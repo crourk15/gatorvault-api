@@ -197,6 +197,60 @@ export function modelFromEarlyDiscovery(player: EarlyDiscoveryPlayer): VaultBigB
   };
 }
 
+/** 2029–2030 Names to know — Natl / Stars / Pos (no chase UF% theater). */
+export function modelFromYoungerProspect(player: {
+  slug: string;
+  name: string;
+  position?: string | null;
+  stars?: number | null;
+  school?: string | null;
+  state?: string | null;
+  classYear?: number | null;
+  natlRank?: number | null;
+  rivalsNatlRank?: number | null;
+  posRank?: number | null;
+  composite?: number | null;
+  tier?: string | null;
+}): VaultBigBoardCardModel {
+  const name = player.name;
+  const school =
+    formatRecruitSchoolLabel(player.school ?? undefined, player.state ?? undefined) ||
+    String(player.school || 'High school TBD');
+  const year = Number(player.classYear) || null;
+  const natl = Number(player.natlRank ?? player.rivalsNatlRank);
+  const hasNatl = Number.isFinite(natl) && natl > 0;
+  const composite = player.composite != null && Number(player.composite) > 0 ? Number(player.composite) : null;
+  const inState = schoolLooksInState(school, player.state);
+  const earlyWatch = (year != null && year >= 2030) || player.tier === 'watchlist';
+  const stamp: VaultBigBoardCardModel['stamp'] = hasNatl
+    ? { label: `#${Math.round(natl)}`, tone: 'intel' }
+    : earlyWatch
+      ? { label: 'Early watch', tone: 'signal' }
+      : { label: 'Early target', tone: 'board' };
+
+  return {
+    slug: player.slug,
+    name,
+    position: player.position || null,
+    stars: player.stars ?? null,
+    school,
+    classYear: year,
+    inState,
+    onBoard: false,
+    ratingLabel: composite != null ? 'Composite' : 'Vault est.',
+    ratingValue: fmtRating(composite),
+    skinny: hasNatl
+      ? `Rivals/On3 early board — ${lastName(name)} checks in at #${Math.round(natl)} for the Class of ${year ?? '2029'}.`
+      : `Early name to know for ${year ?? 2029} — Film Room watchboard before the chase board gets real.`,
+    stamp,
+    metrics: [
+      { label: 'Natl', value: hasNatl ? `#${Math.round(natl)}` : '-' },
+      { label: 'Stars', value: player.stars != null && Number(player.stars) >= 1 ? `${Math.round(Number(player.stars))}★` : '-' },
+      { label: 'Pos', value: player.posRank != null && Number(player.posRank) > 0 ? `#${Math.round(Number(player.posRank))}` : '-' },
+    ],
+  };
+}
+
 
 /** Portal Watchlist — Portal / Depth / Vol */
 export function modelFromPortal(

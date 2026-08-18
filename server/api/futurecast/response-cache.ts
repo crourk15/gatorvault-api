@@ -19,7 +19,8 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** v32: durable /var/data board-truth merge + bundle fallback so sole-board lies cannot stick. */
 /** v33: peer 1→100 crumb poison (Asher OSU On3 lead) stripped on heal + competitorPct. */
 /** v37: underclassmen soft plate from slim younger-prospects-soft.json (no players.json sync parse). */
-export const FUTURECAST_API_CACHE_VERSION = 37;
+/** v38: 2029 early-target On3/Rivals enrich + chase-style Names to know cards. */
+export const FUTURECAST_API_CACHE_VERSION = 38;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;

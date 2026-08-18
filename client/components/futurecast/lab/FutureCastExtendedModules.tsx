@@ -19,13 +19,16 @@ import { PlayerIntelTimelineStrip } from './PlayerIntelTimelineStrip';
 import { ufPctFromFc } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
+import {
+  VaultBigBoardCard,
+  modelFromYoungerProspect,
+} from '@/components/futurecast/VaultBigBoardCard';
 import { InsiderPaywall } from '@/components/futurecast/InsiderPaywall';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import {
   groupYoungerProspectsByYear,
   YOUNGER_PROSPECT_LAB_CAPS,
   YOUNGER_PROSPECT_YEARS,
-  formatYoungerLabMeta,
   isAthHeavyShownPlayers,
   isLabYoungerProspect,
   type YoungerProspectYearGroup,
@@ -168,15 +171,20 @@ function YoungerProspectsLabBoard({
                   Positions still filling in for this class.
                 </p>
               ) : null}
-              <ModuleList
-                empty={`No Class of ${group.year} names loaded yet.`}
-                items={group.players.map((p) => ({
-                  key: p.slug,
-                  primary: `${p.name} · ${p.position && p.position !== 'TBD' ? p.position : 'ATH'}`,
-                  meta: formatYoungerLabMeta(p) || 'Early watch',
-                  href: playerProfileRoute(p.slug, 'futurecast'),
-                }))}
-              />
+              {group.players.length === 0 ? (
+                <p className="fc-profile-muted">{`No Class of ${group.year} names loaded yet.`}</p>
+              ) : (
+                <div className="gv-rb-grid gv-chase-card-grid" data-testid={`fc-lab-younger-${group.year}`}>
+                  {group.players.map((p) => (
+                    <VaultBigBoardCard
+                      key={p.slug}
+                      model={modelFromYoungerProspect(p)}
+                      mode="early-discovery"
+                      profileContext="futurecast"
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
