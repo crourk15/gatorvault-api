@@ -141,9 +141,7 @@ function YoungerProspectsLabBoard({
   columns,
 }: {
   columns: YoungerProspectYearGroup<UnderclassmenPlayer>[];
-}): React.ReactElement | null {
-  if (!columns.some((g) => g.players.length > 0)) return null;
-
+}): React.ReactElement {
   return (
     <FutureCastPanelShell
       title="Names to know — 2029 & 2030"

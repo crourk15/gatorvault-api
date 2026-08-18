@@ -18,7 +18,8 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** v31: rehydrate missing peer boards from store (Girton) + single-flight HP rebuild. */
 /** v32: durable /var/data board-truth merge + bundle fallback so sole-board lies cannot stick. */
 /** v33: peer 1→100 crumb poison (Asher OSU On3 lead) stripped on heal + competitorPct. */
-export const FUTURECAST_API_CACHE_VERSION = 35;
+/** v36: underclassmen soft plate so Lab Names-to-know (2029–30) never lands on deferred_rebuild empty. */
+export const FUTURECAST_API_CACHE_VERSION = 36;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
