@@ -16,7 +16,11 @@ import {
   listStockBoardRows,
 } from '../../models/predictions';
 import { asyncHandler, handlePredictionsApiError, serializeFeedRowsWithVolatility } from '../predictions/utils-api';
-import { sendCachedJson, underclassmenCacheKey } from './response-cache';
+import {
+  primeFuturecastCache,
+  sendCachedJson,
+  underclassmenCacheKey,
+} from './response-cache';
 import {
   buildUnderclassmenIntelForSlug,
   loadUnderclassmenBoardPlayers,
@@ -33,6 +37,9 @@ const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { getAllowlistSet } = require('../../lib/recruiting-target-allowlist');
 const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
+const { buildUnderclassmenSoftPlate } = require('../../lib/underclassmen-soft-plate') as {
+  buildUnderclassmenSoftPlate: (years?: number[]) => Record<string, unknown>;
+};
 
 const EARLY_WATCHLIST_PATH = path.join(__dirname, '../../data/futurecast/early-watchlist.json');
 const DEFAULT_YEARS = [2028, 2029, 2030] as const;
@@ -69,8 +76,14 @@ export type UnderclassmenResponse = {
 
 type EarlyWatchEntry = {
   slug?: string;
+  name?: string;
   classYear?: number;
   tier?: string;
+  pos?: string;
+  position?: string;
+  school?: string;
+  state?: string;
+  stars?: number;
   discoveryScore?: number;
   earlyMovement?: number;
 };
@@ -416,7 +429,19 @@ export const handleGetFutureCastUnderclassmen = asyncHandler(async (req: Request
   try {
     const years = parseYears(typeof req.query.years === 'string' ? req.query.years : undefined);
     const cacheKey = underclassmenCacheKey(years);
-    await sendCachedJson(res, cacheKey, () => buildUnderclassmenPayload(years));
+    await sendCachedJson(res, cacheKey, () => buildUnderclassmenPayload(years), {
+      // Never leave Lab More boards / Names-to-know on empty deferred_rebuild.
+      softOnDeferred: () => {
+        const payload = {
+          ...buildUnderclassmenSoftPlate(years),
+          degraded: 'soft_plate' as const,
+        };
+        primeFuturecastCache(cacheKey, payload);
+        return payload;
+      },
+      // Soft plate is sync JSON; spaced/keepalive warm can refill full board later.
+      backgroundBuildOnSoft: false,
+    });
   } catch (err) {
     handlePredictionsApiError(res, err);
   }
@@ -428,7 +453,17 @@ export const handleGetFutureCastEarlyWatchlist = asyncHandler(async (req: Reques
     const minYear = parseInt(String(req.query.class_year_gte || '2028'), 10);
     const years = DEFAULT_YEARS.filter((y) => y >= (Number.isFinite(minYear) ? minYear : 2028));
     const cacheKey = `futurecast:early-watchlist:${years.join(',')}`;
-    await sendCachedJson(res, cacheKey, () => buildUnderclassmenPayload([...years]));
+    await sendCachedJson(res, cacheKey, () => buildUnderclassmenPayload([...years]), {
+      softOnDeferred: () => {
+        const payload = {
+          ...buildUnderclassmenSoftPlate([...years]),
+          degraded: 'soft_plate' as const,
+        };
+        primeFuturecastCache(cacheKey, payload);
+        return payload;
+      },
+      backgroundBuildOnSoft: false,
+    });
   } catch (err) {
     handlePredictionsApiError(res, err);
   }
