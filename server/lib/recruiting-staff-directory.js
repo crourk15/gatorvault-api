@@ -79,6 +79,8 @@ function normalizePersonNameKey(name) {
 }
 
 function isStaffOrCoachName(name) {
+  const raw = String(name || '').trim();
+  if (/^coach\b/i.test(raw)) return true;
   const lower = normalizePersonNameKey(name);
   if (!lower) return false;
   for (const entry of listStaff()) {

@@ -101,6 +101,8 @@
       var vfUpdated = (vf && vf.updated) || [];
       var vfUnresolved = (vf && vf.unresolved) || [];
       var vfStaff = (vf && vf.blockedStaff) || [];
+      var vfRoster = (vf && vf.blockedRoster) || [];
+      var vfNoise = (vf && vf.noiseSkipped) || [];
       var vf2027 = (vf && vf.skipped2027) || [];
       var vfEmpty = (vf && (vf.emptyReason || (vfs && vfs.emptyReason))) || '';
       var vfBeats = vf ? (vfs.beatsFetched != null ? vfs.beatsFetched : vf.beatsFetched) : null;
@@ -120,8 +122,9 @@
           + '<div class="hub-dash-grid" style="margin:8px 0">'
           + '<section class="hub-card"><h3>Created</h3><p class="hub-kpi">' + esc(vfs.createdCount || 0) + '</p></section>'
           + '<section class="hub-card"><h3>Updated</h3><p class="hub-kpi">' + esc(vfs.updatedCount || 0) + '</p></section>'
-          + '<section class="hub-card"><h3>Unresolved</h3><p class="hub-kpi">' + esc(vfs.unresolvedCount || 0) + '</p></section>'
-          + '<section class="hub-card"><h3>Staff blocked</h3><p class="hub-kpi">' + esc(vfs.blockedStaffCount || 0) + '</p></section>'
+          + '<section class="hub-card"><h3>Needs review</h3><p class="hub-kpi">' + esc(vfs.unresolvedCount || 0) + '</p><p class="hub-meta">Missing On3 / Desk Open</p></section>'
+          + '<section class="hub-card"><h3>Noise skipped</h3><p class="hub-kpi">' + esc(vfs.noiseSkippedCount || ((vf.noiseSkipped || []).length) || 0) + '</p><p class="hub-meta">Press / NIL / media / topics</p></section>'
+          + '<section class="hub-card"><h3>Roster / staff</h3><p class="hub-kpi">' + esc((vfs.blockedRosterCount || ((vf.blockedRoster || []).length) || 0) + (vfs.blockedStaffCount || 0)) + '</p><p class="hub-meta">Not recruits</p></section>'
           + '<section class="hub-card"><h3>2027 skipped</h3><p class="hub-kpi">' + esc(vfs.skipped2027Count || 0) + '</p></section>'
           + '<section class="hub-card"><h3>Allowlist cov</h3><p class="hub-kpi">' + esc(vfs.allowlistCoveragePct != null ? vfs.allowlistCoveragePct + '%' : '—') + '</p></section>'
           + '</div>'
@@ -161,14 +164,14 @@
               + '</tbody></table></div>'
             : '<p class="hub-meta">none</p>')
           + '</div>'
-          + '<div style="margin:10px 0 6px"><p class="hub-meta" style="margin:0 0 4px;color:#fff"><strong>Unresolved detail</strong> — why auto-vault refused (open these in Beat Desk)</p>'
+          + '<div style="margin:10px 0 6px"><p class="hub-meta" style="margin:0 0 4px;color:#fff"><strong>Needs review</strong> — real prospects auto-vault refused (open in Beat Desk)</p>'
           + (vfUnresolved.length
             ? '<div class="hub-table-wrap"><table class="hub-table"><thead><tr><th>Name / cue</th><th>Reason</th><th>Beat / source</th></tr></thead><tbody>'
               + vfUnresolved.slice(0, 24).map(function (r) {
                 var reasonMap = {
                   weak_identity: 'Weak identity — need clearer On3/name match',
                   missing_on3: 'Missing On3 profile / ID',
-                  on3_id_missing: 'Missing On3 ID',
+                  on3_id_missing: 'Missing On3 ID — open in Beat Desk',
                   no_on3_id: 'Missing On3 ID',
                   provision_failed: 'Provision failed',
                   untrusted_writer: 'Writer not on trusted beat list',
@@ -179,9 +182,12 @@
                   blocked_not_recruit: 'Blocked as phantom/alumni (or false ATH shell)',
                   slug_name_identity_mismatch: 'Slug/name identity mismatch',
                   vault_feed_weak_identity: 'Weak identity — queued for review',
-                  max_creates_reached: 'Hit create cap this run'
+                  needs_desk_open: 'Needs Beat Desk Open',
+                  max_creates_reached: 'Hit create cap this run',
+                  program_or_media_noise: 'Program / media noise (should not be here)'
                 };
-                var reason = reasonMap[r.reason] || r.reason || 'unresolved';
+                var reasonKey = String(r.reason || '').split(':')[0].trim();
+                var reason = reasonMap[reasonKey] || reasonMap[r.reason] || r.reason || 'unresolved';
                 var src = (r.handle ? '@' + r.handle + ' — ' : '') + (r.sourcePreview || '');
                 return '<tr><td><strong style="color:#fff">' + esc(r.playerName || r.playerSlug || '—') + '</strong>'
                   + '<div class="hub-meta">' + esc(r.playerSlug || '') + (r.classYear ? ' · ' + esc(r.classYear) : '')
@@ -190,9 +196,27 @@
                   + '<td class="hub-meta">' + esc(src.slice(0, 160) || '—') + '</td></tr>';
               }).join('')
               + '</tbody></table></div>'
-            : '<p class="hub-meta">none</p>')
+            : '<p class="hub-meta">none — clean run</p>')
           + '</div>'
-          + (vfStaff.length ? '<p class="hub-meta">Staff blocked: ' + esc(vfStaff.slice(0, 5).map(function (r) { return r.playerName; }).join(', ')) + '</p>' : '')
+          + ((vfNoise.length || vfRoster.length || vfStaff.length)
+            ? '<div style="margin:10px 0 6px"><p class="hub-meta" style="margin:0 0 4px;color:#fff"><strong>Auto-filtered</strong> — not Desk Open work</p>'
+              + (vfNoise.length
+                ? '<p class="hub-meta" style="margin:4px 0 2px">Noise (' + esc(String(vfNoise.length)) + '): '
+                  + esc(vfNoise.slice(0, 8).map(function (r) { return r.playerName || r.playerSlug || '—'; }).join(', '))
+                  + (vfNoise.length > 8 ? '…' : '') + '</p>'
+                : '')
+              + (vfRoster.length
+                ? '<p class="hub-meta" style="margin:4px 0 2px">Roster (' + esc(String(vfRoster.length)) + '): '
+                  + esc(vfRoster.slice(0, 6).map(function (r) { return r.playerName || r.playerSlug || '—'; }).join(', '))
+                  + (vfRoster.length > 6 ? '…' : '') + '</p>'
+                : '')
+              + (vfStaff.length
+                ? '<p class="hub-meta" style="margin:4px 0 2px">Staff (' + esc(String(vfStaff.length)) + '): '
+                  + esc(vfStaff.slice(0, 6).map(function (r) { return r.playerName || r.playerSlug || '—'; }).join(', '))
+                  + (vfStaff.length > 6 ? '…' : '') + '</p>'
+                : '')
+              + '</div>'
+            : '')
           + (vf2027.length ? '<p class="hub-meta">2027 handpick-only skips: ' + esc(String(vf2027.length)) + '</p>' : '');
 
       body.innerHTML =
