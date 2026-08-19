@@ -58,6 +58,9 @@ function pickClassYear(text, hint) {
 }
 
 function isBlockedStaff(name, slug) {
+  const raw = String(name || '').trim();
+  // "Coach Sumrall Press" / "Coach Mike Holloway" — never a recruit cue
+  if (/^coach\b/i.test(raw)) return true;
   try {
     const staff = require('./recruiting-staff-directory');
     if (name && staff.isStaffOrCoachName?.(name)) return true;
@@ -73,6 +76,144 @@ function isBlockedStaff(name, slug) {
     /* optional */
   }
   return false;
+}
+
+/** Media outlets / analysts / topic fragments that Title-Case as fake "players". */
+const VAULT_FEED_NOISE_NAME_RES = [
+  /^cbs\s+sports$/i,
+  /^the\s+athletic$/i,
+  /^usa\s+today$/i,
+  /^espn$/i,
+  /^ap\s+(top|poll|voters?)$/i,
+  /^which\s+ap$/i,
+  /^joel\s+klatt$/i,
+  /^sec\s+(football|network|college\s+football)$/i,
+  /^college\s+football$/i,
+  /^combination\s+schedule$/i,
+  /^uniform\s+combination/i,
+  /^sarkisian\s+line$/i,
+  /^o-?line\s+shakeup$/i,
+  /^gators?'?\s+nil$/i,
+  /^louder\s+after\s+two$/i,
+  /^coach\s+.+\s+press$/i,
+  /^press\s+conference$/i,
+  /^media\s+(day|days|availability)$/i,
+];
+
+/** Beat body is program/media noise — not a recruit provision attempt. */
+const VAULT_FEED_NOISE_TEXT_RES = [
+  /\bpress\s+conference\b/i,
+  /\bmedia\s+(availability|day|days)\b/i,
+  /\bscrimmage\s+recap\b/i,
+  /\bfall\s+camp\s+intel\b/i,
+  /\buniform\s+combination\s+schedule\b/i,
+  /\bpreseason\s+(ap\s+)?top\s*25\b/i,
+  /\ball-american\s+teams?\b/i,
+  /\bprojected\s+league\s+standings\b/i,
+  /\bsec\s+college\s+football\s+predictions\b/i,
+  /\bnil\s+(collective|deal|offer|pitch)/i,
+  /\b\$[\d.,]+\s*m\b.*\b(nil|signing\s+bonus)\b/i,
+];
+
+function isVaultFeedNoiseName(name) {
+  const n = String(name || '').trim();
+  if (!n) return true;
+  if (VAULT_FEED_NOISE_NAME_RES.some((re) => re.test(n))) return true;
+  try {
+    const blocked = require('./recruiting-blocked-players');
+    if (blocked.isGarbageChaseName?.(n)) return true;
+  } catch {
+    /* optional */
+  }
+  // Topic fragments: no lowercase letters in a middle token that isn't a real surname pattern
+  // e.g. "O-Line Shakeup", "Combination Schedule"
+  if (/\b(shakeup|schedule|standings|predictions?|all-american|watch\s+list)\b/i.test(n)) {
+    return true;
+  }
+  return false;
+}
+
+function isVaultFeedNoiseText(text) {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  if (VAULT_FEED_NOISE_TEXT_RES.some((re) => re.test(t))) {
+    // Keep real recruiting beats that ALSO mention a presser / NIL in passing
+    // only when a strong HS recruit cue is present (class year + pos / visit / offer).
+    const hasRecruitCue =
+      /\b(202[8-9]|2030)\b/.test(t) &&
+      /\b(QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|commit|offer|visit|OV|UOV|RPM)\b/i.test(t);
+    if (!hasRecruitCue) return true;
+  }
+  try {
+    const pre = require('./beat-intel-prefilter');
+    if (pre.isGenericNonPlayerIntel?.(t) && !pre.hasStrongRecruitingSignals?.(t)) return true;
+  } catch {
+    /* optional */
+  }
+  return false;
+}
+
+function isCurrentRosterCue(name, slug) {
+  try {
+    const blocked = require('./recruiting-blocked-players');
+    const probe = { name, slug: slug || null };
+    if (blocked.currentRosterRecruitCollision?.(probe)) return true;
+    const key = String(slug || '')
+      .trim()
+      .toLowerCase();
+    if (key && blocked.BLOCKED_PLAYER_SLUGS?.has?.(key)) {
+      // Explicit blocked slugs that are current roster (Baugh etc.) — not staff.
+      if (!isBlockedStaff(name, slug)) return true;
+    }
+  } catch {
+    /* optional */
+  }
+  return false;
+}
+
+/**
+ * Bucket vault-feed refusals so Hub "Unresolved" is only actionable Desk Open work.
+ * @returns {{ bucket: 'staff'|'roster'|'noise'|'review', reason: string }}
+ */
+function classifyVaultFeedCandidate(candidate = {}, provisionReason = null) {
+  const name = String(candidate.playerName || '').trim();
+  const slug = String(candidate.playerSlug || '').trim().toLowerCase() || null;
+  const text = String(candidate.text || '');
+  const rawReason = String(provisionReason || '').trim();
+  const reasonCode = rawReason.split(':')[0].trim().toLowerCase() || '';
+
+  if (isBlockedStaff(name, slug) || reasonCode === 'blocked_staff' || reasonCode === 'staff_not_recruit') {
+    // Roster RBs were mislabeled staff_not_recruit by enterPlayerIntel — prefer roster when true.
+    if (isCurrentRosterCue(name, slug) || /baugh|pryor/i.test(name)) {
+      return { bucket: 'roster', reason: 'current_roster_player' };
+    }
+    return { bucket: 'staff', reason: reasonCode === 'staff_not_recruit' ? 'staff_not_recruit' : 'staff_or_coach' };
+  }
+  if (isCurrentRosterCue(name, slug) || reasonCode === 'current_roster_player') {
+    return { bucket: 'roster', reason: 'current_roster_player' };
+  }
+  if (isVaultFeedNoiseName(name) || isVaultFeedNoiseText(text)) {
+    return { bucket: 'noise', reason: 'program_or_media_noise' };
+  }
+  // HS coach named in a "head coach explains" beat — not a recruit shell
+  if (/\b(head\s+coach|hs\s+coach|high\s+school\s+coach)\b/i.test(text) && !/\b(202[8-9]|2030)\b/.test(text)) {
+    return { bucket: 'noise', reason: 'program_or_media_noise' };
+  }
+
+  if (
+    reasonCode === 'on3_id_missing' ||
+    reasonCode === 'missing_on3' ||
+    reasonCode === 'no_on3_id' ||
+    /on3 player id missing/i.test(rawReason) ||
+    /missing on3/i.test(rawReason)
+  ) {
+    return { bucket: 'review', reason: 'on3_id_missing' };
+  }
+  if (rawReason) {
+    // Default unknown provision failures stay reviewable
+    return { bucket: 'review', reason: reasonCode || 'provision_failed' };
+  }
+  return { bucket: 'review', reason: 'needs_desk_open' };
 }
 
 function emptyReport(opts = {}) {
@@ -98,6 +239,8 @@ function emptyReport(opts = {}) {
     updated: [],
     skipped2027: [],
     blockedStaff: [],
+    blockedRoster: [],
+    noiseSkipped: [],
     unresolved: [],
     skipped: [],
     errors: [],
@@ -128,6 +271,9 @@ function finalizeSummary(report) {
     updatedCount: report.updated.length,
     skipped2027Count: report.skipped2027.length,
     blockedStaffCount: report.blockedStaff.length,
+    blockedRosterCount: (report.blockedRoster || []).length,
+    noiseSkippedCount: (report.noiseSkipped || []).length,
+    // Actionable Desk Open only — noise/roster/staff live in their own buckets
     unresolvedCount: report.unresolved.length,
     skippedCount: report.skipped.length,
     errorCount: report.errors.length,
@@ -140,7 +286,10 @@ function finalizeSummary(report) {
       ? report.allowlistIntel.coverage.missing.length
       : null,
   };
-  report.message = `created ${report.summary.createdCount}, updated ${report.summary.updatedCount}, unresolved ${report.summary.unresolvedCount}`
+  report.message =
+    `created ${report.summary.createdCount}, updated ${report.summary.updatedCount}, unresolved ${report.summary.unresolvedCount}`
+    + (report.summary.noiseSkippedCount ? `, noise ${report.summary.noiseSkippedCount}` : '')
+    + (report.summary.blockedRosterCount ? `, roster ${report.summary.blockedRosterCount}` : '')
     + (report.emptyReason ? ` · ${report.emptyReason}` : '');
   return report;
 }
@@ -615,12 +764,35 @@ async function runVaultFeed2028SweepInner(opts = {}) {
 
       const name = candidate.playerName;
       const slugHint = candidate.playerSlug;
-      if (isBlockedStaff(name, slugHint)) {
+
+      // Early bucket — keep Unresolved for actionable Desk Open only
+      const earlyClass = classifyVaultFeedCandidate(candidate);
+      if (earlyClass.bucket === 'staff' || isBlockedStaff(name, slugHint)) {
         report.blockedStaff.push({
           playerName: name,
           playerSlug: slugHint,
-          reason: 'staff_or_coach',
+          reason: earlyClass.reason || 'staff_or_coach',
           handle: candidate.handle || null,
+        });
+        continue;
+      }
+      if (earlyClass.bucket === 'roster') {
+        report.blockedRoster.push({
+          playerName: name,
+          playerSlug: slugHint,
+          reason: 'current_roster_player',
+          handle: candidate.handle || null,
+          sourcePreview: String(candidate.text || '').slice(0, 120),
+        });
+        continue;
+      }
+      if (earlyClass.bucket === 'noise') {
+        report.noiseSkipped.push({
+          playerName: name,
+          playerSlug: slugHint,
+          reason: earlyClass.reason || 'program_or_media_noise',
+          handle: candidate.handle || null,
+          sourcePreview: String(candidate.text || '').slice(0, 120),
         });
         continue;
       }
@@ -709,20 +881,32 @@ async function runVaultFeed2028SweepInner(opts = {}) {
         continue;
       }
       if (!provisioned.ok) {
-        const queued = await enqueueUnresolved(
-          candidate,
-          provisioned.reason || 'provision_failed'
-        );
-        report.unresolved.push({
+        const failReason = provisioned.reason || provisioned.error || 'provision_failed';
+        const classified = classifyVaultFeedCandidate(candidate, failReason);
+        const row = {
           playerName: name,
           playerSlug: candidate.playerSlug || null,
           classYear: candidate.classYear || null,
-          reason: provisioned.reason || 'provision_failed',
-          queued,
+          reason: classified.reason,
           handle: candidate.handle || null,
           sourceUrl: candidate.url || null,
           sourcePreview: String(candidate.text || '').slice(0, 160),
-        });
+        };
+        if (classified.bucket === 'staff') {
+          report.blockedStaff.push(row);
+          continue;
+        }
+        if (classified.bucket === 'roster') {
+          report.blockedRoster.push(row);
+          continue;
+        }
+        if (classified.bucket === 'noise') {
+          report.noiseSkipped.push(row);
+          continue;
+        }
+        // Actionable only — enqueue for Beat Desk Open
+        const queued = await enqueueUnresolved(candidate, classified.reason || failReason);
+        report.unresolved.push({ ...row, queued });
         continue;
       }
 
@@ -851,6 +1035,9 @@ module.exports = {
   pickClassYear,
   extractClassYears,
   isBlockedStaff,
+  isVaultFeedNoiseName,
+  isVaultFeedNoiseText,
+  classifyVaultFeedCandidate,
   summarizeFeedResult,
   readLastReport,
   writeReport,

@@ -76,6 +76,18 @@ const INVALID_NAME_PHRASES = [
   /^fathers?\s+day$/i,
   /^mothers?\s+day$/i,
   /^go\s+gators$/i,
+  // Media / program Topic Case false positives (vault-feed noise)
+  /^cbs\s+sports$/i,
+  /^the\s+athletic$/i,
+  /^usa\s+today$/i,
+  /^joel\s+klatt$/i,
+  /^sec\s+football$/i,
+  /^sec\s+college\s+football$/i,
+  /^combination\s+schedule$/i,
+  /^which\s+ap$/i,
+  /^o-?line\s+shakeup$/i,
+  /^press\s+conference$/i,
+  /^coach\s+.+/i,
 ];
 
 function isValidPlayerName(name) {
