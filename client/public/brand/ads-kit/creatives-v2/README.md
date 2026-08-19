@@ -7,7 +7,8 @@ No real recruit names. Diverse Gator Nation faces.
 | File | Use |
 |------|-----|
 | `UPLOAD-THIS-FEED.png` | Feed / Single Image |
-| `UPLOAD-THIS-STORIES.png` | Vertical 9:16 (Replace vertical crop — do not crop the square) |
+| `UPLOAD-THIS-STORIES.png` | Vertical 9:16 (Replace — do not crop the square) |
+| `UPLOAD-THIS-HORIZONTAL.png` | Horizontal 1.91:1 (Replace — do not crop the square) |
 | `gv-meta-reel-UPLOAD-THIS.mp4` | Video |
 
 ## Download
@@ -15,5 +16,7 @@ No real recruit names. Diverse Gator Nation faces.
 https://github.com/crourk15/gatorvault-api/raw/cursor/meta-creatives-v2-human-69d2/client/public/brand/ads-kit/creatives-v2/UPLOAD-THIS-FEED.png
 
 https://github.com/crourk15/gatorvault-api/raw/cursor/meta-creatives-v2-human-69d2/client/public/brand/ads-kit/creatives-v2/UPLOAD-THIS-STORIES.png
+
+https://github.com/crourk15/gatorvault-api/raw/cursor/meta-creatives-v2-human-69d2/client/public/brand/ads-kit/creatives-v2/UPLOAD-THIS-HORIZONTAL.png
 
 https://github.com/crourk15/gatorvault-api/raw/cursor/meta-creatives-v2-human-69d2/client/public/brand/ads-kit/creatives-v2/gv-meta-reel-UPLOAD-THIS.mp4
