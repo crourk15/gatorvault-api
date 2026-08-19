@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-14T12:53:51.359Z",
+  "updatedAt": "2026-08-19T00:54:34.101Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -18516,6 +18516,39 @@
       "updatedAt": "2026-08-14T12:53:51.350Z",
       "filmWatched": true,
       "provisional": false
+    },
+    "xevien-brinson": {
+      "playerSlug": "xevien-brinson",
+      "playerName": "Xevien Brinson",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22336911/690e469974301bea69f97166",
+          "publishedAt": "2026-08-19"
+        }
+      ],
+      "strengths": [
+        "Brinson flexes wide as a big-slot / mismatch TE and creates vertical seams with 6-5 length over the second level.",
+        "Brinson finishes in space after the catch — long stride, ball security, and speed to punish light linebackers in the open field.",
+        "Brinson also attaches in-line in short yardage / goal-line — willing three-point work while keeping the mismatch receiving traits."
+      ],
+      "weaknesses": [
+        "Brinson still needs functional mass at 6-5 / 210 before he can sustain every-down in-line work versus SEC edge setters."
+      ],
+      "comparison": "Brinson comps to Mark Andrews — 6-5 athletic TE mold; flex alignments, seam length, and YAC who grows into a complete hybrid (size-matched; not a Florida-alum default).",
+      "schemeFit": "Brinson fits a 12/11 TE room that values flexed mismatch snaps and growing in-line will as the frame fills.",
+      "staffNotes": "FILM VERIFIED 2026-08-19 from Stephenson sophomore Hudl (Sophomore Full Season Highlights, ~8:06). Watched: flexed wide / big-slot alignments, seam stacks and open-field finish after the catch, in-line goal-line three-point reps. Comp size-matched Mark Andrews (6-5) for 6-5 / 210; skipped Florida-alum default. On3 industry Natl #69 · Pos #3 · State #11 (GA).",
+      "projection": "Brinson projects as earn package / mismatch snaps Year 1, compete for a starting hybrid TE role Year 2 — starter upside as a move/Y who wins with length and after-catch speed before the complete in-line base arrives.",
+      "insiderNotes": "Brinson is a 6-5 / 210 Stephenson tight end who wins with flex alignments, seam length, and finish in space after the catch. Sophomore tape also shows willing in-line short-yardage work. Mass is the growth item — the mismatch traits are already blue-chip.",
+      "recruitingStory": "Xevien Brinson is a 4-star TE · listed 6-5 / 210 · Stephenson (Stone Mountain, GA) · Industry Natl #69 · Pos #3 · State #11 — Florida TE chase with Evan McKissack; RPM led by Georgia Tech / Auburn.",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-08-19T00:54:34.092Z",
+      "filmWatched": true
     }
   }
 }
