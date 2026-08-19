@@ -801,20 +801,30 @@ function mountRecruitingHubRoutes(app) {
         const { scheduleSpacedEliteFill } = require('./recruiting-hub-cache');
         // Lite can still heat both classes; spaced fill stays on yearList (usually 2028).
         const liteYears = years.length > 0 ? yearList : [2027, 2028];
+        // NEVER force-cancel by default — cron every 25m with force=true overlapped
+        // 1.5GB fork workers → cgroup OOM → exit 143 + /ready 5s timeouts (Aug 18 crash loop).
+        // Admin/ops can pass ?force=1 to restart the chain (kills in-flight worker first).
+        const forceSpaced =
+          req.query.force === '1' ||
+          req.query.force === 'true' ||
+          String(req.body?.force || '').toLowerCase() === 'true';
         void warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: liteYears })
           .then((meta) => {
             console.log('[recruiting-hub] spaced lite complete', meta?.warmKeyCount);
-            scheduleSpacedEliteFill({
+            const spaced = scheduleSpacedEliteFill({
               years: yearList,
-              force: true,
+              force: forceSpaced,
               includeLab: process.env.HUB_SPACED_WARM_LAB === 'true',
             });
+            if (spaced?.already) {
+              console.log('[recruiting-hub] spaced fill already queued — lite only this tick');
+            }
           })
           .catch((err) => {
             console.warn('[recruiting-hub] spaced lite failed:', err.message);
             scheduleSpacedEliteFill({
               years: yearList,
-              force: true,
+              force: forceSpaced,
               includeLab: process.env.HUB_SPACED_WARM_LAB === 'true',
             });
           });
@@ -824,6 +834,7 @@ function mountRecruitingHubRoutes(app) {
           mode: 'spaced',
           years: yearList,
           liteYears,
+          force: forceSpaced,
           meta: hubMeta(),
         });
       }
