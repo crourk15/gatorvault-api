@@ -1,31 +1,29 @@
-# Meta creatives — upload guide
+# Meta creatives — SAFE pack (no real recruit names)
 
-## A/B test first (Meta recommendation)
+## Upload these (v5)
 
-Use the **Gators jersey + big type** still as challenger vs your current Single Image Ad:
+| File | Use |
+|------|-----|
+| `UPLOAD-THIS-FEED.png` | Replace active Feed / Single Image |
+| `UPLOAD-THIS-STORIES.png` | Vertical 9:16 crop / Stories |
+| `gv-meta-reel-UPLOAD-THIS.mp4` | Video (H.264 + AAC, 15s) |
 
-- `gv-meta-feed-v4-jersey-bigtype.png` (Feed 1:1) — **start here**
-- `gv-meta-stories-v4-jersey-bigtype.png` (Stories 9:16)
+No real player names. Phone shows **Priority Chase · UF 42% · 2028 BOARD** only.
 
-Set up the A/B test in Ads Manager (I cannot flip Advantage+ for you).
+## Do NOT use for paid ads
 
-## Video for Reels / Stories (upload this)
+Anything with **Izayah Vickers** / EDGE in the filename (v2–v4) — wrong position and name-rights risk.
 
-`gv-meta-reel-UPLOAD-THIS.mp4` (= v4)
-- MP4 H.264 + AAC silent audio (Meta-safe)
-- 9:16, 15s, ~2MB
-- 0–3s fan BREAKING hook
-- Big-type FutureCast phone (Izayah Vickers / UF 42% / Priority Chase)
-- Download free CTA
+## GitHub download (branch)
 
-Do not upload `gv-meta-reel-v2-15s.mp4` (video-only — fails upload).
+https://github.com/crourk15/gatorvault-api/raw/cursor/meta-creatives-v2-human-69d2/client/public/brand/ads-kit/creatives-v2/UPLOAD-THIS-FEED.png
 
-## Why v4
+https://github.com/crourk15/gatorvault-api/raw/cursor/meta-creatives-v2-human-69d2/client/public/brand/ads-kit/creatives-v2/UPLOAD-THIS-STORIES.png
 
-Meta said in-phone data was still thin. v4 enlarges **UF 42%**, name, and Priority Chase for mute mobile scroll.
+https://github.com/crourk15/gatorvault-api/raw/cursor/meta-creatives-v2-human-69d2/client/public/brand/ads-kit/creatives-v2/gv-meta-reel-UPLOAD-THIS.mp4
 
 ## Copy
 
 Headline: Florida recruiting, unlocked.
-Primary: GatorVault shows who Florida is chasing — live FutureCast boards, not rumor noise.
+Primary: See who Florida is chasing — live FutureCast boards, not rumor noise.
 CTA: Download / Install
