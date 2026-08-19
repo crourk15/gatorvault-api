@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Vault feed Hub: bucket noise/roster/staff out of Unresolved — Needs review = missing On3 only (API + Admin Hub)
 - [x] Lee Steele 2028 TE: Vault Scouting (Gesicki) + FC allowlist seed + prepared-meal stamp — API
 - [x] 2028 HP chase cards: visit lines + Why we chase notes from live visit/intel stores + soft priority nudge (API — no Codemagic; Rising still snapshot `delta7d` only)
 - [x] Home NOW / class-overview 2027 commit count lockstep with commit cards (26) — kill protected-only phantom inflate + shared `loadHubHsClassCommits` (API)
