@@ -844,8 +844,9 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   const withEvidence = attachClosestCommitEvidence(withChase, { classYear, days: 180 });
   // Fan-facing visit lines + Why we chase notes from live visit/intel stores (API-only).
   // Soft priority nudge from fresh process — never invents delta7d / Rising.
-  const { enrichHighPriorityChaseCards } = require('../../lib/hp-chase-card-enrich');
-  const withCardIntel = enrichHighPriorityChaseCards(withEvidence, { days: 180 });
+  const { enrichHighPriorityChaseCards, DEFAULT_VISIT_DAYS } = require('../../lib/hp-chase-card-enrich');
+  // Match Board Intel (~21d) — 180d painted June camp UVs on almost every Chase card.
+  const withCardIntel = enrichHighPriorityChaseCards(withEvidence, { days: DEFAULT_VISIT_DAYS });
   // Full locked board, chase-scored. Do not slice to chase top-N — Who commits next /
   // Closest to commit is a system board-lead read over every allowlist target.
   // Priority chase surfaces still re-sort by priorityScore and take top 10 client-side.
