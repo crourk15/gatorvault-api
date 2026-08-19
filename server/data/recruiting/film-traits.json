@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-14T12:53:51.379Z",
+  "updatedAt": "2026-08-19T17:32:40.105Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -2938,6 +2938,72 @@
         "IOL-flex"
       ],
       "vaultFilmAngle": "Lead with Florida offer + game day visit; stack tape finish + Risner-mold projection.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "tre-oiler": {
+      "playerName": "Tre Oiler",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/23066402/6933541fcd06d6b43c37ef0e"
+        }
+      ],
+      "traits": [
+        "length",
+        "contested",
+        "seam",
+        "hands",
+        "blocking",
+        "red-zone"
+      ],
+      "vaultFilmAngle": "Lead with Florida offer + McKissack process after March and June Grill in the Ville trips; Wisconsin leads RPM, Gators still building.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "jacez-walton": {
+      "playerName": "Jacez Walton",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/18368587/692f67ffcd06d6b43c36a09b"
+        }
+      ],
+      "traits": [
+        "contact-balance",
+        "vision",
+        "power",
+        "pad-level",
+        "finish",
+        "committee"
+      ],
+      "vaultFilmAngle": "Lead with Florida offer still live on Central's physical RB while Georgia/Auburn lead RPM.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"
