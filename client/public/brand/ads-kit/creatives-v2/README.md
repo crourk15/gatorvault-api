@@ -1,22 +1,16 @@
-# Meta creatives — SAFE + diverse (v6)
-
-No real recruit names. Diverse Gator Nation faces.
+# Meta creatives — Hub platform pack
 
 ## Upload
 
 | File | Use |
 |------|-----|
-| `UPLOAD-THIS-FEED.png` | Feed / Single Image |
-| `UPLOAD-THIS-STORIES.png` | Vertical 9:16 (Replace — do not crop the square) |
-| `UPLOAD-THIS-HORIZONTAL.png` | Horizontal 1.91:1 (Replace — do not crop the square) |
-| `gv-meta-reel-UPLOAD-THIS.mp4` | Video |
+| `UPLOAD-THIS-FEED.png` | Feed (current diverse fan + board still OK for now) |
+| `UPLOAD-THIS-STORIES.png` | **Vertical 9:16 — Hub platform** (no STORIES 9 label, no recruiting card) |
+| `UPLOAD-THIS-HORIZONTAL.png` | Horizontal 1.91:1 |
+| `gv-meta-reel-UPLOAD-THIS.mp4` | Video (hub product middle) |
 
-## Download
+Stories phone shows Film Room / Live Beat / Game Week / FutureCast / Team.
 
-https://github.com/crourk15/gatorvault-api/raw/cursor/meta-creatives-v2-human-69d2/client/public/brand/ads-kit/creatives-v2/UPLOAD-THIS-FEED.png
+## Download Stories
 
 https://github.com/crourk15/gatorvault-api/raw/cursor/meta-creatives-v2-human-69d2/client/public/brand/ads-kit/creatives-v2/UPLOAD-THIS-STORIES.png
-
-https://github.com/crourk15/gatorvault-api/raw/cursor/meta-creatives-v2-human-69d2/client/public/brand/ads-kit/creatives-v2/UPLOAD-THIS-HORIZONTAL.png
-
-https://github.com/crourk15/gatorvault-api/raw/cursor/meta-creatives-v2-human-69d2/client/public/brand/ads-kit/creatives-v2/gv-meta-reel-UPLOAD-THIS.mp4
