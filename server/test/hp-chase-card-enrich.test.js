@@ -5,7 +5,9 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const {
+  DEFAULT_VISIT_DAYS,
   buildVisitHistoryFromLogs,
+  filterStaleChaseVisitHistory,
   pickChaseNotePreview,
   processFreshnessNudge,
   enrichHighPriorityChaseCards,
@@ -13,40 +15,65 @@ const {
 } = require('../lib/hp-chase-card-enrich');
 
 describe('hp-chase-card-enrich', () => {
+  it('defaults Chase visit window to Board Intel (~21d)', () => {
+    assert.equal(DEFAULT_VISIT_DAYS, 21);
+  });
+
   it('builds UV / OV / Home visit labels from Florida visit logs only', () => {
     const logs = [
       {
         playerSlug: 'hudson-west',
         school: 'Florida',
         visitType: 'unofficial_visit',
-        date: '2026-06-19',
+        date: '2026-08-10',
       },
       {
         playerSlug: 'hudson-west',
         school: 'Georgia',
         visitType: 'unofficial_visit',
-        date: '2026-06-01',
+        date: '2026-08-10',
       },
       {
         playerSlug: 'hudson-west',
         school: 'Florida',
         visitType: 'home_visit',
-        date: '2026-07-01',
+        date: '2026-08-12',
+      },
+      {
+        playerSlug: 'hudson-west',
+        school: 'Florida',
+        visitType: 'unofficial_visit',
+        date: '2026-06-19',
       },
       {
         playerSlug: 'other-kid',
         school: 'Florida',
         visitType: 'unofficial_visit',
-        date: '2026-06-19',
+        date: '2026-08-10',
       },
     ];
     const badges = buildVisitHistoryFromLogs('hudson-west', logs, {
       nowMs: Date.parse('2026-08-18T12:00:00Z'),
-      days: 180,
     });
     assert.ok(badges.some((b) => /Home visit/i.test(b.label)));
     assert.ok(badges.some((b) => /^UV/i.test(b.label) || b.type === 'UV'));
     assert.ok(!badges.some((b) => /Georgia/i.test(b.label)));
+    assert.ok(!badges.some((b) => /Jun 19/i.test(b.label)), 'June camp UV must age off');
+  });
+
+  it('filterStaleChaseVisitHistory drops old UV plates but keeps Expected', () => {
+    const kept = filterStaleChaseVisitHistory(
+      [
+        { type: 'UV', label: 'UV · Jun 19' },
+        { type: 'UV', label: 'UV · Aug 10' },
+        { type: 'Game Day', label: 'Expected FAU visit · Sep 5' },
+      ],
+      { nowMs: Date.parse('2026-08-18T12:00:00Z') }
+    );
+    assert.deepEqual(
+      kept.map((b) => b.label),
+      ['UV · Aug 10', 'Expected FAU visit · Sep 5']
+    );
   });
 
   it('prefers chase process notes over rank-plate skinny', () => {
@@ -115,13 +142,12 @@ describe('hp-chase-card-enrich', () => {
       ],
       {
         nowMs: Date.parse('2026-08-18T12:00:00Z'),
-        days: 180,
         visitLogs: [
           {
             playerSlug: 'hudson-west',
             school: 'Florida',
             visitType: 'unofficial_visit',
-            date: '2026-06-19',
+            date: '2026-08-10',
           },
         ],
         recruitingBySlug: new Map([

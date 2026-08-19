@@ -20,7 +20,8 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** v33: peer 1→100 crumb poison (Asher OSU On3 lead) stripped on heal + competitorPct. */
 /** v37: underclassmen soft plate from slim younger-prospects-soft.json (no players.json sync parse). */
 /** v38: 2029 early-target On3/Rivals enrich + chase-style Names to know cards. */
-export const FUTURECAST_API_CACHE_VERSION = 38;
+/** v39: Chase UV/OV soft filter — drop plates older than Board Intel window (~21d). */
+export const FUTURECAST_API_CACHE_VERSION = 39;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
@@ -810,8 +811,15 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
   } catch {
     /* optional */
   }
-  // Soft/disk HP can predate a full rebuild — stamp Expected visit labels on every serve.
+  // Soft/disk HP can predate a full rebuild — drop stale UV/OV plates, then stamp Expected.
   try {
+    const { filterStaleChaseVisitHistory, DEFAULT_VISIT_DAYS } = require('../../lib/hp-chase-card-enrich') as {
+      filterStaleChaseVisitHistory: (
+        visitHistory: unknown,
+        opts?: { days?: number; nowMs?: number }
+      ) => Array<{ type: string; label: string }>;
+      DEFAULT_VISIT_DAYS: number;
+    };
     const { mergeExpectedVisitHistory } = require('../../lib/game-week-visitors') as {
       mergeExpectedVisitHistory: (
         slug: string,
@@ -823,9 +831,10 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
       const p = row as Record<string, unknown>;
       const slug = String(p.slug || '');
       if (!slug) return row;
+      const fresh = filterStaleChaseVisitHistory(p.visitHistory, { days: DEFAULT_VISIT_DAYS });
       return {
         ...p,
-        visitHistory: mergeExpectedVisitHistory(slug, p.visitHistory),
+        visitHistory: mergeExpectedVisitHistory(slug, fresh),
       };
     });
   } catch {

@@ -16,7 +16,9 @@ const {
 } = require('./uf-chase-score');
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const DEFAULT_VISIT_DAYS = 180;
+const { BOARD_INTEL_VISIT_MAX_AGE_DAYS } = require('./visit-intel-utils');
+/** Match Board Intel — completed UV/OV older than this drop off Chase cards. */
+const DEFAULT_VISIT_DAYS = BOARD_INTEL_VISIT_MAX_AGE_DAYS;
 
 function slugKey(value) {
   return String(value || '')
@@ -69,7 +71,8 @@ function buildVisitHistoryFromLogs(slug, visitLogs, { days = DEFAULT_VISIT_DAYS,
     if (slugKey(row.playerSlug || row.player_slug || row.slug) !== key) continue;
     if (!isFloridaVisitLog(row)) continue;
     const ts = parseVisitTs(row.date || row.visitStart || row.reportedAt);
-    if (ts != null && ts < cutoff) continue;
+    // Require a real date inside the window — undated logs used to paint UV on every card.
+    if (ts == null || ts < cutoff) continue;
     const vt = row.visitType || row.eventType;
     const detail = row.detail || row.notes || '';
     const dateBit = shortVisitDate(ts);
@@ -238,6 +241,47 @@ function loadRecruitingBySlugMap() {
 }
 
 /**
+ * Drop baked UV/OV/Home plates older than the Chase window (soft/disk HP serve).
+ * Labels look like "UV · Jun 19" — parse month/day vs now; bare "UV" counts as stale.
+ */
+function filterStaleChaseVisitHistory(visitHistory, { days = DEFAULT_VISIT_DAYS, nowMs = Date.now() } = {}) {
+  const maxAge = Math.max(1, Number(days) || DEFAULT_VISIT_DAYS) * DAY_MS;
+  const months = {
+    Jan: 0,
+    Feb: 1,
+    Mar: 2,
+    Apr: 3,
+    May: 4,
+    Jun: 5,
+    Jul: 6,
+    Aug: 7,
+    Sep: 8,
+    Oct: 9,
+    Nov: 10,
+    Dec: 11,
+  };
+  const now = new Date(nowMs);
+  const year = now.getUTCFullYear();
+  return (Array.isArray(visitHistory) ? visitHistory : []).filter((row) => {
+    const type = String(row?.type || '');
+    const label = String(row?.label || '').trim();
+    // Keep Expected / Game Day plates — mergeExpected owns those.
+    if (type === 'Game Day' || /^Expected\b/i.test(label)) return true;
+    if (!/^(UV|OV|Home visit|Junior Day|Spring Visit)/i.test(type) && !/\b(UV|OV|Home visit|Junior Day)\b/i.test(label)) {
+      return true;
+    }
+    const m = label.match(/·\s*([A-Za-z]{3})\s+(\d{1,2})\b/);
+    if (!m) return false;
+    const mi = months[m[1]];
+    if (mi == null) return false;
+    const day = Number(m[2]);
+    let ts = Date.UTC(year, mi, day);
+    if (ts > nowMs) ts = Date.UTC(year - 1, mi, day);
+    return nowMs - ts <= maxAge;
+  });
+}
+
+/**
  * Enrich HP players in place-friendly map: visitHistory, notePreview, skinny, priority nudge.
  */
 function enrichHighPriorityChaseCards(players, opts = {}) {
@@ -315,7 +359,9 @@ function enrichHighPriorityChaseCards(players, opts = {}) {
 }
 
 module.exports = {
+  DEFAULT_VISIT_DAYS,
   buildVisitHistoryFromLogs,
+  filterStaleChaseVisitHistory,
   pickChaseNotePreview,
   processFreshnessNudge,
   enrichHighPriorityChaseCards,
