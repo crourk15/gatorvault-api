@@ -358,8 +358,9 @@ services:
         value: "true"
       - key: HUB_SPACED_WORKER_TIMEOUT_MS
         value: "360000"
+      # Keep parent+one child under Pro 4GB cgroup (1536 overlapped → exit 143).
       - key: HUB_SPACED_WORKER_MAX_OLD_SPACE_MB
-        value: "1536"
+        value: "1024"
       # Soft hub refresh — do not wipe caches before rebuild (avoids cold stampede).
       - key: HUB_REFRESH_CLEAR_CACHES
         value: "false"
@@ -505,10 +506,11 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
-  # Tier B: spaced elite warm (lite now, then HP/bundle/master with gaps). No parallel lab-warm.
+  # Tier B: lite every ~30m; spaced elite only if boot chain idle (no force=1).
+  # Dual-year + force-restart every 25m overlapped fork workers → OOM 143 crash loop (Aug 18).
   - type: cron
     name: gatorvault-api-hub-warm
-    schedule: "*/25 * * * *"
+    schedule: "*/30 * * * *"
     runtime: node
     region: oregon
     rootDir: server
@@ -516,7 +518,7 @@ services:
     startCommand: node scripts/render-hub-warm-cron.js
     envVars:
       - key: HUB_WARM_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=spaced&years=2027,2028
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=spaced&years=2028
       - key: LAB_WARM_URL
         value: ""
       - key: MONITORING_CRON_SECRET

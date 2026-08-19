@@ -489,6 +489,20 @@ function yieldEventLoop() {
   return new Promise((resolve) => setImmediate(resolve));
 }
 
+/** Yield + optional pause so Render's 5s /ready probe can land between warm jobs. */
+function yieldForHealthProbe() {
+  const pauseMs = Math.max(0, parseInt(process.env.HUB_WARM_YIELD_MS || '25', 10) || 25);
+  return new Promise((resolve) => {
+    setImmediate(() => {
+      if (pauseMs <= 0) {
+        resolve();
+        return;
+      }
+      setTimeout(resolve, pauseMs);
+    });
+  });
+}
+
 async function runWarmJobBatch(jobs, timeoutMs, label) {
   let warmed = 0;
   for (const [key, fn] of jobs) {
@@ -504,7 +518,7 @@ async function runWarmJobBatch(jobs, timeoutMs, label) {
       console.warn(`[recruiting-hub-cache] ${label} skip`, key, err.message);
     }
     // Let Render /health + /ready + /api/login run between heavy builds.
-    await yieldEventLoop();
+    await yieldForHealthProbe();
   }
   return warmed;
 }
@@ -813,6 +827,10 @@ let spacedEliteQueued = false;
 let spacedEliteGeneration = 0;
 /** @type {ReturnType<typeof setTimeout>[]} */
 let spacedEliteStepTimers = [];
+/** @type {import('child_process').ChildProcess | null} */
+let spacedEliteActiveChild = null;
+/** Prevent overlapping fork workers (OOM → exit 143 crash loop). */
+let spacedEliteWorkerChain = Promise.resolve();
 
 function softGc() {
   try {
@@ -820,6 +838,18 @@ function softGc() {
   } catch {
     /* optional */
   }
+}
+
+function killSpacedEliteChild(reason) {
+  const child = spacedEliteActiveChild;
+  if (!child || child.killed) return;
+  console.warn('[recruiting-hub] killing spaced worker', reason, 'pid', child.pid);
+  try {
+    child.kill('SIGKILL');
+  } catch {
+    /* ignore */
+  }
+  spacedEliteActiveChild = null;
 }
 
 /** Drop in-memory hub keys so HP/bundle can allocate; GETs fall back to hub-runtime disk. */
@@ -864,72 +894,85 @@ function runSpacedEliteWorker({ job, year }) {
     120000,
     parseInt(process.env.HUB_SPACED_WORKER_TIMEOUT_MS || '360000', 10) || 360000
   );
-  return new Promise((resolve, reject) => {
-    // Cap child heap so OOM kills the worker, not gatorvault-api (Pro 4GB shared cgroup).
-    const childHeapMb = Math.max(
-      512,
-      parseInt(process.env.HUB_SPACED_WORKER_MAX_OLD_SPACE_MB || '1536', 10) || 1536
-    );
-    // --import tsx so HP worker can require .ts modules (bundle is plain JS).
-    const child = spawn(
-      process.execPath,
-      [
-        `--max-old-space-size=${childHeapMb}`,
-        '--import',
-        'tsx',
-        script,
-        `--job=${job}`,
-        `--year=${year}`,
-      ],
-      {
-        env: {
-          ...process.env,
-          HUB_BUNDLE_SEQUENTIAL: 'true',
-        },
-        stdio: ['ignore', 'pipe', 'pipe'],
-      }
-    );
-    let stdout = '';
-    let stderr = '';
-    const timer = setTimeout(() => {
-      try {
-        child.kill('SIGKILL');
-      } catch {
-        /* ignore */
-      }
-      reject(new Error(`spaced worker ${job}:${year} timed out after ${timeoutMs}ms`));
-    }, timeoutMs);
-    if (typeof timer.unref === 'function') timer.unref();
-    child.stdout.on('data', (chunk) => {
-      stdout += String(chunk);
-    });
-    child.stderr.on('data', (chunk) => {
-      stderr += String(chunk);
-    });
-    child.on('error', (err) => {
-      clearTimeout(timer);
-      reject(err);
-    });
-    child.on('close', (code, signal) => {
-      clearTimeout(timer);
-      if (code === 0) {
-        let parsed = null;
-        try {
-          const line = stdout.trim().split('\n').filter(Boolean).pop();
-          parsed = line ? JSON.parse(line) : null;
-        } catch {
-          parsed = null;
-        }
-        resolve({ ok: true, job, year, code, parsed, stderr: stderr.slice(-500) });
-        return;
-      }
-      reject(
-        new Error(
-          `spaced worker ${job}:${year} exit ${code}${signal ? `/${signal}` : ''}: ${stderr.slice(-400) || stdout.slice(-200)}`
-        )
+  // Serialize forks — hub-warm force-restart used to overlap 1.5GB children → cgroup OOM → 143.
+  const run = () =>
+    new Promise((resolve, reject) => {
+      // Cap child heap so OOM kills the worker, not gatorvault-api (Pro 4GB shared cgroup).
+      // Default 1024 (was 1536): parent + child + lite restore still fit; override via env.
+      const childHeapMb = Math.max(
+        512,
+        parseInt(process.env.HUB_SPACED_WORKER_MAX_OLD_SPACE_MB || '1024', 10) || 1024
       );
+      // --import tsx so HP worker can require .ts modules (bundle is plain JS).
+      const child = spawn(
+        process.execPath,
+        [
+          `--max-old-space-size=${childHeapMb}`,
+          '--import',
+          'tsx',
+          script,
+          `--job=${job}`,
+          `--year=${year}`,
+        ],
+        {
+          env: {
+            ...process.env,
+            HUB_BUNDLE_SEQUENTIAL: 'true',
+          },
+          stdio: ['ignore', 'pipe', 'pipe'],
+        }
+      );
+      spacedEliteActiveChild = child;
+      let stdout = '';
+      let stderr = '';
+      const timer = setTimeout(() => {
+        try {
+          child.kill('SIGKILL');
+        } catch {
+          /* ignore */
+        }
+        reject(new Error(`spaced worker ${job}:${year} timed out after ${timeoutMs}ms`));
+      }, timeoutMs);
+      if (typeof timer.unref === 'function') timer.unref();
+      child.stdout.on('data', (chunk) => {
+        stdout += String(chunk);
+      });
+      child.stderr.on('data', (chunk) => {
+        stderr += String(chunk);
+      });
+      child.on('error', (err) => {
+        clearTimeout(timer);
+        if (spacedEliteActiveChild === child) spacedEliteActiveChild = null;
+        reject(err);
+      });
+      child.on('close', (code, signal) => {
+        clearTimeout(timer);
+        if (spacedEliteActiveChild === child) spacedEliteActiveChild = null;
+        if (code === 0) {
+          let parsed = null;
+          try {
+            const line = stdout.trim().split('\n').filter(Boolean).pop();
+            parsed = line ? JSON.parse(line) : null;
+          } catch {
+            parsed = null;
+          }
+          resolve({ ok: true, job, year, code, parsed, stderr: stderr.slice(-500) });
+          return;
+        }
+        reject(
+          new Error(
+            `spaced worker ${job}:${year} exit ${code}${signal ? `/${signal}` : ''}: ${stderr.slice(-400) || stdout.slice(-200)}`
+          )
+        );
+      });
     });
-  });
+
+  const next = spacedEliteWorkerChain.then(run, run);
+  spacedEliteWorkerChain = next.then(
+    () => {},
+    () => {}
+  );
+  return next;
 }
 
 function primeHubBundleFromDisk(year) {
@@ -991,11 +1034,14 @@ function clearSpacedEliteTimers() {
  * Avoids the Promise.all / dual-year stampede that OOM'd Starter.
  */
 function scheduleSpacedEliteFill(options = {}) {
-  // Default: never stack chains (cron/boot overlap). force=true cancels pending steps only.
+  // Default: never stack chains (cron/boot overlap). force=true cancels pending steps + kills worker.
   if (spacedEliteQueued && options.force !== true) {
     return { ok: true, queued: true, already: true };
   }
 
+  if (options.force === true) {
+    killSpacedEliteChild('force-reschedule');
+  }
   clearSpacedEliteTimers();
   spacedEliteQueued = true;
   const generation = ++spacedEliteGeneration;
