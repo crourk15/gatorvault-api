@@ -1,37 +1,40 @@
-# Meta creatives v2 (simplified + humanized)
+# Meta creatives v2 / v3 (simplified + humanized)
 
-Built from Meta Creative Performance recommendations — **outside Meta** (local generation).
+Built outside Meta from Creative Performance recommendations.
 
-## What changed vs the old cluttered creative
+## Upload this video (Meta-safe)
 
-| Meta flag | Fix |
-|-----------|-----|
-| Visual clutter (vault + stadium + trophies + many phones) | One phone + one fan + navy brand field |
-| No human element | Expressive Gators fan face |
-| Static-only Advantage+ | 15s vertical reel for Stories/Reels |
-| Mobile text legibility | Large GatorVault + FutureCast / player name |
+**File:** `gv-meta-reel-UPLOAD-THIS.mp4` (same as `gv-meta-reel-v3-15s.mp4`)
 
-## Files (upload these in Ads Manager)
+Specs Meta wants:
+- MP4, H.264 video + **AAC audio** (silent track — required; video-only files often fail upload)
+- 1080x1920 (9:16), 15s, ~2 MB (under 4 GB)
+- Fast-start enabled
+
+Do **not** upload `gv-meta-reel-v2-15s.mp4` — that was video-only and can fail Ads Manager upload.
+
+## Stills
 
 | File | Placement |
 |------|-----------|
-| `gv-meta-feed-v2-fan-futurecast.png` | Feed / single image (1:1) |
-| `gv-meta-stories-v2-fan-futurecast.png` | Stories / Reels static (9:16) |
-| `gv-meta-reel-v2-15s.mp4` | Reels / Stories video (~15s, 1080x1920) |
-| `gv-reel-frame-0*.png` | Optional stills / thumbnail source |
+| `gv-meta-feed-v2-fan-futurecast.png` | Feed 1:1 |
+| `gv-meta-stories-v2-fan-futurecast.png` | Stories 9:16 |
+| `gv-reel-v3-01-hook-3s.png` | First-3s energy (also in reel) |
+| `gv-reel-v3-02-product-soundoff.png` | Sound-off product frame |
+| `gv-reel-v3-03-cta-soundoff.png` | Sound-off CTA |
 
-## Suggested primary text (Ads Manager)
+## Video structure (sound-off)
+
+1. 0–3s: fan reaction + BREAKING / Priority Chase update
+2. 3–11s: FutureCast phone (Izayah Vickers) + big text overlays
+3. 11–15s: Download free / App Store CTA
+
+## Ads copy
 
 **Headline:** Florida recruiting, unlocked.
 
-**Primary text:**
-GatorVault shows who Florida is chasing — live FutureCast boards, not rumor noise.
-See Priority Chase intel (like Izayah Vickers) in one tap.
+**Primary text:** GatorVault shows who Florida is chasing — live FutureCast boards, not rumor noise.
 
 **CTA:** Download / Install now
 
-## Notes
-
-- Faces are generated fan creatives (not real athletes / not NIL likeness).
-- Phone UI is illustrative FutureCast chrome.
-- Upload these as custom creatives — do not rebuild inside Meta Advantage+.
+Faces are generated fans (not real athletes / NIL).
