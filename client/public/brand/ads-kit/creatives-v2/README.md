@@ -1,40 +1,31 @@
-# Meta creatives v2 / v3 (simplified + humanized)
+# Meta creatives — upload guide
 
-Built outside Meta from Creative Performance recommendations.
+## A/B test first (Meta recommendation)
 
-## Upload this video (Meta-safe)
+Use the **Gators jersey + big type** still as challenger vs your current Single Image Ad:
 
-**File:** `gv-meta-reel-UPLOAD-THIS.mp4` (same as `gv-meta-reel-v3-15s.mp4`)
+- `gv-meta-feed-v4-jersey-bigtype.png` (Feed 1:1) — **start here**
+- `gv-meta-stories-v4-jersey-bigtype.png` (Stories 9:16)
 
-Specs Meta wants:
-- MP4, H.264 video + **AAC audio** (silent track — required; video-only files often fail upload)
-- 1080x1920 (9:16), 15s, ~2 MB (under 4 GB)
-- Fast-start enabled
+Set up the A/B test in Ads Manager (I cannot flip Advantage+ for you).
 
-Do **not** upload `gv-meta-reel-v2-15s.mp4` — that was video-only and can fail Ads Manager upload.
+## Video for Reels / Stories (upload this)
 
-## Stills
+`gv-meta-reel-UPLOAD-THIS.mp4` (= v4)
+- MP4 H.264 + AAC silent audio (Meta-safe)
+- 9:16, 15s, ~2MB
+- 0–3s fan BREAKING hook
+- Big-type FutureCast phone (Izayah Vickers / UF 42% / Priority Chase)
+- Download free CTA
 
-| File | Placement |
-|------|-----------|
-| `gv-meta-feed-v2-fan-futurecast.png` | Feed 1:1 |
-| `gv-meta-stories-v2-fan-futurecast.png` | Stories 9:16 |
-| `gv-reel-v3-01-hook-3s.png` | First-3s energy (also in reel) |
-| `gv-reel-v3-02-product-soundoff.png` | Sound-off product frame |
-| `gv-reel-v3-03-cta-soundoff.png` | Sound-off CTA |
+Do not upload `gv-meta-reel-v2-15s.mp4` (video-only — fails upload).
 
-## Video structure (sound-off)
+## Why v4
 
-1. 0–3s: fan reaction + BREAKING / Priority Chase update
-2. 3–11s: FutureCast phone (Izayah Vickers) + big text overlays
-3. 11–15s: Download free / App Store CTA
+Meta said in-phone data was still thin. v4 enlarges **UF 42%**, name, and Priority Chase for mute mobile scroll.
 
-## Ads copy
+## Copy
 
-**Headline:** Florida recruiting, unlocked.
-
-**Primary text:** GatorVault shows who Florida is chasing — live FutureCast boards, not rumor noise.
-
-**CTA:** Download / Install now
-
-Faces are generated fans (not real athletes / NIL).
+Headline: Florida recruiting, unlocked.
+Primary: GatorVault shows who Florida is chasing — live FutureCast boards, not rumor noise.
+CTA: Download / Install
