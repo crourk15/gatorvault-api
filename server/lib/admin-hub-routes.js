@@ -8,7 +8,7 @@ const productStore = require('./product-intel/product-intel-store');
 const selfRunnerEngine = require('./self-runner/self-runner-engine');
 const recruitingStore = require('./recruiting-store');
 const { loadPublishedArticles } = require('./content-store');
-const { loadUsers, changeUserEmail, findUserByEmail, saveUsers } = require('./user-store');
+const { loadUsers, changeUserEmail, findUserByEmail, saveUsers, updateUser } = require('./user-store');
 const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 const { hasPaidAccess, trialState, isSubscriptionActive } = require('./subscription-service');
 const { effectiveTier } = require('./session-auth');
@@ -859,6 +859,7 @@ function mountAdminHubRoutes(app) {
       const users = loadUsers();
       const result = await memberAnnounce.sendIosUpdateAnnounce({
         loadUsers: () => users,
+        updateUser,
         deliverEmail: mail || (async () => ({ sent: false, provider: 'dry' })),
         version,
         dryRun,
@@ -866,14 +867,6 @@ function mountAdminHubRoutes(app) {
         requireActiveAccess,
         limit,
       });
-
-      if (!dryRun && result.sent > 0) {
-        try {
-          saveUsers(users);
-        } catch (err) {
-          console.warn('[announce-ios] saveUsers failed:', err.message || err);
-        }
-      }
 
       return res.status(200).json({
         ok: true,

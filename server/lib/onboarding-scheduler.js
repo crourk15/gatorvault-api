@@ -8,6 +8,7 @@ const {
   getOnboardingEmailByDay,
   getTrialReminderEmail,
 } = require('./onboarding-emails');
+const { onboardingMaxSendsPerTick, onboardingSaveEvery } = require('./fanout-util');
 
 const DEFAULT_INTERVAL_MS = 60 * 60 * 1000; // hourly
 let timer = null;
@@ -101,6 +102,8 @@ async function processOnboardingQueue({
   hasPaidAccess,
   now = new Date(),
   pushEmailLog,
+  maxSends = onboardingMaxSendsPerTick(),
+  saveEvery = onboardingSaveEvery(),
 } = {}) {
   if (!dripEnabled()) {
     return { processed: 0, sent: 0, changed: false, disabled: true, details: [] };
@@ -122,9 +125,23 @@ async function processOnboardingQueue({
   const users = loadUsers() || [];
   let changed = false;
   let sent = 0;
+  let sinceSave = 0;
+  let hitBudget = false;
   const details = [];
+  const budget = Math.max(1, Number(maxSends) || 40);
+  const checkpointEvery = Math.max(1, Number(saveEvery) || 5);
+
+  function checkpoint() {
+    if (!changed) return;
+    saveUsers(users);
+    sinceSave = 0;
+  }
 
   for (let i = 0; i < users.length; i += 1) {
+    if (sent >= budget) {
+      hitBudget = true;
+      break;
+    }
     const user = users[i];
     if (!user?.email) continue;
     if (paidCheck(user)) continue;
@@ -141,6 +158,10 @@ async function processOnboardingQueue({
 
     const dripDays = dueDripDays(user, now);
     for (const day of dripDays) {
+      if (sent >= budget) {
+        hitBudget = true;
+        break;
+      }
       const built = getOnboardingEmailByDay(day, opts);
       if (!built) continue;
       try {
@@ -151,6 +172,7 @@ async function processOnboardingQueue({
           user.onboardingLastSentAt = now.toISOString();
           changed = true;
           sent += 1;
+          sinceSave += 1;
           details.push({ email: user.email, type: 'drip', day, ok: true });
           if (typeof pushEmailLog === 'function') {
             pushEmailLog({
@@ -160,6 +182,7 @@ async function processOnboardingQueue({
               source: 'onboarding-scheduler',
             });
           }
+          if (sinceSave >= checkpointEvery) checkpoint();
         } else {
           details.push({ email: user.email, type: 'drip', day, ok: false, error: delivery?.error || 'not_sent' });
         }
@@ -176,8 +199,14 @@ async function processOnboardingQueue({
       }
     }
 
+    if (hitBudget) break;
+
     const reminderKeys = dueTrialReminderKeys(user, now);
     for (const key of reminderKeys) {
+      if (sent >= budget) {
+        hitBudget = true;
+        break;
+      }
       const def = TRIAL_REMINDER_SEQUENCE.find((e) => e.key === key);
       if (!def) continue;
       const built = getTrialReminderEmail(def.daysLeft, opts);
@@ -191,6 +220,7 @@ async function processOnboardingQueue({
           user.onboardingLastSentAt = now.toISOString();
           changed = true;
           sent += 1;
+          sinceSave += 1;
           details.push({ email: user.email, type: 'trial_reminder', key, ok: true });
           if (typeof pushEmailLog === 'function') {
             pushEmailLog({
@@ -200,6 +230,7 @@ async function processOnboardingQueue({
               source: 'onboarding-scheduler',
             });
           }
+          if (sinceSave >= checkpointEvery) checkpoint();
         } else {
           details.push({ email: user.email, type: 'trial_reminder', key, ok: false, error: delivery?.error || 'not_sent' });
         }
@@ -211,8 +242,15 @@ async function processOnboardingQueue({
     users[i] = user;
   }
 
-  if (changed) saveUsers(users);
-  return { processed: users.length, sent, changed, details };
+  if (changed && sinceSave > 0) saveUsers(users);
+  return {
+    processed: users.length,
+    sent,
+    changed,
+    details,
+    hitBudget,
+    maxSends: budget,
+  };
 }
 
 function startOnboardingScheduler(deps = {}) {

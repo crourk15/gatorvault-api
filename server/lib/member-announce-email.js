@@ -5,6 +5,11 @@
 
 const { emailShell, ctaButton, displayNameFrom } = require('./onboarding-emails');
 const { hasPaidAccess, trialState } = require('./subscription-service');
+const {
+  mapPool,
+  announceEmailConcurrency,
+  announceSaveEvery,
+} = require('./fanout-util');
 
 const SITE_URL = String(process.env.SITE_URL || 'https://gatorvaultinsider.com').replace(/\/$/, '');
 const APP_STORE_URL =
@@ -105,15 +110,21 @@ function getIosUpdateAnnounceEmail(opts = {}) {
 
 /**
  * Send App Store update email to eligible members.
+ * Stamps are persisted incrementally (updateUser or periodic saveUsers) so a mid-run
+ * crash does not re-blast already-sent members on retry.
  */
 async function sendIosUpdateAnnounce({
   loadUsers,
   deliverEmail,
+  updateUser = null,
+  saveUsers = null,
   version = DEFAULT_VERSION,
   dryRun = false,
   force = false,
   requireActiveAccess = true,
   limit = null,
+  concurrency = announceEmailConcurrency(),
+  saveEvery = announceSaveEvery(),
 } = {}) {
   if (typeof loadUsers !== 'function' || typeof deliverEmail !== 'function') {
     throw new Error('sendIosUpdateAnnounce requires loadUsers and deliverEmail');
@@ -127,12 +138,39 @@ async function sendIosUpdateAnnounce({
   const details = [];
   let sent = 0;
   let failed = 0;
+  let sinceSave = 0;
+  const stampKey = `iosAnnounce_${String(version).replace(/[^0-9.]/g, '_')}`;
 
-  for (const user of queue) {
-    const stampKey = `iosAnnounce_${String(version).replace(/[^0-9.]/g, '_')}`;
+  /** Serialize stamp writes when sends run concurrently. */
+  let stampChain = Promise.resolve();
+  function enqueueStamp(work) {
+    const run = stampChain.then(work);
+    stampChain = run.catch(() => {});
+    return run;
+  }
+
+  async function persistStamp(user) {
+    const iso = new Date().toISOString();
+    user[stampKey] = iso;
+    if (typeof updateUser === 'function') {
+      await enqueueStamp(async () => {
+        updateUser(user.email, { [stampKey]: iso });
+      });
+      return;
+    }
+    sinceSave += 1;
+    if (typeof saveUsers === 'function' && sinceSave >= saveEvery) {
+      await enqueueStamp(async () => {
+        saveUsers(loadUsers());
+        sinceSave = 0;
+      });
+    }
+  }
+
+  await mapPool(queue, dryRun ? 1 : concurrency, async (user) => {
     if (!force && user[stampKey]) {
       details.push({ email: user.email, sent: false, reason: 'already_sent' });
-      continue;
+      return;
     }
 
     const built = getIosUpdateAnnounceEmail({
@@ -143,7 +181,7 @@ async function sendIosUpdateAnnounce({
 
     if (dryRun) {
       details.push({ email: user.email, sent: false, dryRun: true, subject: built.subject });
-      continue;
+      return;
     }
 
     try {
@@ -160,7 +198,7 @@ async function sendIosUpdateAnnounce({
         provider: delivery?.provider || null,
         id: delivery?.id || null,
       });
-      user[stampKey] = new Date().toISOString();
+      await persistStamp(user);
     } catch (err) {
       failed += 1;
       details.push({
@@ -170,6 +208,18 @@ async function sendIosUpdateAnnounce({
         error: err instanceof Error ? err.message : String(err),
       });
     }
+  });
+
+  await stampChain;
+
+  if (
+    !dryRun &&
+    sent > 0 &&
+    typeof updateUser !== 'function' &&
+    typeof saveUsers === 'function' &&
+    sinceSave > 0
+  ) {
+    saveUsers(loadUsers());
   }
 
   return {
@@ -183,6 +233,7 @@ async function sendIosUpdateAnnounce({
     skippedCount: skipped.length,
     skipped: skipped.slice(0, 50),
     details,
+    concurrency: dryRun ? 1 : concurrency,
   };
 }
 

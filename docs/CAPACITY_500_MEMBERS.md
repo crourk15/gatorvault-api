@@ -23,11 +23,12 @@ File size at 500 accounts is fine. Real risks: **lost updates** across async gap
 3. **Auth rate limits** — login / register / forgot-password (IP + email).
 4. **Durable Vault Points** — `GV_POINTS_PATH` on `/var/data` (same pattern as users).
 
-### Phase 2 — before alert coverage ≈ membership size
+### Phase 2 — alert / email fan-out (this change set)
 
-5. Visit push/email: one user-map load + bounded concurrency (`push-alert-service`, `visit-intel-email-digest`).
-6. `announce-ios` / drip: chunk sends; persist stamps incrementally; keep off `/ready` path.
-7. Stripe webhook event-id idempotency log (when web checkout is enabled).
+5. Visit push/email: one user-map load (`indexUsersByEmail`) + bounded concurrency via `fanout-util` (`PUSH_FANOUT_CONCURRENCY`, `VISIT_EMAIL_FANOUT_CONCURRENCY`).
+6. `announce-ios`: bounded concurrency + incremental `updateUser` stamps (`ANNOUNCE_EMAIL_CONCURRENCY`).
+7. Onboarding drip: per-tick send budget + checkpoint saves (`ONBOARDING_MAX_SENDS_PER_TICK`, `ONBOARDING_SAVE_EVERY`).
+8. Stripe webhook event-id idempotency log — **still open** (when web checkout is enabled).
 
 ### Phase 3 — when approaching ~1k or multi-instance
 
