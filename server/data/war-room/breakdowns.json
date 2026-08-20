@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-19T20:32:16.228Z",
+  "updatedAt": "2026-08-20T16:34:39.201Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -18515,6 +18515,42 @@
       "nflProjection": null,
       "featured": false,
       "updatedAt": "2026-08-14T12:53:51.350Z",
+      "filmWatched": true,
+      "provisional": false
+    },
+    "amaree-joshua": {
+      "playerSlug": "amaree-joshua",
+      "playerName": "Amaree Joshua",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22378421/696946060825341c8d63addc",
+          "publishedAt": "2026-08-20"
+        }
+      ],
+      "strengths": [
+        "Joshua (#71) fires off the ball with suddenness for a 6-7 frame and consistently wins first contact in the run game.",
+        "Joshua drives and finishes — locks, rides edge defenders 5+ yards, and pancakes with a nasty closing demeanor.",
+        "Joshua climbs to the second level with clean angles and engulfs LBs/DBs in space (open-field finish to the boundary).",
+        "Joshua covers ground in kick-slide, delivers a heavy initial punch, and mirrors inside counters while anchoring vs bull rush."
+      ],
+      "weaknesses": [
+        "Joshua occasionally pops high out of his stance and bends at the waist — pad level vs SEC edge speed needs knee-bend consistency.",
+        "Joshua’s punch can land wide on the shoulder pads — hand placement must tighten when length alone does not win."
+      ],
+      "comparison": "Joshua comps to Walker Little — 6-7 / ~315 tackle mold with rare length who grows mass and wins with reach/frame (size-matched within ~1–2\" of Joshua's 6-7 / 288).",
+      "schemeFit": "Joshua fits a length-first LT/RT who can grow starter mass in a power/zone hybrid room that wants finish and edge seal.",
+      "staffNotes": "Vault film desk verified 2026-08-20 from Hudl embed https://www.hudl.com/embed/video/3/22378421/696946060825341c8d63addc (~170s). Comp size-matched within ~1–2\" — not a Florida-alum default. Confirm with Charles before treating as live FutureCast card copy.",
+      "projection": "Joshua projects as develop into the OL room, earn early depth and swing-tackle snaps, then compete for a starting OT job — starter upside as a length-first tackle.",
+      "insiderNotes": "Joshua is Hillgrove LT #71 with rare 6-7 length. Tape: sudden get-off, drive finish/pancakes, second-level climb, heavy punch + kick-slide depth + anchor. Growth: pad level and hand placement. Florida offered Aug 2026; On3 Industry ~86.55; RPM still has Georgia Tech/Georgia out front with Ohio State loud.",
+      "recruitingStory": "Amaree Joshua is a 2028 OT · listed ~6-7 / 288-290 · Hillgrove (Powder Springs, GA) · On3 Industry ~86.55 · Natl ~316 · OT ~35 · GA ~38 · Florida offered Aug 2026.",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-08-20T16:34:39.189Z",
       "filmWatched": true,
       "provisional": false
     }
