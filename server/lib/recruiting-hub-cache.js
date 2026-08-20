@@ -1076,6 +1076,47 @@ function primeHpFromDisk(year) {
   return true;
 }
 
+/**
+ * After skip-boot-warm: fill memory from hub-runtime / hub-snapshot JSON only.
+ * No elite rebuilds — keeps /ready fast while GET no-sync still has something to serve.
+ */
+function primeLiteKeysFromDisk(years) {
+  const list = (years && years.length ? years : [2027, 2028]).filter((y) => Number.isFinite(y));
+  let primed = 0;
+  const tryPrime = (cacheKey, endpoint, year) => {
+    const value = readHubDiskSnapshot(endpoint, year);
+    if (value == null) return;
+    if (endpoint === 'footprint' && !isUsableFootprintSnapshot(value, year)) return;
+    cacheHubValue(cacheKey, value);
+    primed += 1;
+  };
+
+  tryPrime(eliteClassOverviewAllCacheKey(), 'class-overview-all', null);
+  for (const year of list) {
+    tryPrime(eliteClassOverviewCacheKey(year), 'class-overview', year);
+    tryPrime(classSnapshotCacheKey(year), 'class-metrics', year);
+    tryPrime(`hub:elite:hero:${year}`, 'hero', year);
+    tryPrime(hubCommitsCacheKey(year), 'commits', year);
+    tryPrime(hubFootprintCacheKey(year), 'footprint', year);
+    tryPrime(hubTickerCacheKey(year), 'ticker', year);
+    tryPrime(eliteBundleCacheKey(year), 'bundle', year);
+    try {
+      if (primeHpFromDisk(year)) primed += 1;
+    } catch {
+      /* optional Lab seed */
+    }
+  }
+
+  if (primed > 0) {
+    ready = true;
+    warmKeyCount = Math.max(warmKeyCount, primed);
+    lastWarmAt = new Date().toISOString();
+  }
+  getMeta();
+  console.log('[recruiting-hub] primed lite keys from disk', { primed, years: list });
+  return primed;
+}
+
 async function warmBundleViaWorker(year) {
   releaseHubMemoryForHeavyStep(`worker-bundle-${year}`);
   await runSpacedEliteWorker({ job: 'bundle', year });
@@ -1334,7 +1375,39 @@ function scheduleHubBootPipeline() {
       'ms',
       bootWarmDecision
     );
+    // Disk prime only (no rebuild) so hubReady is not stuck "building" until :12/:42 cron.
+    const seedYears = parseWarmYears(process.env.HUB_BOOT_WARM_YEARS, [2027, 2028]);
+    const seedDelay = Math.max(
+      5000,
+      parseInt(process.env.HUB_DISK_PRIME_DELAY_MS || '15000', 10) || 15000
+    );
+    bootWarmDecision = {
+      ...bootWarmDecision,
+      diskPrimeScheduled: true,
+      diskPrimeDelayMs: seedDelay,
+      diskPrimeYears: seedYears,
+    };
     getMeta();
+    setTimeout(() => {
+      try {
+        const n = primeLiteKeysFromDisk(seedYears);
+        bootWarmDecision = {
+          ...(bootWarmDecision || {}),
+          diskPrimeDone: true,
+          diskPrimeCount: n,
+          diskPrimeAt: new Date().toISOString(),
+        };
+        getMeta();
+      } catch (err) {
+        console.warn('[recruiting-hub] disk prime failed:', err.message);
+        bootWarmDecision = {
+          ...(bootWarmDecision || {}),
+          diskPrimeDone: false,
+          diskPrimeError: err.message,
+        };
+        getMeta();
+      }
+    }, seedDelay);
     return;
   }
 
@@ -1520,4 +1593,6 @@ module.exports = {
   writeHubDiskSnapshot,
   persistDurableCacheValue,
   hubGetNoSyncBuild,
+  primeLiteKeysFromDisk,
+  primeHpFromDisk,
 };
