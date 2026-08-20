@@ -337,6 +337,38 @@ const healTruthBySlug = new Map<string, HealBoardTruth>();
 let healTruthWarmAt = 0;
 let healTruthWarmInFlight: Promise<void> | null = null;
 const HEAL_TRUTH_TTL_MS = 5 * 60_000;
+/** Tiny allowlist floors — sync-safe when HP_HEAL_BOOT=false and players.json warm never ran. */
+let healFloors2028: Map<string, HealBoardTruth> | null = null;
+
+function loadHealFloors2028(): Map<string, HealBoardTruth> {
+  if (healFloors2028) return healFloors2028;
+  const map = new Map<string, HealBoardTruth>();
+  try {
+    const fs = require('node:fs') as typeof import('node:fs');
+    const path = require('node:path') as typeof import('node:path');
+    const file = path.join(__dirname, '../../data/futurecast/hp-heal-floors-2028.json');
+    if (!fs.existsSync(file)) {
+      healFloors2028 = map;
+      return map;
+    }
+    const raw = JSON.parse(fs.readFileSync(file, 'utf8')) as {
+      floors?: Record<string, HealBoardTruth>;
+    };
+    for (const [slug, truth] of Object.entries(raw.floors || {})) {
+      const key = String(slug || '').toLowerCase();
+      if (!key || !truth) continue;
+      map.set(key, {
+        storeRpm: truth.storeRpm ?? null,
+        boardRpm: truth.boardRpm ?? null,
+        storeComps: Array.isArray(truth.storeComps) ? truth.storeComps : [],
+      });
+    }
+  } catch {
+    /* optional */
+  }
+  healFloors2028 = map;
+  return map;
+}
 
 function yieldHealEventLoop(): Promise<void> {
   return new Promise((resolve) => setImmediate(resolve));
@@ -345,6 +377,11 @@ function yieldHealEventLoop(): Promise<void> {
 export function ensureHealPlayersWarm(): Promise<void> {
   scheduleHealPlayersWarm();
   return healTruthWarmInFlight || Promise.resolve();
+}
+
+/** True when full players.json heal index is hot (not just slim floors). */
+export function isHealPlayersWarm(): boolean {
+  return healTruthBySlug.size > 0 && Date.now() - healTruthWarmAt <= HEAL_TRUTH_TTL_MS;
 }
 
 /**
@@ -463,8 +500,10 @@ function scheduleHealPlayersWarm(): void {
 
 function lookupHealBoardTruth(slug: string): HealBoardTruth | null {
   if (!slug) return null;
-  // Map only — never schedule ~9MB players.json warm from the request path.
-  return healTruthBySlug.get(slug) || null;
+  // Prefer full warm Map; fall back to slim 2028 floors (never parse players.json here).
+  const warm = healTruthBySlug.get(slug);
+  if (warm) return warm;
+  return loadHealFloors2028().get(slug) || null;
 }
 
 function boardTruthFromPlayer(
@@ -662,6 +701,9 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
   if (rpm == null && boardRpm != null && boardRpm > 0) {
     nextRpm = boardRpm;
     poisoned = true;
+  } else if (rpm == null && storeRpm != null && storeRpm > 0) {
+    nextRpm = storeRpm;
+    poisoned = true;
   }
   // Drift vs On3 Florida row (Anthony 9 vs 63; Tristian FSU% stored as ufRpm 22 vs UF ~8).
   if (
@@ -749,6 +791,15 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
   let nextUf = uf;
   if (poisoned && Number.isFinite(uf) && uf > anchor + 15) {
     nextUf = Math.min(99, Math.max(1, anchor + 10));
+  }
+  // Antonio-style: UF Shot stuck at 11 while On3 Florida board is ~41 — lift shot with RPM.
+  if (
+    poisoned &&
+    nextRpm != null &&
+    nextRpm > 0 &&
+    (!Number.isFinite(uf) || uf <= 0 || uf + 15 < nextRpm)
+  ) {
+    nextUf = nextRpm;
   }
   // Rival clearly ahead of true UF market — Closest cannot keep a fake Florida share.
   if (

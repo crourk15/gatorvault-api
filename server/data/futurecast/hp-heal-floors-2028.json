@@ -1,0 +1,683 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-20T17:10:47.768Z",
+  "description": "Slim 2028 HP heal floors — UF boardRpm when full players.json warm is cold (HP_HEAL_BOOT=false).",
+  "floors": {
+    "kaleb-ballard": {
+      "boardRpm": 10,
+      "storeRpm": 10,
+      "storeComps": [
+        {
+          "name": "Auburn",
+          "pct": 15.5
+        },
+        {
+          "name": "Alabama",
+          "pct": 13.6
+        },
+        {
+          "name": "Mississippi State",
+          "pct": 11.7
+        },
+        {
+          "name": "Florida State",
+          "pct": 9.7
+        }
+      ]
+    },
+    "brysen-wright": {
+      "boardRpm": 10,
+      "storeRpm": 10,
+      "storeComps": [
+        {
+          "name": "Miami",
+          "pct": 31.1
+        },
+        {
+          "name": "Florida State",
+          "pct": 8.8
+        },
+        {
+          "name": "Ohio State",
+          "pct": 7.3
+        },
+        {
+          "name": "Georgia",
+          "pct": 7.3
+        }
+      ]
+    },
+    "asher-ghioto": {
+      "boardRpm": 8,
+      "storeRpm": 8,
+      "storeComps": [
+        {
+          "name": "Miami",
+          "pct": 67.1
+        },
+        {
+          "name": "Florida State",
+          "pct": 6.2
+        }
+      ]
+    },
+    "antonio-thomas-jr": {
+      "boardRpm": 41,
+      "storeRpm": 41,
+      "storeComps": [
+        {
+          "name": "Miami",
+          "pct": 13.4
+        },
+        {
+          "name": "Auburn",
+          "pct": 11.5
+        }
+      ]
+    },
+    "cassell-cruickshank": {
+      "boardRpm": 21,
+      "storeRpm": 21,
+      "storeComps": [
+        {
+          "name": "Alabama",
+          "pct": 18.6
+        }
+      ]
+    },
+    "prince-che": {
+      "boardRpm": 13,
+      "storeRpm": 13,
+      "storeComps": [
+        {
+          "name": "Clemson",
+          "pct": 27.6
+        },
+        {
+          "name": "Georgia",
+          "pct": 11.3
+        },
+        {
+          "name": "Oklahoma",
+          "pct": 9.4
+        }
+      ]
+    },
+    "gabriel-player": {
+      "boardRpm": 1,
+      "storeRpm": 1,
+      "storeComps": []
+    },
+    "andre-alexander": {
+      "boardRpm": 23,
+      "storeRpm": 23,
+      "storeComps": [
+        {
+          "name": "Alabama",
+          "pct": 20.4
+        }
+      ]
+    },
+    "bubba-brown": {
+      "boardRpm": 19,
+      "storeRpm": 19,
+      "storeComps": [
+        {
+          "name": "Georgia",
+          "pct": 40.3
+        },
+        {
+          "name": "Auburn",
+          "pct": 16.5
+        }
+      ]
+    },
+    "xander-edwards": {
+      "boardRpm": 12,
+      "storeRpm": 12,
+      "storeComps": [
+        {
+          "name": "Notre Dame",
+          "pct": 38.1
+        },
+        {
+          "name": "Miami",
+          "pct": 20.5
+        },
+        {
+          "name": "Ohio State",
+          "pct": 5.5
+        },
+        {
+          "name": "USF",
+          "pct": 5
+        }
+      ]
+    },
+    "izayah-vickers": {
+      "boardRpm": 94,
+      "storeRpm": 94,
+      "storeComps": []
+    },
+    "malakhi-dudley": {
+      "boardRpm": 7,
+      "storeRpm": 7,
+      "storeComps": [
+        {
+          "name": "Georgia",
+          "pct": 10.5
+        },
+        {
+          "name": "Auburn",
+          "pct": 9.2
+        },
+        {
+          "name": "Tennessee",
+          "pct": 7.9
+        },
+        {
+          "name": "Arkansas",
+          "pct": 6.6
+        }
+      ]
+    },
+    "merrick-ham": {
+      "boardRpm": 5,
+      "storeRpm": 5,
+      "storeComps": [
+        {
+          "name": "Georgia",
+          "pct": 15.6
+        },
+        {
+          "name": "Auburn",
+          "pct": 13.7
+        },
+        {
+          "name": "Vanderbilt",
+          "pct": 11.7
+        },
+        {
+          "name": "Notre Dame",
+          "pct": 5.3
+        }
+      ]
+    },
+    "braxton-rein": {
+      "boardRpm": 30,
+      "storeRpm": 29,
+      "storeComps": [
+        {
+          "name": "Alabama",
+          "pct": 14.1
+        },
+        {
+          "name": "Ole Miss",
+          "pct": 12.1
+        }
+      ]
+    },
+    "landon-dawson": {
+      "boardRpm": 7,
+      "storeRpm": 7,
+      "storeComps": [
+        {
+          "name": "Ohio State",
+          "pct": 27.9
+        },
+        {
+          "name": "Purdue",
+          "pct": 24.4
+        },
+        {
+          "name": "Pittsburgh",
+          "pct": 14.4
+        },
+        {
+          "name": "West Virginia",
+          "pct": 6.5
+        }
+      ]
+    },
+    "taihj-moore": {
+      "boardRpm": 14,
+      "storeRpm": 14,
+      "storeComps": [
+        {
+          "name": "Miami",
+          "pct": 42.2
+        },
+        {
+          "name": "Florida State",
+          "pct": 11.9
+        },
+        {
+          "name": "Rutgers",
+          "pct": 9.9
+        }
+      ]
+    },
+    "tristin-gaines": {
+      "boardRpm": 25,
+      "storeRpm": 25,
+      "storeComps": [
+        {
+          "name": "Texas Tech",
+          "pct": 28.1
+        }
+      ]
+    },
+    "tristian-henderson": {
+      "boardRpm": 8,
+      "storeRpm": 7,
+      "storeComps": [
+        {
+          "name": "Florida State",
+          "pct": 21.9
+        },
+        {
+          "name": "Georgia",
+          "pct": 19.2
+        },
+        {
+          "name": "Auburn",
+          "pct": 9
+        },
+        {
+          "name": "LSU",
+          "pct": 7.5
+        }
+      ]
+    },
+    "dominick-harris-payne": {
+      "boardRpm": 98,
+      "storeRpm": 98,
+      "storeComps": []
+    },
+    "cyion-smith": {
+      "boardRpm": 97,
+      "storeRpm": 97,
+      "storeComps": []
+    },
+    "brady-quinn": {
+      "boardRpm": 21,
+      "storeRpm": 21,
+      "storeComps": [
+        {
+          "name": "Miami",
+          "pct": 24.4
+        },
+        {
+          "name": "UCF",
+          "pct": 10
+        },
+        {
+          "name": "Syracuse",
+          "pct": 8.3
+        },
+        {
+          "name": "Nebraska",
+          "pct": 8.3
+        }
+      ]
+    },
+    "john-matthews": {
+      "boardRpm": 60,
+      "storeRpm": 60,
+      "storeComps": []
+    },
+    "bryce-willingham": {
+      "boardRpm": 19,
+      "storeRpm": 19,
+      "storeComps": [
+        {
+          "name": "Georgia",
+          "pct": 40.3
+        }
+      ]
+    },
+    "quinton-rolle-jr": {
+      "boardRpm": 15,
+      "storeRpm": 15,
+      "storeComps": [
+        {
+          "name": "Auburn",
+          "pct": 13.1
+        },
+        {
+          "name": "Kentucky",
+          "pct": 11.2
+        },
+        {
+          "name": "SMU",
+          "pct": 9.3
+        },
+        {
+          "name": "Pittsburgh",
+          "pct": 9.3
+        }
+      ]
+    },
+    "jordon-gorham": {
+      "boardRpm": 21,
+      "storeRpm": 21,
+      "storeComps": [
+        {
+          "name": "South Carolina",
+          "pct": 45
+        },
+        {
+          "name": "Georgia",
+          "pct": 9.6
+        },
+        {
+          "name": "Nebraska",
+          "pct": 8
+        },
+        {
+          "name": "Coastal Carolina",
+          "pct": 7.4
+        }
+      ]
+    },
+    "kahmaree-crumity": {
+      "boardRpm": 16,
+      "storeRpm": 16,
+      "storeComps": [
+        {
+          "name": "Clemson",
+          "pct": 13.8
+        },
+        {
+          "name": "Ole Miss",
+          "pct": 11.9
+        },
+        {
+          "name": "Notre Dame",
+          "pct": 9.9
+        }
+      ]
+    },
+    "pj-evans": {
+      "boardRpm": 34,
+      "storeRpm": 34,
+      "storeComps": [
+        {
+          "name": "Ole Miss",
+          "pct": 38.9
+        }
+      ]
+    },
+    "anthony-howard-jr": {
+      "boardRpm": 63,
+      "storeRpm": 63,
+      "storeComps": [
+        {
+          "name": "Miami",
+          "pct": 19.7
+        },
+        {
+          "name": "Florida State",
+          "pct": 9.2
+        }
+      ]
+    },
+    "joey-fleming": {
+      "boardRpm": 1,
+      "storeRpm": 47,
+      "storeComps": []
+    },
+    "lorenzo-mcmullen-jr": {
+      "boardRpm": 6,
+      "storeRpm": 6,
+      "storeComps": [
+        {
+          "name": "Ohio State",
+          "pct": 35.1
+        },
+        {
+          "name": "Notre Dame",
+          "pct": 16.1
+        },
+        {
+          "name": "Cincinnati",
+          "pct": 7.5
+        },
+        {
+          "name": "Penn State",
+          "pct": 6.3
+        }
+      ]
+    },
+    "hudson-west": {
+      "boardRpm": 99,
+      "storeRpm": 99,
+      "storeComps": []
+    },
+    "nikolay-petrushev": {
+      "boardRpm": 70,
+      "storeRpm": 70,
+      "storeComps": [
+        {
+          "name": "UCF",
+          "pct": 10.2
+        },
+        {
+          "name": "Georgia Tech",
+          "pct": 8.8
+        }
+      ]
+    },
+    "phoenix-evans": {
+      "boardRpm": 3,
+      "storeRpm": 3,
+      "storeComps": [
+        {
+          "name": "Rutgers",
+          "pct": 24.5
+        },
+        {
+          "name": "Penn State",
+          "pct": 13.8
+        },
+        {
+          "name": "Notre Dame",
+          "pct": 6.9
+        },
+        {
+          "name": "Texas A&M",
+          "pct": 5.7
+        }
+      ]
+    },
+    "ridge-janes": {
+      "boardRpm": 3,
+      "storeRpm": 3,
+      "storeComps": [
+        {
+          "name": "Missouri",
+          "pct": 21.9
+        },
+        {
+          "name": "Purdue",
+          "pct": 8.7
+        },
+        {
+          "name": "Tennessee",
+          "pct": 7.5
+        },
+        {
+          "name": "Alabama",
+          "pct": 6.2
+        }
+      ]
+    },
+    "zaiden-jernigan": {
+      "boardRpm": 1,
+      "storeRpm": 1,
+      "storeComps": [
+        {
+          "name": "Mississippi State",
+          "pct": 19.5
+        },
+        {
+          "name": "Ole Miss",
+          "pct": 17.1
+        },
+        {
+          "name": "Auburn",
+          "pct": 14.6
+        },
+        {
+          "name": "Notre Dame",
+          "pct": 12.2
+        }
+      ]
+    },
+    "nate-dollard": {
+      "boardRpm": 1,
+      "storeRpm": 4,
+      "storeComps": [
+        {
+          "name": "NC State",
+          "pct": 18.8
+        },
+        {
+          "name": "Tennessee",
+          "pct": 16.4
+        },
+        {
+          "name": "South Carolina",
+          "pct": 9.7
+        },
+        {
+          "name": "North Carolina",
+          "pct": 8.1
+        }
+      ]
+    },
+    "tyree-mannings-jr": {
+      "boardRpm": 96,
+      "storeRpm": 96,
+      "storeComps": []
+    },
+    "dion-edwards": {
+      "boardRpm": 1,
+      "storeRpm": 5,
+      "storeComps": [
+        {
+          "name": "Tennessee",
+          "pct": 32.7
+        },
+        {
+          "name": "Vanderbilt",
+          "pct": 12.1
+        },
+        {
+          "name": "Clemson",
+          "pct": 10.4
+        },
+        {
+          "name": "Kentucky",
+          "pct": 8.6
+        }
+      ]
+    },
+    "antijuan-wilkes-jr": {
+      "boardRpm": 1,
+      "storeRpm": 84,
+      "storeComps": [
+        {
+          "name": "Michigan",
+          "pct": 28.1
+        },
+        {
+          "name": "Michigan State",
+          "pct": 24.6
+        },
+        {
+          "name": "Ohio State",
+          "pct": 11
+        },
+        {
+          "name": "Missouri",
+          "pct": 5
+        }
+      ]
+    },
+    "nehemiah-mccary": {
+      "boardRpm": 1,
+      "storeRpm": 1,
+      "storeComps": [
+        {
+          "name": "Auburn",
+          "pct": 6.6
+        }
+      ]
+    },
+    "samuel-bailey": {
+      "boardRpm": 20,
+      "storeRpm": 20,
+      "storeComps": [
+        {
+          "name": "Alabama",
+          "pct": 26.6
+        },
+        {
+          "name": "Ohio State",
+          "pct": 23.3
+        },
+        {
+          "name": "Auburn",
+          "pct": 9.1
+        },
+        {
+          "name": "USF",
+          "pct": 8.3
+        }
+      ]
+    },
+    "derrell-hines-jr": {
+      "boardRpm": 18,
+      "storeRpm": 18,
+      "storeComps": [
+        {
+          "name": "Auburn",
+          "pct": 15.5
+        },
+        {
+          "name": "Nebraska",
+          "pct": 13.3
+        }
+      ]
+    },
+    "jamarcus-johnson": {
+      "boardRpm": 49,
+      "storeRpm": 49,
+      "storeComps": [
+        {
+          "name": "Georgia",
+          "pct": 23.2
+        }
+      ]
+    },
+    "denairo-girton-jr": {
+      "boardRpm": 9,
+      "storeRpm": 9,
+      "storeComps": [
+        {
+          "name": "Penn State",
+          "pct": 37.8
+        },
+        {
+          "name": "Maryland",
+          "pct": 22.7
+        },
+        {
+          "name": "Virginia Tech",
+          "pct": 10.6
+        }
+      ]
+    }
+  }
+}

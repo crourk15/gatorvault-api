@@ -1488,9 +1488,19 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       // Persist healed plate cheaply (no full rebuild). Full refresh stays on
       // hub-warm / boot spaced Lab warm. Throttle writes so no-store traffic
       // does not stringify the plate on every phone refresh.
+      // Only persist when heal actually repaired UF RPM / leads — cold heal used to
+      // stamp Miami on Antonio and rewrite durable disk every minute.
       const writeKey = `hp-healed-write:${classYear}`;
       const lastWrite = Number((global as any).__GV_HP_HEALED_WRITE_AT__?.[writeKey] || 0);
-      if (Date.now() - lastWrite > 60_000) {
+      const healedPlayers = Array.isArray((healed as { players?: unknown[] })?.players)
+        ? ((healed as { players: Array<Record<string, unknown>> }).players || [])
+        : [];
+      const healLookedUseful = healedPlayers.some((p) => {
+        const rpm = Number(p?.ufRpmPct);
+        const lead = String(p?.on3Lead || '');
+        return (Number.isFinite(rpm) && rpm > 0) || (lead && lead !== '—' && lead !== '-');
+      });
+      if (healLookedUseful && Date.now() - lastWrite > 60_000) {
         (global as any).__GV_HP_HEALED_WRITE_AT__ = {
           ...((global as any).__GV_HP_HEALED_WRITE_AT__ || {}),
           [writeKey]: Date.now(),
