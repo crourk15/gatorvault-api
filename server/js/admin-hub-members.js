@@ -70,6 +70,23 @@
     }).join(' · ');
   }
 
+  function renderByChannel(byChannel) {
+    var rows = Array.isArray(byChannel) ? byChannel : [];
+    if (!rows.length) return 'Channel: none in this window';
+    var labels = { website: 'Website', ios: 'iOS app', unknown: 'Unknown' };
+    return 'Channel: ' + rows.map(function (r) {
+      var key = String(r.channel || 'unknown');
+      return (labels[key] || key) + ' ' + String(r.count || 0);
+    }).join(' · ');
+  }
+
+  function channelLabel(row) {
+    var ch = String(row.signupChannel || 'unknown').toLowerCase();
+    if (ch === 'website') return 'Website';
+    if (ch === 'ios') return 'iOS app';
+    return 'Unknown';
+  }
+
   function copyText(text) {
     if (!text) return Promise.reject(new Error('Nothing to copy'));
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -177,6 +194,7 @@
           + ' · Trial ' + esc(counts.trial || 0)
           + ' · Paid ' + esc(counts.paid || 0)
           + ' · Expired ' + esc(counts.expired || 0) + '</div>'
+          + '<div style="margin-top:6px">' + esc(renderByChannel(payload.byChannel)) + '</div>'
           + '<div style="margin-top:6px">' + esc(renderBySource(payload.bySource)) + '</div>';
       }
 
@@ -194,6 +212,7 @@
           + '<td>' + esc(fmtWhen(m.createdAt)) + '</td>'
           + '<td><span class="' + accessClass(m.access) + '">' + esc(accessLabel(m.access)) + '</span></td>'
           + '<td>' + esc(m.tier || '—') + '</td>'
+          + '<td>' + esc(channelLabel(m)) + '</td>'
           + '<td><div>' + esc(sourceLabel(m)) + '</div>'
           + (detail ? '<div class="hub-mem-email">' + esc(detail) + '</div>' : '')
           + '</td>'
@@ -208,7 +227,7 @@
         '<div class="hub-table-wrap">'
         + '<table class="hub-table" aria-label="Recent members">'
         + '<thead><tr>'
-        + '<th>Member</th><th>Joined</th><th>Access</th><th>Tier</th><th>Source</th><th>Billing</th><th>Trial end</th><th></th>'
+        + '<th>Member</th><th>Joined</th><th>Access</th><th>Tier</th><th>Channel</th><th>Source</th><th>Billing</th><th>Trial end</th><th></th>'
         + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
 
       body.querySelectorAll('.hub-mem-copy').forEach(function (btn) {

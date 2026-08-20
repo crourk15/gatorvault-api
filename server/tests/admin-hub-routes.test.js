@@ -229,7 +229,8 @@ test('listRecentMembers returns newest first without passwordHash', () => {
         referrer: 't.co',
         landingPath: '/join/?utm_source=x',
         capturedAt: new Date(now - 2 * 60 * 60 * 1000).toISOString()
-      }
+      },
+      signupChannel: 'website'
     },
     {
       email: 'paid@example.com',
@@ -244,7 +245,8 @@ test('listRecentMembers returns newest first without passwordHash', () => {
         tier: 'insider',
         stripeCustomerId: 'cus_test'
       },
-      tier: 'insider'
+      tier: 'insider',
+      signupChannel: 'ios'
     }
   ]);
 
@@ -255,10 +257,16 @@ test('listRecentMembers returns newest first without passwordHash', () => {
     assert.equal(all.members[0].access, 'trial');
     assert.equal(all.members[0].source, 'x');
     assert.equal(all.members[0].campaign, 'fall_camp');
+    assert.equal(all.members[0].signupChannel, 'website');
     assert.ok(Array.isArray(all.bySource));
     assert.ok(all.bySource.some((r) => r.source === 'x' && r.count >= 1));
+    assert.ok(Array.isArray(all.byChannel));
+    assert.ok(all.byChannel.some((r) => r.channel === 'website' && r.count >= 1));
+    assert.ok(all.byChannel.some((r) => r.channel === 'ios' && r.count >= 1));
     assert.equal(all.members.find((m) => m.email === 'paid@example.com')?.access, 'paid');
     assert.equal(all.members.find((m) => m.email === 'paid@example.com')?.source, 'direct');
+    assert.equal(all.members.find((m) => m.email === 'paid@example.com')?.signupChannel, 'ios');
+    assert.equal(all.members.find((m) => m.email === 'older@example.com')?.signupChannel, 'unknown');
     for (const row of all.members) {
       assert.equal(Object.prototype.hasOwnProperty.call(row, 'passwordHash'), false);
       assert.ok(!JSON.stringify(row).includes('SECRET'));

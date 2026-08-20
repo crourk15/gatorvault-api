@@ -529,7 +529,7 @@ function toSafeMemberRow(user) {
   const paid = hasPaidAccess(user);
   const accessActive = paid || !trial.expired;
   const sub = user?.subscription || null;
-  const { sanitizeFirstTouch, outletLabel } = require('./member-attribution');
+  const { sanitizeFirstTouch, outletLabel, sanitizeSignupChannel } = require('./member-attribution');
   const firstTouch = sanitizeFirstTouch(user?.firstTouch || null);
   return {
     email: user.email || null,
@@ -552,6 +552,7 @@ function toSafeMemberRow(user) {
     source: outletLabel(firstTouch),
     campaign: firstTouch?.campaign || null,
     medium: firstTouch?.medium || null,
+    signupChannel: sanitizeSignupChannel(user?.signupChannel),
   };
 }
 
@@ -595,8 +596,9 @@ function listRecentMembers(opts = {}) {
     if (counts[row.access] != null) counts[row.access] += 1;
   }
 
-  const { countBySource } = require('./member-attribution');
+  const { countBySource, countByChannel } = require('./member-attribution');
   const bySource = countBySource(filtered);
+  const byChannel = countByChannel(filtered);
 
   return {
     members: filtered.slice(0, limit),
@@ -604,6 +606,7 @@ function listRecentMembers(opts = {}) {
     returned: Math.min(filtered.length, limit),
     counts,
     bySource,
+    byChannel,
     since: opts.since == null ? '30d' : String(opts.since),
     access: accessFilter || 'all',
     limit

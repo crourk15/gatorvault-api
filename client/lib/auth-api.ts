@@ -186,7 +186,10 @@ async function authPost<T>(path: string, body: Record<string, unknown>): Promise
   const base = getApiBase();
   const res = await fetch(`${base}${path}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-GV-Client': isNativeApp() ? 'ios' : 'website',
+    },
     body: JSON.stringify(body),
   });
   const data = (await res.json()) as T;
@@ -253,12 +256,16 @@ export async function registerAccount(opts: {
     landingPath?: string | null;
     capturedAt?: string;
   } | null;
+  /** website = browser Join; ios = native app. Defaults from Capacitor detect. */
+  signupChannel?: 'website' | 'ios' | 'web' | 'app' | 'unknown';
 }): Promise<{
   session: AuthSession;
   emailSent?: boolean;
   trialReused?: boolean;
   trialExpired?: boolean;
 }> {
+  const signupChannel =
+    opts.signupChannel || (isNativeApp() ? 'ios' : 'website');
   const res = await authPost<{
     ok?: boolean;
     error?: string;
@@ -267,7 +274,7 @@ export async function registerAccount(opts: {
     emailSent?: boolean;
     trialReused?: boolean;
     trialExpired?: boolean;
-  }>('/api/register', opts);
+  }>('/api/register', { ...opts, signupChannel });
   if (!res.ok || !res.data.session) {
     const err = new Error(res.data.error || 'Registration failed.') as Error & {
       code?: string;
