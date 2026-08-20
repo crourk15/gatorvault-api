@@ -859,7 +859,11 @@ function mountRecruitingHubRoutes(app) {
         !forceRebuild &&
         process.env.HUB_WARM_DISK_FIRST !== 'false'
       ) {
-        const primed = primeLiteKeysFromDisk(yearList.length ? yearList : [2028]);
+        const primed = primeLiteKeysFromDisk(yearList.length ? yearList : [2028], {
+          includeBundle: true,
+          includeHp: false,
+          persist: false,
+        });
         if (primed >= 3) {
           console.log('[recruiting-hub] warm-memory disk-first ok', primed);
           return res.json({

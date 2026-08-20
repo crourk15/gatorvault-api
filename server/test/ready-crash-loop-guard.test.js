@@ -132,9 +132,17 @@ describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => 
       'utf8'
     );
     assert.match(src, /primeLiteKeysFromDisk/);
+    assert.match(src, /primeLiteKeysFromDiskAsync/);
     assert.match(src, /diskPrimeScheduled/);
     assert.match(src, /HUB_DISK_PRIME_DELAY_MS/);
     assert.match(src, /measureEventLoopLagMs/);
+    assert.match(src, /includeHp: false/);
+  });
+
+  it('deploy-cache does not wipe hub after disk-prime', () => {
+    const src = fs.readFileSync(path.join(__dirname, '..', 'lib/deploy-cache.js'), 'utf8');
+    assert.doesNotMatch(src, /clearHubCache/);
+    assert.match(src, /Do NOT clear recruiting-hub/);
   });
 
   it('warm-memory coerces spaced to lite and prefers disk-first', () => {
