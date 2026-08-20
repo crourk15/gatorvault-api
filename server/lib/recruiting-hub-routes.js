@@ -971,6 +971,19 @@ function mountRecruitingHubRoutes(app) {
       })
         .then((meta) => {
           console.log('[recruiting-hub] warm-memory complete', meta?.status || 'ok');
+          // HP_HEAL_BOOT=false — cron owns players.json heal index so On3 lead stamps
+          // (Antonio Miami→UF) heal without boot /ready risk.
+          try {
+            const { ensureHealPlayersWarm } = require('../api/futurecast/response-cache.ts');
+            ensureHealPlayersWarm().catch((err) =>
+              console.warn('[recruiting-hub] HP heal warm after lite failed:', err.message)
+            );
+          } catch (err) {
+            console.warn(
+              '[recruiting-hub] HP heal warm after lite skipped:',
+              err instanceof Error ? err.message : String(err)
+            );
+          }
         })
         .catch((err) => {
           console.warn('[recruiting-hub] warm-memory failed:', err.message);
