@@ -1386,22 +1386,28 @@ function scheduleHubBootPipeline() {
           console.warn('[recruiting-hub] HP seed prime failed:', err.message);
         }
         // Deferred HP board-truth index (slim Map from players.json) — never from GET.
-        const healDelay = Math.max(
-          120000,
-          parseInt(process.env.HP_HEAL_WARM_BOOT_DELAY_MS || '180000', 10) || 180000
-        );
-        setTimeout(() => {
-          try {
-            const { ensureHealPlayersWarm } = require('../api/futurecast/response-cache.ts');
-            ensureHealPlayersWarm()
-              .then(() => console.log('[recruiting-hub] HP heal players warm scheduled/done'))
-              .catch((err) =>
-                console.warn('[recruiting-hub] HP heal players warm failed:', err.message)
-              );
-          } catch (err) {
-            console.warn('[recruiting-hub] HP heal players warm skipped:', err.message);
-          }
-        }, healDelay);
+        // Off by default on boot — sync JSON.parse ~9MB blocked /ready into 502 loops.
+        const healBoot = process.env.HP_HEAL_BOOT === 'true';
+        if (healBoot) {
+          const healDelay = Math.max(
+            300000,
+            parseInt(process.env.HP_HEAL_WARM_BOOT_DELAY_MS || '600000', 10) || 600000
+          );
+          setTimeout(() => {
+            try {
+              const { ensureHealPlayersWarm } = require('../api/futurecast/response-cache.ts');
+              ensureHealPlayersWarm()
+                .then(() => console.log('[recruiting-hub] HP heal players warm scheduled/done'))
+                .catch((err) =>
+                  console.warn('[recruiting-hub] HP heal players warm failed:', err.message)
+                );
+            } catch (err) {
+              console.warn('[recruiting-hub] HP heal players warm skipped:', err.message);
+            }
+          }, healDelay);
+        } else {
+          console.log('[recruiting-hub] HP heal boot warm skipped — cron/manual owns players.json index');
+        }
         if (spacedElite) {
           const spacedYears = parseWarmYears(process.env.HUB_SPACED_WARM_YEARS, [2028]);
           scheduleSpacedEliteFill({

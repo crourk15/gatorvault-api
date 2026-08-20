@@ -311,15 +311,19 @@ services:
         value: "false"
       - key: HUB_BOOT_IMMEDIATE_WARM
         value: "false"
-      # Elite: deferred priority warm after listen (GET path never rebuilds).
+      # CRITICAL (Aug 20): boot warm was stacking lite+spaced+heal and blocking
+      # /ready for 40s+ → Render 502 crash loop → Beat Desk Open Brief hung.
+      # Cron hub-warm (:12/:42) owns refill; Tier B GETs use disk/seed.
       - key: HUB_BOOT_FORCE_WARM
-        value: "true"
-      - key: HUB_BOOT_SKIP_WARM
         value: "false"
+      - key: HUB_BOOT_SKIP_WARM
+        value: "true"
       - key: HUB_BOOT_WARM_DELAY_MS
-        value: "90000"
+        value: "180000"
+      - key: HP_HEAL_BOOT
+        value: "false"
       - key: HUB_BOOT_WARM_YEARS
-        value: "2027,2028"
+        value: "2028"
       - key: HUB_BOOT_SECONDARY_WARM
         value: "false"
       # Tier B: member GETs never sync-rebuild hub/Lab (boot/cron warm owns refill).

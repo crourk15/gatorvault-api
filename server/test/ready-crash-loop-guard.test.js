@@ -81,6 +81,13 @@ describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => 
     );
   });
 
+  it('boot warm is skipped so /ready is not starved after deploy', () => {
+    const yaml = fs.readFileSync(path.join(__dirname, '..', '..', 'render.yaml'), 'utf8');
+    assert.match(yaml, /HUB_BOOT_FORCE_WARM[\s\S]*?value:\s*"false"/);
+    assert.match(yaml, /HUB_BOOT_SKIP_WARM[\s\S]*?value:\s*"true"/);
+    assert.match(yaml, /HP_HEAL_BOOT[\s\S]*?value:\s*"false"/);
+  });
+
   it('warm job batch yields for health probes between keys', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', 'lib/recruiting-hub-cache.js'),
@@ -88,5 +95,13 @@ describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => 
     );
     assert.match(src, /yieldForHealthProbe/);
     assert.match(src, /HUB_WARM_YIELD_MS/);
+  });
+
+  it('HP heal is gated off boot unless HP_HEAL_BOOT=true', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', 'lib/recruiting-hub-cache.js'),
+      'utf8'
+    );
+    assert.match(src, /HP_HEAL_BOOT === 'true'/);
   });
 });
