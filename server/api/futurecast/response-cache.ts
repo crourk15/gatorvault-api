@@ -841,17 +841,19 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
     /* optional */
   }
   // Charles elite profile bar — Priority Chase is not a dumping ground for thin soft shells.
-  try {
-    const { filterEliteChaseProfiles } = require('../../lib/elite-chase-profile-bar') as {
-      filterEliteChaseProfiles: (list: unknown[]) => unknown[];
-    };
-    const before = players.length;
-    players = filterEliteChaseProfiles(players);
-    if (players.length !== before) {
-      /* count updated below */
+  // Soft seed plates (closing_seed / open_seed) must still paint Top UF Targets / Open Class
+  // on Tier B cold miss — skip the elite bar until warm/cron refill lands.
+  const degraded = String(doc.degraded || '');
+  const softSeed = degraded === 'closing_seed' || degraded === 'open_seed';
+  if (!softSeed) {
+    try {
+      const { filterEliteChaseProfiles } = require('../../lib/elite-chase-profile-bar') as {
+        filterEliteChaseProfiles: (list: unknown[]) => unknown[];
+      };
+      players = filterEliteChaseProfiles(players);
+    } catch {
+      /* optional */
     }
-  } catch {
-    /* optional */
   }
   return {
     ...doc,

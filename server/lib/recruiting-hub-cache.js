@@ -285,14 +285,56 @@ function persistDurableCacheValue(cacheKey, value) {
   return writeHubDiskSnapshot(meta.endpoint, meta.year, value);
 }
 
+/**
+ * Open-cycle Class of 2028 prefers bundle.footprint. Dedicated /hub/footprint can be
+ * healthy (Armani pin) while a stale nest stays at 0 commits — heal nest from the
+ * dedicated plate before we serve or persist the bundle.
+ */
+function healBundleFootprintNest(value, year) {
+  if (!value || typeof value !== 'object') return value;
+  const y = Number(year);
+  if (!Number.isFinite(y)) return value;
+  const nest = value.footprint;
+  if (isUsableFootprintSnapshot(nest, y)) return value;
+
+  let healthy = null;
+  try {
+    healthy = hubCache.get(hubFootprintCacheKey(y));
+  } catch {
+    healthy = null;
+  }
+  if (!isUsableFootprintSnapshot(healthy, y)) {
+    try {
+      healthy = hubCache.getStale(hubFootprintCacheKey(y));
+    } catch {
+      /* optional */
+    }
+  }
+  if (!isUsableFootprintSnapshot(healthy, y)) {
+    try {
+      healthy = readHubDiskSnapshot('footprint', y);
+    } catch {
+      healthy = null;
+    }
+  }
+  if (!isUsableFootprintSnapshot(healthy, y)) return value;
+
+  value.footprint = healthy;
+  console.warn(
+    `[recruiting-hub-cache] healed bundle.footprint nest for ${y} (was ${footprintStateCommitCount(nest)} commits → ${footprintStateCommitCount(healthy)})`
+  );
+  return value;
+}
+
 /** When a hub bundle is in hand, keep dedicated footprint GETs warm for Class tabs. */
 function seedFootprintFromBundle(cacheKey, value) {
   const m = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
   if (!m || !value || typeof value !== 'object') return;
+  const year = Number(m[1]);
+  healBundleFootprintNest(value, year);
   const footprint = value.footprint;
   if (!footprint || typeof footprint !== 'object') return;
   if (!Array.isArray(footprint.states) || !footprint.states.length) return;
-  const year = Number(m[1]);
   if (!isUsableFootprintSnapshot(footprint, year)) return;
   const fpKey = hubFootprintCacheKey(year);
   hubCache.set(fpKey, footprint);
@@ -302,6 +344,8 @@ function seedFootprintFromBundle(cacheKey, value) {
 /** Bundle warm must also fill dedicated footprint GETs (map Class 2027/2028 tabs). */
 function cacheHubValue(cacheKey, value) {
   if (!cacheKey || value == null) return;
+  const m = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
+  if (m) healBundleFootprintNest(value, Number(m[1]));
   hubCache.set(cacheKey, value);
   persistDurableCacheValue(cacheKey, value);
   seedFootprintFromBundle(cacheKey, value);
@@ -695,6 +739,12 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   const hit = options.force ? null : hubCache.get(cacheKey);
   if (hit != null) {
     // Older in-memory bundles predate footprint seeding — backfill on hit.
+    // Also heal poisoned nest (0 commits while dedicated footprint is healthy).
+    const bundleYearHit = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
+    if (bundleYearHit) {
+      healBundleFootprintNest(hit, Number(bundleYearHit[1]));
+      persistDurableCacheValue(cacheKey, hit);
+    }
     seedFootprintFromBundle(cacheKey, hit);
     if (!ready) {
       ready = true;
@@ -706,6 +756,11 @@ async function serveCached(cacheKey, builderFn, options = {}) {
 
   const stale = hubCache.getStale(cacheKey);
   if (stale != null) {
+    const bundleYearStale = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
+    if (bundleYearStale) {
+      healBundleFootprintNest(stale, Number(bundleYearStale[1]));
+      persistDurableCacheValue(cacheKey, stale);
+    }
     seedFootprintFromBundle(cacheKey, stale);
     // Stay-green / no-sync: serve stale only. Do not rebuild from GET — cron owns refill.
     if (!stayGreen && !noSync) refreshCacheKey(cacheKey, builderFn, timeoutMs);
@@ -727,6 +782,9 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     if (diskOk) {
       // Seed memory so the next request is a hot hit. Cron warm-memory refreshes later.
       // Bundle disk hits also seed dedicated footprint keys for Class year tabs.
+      if (diskFallback.endpoint === 'bundle') {
+        healBundleFootprintNest(diskValue, diskFallback.year);
+      }
       cacheHubValue(cacheKey, diskValue);
       ready = true;
       warmKeyCount = Math.max(warmKeyCount, 1);
@@ -979,7 +1037,10 @@ function primeHubBundleFromDisk(year) {
   const value = readHubDiskSnapshot('bundle', year);
   if (!value) return false;
   const key = eliteBundleCacheKey(year);
+  healBundleFootprintNest(value, year);
   hubCache.set(key, value);
+  persistDurableCacheValue(key, value);
+  seedFootprintFromBundle(key, value);
   ready = true;
   warmKeyCount = Math.max(warmKeyCount, 1);
   getMeta();
@@ -1419,6 +1480,7 @@ module.exports = {
   recruitingFootprintCacheKey,
   footprintStateCommitCount,
   isUsableFootprintSnapshot,
+  healBundleFootprintNest,
   clearHubCache,
   removeHubCacheKeys,
   warmEliteHubCaches,

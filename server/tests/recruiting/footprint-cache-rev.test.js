@@ -115,4 +115,38 @@ describe('footprint cache rev and heal', () => {
     assert.ok(read, 'bundled seed must win over poisoned durable disk');
     assert.equal(cache.footprintStateCommitCount(read), 1);
   });
+
+  it('heals poisoned bundle.footprint nest from dedicated footprint disk', () => {
+    const yearDir = path.join(tmpRoot, 'hub-runtime', '2028');
+    fs.mkdirSync(yearDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(yearDir, 'commits.json'),
+      JSON.stringify({
+        ok: true,
+        status: 'ready',
+        meta: { endpoint: 'commits', year: 2028, cacheRev: cache.COMMITS_CACHE_REV },
+        items: [{ id: 'armani-strong', name: 'Armani Strong' }],
+      })
+    );
+    const healthyFp = {
+      states: [{ state: 'FL', commits: 1, targets: 12 }],
+      pins: [{ id: 'armani-strong', pinType: 'commit', name: 'Armani Strong' }],
+      year: 2028,
+    };
+    cache.writeHubDiskSnapshot('footprint', 2028, healthyFp);
+
+    const poisonedBundle = {
+      year: 2028,
+      commits: [{ id: 'armani-strong', name: 'Armani Strong' }],
+      classOverview: { commits: '1' },
+      footprint: {
+        states: [{ state: 'FL', commits: 0, targets: 147 }],
+        pins: [],
+        year: 2028,
+      },
+    };
+    const healed = cache.healBundleFootprintNest(poisonedBundle, 2028);
+    assert.equal(cache.footprintStateCommitCount(healed.footprint), 1);
+    assert.ok((healed.footprint.pins || []).some((p) => p.id === 'armani-strong'));
+  });
 });

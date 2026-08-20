@@ -20,6 +20,8 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Full-profile stamps overlay live On3 Industry ranks (Wright #1 not baked #208) — API
 - [x] 2028 allowlist intel continuous coverage (Wilkes/McCary/Bailey/Hines/Jamarcus) + chase process logs — API / recruiting-light sweep
 - [x] Home NOW ticker lines: named movement + lite-warm `/hub/ticker` refresh (API — no Codemagic)
+- [x] Footprint Class 2028 commits: heal poisoned `bundle.footprint` nest from dedicated plate on serve (API — open-cycle map no longer stuck at 0)
+- [x] Open Class 2028 HP soft plate — Tier B cold miss never empty `status:building` for targets / Priority Chase (API)
 - [x] Footprint Class 2028 commits: rev-gate + heal poisoned 0-commit runtime plates; lite warm refreshes footprint/commits on cron (API — no Codemagic)
 - [x] DeNairo Girton Jr. 2028 S Vault Scouting (Jessie Bates III comp) — correct Great Mills MD identity (Beat Desk had Tramond Collins On3 collision) — API
 - [x] Tranard Roberts profile: Vault Scouting (Judkins comp) + heal predictedSchool / htWt / Georgia phantom rival — API + prepared-meal stamp
@@ -65,6 +67,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-20 | Footprint Class 2028: client falls back to dedicated `/hub/footprint` when bundle nest shows 0 commits but commit cards exist | `useHubBundleSection` in binary; **API heal of `bundle.footprint` nest is live without bake** | pending |
 | 2026-08-17 | Chase On3 lead stamp from API (`on3Lead`) — prefer server field so stamp bugs/prediction swings are Render-only after this bake | `VaultChaseCard` + HP cache v20 in binary; API stamps `on3Lead` on every HP serve | pending |
 | 2026-08-17 | Chase On3 lead labels: ND / Miss St / SC / TTU / NC State (no more "Notre"/"South"/"Texas" for Tech) | `competing-schools` + `VaultChaseCard` in binary | pending |
 | 2026-08-17 | Chase On3 lead: treat FSU/USF/FAU as rivals (not UF); keep real ~95% favorites in chrome | `competing-schools` in binary; API peer extract + HP disk heal also live | pending |
