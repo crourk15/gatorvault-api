@@ -1620,8 +1620,26 @@ async function upsertTargetFromVisitIntel(intel) {
     patch.ufOvStatus = 'scheduled';
   }
 
-  if (existing) return upsertPlayer(preservePlayerFields(existing, patch));
-  return upsertPlayer(patch);
+  const saved = existing
+    ? await upsertPlayer(preservePlayerFields(existing, patch))
+    : await upsertPlayer(patch);
+
+  // Campus visit set up → 2028 allowlist (Chase / Closest). Offer alone stays War Room.
+  if (!isCancel && (intel.eventType === 'official_visit' || intel.eventType === 'unofficial_visit')) {
+    try {
+      const { promoteAllowlistOnCampusVisit } = require('./campus-visit-allowlist-promote');
+      await promoteAllowlistOnCampusVisit({
+        slug,
+        name: saved?.name || intel.playerName || patch.name,
+        classYear: saved?.classYear || intel.classYear || patch.classYear || 2028,
+        player: saved,
+      });
+    } catch (err) {
+      console.warn('[recruiting-store] campus-visit allowlist promote:', err.message);
+    }
+  }
+
+  return saved;
 }
 
 module.exports = {
