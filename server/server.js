@@ -1651,9 +1651,11 @@ function startPostBootServices() {
   setTimeout(startPostBootLightServices, deferLightMs);
   // Hub boot warm must not wait on recruiting-store / identity-patterns init.
   // Those paths can stall and left hub permanently building after Tier B GET no-sync.
+  // Keep this SHORT — skip path only disk-primes; long defer left hub cold + Admin Hub
+  // looking "down" while /ready was fine.
   const deferHubWarmMs = Math.max(
-    20000,
-    parseInt(process.env.API_BOOT_DEFER_HUB_WARM_MS || String(deferLightMs), 10) || deferLightMs
+    3000,
+    parseInt(process.env.API_BOOT_DEFER_HUB_WARM_MS || '8000', 10) || 8000
   );
   setTimeout(() => {
     try {

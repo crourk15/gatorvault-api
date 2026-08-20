@@ -794,8 +794,23 @@ function mountRecruitingHubRoutes(app) {
         console.log('[recruiting-hub] stay-green skip hub/warm-memory');
         return res.json({ ...skipped, meta: hubMeta() });
       }
-      const { warmEliteHubCaches } = require('./recruiting-hub-cache');
-      const mode = String(req.query.mode || '').trim().toLowerCase();
+      const {
+        warmEliteHubCaches,
+        primeLiteKeysFromDisk,
+        measureEventLoopLagMs,
+      } = require('./recruiting-hub-cache');
+      let mode = String(req.query.mode || '').trim().toLowerCase();
+      // Cron/Blueprint lag can still send mode=spaced while web env has spaced OFF.
+      // Coerce to lite so every :12/:42 tick cannot re-open the 502 crash loop.
+      if (
+        (mode === 'spaced' || mode === 'elite') &&
+        process.env.HUB_SPACED_ELITE_WARM === 'false'
+      ) {
+        console.warn(
+          '[recruiting-hub] warm-memory spaced coerced to lite (HUB_SPACED_ELITE_WARM=false)'
+        );
+        mode = 'lite';
+      }
       const yearsRaw = String(req.query.years || '').trim();
       const years = yearsRaw
         ? yearsRaw
@@ -810,6 +825,53 @@ function mountRecruitingHubRoutes(app) {
           : mode === 'spaced' || mode === 'elite'
             ? [2028]
             : [2027, 2028];
+
+      // If the event loop is already behind, refuse warm — another stampede → /ready 502.
+      const lagMs = await measureEventLoopLagMs();
+      const lagReject =
+        parseInt(process.env.HUB_WARM_REJECT_LAG_MS || '250', 10) || 250;
+      if (lagMs >= lagReject) {
+        console.warn('[recruiting-hub] warm-memory rejected — event-loop lag', lagMs, 'ms');
+        return res.status(503).json({
+          ok: false,
+          error: 'event_loop_lag',
+          message: 'API busy — skip warm this tick',
+          lagMs,
+          lagRejectMs: lagReject,
+          meta: hubMeta(),
+        });
+      }
+
+      const priorityLite =
+        mode === 'lite' ||
+        mode === 'priority' ||
+        req.query.priorityLite === '1' ||
+        req.query.priorityLite === 'true';
+      const forceRebuild =
+        req.query.force === '1' ||
+        req.query.force === 'true' ||
+        String(req.body?.force || '').toLowerCase() === 'true';
+
+      // Disk-first lite: refill memory from hub-runtime without elite rebuilds.
+      // Stops :12/:42 cron from sync-building on the web dyno during flaps.
+      if (
+        priorityLite &&
+        !forceRebuild &&
+        process.env.HUB_WARM_DISK_FIRST !== 'false'
+      ) {
+        const primed = primeLiteKeysFromDisk(yearList.length ? yearList : [2028]);
+        if (primed >= 3) {
+          console.log('[recruiting-hub] warm-memory disk-first ok', primed);
+          return res.json({
+            ok: true,
+            accepted: true,
+            mode: 'disk-prime',
+            primed,
+            years: yearList,
+            meta: hubMeta(),
+          });
+        }
+      }
 
       // Spaced elite: lite now, then HP/bundle/master with gaps (full elite without OOM).
       if (mode === 'spaced' || mode === 'elite') {
@@ -854,11 +916,6 @@ function mountRecruitingHubRoutes(app) {
         });
       }
 
-      const priorityLite =
-        mode === 'lite' ||
-        mode === 'priority' ||
-        req.query.priorityLite === '1' ||
-        req.query.priorityLite === 'true';
       const priorityOnly =
         priorityLite ||
         req.query.priorityOnly === '1' ||

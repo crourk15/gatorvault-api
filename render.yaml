@@ -377,10 +377,18 @@ services:
         value: "850"
       # Yield between warm keys so Render /ready (~5s) can run during lite builds.
       - key: HUB_WARM_YIELD_MS
-        value: "120"
+        value: "150"
+      # Disk-first warm-memory (lite) — skip elite rebuild when hub-runtime exists.
+      - key: HUB_WARM_DISK_FIRST
+        value: "true"
+      - key: HUB_WARM_REJECT_LAG_MS
+        value: "250"
       # Pro 4GB: keep heavy warm well after listen so /ready stays cheap.
       - key: API_BOOT_DEFER_HEAVY_MS
         value: "90000"
+      # Hub skip/disk-prime path — don't wait on light/sched defer (Admin Hub cold).
+      - key: API_BOOT_DEFER_HUB_WARM_MS
+        value: "8000"
       - key: PLAYER_INTEL_REFRESH_ON_BOOT
         value: "false"
       # Off — in-process 10m lite warm + cron spaced stacked and starved /ready (Aug 20).
@@ -629,7 +637,9 @@ services:
 
   - type: cron
     name: gatorvault-api-gators-score-alerts
-    schedule: "*/3 * * * *"
+    # Every 5m (was */3) — run-job on the web dyno during score windows stacked with
+    # keepalive/hub-warm and contributed to brief HTML 502 flaps.
+    schedule: "*/5 * * * *"
     runtime: node
     region: oregon
     rootDir: server

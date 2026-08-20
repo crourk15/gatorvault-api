@@ -533,6 +533,14 @@ function yieldEventLoop() {
   return new Promise((resolve) => setImmediate(resolve));
 }
 
+/** Cheap lag sample — if setImmediate is already delayed, the dyno is starving. */
+function measureEventLoopLagMs() {
+  return new Promise((resolve) => {
+    const started = Date.now();
+    setImmediate(() => resolve(Date.now() - started));
+  });
+}
+
 /** Yield + optional pause so Render's 5s /ready probe can land between warm jobs. */
 function yieldForHealthProbe() {
   const pauseMs = Math.max(0, parseInt(process.env.HUB_WARM_YIELD_MS || '25', 10) || 25);
@@ -1378,8 +1386,8 @@ function scheduleHubBootPipeline() {
     // Disk prime only (no rebuild) so hubReady is not stuck "building" until :12/:42 cron.
     const seedYears = parseWarmYears(process.env.HUB_BOOT_WARM_YEARS, [2027, 2028]);
     const seedDelay = Math.max(
-      5000,
-      parseInt(process.env.HUB_DISK_PRIME_DELAY_MS || '15000', 10) || 15000
+      2000,
+      parseInt(process.env.HUB_DISK_PRIME_DELAY_MS || '4000', 10) || 4000
     );
     bootWarmDecision = {
       ...bootWarmDecision,
@@ -1595,4 +1603,5 @@ module.exports = {
   hubGetNoSyncBuild,
   primeLiteKeysFromDisk,
   primeHpFromDisk,
+  measureEventLoopLagMs,
 };
