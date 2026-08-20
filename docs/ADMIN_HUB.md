@@ -97,7 +97,7 @@ Set `OPS_ADMIN_PIN` in Render for production.
 | **Ops Summary** | `#dashboard/ops-summary` | Tiles, cron freshness, safe re-runs |
 | **Job Queue** | `#dashboard/jobs` | Safe re-runs + heartbeats + recent ops logs |
 | **Post Studio** | `#dashboard/post-studio` | Advanced inbox/drafts (secondary to Beat Desk) |
-| **Members** | `#members/recent` | Newest signups: trial / paid / expired |
+| **Members** | `#members/recent` | Newest signups: trial / paid / expired · **Channel** (Website vs iOS app) · marketing Source |
 | **FutureCast** | `#futurecast/control` | Targets, 2028 admin allowlist add/remove, early watch |
 | **Recruiting Daily** | `#recruiting/daily` | Events, ingest, pipeline |
 | **Unresolved Predictions** | `#recruiting/unresolved` | Nameless RPM teasers |
