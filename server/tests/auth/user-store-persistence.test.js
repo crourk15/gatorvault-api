@@ -63,4 +63,41 @@ describe('user-store durable path', () => {
       ['a@example.com', 'b@example.com']
     );
   });
+
+  it('updateUser re-reads before patch so concurrent fields are not wiped', () => {
+    const durable = path.join(tmp, 'users.json');
+    process.env.GV_USERS_PATH = durable;
+    delete require.cache[require.resolve('../../lib/user-store')];
+    const store = require('../../lib/user-store');
+    store.saveUsers([
+      {
+        email: 'fan@example.com',
+        passwordHash: 'x:y',
+        onboardingSent: [],
+        subscription: { status: 'active', source: 'apple' },
+      },
+    ]);
+    // Simulate post-await onboarding stamp — must keep subscription.
+    const patched = store.updateUser('fan@example.com', {
+      onboardingSent: [0],
+      onboardingProvider: 'server',
+    });
+    assert.equal(patched.onboardingSent[0], 0);
+    assert.equal(patched.subscription.status, 'active');
+    assert.equal(store.findUserByEmail('fan@example.com').subscription.source, 'apple');
+  });
+
+  it('mutateUsers applies a sync load-modify-save', () => {
+    const durable = path.join(tmp, 'users.json');
+    process.env.GV_USERS_PATH = durable;
+    delete require.cache[require.resolve('../../lib/user-store')];
+    const store = require('../../lib/user-store');
+    store.saveUsers([{ email: 'a@example.com', passwordHash: 'x:y', tier: 'locker' }]);
+    store.mutateUsers((users) => {
+      users[0].tier = 'war';
+      users.push({ email: 'b@example.com', passwordHash: 'x:y', tier: 'locker' });
+    });
+    assert.equal(store.findUserByEmail('a@example.com').tier, 'war');
+    assert.equal(store.loadUsers().length, 2);
+  });
 });

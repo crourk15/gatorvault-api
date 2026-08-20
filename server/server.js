@@ -62,7 +62,12 @@ const { apiMonitorMiddleware } = require('./lib/api-monitor');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 const { effectiveTier, isAdminAccount, isReservedOperatorEmail } = require('./lib/session-auth');
-const { loadUsers, saveUsers, findUserByEmail } = require('./lib/user-store');
+const { loadUsers, saveUsers, findUserByEmail, updateUser } = require('./lib/user-store');
+const {
+  checkAuthRateLimit,
+  clientIp,
+  rateLimitResponse,
+} = require('./lib/auth-rate-limit');
 const { hasPaidAccess, buildSessionFields } = require('./lib/subscription-service');
 const { mountSubscriptionRoutes } = require('./lib/subscription-routes');
 const { mountPushAlertRoutes } = require('./lib/push-alert-routes');
@@ -628,6 +633,9 @@ app.post('/api/register', async (req, res) => {
     // Self-register never chooses War — upgrades only via IAP / admin grant.
     const tier = 'locker';
 
+    const rate = checkAuthRateLimit('register', { email, ip: clientIp(req) });
+    if (!rate.ok) return rateLimitResponse(res, rate);
+
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res.status(400).json({ ok: false, error: 'Enter a valid email address.' });
     }
@@ -708,17 +716,15 @@ app.post('/api/register', async (req, res) => {
       } catch (beehiivErr) {
         console.warn('beehiiv enroll skipped:', beehiivErr.message);
       }
-      const usersUpdated = loadUsers();
-      const uIdx = usersUpdated.findIndex((u) => u.email === email);
-      if (uIdx >= 0) {
-        usersUpdated[uIdx].onboardingSent = user.onboardingSent;
-        usersUpdated[uIdx].onboardingProvider = user.onboardingProvider;
-        usersUpdated[uIdx].trialRemindersSent = user.trialRemindersSent;
-        if (user.beehiivSubscriptionId) {
-          usersUpdated[uIdx].beehiivSubscriptionId = user.beehiivSubscriptionId;
-        }
-        saveUsers(usersUpdated);
-      }
+      // Re-patch via updateUser after awaits so a concurrent entitlement write is not overwritten.
+      updateUser(email, {
+        onboardingSent: user.onboardingSent,
+        onboardingProvider: user.onboardingProvider,
+        trialRemindersSent: user.trialRemindersSent,
+        ...(user.beehiivSubscriptionId
+          ? { beehiivSubscriptionId: user.beehiivSubscriptionId }
+          : {}),
+      });
     } catch (e) {
       console.warn('welcome email failed:', e.message);
     }
@@ -750,8 +756,10 @@ app.post('/api/register', async (req, res) => {
 
 app.post('/api/auth/forgot-password', async (req, res) => {
   try {
-    const { requestPasswordReset } = require('./lib/password-reset');
     const email = String(req.body?.email || '').trim().toLowerCase();
+    const rate = checkAuthRateLimit('forgot', { email, ip: clientIp(req) });
+    if (!rate.ok) return rateLimitResponse(res, rate);
+    const { requestPasswordReset } = require('./lib/password-reset');
     await requestPasswordReset(email, { deliverEmail });
     // Always identical body — do not reveal whether the account exists.
     return res.json({
@@ -795,6 +803,9 @@ app.post('/api/login', async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ ok: false, error: 'Email and password are required.' });
     }
+
+    const rate = checkAuthRateLimit('login', { email, ip: clientIp(req) });
+    if (!rate.ok) return rateLimitResponse(res, rate);
 
     const users = loadUsers();
     const user = users.find((u) => u.email === email);
