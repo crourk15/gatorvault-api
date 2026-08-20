@@ -76,6 +76,8 @@ module.exports = (app) => {
       routesReady,
       hubReady,
       hubMeta,
+      uptimeSec: Math.floor(process.uptime()),
+      bootAt: global.__GV_BOOT_AT__ || null,
       time: Date.now(),
     });
   });

@@ -6,7 +6,7 @@ require('./render-cron-env');
 
 const REFRESH_URL =
   process.env.HUB_REFRESH_URL ||
-  'https://gatorvault-api.onrender.com/api/recruiting/hub/refresh';
+  'https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?warmAfter=false';
 const CRON_SECRET = process.env.MONITORING_CRON_SECRET || process.env.CRON_SECRET || '';
 
 const RETRY_STATUSES = new Set([502, 503, 504, 429]);

@@ -151,9 +151,26 @@ describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => 
       'utf8'
     );
     assert.match(src, /spaced coerced to lite/);
+    assert.match(src, /allowSpaced/);
     assert.match(src, /HUB_WARM_DISK_FIRST/);
     assert.match(src, /event_loop_lag/);
     assert.match(src, /mode: 'disk-prime'/);
+    assert.match(src, /disk_prime_insufficient/);
+  });
+
+  it('hub-refresh defaults warmAfter off and cron URL is warmAfter=false', () => {
+    const routes = fs.readFileSync(
+      path.join(__dirname, '..', 'lib/recruiting-hub-routes.js'),
+      'utf8'
+    );
+    assert.match(routes, /warmAfter \|\| 'false'/);
+    const yaml = fs.readFileSync(path.join(__dirname, '..', '..', 'render.yaml'), 'utf8');
+    assert.match(yaml, /hub\/refresh\?warmAfter=false/);
+    const cron = fs.readFileSync(
+      path.join(__dirname, '..', 'scripts/render-hub-refresh-cron.js'),
+      'utf8'
+    );
+    assert.match(cron, /warmAfter=false/);
   });
 
   it('hub-warm cron script defaults to lite not spaced', () => {

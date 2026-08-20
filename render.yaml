@@ -383,6 +383,8 @@ services:
         value: "true"
       - key: HUB_WARM_REJECT_LAG_MS
         value: "250"
+      - key: HUB_WARM_REJECT_RSS_MB
+        value: "900"
       # Pro 4GB: keep heavy warm well after listen so /ready stays cheap.
       - key: API_BOOT_DEFER_HEAVY_MS
         value: "90000"
@@ -526,7 +528,7 @@ services:
     startCommand: node scripts/render-hub-refresh-cron.js
     envVars:
       - key: HUB_REFRESH_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?warmAfter=priority
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?warmAfter=false
       - key: MONITORING_CRON_SECRET
         sync: false
 
