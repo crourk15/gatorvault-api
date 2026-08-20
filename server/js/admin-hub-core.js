@@ -303,11 +303,20 @@
 
   /** Cheap public probe — no PIN, no wake storm. Uses /api/ping (Netlify proxies /api/*). */
   function probeApiAlive() {
+    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = null;
+    if (ctrl) {
+      timer = setTimeout(function () {
+        try { ctrl.abort(); } catch (e) { /* ignore */ }
+      }, 5000);
+    }
     return fetch(API + '/api/ping', {
       method: 'GET',
       headers: { Accept: 'application/json' },
-      cache: 'no-store'
+      cache: 'no-store',
+      signal: ctrl ? ctrl.signal : undefined
     }).then(function (r) {
+      if (timer) clearTimeout(timer);
       if (!r.ok) {
         var err = new Error('HTTP ' + r.status);
         err.status = r.status;
@@ -326,6 +335,18 @@
           return { ok: true };
         }
       });
+    }).catch(function (err) {
+      if (timer) clearTimeout(timer);
+      var name = String((err && err.name) || '');
+      var msg = String((err && err.message) || '');
+      // Timeout / abort → soft wake, not instant API DOWN.
+      if (name === 'AbortError' || /aborted|timeout/i.test(msg)) {
+        var soft = new Error('probe_timeout');
+        soft.status = 503;
+        soft.wake = true;
+        throw soft;
+      }
+      throw err;
     });
   }
 
@@ -375,10 +396,11 @@
     var elapsed = now - _apiDownSince;
     var status = err && err.status;
     var msg = String((err && err.message) || '');
-    // 502/504 = crash / bad gateway — flash red immediately (not "waking").
-    // 503 / first network blip = soft wake for a short grace window.
+    // Confirmed Render gateway failure = hard red immediately.
+    // Network blips / Failed to fetch / timeouts get a wake grace (false red was common).
     var hardDown = status === 502 || status === 504
-      || /still starting after several|API DOWN|Failed to fetch|NetworkError|Load failed/i.test(msg);
+      || /still starting after several|API DOWN/i.test(msg)
+      || (/\bHTTP 502\b|\bHTTP 504\b/.test(msg));
     var pastGrace = elapsed >= API_WAKE_GRACE_MS || _apiFailCount >= 3;
     if (hardDown || pastGrace) {
       var code = status || (/502/.test(msg) ? 502 : (/504/.test(msg) ? 504 : 'down'));

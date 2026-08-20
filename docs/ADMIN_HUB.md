@@ -26,8 +26,8 @@ Plain-English playbook cards on **Beat Desk** and **Command Center**:
 - **Clear the red** — sticky green button on every page; wakes server and runs safe fix jobs for real reds (Film Room, recruiting, etc.)
 - **Go post** — default when nothing actionable is red; wake-lag / latency-only API is yellow (ignore) so Charles isn’t blocked from Beat Desk
 - **Wake lock** — while the server is waking, Deploy recovery stays disabled (spamming it makes fail noise)
-- **API status light** — top-right pill is always visible: **green API OK** / yellow API waking / **flashing red API DOWN**. Click to recheck. Soft orange banner = kitchen waking (503). **Flashing red banner + ops strip + `[API DOWN]` tab title** = Render 502/504 — App Store / War Room login will fail until `gatorvault-api` is restarted/redeployed. Do not treat red as “just waking.”
-
+- **API status light** — top-right pill is always visible: **green API OK** / yellow API waking / **flashing red API DOWN**. Click to recheck. Soft orange banner = kitchen waking (503) **or brief network blip** (grace window). **Flashing red banner + ops strip + `[API DOWN]` tab title** = confirmed Render **502/504** — App Store / War Room login will fail until `gatorvault-api` is restarted/redeployed. Do not treat orange wake as “API DOWN.”
+- **502 flap control (Aug 2026):** hub-warm runs at **:12/:42** (not :00/:30); recruiting-ingest at **:15** every 2h; spaced fork skips when parent RSS ≥ `HUB_SPACED_FORK_PARENT_RSS_MB` (850); warm yields `HUB_WARM_YIELD_MS=50` between keys. Goal: stop brief daytime restart loops when crons stacked.
 ### Elite API stability (keep every product job)
 
 Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTube) is **queued**, not disabled. Overlap waits its turn so members still get every feature while `/ready` stays green. Look for `[heavy-job-gate] start|done` in Render logs. Do **not** re-enable stay-green / strip crons to “stabilize.”

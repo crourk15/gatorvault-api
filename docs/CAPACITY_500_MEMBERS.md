@@ -36,6 +36,15 @@ File size at 500 accounts is fine. Real risks: **lost updates** across async gap
 9. Login attempt counters / lockout beyond IP rate limits.
 10. Admin Members: avoid full-list attribution work when only needing top N (already returns ≤200).
 
+## API DOWN / brief 502 flaps
+
+Daytime Beat Desk red flashes (15–30s) were usually Render restarting because `/ready` could not answer within ~5s while stacked crons ran (hub-warm + recruiting-light at `:00`).
+
+Mitigations (Aug 2026):
+- hub-warm at `:12/:42`; recruiting-ingest at `:15` every 2h
+- Skip spaced fork when parent RSS ≥ `HUB_SPACED_FORK_PARENT_RSS_MB`
+- Admin Hub: confirmed 502/504 = red; network blips get wake grace
+
 ## Do not break while growing
 
 - Keep `HEAVY_JOB_CONCURRENCY=1`, cheap `/ready`, Tier B hub GET (no sync rebuild).
