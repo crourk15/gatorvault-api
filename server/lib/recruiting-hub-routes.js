@@ -737,18 +737,43 @@ function mountRecruitingHubRoutes(app) {
         console.log('[recruiting-hub] stay-green skip hub/refresh');
         return res.json({ ...skipped, meta: hubMeta() });
       }
+      const rssMb = Math.round(process.memoryUsage().rss / 1024 / 1024);
+      const rejectRss =
+        parseInt(process.env.HUB_WARM_REJECT_RSS_MB || '900', 10) || 900;
+      if (rssMb >= rejectRss) {
+        return res.status(503).json({
+          ok: false,
+          error: 'rss_guard',
+          rssMb,
+          rejectRssMb: rejectRss,
+          meta: hubMeta(),
+        });
+      }
       const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
       const geoBackfill =
         req.query.geoBackfill === 'true' || req.query.geoBackfill === '1';
-      const warmAfterRaw = String(req.query.warmAfter || '').trim().toLowerCase();
-      let warmAfter = true;
+      // Default OFF — cron used to warmAfter=true and rebuild elite on the web dyno → 502 flaps.
+      const warmAfterRaw = String(req.query.warmAfter || 'false').trim().toLowerCase();
+      let warmAfter = false;
       let warmOptions;
-      if (warmAfterRaw === 'false' || warmAfterRaw === '0' || warmAfterRaw === 'off') {
-        warmAfter = false;
+      if (warmAfterRaw === 'true' || warmAfterRaw === '1' || warmAfterRaw === 'on') {
+        warmAfter = true;
       } else if (warmAfterRaw === 'priority' || warmAfterRaw === 'priorityonly') {
+        warmAfter = true;
         warmOptions = { priorityOnly: true };
       }
       const result = await refreshRecruitingHubCaches({ geoBackfill, warmAfter, warmOptions });
+      // Prefer disk prime after soft refresh so memory is hot without elite rebuild.
+      try {
+        const { primeLiteKeysFromDisk } = require('./recruiting-hub-cache');
+        result.diskPrime = primeLiteKeysFromDisk([2027, 2028], {
+          includeBundle: true,
+          includeHp: false,
+          persist: false,
+        });
+      } catch {
+        /* optional */
+      }
       return res.json({ ok: true, meta: hubMeta(), ...result });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -776,7 +801,7 @@ function mountRecruitingHubRoutes(app) {
       // Refuse warm while the dyno is already memory-hot — another stampede → /ready 502.
       const rssMb = Math.round(process.memoryUsage().rss / 1024 / 1024);
       const rejectRss =
-        parseInt(process.env.HUB_WARM_REJECT_RSS_MB || '1400', 10) || 1400;
+        parseInt(process.env.HUB_WARM_REJECT_RSS_MB || '900', 10) || 900;
       if (rssMb >= rejectRss) {
         console.warn('[recruiting-hub] warm-memory rejected — RSS', rssMb, '>=', rejectRss);
         return res.status(503).json({
@@ -800,15 +825,14 @@ function mountRecruitingHubRoutes(app) {
         measureEventLoopLagMs,
       } = require('./recruiting-hub-cache');
       let mode = String(req.query.mode || '').trim().toLowerCase();
-      // Cron/Blueprint lag can still send mode=spaced while web env has spaced OFF.
-      // Coerce to lite so every :12/:42 tick cannot re-open the 502 crash loop.
+      // Spaced forks on the web dyno keep reopening HTML 502 flaps. Require explicit
+      // allowSpaced=1 (admin) — cron/Blueprint cannot re-enable by accident.
       if (
         (mode === 'spaced' || mode === 'elite') &&
-        process.env.HUB_SPACED_ELITE_WARM === 'false'
+        req.query.allowSpaced !== '1' &&
+        req.query.allowSpaced !== 'true'
       ) {
-        console.warn(
-          '[recruiting-hub] warm-memory spaced coerced to lite (HUB_SPACED_ELITE_WARM=false)'
-        );
+        console.warn('[recruiting-hub] warm-memory spaced coerced to lite (allowSpaced required)');
         mode = 'lite';
       }
       const yearsRaw = String(req.query.years || '').trim();
@@ -854,11 +878,7 @@ function mountRecruitingHubRoutes(app) {
 
       // Disk-first lite: refill memory from hub-runtime without elite rebuilds.
       // Stops :12/:42 cron from sync-building on the web dyno during flaps.
-      if (
-        priorityLite &&
-        !forceRebuild &&
-        process.env.HUB_WARM_DISK_FIRST !== 'false'
-      ) {
+      if (priorityLite && process.env.HUB_WARM_DISK_FIRST !== 'false') {
         const primed = primeLiteKeysFromDisk(yearList.length ? yearList : [2028], {
           includeBundle: true,
           includeHp: false,
@@ -871,6 +891,18 @@ function mountRecruitingHubRoutes(app) {
             accepted: true,
             mode: 'disk-prime',
             primed,
+            years: yearList,
+            meta: hubMeta(),
+          });
+        }
+        // Never fall through to elite rebuild on cron — that starved /ready ~45s (Aug 20).
+        if (!forceRebuild) {
+          console.warn('[recruiting-hub] warm-memory disk-prime thin — skip rebuild', primed);
+          return res.status(503).json({
+            ok: false,
+            error: 'disk_prime_insufficient',
+            primed,
+            message: 'Hub disk seed thin — pass force=1 to rebuild (may flap /ready)',
             years: yearList,
             meta: hubMeta(),
           });

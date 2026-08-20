@@ -151,6 +151,7 @@ app.use('/api', (req, res, next) => {
 });
 
 app.listen(PORT, () => {
+  global.__GV_BOOT_AT__ = new Date().toISOString();
   console.log('[boot] early listen on port', PORT);
   // Keep /health green through Render's deploy probes before sync route wiring.
   // Starter CPUs can spend multiple seconds inside wireApplication mounts.
