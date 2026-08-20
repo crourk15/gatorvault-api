@@ -6,6 +6,7 @@ import { ufPctFromFc } from '@/components/futurecast/lab/fc-lab-types';
 import {
   buildChaseWhyBrief,
   chaseHeatLabel,
+  floridaChasePct,
   type ChaseTargetExtras,
 } from '@/components/futurecast/lab/chase-priority';
 import { isFlorida, shortSchoolLabel, topThreatVsFlorida } from '@/components/futurecast/lab/competing-schools';
@@ -113,7 +114,7 @@ export function VaultChaseCard({
     hrefOverride ??
     playerProfilePath(player.slug, 'HIGH_SCHOOL', true, player.name, profileContext);
 
-  const ufShot = ufPctFromFc(player.ufProbability);
+  const ufShot = floridaChasePct(player);
   const fit =
     player.fitScore != null && Number(player.fitScore) > 0
       ? Math.round(Number(player.fitScore))

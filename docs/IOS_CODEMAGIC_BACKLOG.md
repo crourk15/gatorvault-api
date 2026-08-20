@@ -69,6 +69,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-20 | Chase Why we chase / UF Shot prefer `ufRpmPct` (no Antonio “sits at 11%” vs Miami) | `chase-priority` + `VaultChaseCard` in binary | pending |
 | 2026-08-20 | HP stale fallback: reject missing-RPM soft-rival On3 leads (Antonio Miami flip-back); cache v21 + 10m stale max | `futurecast-high-priority-api` in binary; **API still serves UF live** | pending |
 | 2026-08-20 | Signup channel: send `signupChannel` / `X-GV-Client` (website vs ios) on register so Admin Members can split web vs app | `auth-api` Join/register in binary; **API + Admin Hub already live for web Netlify** | pending |
 | 2026-08-20 | Footprint Class 2028: client falls back to dedicated `/hub/footprint` when bundle nest shows 0 commits but commit cards exist | `useHubBundleSection` in binary; **API heal of `bundle.footprint` nest is live without bake** | pending |
