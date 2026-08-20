@@ -25,6 +25,13 @@ export type ChaseTargetExtras = {
   hotBadges?: ChaseBadges | null;
 };
 
+/** Prefer live On3 RPM over store ufProbability (Antonio 11% poison vs Field 41). */
+export function floridaChasePct(player: FcLabTarget): number {
+  const rpm = Number(player.ufRpmPct);
+  if (Number.isFinite(rpm) && rpm > 0) return Math.round(rpm);
+  return ufPctFromFc(player.ufProbability);
+}
+
 function laneRank(lanes: ChaseLaneScores | null | undefined): Array<{ key: keyof ChaseLaneScores; score: number }> {
   if (!lanes) return [];
   return (
@@ -121,7 +128,7 @@ function looksLikeTraitNote(note: string): boolean {
  * not how he plays. Traits stay on the profile.
  */
 export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): string {
-  const pct = ufPctFromFc(player.ufProbability);
+  const pct = floridaChasePct(player);
   const fit = player.fitScore != null ? Math.round(Number(player.fitScore)) : 0;
   const lanes = laneRank(player.hotLanes);
   const threat = topThreatVsFlorida(player);
@@ -156,11 +163,18 @@ export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): str
   if (visitBits.length) tails.push(visitBits.join(' · '));
   if (inState && !/in-state/i.test(lead)) tails.push('in-state');
   if (threat?.name) {
-    tails.push(
-      pct > 0 && pct < 40
-        ? `live fight with ${threat.label || threat.name} while Florida still sits at ${pct}%`
-        : `board fight with ${threat.label || threat.name}`
-    );
+    const threatPct = Number(threat.pct) || 0;
+    const threatLabel = threat.label || threat.name;
+    if (pct > 0 && threatPct > 0 && pct >= threatPct) {
+      // Antonio: UF 41 vs Miami 13 — never "live fight… sits at 11%".
+      tails.push(`Florida leads On3 vs ${threatLabel}`);
+    } else if (pct > 0 && pct < 40) {
+      tails.push(
+        `live fight with ${threatLabel} while Florida still sits at ${pct}%`
+      );
+    } else {
+      tails.push(`board fight with ${threatLabel}`);
+    }
   } else if (pct > 0 && pct < 35 && !/Florida shot/i.test(lead)) {
     tails.push(`still a live chase at ${pct}% UF`);
   }
@@ -183,7 +197,7 @@ export function chaseHeatLabel(score: number | null | undefined): string {
 }
 
 export function chaseFightLine(player: FcLabTarget): string {
-  const pct = ufPctFromFc(player.ufProbability);
+  const pct = floridaChasePct(player);
   const threat = topThreatVsFlorida(player);
   if (threat?.name) {
     return `${pct}% Florida · vs ${threat.label || threat.name}`;
