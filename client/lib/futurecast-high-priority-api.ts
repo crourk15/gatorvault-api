@@ -7,7 +7,8 @@ import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 /** Bump when high-priority payload shape changes (align with server FUTURECAST_API_CACHE_VERSION). */
 /** v20: bust localStorage so chase cards pick up API `on3Lead` stamp field. */
-export const FUTURECAST_CLIENT_CACHE_VERSION = 20;
+/** v21: bust iOS localStorage after Antonio Miami→UF HP heal (API already live; App Store binary still on pre-prefer stamp). */
+export const FUTURECAST_CLIENT_CACHE_VERSION = 21;
 export const HIGH_PRIORITY_CACHE_KEY = `gv:futurecast:high-priority:v${FUTURECAST_CLIENT_CACHE_VERSION}`;
 export const HIGH_PRIORITY_YEAR = 2027;
 export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;
