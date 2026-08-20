@@ -123,10 +123,14 @@ Full Ops / Full QA iframes remain under Dashboard / QA as escape hatches.
 
 ## FutureCast wiring
 
-1. Beat Desk **Open** hydrates On3 + builds brief.
-2. `feedDeskIntelToFutureCast` may seed/promote/refresh 2028 targets (never expands 2027 Closing Class).
-3. Desk shows a **FutureCast feed** card (seeded / promoted / refreshed + %).
+1. Beat Desk **Open** builds a **desk-lite** brief from disk + beat store (fast). Live On3 hydrate / elite research / FutureCast feed write run only with `?full=1`.
+2. `feedDeskIntelToFutureCast` (full brief) may seed/promote/refresh 2028 targets (never expands 2027 Closing Class).
+3. Desk shows a **FutureCast feed** card when the full path ran (seeded / promoted / refreshed + %).
 4. `#futurecast/control` lists admin allowlist extras, board sample, early watch — add/remove 2028 only.
+
+### API crash-loop note (Aug 20)
+
+If Open shows “still starting,” the Render API is flapping HTML 502 (event-loop starve past ~5s `/ready`). Guards: skip boot warm, disable in-process background hub refresh, hub-warm cron **lite** only, desk-lite Open Brief, 25s brief timeout.
 
 ## Film / highlights in Copy Brief
 

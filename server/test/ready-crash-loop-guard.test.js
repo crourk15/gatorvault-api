@@ -6,13 +6,14 @@ const fs = require('node:fs');
 const path = require('path');
 
 describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => {
-  it('hub-warm cron is 2028-only spaced and does not force-restart', () => {
+  it('hub-warm cron is 2028-only lite (not spaced) and does not force-restart', () => {
     const yaml = fs.readFileSync(path.join(__dirname, '..', '..', 'render.yaml'), 'utf8');
     const start = yaml.indexOf('gatorvault-api-hub-warm');
     assert.ok(start > 0, 'expected hub-warm cron');
     const nextService = yaml.slice(start).search(/\n  - type:/);
     const block = nextService > 0 ? yaml.slice(start, start + nextService) : yaml.slice(start);
-    assert.match(block, /mode=spaced&years=2028/);
+    assert.match(block, /mode=lite&years=2028/);
+    assert.doesNotMatch(block, /mode=spaced/);
     assert.doesNotMatch(block, /years=2027,2028/);
     assert.doesNotMatch(block, /force=1/);
     // Staggered off :00/:30 so it does not stack with recruiting-light / ingest.
@@ -86,6 +87,8 @@ describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => 
     assert.match(yaml, /HUB_BOOT_FORCE_WARM[\s\S]*?value:\s*"false"/);
     assert.match(yaml, /HUB_BOOT_SKIP_WARM[\s\S]*?value:\s*"true"/);
     assert.match(yaml, /HP_HEAL_BOOT[\s\S]*?value:\s*"false"/);
+    assert.match(yaml, /HUB_BACKGROUND_REFRESH[\s\S]*?value:\s*"false"/);
+    assert.match(yaml, /HUB_SPACED_ELITE_WARM[\s\S]*?value:\s*"false"/);
   });
 
   it('warm job batch yields for health probes between keys', () => {
@@ -95,6 +98,7 @@ describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => 
     );
     assert.match(src, /yieldForHealthProbe/);
     assert.match(src, /HUB_WARM_YIELD_MS/);
+    assert.match(src, /HUB_BACKGROUND_REFRESH === 'false'/);
   });
 
   it('HP heal is gated off boot unless HP_HEAL_BOOT=true', () => {
@@ -103,5 +107,24 @@ describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => 
       'utf8'
     );
     assert.match(src, /HP_HEAL_BOOT === 'true'/);
+  });
+
+  it('Open Brief default path stays desk-lite (no live On3/research)', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', 'lib/beat-brief-packet.js'),
+      'utf8'
+    );
+    assert.match(src, /deskLite/);
+    assert.match(src, /const heavy = wantFull/);
+    assert.match(src, /Desk Open must stay fast/);
+  });
+
+  it('brief route times out instead of hanging forever', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', 'lib/x-autoposter-routes.js'),
+      'utf8'
+    );
+    assert.match(src, /BEAT_BRIEF_TIMEOUT_MS/);
+    assert.match(src, /brief_timeout/);
   });
 });

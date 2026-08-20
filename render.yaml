@@ -339,9 +339,9 @@ services:
         value: "false"
       - key: HUB_BOOT_BUNDLE_WARM
         value: "false"
-      # After lite: HP → bundle → master for 2028 only (Starter-safe; widen years later).
+      # Off on web dyno — cron lite owns refill; spaced forks were OOM/502 looping.
       - key: HUB_SPACED_ELITE_WARM
-        value: "true"
+        value: "false"
       - key: HUB_SPACED_WARM_YEARS
         value: "2028"
       - key: HUB_SPACED_WARM_START_MS
@@ -377,15 +377,18 @@ services:
         value: "850"
       # Yield between warm keys so Render /ready (~5s) can run during lite builds.
       - key: HUB_WARM_YIELD_MS
-        value: "50"
+        value: "120"
       # Pro 4GB: keep heavy warm well after listen so /ready stays cheap.
       - key: API_BOOT_DEFER_HEAVY_MS
         value: "90000"
       - key: PLAYER_INTEL_REFRESH_ON_BOOT
         value: "false"
-      # Background hub re-warm every 10m (was 4m — too aggressive with crons).
+      # Off — in-process 10m lite warm + cron spaced stacked and starved /ready (Aug 20).
+      - key: HUB_BACKGROUND_REFRESH
+        value: "false"
+      # Background hub re-warm interval (only if HUB_BACKGROUND_REFRESH is re-enabled).
       - key: HUB_CACHE_REFRESH_MS
-        value: "600000"
+        value: "1800000"
       - key: HUB_REFRESH_INTERVAL_MS
         value: "21600000"
       - key: DATABASE_URL
@@ -519,9 +522,8 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
-  # Tier B: lite + spaced elite. Schedule OFF :00/:30 so it does not stack with
-  # recruiting-light (:00) + recruiting-ingest (even hours) — that pile-up starved
-  # /ready past Render's ~5s health window → brief HTML 502 restart flaps.
+  # Tier B: lite only while API crash-loops recover (Aug 20). Spaced forks on the
+  # web dyno starved /ready past ~5s → HTML 502. Schedule OFF :00/:30.
   - type: cron
     name: gatorvault-api-hub-warm
     schedule: "12,42 * * * *"
@@ -532,7 +534,7 @@ services:
     startCommand: node scripts/render-hub-warm-cron.js
     envVars:
       - key: HUB_WARM_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=spaced&years=2028
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=lite&years=2028
       - key: LAB_WARM_URL
         value: ""
       - key: MONITORING_CRON_SECRET

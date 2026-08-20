@@ -856,6 +856,12 @@ async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = fa
 
 function scheduleBackgroundRefresh() {
   if (refreshTimer) return;
+  // Emergency off: in-process lite warm every N minutes still starved /ready into
+  // HTML 502 flaps (Aug 20). Cron hub-warm owns refill; set true to re-enable.
+  if (process.env.HUB_BACKGROUND_REFRESH === 'false') {
+    console.log('[recruiting-hub] background refresh disabled (HUB_BACKGROUND_REFRESH=false)');
+    return;
+  }
   refreshTimer = setInterval(() => {
     try {
       const pipelineGuards = require('./pipeline-guards');

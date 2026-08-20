@@ -773,6 +773,21 @@ function mountRecruitingHubRoutes(app) {
       if (!isCron && !isAdmin && process.env.NODE_ENV === 'production') {
         return res.status(403).json({ ok: false, error: 'Forbidden' });
       }
+      // Refuse warm while the dyno is already memory-hot — another stampede → /ready 502.
+      const rssMb = Math.round(process.memoryUsage().rss / 1024 / 1024);
+      const rejectRss =
+        parseInt(process.env.HUB_WARM_REJECT_RSS_MB || '1400', 10) || 1400;
+      if (rssMb >= rejectRss) {
+        console.warn('[recruiting-hub] warm-memory rejected — RSS', rssMb, '>=', rejectRss);
+        return res.status(503).json({
+          ok: false,
+          error: 'rss_guard',
+          message: 'API memory high — skip warm this tick',
+          rssMb,
+          rejectRssMb: rejectRss,
+          meta: hubMeta(),
+        });
+      }
       const { stayGreenSkipPayload } = require('./api-stay-green');
       const skipped = stayGreenSkipPayload('hub-warm-memory');
       if (skipped) {

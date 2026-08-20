@@ -66,7 +66,9 @@
       throw new Error((body && body.error) || 'Invalid PIN — check Render OPS_ADMIN_PIN / RECRUITING_ADMIN_PIN');
     }
     if (!r.ok) {
-      var fail = new Error((body && body.error) || ('Request failed (' + r.status + ')'));
+      var fail = new Error(
+        (body && body.message) || (body && body.error) || ('Request failed (' + r.status + ')')
+      );
       fail.status = r.status;
       fail.retryable = !!RETRY_STATUSES[r.status];
       fail.wake = !!RETRY_STATUSES[r.status];
@@ -100,11 +102,13 @@
     var retries = opts.retries != null ? opts.retries : DEFAULT_RETRIES;
     var retryDelayMs = opts.retryDelayMs != null ? opts.retryDelayMs : DEFAULT_RETRY_MS;
     var onAttempt = typeof opts.onAttempt === 'function' ? opts.onAttempt : null;
+    var timeoutMs = opts.timeoutMs != null ? opts.timeoutMs : 0;
     var fetchOpts = Object.assign({}, opts);
     delete fetchOpts.retries;
     delete fetchOpts.retryDelayMs;
     delete fetchOpts.onAttempt;
     delete fetchOpts.skipWake;
+    delete fetchOpts.timeoutMs;
 
     var attempt = 0;
     var maxAttempts = retries + 1;
@@ -113,7 +117,26 @@
       if (onAttempt) {
         try { onAttempt({ attempt: attempt, maxAttempts: maxAttempts, url: url }); } catch (e) { /* ignore */ }
       }
-      return fetchJsonOnce(url, fetchOpts).catch(function (err) {
+      var onceOpts = fetchOpts;
+      var abortTimer = null;
+      if (timeoutMs > 0 && typeof AbortController !== 'undefined') {
+        var ctrl = new AbortController();
+        onceOpts = Object.assign({}, fetchOpts, { signal: ctrl.signal });
+        abortTimer = setTimeout(function () {
+          try { ctrl.abort(); } catch (e2) { /* ignore */ }
+        }, timeoutMs);
+      }
+      return fetchJsonOnce(url, onceOpts)
+        .finally(function () {
+          if (abortTimer) clearTimeout(abortTimer);
+        })
+        .catch(function (err) {
+        if (err && (err.name === 'AbortError' || /aborted/i.test(String(err.message || '')))) {
+          err = new Error('Request timed out — server may be warming. Try again in a minute.');
+          err.retryable = true;
+          err.wake = true;
+          err.status = 503;
+        }
         var status = err && err.status;
         if (attempt >= retries || !isRetryableError(err, status)) {
           // Final failure after wake retries — plain English for Charles, not “Waking kitchen…”.
