@@ -1087,15 +1087,25 @@ function primeHpFromDisk(year) {
 /**
  * After skip-boot-warm: fill memory from hub-runtime / hub-snapshot JSON only.
  * No elite rebuilds — keeps /ready fast while GET no-sync still has something to serve.
+ * Boot path must NOT require FutureCast .ts (HP) — first-load transpile starved /ready ~15s.
  */
-function primeLiteKeysFromDisk(years) {
+function primeLiteKeysFromDisk(years, options = {}) {
   const list = (years && years.length ? years : [2027, 2028]).filter((y) => Number.isFinite(y));
+  const includeBundle = options.includeBundle !== false;
+  const includeHp = options.includeHp === true; // off by default — heavy require
+  const persist = options.persist === true; // off by default — already on disk
   let primed = 0;
   const tryPrime = (cacheKey, endpoint, year) => {
     const value = readHubDiskSnapshot(endpoint, year);
     if (value == null) return;
     if (endpoint === 'footprint' && !isUsableFootprintSnapshot(value, year)) return;
-    cacheHubValue(cacheKey, value);
+    if (persist) {
+      cacheHubValue(cacheKey, value);
+    } else {
+      if (endpoint === 'bundle') healBundleFootprintNest(value, year);
+      hubCache.set(cacheKey, value);
+      seedFootprintFromBundle(cacheKey, value);
+    }
     primed += 1;
   };
 
@@ -1107,11 +1117,13 @@ function primeLiteKeysFromDisk(years) {
     tryPrime(hubCommitsCacheKey(year), 'commits', year);
     tryPrime(hubFootprintCacheKey(year), 'footprint', year);
     tryPrime(hubTickerCacheKey(year), 'ticker', year);
-    tryPrime(eliteBundleCacheKey(year), 'bundle', year);
-    try {
-      if (primeHpFromDisk(year)) primed += 1;
-    } catch {
-      /* optional Lab seed */
+    if (includeBundle) tryPrime(eliteBundleCacheKey(year), 'bundle', year);
+    if (includeHp) {
+      try {
+        if (primeHpFromDisk(year)) primed += 1;
+      } catch {
+        /* optional Lab seed */
+      }
     }
   }
 
@@ -1121,7 +1133,73 @@ function primeLiteKeysFromDisk(years) {
     lastWarmAt = new Date().toISOString();
   }
   getMeta();
-  console.log('[recruiting-hub] primed lite keys from disk', { primed, years: list });
+  console.log('[recruiting-hub] primed lite keys from disk', {
+    primed,
+    years: list,
+    includeBundle,
+    includeHp,
+    persist,
+  });
+  return primed;
+}
+
+/** Yield between keys so Render /ready can land during boot disk-prime. */
+async function primeLiteKeysFromDiskAsync(years, options = {}) {
+  const list = (years && years.length ? years : [2027, 2028]).filter((y) => Number.isFinite(y));
+  const includeBundle = options.includeBundle !== false;
+  const includeHp = options.includeHp === true;
+  const persist = options.persist === true;
+  let primed = 0;
+  const steps = [];
+  steps.push(['class-overview-all', eliteClassOverviewAllCacheKey(), 'class-overview-all', null]);
+  for (const year of list) {
+    steps.push(['class-overview', eliteClassOverviewCacheKey(year), 'class-overview', year]);
+    steps.push(['class-metrics', classSnapshotCacheKey(year), 'class-metrics', year]);
+    steps.push(['hero', `hub:elite:hero:${year}`, 'hero', year]);
+    steps.push(['commits', hubCommitsCacheKey(year), 'commits', year]);
+    steps.push(['footprint', hubFootprintCacheKey(year), 'footprint', year]);
+    steps.push(['ticker', hubTickerCacheKey(year), 'ticker', year]);
+    if (includeBundle) steps.push(['bundle', eliteBundleCacheKey(year), 'bundle', year]);
+  }
+
+  for (const [, cacheKey, endpoint, year] of steps) {
+    const value = readHubDiskSnapshot(endpoint, year);
+    if (value != null && !(endpoint === 'footprint' && !isUsableFootprintSnapshot(value, year))) {
+      if (persist) {
+        cacheHubValue(cacheKey, value);
+      } else {
+        if (endpoint === 'bundle') healBundleFootprintNest(value, year);
+        hubCache.set(cacheKey, value);
+        seedFootprintFromBundle(cacheKey, value);
+      }
+      primed += 1;
+      if (primed === 1 || primed % 3 === 0) {
+        ready = true;
+        warmKeyCount = Math.max(warmKeyCount, primed);
+        getMeta();
+      }
+    }
+    await yieldForHealthProbe();
+  }
+
+  if (includeHp) {
+    for (const year of list) {
+      try {
+        if (primeHpFromDisk(year)) primed += 1;
+      } catch {
+        /* optional */
+      }
+      await yieldForHealthProbe();
+    }
+  }
+
+  if (primed > 0) {
+    ready = true;
+    warmKeyCount = Math.max(warmKeyCount, primed);
+    lastWarmAt = new Date().toISOString();
+  }
+  getMeta();
+  console.log('[recruiting-hub] async primed lite keys from disk', { primed, years: list });
   return primed;
 }
 
@@ -1397,24 +1475,29 @@ function scheduleHubBootPipeline() {
     };
     getMeta();
     setTimeout(() => {
-      try {
-        const n = primeLiteKeysFromDisk(seedYears);
-        bootWarmDecision = {
-          ...(bootWarmDecision || {}),
-          diskPrimeDone: true,
-          diskPrimeCount: n,
-          diskPrimeAt: new Date().toISOString(),
-        };
-        getMeta();
-      } catch (err) {
-        console.warn('[recruiting-hub] disk prime failed:', err.message);
-        bootWarmDecision = {
-          ...(bootWarmDecision || {}),
-          diskPrimeDone: false,
-          diskPrimeError: err.message,
-        };
-        getMeta();
-      }
+      primeLiteKeysFromDiskAsync(seedYears, {
+        includeBundle: false,
+        includeHp: false,
+        persist: false,
+      })
+        .then((n) => {
+          bootWarmDecision = {
+            ...(bootWarmDecision || {}),
+            diskPrimeDone: true,
+            diskPrimeCount: n,
+            diskPrimeAt: new Date().toISOString(),
+          };
+          getMeta();
+        })
+        .catch((err) => {
+          console.warn('[recruiting-hub] disk prime failed:', err.message);
+          bootWarmDecision = {
+            ...(bootWarmDecision || {}),
+            diskPrimeDone: false,
+            diskPrimeError: err.message,
+          };
+          getMeta();
+        });
     }, seedDelay);
     return;
   }
@@ -1602,6 +1685,7 @@ module.exports = {
   persistDurableCacheValue,
   hubGetNoSyncBuild,
   primeLiteKeysFromDisk,
+  primeLiteKeysFromDiskAsync,
   primeHpFromDisk,
   measureEventLoopLagMs,
 };
