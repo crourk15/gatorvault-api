@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-20T16:26:18.413Z",
+  "updatedAt": "2026-08-20T16:34:39.217Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -2935,16 +2935,23 @@
       "playerName": "Amaree Joshua",
       "position": null,
       "classYear": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22378421/696946060825341c8d63addc"
+        }
+      ],
       "traits": [
         "length",
-        "frame",
-        "power",
-        "tackle-mold",
-        "footwork",
-        "upside"
+        "get-off",
+        "finish",
+        "second-level",
+        "kick-slide",
+        "hands",
+        "anchor"
       ],
-      "vaultFilmAngle": "Lead with Florida offer entering the Joshua race — stack length/frame + RPM context, provisional until film locked.",
+      "vaultFilmAngle": "Lead with Florida offer + Hillgrove LT length/finish on tape — stack get-off, pancakes, kick-slide.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"

@@ -3,31 +3,34 @@
   "name": "Amaree Joshua",
   "pos": "OT",
   "type": "target",
-  "hudl": "",
+  "hudl": "https://www.hudl.com/embed/video/3/22378421/696946060825341c8d63addc",
   "publishedAt": "2026-08-20",
-  "filmWatched": false,
-  "provisional": true,
+  "filmWatched": true,
+  "provisional": false,
   "strengths": [
-    "Joshua has rare OT length at ~6-7 / 288-290 — the frame already looks SEC-ready before mass peaks.",
-    "Joshua fires off the ball and can physically displace high-school edge defenders with natural power in the run game (camp/scout signal).",
-    "Joshua shows workable footwork for his size — enough kick-slide foundation to project as a true tackle, not a forced IOL."
+    "Joshua (#71) fires off the ball with suddenness for a 6-7 frame and consistently wins first contact in the run game.",
+    "Joshua drives and finishes — locks, rides edge defenders 5+ yards, and pancakes with a nasty closing demeanor.",
+    "Joshua climbs to the second level with clean angles and engulfs LBs/DBs in space (open-field finish to the boundary).",
+    "Joshua covers ground in kick-slide, delivers a heavy initial punch, and mirrors inside counters while anchoring vs bull rush."
   ],
   "weaknesses": [
-    "Joshua still needs confirmed Hudl/On3 tape in Vault before full film traits — mass and hand timing vs SEC speed rush remain growth items until film is locked."
+    "Joshua occasionally pops high out of his stance and bends at the waist — pad level vs SEC edge speed needs knee-bend consistency.",
+    "Joshua’s punch can land wide on the shoulder pads — hand placement must tighten when length alone does not win."
   ],
   "comparison": "Joshua comps to Walker Little — 6-7 / ~315 tackle mold with rare length who grows mass and wins with reach/frame (size-matched within ~1–2\" of Joshua's 6-7 / 288).",
   "projection": "Joshua projects as develop into the OL room, earn early depth and swing-tackle snaps, then compete for a starting OT job — starter upside as a length-first tackle.",
-  "schemeFit": "Joshua fits a length-first tackle who can grow into LT/RT starter mass in a power/zone hybrid room.",
-  "insiderNotes": "Joshua is a 2028 OT from Hillgrove (Powder Springs, GA) listed ~6-7 / 288-290. Florida offered Aug 2026. On3 Industry ~86.55 (Natl ~316 / OT ~35 / GA ~38); rising 247 band (~90 / Natl ~97). RPM picture has Georgia Tech and Georgia out front with Ohio State loud — Florida is newly on the offer board.",
-  "staffNotes": "PROVISIONAL — no Hudl/On3 highlight link on Beat Desk Open 2026-08-20. Board + public size/rank/scout frame only. Re-Open to auto-pull film, then Charles confirms before treating as live FutureCast card copy. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+  "schemeFit": "Joshua fits a length-first LT/RT who can grow starter mass in a power/zone hybrid room that wants finish and edge seal.",
+  "insiderNotes": "Joshua is Hillgrove LT #71 with rare 6-7 length. Tape: sudden get-off, drive finish/pancakes, second-level climb, heavy punch + kick-slide depth + anchor. Growth: pad level and hand placement. Florida offered Aug 2026; On3 Industry ~86.55; RPM still has Georgia Tech/Georgia out front with Ohio State loud.",
+  "staffNotes": "Vault film desk verified 2026-08-20 from Hudl embed https://www.hudl.com/embed/video/3/22378421/696946060825341c8d63addc (~170s). Comp size-matched within ~1–2\" — not a Florida-alum default. Confirm with Charles before treating as live FutureCast card copy.",
   "recruitingStory": "Amaree Joshua is a 2028 OT · listed ~6-7 / 288-290 · Hillgrove (Powder Springs, GA) · On3 Industry ~86.55 · Natl ~316 · OT ~35 · GA ~38 · Florida offered Aug 2026.",
-  "angle": "Lead with Florida offer entering the Joshua race — stack length/frame + RPM context, provisional until film locked.",
+  "angle": "Lead with Florida offer + Hillgrove LT length/finish on tape — stack get-off, pancakes, kick-slide.",
   "traits": [
     "length",
-    "frame",
-    "power",
-    "tackle-mold",
-    "footwork",
-    "upside"
+    "get-off",
+    "finish",
+    "second-level",
+    "kick-slide",
+    "hands",
+    "anchor"
   ]
 }
