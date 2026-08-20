@@ -132,6 +132,23 @@ function findUserByEmail(email) {
   return loadUsers().find((u) => u.email === normalized) || null;
 }
 
+/**
+ * One Map for fan-out eligibility (avoid N× findUserByEmail scans).
+ * @param {object[]=} users
+ * @returns {Map<string, object>}
+ */
+function indexUsersByEmail(users) {
+  const list = Array.isArray(users) ? users : loadUsers();
+  const map = new Map();
+  for (const u of list) {
+    const e = String(u?.email || '')
+      .trim()
+      .toLowerCase();
+    if (e) map.set(e, u);
+  }
+  return map;
+}
+
 function findUserByOriginalTransactionId(originalTransactionId) {
   const key = String(originalTransactionId || '').trim();
   if (!key) return null;
@@ -226,6 +243,7 @@ module.exports = {
   saveUsers,
   mutateUsers,
   findUserByEmail,
+  indexUsersByEmail,
   findUserByOriginalTransactionId,
   findUserByAppAccountToken,
   updateUser,

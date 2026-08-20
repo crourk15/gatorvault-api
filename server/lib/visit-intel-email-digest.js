@@ -10,6 +10,7 @@ const {
 } = require("./alert-email-prefs-service");
 const { subscriberMatchesPayload } = require("./push-alert-filters");
 const { getVerifiedFloridaVisitWindow } = require("./visit-intel-utils");
+const { mapPool, visitEmailFanoutConcurrency } = require("./fanout-util");
 
 const SITE_URL = (process.env.SITE_URL || "https://gatorvaultinsider.com").replace(/\/$/, "");
 const STATE_PATH = require("path").join(__dirname, "../data/ops/visit-intel-email-state.json");
@@ -173,7 +174,8 @@ async function dispatchVisitInstantEmail(payload, options = {}) {
 
   let sent = 0;
   const errors = [];
-  for (const recipient of filtered) {
+  const concurrency = visitEmailFanoutConcurrency();
+  await mapPool(filtered, concurrency, async (recipient) => {
     try {
       const out = await sendSubscriberDigestEmail(recipient.email, payload.subject, payload.html, {
         playerSlug: payload.playerSlug,
@@ -183,7 +185,7 @@ async function dispatchVisitInstantEmail(payload, options = {}) {
     } catch (err) {
       errors.push({ email: recipient.email, error: err.message });
     }
-  }
+  });
 
   if (sent > 0) markInstantFingerprintSent(fingerprint);
 
@@ -254,18 +256,19 @@ async function sendVisitIntelDailyDigest({ recapRows, dayKey, dryRun = false }) 
   let sent = 0;
   let skippedEmpty = 0;
   const errors = [];
+  const concurrency = visitEmailFanoutConcurrency();
 
-  for (const recipient of recipients) {
+  await mapPool(recipients, concurrency, async (recipient) => {
     const rows = filterRecapRowsForSubscriber(recapRows, recipient.prefs);
     if (!rows.length) {
       skippedEmpty += 1;
-      continue;
+      return;
     }
     const subject = `GatorVault verified visit intel — ${dayKey}`;
     const html = buildVisitDailyEmailHtml(rows, dayKey);
     if (dryRun) {
       sent += 1;
-      continue;
+      return;
     }
     try {
       const out = await sendSubscriberDigestEmail(recipient.email, subject, html);
@@ -273,7 +276,7 @@ async function sendVisitIntelDailyDigest({ recapRows, dayKey, dryRun = false }) 
     } catch (err) {
       errors.push({ email: recipient.email, error: err.message });
     }
-  }
+  });
 
   if (!dryRun && sent > 0) {
     state.dailyDigests = state.dailyDigests || [];
@@ -318,18 +321,19 @@ async function sendVisitIntelWeeklyDigest({ recapRows, weekKey, dryRun = false }
   let sent = 0;
   let skippedEmpty = 0;
   const errors = [];
+  const concurrency = visitEmailFanoutConcurrency();
 
-  for (const recipient of recipients) {
+  await mapPool(recipients, concurrency, async (recipient) => {
     const rows = filterRecapRowsForSubscriber(recapRows, recipient.prefs);
     if (!rows.length) {
       skippedEmpty += 1;
-      continue;
+      return;
     }
     const subject = `GatorVault verified OV recap — ${weekKey}`;
     const html = buildVisitRecapEmailHtml(rows, weekKey);
     if (dryRun) {
       sent += 1;
-      continue;
+      return;
     }
     try {
       const out = await sendSubscriberDigestEmail(recipient.email, subject, html);
@@ -337,7 +341,7 @@ async function sendVisitIntelWeeklyDigest({ recapRows, weekKey, dryRun = false }
     } catch (err) {
       errors.push({ email: recipient.email, error: err.message });
     }
-  }
+  });
 
   if (!dryRun && sent > 0) {
     state.digests = state.digests || [];

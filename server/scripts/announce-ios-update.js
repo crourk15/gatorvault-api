@@ -15,7 +15,7 @@
  */
 'use strict';
 
-const { loadUsers, saveUsers } = require('../lib/user-store');
+const { loadUsers, updateUser } = require('../lib/user-store');
 const announce = require('../lib/member-announce-email');
 
 function hasFlag(flag) {
@@ -52,6 +52,7 @@ async function main() {
 
   const result = await announce.sendIosUpdateAnnounce({
     loadUsers: () => users,
+    updateUser,
     deliverEmail,
     version,
     dryRun,
@@ -59,7 +60,6 @@ async function main() {
     limit,
   });
 
-  if (!dryRun && result.sent > 0) saveUsers(users);
   console.log(JSON.stringify(result, null, 2));
 }
 

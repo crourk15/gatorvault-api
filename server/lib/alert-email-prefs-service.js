@@ -1,7 +1,7 @@
 /**
  * Email alert preferences — instant visit alerts + weekly verified OV digest eligibility.
  */
-const { findUserByEmail } = require("./user-store");
+const { findUserByEmail, indexUsersByEmail, loadUsers } = require("./user-store");
 const { hasPaidAccess, trialState } = require("./subscription-service");
 const { getSessionFromReq } = require("./session-auth");
 const { subscriberMatchesPayload } = require("./push-alert-filters");
@@ -60,11 +60,15 @@ async function upsertEmailAlertPrefs(email, prefs) {
 
 async function listEligibleVisitInstantRecipients() {
   const rows = await persistence.loadAllPrefs();
+  const byEmail = indexUsersByEmail(loadUsers());
   const out = [];
   for (const row of rows) {
     const prefs = normalizePrefs(row.prefs);
     if (!wantsEmailVisitInstant(prefs)) continue;
-    const user = findUserByEmail(row.email);
+    const email = String(row.email || "")
+      .trim()
+      .toLowerCase();
+    const user = email ? byEmail.get(email) || null : null;
     if (!hasSubscriberAccess(user)) continue;
     out.push({ email: row.email, prefs, user });
   }
@@ -73,13 +77,17 @@ async function listEligibleVisitInstantRecipients() {
 
 async function listEligibleVisitDigestRecipients({ freq = "weekly" } = {}) {
   const rows = await persistence.loadAllPrefs();
+  const byEmail = indexUsersByEmail(loadUsers());
   const out = [];
   for (const row of rows) {
     const prefs = normalizePrefs(row.prefs);
     if (!wantsEmailVisitDigest(prefs)) continue;
     if (freq === "weekly" && prefs.freq !== "weekly") continue;
     if (freq === "daily" && prefs.freq !== "daily") continue;
-    const user = findUserByEmail(row.email);
+    const email = String(row.email || "")
+      .trim()
+      .toLowerCase();
+    const user = email ? byEmail.get(email) || null : null;
     if (!hasSubscriberAccess(user)) continue;
     out.push({ email: row.email, prefs, user });
   }

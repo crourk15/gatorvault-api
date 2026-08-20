@@ -126,3 +126,44 @@ test('dueTrialReminderKeys catches up when exact day was missed', () => {
   };
   assert.deepEqual(dueTrialReminderKeys(user, now), ['d5']);
 });
+
+test('processOnboardingQueue respects maxSends budget and leaves work for next tick', async () => {
+  const now = new Date('2026-07-22T12:00:00.000Z');
+  const users = [
+    {
+      email: 'a@example.com',
+      createdAt: '2026-07-15T12:00:00.000Z',
+      trialEnd: '2026-08-20T12:00:00.000Z',
+      onboardingSent: [0],
+      trialRemindersSent: [],
+    },
+    {
+      email: 'b@example.com',
+      createdAt: '2026-07-15T12:00:00.000Z',
+      trialEnd: '2026-08-20T12:00:00.000Z',
+      onboardingSent: [0],
+      trialRemindersSent: [],
+    },
+  ];
+  const sent = [];
+  const result = await processOnboardingQueue({
+    now,
+    maxSends: 1,
+    saveEvery: 1,
+    loadUsers: () => users,
+    saveUsers: (next) => {
+      users.splice(0, users.length, ...next);
+    },
+    deliverEmail: async (to) => {
+      sent.push(to);
+      return { sent: true, provider: 'test' };
+    },
+    hasPaidAccess: () => false,
+  });
+  assert.equal(result.sent, 1);
+  assert.equal(result.hitBudget, true);
+  assert.equal(sent.length, 1);
+  // Catch-up would owe days 1,3,7 — budget 1 only completes the first due drip.
+  assert.ok(users[0].onboardingSent.includes(1) || users[1].onboardingSent.includes(1));
+});
+
