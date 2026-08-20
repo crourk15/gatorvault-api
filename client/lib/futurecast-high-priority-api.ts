@@ -7,12 +7,14 @@ import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 /** Bump when high-priority payload shape changes (align with server FUTURECAST_API_CACHE_VERSION). */
 /** v20: bust localStorage so chase cards pick up API `on3Lead` stamp field. */
-export const FUTURECAST_CLIENT_CACHE_VERSION = 20;
+/** v21: bust iOS stale Miami On3 lead after Antonio HP heal; shorten stale fallback. */
+export const FUTURECAST_CLIENT_CACHE_VERSION = 21;
 export const HIGH_PRIORITY_CACHE_KEY = `gv:futurecast:high-priority:v${FUTURECAST_CLIENT_CACHE_VERSION}`;
 export const HIGH_PRIORITY_YEAR = 2027;
 export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;
 export const HIGH_PRIORITY_CACHE_TTL_MS = 5 * 60_000;
-export const HIGH_PRIORITY_STALE_CACHE_MAX_MS = 24 * 60 * 60_000;
+/** Was 24h — after Render 502s iOS re-painted Antonio Miami from poison disk. Keep short. */
+export const HIGH_PRIORITY_STALE_CACHE_MAX_MS = 10 * 60_000;
 
 export type VisitBadgeType = 'OV' | 'UV' | 'Game Day' | 'Junior Day' | 'Spring Visit';
 
@@ -175,6 +177,29 @@ export interface HighPriorityResponse {
   movementNarratives?: MovementNarrativeRow[];
 }
 
+/**
+ * Reject stale HP plates that crowned a soft rival while Florida RPM was missing
+ * (Antonio: on3Lead Miami + ufRpmPct null + Miami ~13). Prefer empty over poison.
+ */
+export function isUsableHighPriorityCache(payload: HighPriorityResponse | null | undefined): boolean {
+  if (!payload || !Array.isArray(payload.players) || payload.players.length === 0) return false;
+  for (const p of payload.players) {
+    if (!p || typeof p !== 'object') continue;
+    const rpm = Number(p.ufRpmPct);
+    const hasRpm = Number.isFinite(rpm) && rpm > 0;
+    if (hasRpm) continue;
+    const lead = String(p.on3Lead || '').trim();
+    if (!lead || lead === 'UF' || lead === '—' || lead === '-') continue;
+    const top = [...(p.competingSchools || [])]
+      .filter((s) => s?.name && Number(s.pct) > 0)
+      .sort((a, b) => Number(b.pct) - Number(a.pct))[0];
+    if (top && Number(top.pct) > 0 && Number(top.pct) < 30) {
+      return false;
+    }
+  }
+  return true;
+}
+
 function readHighPriorityCacheEntry(maxAgeMs: number, year = HIGH_PRIORITY_YEAR): HighPriorityResponse | null {
   if (typeof window === 'undefined') return null;
   try {
@@ -185,6 +210,7 @@ function readHighPriorityCacheEntry(maxAgeMs: number, year = HIGH_PRIORITY_YEAR)
       payload: HighPriorityResponse;
     };
     if (Date.now() - savedAt > maxAgeMs) return null;
+    if (!isUsableHighPriorityCache(payload)) return null;
     return payload;
   } catch {
     return null;
@@ -201,6 +227,7 @@ export function readStaleHighPriorityCache(year = HIGH_PRIORITY_YEAR): HighPrior
 
 export function writeHighPriorityCache(payload: HighPriorityResponse): void {
   if (typeof window === 'undefined') return;
+  if (!isUsableHighPriorityCache(payload)) return;
   const year = payload.classYear ?? HIGH_PRIORITY_YEAR;
   try {
     localStorage.setItem(
