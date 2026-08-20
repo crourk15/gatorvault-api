@@ -27,7 +27,7 @@ Plain-English playbook cards on **Beat Desk** and **Command Center**:
 - **Go post** — default when nothing actionable is red; wake-lag / latency-only API is yellow (ignore) so Charles isn’t blocked from Beat Desk
 - **Wake lock** — while the server is waking, Deploy recovery stays disabled (spamming it makes fail noise)
 - **API status light** — top-right pill is always visible: **green API OK** / yellow API waking / **flashing red API DOWN**. Click to recheck. Soft orange banner = kitchen waking (503) **or brief network blip** (grace window). **Flashing red banner + ops strip + `[API DOWN]` tab title** = confirmed Render **502/504** — App Store / War Room login will fail until `gatorvault-api` is restarted/redeployed. Do not treat orange wake as “API DOWN.”
-- **502 flap control (Aug 2026):** hub-warm runs at **:12/:42** (not :00/:30); recruiting-ingest at **:15** every 2h; spaced fork skips when parent RSS ≥ `HUB_SPACED_FORK_PARENT_RSS_MB` (850); warm yields `HUB_WARM_YIELD_MS=50` between keys. Goal: stop brief daytime restart loops when crons stacked.
+- **502 flap control (Aug 2026):** hub-warm runs at **:12/:42** (not :00/:30); recruiting-ingest at **:15** every 2h; spaced fork skips when parent RSS ≥ `HUB_SPACED_FORK_PARENT_RSS_MB` (850); warm yields `HUB_WARM_YIELD_MS=50` between keys. **Boot warm OFF** (`HUB_BOOT_SKIP_WARM=true`) — cron owns refill so deploys do not 502-loop. Beat Brief times out at 25s with a clear retry instead of hanging.
 ### Elite API stability (keep every product job)
 
 Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTube) is **queued**, not disabled. Overlap waits its turn so members still get every feature while `/ready` stays green. Look for `[heavy-job-gate] start|done` in Render logs. Do **not** re-enable stay-green / strip crons to “stabilize.”
@@ -123,10 +123,14 @@ Full Ops / Full QA iframes remain under Dashboard / QA as escape hatches.
 
 ## FutureCast wiring
 
-1. Beat Desk **Open** hydrates On3 + builds brief.
-2. `feedDeskIntelToFutureCast` may seed/promote/refresh 2028 targets (never expands 2027 Closing Class).
-3. Desk shows a **FutureCast feed** card (seeded / promoted / refreshed + %).
+1. Beat Desk **Open** builds a **desk-lite** brief from disk + beat store (fast). Live On3 hydrate / elite research / FutureCast feed write run only with `?full=1`.
+2. `feedDeskIntelToFutureCast` (full brief) may seed/promote/refresh 2028 targets (never expands 2027 Closing Class).
+3. Desk shows a **FutureCast feed** card when the full path ran (seeded / promoted / refreshed + %).
 4. `#futurecast/control` lists admin allowlist extras, board sample, early watch — add/remove 2028 only.
+
+### API crash-loop note (Aug 20)
+
+If Open shows “still starting,” the Render API is flapping HTML 502 (event-loop starve past ~5s `/ready`). Guards: skip boot warm, disable in-process background hub refresh, hub-warm cron **lite** only, desk-lite Open Brief, 25s brief timeout.
 
 ## Film / highlights in Copy Brief
 

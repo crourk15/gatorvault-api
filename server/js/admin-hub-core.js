@@ -689,7 +689,8 @@
       retries: getOpts.retries,
       retryDelayMs: getOpts.retryDelayMs,
       onAttempt: getOpts.onAttempt,
-      skipWake: getOpts.skipWake
+      skipWake: getOpts.skipWake,
+      timeoutMs: getOpts.timeoutMs
     };
     var fetchApi = global.GVAdminApiFetch;
     // Wake kitchen once, then hit the real route — kills cold-start 502 loops.

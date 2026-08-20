@@ -465,9 +465,12 @@
         row.classList.toggle('hub-ps-row--active', row.getAttribute('data-bd-slug') === slug);
       });
 
-      return apiGet('/api/x/post-studio/brief/' + encodeURIComponent(slug))
+      return apiGet('/api/x/post-studio/brief/' + encodeURIComponent(slug), {
+        retries: 1,
+        timeoutMs: 30000
+      })
         .then(function (brief) {
-          if (!brief || !brief.ok) throw new Error((brief && brief.error) || 'Brief failed');
+          if (!brief || !brief.ok) throw new Error((brief && (brief.message || brief.error)) || 'Brief failed');
           paintBrief(brief);
           var fc = brief.futurecastFeed;
           var fcNote = '';
@@ -480,23 +483,30 @@
         })
         .catch(function (err) {
           var panel = document.getElementById('hub-bd-brief');
+          var msg = (err && err.message) || 'Could not build brief.';
+          if (err && (err.status === 503 || /brief_timeout|timed out|warming/i.test(msg))) {
+            msg = 'Server is busy warming up. Wait 30–60 seconds, then Try again.';
+          }
           if (panel) {
             panel.innerHTML =
               '<h3>Player packet</h3>'
-              + '<p class="hub-meta" style="color:#fca5a5">' + esc((err && err.message) || 'Could not build brief.') + '</p>'
+              + '<p class="hub-meta" style="color:#fca5a5">' + esc(msg) + '</p>'
               + '<button type="button" class="hub-btn" id="hub-bd-retry-brief">Try again</button>';
             var btn = document.getElementById('hub-bd-retry-brief');
             if (btn) btn.addEventListener('click', function () { openBrief(slug, name); });
           }
-          setMsg((err && err.message) || 'Could not build brief.', true);
+          setMsg(msg, true);
         });
     }
 
     function copyBriefDirect(slug, name) {
       setMsg('Building + copying brief for ' + (name || slug) + '…');
-      return apiGet('/api/x/post-studio/brief/' + encodeURIComponent(slug))
+      return apiGet('/api/x/post-studio/brief/' + encodeURIComponent(slug), {
+        retries: 1,
+        timeoutMs: 30000
+      })
         .then(function (brief) {
-          if (!brief || !brief.ok) throw new Error((brief && brief.error) || 'Brief failed');
+          if (!brief || !brief.ok) throw new Error((brief && (brief.message || brief.error)) || 'Brief failed');
           selectedSlug = slug;
           paintBrief(brief);
           return copyText(brief.pasteText || '').then(function () {
@@ -504,7 +514,11 @@
           });
         })
         .catch(function (err) {
-          setMsg((err && err.message) || 'Copy brief failed.', true);
+          var msg = (err && err.message) || 'Copy brief failed.';
+          if (err && (err.status === 503 || /brief_timeout|timed out|warming/i.test(msg))) {
+            msg = 'Server is busy warming up. Wait 30–60 seconds, then try Copy Brief again.';
+          }
+          setMsg(msg, true);
         });
     }
 
