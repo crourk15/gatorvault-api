@@ -546,4 +546,5 @@ module.exports = {
   assessOn3Intel,
   upsertEarlyWatchEntry,
   isOnEarlyWatchlist,
+  upsert2028TargetBoardSeed,
 };

@@ -20,7 +20,6 @@ const {
   loadRivalsOnlyUfPctBySlug,
 } = require('./uf-probability-utils');
 const { isAllowlistedTarget, canonicalTargetSlug } = require('./recruiting-target-allowlist');
-const { isFloridaSchool } = require('./recruiting-target-filters');
 const on3Recruit = require('./on3-recruit-client');
 
 const ON3_RPM_PATH = path.join(__dirname, '..', 'data', 'war-room', 'on3-rpm-allowlist.json');
@@ -54,33 +53,20 @@ function floridaOfferedOnPlayer(player) {
 }
 
 function floridaVisitOnPlayer(player) {
-  const trail = Array.isArray(player?.visitTrail) ? player.visitTrail : [];
-  if (trail.some((v) => isFloridaSchool(v.school || ''))) return true;
-  const teams = player?.on3TopTeams || player?.topTeams || [];
-  const year = Number(player?.classYear) || 2028;
-  const uf = on3Recruit.getFloridaTeam(teams, year);
-  if (!uf) return false;
-  return (
-    Number(uf.officialVisitCount) > 0 ||
-    Number(uf.unOfficialVisitCount) > 0 ||
-    Boolean(uf.latestVisit)
-  );
+  const {
+    floridaCampusVisitSetUp,
+  } = require('./campus-visit-allowlist-promote');
+  return floridaCampusVisitSetUp(player);
 }
 
+/**
+ * Allowlist promote gate (Chase / Closest).
+ * Product: beat + offer → War Room OK; Florida campus visit set up → allowlist.
+ * Offer / RPM alone do not soft-expand the 2028 chase board.
+ */
 function shouldPromoteToFutureCast(player, classYear) {
-  const year = Number(classYear || player?.classYear);
-  // Closing Class is code-locked — never soft-expand.
-  if (year === 2027) return false;
-  if (year !== 2028) return false;
-  if (!player?.name || !player?.on3Slug) return false;
-  // Offer = real UF involvement. Visit-only national prospects (e.g. Trace Hawkins)
-  // must not soft-expand the 2028 Home / underclassmen board.
-  if (floridaOfferedOnPlayer(player)) return true;
-  // Sanitize — never let residual 0.99→99 poison force a promote.
-  const rpm = sanitizeRpmPct(player.ufRpmPct ?? player.ufProbability);
-  // Extreme 90%+ on an uncommitted kid is residual poison, not a market call.
-  if (rpm != null && rpm >= 15 && rpm < 90) return true;
-  return false;
+  const { shouldPromoteOnCampusVisit } = require('./campus-visit-allowlist-promote');
+  return shouldPromoteOnCampusVisit(player, classYear);
 }
 
 /**

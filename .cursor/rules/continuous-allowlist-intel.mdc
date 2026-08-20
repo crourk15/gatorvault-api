@@ -11,6 +11,12 @@ Intel is a **first-class** FutureCast / chase signal. Do **not** treat uneven in
 
 Every 2028 allowlist / live-board target must keep receiving process intel — visits, FL offers, On3/beat rows — on a schedule. Beat Desk Open amplifies; it does **not** own coverage.
 
+### Who gets onto the allowlist (Chase / Closest)
+
+- **Beat + Florida offer** → War Room / player profile / early-watch **monitor** is enough. Do **not** force allowlist from offer alone.
+- **Any Florida campus visit set up** (scheduled OV/UV, visit window, Florida visit log, On3 UF visit counts) → **must** auto-promote onto the 2028 admin allowlist so Chase + Closest can rank them.
+- Module: `server/lib/campus-visit-allowlist-promote.js` (also hooked from visit intel upsert + visit log append).
+
 ## Required path
 
 1. Cron (recruiting-light): `POST /api/recruiting/allowlist-intel/sweep`

@@ -125,8 +125,9 @@ Full Ops / Full QA iframes remain under Dashboard / QA as escape hatches.
 
 1. Beat Desk **Open** builds a **desk-lite** brief from disk + beat store (fast). Live On3 hydrate / elite research / FutureCast feed write run only with `?full=1`.
 2. `feedDeskIntelToFutureCast` (full brief) may seed/promote/refresh 2028 targets (never expands 2027 Closing Class).
-3. Desk shows a **FutureCast feed** card when the full path ran (seeded / promoted / refreshed + %).
-4. `#futurecast/control` lists admin allowlist extras, board sample, early watch — add/remove 2028 only.
+3. **Allowlist promote rule:** beat + Florida offer → War Room / early-watch monitor OK. **Any Florida campus visit set up** (scheduled OV/UV, visit window, Florida visit log) → auto-add to 2028 admin allowlist (`campus-visit-allowlist-promote.js`) so Chase + Closest can rank them.
+4. Desk shows a **FutureCast feed** card when the full path ran (seeded / promoted / refreshed + %).
+5. `#futurecast/control` lists admin allowlist extras, board sample, early watch — add/remove 2028 only.
 
 ### API crash-loop note (Aug 20)
 
