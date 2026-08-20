@@ -55,12 +55,10 @@ describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => 
       path.join(__dirname, '..', 'lib/recruiting-hub-routes.js'),
       'utf8'
     );
-    const start = src.indexOf("mode === 'spaced'");
-    assert.ok(start > 0);
-    const slice = src.slice(start, start + 2200);
-    assert.match(slice, /forceSpaced/);
-    assert.doesNotMatch(slice, /force:\s*true/);
-    assert.match(slice, /req\.query\.force/);
+    assert.match(src, /forceSpaced/);
+    assert.match(src, /req\.query\.force/);
+    // Default must not hard-code force:true on scheduleSpacedEliteFill.
+    assert.doesNotMatch(src, /scheduleSpacedEliteFill\(\{[\s\S]*?force:\s*true/);
   });
 
   it('spaced fork workers are serialized and capped ≤1024 by default', () => {
@@ -136,5 +134,26 @@ describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => 
     assert.match(src, /primeLiteKeysFromDisk/);
     assert.match(src, /diskPrimeScheduled/);
     assert.match(src, /HUB_DISK_PRIME_DELAY_MS/);
+    assert.match(src, /measureEventLoopLagMs/);
+  });
+
+  it('warm-memory coerces spaced to lite and prefers disk-first', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', 'lib/recruiting-hub-routes.js'),
+      'utf8'
+    );
+    assert.match(src, /spaced coerced to lite/);
+    assert.match(src, /HUB_WARM_DISK_FIRST/);
+    assert.match(src, /event_loop_lag/);
+    assert.match(src, /mode: 'disk-prime'/);
+  });
+
+  it('hub-warm cron script defaults to lite not spaced', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', 'scripts/render-hub-warm-cron.js'),
+      'utf8'
+    );
+    assert.match(src, /mode=lite&years=2028/);
+    assert.doesNotMatch(src, /mode=spaced&years=2028/);
   });
 });
