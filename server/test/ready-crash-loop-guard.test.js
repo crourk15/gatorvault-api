@@ -127,4 +127,14 @@ describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => 
     assert.match(src, /BEAT_BRIEF_TIMEOUT_MS/);
     assert.match(src, /brief_timeout/);
   });
+
+  it('skip-boot path primes lite keys from disk (no rebuild stampede)', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', 'lib/recruiting-hub-cache.js'),
+      'utf8'
+    );
+    assert.match(src, /primeLiteKeysFromDisk/);
+    assert.match(src, /diskPrimeScheduled/);
+    assert.match(src, /HUB_DISK_PRIME_DELAY_MS/);
+  });
 });
