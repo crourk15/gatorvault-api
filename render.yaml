@@ -368,6 +368,12 @@ services:
         value: "false"
       - key: HUB_PRIORITY_WARM_RSS_MB
         value: "900"
+      # Skip spawning spaced child when parent RSS already high (prevents cgroup 143).
+      - key: HUB_SPACED_FORK_PARENT_RSS_MB
+        value: "850"
+      # Yield between warm keys so Render /ready (~5s) can run during lite builds.
+      - key: HUB_WARM_YIELD_MS
+        value: "50"
       # Pro 4GB: keep heavy warm well after listen so /ready stays cheap.
       - key: API_BOOT_DEFER_HEAVY_MS
         value: "90000"
@@ -446,7 +452,8 @@ services:
 
   - type: cron
     name: gatorvault-api-recruiting-ingest
-    schedule: "0 */2 * * *"
+    # :15 avoids stacking with recruiting-light at :00 (same even hours).
+    schedule: "15 */2 * * *"
     runtime: node
     region: oregon
     rootDir: server
@@ -508,11 +515,12 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
-  # Tier B: lite every ~30m; spaced elite only if boot chain idle (no force=1).
-  # Dual-year + force-restart every 25m overlapped fork workers → OOM 143 crash loop (Aug 18).
+  # Tier B: lite + spaced elite. Schedule OFF :00/:30 so it does not stack with
+  # recruiting-light (:00) + recruiting-ingest (even hours) — that pile-up starved
+  # /ready past Render's ~5s health window → brief HTML 502 restart flaps.
   - type: cron
     name: gatorvault-api-hub-warm
-    schedule: "*/30 * * * *"
+    schedule: "12,42 * * * *"
     runtime: node
     region: oregon
     rootDir: server

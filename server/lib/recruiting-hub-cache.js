@@ -953,8 +953,18 @@ function runSpacedEliteWorker({ job, year }) {
     parseInt(process.env.HUB_SPACED_WORKER_TIMEOUT_MS || '360000', 10) || 360000
   );
   // Serialize forks — hub-warm force-restart used to overlap 1.5GB children → cgroup OOM → 143.
-  const run = () =>
-    new Promise((resolve, reject) => {
+  const run = () => {
+    const pipelineGuards = require('./pipeline-guards');
+    // Parent+child share the Pro cgroup. If parent is already hot, skip this fork tick
+    // instead of risking exit 143 (/ready flaps for 15–30s).
+    const parentRssLimit = Math.max(
+      400,
+      parseInt(process.env.HUB_SPACED_FORK_PARENT_RSS_MB || '850', 10) || 850
+    );
+    if (pipelineGuards.shouldSkipHeavyJob(`spaced-fork-${job}-${year}`, parentRssLimit)) {
+      return Promise.resolve({ skipped: true, reason: 'parent_rss', job, year });
+    }
+    return new Promise((resolve, reject) => {
       // Cap child heap so OOM kills the worker, not gatorvault-api (Pro 4GB shared cgroup).
       // Default 1024 (was 1536): parent + child + lite restore still fit; override via env.
       const childHeapMb = Math.max(
@@ -1024,6 +1034,7 @@ function runSpacedEliteWorker({ job, year }) {
         );
       });
     });
+  };
 
   const next = spacedEliteWorkerChain.then(run, run);
   spacedEliteWorkerChain = next.then(

@@ -15,7 +15,38 @@ describe('Render /ready crash-loop guards (Aug 18 exit 143 + 5s health)', () => 
     assert.match(block, /mode=spaced&years=2028/);
     assert.doesNotMatch(block, /years=2027,2028/);
     assert.doesNotMatch(block, /force=1/);
-    assert.match(block, /schedule:\s*"\*\/30 \* \* \* \*"/);
+    // Staggered off :00/:30 so it does not stack with recruiting-light / ingest.
+    assert.match(block, /schedule:\s*"12,42 \* \* \* \*"/);
+  });
+
+  it('recruiting-ingest is staggered off recruiting-light :00', () => {
+    const yaml = fs.readFileSync(path.join(__dirname, '..', '..', 'render.yaml'), 'utf8');
+    const start = yaml.indexOf('gatorvault-api-recruiting-ingest');
+    assert.ok(start > 0);
+    const nextService = yaml.slice(start).search(/\n  - type:/);
+    const block = nextService > 0 ? yaml.slice(start, start + nextService) : yaml.slice(start);
+    assert.match(block, /schedule:\s*"15 \*\/2 \* \* \*"/);
+  });
+
+  it('spaced fork skips when parent RSS is high', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', 'lib/recruiting-hub-cache.js'),
+      'utf8'
+    );
+    assert.match(src, /HUB_SPACED_FORK_PARENT_RSS_MB/);
+    assert.match(src, /spaced-fork-/);
+  });
+
+  it('Admin Hub probe does not instant-red on Failed to fetch', () => {
+    const src = fs.readFileSync(path.join(__dirname, '..', 'js/admin-hub-core.js'), 'utf8');
+    assert.match(src, /probe_timeout/);
+    assert.match(src, /AbortController/);
+    // Network blips must use wake grace — not hardDown regex.
+    const escalateStart = src.indexOf('function escalateApiDown');
+    assert.ok(escalateStart > 0);
+    const escalate = src.slice(escalateStart, escalateStart + 1200);
+    assert.doesNotMatch(escalate, /Failed to fetch\|NetworkError\|Load failed/);
+    assert.match(escalate, /status === 502 \|\| status === 504/);
   });
 
   it('spaced warm-memory does not force by default', () => {
