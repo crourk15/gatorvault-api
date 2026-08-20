@@ -92,20 +92,31 @@ function appendVisitLog(entry) {
     const { isFloridaSchool } = require('./recruiting-target-filters');
     if (isFloridaSchool(row.school || 'Florida')) {
       const { promoteAllowlistOnCampusVisit } = require('./campus-visit-allowlist-promote');
-      // Fire-and-forget; visit log write must stay sync + cheap.
+      const store = require('./recruiting-store');
       Promise.resolve(
-        promoteAllowlistOnCampusVisit({
-          slug: row.playerSlug,
-          name: row.playerName || row.playerSlug,
-          classYear: 2028,
-          player: {
+        (async () => {
+          let player = null;
+          try {
+            player = (await store.getPlayerBySlug(row.playerSlug)) || null;
+          } catch {
+            player = null;
+          }
+          const year = Number(player?.classYear) || 2028;
+          if (year !== 2028) return;
+          await promoteAllowlistOnCampusVisit({
             slug: row.playerSlug,
-            name: row.playerName || row.playerSlug,
-            classYear: 2028,
-            on3Slug: row.playerSlug,
-            visits: [{ school: row.school || 'Florida', visitType: row.visitType }],
-          },
-        })
+            name: row.playerName || player?.name || row.playerSlug,
+            classYear: year,
+            player: {
+              ...(player || {}),
+              slug: row.playerSlug,
+              name: row.playerName || player?.name || row.playerSlug,
+              classYear: year,
+              on3Slug: player?.on3Slug || row.playerSlug,
+              visits: [{ school: row.school || 'Florida', visitType: row.visitType }],
+            },
+          });
+        })()
       ).catch((err) => {
         console.warn('[visit-log] campus-visit allowlist promote:', err.message);
       });
