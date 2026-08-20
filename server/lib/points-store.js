@@ -1,24 +1,87 @@
 /**
  * Server-side Vault Points ledger — keyed by user email.
+ * Prefer GV_POINTS_PATH on Render disk so redeploys do not wipe balances.
  */
 const fs = require('fs');
 const path = require('path');
 const { pointsTierFromPoints, nextPointsTierInfo } = require('./access-config');
 
-const DATA_PATH = path.join(__dirname, '..', 'data', 'users-points.json');
+function defaultPointsPath() {
+  return path.join(__dirname, '..', 'data', 'users-points.json');
+}
 
-function readDoc() {
+function pointsPath() {
+  return process.env.GV_POINTS_PATH || defaultPointsPath();
+}
+
+function ensureParentDir(filePath) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+}
+
+function atomicWriteJson(filePath, value) {
+  ensureParentDir(filePath);
+  const tmp = `${filePath}.${process.pid}.${Date.now()}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(value, null, 2), 'utf8');
+  fs.renameSync(tmp, filePath);
+}
+
+function emptyDoc() {
+  return { version: 1, updatedAt: null, users: {} };
+}
+
+function readJsonDoc(filePath) {
   try {
-    return JSON.parse(fs.readFileSync(DATA_PATH, 'utf8'));
+    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    if (!raw || typeof raw !== 'object') return emptyDoc();
+    return {
+      version: raw.version || 1,
+      updatedAt: raw.updatedAt || null,
+      users: raw.users && typeof raw.users === 'object' ? raw.users : {},
+    };
   } catch {
-    return { version: 1, updatedAt: null, users: {} };
+    return emptyDoc();
   }
 }
 
+let migrateAttempted = false;
+
+function migratePointsFromLegacyIfNeeded() {
+  const dest = pointsPath();
+  const legacy = defaultPointsPath();
+  if (path.resolve(dest) === path.resolve(legacy)) return { migrated: false, reason: 'same_path' };
+  if (fs.existsSync(dest)) {
+    const existing = readJsonDoc(dest);
+    if (Object.keys(existing.users || {}).length > 0) {
+      return { migrated: false, reason: 'dest_has_points', count: Object.keys(existing.users).length };
+    }
+  }
+  if (!fs.existsSync(legacy)) return { migrated: false, reason: 'no_legacy' };
+  const legacyDoc = readJsonDoc(legacy);
+  if (!Object.keys(legacyDoc.users || {}).length) return { migrated: false, reason: 'legacy_empty' };
+  atomicWriteJson(dest, legacyDoc);
+  return { migrated: true, count: Object.keys(legacyDoc.users).length, from: legacy, to: dest };
+}
+
+function readDoc() {
+  if (!migrateAttempted) {
+    migrateAttempted = true;
+    try {
+      const result = migratePointsFromLegacyIfNeeded();
+      if (result.migrated) {
+        console.log(
+          `[points-store] migrated ${result.count} point ledger(s) from ephemeral path → ${result.to}`
+        );
+      }
+    } catch (err) {
+      console.warn('[points-store] migrate failed:', err instanceof Error ? err.message : err);
+    }
+  }
+  return readJsonDoc(pointsPath());
+}
+
 function writeDoc(doc) {
-  fs.mkdirSync(path.dirname(DATA_PATH), { recursive: true });
   doc.updatedAt = new Date().toISOString();
-  fs.writeFileSync(DATA_PATH, JSON.stringify(doc, null, 2));
+  atomicWriteJson(pointsPath(), doc);
 }
 
 function normalizeEmail(email) {
@@ -100,4 +163,7 @@ module.exports = {
   awardPoints,
   setPoints,
   deleteUserPoints,
+  get pointsPath() {
+    return pointsPath();
+  },
 };

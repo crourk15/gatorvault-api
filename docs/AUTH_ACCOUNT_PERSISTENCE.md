@@ -31,6 +31,8 @@ Expect:
 
 Also: Dashboard → gatorvault-api → Disks → `/var/data`, and API logs for `[user-store] path= /var/data/users.json … durableEnv= true`.
 
+Capacity prep for ~500 members (write races, rate limits, points durability): `docs/CAPACITY_500_MEMBERS.md`.
+
 Fans whose accounts were already wiped must **Create Account once more** with the same email (trial ledger still prevents a second free month when the ledger row survives; if the ledger was also wiped, they get a normal new trial).
 
 Do **not** change the App Review demo password without an explicit request.

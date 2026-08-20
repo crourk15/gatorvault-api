@@ -52,6 +52,27 @@ function migrateUsersFromLegacyIfNeeded() {
 
 let migrateAttempted = false;
 
+/** mtime-aware in-process cache — cuts full-file parse on hot login/tier paths. */
+let usersCache = {
+  path: null,
+  mtimeMs: null,
+  users: null,
+};
+
+function invalidateUsersCache() {
+  usersCache = { path: null, mtimeMs: null, users: null };
+}
+
+function setUsersCache(filePath, users) {
+  let mtimeMs = Date.now();
+  try {
+    mtimeMs = fs.statSync(filePath).mtimeMs;
+  } catch {
+    /* new file */
+  }
+  usersCache = { path: filePath, mtimeMs, users };
+}
+
 function loadUsers() {
   if (!migrateAttempted) {
     migrateAttempted = true;
@@ -66,14 +87,43 @@ function loadUsers() {
       console.warn('[user-store] migrate failed:', err instanceof Error ? err.message : err);
     }
   }
-  return readJsonArray(usersPath());
+  const filePath = usersPath();
+  try {
+    const st = fs.statSync(filePath);
+    if (
+      usersCache.path === filePath &&
+      usersCache.mtimeMs === st.mtimeMs &&
+      Array.isArray(usersCache.users)
+    ) {
+      return usersCache.users;
+    }
+  } catch {
+    /* missing file → empty */
+  }
+  const users = readJsonArray(filePath);
+  setUsersCache(filePath, users);
+  return users;
 }
 
 function saveUsers(users) {
   if (!Array.isArray(users)) {
     throw new Error('saveUsers expects an array');
   }
-  atomicWriteJson(usersPath(), users);
+  const filePath = usersPath();
+  atomicWriteJson(filePath, users);
+  setUsersCache(filePath, users);
+}
+
+/**
+ * Sync load → mutate → save with no await gap (preferred for entitlement/auth writes).
+ * @param {(users: object[]) => void} mutator
+ * @returns {object[]}
+ */
+function mutateUsers(mutator) {
+  const users = loadUsers().slice();
+  mutator(users);
+  saveUsers(users);
+  return users;
 }
 
 function findUserByEmail(email) {
@@ -107,9 +157,10 @@ function updateUser(email, patch) {
   const users = loadUsers();
   const idx = users.findIndex((u) => u.email === normalized);
   if (idx < 0) return null;
-  users[idx] = { ...users[idx], ...patch };
-  saveUsers(users);
-  return users[idx];
+  const next = users.slice();
+  next[idx] = { ...users[idx], ...patch };
+  saveUsers(next);
+  return next[idx];
 }
 
 /**
@@ -134,14 +185,15 @@ function changeUserEmail(fromEmail, toEmail) {
     ? users[idx].previousEmails.slice()
     : [];
   if (!previousEmails.includes(from)) previousEmails.push(from);
-  users[idx] = {
+  const next = users.slice();
+  next[idx] = {
     ...users[idx],
     email: to,
     previousEmails,
     emailCorrectedAt: new Date().toISOString(),
   };
-  saveUsers(users);
-  return { ok: true, from, to, user: users[idx] };
+  saveUsers(next);
+  return { ok: true, from, to, user: next[idx] };
 }
 
 function deleteUser(email) {
@@ -150,8 +202,9 @@ function deleteUser(email) {
   const users = loadUsers();
   const idx = users.findIndex((u) => u.email === normalized);
   if (idx < 0) return false;
-  users.splice(idx, 1);
-  saveUsers(users);
+  const next = users.slice();
+  next.splice(idx, 1);
+  saveUsers(next);
   return true;
 }
 
@@ -171,6 +224,7 @@ module.exports = {
   },
   loadUsers,
   saveUsers,
+  mutateUsers,
   findUserByEmail,
   findUserByOriginalTransactionId,
   findUserByAppAccountToken,
@@ -179,4 +233,5 @@ module.exports = {
   deleteUser,
   migrateUsersFromLegacyIfNeeded,
   getUsersStoreInfo,
+  invalidateUsersCache,
 };
