@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-20T21:19:06.154Z",
+  "updatedAt": "2026-08-22T02:09:59.532Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -14437,26 +14437,32 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/player/kweli-fielder-46150823/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": null,
+          "publishedAt": "2026-08-22"
         }
       ],
       "strengths": [
-        "s Miami Hurricanes Hard Commit - 6/24/2026 Kweli Fielder Pos OT Height 6-4 Weight 310"
+        "Fielder carries a true 6-4 / 325 tackle-guard frame with early mass that already held varsity trench reps.",
+        "Fielder projects as a drive-first OL who can grow into zone patience and balance as a nimble mover for the size.",
+        "Fielder's board band (Natl #45 / OT #6) matches a high-floor trench piece with tackle-guard versatility upside."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "s Miami Hurricanes Hard Commit - 6/24/2026 Kweli Fielder Pos OT Height 6-4 Weight 310",
-      "recruitingStory": null,
+      "weaknesses": [
+        "No Vault Hudl on this Open — film traits locked to board/size band until a highlight link lands. Fielder may need OL incubator time before every-down OT snaps."
+      ],
+      "comparison": "Fielder comps to Anton Harrison — 6-4 / 315 OT mold; thick tackle frame with power-first trench tools and swing T/G versatility in the same build family.",
+      "schemeFit": "Fielder fits power/drive OL rooms that also ask zone patience from a thick 6-4 tackle mold.",
+      "staffNotes": "Vault board lock 2026-08-22. No Hudl link on Copy Brief Open — projection/comp from size + On3 band (4-star / Natl #45 / OT #6). PROVISIONAL until film link. Miami hard commit 2026-06-24; Florida file = Phil Trautwein offer + 3 UOVs (latest 2026-03-07). Confirm with Charles before FutureCast card copy.",
+      "projection": "Fielder projects develop-in-the-room Year 1–2 (depth / swing tackle-guard), then compete for a starting OT job. Ceiling: starting OT — high-4-star Nat-45 trench upside once the mass and footwork finish.",
+      "insiderNotes": "Kweli Fielder committed to Miami (6/24/2026). Florida's process was real — Trautwein offered, three UOVs on file — but the commitment is locked in Coral Gables. Residual On3 RPM (~10%) is old board noise, not an open chase. Reopen film desk when Hudl/On3 highlight auto-pulls.",
+      "recruitingStory": "Kweli Fielder is a 2028 Carrollton (GA) OT / 4-star / Natl #45 / Pos #6 / State #7 / 6-4 / 325. Miami hard commit (6/24/2026). Florida offered under Phil Trautwein with 3 UOVs (latest 2026-03-07); UF residual RPM ~10%.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:14:01.309Z"
+      "updatedAt": "2026-08-22T02:09:59.521Z",
+      "filmWatched": false,
+      "provisional": true
     },
     "neimann-lawrence": {
       "playerSlug": "neimann-lawrence",
