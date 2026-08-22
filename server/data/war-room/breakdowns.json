@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-20T21:19:06.154Z",
+  "updatedAt": "2026-08-22T19:39:31.202Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -18555,6 +18555,40 @@
       "updatedAt": "2026-08-20T16:34:39.189Z",
       "filmWatched": true,
       "provisional": false
+    },
+    "calvin-landy": {
+      "playerSlug": "calvin-landy",
+      "playerName": "Calvin Landy",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": null,
+          "publishedAt": "2026-08-22"
+        }
+      ],
+      "strengths": [
+        "Landy is a rising 6-4 / 270 Alpharetta OL with a tackle-interior frame that still has mass to add.",
+        "Landy's board is heating — Florida just offered under Phil Trautwein with a Gainesville visit already in his sights.",
+        "Landy projects as a developmental Power OL who can grow into OT/IOL snaps as the 270 frame fills."
+      ],
+      "weaknesses": [
+        "No Vault Hudl on this Open — film traits locked provisional until a highlight link lands. Landy still adding finished mass at 6-4 / 270."
+      ],
+      "comparison": "Landy comps to Anton Harrison — 6-4 OT mold; thickening tackle frame with power-first trench tools as he grows out of the 270 listed weight.",
+      "schemeFit": "Landy fits a Trautwein OL room that develops rising 6-4 frames into finished Power conference starters.",
+      "staffNotes": "PROVISIONAL board lock 2026-08-22 — no Hudl on Copy Brief Open. Florida offer + Trautwein + Gainesville visit eyed (Why UF seed). Comp size-matched Anton Harrison (6-4). Confirm with Charles before FutureCast card copy.",
+      "projection": "Landy projects develop-in-the-OL-room Year 1–2 (depth / swing OT-IOL), then compete for a starting job. Ceiling: starting OT or interior — rising Peach State trench upside once the mass finishes.",
+      "insiderNotes": "Calvin Landy — Florida just offered. Trautwein is on the OL file and the Alpharetta (GA) lineman is already eyeing a Gainesville visit. Process just opened; do not invent RPM or tape until board/film fill.",
+      "recruitingStory": "Calvin Landy is a 2028 Alpharetta (GA) OL · 6-4 / 270. Florida offered (Phil Trautwein) with a Gainesville visit already eyed. Uncommitted rising Peach State trench target.",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-08-22T19:39:31.192Z",
+      "filmWatched": false,
+      "provisional": true
     }
   }
 }
