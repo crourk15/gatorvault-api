@@ -58,6 +58,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 - [x] Live depth chart API — `GET/PUT /api/roster/depth-chart` fall-camp board (web + post-Codemagic iOS content path)
 - [x] FutureCast HP movement: hydrate 7d deltas from stamp history + ignore ancient baselines (API seed refresh)
 - [x] Recruiting class counts: enrolled On3 signees no longer wiped by roster-collision block (2026 HS ~21, 2027 ~26) — API
+- [x] 2026 Game Week uniform schedule (helmet/jersey/pants per game from `@GatorsFB` lineup) — API `/api/schedule` (matchup hero strip needs Codemagic)
 
 ---
 
@@ -77,6 +78,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-23 | Community iOS org: post→open thread, default Recent, Staff open vs Member threads, category tabs, hide duplicate Spark/Staff on mobile | `VaultCommunityPage`, `community-api`, `community-elite.css` in binary | pending |
 | 2026-08-20 | Signup channel: send `signupChannel` / `X-GV-Client` (website vs ios) on register so Admin Members can split web vs app | `auth-api` Join/register in binary; **API + Admin Hub already live for web Netlify** | pending |
 | 2026-08-20 | Footprint Class 2028: client falls back to dedicated `/hub/footprint` when bundle nest shows 0 commits but commit cards exist | `useHubBundleSection` in binary; **API heal of `bundle.footprint` nest is live without bake** | pending |
+| 2026-08-18 | Game Week matchup hero: official 2026 uniform combo (helmet/jersey/pants) from `@GatorsFB` lineup | `MatchupHeroWidget` + `game-week-wow` CSS + schedule JSON in binary | pending #502 |
 | 2026-08-17 | Chase On3 lead stamp from API (`on3Lead`) — prefer server field so stamp bugs/prediction swings are Render-only after this bake | `VaultChaseCard` + HP cache v20 in binary; API stamps `on3Lead` on every HP serve | pending |
 | 2026-08-17 | Chase On3 lead labels: ND / Miss St / SC / TTU / NC State (no more "Notre"/"South"/"Texas" for Tech) | `competing-schools` + `VaultChaseCard` in binary | pending |
 | 2026-08-17 | Chase On3 lead: treat FSU/USF/FAU as rivals (not UF); keep real ~95% favorites in chrome | `competing-schools` in binary; API peer extract + HP disk heal also live | pending |

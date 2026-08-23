@@ -325,6 +325,34 @@
   margin: 0.15rem 0;
 }
 
+.gv-gw-matchup-hero__uniform {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.55rem;
+  margin: 0.45rem 0 0;
+  font-size: 0.84rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.gv-gw-matchup-hero__uniform-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fa4616;
+  font-weight: 700;
+}
+
+.gv-gw-matchup-hero__uniform-combo {
+  font-weight: 650;
+}
+
+.gv-gw-matchup-hero__uniform-note {
+  width: 100%;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
 .gv-gw-matchup-hero__weather {
   display: flex;
   flex-wrap: wrap;
