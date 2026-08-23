@@ -340,7 +340,7 @@
             .then(function (j) {
               var ta = document.getElementById('hub-fc-why-text');
               if (ta) ta.value = j.override || j.active || j.generated || '';
-              setMsg(j.override ? ('Loaded override for ' + slug) : ('No override — showing generated for ' + slug));
+              setMsg((j.override ? ('Loaded override for ' + slug) : ('No override — showing generated for ' + slug)) + (j.builtFrom ? (' · Built from: ' + j.builtFrom) : ''));
             })
             .catch(function (e) { setMsg(e.message || 'Load failed', true); })
             .finally(function () { whyLoad.disabled = false; });

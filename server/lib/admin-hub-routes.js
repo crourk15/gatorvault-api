@@ -1242,7 +1242,7 @@ function mountAdminHubRoutes(app) {
       const brief = require('./chase-why-brief');
       const slug = String(req.params.slug || '').trim();
       const override = store.getOverride(slug);
-      const preview = brief.generateWhyWeChase(
+      const preview = brief.composeWhyWeChase(
         {
           slug,
           name: req.query.name || slug,
@@ -1256,8 +1256,9 @@ function mountAdminHubRoutes(app) {
         ok: true,
         slug,
         override: override || null,
-        generated: preview,
-        active: override || preview,
+        generated: preview.text,
+        builtFrom: (preview.builtFrom || []).join(' · ') || null,
+        active: override || preview.text,
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
