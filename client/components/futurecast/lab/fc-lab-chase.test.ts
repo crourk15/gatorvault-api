@@ -37,10 +37,11 @@ test('buildChaseWhy prefers staff heat + thin room over odds alone', () => {
   const p = target({
     slug: 'lane-kid',
     name: 'Lane Kid',
+    position: 'EDGE',
     hotLanes: {
       staffHeat: 70,
       mustGetFit: 40,
-      positionalNeed: 65,
+      positionalNeed: 95,
       geoPipeline: 20,
       marketPressure: 10,
     },
@@ -238,7 +239,7 @@ test('buildChaseWhyBrief never says backyard', () => {
   assert.match(brief, /Mandarin|Jacksonville|in-state|keep warm/i);
 });
 
-test('buildChaseWhyBrief still claims thin room when need is real', () => {
+test('buildChaseWhyBrief still claims thin room when trench need is real', () => {
   const p = target({
     slug: 'true-need',
     name: 'True Need',
@@ -248,7 +249,7 @@ test('buildChaseWhyBrief still claims thin room when need is real', () => {
     ufProbability: 24,
     fitScore: 79,
     hotLanes: {
-      positionalNeed: 72,
+      positionalNeed: 95,
       mustGetFit: 50,
       staffHeat: 25,
       geoPipeline: 70,
@@ -261,4 +262,56 @@ test('buildChaseWhyBrief still claims thin room when need is real', () => {
   });
   const brief = buildChaseWhyBrief(p);
   assert.match(brief, /Thin OT room \+ Fit 79/);
+});
+
+test('buildChaseWhyBrief never claims thin room for WR from weight table alone', () => {
+  const p = target({
+    slug: 'brysen-wright',
+    name: 'Brysen Wright',
+    position: 'WR',
+    school: 'Mandarin (Jacksonville, FL)',
+    stars: 5,
+    nationalRank: 1,
+    ufProbability: 16,
+    fitScore: 84,
+    hotLanes: {
+      positionalNeed: 62,
+      mustGetFit: 55,
+      staffHeat: 40,
+      geoPipeline: 90,
+      marketPressure: 30,
+    },
+    hotBadges: { inState: true },
+    competingSchools: [{ name: 'Miami', pct: 38 }],
+    notePreview: null,
+    visitLabels: [],
+  });
+  const brief = buildChaseWhyBrief(p);
+  assert.doesNotMatch(brief, /Thin WR room|thin room Florida has to fill/i);
+  assert.match(brief, /still chases even with the room set|must-get|Top-10|Five-star/i);
+});
+
+test('buildChaseWhyBrief skips thin room when trench need is mid (under 85)', () => {
+  const p = target({
+    slug: 'mid-cb',
+    name: 'Mid CB',
+    position: 'CB',
+    school: 'Plant (Tampa, FL)',
+    stars: 4,
+    ufProbability: 20,
+    fitScore: 72,
+    hotLanes: {
+      positionalNeed: 70,
+      mustGetFit: 40,
+      staffHeat: 30,
+      geoPipeline: 60,
+      marketPressure: 10,
+    },
+    hotBadges: { inState: true },
+    competingSchools: [{ name: 'Miami', pct: 35 }],
+    notePreview: null,
+    visitLabels: [],
+  });
+  const brief = buildChaseWhyBrief(p);
+  assert.doesNotMatch(brief, /Thin CB room/i);
 });

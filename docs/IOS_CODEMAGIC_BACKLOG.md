@@ -68,6 +68,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-23 | Why we chase: thin room only for trench/CB gaps at need ≥85 — never WR/RB/TE from weight table alone | `chase-priority` thin-room gate in binary | pending |
 | 2026-08-23 | Why we chase: truth-first voice — claim thin room only when need is real; elite talent can chase with room set; named place never “backyard” | `chase-priority` `buildChaseWhyBrief` + `nationalRank` on Lab target in binary | pending |
 | 2026-08-23 | Why we chase: never mid-sentence note clips (`and is…`) — compress visit/offer prose to short Vault chips | `chase-priority` in binary; API `truncateNote` also live | pending |
 | 2026-08-23 | Why we chase: richer lead (thin room + Fit) + process `notePreview` tails; ~180 char cap; still no film traits | `chase-priority` `buildChaseWhyBrief` + chase tests in binary | pending |

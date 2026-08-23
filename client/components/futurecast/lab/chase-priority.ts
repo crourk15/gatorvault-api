@@ -73,6 +73,9 @@ export function buildChaseWhy(
   const lanes = laneRank(player.hotLanes);
 
   for (const lane of lanes.slice(0, 2)) {
+    if (lane.key === 'positionalNeed' && !isTrueThinRoom(player.position, lane.score)) {
+      continue;
+    }
     const label = laneLabel(lane.key);
     if (label) bullets.push(label);
   }
@@ -127,8 +130,34 @@ function looksLikeTraitNote(note: string): boolean {
  * Never "backyard." Never forced position-of-need mad-libs.
  */
 const WHY_BRIEF_MAX = 180;
-/** Positional need must clear this before we say thin room / need. */
-const TRUE_NEED_MIN = 55;
+/**
+ * Thin-room copy only for cycle trench / coverage gaps, and only when the
+ * static need weight is actually high. WR/RB/TE/S/QB/ATH never get "thin room"
+ * from the weight table alone — that was lying about loaded rooms.
+ */
+const TRUE_NEED_MIN = 85;
+const THIN_ROOM_ELIGIBLE = new Set([
+  'EDGE',
+  'DE',
+  'DL',
+  'DT',
+  'OT',
+  'OL',
+  'IOL',
+  'OG',
+  'C',
+  'LB',
+  'ILB',
+  'OLB',
+  'CB',
+]);
+
+function isTrueThinRoom(position: string | null | undefined, needScore: number): boolean {
+  const pos = String(position || '')
+    .trim()
+    .toUpperCase();
+  return THIN_ROOM_ELIGIBLE.has(pos) && Number(needScore) >= TRUE_NEED_MIN;
+}
 
 function clipWhyBrief(text: string, max = WHY_BRIEF_MAX): string {
   const t = String(text || '').replace(/\s+/g, ' ').trim();
@@ -258,7 +287,7 @@ export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): str
       .filter(Boolean)
       .slice(-1)[0] || 'He';
   const place = placeFromSchool(player.school);
-  const trueNeed = needScore >= TRUE_NEED_MIN;
+  const trueNeed = isTrueThinRoom(pos, needScore);
   const eliteTalent = isEliteTalent(player);
   const status = talentStatusLine(player, pos, place, inState);
   const staffOn = staffScore >= 55 || Boolean(player.hotBadges?.staffAssigned);
