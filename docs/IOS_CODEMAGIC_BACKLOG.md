@@ -70,6 +70,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-23 | Game Week matchup hero: Helmet / Jersey / Pants color chips for this week’s uniform | `MatchupHeroWidget` + `uf-uniform-colors` + GW CSS in binary | pending |
 | 2026-08-23 | Where Florida needs help: depth-ok rooms stay In good shape — no Needs help from 2 departing seniors alone | `fc-position-need-board` + Lab position breakdown in binary | pending |
 | 2026-08-23 | Why we chase: thin room only for trench/CB gaps at need ≥85 — never WR/RB/TE from weight table alone | `chase-priority` thin-room gate in binary | pending |
 | 2026-08-23 | Why we chase: truth-first voice — claim thin room only when need is real; elite talent can chase with room set; named place never “backyard” | `chase-priority` `buildChaseWhyBrief` + `nationalRank` on Lab target in binary | pending |

@@ -3,6 +3,7 @@
 import React from 'react';
 import type { GameWeekBundle } from '@/lib/game-week-data';
 import { homeLogoUrl, awayLogoUrl } from '@/lib/team-logos';
+import { buildUfUniformChips } from '@/lib/uf-uniform-colors';
 import { CountdownWidget } from './CountdownWidget';
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
 export function MatchupHeroWidget({ bundle }: Props): React.ReactElement {
   const { game, weather } = bundle;
   const weatherParts = weather?.split(' · ') ?? [];
+  const uniformChips = buildUfUniformChips(game.uniform);
 
   return (
     <div className="gv-gw-matchup-hero" data-testid="gw-matchup-hero">
@@ -41,7 +43,36 @@ export function MatchupHeroWidget({ bundle }: Props): React.ReactElement {
           {game.venue}
           {game.tv ? ` · ${game.tv}` : ''}
         </p>
-        {game.uniform?.label ? (
+        {uniformChips.length > 0 ? (
+          <div className="gv-gw-matchup-hero__uniform" data-testid="gw-uniform">
+            <span className="gv-gw-matchup-hero__uniform-label">This week</span>
+            <div className="gv-gw-matchup-hero__uniform-chips" role="list">
+              {uniformChips.map((chip) => (
+                <div
+                  key={chip.part}
+                  className="gv-gw-uniform-chip"
+                  role="listitem"
+                  title={`${chip.partLabel}: ${chip.swatch.label}`}
+                >
+                  <span className="gv-gw-uniform-chip__part">{chip.partLabel}</span>
+                  <span
+                    className={`gv-gw-uniform-chip__swatch gv-gw-uniform-chip__swatch--${chip.swatch.label.toLowerCase()}`}
+                    style={{
+                      background: chip.swatch.background,
+                      color: chip.swatch.color,
+                      borderColor: chip.swatch.border,
+                    }}
+                  >
+                    {chip.swatch.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {game.uniform?.note ? (
+              <span className="gv-gw-matchup-hero__uniform-note">{game.uniform.note}</span>
+            ) : null}
+          </div>
+        ) : game.uniform?.label ? (
           <p className="gv-gw-matchup-hero__uniform" data-testid="gw-uniform">
             <span className="gv-gw-matchup-hero__uniform-label">Uniform</span>
             <span className="gv-gw-matchup-hero__uniform-combo">{game.uniform.label}</span>
