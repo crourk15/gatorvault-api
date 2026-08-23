@@ -8,7 +8,7 @@ const productStore = require('./product-intel/product-intel-store');
 const selfRunnerEngine = require('./self-runner/self-runner-engine');
 const recruitingStore = require('./recruiting-store');
 const { loadPublishedArticles } = require('./content-store');
-const { loadUsers, changeUserEmail, findUserByEmail, saveUsers } = require('./user-store');
+const { loadUsers, changeUserEmail, findUserByEmail, saveUsers, updateUser } = require('./user-store');
 const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 const { hasPaidAccess, trialState, isSubscriptionActive } = require('./subscription-service');
 const { effectiveTier } = require('./session-auth');
@@ -529,7 +529,7 @@ function toSafeMemberRow(user) {
   const paid = hasPaidAccess(user);
   const accessActive = paid || !trial.expired;
   const sub = user?.subscription || null;
-  const { sanitizeFirstTouch, outletLabel } = require('./member-attribution');
+  const { sanitizeFirstTouch, outletLabel, sanitizeSignupChannel } = require('./member-attribution');
   const firstTouch = sanitizeFirstTouch(user?.firstTouch || null);
   return {
     email: user.email || null,
@@ -552,6 +552,7 @@ function toSafeMemberRow(user) {
     source: outletLabel(firstTouch),
     campaign: firstTouch?.campaign || null,
     medium: firstTouch?.medium || null,
+    signupChannel: sanitizeSignupChannel(user?.signupChannel),
   };
 }
 
@@ -595,8 +596,9 @@ function listRecentMembers(opts = {}) {
     if (counts[row.access] != null) counts[row.access] += 1;
   }
 
-  const { countBySource } = require('./member-attribution');
+  const { countBySource, countByChannel } = require('./member-attribution');
   const bySource = countBySource(filtered);
+  const byChannel = countByChannel(filtered);
 
   return {
     members: filtered.slice(0, limit),
@@ -604,6 +606,7 @@ function listRecentMembers(opts = {}) {
     returned: Math.min(filtered.length, limit),
     counts,
     bySource,
+    byChannel,
     since: opts.since == null ? '30d' : String(opts.since),
     access: accessFilter || 'all',
     limit
@@ -856,6 +859,7 @@ function mountAdminHubRoutes(app) {
       const users = loadUsers();
       const result = await memberAnnounce.sendIosUpdateAnnounce({
         loadUsers: () => users,
+        updateUser,
         deliverEmail: mail || (async () => ({ sent: false, provider: 'dry' })),
         version,
         dryRun,
@@ -863,14 +867,6 @@ function mountAdminHubRoutes(app) {
         requireActiveAccess,
         limit,
       });
-
-      if (!dryRun && result.sent > 0) {
-        try {
-          saveUsers(users);
-        } catch (err) {
-          console.warn('[announce-ios] saveUsers failed:', err.message || err);
-        }
-      }
 
       return res.status(200).json({
         ok: true,

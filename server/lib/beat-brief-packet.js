@@ -1267,7 +1267,11 @@ async function buildBeatBrief(slug, opts = {}) {
 
   await intelStore.initIntelStore().catch(() => {});
 
+  // Desk Open must stay fast on the web dyno. Live On3 / elite research / player-intel
+  // hydrate can hang 30–90s and starve Render /ready → 502 crash loop. Default = disk
+  // + beat store only; pass ?full=1 (or opts.full) for the heavy packet.
   const wantFull = opts && opts.full === true;
+  const heavy = wantFull || opts.heavy === true;
   let [inspect, player] = await Promise.all([
     wantFull
       ? inspectPlayer(normalized).catch((err) => ({ ok: false, error: err.message }))
@@ -1275,26 +1279,28 @@ async function buildBeatBrief(slug, opts = {}) {
     loadRecruitingPlayer(normalized)
   ]);
 
-  // Live On3 hydrate when store is thin — every Open needs ranks + interested schools.
-  try {
-    const hydrate = require('./on3-board-hydrate');
-    if (hydrate.boardNeedsHydration(player)) {
-      const seedName =
-        inspect?.playerName ||
-        player?.name ||
-        player?.fullName ||
-        hydrate.humanizeSlugName(normalized);
-      const hydrated = await hydrate.hydrateRecruitBoard({
-        slug: normalized,
-        name: seedName,
-        player,
-        classYear: player?.classYear || player?.year || null,
-        pos: player?.pos || player?.position || null
-      });
-      if (hydrated?.player) player = hydrated.player;
+  // Live On3 hydrate when store is thin — full brief only (desk Open uses disk board).
+  if (heavy) {
+    try {
+      const hydrate = require('./on3-board-hydrate');
+      if (hydrate.boardNeedsHydration(player)) {
+        const seedName =
+          inspect?.playerName ||
+          player?.name ||
+          player?.fullName ||
+          hydrate.humanizeSlugName(normalized);
+        const hydrated = await hydrate.hydrateRecruitBoard({
+          slug: normalized,
+          name: seedName,
+          player,
+          classYear: player?.classYear || player?.year || null,
+          pos: player?.pos || player?.position || null
+        });
+        if (hydrated?.player) player = hydrated.player;
+      }
+    } catch {
+      /* optional live On3 */
     }
-  } catch {
-    /* optional live On3 */
   }
 
   const allIntel = intelStore.getIntelForPlayer({ playerSlug: normalized }) || [];
@@ -1322,26 +1328,32 @@ async function buildBeatBrief(slug, opts = {}) {
 
   const primaryBeat = beatRows[0] || null;
   let research = null;
-  try {
-    const { researchUpdate } = require('./x-autoposter-elite-research');
-    research = await researchUpdate({
-      playerSlug: normalized,
-      playerName,
-      beatText: primaryBeat ? String(primaryBeat.detail || primaryBeat.skinny || '') : null,
-      sourceLabel: primaryBeat?.source || null,
-      intel: primaryBeat,
-      headline: `${playerName} Florida recruiting`
-    });
-  } catch (err) {
-    research = { error: err.message, sourcesUsed: [], predictions: [], beatMentions: [] };
+  if (heavy) {
+    try {
+      const { researchUpdate } = require('./x-autoposter-elite-research');
+      research = await researchUpdate({
+        playerSlug: normalized,
+        playerName,
+        beatText: primaryBeat ? String(primaryBeat.detail || primaryBeat.skinny || '') : null,
+        sourceLabel: primaryBeat?.source || null,
+        intel: primaryBeat,
+        headline: `${playerName} Florida recruiting`
+      });
+    } catch (err) {
+      research = { error: err.message, sourcesUsed: [], predictions: [], beatMentions: [] };
+    }
+  } else {
+    research = { sourcesUsed: [], predictions: [], beatMentions: [], deskLite: true };
   }
 
   let intelligence = null;
-  try {
-    const { getPlayerIntelligence } = require('./player-intelligence');
-    intelligence = await getPlayerIntelligence(normalized, { coverageTier: 'standard' });
-  } catch {
-    intelligence = null;
+  if (heavy) {
+    try {
+      const { getPlayerIntelligence } = require('./player-intelligence');
+      intelligence = await getPlayerIntelligence(normalized, { coverageTier: 'standard' });
+    } catch {
+      intelligence = null;
+    }
   }
 
   if (research && isCommittedPlayer(player, research)) {
@@ -1361,8 +1373,8 @@ async function buildBeatBrief(slug, opts = {}) {
       playerName,
       aliases: [player?.on3Slug, player?.slug].filter(Boolean),
     });
-    // Auto-attach On3/Hudl highlight URLs when missing (traits still Vault-curated).
-    if (opts.hydrateFilm !== false) {
+    // Auto-attach On3/Hudl highlight URLs when missing — full brief only (desk Open = disk).
+    if (heavy && opts.hydrateFilm !== false) {
       const ingest = require('./film-traits-ingest');
       if (ingest.needsSourceHydration(filmTraits)) {
         const hydrated = await ingest.hydrateFilmTraitsFromOn3({
@@ -1407,8 +1419,9 @@ async function buildBeatBrief(slug, opts = {}) {
   });
 
   // Persist desk board intel into FutureCast targeting (new seed or % nudge).
+  // Desk lite Open skips the write so the packet returns before the dyno starves.
   let futurecastFeed = null;
-  if (opts.feedFutureCast !== false) {
+  if (heavy && opts.feedFutureCast !== false) {
     try {
       const { feedDeskIntelToFutureCast } = require('./desk-intel-futurecast-feed');
       futurecastFeed = await feedDeskIntelToFutureCast({
@@ -1496,6 +1509,7 @@ async function buildBeatBrief(slug, opts = {}) {
     ok: true,
     slug: normalized,
     playerName,
+    deskLite: !heavy,
     updatedAt: new Date().toISOString(),
     player: player
       ? {

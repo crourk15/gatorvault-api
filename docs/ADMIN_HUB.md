@@ -26,8 +26,8 @@ Plain-English playbook cards on **Beat Desk** and **Command Center**:
 - **Clear the red** — sticky green button on every page; wakes server and runs safe fix jobs for real reds (Film Room, recruiting, etc.)
 - **Go post** — default when nothing actionable is red; wake-lag / latency-only API is yellow (ignore) so Charles isn’t blocked from Beat Desk
 - **Wake lock** — while the server is waking, Deploy recovery stays disabled (spamming it makes fail noise)
-- **API status light** — top-right pill is always visible: **green API OK** / yellow API waking / **flashing red API DOWN**. Click to recheck. Soft orange banner = kitchen waking (503). **Flashing red banner + ops strip + `[API DOWN]` tab title** = Render 502/504 — App Store / War Room login will fail until `gatorvault-api` is restarted/redeployed. Do not treat red as “just waking.”
-
+- **API status light** — top-right pill is always visible: **green API OK** / yellow API waking / **flashing red API DOWN**. Click to recheck. Soft orange banner = kitchen waking (503) **or brief network blip** (grace window). **Flashing red banner + ops strip + `[API DOWN]` tab title** = confirmed Render **502/504** — App Store / War Room login will fail until `gatorvault-api` is restarted/redeployed. Do not treat orange wake as “API DOWN.”
+- **502 flap control (Aug 2026):** hub-warm runs at **:12/:42** (not :00/:30); recruiting-ingest at **:15** every 2h; spaced fork skips when parent RSS ≥ `HUB_SPACED_FORK_PARENT_RSS_MB` (850); warm yields `HUB_WARM_YIELD_MS=50` between keys. **Boot warm OFF** (`HUB_BOOT_SKIP_WARM=true`) — cron owns refill so deploys do not 502-loop. Beat Brief times out at 25s with a clear retry instead of hanging.
 ### Elite API stability (keep every product job)
 
 Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTube) is **queued**, not disabled. Overlap waits its turn so members still get every feature while `/ready` stays green. Look for `[heavy-job-gate] start|done` in Render logs. Do **not** re-enable stay-green / strip crons to “stabilize.”
@@ -38,7 +38,7 @@ Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTu
 
 - **Keepalive:** ping-only (`KEEPALIVE_FULL_TOUCH=false`). Do **not** re-enable full touch — it stampeded HP/bundle and sync-parsed `players.json` on the web dyno, starving Render `/ready` into 502 restart loops.
 - **Boot:** `HUB_BOOT_FORCE_WARM=true` — priority-**lite** (hero/class/**footprint+commits**) first, then **spaced elite fill** (HP → sequential bundle → master-board) with large gaps so Starter does not OOM. HP board-truth heal index warms deferred after lite (never on GET).
-- `POST /api/recruiting/hub/warm-memory?mode=spaced` (cron `gatorvault-api-hub-warm`, every ~25m; Admin PIN also works). Modes: `lite` | `spaced`/`elite` | `bundle` — **lite includes Class footprint + commits** so map tallies refresh without Codemagic
+- `POST /api/recruiting/hub/warm-memory?mode=spaced` (cron `gatorvault-api-hub-warm`, every ~30m; Admin PIN also works). Modes: `lite` | `spaced`/`elite` | `bundle` — **lite includes Class footprint + commits** so map tallies refresh without Codemagic. Cron uses **2028-only** spaced years and does **not** pass `force=1` (force-restart every tick overlapped fork workers → OOM exit 143 + `/ready` 5s timeouts). Pass `?force=1` only for a manual restart.
 - `POST /api/futurecast/lab-warm` (Admin PIN / optional; spaced warm owns HP + master on cron)
 - `POST /api/recruiting/hub/refresh?warmAfter=priority` (cron `gatorvault-api-hub-refresh`)
 
@@ -50,7 +50,7 @@ Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTu
 
 **Vault Scouting (iOS):** Film-desk Pearl cards (`filmWatched:true` / Vault film desk verified) are protected from beat `scouting-database` sync clobber. Provisional drafts (`PROVISIONAL` / `filmWatched:false`) stay hidden from fans. Master-board GETs soft-serve disk/`hp_soft_seed` so Lab never sticks on empty `status:building`.
 
-Lab polish: unknown stars are `null` (not `0★`); Early Discovery cold miss serves allowlist soft payload (no Loading…); workers use capped heap. Lab HP: Pro 4GB runs spaced child-worker refresh (`HUB_SPACED_WARM_LAB=true`) and writes durable leftovers; bundled `futurecast-runtime` seed is emergency backup only. Spaced steps **release hub memory** (disk fallback) before bundle/HP, then restore lite. Look for `[recruiting-hub] boot priority-lite warm` / `primed Lab HP from seed` / `spaced elite fill queued` / `spaced step` / `warm-memory` in Render logs. Env knobs: `HUB_GET_NO_SYNC_BUILD`, `FC_GET_NO_SYNC_BUILD`, `HUB_BOOT_FORCE_WARM`, `HUB_SPACED_ELITE_WARM`, `HUB_SPACED_WARM_YEARS` (default `2028`), `HUB_SPACED_WARM_LAB`, `HUB_SPACED_WARM_GAP_MS` (code floor ≥240s), `HUB_SPACED_WARM_START_MS` (code floor ≥180s), `HUB_SPACED_WARM_MASTER` (opt-in), `HUB_BUNDLE_SEQUENTIAL`, `HUB_SPACED_WARM_FORK` (child-process warm; HP worker loads `tsx`). Stale Render dashboard values below the floors are ignored.
+Lab polish: unknown stars are `null` (not `0★`); Early Discovery cold miss serves allowlist soft payload (no Loading…); workers use capped heap. Lab HP: Pro 4GB runs spaced child-worker refresh (`HUB_SPACED_WARM_LAB=true`) and writes durable leftovers; bundled `futurecast-runtime` seed is emergency backup only. Spaced steps **release hub memory** (disk fallback) before bundle/HP, then restore lite. Fork workers are **serialized** (one child at a time; default heap 1024MB). Look for `[recruiting-hub] boot priority-lite warm` / `primed Lab HP from seed` / `spaced elite fill queued` / `spaced step` / `warm-memory` in Render logs. Env knobs: `HUB_GET_NO_SYNC_BUILD`, `FC_GET_NO_SYNC_BUILD`, `HUB_BOOT_FORCE_WARM`, `HUB_SPACED_ELITE_WARM`, `HUB_SPACED_WARM_YEARS` (default `2028`), `HUB_SPACED_WARM_LAB`, `HUB_SPACED_WARM_GAP_MS` (code floor ≥240s), `HUB_SPACED_WARM_START_MS` (code floor ≥180s), `HUB_SPACED_WARM_MASTER` (opt-in), `HUB_BUNDLE_SEQUENTIAL`, `HUB_SPACED_WARM_FORK` (child-process warm; HP worker loads `tsx`). Stale Render dashboard values below the floors are ignored.
 - **App Store gate** — internal 7-day stability checklist (QA + Product Health ≥ 90). Codes like `product_intel_below_90` mean the vault scorecard is under 90 — **not** a message from Apple / App Store Connect
 - **What the buttons mean** — Open / Copy Brief / Refresh / etc.
 - **Vault feed 2028+ (7am / 7pm ET)** — dedicated cron feeds FutureCast Lab + recruiting for **2028/2029/2030+** from trusted beats: updates existing players’ intel, monitor-provisions new names into Vault (API only — no Codemagic), **never auto-adds 2027** (handpick / flip chart), **blocks staff/coach phantoms**. **Run now** refreshes the beat cache first (empty cache used to finish at all zeros). Also merges **On3/Gators Online team-news articles** (title resolve) into Created/Updated — not tweets-only. Proof: FutureCast panel → “Vault feed 2028+” card (created / updated / unresolved / beats fetched / empty reason / allowlist cov) or `GET /api/admin/hub/vault-feed-2028`. Manual: Job Queue `vault-feed-2028-sweep` or Run now on that card. Hard-refresh Hub after deploy (`hub-fc-v8`). Proof tables list Updated (what changed + beat cue) and Unresolved (reason + beat cue).
@@ -97,7 +97,7 @@ Set `OPS_ADMIN_PIN` in Render for production.
 | **Ops Summary** | `#dashboard/ops-summary` | Tiles, cron freshness, safe re-runs |
 | **Job Queue** | `#dashboard/jobs` | Safe re-runs + heartbeats + recent ops logs |
 | **Post Studio** | `#dashboard/post-studio` | Advanced inbox/drafts (secondary to Beat Desk) |
-| **Members** | `#members/recent` | Newest signups: trial / paid / expired |
+| **Members** | `#members/recent` | Newest signups: trial / paid / expired · **Channel** (Website vs iOS app) · marketing Source |
 | **FutureCast** | `#futurecast/control` | Targets, 2028 admin allowlist add/remove, early watch |
 | **Recruiting Daily** | `#recruiting/daily` | Events, ingest, pipeline |
 | **Unresolved Predictions** | `#recruiting/unresolved` | Nameless RPM teasers |
@@ -123,10 +123,15 @@ Full Ops / Full QA iframes remain under Dashboard / QA as escape hatches.
 
 ## FutureCast wiring
 
-1. Beat Desk **Open** hydrates On3 + builds brief.
-2. `feedDeskIntelToFutureCast` may seed/promote/refresh 2028 targets (never expands 2027 Closing Class).
-3. Desk shows a **FutureCast feed** card (seeded / promoted / refreshed + %).
-4. `#futurecast/control` lists admin allowlist extras, board sample, early watch — add/remove 2028 only.
+1. Beat Desk **Open** builds a **desk-lite** brief from disk + beat store (fast). Live On3 hydrate / elite research / FutureCast feed write run only with `?full=1`.
+2. `feedDeskIntelToFutureCast` (full brief) may seed/promote/refresh 2028 targets (never expands 2027 Closing Class).
+3. **Allowlist promote rule:** beat + Florida offer → War Room / early-watch monitor OK. **Any Florida campus visit set up** (scheduled OV/UV, visit window, Florida visit log) → auto-add to 2028 admin allowlist (`campus-visit-allowlist-promote.js`) so Chase + Closest can rank them.
+4. Desk shows a **FutureCast feed** card when the full path ran (seeded / promoted / refreshed + %).
+5. `#futurecast/control` lists admin allowlist extras, board sample, early watch — add/remove 2028 only.
+
+### API crash-loop note (Aug 20)
+
+If Open shows “still starting,” the Render API is flapping HTML 502 (event-loop starve past ~5s `/ready`). Guards: skip boot warm, disable in-process background hub refresh, hub-warm cron **lite** only, desk-lite Open Brief, 25s brief timeout.
 
 ## Film / highlights in Copy Brief
 

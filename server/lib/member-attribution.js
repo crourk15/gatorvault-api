@@ -1,14 +1,56 @@
 /**
  * Sanitize + summarize first-touch attribution on member signup.
  * Members never see an extra step — client cookies/localStorage carry UTMs silently.
+ *
+ * Also tracks signupChannel: website vs ios app (separate from marketing source).
  */
 'use strict';
 
 const MAX_FIELD = 120;
+const SIGNUP_CHANNELS = new Set(['website', 'ios', 'unknown']);
 
 function trimField(value) {
   const s = String(value == null ? '' : value).trim().slice(0, MAX_FIELD);
   return s || null;
+}
+
+/**
+ * @param {unknown} raw
+ * @returns {'website'|'ios'|'unknown'}
+ */
+function sanitizeSignupChannel(raw) {
+  const key = String(raw == null ? '' : raw)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z]/g, '');
+  if (key === 'web' || key === 'website' || key === 'browser') return 'website';
+  if (key === 'ios' || key === 'iphone' || key === 'ipad' || key === 'native' || key === 'app') {
+    return 'ios';
+  }
+  return 'unknown';
+}
+
+/**
+ * Infer channel from request when body omitted (legacy clients).
+ * @param {{ body?: object, get?: Function, headers?: object }} req
+ */
+function signupChannelFromReq(req) {
+  const body = req?.body || {};
+  const fromBody = body.signupChannel || body.channel || body.platform || body.client;
+  if (fromBody) return sanitizeSignupChannel(fromBody);
+
+  const header =
+    (typeof req?.get === 'function' && (req.get('X-GV-Client') || req.get('x-gv-client'))) ||
+    req?.headers?.['x-gv-client'] ||
+    '';
+  if (header) return sanitizeSignupChannel(header);
+
+  const ua = String(
+    (typeof req?.get === 'function' && req.get('user-agent')) || req?.headers?.['user-agent'] || ''
+  ).toLowerCase();
+  if (ua.includes('capacitor') || ua.includes('gatorvault-ios')) return 'ios';
+
+  return 'unknown';
 }
 
 /**
@@ -73,8 +115,26 @@ function countBySource(rows) {
     .map((source) => ({ source, count: counts[source] }));
 }
 
+/**
+ * @param {Array<{signupChannel?: string|null}>} rows
+ */
+function countByChannel(rows) {
+  const counts = { website: 0, ios: 0, unknown: 0 };
+  for (const row of rows || []) {
+    const key = sanitizeSignupChannel(row?.signupChannel);
+    counts[key] = (counts[key] || 0) + 1;
+  }
+  return ['website', 'ios', 'unknown']
+    .filter((channel) => counts[channel] > 0)
+    .map((channel) => ({ channel, count: counts[channel] }));
+}
+
 module.exports = {
   sanitizeFirstTouch,
+  sanitizeSignupChannel,
+  signupChannelFromReq,
   outletLabel,
   countBySource,
+  countByChannel,
+  SIGNUP_CHANNELS,
 };

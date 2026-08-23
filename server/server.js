@@ -62,7 +62,12 @@ const { apiMonitorMiddleware } = require('./lib/api-monitor');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 const { effectiveTier, isAdminAccount, isReservedOperatorEmail } = require('./lib/session-auth');
-const { loadUsers, saveUsers, findUserByEmail } = require('./lib/user-store');
+const { loadUsers, saveUsers, findUserByEmail, updateUser } = require('./lib/user-store');
+const {
+  checkAuthRateLimit,
+  clientIp,
+  rateLimitResponse,
+} = require('./lib/auth-rate-limit');
 const { hasPaidAccess, buildSessionFields } = require('./lib/subscription-service');
 const { mountSubscriptionRoutes } = require('./lib/subscription-routes');
 const { mountPushAlertRoutes } = require('./lib/push-alert-routes');
@@ -146,6 +151,7 @@ app.use('/api', (req, res, next) => {
 });
 
 app.listen(PORT, () => {
+  global.__GV_BOOT_AT__ = new Date().toISOString();
   console.log('[boot] early listen on port', PORT);
   // Keep /health green through Render's deploy probes before sync route wiring.
   // Starter CPUs can spend multiple seconds inside wireApplication mounts.
@@ -628,6 +634,9 @@ app.post('/api/register', async (req, res) => {
     // Self-register never chooses War — upgrades only via IAP / admin grant.
     const tier = 'locker';
 
+    const rate = checkAuthRateLimit('register', { email, ip: clientIp(req) });
+    if (!rate.ok) return rateLimitResponse(res, rate);
+
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res.status(400).json({ ok: false, error: 'Enter a valid email address.' });
     }
@@ -652,11 +661,12 @@ app.post('/api/register', async (req, res) => {
     }
 
     const { resolveRegistrationTrial, rememberTrial } = require('./lib/trial-ledger');
-    const { sanitizeFirstTouch } = require('./lib/member-attribution');
+    const { sanitizeFirstTouch, signupChannelFromReq } = require('./lib/member-attribution');
     const trialPlan = resolveRegistrationTrial(email, { trialDays: 30 });
     const trialEnd = trialPlan.trialEnd;
     const createdAt = new Date().toISOString();
     const firstTouch = sanitizeFirstTouch(req.body?.firstTouch || req.body?.attribution || null);
+    const signupChannel = signupChannelFromReq(req);
 
     const user = {
       email,
@@ -665,6 +675,7 @@ app.post('/api/register', async (req, res) => {
       passwordHash: hashPassword(password),
       createdAt: trialPlan.trialStart || createdAt,
       trialEnd: trialEnd.toISOString(),
+      signupChannel,
       ...(firstTouch ? { firstTouch } : {}),
     };
     users.push(user);
@@ -706,17 +717,15 @@ app.post('/api/register', async (req, res) => {
       } catch (beehiivErr) {
         console.warn('beehiiv enroll skipped:', beehiivErr.message);
       }
-      const usersUpdated = loadUsers();
-      const uIdx = usersUpdated.findIndex((u) => u.email === email);
-      if (uIdx >= 0) {
-        usersUpdated[uIdx].onboardingSent = user.onboardingSent;
-        usersUpdated[uIdx].onboardingProvider = user.onboardingProvider;
-        usersUpdated[uIdx].trialRemindersSent = user.trialRemindersSent;
-        if (user.beehiivSubscriptionId) {
-          usersUpdated[uIdx].beehiivSubscriptionId = user.beehiivSubscriptionId;
-        }
-        saveUsers(usersUpdated);
-      }
+      // Re-patch via updateUser after awaits so a concurrent entitlement write is not overwritten.
+      updateUser(email, {
+        onboardingSent: user.onboardingSent,
+        onboardingProvider: user.onboardingProvider,
+        trialRemindersSent: user.trialRemindersSent,
+        ...(user.beehiivSubscriptionId
+          ? { beehiivSubscriptionId: user.beehiivSubscriptionId }
+          : {}),
+      });
     } catch (e) {
       console.warn('welcome email failed:', e.message);
     }
@@ -748,8 +757,10 @@ app.post('/api/register', async (req, res) => {
 
 app.post('/api/auth/forgot-password', async (req, res) => {
   try {
-    const { requestPasswordReset } = require('./lib/password-reset');
     const email = String(req.body?.email || '').trim().toLowerCase();
+    const rate = checkAuthRateLimit('forgot', { email, ip: clientIp(req) });
+    if (!rate.ok) return rateLimitResponse(res, rate);
+    const { requestPasswordReset } = require('./lib/password-reset');
     await requestPasswordReset(email, { deliverEmail });
     // Always identical body — do not reveal whether the account exists.
     return res.json({
@@ -793,6 +804,9 @@ app.post('/api/login', async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ ok: false, error: 'Email and password are required.' });
     }
+
+    const rate = checkAuthRateLimit('login', { email, ip: clientIp(req) });
+    if (!rate.ok) return rateLimitResponse(res, rate);
 
     const users = loadUsers();
     const user = users.find((u) => u.email === email);
@@ -1638,9 +1652,11 @@ function startPostBootServices() {
   setTimeout(startPostBootLightServices, deferLightMs);
   // Hub boot warm must not wait on recruiting-store / identity-patterns init.
   // Those paths can stall and left hub permanently building after Tier B GET no-sync.
+  // Keep this SHORT — skip path only disk-primes; long defer left hub cold + Admin Hub
+  // looking "down" while /ready was fine.
   const deferHubWarmMs = Math.max(
-    20000,
-    parseInt(process.env.API_BOOT_DEFER_HUB_WARM_MS || String(deferLightMs), 10) || deferLightMs
+    3000,
+    parseInt(process.env.API_BOOT_DEFER_HUB_WARM_MS || '8000', 10) || 8000
   );
   setTimeout(() => {
     try {

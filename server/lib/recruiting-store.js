@@ -212,7 +212,9 @@ function filterSnapshotAuthoritativeCommits(players, snapshotCommits, classYear)
     const slug = String(p.slug || '').toLowerCase();
     if (snapshotSlugs.has(slug)) return true;
     if (p.on3Id && snapshotOn3Ids.has(String(p.on3Id))) return true;
-    if (p.on3Source === 'on3-board-sync' || p.protected === true) return true;
+    // Live On3 board sync may add a signee before the bundled snapshot refreshes.
+    // Do NOT allow bare protected:true — that re-inflated home "N commits" past the card list.
+    if (p.on3Source === 'on3-board-sync' || p.on3Source === 'on3-portal-sync') return true;
     if (isVerifiedUfCommitSlug(slug, year)) return true;
     return false;
   });
@@ -1618,8 +1620,26 @@ async function upsertTargetFromVisitIntel(intel) {
     patch.ufOvStatus = 'scheduled';
   }
 
-  if (existing) return upsertPlayer(preservePlayerFields(existing, patch));
-  return upsertPlayer(patch);
+  const saved = existing
+    ? await upsertPlayer(preservePlayerFields(existing, patch))
+    : await upsertPlayer(patch);
+
+  // Campus visit set up → 2028 allowlist (Chase / Closest). Offer alone stays War Room.
+  if (!isCancel && (intel.eventType === 'official_visit' || intel.eventType === 'unofficial_visit')) {
+    try {
+      const { promoteAllowlistOnCampusVisit } = require('./campus-visit-allowlist-promote');
+      await promoteAllowlistOnCampusVisit({
+        slug,
+        name: saved?.name || intel.playerName || patch.name,
+        classYear: saved?.classYear || intel.classYear || patch.classYear || 2028,
+        player: saved,
+      });
+    } catch (err) {
+      console.warn('[recruiting-store] campus-visit allowlist promote:', err.message);
+    }
+  }
+
+  return saved;
 }
 
 module.exports = {

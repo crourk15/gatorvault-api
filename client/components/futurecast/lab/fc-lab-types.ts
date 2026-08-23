@@ -35,6 +35,8 @@ export type FcLabTarget = {
   fitScore: number | null;
   modelPct: number | null;
   stars: number | null;
+  /** On3/industry national rank when known — chase status, not film. */
+  nationalRank?: number | null;
   committedTo?: string | null;
   predictors: Array<{ name: string; score: number }>;
   competingSchools?: Array<{ name: string; pct: number }>;
@@ -176,6 +178,10 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
         ? Number(p.staffConfidence)
         : null,
     stars: p.stars ?? null,
+    nationalRank:
+      (p as { nationalRank?: number | null; natlRank?: number | null }).nationalRank ??
+      (p as { nationalRank?: number | null; natlRank?: number | null }).natlRank ??
+      null,
     committedTo: committed,
     predictors: (p.predictors ?? []).map((x) => ({ name: x.name, score: x.score })),
     competingSchools: (p.competingSchools ?? [])

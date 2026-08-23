@@ -33,6 +33,8 @@ services:
         value: /var/data/users.json
       - key: GV_TRIAL_LEDGER_PATH
         value: /var/data/trial-ledger.json
+      - key: GV_POINTS_PATH
+        value: /var/data/users-points.json
       # Beat/X live pool + feed caches — same disk so redeploys do not empty GatorNation Live.
       - key: GV_LIVE_DATA_DIR
         value: /var/data/live
@@ -309,15 +311,19 @@ services:
         value: "false"
       - key: HUB_BOOT_IMMEDIATE_WARM
         value: "false"
-      # Elite: deferred priority warm after listen (GET path never rebuilds).
+      # CRITICAL (Aug 20): boot warm was stacking lite+spaced+heal and blocking
+      # /ready for 40s+ → Render 502 crash loop → Beat Desk Open Brief hung.
+      # Cron hub-warm (:12/:42) owns refill; Tier B GETs use disk/seed.
       - key: HUB_BOOT_FORCE_WARM
-        value: "true"
-      - key: HUB_BOOT_SKIP_WARM
         value: "false"
+      - key: HUB_BOOT_SKIP_WARM
+        value: "true"
       - key: HUB_BOOT_WARM_DELAY_MS
-        value: "90000"
+        value: "180000"
+      - key: HP_HEAL_BOOT
+        value: "false"
       - key: HUB_BOOT_WARM_YEARS
-        value: "2027,2028"
+        value: "2028"
       - key: HUB_BOOT_SECONDARY_WARM
         value: "false"
       # Tier B: member GETs never sync-rebuild hub/Lab (boot/cron warm owns refill).
@@ -333,9 +339,9 @@ services:
         value: "false"
       - key: HUB_BOOT_BUNDLE_WARM
         value: "false"
-      # After lite: HP → bundle → master for 2028 only (Starter-safe; widen years later).
+      # Off on web dyno — cron lite owns refill; spaced forks were OOM/502 looping.
       - key: HUB_SPACED_ELITE_WARM
-        value: "true"
+        value: "false"
       - key: HUB_SPACED_WARM_YEARS
         value: "2028"
       - key: HUB_SPACED_WARM_START_MS
@@ -358,21 +364,41 @@ services:
         value: "true"
       - key: HUB_SPACED_WORKER_TIMEOUT_MS
         value: "360000"
+      # Keep parent+one child under Pro 4GB cgroup (1536 overlapped → exit 143).
       - key: HUB_SPACED_WORKER_MAX_OLD_SPACE_MB
-        value: "1536"
+        value: "1024"
       # Soft hub refresh — do not wipe caches before rebuild (avoids cold stampede).
       - key: HUB_REFRESH_CLEAR_CACHES
         value: "false"
       - key: HUB_PRIORITY_WARM_RSS_MB
         value: "900"
+      # Skip spawning spaced child when parent RSS already high (prevents cgroup 143).
+      - key: HUB_SPACED_FORK_PARENT_RSS_MB
+        value: "850"
+      # Yield between warm keys so Render /ready (~5s) can run during lite builds.
+      - key: HUB_WARM_YIELD_MS
+        value: "150"
+      # Disk-first warm-memory (lite) — skip elite rebuild when hub-runtime exists.
+      - key: HUB_WARM_DISK_FIRST
+        value: "true"
+      - key: HUB_WARM_REJECT_LAG_MS
+        value: "250"
+      - key: HUB_WARM_REJECT_RSS_MB
+        value: "900"
       # Pro 4GB: keep heavy warm well after listen so /ready stays cheap.
       - key: API_BOOT_DEFER_HEAVY_MS
         value: "90000"
+      # Hub skip/disk-prime path — don't wait on light/sched defer (Admin Hub cold).
+      - key: API_BOOT_DEFER_HUB_WARM_MS
+        value: "8000"
       - key: PLAYER_INTEL_REFRESH_ON_BOOT
         value: "false"
-      # Background hub re-warm every 10m (was 4m — too aggressive with crons).
+      # Off — in-process 10m lite warm + cron spaced stacked and starved /ready (Aug 20).
+      - key: HUB_BACKGROUND_REFRESH
+        value: "false"
+      # Background hub re-warm interval (only if HUB_BACKGROUND_REFRESH is re-enabled).
       - key: HUB_CACHE_REFRESH_MS
-        value: "600000"
+        value: "1800000"
       - key: HUB_REFRESH_INTERVAL_MS
         value: "21600000"
       - key: DATABASE_URL
@@ -443,7 +469,8 @@ services:
 
   - type: cron
     name: gatorvault-api-recruiting-ingest
-    schedule: "0 */2 * * *"
+    # :15 avoids stacking with recruiting-light at :00 (same even hours).
+    schedule: "15 */2 * * *"
     runtime: node
     region: oregon
     rootDir: server
@@ -501,14 +528,15 @@ services:
     startCommand: node scripts/render-hub-refresh-cron.js
     envVars:
       - key: HUB_REFRESH_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?warmAfter=priority
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?warmAfter=false
       - key: MONITORING_CRON_SECRET
         sync: false
 
-  # Tier B: spaced elite warm (lite now, then HP/bundle/master with gaps). No parallel lab-warm.
+  # Tier B: lite only while API crash-loops recover (Aug 20). Spaced forks on the
+  # web dyno starved /ready past ~5s → HTML 502. Schedule OFF :00/:30.
   - type: cron
     name: gatorvault-api-hub-warm
-    schedule: "*/25 * * * *"
+    schedule: "12,42 * * * *"
     runtime: node
     region: oregon
     rootDir: server
@@ -516,7 +544,7 @@ services:
     startCommand: node scripts/render-hub-warm-cron.js
     envVars:
       - key: HUB_WARM_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=spaced&years=2027,2028
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=lite&years=2028
       - key: LAB_WARM_URL
         value: ""
       - key: MONITORING_CRON_SECRET
@@ -611,7 +639,9 @@ services:
 
   - type: cron
     name: gatorvault-api-gators-score-alerts
-    schedule: "*/3 * * * *"
+    # Every 5m (was */3) — run-job on the web dyno during score windows stacked with
+    # keepalive/hub-warm and contributed to brief HTML 502 flaps.
+    schedule: "*/5 * * * *"
     runtime: node
     region: oregon
     rootDir: server

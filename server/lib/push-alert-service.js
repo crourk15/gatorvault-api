@@ -6,12 +6,13 @@ const fs = require('fs');
 const path = require('path');
 const webpush = require('web-push');
 const { getSessionFromReq } = require('./session-auth');
-const { findUserByEmail } = require('./user-store');
+const { findUserByEmail, indexUsersByEmail, loadUsers } = require('./user-store');
 const { hasPaidAccess, trialState } = require('./subscription-service');
 const { getVerifiedFloridaVisitWindow } = require('./visit-intel-utils');
 const persistence = require('./push-subscription-persistence');
 const { subscriberMatchesPayload } = require('./push-alert-filters');
 const { apnsConfigured, sendApnsNotification } = require('./apns-push');
+const { mapPool, pushFanoutConcurrency } = require('./fanout-util');
 
 const STORE_PATH = path.join(__dirname, '../data/ops/push-subscriptions.json');
 const SITE_URL = (process.env.SITE_URL || 'https://gatorvaultinsider.com').replace(/\/$/, '');
@@ -197,19 +198,26 @@ function prefsWantsType(prefs, type) {
   return false;
 }
 
-function eligibleRecipients(alertType = 'visit') {
+function eligibleRecipients(alertType = 'visit', userMap = null) {
   const store = readStore();
+  const byEmail = userMap || indexUsersByEmail(loadUsers());
   const web = [];
   for (const sub of store.subscriptions || []) {
     if (!prefsWantsType(sub.prefs, alertType)) continue;
-    const user = findUserByEmail(sub.email);
+    const email = String(sub.email || '')
+      .trim()
+      .toLowerCase();
+    const user = email ? byEmail.get(email) || null : null;
     if (!hasSubscriberAccess(user)) continue;
     web.push({ channel: 'web', ...sub });
   }
   const devices = [];
   for (const device of store.deviceTokens || []) {
     if (!prefsWantsType(device.prefs, alertType)) continue;
-    const user = findUserByEmail(device.email);
+    const email = String(device.email || '')
+      .trim()
+      .toLowerCase();
+    const user = email ? byEmail.get(email) || null : null;
     if (!hasSubscriberAccess(user)) continue;
     devices.push({ channel: 'apns', ...device });
   }
@@ -328,7 +336,8 @@ async function sendPushToSubscribers(payload, options = {}) {
   const alertType = options.alertType || payload.type || 'visit';
 
   if (options.dryRun) {
-    const { web, devices } = eligibleRecipients(alertType);
+    const userMap = indexUsersByEmail(loadUsers());
+    const { web, devices } = eligibleRecipients(alertType, userMap);
     return {
       ok: true,
       dryRun: true,
@@ -341,7 +350,8 @@ async function sendPushToSubscribers(payload, options = {}) {
     return { ok: true, skipped: true, reason: 'already_dispatched', fingerprint };
   }
 
-  const { web, devices } = eligibleRecipients(alertType);
+  const userMap = indexUsersByEmail(loadUsers());
+  const { web, devices } = eligibleRecipients(alertType, userMap);
   const webRecipients = web.filter((sub) => subscriberMatchesPayload(sub, payload));
   const deviceRecipients = devices.filter((sub) => subscriberMatchesPayload(sub, payload));
 
@@ -349,9 +359,10 @@ async function sendPushToSubscribers(payload, options = {}) {
   let failed = 0;
   const deadWeb = [];
   const deadDevices = [];
+  const concurrency = pushFanoutConcurrency();
 
   if (ensureWebPush()) {
-    for (const sub of webRecipients) {
+    await mapPool(webRecipients, concurrency, async (sub) => {
       try {
         await webpush.sendNotification(
           { endpoint: sub.endpoint, keys: sub.keys },
@@ -370,18 +381,18 @@ async function sendPushToSubscribers(payload, options = {}) {
         const status = err?.statusCode || err?.status;
         if (status === 404 || status === 410) deadWeb.push(sub.endpoint);
       }
-    }
+    });
   }
 
   if (apnsConfigured()) {
-    for (const device of deviceRecipients) {
+    await mapPool(deviceRecipients, concurrency, async (device) => {
       const out = await sendApnsNotification(device.token, payload);
       if (out.ok) sent += 1;
       else {
         failed += 1;
         if (out.dead) deadDevices.push(device.token);
       }
-    }
+    });
   }
 
   if (deadWeb.length || deadDevices.length) {

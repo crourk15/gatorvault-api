@@ -30,17 +30,18 @@ describe('Elite boot force warm', () => {
     assert.ok(refreshIdx > 0 && skipLogIdx > refreshIdx);
   });
 
-  it('render.yaml enables force warm + spaced elite; lab/bundle off as boot jobs', () => {
+  it('render.yaml skips boot warm + spaced; cron lite owns refill', () => {
     const yaml = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'render.yaml'), 'utf8');
-    assert.match(yaml, /HUB_BOOT_FORCE_WARM[\s\S]*value: "true"/);
+    assert.match(yaml, /HUB_BOOT_FORCE_WARM[\s\S]*value: "false"/);
+    assert.match(yaml, /HUB_BOOT_SKIP_WARM[\s\S]*value: "true"/);
     assert.match(yaml, /HUB_BOOT_BUNDLE_WARM[\s\S]*value: "false"/);
-    assert.match(yaml, /HUB_SPACED_ELITE_WARM[\s\S]*value: "true"/);
+    assert.match(yaml, /HUB_SPACED_ELITE_WARM[\s\S]*value: "false"/);
+    assert.match(yaml, /HUB_BACKGROUND_REFRESH[\s\S]*value: "false"/);
     assert.match(yaml, /HUB_SPACED_WARM_YEARS[\s\S]*value: "2028"/);
     assert.match(yaml, /HUB_BUNDLE_SEQUENTIAL[\s\S]*value: "true"/);
     assert.match(yaml, /HUB_SPACED_WARM_FORK[\s\S]*value: "true"/);
-    assert.match(yaml, /HUB_SPACED_WARM_LAB[\s\S]*value: "true"/);
     assert.match(yaml, /^\s+plan:\s+pro\s*$/m);
-    assert.match(yaml, /warm-memory\?mode=spaced&years=2028/);
+    assert.match(yaml, /warm-memory\?mode=lite&years=2028/);
   });
 
   it('server schedules hub boot warm early and idempotently', () => {

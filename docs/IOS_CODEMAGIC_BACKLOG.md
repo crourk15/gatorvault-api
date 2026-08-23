@@ -7,6 +7,9 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] 2028 HP chase cards: visit lines + Why we chase notes from live visit/intel stores + soft priority nudge (API — no Codemagic; Rising still snapshot `delta7d` only)
+- [x] Home NOW / class-overview 2027 commit count lockstep with commit cards (26) — kill protected-only phantom inflate + shared `loadHubHsClassCommits` (API)
+- [x] App Store **1.0.18** approved — pre-release train closed; next bake is **1.0.19** / build 84+ (`90186` / `90062` if you re-upload 1.0.18)
 - [x] App Store **1.0.17** accepted / eligible for distribution (Aug 17, 2026) — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`
 - [x] Film Room Press Conferences: same-day speaker re-uploads / search mirrors collapsed (Sumrall Aug 4 + Media Days) — API + cache dedupe on sync/serve
 - [x] Gabriel profile Field/On3 Florida 100: stamp overlay treated residual ufRpmPct 1 as fraction×100 — parseRpmPct + live topTeams peers (API)
@@ -18,6 +21,8 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Full-profile stamps overlay live On3 Industry ranks (Wright #1 not baked #208) — API
 - [x] 2028 allowlist intel continuous coverage (Wilkes/McCary/Bailey/Hines/Jamarcus) + chase process logs — API / recruiting-light sweep
 - [x] Home NOW ticker lines: named movement + lite-warm `/hub/ticker` refresh (API — no Codemagic)
+- [x] Footprint Class 2028 commits: heal poisoned `bundle.footprint` nest from dedicated plate on serve (API — open-cycle map no longer stuck at 0)
+- [x] Open Class 2028 HP soft plate — Tier B cold miss never empty `status:building` for targets / Priority Chase (API)
 - [x] Footprint Class 2028 commits: rev-gate + heal poisoned 0-commit runtime plates; lite warm refreshes footprint/commits on cron (API — no Codemagic)
 - [x] DeNairo Girton Jr. 2028 S Vault Scouting (Jessie Bates III comp) — correct Great Mills MD identity (Beat Desk had Tramond Collins On3 collision) — API
 - [x] Tranard Roberts profile: Vault Scouting (Judkins comp) + heal predictedSchool / htWt / Georgia phantom rival — API + prepared-meal stamp
@@ -32,7 +37,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] FutureCast master-board soft/disk seed — Lab primary never empty `status:building` on iOS (API)
 - [x] Lab polish API — null stars, Early Discovery soft cold-miss, capped warm workers (API)
 
-These ship via Render / Netlify API — current App Store binary (1.0.17) picks them up:
+These ship via Render / Netlify API — current App Store binary (1.0.18) picks them up:
 
 - [x] FutureCast commit likelihood (live HP / GV odds)
 - [x] Official 2026 roster jersey numbers + newcomers (API)
@@ -47,6 +52,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.17) picks 
 - [x] FutureCast Closest to commit: 2028 high-priority API returns full allowlist (not chase-hot top-18 cut) so board leaders like Hudson West update live on iOS
 - [x] Vault Scouting: provisional / `filmWatched:false` evals hidden from fan profiles (Harris-Payne film-watch standard) — API gate
 - [x] FutureCast Closest processEvidence on HP API (offer/visits/intel flags) — live on iOS for payload; stamp gate needs client bake below
+- [x] Member signup channel — Website vs iOS app on register + Admin Members Channel / byChannel rollup (API + Hub; web Netlify client; iOS bake for in-app Join)
 - [x] Member first-touch attribution persist on `POST /api/register` + Admin Members Source/bySource (API) — live once any client sends `firstTouch`
 - [x] 2028 HP seed refresh — Alderman locks Wilkes / McCary / Bailey / Hines on FutureCast Priority Chase (bundled seed; API)
 - [x] Live depth chart API — `GET/PUT /api/roster/depth-chart` fall-camp board (web + post-Codemagic iOS content path)
@@ -58,13 +64,21 @@ These ship via Render / Netlify API — current App Store binary (1.0.17) picks 
 
 ## Waiting for next Codemagic build
 
-**Next bake target: App Store `1.0.18` / build `83+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_18_BUILD83.md`.
+**Next bake target: App Store `1.0.19` / build `84+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_19_BUILD84.md`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-08-18 | Game Week matchup hero: official 2026 uniform combo (helmet/jersey/pants) from `@GatorsFB` lineup drop — **parked** (branch `cursor/gw-uniform-schedule-69d2`; do not bake for this alone) | `MatchupHeroWidget` + `game-week-wow` CSS in binary; schedule JSON on that branch | parked #502 |
+| 2026-08-23 | Where Florida needs help: depth-ok rooms stay In good shape — no Needs help from 2 departing seniors alone | `fc-position-need-board` + Lab position breakdown in binary | pending |
+| 2026-08-23 | Why we chase: thin room only for trench/CB gaps at need ≥85 — never WR/RB/TE from weight table alone | `chase-priority` thin-room gate in binary | pending |
+| 2026-08-23 | Why we chase: truth-first voice — claim thin room only when need is real; elite talent can chase with room set; named place never “backyard” | `chase-priority` `buildChaseWhyBrief` + `nationalRank` on Lab target in binary | pending |
+| 2026-08-23 | Why we chase: never mid-sentence note clips (`and is…`) — compress visit/offer prose to short Vault chips | `chase-priority` in binary; API `truncateNote` also live | pending |
+| 2026-08-23 | Why we chase: richer lead (thin room + Fit) + process `notePreview` tails; ~180 char cap; still no film traits | `chase-priority` `buildChaseWhyBrief` + chase tests in binary | pending |
+| 2026-08-23 | Community iOS org: post→open thread, default Recent, Staff open vs Member threads, category tabs, hide duplicate Spark/Staff on mobile | `VaultCommunityPage`, `community-api`, `community-elite.css` in binary | pending |
+| 2026-08-20 | Signup channel: send `signupChannel` / `X-GV-Client` (website vs ios) on register so Admin Members can split web vs app | `auth-api` Join/register in binary; **API + Admin Hub already live for web Netlify** | pending |
+| 2026-08-20 | Footprint Class 2028: client falls back to dedicated `/hub/footprint` when bundle nest shows 0 commits but commit cards exist | `useHubBundleSection` in binary; **API heal of `bundle.footprint` nest is live without bake** | pending |
+| 2026-08-18 | Game Week matchup hero: official 2026 uniform combo (helmet/jersey/pants) from `@GatorsFB` lineup | `MatchupHeroWidget` + `game-week-wow` CSS + schedule JSON in binary | pending #502 |
 | 2026-08-17 | Chase On3 lead stamp from API (`on3Lead`) — prefer server field so stamp bugs/prediction swings are Render-only after this bake | `VaultChaseCard` + HP cache v20 in binary; API stamps `on3Lead` on every HP serve | pending |
 | 2026-08-17 | Chase On3 lead labels: ND / Miss St / SC / TTU / NC State (no more "Notre"/"South"/"Texas" for Tech) | `competing-schools` + `VaultChaseCard` in binary | pending |
 | 2026-08-17 | Chase On3 lead: treat FSU/USF/FAU as rivals (not UF); keep real ~95% favorites in chrome | `competing-schools` in binary; API peer extract + HP disk heal also live | pending |

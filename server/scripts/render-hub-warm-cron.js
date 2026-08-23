@@ -10,7 +10,7 @@ const API_ORIGIN = process.env.HUB_WARM_API_ORIGIN || 'https://gatorvault-api.on
 const CRON_SECRET = process.env.MONITORING_CRON_SECRET || process.env.CRON_SECRET || '';
 const HUB_WARM_URL =
   process.env.HUB_WARM_URL ||
-  `${API_ORIGIN}/api/recruiting/hub/warm-memory?mode=spaced&years=2028`;
+  `${API_ORIGIN}/api/recruiting/hub/warm-memory?mode=lite&years=2028`;
 const LAB_WARM_URL = String(process.env.LAB_WARM_URL || '').trim();
 
 const RETRY_STATUSES = new Set([502, 503, 504, 429]);

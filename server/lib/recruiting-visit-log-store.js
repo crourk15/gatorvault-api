@@ -86,6 +86,45 @@ function appendVisitLog(entry) {
 
   doc.items.unshift(row);
   saveDoc(doc);
+
+  // Florida campus visit logged → 2028 allowlist so Chase / Closest can rank them.
+  try {
+    const { isFloridaSchool } = require('./recruiting-target-filters');
+    if (isFloridaSchool(row.school || 'Florida')) {
+      const { promoteAllowlistOnCampusVisit } = require('./campus-visit-allowlist-promote');
+      const store = require('./recruiting-store');
+      Promise.resolve(
+        (async () => {
+          let player = null;
+          try {
+            player = (await store.getPlayerBySlug(row.playerSlug)) || null;
+          } catch {
+            player = null;
+          }
+          const year = Number(player?.classYear) || 2028;
+          if (year !== 2028) return;
+          await promoteAllowlistOnCampusVisit({
+            slug: row.playerSlug,
+            name: row.playerName || player?.name || row.playerSlug,
+            classYear: year,
+            player: {
+              ...(player || {}),
+              slug: row.playerSlug,
+              name: row.playerName || player?.name || row.playerSlug,
+              classYear: year,
+              on3Slug: player?.on3Slug || row.playerSlug,
+              visits: [{ school: row.school || 'Florida', visitType: row.visitType }],
+            },
+          });
+        })()
+      ).catch((err) => {
+        console.warn('[visit-log] campus-visit allowlist promote:', err.message);
+      });
+    }
+  } catch (err) {
+    console.warn('[visit-log] campus-visit allowlist promote:', err.message);
+  }
+
   return { item: row, created: true, duplicate: false };
 }
 

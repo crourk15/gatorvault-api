@@ -10,7 +10,7 @@ const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
 const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 
 /** Bump when HS-only class commit metrics logic changes. */
-const HUB_METRICS_CACHE_REV = 'hs7';
+const HUB_METRICS_CACHE_REV = 'hs8';
 
 /** Bump when footprint commit/target tallies logic changes. */
 const FOOTPRINT_CACHE_REV = 'fp3';
@@ -21,12 +21,19 @@ const FOOTPRINT_CACHE_REV = 'fp3';
  */
 const COMMITS_CACHE_REV = 'c5';
 
+/** Bump when Home NOW locked-commit ticker line must invalidate. */
+const TICKER_CACHE_REV = 't2';
+
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
 }
 
 function hubCommitsCacheKey(year) {
   return `hub:elite:commits:${COMMITS_CACHE_REV}:${year}`;
+}
+
+function hubTickerCacheKey(year) {
+  return `hub:elite:ticker:${TICKER_CACHE_REV}:${year}`;
 }
 
 function recruitingFootprintCacheKey(year) {
@@ -261,6 +268,8 @@ function durableMetaForCacheKey(cacheKey) {
   if (m) return { endpoint: 'commits', year: Number(m[1]), spread: false };
   m = cacheKey.match(/^hub:elite:commits:(\d+)$/);
   if (m) return { endpoint: 'commits', year: Number(m[1]), spread: false };
+  m = cacheKey.match(/^hub:elite:ticker:[^:]+:(\d+)$/);
+  if (m) return { endpoint: 'ticker', year: Number(m[1]), spread: false };
   m = cacheKey.match(/^hub:elite:ticker:(\d+)$/);
   if (m) return { endpoint: 'ticker', year: Number(m[1]), spread: false };
   m = cacheKey.match(/^hub:elite:footprint:[^:]+:(\d+)$/);
@@ -276,14 +285,56 @@ function persistDurableCacheValue(cacheKey, value) {
   return writeHubDiskSnapshot(meta.endpoint, meta.year, value);
 }
 
+/**
+ * Open-cycle Class of 2028 prefers bundle.footprint. Dedicated /hub/footprint can be
+ * healthy (Armani pin) while a stale nest stays at 0 commits — heal nest from the
+ * dedicated plate before we serve or persist the bundle.
+ */
+function healBundleFootprintNest(value, year) {
+  if (!value || typeof value !== 'object') return value;
+  const y = Number(year);
+  if (!Number.isFinite(y)) return value;
+  const nest = value.footprint;
+  if (isUsableFootprintSnapshot(nest, y)) return value;
+
+  let healthy = null;
+  try {
+    healthy = hubCache.get(hubFootprintCacheKey(y));
+  } catch {
+    healthy = null;
+  }
+  if (!isUsableFootprintSnapshot(healthy, y)) {
+    try {
+      healthy = hubCache.getStale(hubFootprintCacheKey(y));
+    } catch {
+      /* optional */
+    }
+  }
+  if (!isUsableFootprintSnapshot(healthy, y)) {
+    try {
+      healthy = readHubDiskSnapshot('footprint', y);
+    } catch {
+      healthy = null;
+    }
+  }
+  if (!isUsableFootprintSnapshot(healthy, y)) return value;
+
+  value.footprint = healthy;
+  console.warn(
+    `[recruiting-hub-cache] healed bundle.footprint nest for ${y} (was ${footprintStateCommitCount(nest)} commits → ${footprintStateCommitCount(healthy)})`
+  );
+  return value;
+}
+
 /** When a hub bundle is in hand, keep dedicated footprint GETs warm for Class tabs. */
 function seedFootprintFromBundle(cacheKey, value) {
   const m = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
   if (!m || !value || typeof value !== 'object') return;
+  const year = Number(m[1]);
+  healBundleFootprintNest(value, year);
   const footprint = value.footprint;
   if (!footprint || typeof footprint !== 'object') return;
   if (!Array.isArray(footprint.states) || !footprint.states.length) return;
-  const year = Number(m[1]);
   if (!isUsableFootprintSnapshot(footprint, year)) return;
   const fpKey = hubFootprintCacheKey(year);
   hubCache.set(fpKey, footprint);
@@ -293,6 +344,8 @@ function seedFootprintFromBundle(cacheKey, value) {
 /** Bundle warm must also fill dedicated footprint GETs (map Class 2027/2028 tabs). */
 function cacheHubValue(cacheKey, value) {
   if (!cacheKey || value == null) return;
+  const m = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
+  if (m) healBundleFootprintNest(value, Number(m[1]));
   hubCache.set(cacheKey, value);
   persistDurableCacheValue(cacheKey, value);
   seedFootprintFromBundle(cacheKey, value);
@@ -391,7 +444,7 @@ function priorityLiteWarmJobs(elite, years) {
     // Periodic Class tabs + home NOW ticker — API/data live without Codemagic.
     jobs.push([hubCommitsCacheKey(year), () => elite.buildHubCommits(year)]);
     jobs.push([hubFootprintCacheKey(year), () => elite.buildHubFootprint(year)]);
-    jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year)]);
+    jobs.push([hubTickerCacheKey(year), () => elite.buildHubTicker(year)]);
   }
   return jobs;
 }
@@ -464,7 +517,7 @@ function secondaryWarmJobs(elite, years) {
     jobs.push([`recruiting:heat-index:${year}`, () => elite.buildHubHeatIndex(year)]);
     jobs.push([`recruiting:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
     jobs.push([recruitingFootprintCacheKey(year), () => elite.buildHubFootprint(year)]);
-    jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year)]);
+    jobs.push([hubTickerCacheKey(year), () => elite.buildHubTicker(year)]);
     jobs.push([hubCommitsCacheKey(year), () => elite.buildHubCommits(year)]);
     jobs.push([`hub:elite:battles:${year}`, () => elite.buildHubBattles(year)]);
     jobs.push([`hub:elite:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
@@ -478,6 +531,28 @@ function secondaryWarmJobs(elite, years) {
 
 function yieldEventLoop() {
   return new Promise((resolve) => setImmediate(resolve));
+}
+
+/** Cheap lag sample — if setImmediate is already delayed, the dyno is starving. */
+function measureEventLoopLagMs() {
+  return new Promise((resolve) => {
+    const started = Date.now();
+    setImmediate(() => resolve(Date.now() - started));
+  });
+}
+
+/** Yield + optional pause so Render's 5s /ready probe can land between warm jobs. */
+function yieldForHealthProbe() {
+  const pauseMs = Math.max(0, parseInt(process.env.HUB_WARM_YIELD_MS || '25', 10) || 25);
+  return new Promise((resolve) => {
+    setImmediate(() => {
+      if (pauseMs <= 0) {
+        resolve();
+        return;
+      }
+      setTimeout(resolve, pauseMs);
+    });
+  });
 }
 
 async function runWarmJobBatch(jobs, timeoutMs, label) {
@@ -495,7 +570,7 @@ async function runWarmJobBatch(jobs, timeoutMs, label) {
       console.warn(`[recruiting-hub-cache] ${label} skip`, key, err.message);
     }
     // Let Render /health + /ready + /api/login run between heavy builds.
-    await yieldEventLoop();
+    await yieldForHealthProbe();
   }
   return warmed;
 }
@@ -672,6 +747,12 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   const hit = options.force ? null : hubCache.get(cacheKey);
   if (hit != null) {
     // Older in-memory bundles predate footprint seeding — backfill on hit.
+    // Also heal poisoned nest (0 commits while dedicated footprint is healthy).
+    const bundleYearHit = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
+    if (bundleYearHit) {
+      healBundleFootprintNest(hit, Number(bundleYearHit[1]));
+      persistDurableCacheValue(cacheKey, hit);
+    }
     seedFootprintFromBundle(cacheKey, hit);
     if (!ready) {
       ready = true;
@@ -683,6 +764,11 @@ async function serveCached(cacheKey, builderFn, options = {}) {
 
   const stale = hubCache.getStale(cacheKey);
   if (stale != null) {
+    const bundleYearStale = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
+    if (bundleYearStale) {
+      healBundleFootprintNest(stale, Number(bundleYearStale[1]));
+      persistDurableCacheValue(cacheKey, stale);
+    }
     seedFootprintFromBundle(cacheKey, stale);
     // Stay-green / no-sync: serve stale only. Do not rebuild from GET — cron owns refill.
     if (!stayGreen && !noSync) refreshCacheKey(cacheKey, builderFn, timeoutMs);
@@ -704,6 +790,9 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     if (diskOk) {
       // Seed memory so the next request is a hot hit. Cron warm-memory refreshes later.
       // Bundle disk hits also seed dedicated footprint keys for Class year tabs.
+      if (diskFallback.endpoint === 'bundle') {
+        healBundleFootprintNest(diskValue, diskFallback.year);
+      }
       cacheHubValue(cacheKey, diskValue);
       ready = true;
       warmKeyCount = Math.max(warmKeyCount, 1);
@@ -775,6 +864,12 @@ async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = fa
 
 function scheduleBackgroundRefresh() {
   if (refreshTimer) return;
+  // Emergency off: in-process lite warm every N minutes still starved /ready into
+  // HTML 502 flaps (Aug 20). Cron hub-warm owns refill; set true to re-enable.
+  if (process.env.HUB_BACKGROUND_REFRESH === 'false') {
+    console.log('[recruiting-hub] background refresh disabled (HUB_BACKGROUND_REFRESH=false)');
+    return;
+  }
   refreshTimer = setInterval(() => {
     try {
       const pipelineGuards = require('./pipeline-guards');
@@ -804,6 +899,10 @@ let spacedEliteQueued = false;
 let spacedEliteGeneration = 0;
 /** @type {ReturnType<typeof setTimeout>[]} */
 let spacedEliteStepTimers = [];
+/** @type {import('child_process').ChildProcess | null} */
+let spacedEliteActiveChild = null;
+/** Prevent overlapping fork workers (OOM → exit 143 crash loop). */
+let spacedEliteWorkerChain = Promise.resolve();
 
 function softGc() {
   try {
@@ -811,6 +910,18 @@ function softGc() {
   } catch {
     /* optional */
   }
+}
+
+function killSpacedEliteChild(reason) {
+  const child = spacedEliteActiveChild;
+  if (!child || child.killed) return;
+  console.warn('[recruiting-hub] killing spaced worker', reason, 'pid', child.pid);
+  try {
+    child.kill('SIGKILL');
+  } catch {
+    /* ignore */
+  }
+  spacedEliteActiveChild = null;
 }
 
 /** Drop in-memory hub keys so HP/bundle can allocate; GETs fall back to hub-runtime disk. */
@@ -855,79 +966,106 @@ function runSpacedEliteWorker({ job, year }) {
     120000,
     parseInt(process.env.HUB_SPACED_WORKER_TIMEOUT_MS || '360000', 10) || 360000
   );
-  return new Promise((resolve, reject) => {
-    // Cap child heap so OOM kills the worker, not gatorvault-api (Pro 4GB shared cgroup).
-    const childHeapMb = Math.max(
-      512,
-      parseInt(process.env.HUB_SPACED_WORKER_MAX_OLD_SPACE_MB || '1536', 10) || 1536
+  // Serialize forks — hub-warm force-restart used to overlap 1.5GB children → cgroup OOM → 143.
+  const run = () => {
+    const pipelineGuards = require('./pipeline-guards');
+    // Parent+child share the Pro cgroup. If parent is already hot, skip this fork tick
+    // instead of risking exit 143 (/ready flaps for 15–30s).
+    const parentRssLimit = Math.max(
+      400,
+      parseInt(process.env.HUB_SPACED_FORK_PARENT_RSS_MB || '850', 10) || 850
     );
-    // --import tsx so HP worker can require .ts modules (bundle is plain JS).
-    const child = spawn(
-      process.execPath,
-      [
-        `--max-old-space-size=${childHeapMb}`,
-        '--import',
-        'tsx',
-        script,
-        `--job=${job}`,
-        `--year=${year}`,
-      ],
-      {
-        env: {
-          ...process.env,
-          HUB_BUNDLE_SEQUENTIAL: 'true',
-        },
-        stdio: ['ignore', 'pipe', 'pipe'],
-      }
-    );
-    let stdout = '';
-    let stderr = '';
-    const timer = setTimeout(() => {
-      try {
-        child.kill('SIGKILL');
-      } catch {
-        /* ignore */
-      }
-      reject(new Error(`spaced worker ${job}:${year} timed out after ${timeoutMs}ms`));
-    }, timeoutMs);
-    if (typeof timer.unref === 'function') timer.unref();
-    child.stdout.on('data', (chunk) => {
-      stdout += String(chunk);
-    });
-    child.stderr.on('data', (chunk) => {
-      stderr += String(chunk);
-    });
-    child.on('error', (err) => {
-      clearTimeout(timer);
-      reject(err);
-    });
-    child.on('close', (code, signal) => {
-      clearTimeout(timer);
-      if (code === 0) {
-        let parsed = null;
-        try {
-          const line = stdout.trim().split('\n').filter(Boolean).pop();
-          parsed = line ? JSON.parse(line) : null;
-        } catch {
-          parsed = null;
-        }
-        resolve({ ok: true, job, year, code, parsed, stderr: stderr.slice(-500) });
-        return;
-      }
-      reject(
-        new Error(
-          `spaced worker ${job}:${year} exit ${code}${signal ? `/${signal}` : ''}: ${stderr.slice(-400) || stdout.slice(-200)}`
-        )
+    if (pipelineGuards.shouldSkipHeavyJob(`spaced-fork-${job}-${year}`, parentRssLimit)) {
+      return Promise.resolve({ skipped: true, reason: 'parent_rss', job, year });
+    }
+    return new Promise((resolve, reject) => {
+      // Cap child heap so OOM kills the worker, not gatorvault-api (Pro 4GB shared cgroup).
+      // Default 1024 (was 1536): parent + child + lite restore still fit; override via env.
+      const childHeapMb = Math.max(
+        512,
+        parseInt(process.env.HUB_SPACED_WORKER_MAX_OLD_SPACE_MB || '1024', 10) || 1024
       );
+      // --import tsx so HP worker can require .ts modules (bundle is plain JS).
+      const child = spawn(
+        process.execPath,
+        [
+          `--max-old-space-size=${childHeapMb}`,
+          '--import',
+          'tsx',
+          script,
+          `--job=${job}`,
+          `--year=${year}`,
+        ],
+        {
+          env: {
+            ...process.env,
+            HUB_BUNDLE_SEQUENTIAL: 'true',
+          },
+          stdio: ['ignore', 'pipe', 'pipe'],
+        }
+      );
+      spacedEliteActiveChild = child;
+      let stdout = '';
+      let stderr = '';
+      const timer = setTimeout(() => {
+        try {
+          child.kill('SIGKILL');
+        } catch {
+          /* ignore */
+        }
+        reject(new Error(`spaced worker ${job}:${year} timed out after ${timeoutMs}ms`));
+      }, timeoutMs);
+      if (typeof timer.unref === 'function') timer.unref();
+      child.stdout.on('data', (chunk) => {
+        stdout += String(chunk);
+      });
+      child.stderr.on('data', (chunk) => {
+        stderr += String(chunk);
+      });
+      child.on('error', (err) => {
+        clearTimeout(timer);
+        if (spacedEliteActiveChild === child) spacedEliteActiveChild = null;
+        reject(err);
+      });
+      child.on('close', (code, signal) => {
+        clearTimeout(timer);
+        if (spacedEliteActiveChild === child) spacedEliteActiveChild = null;
+        if (code === 0) {
+          let parsed = null;
+          try {
+            const line = stdout.trim().split('\n').filter(Boolean).pop();
+            parsed = line ? JSON.parse(line) : null;
+          } catch {
+            parsed = null;
+          }
+          resolve({ ok: true, job, year, code, parsed, stderr: stderr.slice(-500) });
+          return;
+        }
+        reject(
+          new Error(
+            `spaced worker ${job}:${year} exit ${code}${signal ? `/${signal}` : ''}: ${stderr.slice(-400) || stdout.slice(-200)}`
+          )
+        );
+      });
     });
-  });
+  };
+
+  const next = spacedEliteWorkerChain.then(run, run);
+  spacedEliteWorkerChain = next.then(
+    () => {},
+    () => {}
+  );
+  return next;
 }
 
 function primeHubBundleFromDisk(year) {
   const value = readHubDiskSnapshot('bundle', year);
   if (!value) return false;
   const key = eliteBundleCacheKey(year);
+  healBundleFootprintNest(value, year);
   hubCache.set(key, value);
+  persistDurableCacheValue(key, value);
+  seedFootprintFromBundle(key, value);
   ready = true;
   warmKeyCount = Math.max(warmKeyCount, 1);
   getMeta();
@@ -944,6 +1082,125 @@ function primeHpFromDisk(year) {
   if (!value) return false;
   primeFuturecastCache(highPriorityCacheKey(year), value);
   return true;
+}
+
+/**
+ * After skip-boot-warm: fill memory from hub-runtime / hub-snapshot JSON only.
+ * No elite rebuilds — keeps /ready fast while GET no-sync still has something to serve.
+ * Boot path must NOT require FutureCast .ts (HP) — first-load transpile starved /ready ~15s.
+ */
+function primeLiteKeysFromDisk(years, options = {}) {
+  const list = (years && years.length ? years : [2027, 2028]).filter((y) => Number.isFinite(y));
+  const includeBundle = options.includeBundle !== false;
+  const includeHp = options.includeHp === true; // off by default — heavy require
+  const persist = options.persist === true; // off by default — already on disk
+  let primed = 0;
+  const tryPrime = (cacheKey, endpoint, year) => {
+    const value = readHubDiskSnapshot(endpoint, year);
+    if (value == null) return;
+    if (endpoint === 'footprint' && !isUsableFootprintSnapshot(value, year)) return;
+    if (persist) {
+      cacheHubValue(cacheKey, value);
+    } else {
+      if (endpoint === 'bundle') healBundleFootprintNest(value, year);
+      hubCache.set(cacheKey, value);
+      seedFootprintFromBundle(cacheKey, value);
+    }
+    primed += 1;
+  };
+
+  tryPrime(eliteClassOverviewAllCacheKey(), 'class-overview-all', null);
+  for (const year of list) {
+    tryPrime(eliteClassOverviewCacheKey(year), 'class-overview', year);
+    tryPrime(classSnapshotCacheKey(year), 'class-metrics', year);
+    tryPrime(`hub:elite:hero:${year}`, 'hero', year);
+    tryPrime(hubCommitsCacheKey(year), 'commits', year);
+    tryPrime(hubFootprintCacheKey(year), 'footprint', year);
+    tryPrime(hubTickerCacheKey(year), 'ticker', year);
+    if (includeBundle) tryPrime(eliteBundleCacheKey(year), 'bundle', year);
+    if (includeHp) {
+      try {
+        if (primeHpFromDisk(year)) primed += 1;
+      } catch {
+        /* optional Lab seed */
+      }
+    }
+  }
+
+  if (primed > 0) {
+    ready = true;
+    warmKeyCount = Math.max(warmKeyCount, primed);
+    lastWarmAt = new Date().toISOString();
+  }
+  getMeta();
+  console.log('[recruiting-hub] primed lite keys from disk', {
+    primed,
+    years: list,
+    includeBundle,
+    includeHp,
+    persist,
+  });
+  return primed;
+}
+
+/** Yield between keys so Render /ready can land during boot disk-prime. */
+async function primeLiteKeysFromDiskAsync(years, options = {}) {
+  const list = (years && years.length ? years : [2027, 2028]).filter((y) => Number.isFinite(y));
+  const includeBundle = options.includeBundle !== false;
+  const includeHp = options.includeHp === true;
+  const persist = options.persist === true;
+  let primed = 0;
+  const steps = [];
+  steps.push(['class-overview-all', eliteClassOverviewAllCacheKey(), 'class-overview-all', null]);
+  for (const year of list) {
+    steps.push(['class-overview', eliteClassOverviewCacheKey(year), 'class-overview', year]);
+    steps.push(['class-metrics', classSnapshotCacheKey(year), 'class-metrics', year]);
+    steps.push(['hero', `hub:elite:hero:${year}`, 'hero', year]);
+    steps.push(['commits', hubCommitsCacheKey(year), 'commits', year]);
+    steps.push(['footprint', hubFootprintCacheKey(year), 'footprint', year]);
+    steps.push(['ticker', hubTickerCacheKey(year), 'ticker', year]);
+    if (includeBundle) steps.push(['bundle', eliteBundleCacheKey(year), 'bundle', year]);
+  }
+
+  for (const [, cacheKey, endpoint, year] of steps) {
+    const value = readHubDiskSnapshot(endpoint, year);
+    if (value != null && !(endpoint === 'footprint' && !isUsableFootprintSnapshot(value, year))) {
+      if (persist) {
+        cacheHubValue(cacheKey, value);
+      } else {
+        if (endpoint === 'bundle') healBundleFootprintNest(value, year);
+        hubCache.set(cacheKey, value);
+        seedFootprintFromBundle(cacheKey, value);
+      }
+      primed += 1;
+      if (primed === 1 || primed % 3 === 0) {
+        ready = true;
+        warmKeyCount = Math.max(warmKeyCount, primed);
+        getMeta();
+      }
+    }
+    await yieldForHealthProbe();
+  }
+
+  if (includeHp) {
+    for (const year of list) {
+      try {
+        if (primeHpFromDisk(year)) primed += 1;
+      } catch {
+        /* optional */
+      }
+      await yieldForHealthProbe();
+    }
+  }
+
+  if (primed > 0) {
+    ready = true;
+    warmKeyCount = Math.max(warmKeyCount, primed);
+    lastWarmAt = new Date().toISOString();
+  }
+  getMeta();
+  console.log('[recruiting-hub] async primed lite keys from disk', { primed, years: list });
+  return primed;
 }
 
 async function warmBundleViaWorker(year) {
@@ -982,11 +1239,14 @@ function clearSpacedEliteTimers() {
  * Avoids the Promise.all / dual-year stampede that OOM'd Starter.
  */
 function scheduleSpacedEliteFill(options = {}) {
-  // Default: never stack chains (cron/boot overlap). force=true cancels pending steps only.
+  // Default: never stack chains (cron/boot overlap). force=true cancels pending steps + kills worker.
   if (spacedEliteQueued && options.force !== true) {
     return { ok: true, queued: true, already: true };
   }
 
+  if (options.force === true) {
+    killSpacedEliteChild('force-reschedule');
+  }
   clearSpacedEliteTimers();
   spacedEliteQueued = true;
   const generation = ++spacedEliteGeneration;
@@ -1201,7 +1461,44 @@ function scheduleHubBootPipeline() {
       'ms',
       bootWarmDecision
     );
+    // Disk prime only (no rebuild) so hubReady is not stuck "building" until :12/:42 cron.
+    const seedYears = parseWarmYears(process.env.HUB_BOOT_WARM_YEARS, [2027, 2028]);
+    const seedDelay = Math.max(
+      2000,
+      parseInt(process.env.HUB_DISK_PRIME_DELAY_MS || '4000', 10) || 4000
+    );
+    bootWarmDecision = {
+      ...bootWarmDecision,
+      diskPrimeScheduled: true,
+      diskPrimeDelayMs: seedDelay,
+      diskPrimeYears: seedYears,
+    };
     getMeta();
+    setTimeout(() => {
+      primeLiteKeysFromDiskAsync(seedYears, {
+        includeBundle: false,
+        includeHp: false,
+        persist: false,
+      })
+        .then((n) => {
+          bootWarmDecision = {
+            ...(bootWarmDecision || {}),
+            diskPrimeDone: true,
+            diskPrimeCount: n,
+            diskPrimeAt: new Date().toISOString(),
+          };
+          getMeta();
+        })
+        .catch((err) => {
+          console.warn('[recruiting-hub] disk prime failed:', err.message);
+          bootWarmDecision = {
+            ...(bootWarmDecision || {}),
+            diskPrimeDone: false,
+            diskPrimeError: err.message,
+          };
+          getMeta();
+        });
+    }, seedDelay);
     return;
   }
 
@@ -1259,22 +1556,28 @@ function scheduleHubBootPipeline() {
           console.warn('[recruiting-hub] HP seed prime failed:', err.message);
         }
         // Deferred HP board-truth index (slim Map from players.json) — never from GET.
-        const healDelay = Math.max(
-          120000,
-          parseInt(process.env.HP_HEAL_WARM_BOOT_DELAY_MS || '180000', 10) || 180000
-        );
-        setTimeout(() => {
-          try {
-            const { ensureHealPlayersWarm } = require('../api/futurecast/response-cache.ts');
-            ensureHealPlayersWarm()
-              .then(() => console.log('[recruiting-hub] HP heal players warm scheduled/done'))
-              .catch((err) =>
-                console.warn('[recruiting-hub] HP heal players warm failed:', err.message)
-              );
-          } catch (err) {
-            console.warn('[recruiting-hub] HP heal players warm skipped:', err.message);
-          }
-        }, healDelay);
+        // Off by default on boot — sync JSON.parse ~9MB blocked /ready into 502 loops.
+        const healBoot = process.env.HP_HEAL_BOOT === 'true';
+        if (healBoot) {
+          const healDelay = Math.max(
+            300000,
+            parseInt(process.env.HP_HEAL_WARM_BOOT_DELAY_MS || '600000', 10) || 600000
+          );
+          setTimeout(() => {
+            try {
+              const { ensureHealPlayersWarm } = require('../api/futurecast/response-cache.ts');
+              ensureHealPlayersWarm()
+                .then(() => console.log('[recruiting-hub] HP heal players warm scheduled/done'))
+                .catch((err) =>
+                  console.warn('[recruiting-hub] HP heal players warm failed:', err.message)
+                );
+            } catch (err) {
+              console.warn('[recruiting-hub] HP heal players warm skipped:', err.message);
+            }
+          }, healDelay);
+        } else {
+          console.log('[recruiting-hub] HP heal boot warm skipped — cron/manual owns players.json index');
+        }
         if (spacedElite) {
           const spacedYears = parseWarmYears(process.env.HUB_SPACED_WARM_YEARS, [2028]);
           scheduleSpacedEliteFill({
@@ -1353,8 +1656,10 @@ module.exports = {
   HUB_METRICS_CACHE_REV,
   FOOTPRINT_CACHE_REV,
   COMMITS_CACHE_REV,
+  TICKER_CACHE_REV,
   classSnapshotCacheKey,
   eliteClassOverviewCacheKey,
+  hubTickerCacheKey,
   eliteClassOverviewAllCacheKey,
   eliteBundleCacheKey,
   hubFootprintCacheKey,
@@ -1362,6 +1667,7 @@ module.exports = {
   recruitingFootprintCacheKey,
   footprintStateCommitCount,
   isUsableFootprintSnapshot,
+  healBundleFootprintNest,
   clearHubCache,
   removeHubCacheKeys,
   warmEliteHubCaches,
@@ -1378,4 +1684,8 @@ module.exports = {
   writeHubDiskSnapshot,
   persistDurableCacheValue,
   hubGetNoSyncBuild,
+  primeLiteKeysFromDisk,
+  primeLiteKeysFromDiskAsync,
+  primeHpFromDisk,
+  measureEventLoopLagMs,
 };

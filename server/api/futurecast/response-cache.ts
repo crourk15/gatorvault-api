@@ -20,7 +20,8 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** v33: peer 1→100 crumb poison (Asher OSU On3 lead) stripped on heal + competitorPct. */
 /** v37: underclassmen soft plate from slim younger-prospects-soft.json (no players.json sync parse). */
 /** v38: 2029 early-target On3/Rivals enrich + chase-style Names to know cards. */
-export const FUTURECAST_API_CACHE_VERSION = 38;
+/** v39: Chase UV/OV soft filter — drop plates older than Board Intel window (~21d). */
+export const FUTURECAST_API_CACHE_VERSION = 39;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
@@ -336,6 +337,38 @@ const healTruthBySlug = new Map<string, HealBoardTruth>();
 let healTruthWarmAt = 0;
 let healTruthWarmInFlight: Promise<void> | null = null;
 const HEAL_TRUTH_TTL_MS = 5 * 60_000;
+/** Tiny allowlist floors — sync-safe when HP_HEAL_BOOT=false and players.json warm never ran. */
+let healFloors2028: Map<string, HealBoardTruth> | null = null;
+
+function loadHealFloors2028(): Map<string, HealBoardTruth> {
+  if (healFloors2028) return healFloors2028;
+  const map = new Map<string, HealBoardTruth>();
+  try {
+    const fs = require('node:fs') as typeof import('node:fs');
+    const path = require('node:path') as typeof import('node:path');
+    const file = path.join(__dirname, '../../data/futurecast/hp-heal-floors-2028.json');
+    if (!fs.existsSync(file)) {
+      healFloors2028 = map;
+      return map;
+    }
+    const raw = JSON.parse(fs.readFileSync(file, 'utf8')) as {
+      floors?: Record<string, HealBoardTruth>;
+    };
+    for (const [slug, truth] of Object.entries(raw.floors || {})) {
+      const key = String(slug || '').toLowerCase();
+      if (!key || !truth) continue;
+      map.set(key, {
+        storeRpm: truth.storeRpm ?? null,
+        boardRpm: truth.boardRpm ?? null,
+        storeComps: Array.isArray(truth.storeComps) ? truth.storeComps : [],
+      });
+    }
+  } catch {
+    /* optional */
+  }
+  healFloors2028 = map;
+  return map;
+}
 
 function yieldHealEventLoop(): Promise<void> {
   return new Promise((resolve) => setImmediate(resolve));
@@ -344,6 +377,11 @@ function yieldHealEventLoop(): Promise<void> {
 export function ensureHealPlayersWarm(): Promise<void> {
   scheduleHealPlayersWarm();
   return healTruthWarmInFlight || Promise.resolve();
+}
+
+/** True when full players.json heal index is hot (not just slim floors). */
+export function isHealPlayersWarm(): boolean {
+  return healTruthBySlug.size > 0 && Date.now() - healTruthWarmAt <= HEAL_TRUTH_TTL_MS;
 }
 
 /**
@@ -462,8 +500,10 @@ function scheduleHealPlayersWarm(): void {
 
 function lookupHealBoardTruth(slug: string): HealBoardTruth | null {
   if (!slug) return null;
-  // Map only — never schedule ~9MB players.json warm from the request path.
-  return healTruthBySlug.get(slug) || null;
+  // Prefer full warm Map; fall back to slim 2028 floors (never parse players.json here).
+  const warm = healTruthBySlug.get(slug);
+  if (warm) return warm;
+  return loadHealFloors2028().get(slug) || null;
 }
 
 function boardTruthFromPlayer(
@@ -661,6 +701,9 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
   if (rpm == null && boardRpm != null && boardRpm > 0) {
     nextRpm = boardRpm;
     poisoned = true;
+  } else if (rpm == null && storeRpm != null && storeRpm > 0) {
+    nextRpm = storeRpm;
+    poisoned = true;
   }
   // Drift vs On3 Florida row (Anthony 9 vs 63; Tristian FSU% stored as ufRpm 22 vs UF ~8).
   if (
@@ -749,6 +792,15 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
   if (poisoned && Number.isFinite(uf) && uf > anchor + 15) {
     nextUf = Math.min(99, Math.max(1, anchor + 10));
   }
+  // Antonio-style: UF Shot stuck at 11 while On3 Florida board is ~41 — lift shot with RPM.
+  if (
+    poisoned &&
+    nextRpm != null &&
+    nextRpm > 0 &&
+    (!Number.isFinite(uf) || uf <= 0 || uf + 15 < nextRpm)
+  ) {
+    nextUf = nextRpm;
+  }
   // Rival clearly ahead of true UF market — Closest cannot keep a fake Florida share.
   if (
     top &&
@@ -810,8 +862,15 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
   } catch {
     /* optional */
   }
-  // Soft/disk HP can predate a full rebuild — stamp Expected visit labels on every serve.
+  // Soft/disk HP can predate a full rebuild — drop stale UV/OV plates, then stamp Expected.
   try {
+    const { filterStaleChaseVisitHistory, DEFAULT_VISIT_DAYS } = require('../../lib/hp-chase-card-enrich') as {
+      filterStaleChaseVisitHistory: (
+        visitHistory: unknown,
+        opts?: { days?: number; nowMs?: number }
+      ) => Array<{ type: string; label: string }>;
+      DEFAULT_VISIT_DAYS: number;
+    };
     const { mergeExpectedVisitHistory } = require('../../lib/game-week-visitors') as {
       mergeExpectedVisitHistory: (
         slug: string,
@@ -823,26 +882,29 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
       const p = row as Record<string, unknown>;
       const slug = String(p.slug || '');
       if (!slug) return row;
+      const fresh = filterStaleChaseVisitHistory(p.visitHistory, { days: DEFAULT_VISIT_DAYS });
       return {
         ...p,
-        visitHistory: mergeExpectedVisitHistory(slug, p.visitHistory),
+        visitHistory: mergeExpectedVisitHistory(slug, fresh),
       };
     });
   } catch {
     /* optional */
   }
   // Charles elite profile bar — Priority Chase is not a dumping ground for thin soft shells.
-  try {
-    const { filterEliteChaseProfiles } = require('../../lib/elite-chase-profile-bar') as {
-      filterEliteChaseProfiles: (list: unknown[]) => unknown[];
-    };
-    const before = players.length;
-    players = filterEliteChaseProfiles(players);
-    if (players.length !== before) {
-      /* count updated below */
+  // Soft seed plates (closing_seed / open_seed) must still paint Top UF Targets / Open Class
+  // on Tier B cold miss — skip the elite bar until warm/cron refill lands.
+  const degraded = String(doc.degraded || '');
+  const softSeed = degraded === 'closing_seed' || degraded === 'open_seed';
+  if (!softSeed) {
+    try {
+      const { filterEliteChaseProfiles } = require('../../lib/elite-chase-profile-bar') as {
+        filterEliteChaseProfiles: (list: unknown[]) => unknown[];
+      };
+      players = filterEliteChaseProfiles(players);
+    } catch {
+      /* optional */
     }
-  } catch {
-    /* optional */
   }
   return {
     ...doc,

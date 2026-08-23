@@ -564,7 +564,8 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/hub/ticker', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `hub:elite:ticker:${year}`;
+      const { hubTickerCacheKey } = require('./recruiting-hub-cache');
+      const cacheKey = hubTickerCacheKey(year);
       return sendHubJson(res, {
         cacheKey,
         year,
@@ -736,18 +737,43 @@ function mountRecruitingHubRoutes(app) {
         console.log('[recruiting-hub] stay-green skip hub/refresh');
         return res.json({ ...skipped, meta: hubMeta() });
       }
+      const rssMb = Math.round(process.memoryUsage().rss / 1024 / 1024);
+      const rejectRss =
+        parseInt(process.env.HUB_WARM_REJECT_RSS_MB || '900', 10) || 900;
+      if (rssMb >= rejectRss) {
+        return res.status(503).json({
+          ok: false,
+          error: 'rss_guard',
+          rssMb,
+          rejectRssMb: rejectRss,
+          meta: hubMeta(),
+        });
+      }
       const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
       const geoBackfill =
         req.query.geoBackfill === 'true' || req.query.geoBackfill === '1';
-      const warmAfterRaw = String(req.query.warmAfter || '').trim().toLowerCase();
-      let warmAfter = true;
+      // Default OFF — cron used to warmAfter=true and rebuild elite on the web dyno → 502 flaps.
+      const warmAfterRaw = String(req.query.warmAfter || 'false').trim().toLowerCase();
+      let warmAfter = false;
       let warmOptions;
-      if (warmAfterRaw === 'false' || warmAfterRaw === '0' || warmAfterRaw === 'off') {
-        warmAfter = false;
+      if (warmAfterRaw === 'true' || warmAfterRaw === '1' || warmAfterRaw === 'on') {
+        warmAfter = true;
       } else if (warmAfterRaw === 'priority' || warmAfterRaw === 'priorityonly') {
+        warmAfter = true;
         warmOptions = { priorityOnly: true };
       }
       const result = await refreshRecruitingHubCaches({ geoBackfill, warmAfter, warmOptions });
+      // Prefer disk prime after soft refresh so memory is hot without elite rebuild.
+      try {
+        const { primeLiteKeysFromDisk } = require('./recruiting-hub-cache');
+        result.diskPrime = primeLiteKeysFromDisk([2027, 2028], {
+          includeBundle: true,
+          includeHp: false,
+          persist: false,
+        });
+      } catch {
+        /* optional */
+      }
       return res.json({ ok: true, meta: hubMeta(), ...result });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -772,14 +798,43 @@ function mountRecruitingHubRoutes(app) {
       if (!isCron && !isAdmin && process.env.NODE_ENV === 'production') {
         return res.status(403).json({ ok: false, error: 'Forbidden' });
       }
+      // Refuse warm while the dyno is already memory-hot — another stampede → /ready 502.
+      const rssMb = Math.round(process.memoryUsage().rss / 1024 / 1024);
+      const rejectRss =
+        parseInt(process.env.HUB_WARM_REJECT_RSS_MB || '900', 10) || 900;
+      if (rssMb >= rejectRss) {
+        console.warn('[recruiting-hub] warm-memory rejected — RSS', rssMb, '>=', rejectRss);
+        return res.status(503).json({
+          ok: false,
+          error: 'rss_guard',
+          message: 'API memory high — skip warm this tick',
+          rssMb,
+          rejectRssMb: rejectRss,
+          meta: hubMeta(),
+        });
+      }
       const { stayGreenSkipPayload } = require('./api-stay-green');
       const skipped = stayGreenSkipPayload('hub-warm-memory');
       if (skipped) {
         console.log('[recruiting-hub] stay-green skip hub/warm-memory');
         return res.json({ ...skipped, meta: hubMeta() });
       }
-      const { warmEliteHubCaches } = require('./recruiting-hub-cache');
-      const mode = String(req.query.mode || '').trim().toLowerCase();
+      const {
+        warmEliteHubCaches,
+        primeLiteKeysFromDisk,
+        measureEventLoopLagMs,
+      } = require('./recruiting-hub-cache');
+      let mode = String(req.query.mode || '').trim().toLowerCase();
+      // Spaced forks on the web dyno keep reopening HTML 502 flaps. Require explicit
+      // allowSpaced=1 (admin) — cron/Blueprint cannot re-enable by accident.
+      if (
+        (mode === 'spaced' || mode === 'elite') &&
+        req.query.allowSpaced !== '1' &&
+        req.query.allowSpaced !== 'true'
+      ) {
+        console.warn('[recruiting-hub] warm-memory spaced coerced to lite (allowSpaced required)');
+        mode = 'lite';
+      }
       const yearsRaw = String(req.query.years || '').trim();
       const years = yearsRaw
         ? yearsRaw
@@ -795,34 +850,18 @@ function mountRecruitingHubRoutes(app) {
             ? [2028]
             : [2027, 2028];
 
-      // Spaced elite: lite now, then HP/bundle/master with gaps (full elite without OOM).
-      if (mode === 'spaced' || mode === 'elite') {
-        const { scheduleSpacedEliteFill } = require('./recruiting-hub-cache');
-        // Lite can still heat both classes; spaced fill stays on yearList (usually 2028).
-        const liteYears = years.length > 0 ? yearList : [2027, 2028];
-        void warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: liteYears })
-          .then((meta) => {
-            console.log('[recruiting-hub] spaced lite complete', meta?.warmKeyCount);
-            scheduleSpacedEliteFill({
-              years: yearList,
-              force: true,
-              includeLab: process.env.HUB_SPACED_WARM_LAB === 'true',
-            });
-          })
-          .catch((err) => {
-            console.warn('[recruiting-hub] spaced lite failed:', err.message);
-            scheduleSpacedEliteFill({
-              years: yearList,
-              force: true,
-              includeLab: process.env.HUB_SPACED_WARM_LAB === 'true',
-            });
-          });
-        return res.json({
-          ok: true,
-          accepted: true,
-          mode: 'spaced',
-          years: yearList,
-          liteYears,
+      // If the event loop is already behind, refuse warm — another stampede → /ready 502.
+      const lagMs = await measureEventLoopLagMs();
+      const lagReject =
+        parseInt(process.env.HUB_WARM_REJECT_LAG_MS || '250', 10) || 250;
+      if (lagMs >= lagReject) {
+        console.warn('[recruiting-hub] warm-memory rejected — event-loop lag', lagMs, 'ms');
+        return res.status(503).json({
+          ok: false,
+          error: 'event_loop_lag',
+          message: 'API busy — skip warm this tick',
+          lagMs,
+          lagRejectMs: lagReject,
           meta: hubMeta(),
         });
       }
@@ -832,6 +871,87 @@ function mountRecruitingHubRoutes(app) {
         mode === 'priority' ||
         req.query.priorityLite === '1' ||
         req.query.priorityLite === 'true';
+      const forceRebuild =
+        req.query.force === '1' ||
+        req.query.force === 'true' ||
+        String(req.body?.force || '').toLowerCase() === 'true';
+
+      // Disk-first lite: refill memory from hub-runtime without elite rebuilds.
+      // Stops :12/:42 cron from sync-building on the web dyno during flaps.
+      if (priorityLite && process.env.HUB_WARM_DISK_FIRST !== 'false') {
+        const primed = primeLiteKeysFromDisk(yearList.length ? yearList : [2028], {
+          includeBundle: true,
+          includeHp: false,
+          persist: false,
+        });
+        if (primed >= 3) {
+          console.log('[recruiting-hub] warm-memory disk-first ok', primed);
+          return res.json({
+            ok: true,
+            accepted: true,
+            mode: 'disk-prime',
+            primed,
+            years: yearList,
+            meta: hubMeta(),
+          });
+        }
+        // Never fall through to elite rebuild on cron — that starved /ready ~45s (Aug 20).
+        if (!forceRebuild) {
+          console.warn('[recruiting-hub] warm-memory disk-prime thin — skip rebuild', primed);
+          return res.status(503).json({
+            ok: false,
+            error: 'disk_prime_insufficient',
+            primed,
+            message: 'Hub disk seed thin — pass force=1 to rebuild (may flap /ready)',
+            years: yearList,
+            meta: hubMeta(),
+          });
+        }
+      }
+
+      // Spaced elite: lite now, then HP/bundle/master with gaps (full elite without OOM).
+      if (mode === 'spaced' || mode === 'elite') {
+        const { scheduleSpacedEliteFill } = require('./recruiting-hub-cache');
+        // Lite can still heat both classes; spaced fill stays on yearList (usually 2028).
+        const liteYears = years.length > 0 ? yearList : [2027, 2028];
+        // NEVER force-cancel by default — cron every 25m with force=true overlapped
+        // 1.5GB fork workers → cgroup OOM → exit 143 + /ready 5s timeouts (Aug 18 crash loop).
+        // Admin/ops can pass ?force=1 to restart the chain (kills in-flight worker first).
+        const forceSpaced =
+          req.query.force === '1' ||
+          req.query.force === 'true' ||
+          String(req.body?.force || '').toLowerCase() === 'true';
+        void warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: liteYears })
+          .then((meta) => {
+            console.log('[recruiting-hub] spaced lite complete', meta?.warmKeyCount);
+            const spaced = scheduleSpacedEliteFill({
+              years: yearList,
+              force: forceSpaced,
+              includeLab: process.env.HUB_SPACED_WARM_LAB === 'true',
+            });
+            if (spaced?.already) {
+              console.log('[recruiting-hub] spaced fill already queued — lite only this tick');
+            }
+          })
+          .catch((err) => {
+            console.warn('[recruiting-hub] spaced lite failed:', err.message);
+            scheduleSpacedEliteFill({
+              years: yearList,
+              force: forceSpaced,
+              includeLab: process.env.HUB_SPACED_WARM_LAB === 'true',
+            });
+          });
+        return res.json({
+          ok: true,
+          accepted: true,
+          mode: 'spaced',
+          years: yearList,
+          liteYears,
+          force: forceSpaced,
+          meta: hubMeta(),
+        });
+      }
+
       const priorityOnly =
         priorityLite ||
         req.query.priorityOnly === '1' ||
@@ -851,6 +971,19 @@ function mountRecruitingHubRoutes(app) {
       })
         .then((meta) => {
           console.log('[recruiting-hub] warm-memory complete', meta?.status || 'ok');
+          // HP_HEAL_BOOT=false — cron owns players.json heal index so On3 lead stamps
+          // (Antonio Miami→UF) heal without boot /ready risk.
+          try {
+            const { ensureHealPlayersWarm } = require('../api/futurecast/response-cache.ts');
+            ensureHealPlayersWarm().catch((err) =>
+              console.warn('[recruiting-hub] HP heal warm after lite failed:', err.message)
+            );
+          } catch (err) {
+            console.warn(
+              '[recruiting-hub] HP heal warm after lite skipped:',
+              err instanceof Error ? err.message : String(err)
+            );
+          }
         })
         .catch((err) => {
           console.warn('[recruiting-hub] warm-memory failed:', err.message);

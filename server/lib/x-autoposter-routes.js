@@ -412,12 +412,35 @@ function mountXAutoposterRoutes(app) {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
+    const timeoutMs = Math.max(
+      8000,
+      parseInt(process.env.BEAT_BRIEF_TIMEOUT_MS || '25000', 10) || 25000
+    );
+    let settled = false;
+    const timer = setTimeout(() => {
+      if (settled || res.headersSent) return;
+      settled = true;
+      res.status(503).json({
+        ok: false,
+        error: 'brief_timeout',
+        message:
+          'Server is busy warming up. Wait 30–60 seconds, then try Open Brief again.',
+        wake: true,
+      });
+    }, timeoutMs);
+    if (typeof timer.unref === 'function') timer.unref();
     try {
       const { buildBeatBrief } = require('./beat-brief-packet');
       const full = req.query.full === '1' || req.query.full === 'true';
       const out = await buildBeatBrief(req.params.slug, { full });
+      if (settled || res.headersSent) return;
+      settled = true;
+      clearTimeout(timer);
       return res.status(out.ok ? 200 : 400).json(out);
     } catch (err) {
+      if (settled || res.headersSent) return;
+      settled = true;
+      clearTimeout(timer);
       return res.status(500).json({ ok: false, error: err.message });
     }
   });

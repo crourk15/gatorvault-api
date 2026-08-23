@@ -5,6 +5,22 @@ import type { RhHubBundle } from '@/lib/recruiting-hub-elite-api';
 import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 
+function footprintCommitSum(footprint: unknown): number {
+  const states = (footprint as { states?: Array<{ commits?: number }> } | null)?.states;
+  if (!Array.isArray(states)) return 0;
+  return states.reduce((n, s) => n + (Number(s?.commits) || 0), 0);
+}
+
+/** True when bundle nest zeroed commits while commit cards prove HS signees exist. */
+function isPoisonedBundleFootprint(bundle: RhHubBundle): boolean {
+  const fpCommits = footprintCommitSum(bundle.footprint);
+  if (fpCommits > 0) return false;
+  const cards = Array.isArray(bundle.commits) ? bundle.commits.length : 0;
+  if (cards > 0) return true;
+  const overview = Number.parseInt(String(bundle.classOverview?.commits ?? ''), 10);
+  return Number.isFinite(overview) && overview > 0;
+}
+
 /**
  * Prefer hub bundle data (single /hub/bundle request). Fall back to a section fetch
  * only when the bundle is unavailable or still loading after failure.
@@ -35,7 +51,31 @@ export function useHubBundleSection<T>({
   const bundleMatchesYear = bundle != null && bundle.year === sectionYear;
 
   useEffect(() => {
-    if (bundleMatchesYear) {
+    if (bundleMatchesYear && bundle) {
+      // Open-cycle Class of 2028: never paint a 0-commit nest when commits exist —
+      // fall back to dedicated /hub/footprint (Armani Strong plate).
+      if (isPoisonedBundleFootprint(bundle)) {
+        let cancelled = false;
+        setLoading(true);
+        setError(false);
+        void fetchRef
+          .current(sectionYear)
+          .then((result) => {
+            if (!cancelled) setData(result);
+          })
+          .catch(() => {
+            if (!cancelled) {
+              setData(selectRef.current(bundle));
+              setError(true);
+            }
+          })
+          .finally(() => {
+            if (!cancelled) setLoading(false);
+          });
+        return () => {
+          cancelled = true;
+        };
+      }
       setData(selectRef.current(bundle));
       setLoading(false);
       setError(false);

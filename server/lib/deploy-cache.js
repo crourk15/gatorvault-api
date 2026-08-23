@@ -24,14 +24,9 @@ function invalidateAllOnDeploy() {
   ) {
     cleared.push('live-dashboard');
   }
-  if (
-    safeClear('recruiting-hub', () => {
-      const mod = require('./recruiting-hub-cache');
-      if (typeof mod.clearHubCache === 'function') mod.clearHubCache();
-    })
-  ) {
-    cleared.push('recruiting-hub');
-  }
+  // Do NOT clear recruiting-hub here. Render always boots a fresh process, so the
+  // in-memory hub is already empty — and clearing after skip-boot disk-prime wiped
+  // hubReady back to building (~30s post-deploy), which looked like another API flap.
   console.log('[deploy-cache] invalidated:', cleared.length ? cleared.join(', ') : 'none');
   return { cleared, at: new Date().toISOString() };
 }

@@ -237,6 +237,39 @@
   color: var(--cm-orange);
 }
 
+.gv-community-page .gv-community__cat-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.gv-community-page .gv-community__cat-tab {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  min-height: 36px;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 33, 165, 0.22);
+  background: transparent;
+  color: var(--cm-blue);
+  cursor: pointer;
+}
+
+.gv-community-page .gv-community__cat-tab.is-active {
+  background: rgba(0, 33, 165, 0.1);
+  border-color: rgba(0, 33, 165, 0.45);
+  color: var(--cm-blue);
+}
+
+.gv-community-page .gv-community__thread-row--just-posted {
+  outline: 2px solid var(--cm-orange);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(250, 70, 22, 0.18);
+}
+
 .gv-community-page .gv-community__select {
   font-size: 0.75rem;
   min-height: 40px;
@@ -654,5 +687,24 @@
     z-index: 5;
     width: 100%;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Mobile IA: Staff open + Member threads only — hide duplicate Spark/Staff blocks */
+  .gv-community-page .gv-community__secondary--desktop {
+    display: none;
+  }
+
+  .gv-community-page .gv-community__aside {
+    margin-top: 0.75rem;
+  }
+
+  .gv-community-page .gv-community__hero-sub {
+    max-width: 42ch;
+  }
+}
+
+@media (min-width: 768px) {
+  .gv-community-page .gv-community__secondary--desktop {
+    display: block;
   }
 }

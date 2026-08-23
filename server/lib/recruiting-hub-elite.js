@@ -385,10 +385,22 @@ function classCommitMetricLabel(year) {
   return Number(year) <= calendarYear ? 'Signees' : 'Commits';
 }
 
-async function buildHubTicker(year = 2027) {
+/**
+ * Single HS commit universe for ticker + class-overview + commit cards.
+ * Uses enrichBoard so home "N commits" cannot drift above the card list.
+ */
+async function loadHubHsClassCommits(year = 2027) {
   const { filterBlockedRecruits } = require('./recruiting-blocked-players');
+  const raw = filterBlockedRecruits(await store.getHubHsCommits(year));
+  const { enrichBoard } = require('./recruiting-board-enrich');
+  const enriched = enrichBoard({ classYear: year, commits: raw, targets: [], rankings: null }, false);
+  const commits = Array.isArray(enriched?.commits) ? enriched.commits : raw;
+  return { raw, commits };
+}
+
+async function buildHubTicker(year = 2027) {
   // Same commit universe as class-overview / commits cards — avoid 25/26/27 drift.
-  const commits = filterBlockedRecruits(await store.getHubHsCommits(year));
+  const { commits } = await loadHubHsClassCommits(year);
   const board = await store.getBoard(year);
   const targets = board?.targets || [];
   const rankingsList = await store.getRankings();
@@ -417,14 +429,11 @@ async function buildHubTicker(year = 2027) {
 }
 
 async function buildHubClassOverview(year = 2027) {
-  // Lightweight path: targeted commit + rankings queries only (avoid getAllPlayers + movement DB).
-  const { filterBlockedRecruits } = require('./recruiting-blocked-players');
-  const [rawCommits, rankingsList] = await Promise.all([
-    store.getHubHsCommits(year),
+  // Same HS commit list as commit cards + Home NOW ticker (no raw-count drift).
+  const [{ commits }, rankingsList] = await Promise.all([
+    loadHubHsClassCommits(year),
     store.getRankings(),
   ]);
-  // Match commits cards + Home NOW ticker (blocked phantoms never count).
-  const commits = filterBlockedRecruits(rawCommits);
   const rankings =
     (rankingsList || []).find((r) => Number(r.classYear) === Number(year)) || null;
   const chip = blueChipPct(commits);
@@ -544,14 +553,9 @@ function mapHubCommit(player, classYear) {
 }
 
 async function buildHubCommits(year = 2027) {
-  // Match class-card counts (HS signing class only — portal has its own board).
-  const { filterBlockedRecruits } = require('./recruiting-blocked-players');
-  const commits = filterBlockedRecruits(await store.getHubHsCommits(year));
-  const { enrichBoard } = require('./recruiting-board-enrich');
-  const enriched = enrichBoard({ classYear: year, commits, targets: [], rankings: null }, false);
-  const rows = enriched.commits || commits;
-
-  return rows.map((player) => mapHubCommit(player, year));
+  // Match class-overview / ticker counts (HS signing class only — portal has its own board).
+  const { commits } = await loadHubHsClassCommits(year);
+  return commits.map((player) => mapHubCommit(player, year));
 }
 
 async function buildHubClassOverviewAll() {
@@ -718,6 +722,7 @@ module.exports = {
   buildHubTicker,
   buildHubClassOverview,
   buildHubClassOverviewAll,
+  loadHubHsClassCommits,
   buildHubCommits,
   buildHubBattles,
   buildHubPositions,

@@ -64,22 +64,35 @@ function mainSync() {
     ]
   };
   assert.ok(floridaOfferedOnPlayer(player));
+  // UV counts on Florida = campus visit set up → allowlist promote.
   assert.ok(shouldPromoteToFutureCast(player, 2028));
   assert.ok(!shouldPromoteToFutureCast(player, 2027));
 
-  // Visit-only national prospect with residual poison RPM must NOT soft-promote.
-  const visitOnlyPoison = {
+  // Offer alone (no campus visit) stays War Room — does not soft-expand Chase allowlist.
+  const offerOnly = {
+    name: 'Amaree Joshua',
+    classYear: 2028,
+    on3Slug: 'amaree-joshua-1',
+    ufRpmPct: 25,
+    ufStatus: 'Florida Offered',
+    ufOffer: true,
+  };
+  assert.ok(floridaOfferedOnPlayer(offerOnly));
+  assert.ok(!shouldPromoteToFutureCast(offerOnly, 2028));
+
+  // Florida campus visit set up → MUST promote onto allowlist (Chase / Closest).
+  const visitSetUp = {
     name: 'Trace Hawkins',
     classYear: 2028,
     on3Slug: 'trace-hawkins-247268',
-    ufRpmPct: 99,
+    ufRpmPct: 12,
     ufStatus: 'Uncommitted',
     visitTrail: [{ school: 'Florida', type: 'unofficial_visit' }],
     on3TopTeams: [
-      { team: { name: 'Florida' }, status: 'Visited', prediction: 0.99, year: 2028, unOfficialVisitCount: 1 },
+      { team: { name: 'Florida' }, status: 'Visited', prediction: 0.12, year: 2028, unOfficialVisitCount: 1 },
     ],
   };
-  assert.ok(!shouldPromoteToFutureCast(visitOnlyPoison, 2028));
+  assert.ok(shouldPromoteToFutureCast(visitSetUp, 2028));
 
   console.log('sync asserts PASS');
 }

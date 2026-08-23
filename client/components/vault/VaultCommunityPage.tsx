@@ -92,7 +92,8 @@ function threadIdFromLocation(): string | null {
 
 function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string }): React.ReactElement {
   const { pushToast } = useCommunityToast();
-  const [sort, setSort] = useState<SortId>('trending');
+  /** Recent first so new member threads are findable under pins (Trending buries 0-reply posts). */
+  const [sort, setSort] = useState<SortId>('recent');
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState<CommunityCategory[]>(
     HAS_COMMUNITY_SEED ? SEED_COMMUNITY.categories : []
@@ -100,6 +101,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const [threads, setThreads] = useState<CommunityThread[]>(
     HAS_COMMUNITY_SEED ? SEED_COMMUNITY.threads : []
   );
+  const [justPostedId, setJustPostedId] = useState<string | null>(null);
   const [pulse, setPulse] = useState<CommunityPulse | null>(
     HAS_COMMUNITY_SEED ? SEED_COMMUNITY.pulse : null
   );
@@ -247,7 +249,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     setPosting(true);
     setPostError(null);
     try {
-      await createCommunityThread({
+      const { thread } = await createCommunityThread({
         title: newTitle.trim(),
         body: newBody.trim(),
         category: newCategory,
@@ -255,7 +257,20 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
       setNewTitle('');
       setNewBody('');
       setShowForm(false);
-      await load();
+      // Make the new thread findable: clear filters, Recent sort, open it immediately.
+      setCategory('');
+      setSort('recent');
+      setJustPostedId(thread.id);
+      setThreads((prev) => {
+        if (prev.some((t) => t.id === thread.id)) return prev;
+        return [thread, ...prev];
+      });
+      pushToast({
+        kind: 'success',
+        title: 'Thread posted',
+        body: 'Opening your thread…',
+      });
+      await openThread(thread.id);
     } catch (err) {
       setPostError(err instanceof Error ? err.message : 'Could not post thread.');
     } finally {
@@ -392,6 +407,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     return [];
   }, [threads]);
 
+  /** Member lane — exclude staff pins / daily so new threads aren't buried visually under pins. */
+  const memberThreads = useMemo(
+    () => threads.filter((t) => !t.pinned && !t.featured && !t.dailyKey),
+    [threads],
+  );
+
   /** Daily-open hook — ET daily staff OP first, then pinned/featured. */
   const todaysThread = useMemo(() => {
     const daily = threads.find((t) => Boolean(t.dailyKey));
@@ -399,6 +420,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     const pinned = threads.find((t) => t.pinned || t.featured);
     return pinned || threads[0] || null;
   }, [threads]);
+
+  useEffect(() => {
+    if (!justPostedId || selectedId) return;
+    const t = window.setTimeout(() => setJustPostedId(null), 8000);
+    return () => window.clearTimeout(t);
+  }, [justPostedId, selectedId]);
 
   const findThreadForRoom = useCallback(
     (room: LiveRoom): CommunityThread | null => {
@@ -481,7 +508,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             <p className="gv-community__hero-brand">GatorVault</p>
             <h1 className="gv-community__hero-title">Community</h1>
             <p className="gv-community__hero-sub">
-              Staff-led talk. Member replies. Report and block stay on every thread.
+              Staff opens today. Member threads below — use Recent to find yours.
             </p>
           </div>
           <div className="gv-community__hero-accent" aria-hidden="true" />
@@ -491,7 +518,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
       <div className="gv-community__layout">
         <div className="gv-community__main">
           {todaysThread && !selectedId ? (
-            <PageSection title="Jump in today" subtitle="Staff-led open thread — reply and keep the board alive.">
+            <PageSection title="Staff open" subtitle="Today’s staff thread — reply here to jump in.">
               <button
                 type="button"
                 className="gv-community__today-card"
@@ -523,7 +550,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
 
           <div className="gv-community__toolbar">
             <div className="gv-community__sort" role="group" aria-label="Sort threads">
-              {(['trending', 'recent', 'active', 'replies'] as SortId[]).map((s) => (
+              {(['recent', 'trending', 'active', 'replies'] as SortId[]).map((s) => (
                 <button
                   key={s}
                   type="button"
@@ -534,19 +561,29 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                 </button>
               ))}
             </div>
-            <select
-              className="gv-community__select"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              aria-label="Filter by category"
-            >
-              <option value="">All categories</option>
+            <div className="gv-community__cat-tabs" role="tablist" aria-label="Filter by category">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={category === ''}
+                className={`gv-community__cat-tab${category === '' ? ' is-active' : ''}`}
+                onClick={() => setCategory('')}
+              >
+                All
+              </button>
               {categories.map((c) => (
-                <option key={c.id} value={c.slug}>
+                <button
+                  key={c.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={category === c.slug}
+                  className={`gv-community__cat-tab${category === c.slug ? ' is-active' : ''}`}
+                  onClick={() => setCategory(c.slug)}
+                >
                   {c.label || c.name}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
             <button type="button" className="gv-community__new-btn" onClick={() => setShowForm((v) => !v)}>
               + New Thread
             </button>
@@ -644,6 +681,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                   setSelectedId(null);
                   setSelectedThread(null);
                   setSelectedPosts([]);
+                  void load();
                 }}
               >
                 ← All threads
@@ -761,21 +799,27 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
           )}
 
           {(HAS_COMMUNITY_SEED || (!loading && !error)) && !selectedId && (
-            <PageSection title="Threads">
+            <PageSection
+              title="Member threads"
+              subtitle="Your posts land here under Recent. Staff pins stay in Staff open."
+            >
               <ul className="gv-community__threads">
-                {threads.map((t) => {
+                {memberThreads.map((t) => {
                   const blockedAuthor = isAuthorBlocked(t.authorEmail);
+                  const isYours = isOwnAuthor(t.authorEmail);
+                  const isJustPosted = justPostedId === t.id;
                   return (
                     <li key={t.id}>
                       <button
                         type="button"
                         className={`gv-community__thread-row${blockedAuthor ? ' gv-community__thread-row--blocked' : ''}${
                           t.flagged ? ' gv-community__thread-row--flagged' : ''
-                        }`}
+                        }${isJustPosted ? ' gv-community__thread-row--just-posted' : ''}`}
                         onClick={() => void openThread(t.id)}
                       >
                         <span className="gv-community__thread-title">
-                          {t.pinned ? <Chip variant="staff">Pinned</Chip> : null}{' '}
+                          {isJustPosted ? <Chip variant="staff">Just posted</Chip> : null}{' '}
+                          {isYours && !isJustPosted ? <Chip variant="trending">Yours</Chip> : null}{' '}
                           {t.title}
                           {blockedAuthor ? (
                             <span className="gv-community__blocked-chip">Blocked author</span>
@@ -789,9 +833,9 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                     </li>
                   );
                 })}
-                {threads.length === 0 && (
+                {memberThreads.length === 0 && (
                   <li className="gv-community__empty-cta">
-                    <UiEmpty message="Be first — start a founding conversation." />
+                    <UiEmpty message="No member threads yet — start one." />
                     <button
                       type="button"
                       className="gv-community__new-btn"
@@ -806,7 +850,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                 <button
                   type="button"
                   className="gv-community__sticky-new"
-                  onClick={() => setShowForm(true)}
+                  onClick={() => {
+                    setShowForm(true);
+                    if (typeof window !== 'undefined') {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
                 >
                   + New Thread
                 </button>
@@ -815,7 +864,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
           )}
 
           {!selectedId ? (
-            <div className="gv-community__secondary">
+            <div className="gv-community__secondary gv-community__secondary--desktop">
               <PageSection title="Spark a thread" subtitle="Quick topics if you want a new conversation.">
                 <div className="gv-community__topic-row">
                   {trendingTopics.map((t) => (

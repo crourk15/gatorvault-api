@@ -58,4 +58,39 @@ describe('member first-touch attribution', () => {
     assert.equal(outletLabel({ fbclid: 'xyz' }), 'meta');
     assert.equal(outletLabel(null), 'direct');
   });
+
+  it('sanitizes signupChannel website vs ios and rolls up byChannel', () => {
+    const {
+      sanitizeSignupChannel,
+      signupChannelFromReq,
+      countByChannel,
+    } = require('../lib/member-attribution');
+    assert.equal(sanitizeSignupChannel('website'), 'website');
+    assert.equal(sanitizeSignupChannel('web'), 'website');
+    assert.equal(sanitizeSignupChannel('ios'), 'ios');
+    assert.equal(sanitizeSignupChannel('app'), 'ios');
+    assert.equal(sanitizeSignupChannel(''), 'unknown');
+    assert.equal(
+      signupChannelFromReq({ body: { signupChannel: 'website' } }),
+      'website'
+    );
+    assert.equal(
+      signupChannelFromReq({
+        body: {},
+        get: (h) => (String(h).toLowerCase() === 'x-gv-client' ? 'ios' : ''),
+      }),
+      'ios'
+    );
+    const by = countByChannel([
+      { signupChannel: 'website' },
+      { signupChannel: 'website' },
+      { signupChannel: 'ios' },
+      {},
+    ]);
+    assert.deepEqual(by, [
+      { channel: 'website', count: 2 },
+      { channel: 'ios', count: 1 },
+      { channel: 'unknown', count: 1 },
+    ]);
+  });
 });

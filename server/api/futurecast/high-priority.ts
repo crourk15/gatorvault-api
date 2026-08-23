@@ -56,6 +56,7 @@ const {
 const { loadUnderclassmenBoardPlayers } = require('../../lib/underclassmen-intel');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 const TARGET_BOARD_SEED_PATH = path.join(__dirname, '../../data/recruiting/2027-target-board.json');
+const TARGET_BOARD_2028_SEED_PATH = path.join(__dirname, '../../data/recruiting/2028-target-board.json');
 
 /**
  * Sync Closing Class HP soft plate — Tier B GET must never return empty deferred_rebuild
@@ -231,6 +232,151 @@ export function softClosingClassHighPriorityFromSeed(classYear = FUTURECAST_CLAS
     flipWatch,
     movementNarratives: [],
     degraded: 'closing_seed',
+  });
+}
+
+/**
+ * Sync Open Class HP soft plate — Tier B GET must never return empty deferred_rebuild
+ * for 2028 Open Class targets / Priority Chase. Allowlist + 2028-target-board.json;
+ * full chase/visit enrich via warm/cron.
+ */
+export function softOpenClassHighPriorityFromSeed(classYear = 2028) {
+  const year = Number(classYear) || 2028;
+  const recruitingBySlug = loadRecruitingBySlug();
+  const targetSeedBySlug = loadTargetSeedBySlugForYear(year);
+  const allowSlugs = (ALLOWLIST_2028 as string[]).map((s) => String(s).toLowerCase());
+
+  const seedRows: TargetBoardEntry[] = [];
+  for (const slug of allowSlugs) {
+    const seed = targetSeedBySlug.get(slug);
+    const recruiting = recruitingBySlug.get(slug);
+    const name =
+      seed?.name ||
+      recruiting?.name ||
+      (CANONICAL_TARGET_NAMES as Record<string, string>)[slug] ||
+      slug;
+    seedRows.push({
+      slug,
+      name,
+      pos: recruiting?.pos || seed?.pos || undefined,
+      school: recruiting?.school || seed?.school || undefined,
+      htWt: recruiting?.htWt || seed?.htWt || undefined,
+      stars: recruiting?.stars ?? seed?.stars ?? undefined,
+      rating: recruiting?.rating ?? seed?.rating ?? undefined,
+      natlRank: recruiting?.natlRank ?? seed?.natlRank ?? undefined,
+      posRank: recruiting?.posRank ?? seed?.posRank ?? undefined,
+      stateRank: recruiting?.stateRank ?? seed?.stateRank ?? undefined,
+      headliner: Boolean(seed?.headliner || recruiting?.headliner),
+      committedTo: resolveCommittedTo(
+        { slug, name, committedTo: seed?.committedTo ?? null },
+        recruiting,
+        seed
+      ),
+      skinny: seed?.skinny || recruiting?.skinny || undefined,
+      ufProbability: recruiting?.ufProbability ?? seed?.ufProbability,
+      classYear: year,
+    });
+  }
+
+  const openHunts = filterBlockedRecruits(seedRows).filter((t: TargetBoardEntry) =>
+    isActiveUfTarget(t)
+  );
+
+  const players: HighPriorityPlayer[] = openHunts.map((target) => {
+    const recruiting = recruitingBySlug.get(target.slug);
+    const competingSchools = (() => {
+      try {
+        const { competingSchoolsFromRecruitingRecord } = require('../../lib/underclassmen-intel');
+        return competingSchoolsFromRecruitingRecord(
+          recruiting as Record<string, unknown> | null | undefined
+        );
+      } catch {
+        return [] as Array<{ name: string; pct: number }>;
+      }
+    })();
+    const storeRpm = resolveUfRpmPctForRecruiting(
+      recruiting as Record<string, unknown> | null | undefined,
+      target.slug,
+      competingSchools
+    );
+    const resolvedUf = resolveGatorVaultLikelihood({
+      modelPct: 0,
+      rpmPct: storeRpm ?? 0,
+      rivalsPct: 0,
+      fitScore:
+        recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
+          ? Number(recruiting.fitScore)
+          : 0,
+      storePct: firstPositiveStorePct(target.ufProbability, recruiting?.ufProbability) ?? 0,
+      delta7d: 0,
+      stars: target.stars ?? null,
+      headliner: Boolean(target.headliner),
+    });
+    const fitScore =
+      recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
+        ? Math.round(Number(recruiting.fitScore))
+        : 0;
+    return {
+      id: target.slug,
+      slug: target.slug,
+      name: target.name,
+      classYear: year,
+      position: target.pos ?? recruiting?.pos ?? '—',
+      school: target.school ?? recruiting?.school ?? null,
+      htWt: target.htWt ?? null,
+      stars: (() => {
+        const n = Number(target.stars ?? 0);
+        return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
+      })(),
+      headliner: Boolean(target.headliner),
+      committedTo: target.committedTo ?? null,
+      compositeScore: Number(target.rating ?? recruiting?.rating ?? 0) || 0,
+      nationalRank: target.natlRank ?? recruiting?.natlRank ?? null,
+      positionRank: target.posRank ?? recruiting?.posRank ?? null,
+      stateRank: target.stateRank ?? recruiting?.stateRank ?? null,
+      rating: Number(target.rating ?? recruiting?.rating ?? 0) || 0,
+      natlRank: target.natlRank ?? recruiting?.natlRank ?? null,
+      posRank: target.posRank ?? recruiting?.posRank ?? null,
+      ufProbability: resolvedUf.value,
+      ufProbabilitySource: resolvedUf.source,
+      ufProbabilityLabel: resolvedUf.label,
+      ufProbabilityLowConfidence: resolvedUf.lowConfidence,
+      movementDelta: 0,
+      delta7d: 0,
+      fitScore,
+      staffConfidence: 0,
+      priorityScore: Math.max(40, fitScore || 50),
+      insiderNotes: null,
+      notePreview: null,
+      skinny: target.skinny ?? null,
+      visitHistory: [],
+      ufOvStatus: null,
+      visitStart: null,
+      visitEnd: null,
+      trendHistory: [],
+      predictors: storeRpm != null ? [{ name: 'On3 RPM', score: storeRpm }] : [],
+      competingSchools,
+      ufRpmPct: storeRpm,
+    } as HighPriorityPlayer;
+  });
+
+  const lastUpdated = new Date().toISOString();
+  return sanitizeHighPriorityStarsPayload({
+    ok: true,
+    classYear: year,
+    count: players.length,
+    visitIntelCount: 0,
+    visitRecapCount: 0,
+    flipWatchCount: 0,
+    visitBoardSnapshot: { upcomingCount: 0, recapCount: 0 },
+    updatedAt: lastUpdated,
+    lastUpdated,
+    players,
+    visitIntel: [],
+    visitRecap: [],
+    flipWatch: [],
+    movementNarratives: [],
+    degraded: 'open_seed',
   });
 }
 
@@ -447,13 +593,21 @@ function loadRecruitingBySlug(): Map<string, RecruitingPlayerRow> {
 }
 
 function loadTargetSeedBySlug(): Map<string, TargetBoardEntry> {
+  return loadTargetSeedBySlugForYear(FUTURECAST_CLASS_YEAR);
+}
+
+function loadTargetSeedBySlugForYear(classYear: number): Map<string, TargetBoardEntry> {
   const map = new Map<string, TargetBoardEntry>();
+  const seedPath =
+    Number(classYear) >= 2028 ? TARGET_BOARD_2028_SEED_PATH : TARGET_BOARD_SEED_PATH;
   try {
-    const doc = JSON.parse(fs.readFileSync(TARGET_BOARD_SEED_PATH, 'utf8')) as {
+    const doc = JSON.parse(fs.readFileSync(seedPath, 'utf8')) as {
       targets?: TargetBoardEntry[];
     };
     for (const target of doc.targets ?? []) {
-      if (target.slug) map.set(target.slug, target);
+      if (!target.slug) continue;
+      map.set(target.slug, target);
+      map.set(String(target.slug).toLowerCase(), target);
     }
   } catch {
     /* optional */
@@ -842,10 +996,15 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   // Attach offer/visit/intel evidence so Closest to commit is process-backed, not On3 % alone.
   const { attachClosestCommitEvidence } = require('../../lib/closest-commit-evidence');
   const withEvidence = attachClosestCommitEvidence(withChase, { classYear, days: 180 });
+  // Fan-facing visit lines + Why we chase notes from live visit/intel stores (API-only).
+  // Soft priority nudge from fresh process — never invents delta7d / Rising.
+  const { enrichHighPriorityChaseCards, DEFAULT_VISIT_DAYS } = require('../../lib/hp-chase-card-enrich');
+  // Match Board Intel (~21d) — 180d painted June camp UVs on almost every Chase card.
+  const withCardIntel = enrichHighPriorityChaseCards(withEvidence, { days: DEFAULT_VISIT_DAYS });
   // Full locked board, chase-scored. Do not slice to chase top-N — Who commits next /
   // Closest to commit is a system board-lead read over every allowlist target.
   // Priority chase surfaces still re-sort by priorityScore and take top 10 client-side.
-  const players = [...withEvidence].sort(compareUnderclassmenHighPriority);
+  const players = [...withCardIntel].sort(compareUnderclassmenHighPriority);
   const lastUpdated = new Date().toISOString();
   const visitBoardSnapshot = getVisitIntelBoardSnapshot([]);
 
@@ -1329,9 +1488,19 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       // Persist healed plate cheaply (no full rebuild). Full refresh stays on
       // hub-warm / boot spaced Lab warm. Throttle writes so no-store traffic
       // does not stringify the plate on every phone refresh.
+      // Only persist when heal actually repaired UF RPM / leads — cold heal used to
+      // stamp Miami on Antonio and rewrite durable disk every minute.
       const writeKey = `hp-healed-write:${classYear}`;
       const lastWrite = Number((global as any).__GV_HP_HEALED_WRITE_AT__?.[writeKey] || 0);
-      if (Date.now() - lastWrite > 60_000) {
+      const healedPlayers = Array.isArray((healed as { players?: unknown[] })?.players)
+        ? ((healed as { players: Array<Record<string, unknown>> }).players || [])
+        : [];
+      const healLookedUseful = healedPlayers.some((p) => {
+        const rpm = Number(p?.ufRpmPct);
+        const lead = String(p?.on3Lead || '');
+        return (Number.isFinite(rpm) && rpm > 0) || (lead && lead !== '—' && lead !== '-');
+      });
+      if (healLookedUseful && Date.now() - lastWrite > 60_000) {
         (global as any).__GV_HP_HEALED_WRITE_AT__ = {
           ...((global as any).__GV_HP_HEALED_WRITE_AT__ || {}),
           [writeKey]: Date.now(),
@@ -1353,6 +1522,13 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       softOnDeferred: () => {
         if (classYear === FUTURECAST_CLASS_YEAR) {
           const soft = softClosingClassHighPriorityFromSeed(classYear);
+          primeFuturecastCache(cacheKey, soft);
+          writeHighPriorityRuntime(classYear, soft);
+          return soft;
+        }
+        if (isUnderclassmenHighPriorityYear(classYear)) {
+          // Open Class 2028: never leave targets board empty on Tier B cold miss.
+          const soft = softOpenClassHighPriorityFromSeed(classYear);
           primeFuturecastCache(cacheKey, soft);
           writeHighPriorityRuntime(classYear, soft);
           return soft;

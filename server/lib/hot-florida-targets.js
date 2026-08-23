@@ -293,12 +293,38 @@ function computeHotTargetScore(player, opts = {}) {
   };
 }
 
-function enrichPlayerForHotScore(player) {
+function loadHotScoreRecruitingBySlug() {
+  const map = new Map();
+  try {
+    const store = require('./recruiting-store');
+    const fs = require('fs');
+    const file = store.PLAYERS_PATH;
+    if (!file || !fs.existsSync(file)) return map;
+    const rows = JSON.parse(fs.readFileSync(file, 'utf8'));
+    if (!Array.isArray(rows)) return map;
+    for (const row of rows) {
+      const slug = slugKey(row?.slug || row?.id);
+      if (!slug || map.has(slug)) continue;
+      map.set(slug, row);
+    }
+  } catch {
+    /* optional */
+  }
+  return map;
+}
+
+function enrichPlayerForHotScore(player, recruitingBySlug = null) {
   const slug = slugKey(player?.slug || player?.id);
   if (!slug) return player || {};
   try {
-    const store = require('./recruiting-store');
-    const local = typeof store.findBySlug === 'function' ? store.findBySlug(slug) : null;
+    let local = null;
+    if (recruitingBySlug && typeof recruitingBySlug.get === 'function') {
+      local = recruitingBySlug.get(slug) || null;
+    } else {
+      // Fallback only — board scoring must pass a one-shot map (never N× findBySlug).
+      const store = require('./recruiting-store');
+      local = typeof store.findBySlug === 'function' ? store.findBySlug(slug) : null;
+    }
     if (!local) return { ...player, pos: player.pos || player.position };
     return {
       ...local,
@@ -327,8 +353,12 @@ function enrichPlayerForHotScore(player) {
 function scoreHotTargetBoard(players, opts = {}) {
   const classYear = Number(opts.classYear) || 2028;
   const chaseIndex = buildChaseFeatureIndex({ classYear });
+  // ONE players.json parse for the whole board — N× findBySlug starved Render /ready.
+  const recruitingBySlug =
+    opts.recruitingBySlug ||
+    (opts.skipRecruitingEnrich === true ? new Map() : loadHotScoreRecruitingBySlug());
   return (players || []).map((p) => {
-    const enriched = enrichPlayerForHotScore(p);
+    const enriched = enrichPlayerForHotScore(p, recruitingBySlug);
     const hot = computeHotTargetScore(enriched, { chaseIndex, delta7d: p.delta7d });
     return {
       ...p,
@@ -346,6 +376,8 @@ module.exports = {
   POSITION_NEED_WEIGHT,
   computeHotTargetScore,
   scoreHotTargetBoard,
+  loadHotScoreRecruitingBySlug,
+  enrichPlayerForHotScore,
   scorePhysicalUpside,
   scoreFootballIq,
   scoreMustGetFit,
