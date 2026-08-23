@@ -68,6 +68,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-23 | Community iOS org: post→open thread, default Recent, Staff open vs Member threads, category tabs, hide duplicate Spark/Staff on mobile | `VaultCommunityPage`, `community-api`, `community-elite.css` in binary | pending |
 | 2026-08-20 | Signup channel: send `signupChannel` / `X-GV-Client` (website vs ios) on register so Admin Members can split web vs app | `auth-api` Join/register in binary; **API + Admin Hub already live for web Netlify** | pending |
 | 2026-08-20 | Footprint Class 2028: client falls back to dedicated `/hub/footprint` when bundle nest shows 0 commits but commit cards exist | `useHubBundleSection` in binary; **API heal of `bundle.footprint` nest is live without bake** | pending |
 | 2026-08-17 | Chase On3 lead stamp from API (`on3Lead`) — prefer server field so stamp bugs/prediction swings are Render-only after this bake | `VaultChaseCard` + HP cache v20 in binary; API stamps `on3Lead` on every HP serve | pending |

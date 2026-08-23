@@ -167,12 +167,17 @@ export async function createCommunityThread(input: {
   title: string;
   body: string;
   category?: string;
-}): Promise<void> {
-  await apiFetch('/api/community/thread', {
+}): Promise<{ thread: CommunityThread }> {
+  const data = await apiFetch<{ ok?: boolean; thread?: CommunityThread }>('/api/community/thread', {
     ...communityFetchInit(true),
     method: 'POST',
     body: JSON.stringify(input),
   });
+  const thread = data?.thread;
+  if (!thread?.id) {
+    throw new Error('Thread created but no id returned.');
+  }
+  return { thread };
 }
 
 export async function createCommunityReply(threadId: string, body: string): Promise<void> {
