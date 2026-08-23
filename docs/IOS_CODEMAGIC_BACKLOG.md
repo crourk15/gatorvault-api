@@ -68,6 +68,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-23 | Why we chase: never mid-sentence note clips (`and is…`) — compress visit/offer prose to short Vault chips | `chase-priority` in binary; API `truncateNote` also live | pending |
 | 2026-08-23 | Why we chase: richer lead (thin room + Fit) + process `notePreview` tails; ~180 char cap; still no film traits | `chase-priority` `buildChaseWhyBrief` + chase tests in binary | pending |
 | 2026-08-23 | Community iOS org: post→open thread, default Recent, Staff open vs Member threads, category tabs, hide duplicate Spark/Staff on mobile | `VaultCommunityPage`, `community-api`, `community-elite.css` in binary | pending |
 | 2026-08-20 | Signup channel: send `signupChannel` / `X-GV-Client` (website vs ios) on register so Admin Members can split web vs app | `auth-api` Join/register in binary; **API + Admin Hub already live for web Netlify** | pending |
