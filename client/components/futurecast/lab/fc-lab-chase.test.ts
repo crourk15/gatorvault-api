@@ -123,7 +123,7 @@ test('buildChaseWhyBrief explains late-board without hometown or score dump', ()
   });
   const brief = buildChaseWhyBrief(p, { chaseRank: 43 });
   assert.match(brief, /Evans|live fight|still on the chase|still on the board/i);
-  assert.doesNotMatch(brief, /from |Tallahassee|Thin WR room|#43|34%/i);
+  assert.doesNotMatch(brief, /from |Tallahassee|Thin WR room|#43|34%|filler|walked away|keeping eyes/i);
 });
 
 test('buildChaseWhyBrief uses ufRpmPct ownership, not raw ufProbability', () => {

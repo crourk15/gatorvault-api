@@ -4,6 +4,9 @@
  * Why we chase — rank-truth prose for Priority Chase cards.
  * Prefer live override (Admin / upsert script); else generate from chase factors.
  * Editable anytime via API — no Codemagic for copy changes after client reads whyWeChase.
+ *
+ * Voice: confident insider nugget. No score dumps. No hometown lead.
+ * No hedge tags or soft dismissals.
  */
 
 const { getOverride } = require('./chase-why-store');
@@ -70,7 +73,7 @@ function boardLeadPct(player) {
 
 function on3LeadName(player) {
   const stamped = String(player?.on3Lead || player?.on3LeadSchool || player?.crystalBallSchool || '').trim();
-  if (stamped && stamped !== '-' && stamped !== '—') return stamped;
+  if (stamped && stamped !== '-' && stamped !== '\u2014') return stamped;
   const peers = Array.isArray(player?.competingSchools) ? player.competingSchools : [];
   const top = peers
     .filter((s) => s?.name && Number(s.pct) > 0 && !/florida|^uf$|gators/i.test(String(s.name)))
@@ -80,7 +83,6 @@ function on3LeadName(player) {
 
 /**
  * Insider nugget — why THIS name sits THIS high on OUR board.
- * No score dumps. No “not because he’s from X.”
  */
 function generateWhyWeChase(player, opts = {}) {
   const rank = Math.max(1, Number(opts.chaseRank) || 1);
@@ -100,7 +102,8 @@ function generateWhyWeChase(player, opts = {}) {
   const fitStrong = Number.isFinite(fit) && fit >= 78;
   const needHot = Number.isFinite(need) && need >= 85;
   const ufOwns = Number.isFinite(ufPct) && ufPct >= 55;
-  const ufClose = Number.isFinite(ufPct) && ufPct >= 35 && Number.isFinite(leadPct) && Math.abs(ufPct - leadPct) <= 12;
+  const ufClose =
+    Number.isFinite(ufPct) && ufPct >= 35 && Number.isFinite(leadPct) && Math.abs(ufPct - leadPct) <= 12;
   const rivalFight =
     lead &&
     !/florida|^uf$|gators/i.test(lead) &&
@@ -108,63 +111,69 @@ function generateWhyWeChase(player, opts = {}) {
     Number.isFinite(leadPct) &&
     Math.abs(ufPct - leadPct) <= 18;
 
-  // #1–3: own the lane
+  // #1-3: own the lane — confident, no hedge tags
   if (topOfBoard) {
-    if (ufOwns && staffLock) {
-      return `Florida already owns this ${pos} on the board — staff is locked on ${ln}, and that’s why he’s sitting at the top of the chase.`;
+    if (ufOwns && (staffLock || staffStrong)) {
+      return `Florida already owns this ${pos} on the board \u2014 staff is locked on ${ln}, and that\u2019s why he\u2019s sitting at the top of the chase.`;
     }
     if (ufOwns && fitElite) {
-      return `Florida’s already got the lead on ${ln} — elite ${pos} fit, and the board has him where a true must-get belongs.`;
+      return `Florida\u2019s already got the lead on ${ln} \u2014 elite ${pos} fit, and the board has him where a true must-get belongs.`;
     }
     if (needHot && gapLine && staffStrong) {
-      return `${ln}’s this high because ${gapLine} and Florida’s staff is all-in on him as a ${pos} fix — not a filler name.`;
+      return `${ln}\u2019s this high because ${gapLine} and Florida\u2019s staff is all-in on him as the ${pos} fix.`;
     }
     if (needHot && gapLine) {
-      return `${ln} sits this high because ${gapLine} — Florida’s chasing him as a real ${pos} answer, not a depth add.`;
+      return `${ln} sits this high because ${gapLine} \u2014 Florida\u2019s chasing him as the ${pos} answer in this class.`;
     }
     if (fitElite && staffStrong) {
-      return `${ln}’s this high because the staff won’t let this ${pos} walk — must-get fit, and the board ranks him like it.`;
+      return `Staff won\u2019t let ${ln} walk \u2014 must-get ${pos} fit, and the board ranks him like it.`;
     }
-    if (staffLock) {
-      return `Staff has ${ln} marked as a real ${pos} priority — that’s why he’s sitting this high on our chase, not mid-board noise.`;
+    if (staffLock || staffStrong) {
+      return `Staff has ${ln} marked as a real ${pos} priority \u2014 that\u2019s why he\u2019s this high on our chase.`;
     }
     if (ufOwns) {
-      return `Florida’s already ahead on ${ln} — that’s why he’s this high on the chase while the board still has him in play.`;
+      return `Florida\u2019s already ahead on ${ln} \u2014 that\u2019s why he\u2019s this high on the chase.`;
     }
-    return `${ln}’s this high because Florida’s ranking him as a true ${pos} priority on this board — process and fit, not a random bump.`;
+    return `${ln}\u2019s this high because Florida\u2019s ranking him as a true ${pos} priority on this board.`;
   }
 
-  // #4–8: clear reason, not top
+  // #4-8: still sharp
   if (midBoard) {
     if (rivalFight && staffStrong) {
-      return `There’s a real fight for ${ln} right now — Florida’s staff is still in it, and that’s why he’s this high on our chase.`;
+      return `There\u2019s a real fight for ${ln} right now \u2014 Florida\u2019s staff is still in it, and that\u2019s why he\u2019s this high on our chase.`;
     }
     if (ufClose && fitStrong) {
-      return `${ln}’s still a live ${pos} chase — the board’s tight, the fit’s real, and Florida’s treating him like a name that can move.`;
+      return `${ln}\u2019s still a live ${pos} chase \u2014 the board\u2019s tight, the fit\u2019s real, and Florida\u2019s treating him like a name that can move.`;
     }
     if (needHot && gapLine) {
-      return `${ln} stays this high because ${gapLine} — Florida’s still chasing him as a ${pos} answer in this class.`;
+      return `${ln} stays this high because ${gapLine} \u2014 Florida\u2019s still chasing him as a ${pos} answer in this class.`;
     }
     if (fitElite || (fitStrong && staffStrong)) {
-      return `${ln}’s this high because the ${pos} fit is too clean to ignore — staff’s still treating him like a real chase, not a watch-list name.`;
+      return `${ln}\u2019s this high because the ${pos} fit is too clean to ignore \u2014 staff\u2019s still treating him like a real chase.`;
     }
     if (Number.isFinite(market) && market >= 72 && staffStrong) {
-      return `${ln} stays on the chase because Florida’s still in the ${pos} fight — staff’s invested, and the board hasn’t cooled.`;
+      return `${ln} stays on the chase because Florida\u2019s still in the ${pos} fight \u2014 staff\u2019s invested, and the board hasn\u2019t cooled.`;
     }
-    return `${ln}’s this high because Florida’s still ranking him as a live ${pos} target on this board — not a filler slot.`;
+    return `${ln}\u2019s this high because Florida\u2019s still ranking him as a live ${pos} target on this board.`;
   }
 
-  // #9+: honest mid/late
+  // #9+: honest, still elite — no soft hedges
+  if (rivalFight && staffStrong) {
+    return `There\u2019s still a live fight for ${ln} \u2014 Florida\u2019s staff hasn\u2019t backed off the ${pos} chase.`;
+  }
   if (rivalFight) {
-    return `${ln}’s still on the board because there’s a live fight for him — Florida’s chasing, even if he’s not the top name right now.`;
+    return `${ln} stays on the board because the ${pos} fight is still live \u2014 Florida\u2019s in it.`;
   }
   if (fitStrong && staffStrong) {
-    return `${ln} stays on the chase because the ${pos} fit still grades — staff’s interested, even mid-board.`;
+    return `${ln} stays on the chase because the ${pos} fit still grades and staff\u2019s still invested.`;
   }
   if (needHot && gapLine) {
-    return `${ln}’s still here because ${gapLine} — Florida’s keeping eyes on him as a ${pos} option.`;
+    return `${ln} stays on the chase because ${gapLine} \u2014 Florida still needs him as a ${pos} piece.`;
   }
-  return `${ln}’s still on the chase as a live ${pos} name — not the top of the board, but Florida hasn’t walked away.`;
+  if (staffStrong) {
+    return `Staff\u2019s still on ${ln} \u2014 that\u2019s why this ${pos} stays on our chase.`;
+  }
+  return `${ln} stays on the chase as a live ${pos} name Florida still wants in this class.`;
 }
 
 function resolveWhyWeChase(player, opts = {}) {

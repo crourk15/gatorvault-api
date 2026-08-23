@@ -20,7 +20,7 @@ describe('chase-why-brief', () => {
       { chaseRank: 1 }
     );
     assert.match(text, /owns this CB|staff is locked on Vickers/i);
-    assert.doesNotMatch(text, /Tallahassee|not because|94%|Staff 80/i);
+    assert.doesNotMatch(text, /Tallahassee|not because|94%|Staff 80|filler|mid-board noise/i);
   });
 
   it('attachWhyWeChaseToPlayers ranks by priorityScore without reordering', () => {
@@ -50,6 +50,23 @@ describe('chase-why-brief', () => {
     assert.equal(out[2].chaseRank, 2);
     assert.equal(out[0].chaseRank, 3);
     assert.ok(out[1].whyWeChase);
+  });
+
+
+  it('staff priority line has no mid-board noise hedge', () => {
+    const text = brief.generateWhyWeChase(
+      {
+        slug: 'brysen-wright',
+        name: 'Brysen Wright',
+        position: 'WR',
+        ufRpmPct: 16,
+        hotLanes: { staffHeat: 80, mustGetFit: 60, positionalNeed: 40 },
+        hotBadges: { staffAssigned: true },
+      },
+      { chaseRank: 2 }
+    );
+    assert.match(text, /Staff has Wright marked as a real WR priority/i);
+    assert.doesNotMatch(text, /filler|mid-board noise|not a /i);
   });
 
   it('resolveWhyWeChase prefers override text', () => {

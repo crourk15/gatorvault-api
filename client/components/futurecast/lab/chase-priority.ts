@@ -314,17 +314,17 @@ export function buildChaseWhyBrief(
     } else if (ufOwns && fitElite) {
       text = `Florida’s already got the lead on ${ln} — elite ${pos} fit, and the board has him where a true must-get belongs.`;
     } else if (needHot && staffStrong) {
-      text = `${ln}’s this high because ${gapLine} and Florida’s staff is all-in on him as a ${pos} fix — not a filler name.`;
+      text = `${ln}’s this high because ${gapLine} and Florida’s staff is all-in on him as the ${pos} fix.`;
     } else if (needHot) {
-      text = `${ln} sits this high because ${gapLine} — Florida’s chasing him as a real ${pos} answer, not a depth add.`;
+      text = `${ln} sits this high because ${gapLine} — Florida’s chasing him as the ${pos} answer in this class.`;
     } else if (fitElite && staffStrong) {
-      text = `${ln}’s this high because the staff won’t let this ${pos} walk — must-get fit, and the board ranks him like it.`;
+      text = `Staff won’t let ${ln} walk — must-get ${pos} fit, and the board ranks him like it.`;
     } else if (staffLock || staffStrong) {
-      text = `Staff has ${ln} marked as a real ${pos} priority — that’s why he’s sitting this high on our chase, not mid-board noise.`;
+      text = `Staff has ${ln} marked as a real ${pos} priority — that’s why he’s this high on our chase.`;
     } else if (ufOwns) {
-      text = `Florida’s already ahead on ${ln} — that’s why he’s this high on the chase while the board still has him in play.`;
+      text = `Florida’s already ahead on ${ln} — that’s why he’s this high on the chase.`;
     } else {
-      text = `${ln}’s this high because Florida’s ranking him as a true ${pos} priority on this board — process and fit, not a random bump.`;
+      text = `${ln}’s this high because Florida’s ranking him as a true ${pos} priority on this board.`;
     }
   } else if (midBoard) {
     if (rivalFight && staffStrong) {
@@ -334,20 +334,24 @@ export function buildChaseWhyBrief(
     } else if (needHot) {
       text = `${ln} stays this high because ${gapLine} — Florida’s still chasing him as a ${pos} answer in this class.`;
     } else if (fitElite || (fitStrong && staffStrong)) {
-      text = `${ln}’s this high because the ${pos} fit is too clean to ignore — staff’s still treating him like a real chase, not a watch-list name.`;
+      text = `${ln}’s this high because the ${pos} fit is too clean to ignore — staff’s still treating him like a real chase.`;
     } else if (market >= 72 && staffStrong) {
       text = `${ln} stays on the chase because Florida’s still in the ${pos} fight — staff’s invested, and the board hasn’t cooled.`;
     } else {
-      text = `${ln}’s this high because Florida’s still ranking him as a live ${pos} target on this board — not a filler slot.`;
+      text = `${ln}’s this high because Florida’s still ranking him as a live ${pos} target on this board.`;
     }
+  } else if (rivalFight && staffStrong) {
+    text = `There’s still a live fight for ${ln} — Florida’s staff hasn’t backed off the ${pos} chase.`;
   } else if (rivalFight) {
-    text = `${ln}’s still on the board because there’s a live fight for him — Florida’s chasing, even if he’s not the top name right now.`;
+    text = `${ln} stays on the board because the ${pos} fight is still live — Florida’s in it.`;
   } else if (fitStrong && staffStrong) {
-    text = `${ln} stays on the chase because the ${pos} fit still grades — staff’s interested, even mid-board.`;
+    text = `${ln} stays on the chase because the ${pos} fit still grades and staff’s still invested.`;
   } else if (needHot) {
-    text = `${ln}’s still here because ${gapLine} — Florida’s keeping eyes on him as a ${pos} option.`;
+    text = `${ln} stays on the chase because ${gapLine} — Florida still needs him as a ${pos} piece.`;
+  } else if (staffStrong) {
+    text = `Staff’s still on ${ln} — that’s why this ${pos} stays on our chase.`;
   } else {
-    text = `${ln}’s still on the chase as a live ${pos} name — not the top of the board, but Florida hasn’t walked away.`;
+    text = `${ln} stays on the chase as a live ${pos} name Florida still wants in this class.`;
   }
 
   return clipWhyBrief(text.replace(/\bbackyard\b/gi, 'in-state'));
