@@ -44,6 +44,8 @@ export type FcLabTarget = {
   priorityScore?: number | null;
   notePreview?: string | null;
   visitLabels?: string[];
+  /** Live API Why we chase — prefer over client generate after Codemagic bake. */
+  whyWeChase?: string | null;
   hotLanes?: {
     staffHeat?: number;
     mustGetFit?: number;
@@ -196,6 +198,10 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
       .map((v) => String(v?.label || v?.type || '').trim())
       .filter(Boolean)
       .slice(0, 3),
+    whyWeChase:
+      typeof (p as { whyWeChase?: unknown }).whyWeChase === 'string'
+        ? String((p as { whyWeChase?: string }).whyWeChase).trim() || null
+        : null,
     hotLanes: (p as { hotLanes?: FcLabTarget['hotLanes'] }).hotLanes ?? null,
     hotBadges: (p as { hotBadges?: FcLabTarget['hotBadges'] }).hotBadges ?? null,
     hasUFOffer: p.hasUFOffer === true || p.processEvidence?.hasUFOffer === true,

@@ -24,6 +24,8 @@ export type ChaseTargetExtras = {
   hotLanes?: ChaseLaneScores | null;
   hotBadges?: ChaseBadges | null;
   nationalRank?: number | null;
+  /** Live API Why we chase — prefer this over client generate (editable anytime). */
+  whyWeChase?: string | null;
 };
 
 function laneRank(lanes: ChaseLaneScores | null | undefined): Array<{ key: keyof ChaseLaneScores; score: number }> {
@@ -129,7 +131,7 @@ function looksLikeTraitNote(note: string): boolean {
  * Only claim need / talent / process / fight when the data supports it.
  * Never "backyard." Never forced position-of-need mad-libs.
  */
-const WHY_BRIEF_MAX = 180;
+const WHY_BRIEF_MAX = 280;
 /**
  * Thin-room copy only for cycle trench / coverage gaps, and only when the
  * static need weight is actually high. WR/RB/TE/S/QB/ATH never get "thin room"
@@ -209,172 +211,146 @@ function processNoteTail(note: string): string | null {
   return null;
 }
 
-/** City / school place for in-state copy — never "backyard." */
-function placeFromSchool(school: string | null | undefined): string | null {
-  const s = String(school || '').trim();
-  if (!s) return null;
-  const paren = s.match(/\(([^,)/]+)/);
-  if (paren?.[1]) return paren[1].trim();
-  const head = s.split('(')[0].trim();
-  return head ? head.slice(0, 28) : null;
+function lastName(name: string | null | undefined): string {
+  const parts = String(name || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((p) => !/^(jr\.?|sr\.?|ii|iii|iv|v)$/i.test(p));
+  return parts.length ? parts[parts.length - 1] : 'Him';
 }
 
-function starBand(stars: number | null | undefined): string | null {
-  const n = Number(stars);
-  if (!Number.isFinite(n) || n <= 0) return null;
-  if (n >= 5) return 'Five-star';
-  if (n >= 4) return 'Four-star';
-  if (n >= 3) return 'Three-star';
-  return null;
+function posNugget(pos: string | null | undefined): string {
+  const p = String(pos || '').toUpperCase();
+  if (p === 'EDGE' || p === 'DE' || p === 'OLB') return 'edge';
+  if (p === 'DT' || p === 'DL' || p === 'NT') return 'DL';
+  if (p === 'CB') return 'CB';
+  if (p === 'S' || p === 'SAF') return 'safety';
+  if (p === 'WR') return 'WR';
+  if (p === 'RB') return 'RB';
+  if (p === 'QB') return 'QB';
+  if (p === 'OT' || p === 'OL' || p === 'IOL' || p === 'OG' || p === 'OC' || p === 'C') return 'OL';
+  if (p === 'TE') return 'TE';
+  if (p === 'LB' || p === 'ILB' || p === 'MLB') return 'LB';
+  if (p === 'ATH') return 'athlete';
+  return p || 'prospect';
 }
 
-function isEliteTalent(player: FcLabTarget & ChaseTargetExtras): boolean {
-  const stars = Number(player.stars) || 0;
-  const nat =
-    player.nationalRank != null && Number(player.nationalRank) > 0
-      ? Number(player.nationalRank)
-      : null;
-  if (stars >= 5) return true;
-  if (nat != null && nat <= 25) return true;
-  if (stars >= 4 && nat != null && nat <= 75) return true;
-  return false;
+function needGapLine(pos: string | null | undefined, need: number): string {
+  if (!(need >= TRUE_NEED_MIN)) return '';
+  const p = String(pos || '').toUpperCase();
+  if (p === 'EDGE' || p === 'DE' || p === 'OLB' || p === 'DT' || p === 'DL' || p === 'NT') {
+    return 'the trench room is thin';
+  }
+  if (p === 'CB') return 'the secondary needs another lockdown piece';
+  return '';
 }
 
-function talentStatusLine(
+function boardPct(player: FcLabTarget & ChaseTargetExtras): number {
+  if (player.ufRpmPct != null && Number(player.ufRpmPct) > 0) {
+    return Math.round(Number(player.ufRpmPct));
+  }
+  return ufPctFromFc(player.ufProbability);
+}
+
+export type ChaseWhyBriefOpts = {
+  /** Priority Chase stamp rank (#1, #43, …). Explains this spot on OUR board. */
+  chaseRank?: number | null;
+};
+
+/**
+ * Fan-facing chase brief — insider nugget for why THIS name sits THIS high.
+ * Prefer live `player.whyWeChase` from HP API (editable anytime, no Codemagic).
+ * Fallback generates prose — no score dumps, no hometown lead.
+ */
+export function buildChaseWhyBrief(
   player: FcLabTarget & ChaseTargetExtras,
-  pos: string,
-  place: string | null,
-  inState: boolean
-): string | null {
-  const stars = starBand(player.stars);
-  const nat =
-    player.nationalRank != null && Number(player.nationalRank) > 0
-      ? Math.round(Number(player.nationalRank))
-      : null;
-  const where = place || (inState ? 'in-state' : null);
+  opts: ChaseWhyBriefOpts = {}
+): string {
+  const live = String(player.whyWeChase || '').trim();
+  if (live) return clipWhyBrief(live);
 
-  if (nat != null && nat <= 10) {
-    return where
-      ? `Top-10 ${pos} nationally from ${where}`
-      : `Top-10 ${pos} nationally`;
-  }
-  if (nat != null && nat <= 25) {
-    return where
-      ? `Top-25 ${pos} from ${where}`
-      : `Top-25 ${pos} nationally`;
-  }
-  if (stars) {
-    return where ? `${stars} ${pos} from ${where}` : `${stars} ${pos}`;
-  }
-  return null;
-}
-
-export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): string {
-  const pct = ufPctFromFc(player.ufProbability);
-  const fit = player.fitScore != null ? Math.round(Number(player.fitScore)) : 0;
-  const needScore = laneScore(player.hotLanes, 'positionalNeed');
-  const staffScore = laneScore(player.hotLanes, 'staffHeat');
+  const rank =
+    opts.chaseRank != null && Number(opts.chaseRank) > 0
+      ? Math.round(Number(opts.chaseRank))
+      : 1;
+  const ln = lastName(player.name);
+  const pos = posNugget(player.position);
+  const staff = laneScore(player.hotLanes, 'staffHeat');
   const fitLane = laneScore(player.hotLanes, 'mustGetFit');
+  const need = laneScore(player.hotLanes, 'positionalNeed');
+  const market = laneScore(player.hotLanes, 'marketPressure');
+  const fit = player.fitScore != null ? Math.round(Number(player.fitScore)) : 0;
+  const fitScore = Math.max(fitLane, fit);
+  const pct = boardPct(player);
   const threat = topThreatVsFlorida(player);
-  const inState =
-    Boolean(player.hotBadges?.inState) ||
-    /\bFL\b|\(FL\)|,\s*FL\b/i.test(String(player.school || ''));
-  const pos = String(player.position || 'prospect').toUpperCase();
-  const last =
-    String(player.name || '')
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(-1)[0] || 'He';
-  const place = placeFromSchool(player.school);
-  const trueNeed = isTrueThinRoom(pos, needScore);
-  const eliteTalent = isEliteTalent(player);
-  const status = talentStatusLine(player, pos, place, inState);
-  const staffOn = staffScore >= 55 || Boolean(player.hotBadges?.staffAssigned);
-  const mustGet = fit >= 80 || fitLane >= 70;
+  const lead = threat?.label || threat?.name || '';
+  const leadPct = threat?.pct != null ? Math.round(Number(threat.pct)) : NaN;
+  const gapLine = needGapLine(player.position, need);
+  const staffOn = staff >= 55 || Boolean(player.hotBadges?.staffAssigned);
 
-  // Lead = the real reason he's this high — only claim need when trueNeed fires.
-  let lead = '';
-  if (eliteTalent && !trueNeed && status) {
-    lead = `${status} Florida still chases even with the room set`;
-  } else if (eliteTalent && trueNeed && status) {
-    lead = fit >= 75 ? `${status} for a thin ${pos} room (Fit ${fit})` : `${status} for a thin ${pos} room`;
-  } else if (trueNeed && fit >= 75) {
-    lead = `Thin ${pos} room + Fit ${fit}`;
-  } else if (trueNeed) {
-    lead = `Thin ${pos} room Florida has to fill`;
-  } else if (pct >= 50 && inState && status) {
-    lead = `${status} — Florida leads the On3 board`;
-  } else if (pct >= 50 && inState) {
-    lead = place
-      ? `${place} ${pos} with Florida leading On3`
-      : `In-state ${pos} with Florida leading On3`;
-  } else if (pct >= 35) {
-    lead = status
-      ? `${status} — Florida's best shot on this board (${pct}%)`
-      : `Florida's best shot on this board (${pct}%)`;
-  } else if (mustGet && status) {
-    lead = `${status} — must-get Fit (${fit || '—'})`;
-  } else if (mustGet) {
-    lead = `Must-get Fit (${fit || '—'}) on the board`;
-  } else if (staffOn && status) {
-    lead = `${status} — staff already on ${last}`;
-  } else if (staffOn) {
-    lead = `Staff already on ${last}`;
-  } else if (inState && status) {
-    lead = `${status} Florida has to keep warm`;
-  } else if (inState && place) {
-    lead = `${place} ${pos} Florida has to keep warm`;
-  } else if (status) {
-    lead = `${status} ranked on chase heat`;
+  const topOfBoard = rank <= 3;
+  const midBoard = rank >= 4 && rank <= 8;
+  const staffLock = staff >= 78 || (staffOn && staff >= 62);
+  const staffStrong = staff >= 62 || staffOn;
+  const fitElite = fitScore >= 88;
+  const fitStrong = fitScore >= 78;
+  const needHot = need >= TRUE_NEED_MIN && Boolean(gapLine);
+  const ufOwns = pct >= 55;
+  const ufClose =
+    pct >= 35 && Number.isFinite(leadPct) && Math.abs(pct - leadPct) <= 12;
+  const rivalFight =
+    Boolean(lead) &&
+    pct > 0 &&
+    Number.isFinite(leadPct) &&
+    Math.abs(pct - leadPct) <= 18 &&
+    pct < 55;
+
+  let text = '';
+
+  if (topOfBoard) {
+    if (ufOwns && (staffLock || staffStrong)) {
+      text = `Florida already owns this ${pos} on the board — staff is locked on ${ln}, and that’s why he’s sitting at the top of the chase.`;
+    } else if (ufOwns && fitElite) {
+      text = `Florida’s already got the lead on ${ln} — elite ${pos} fit, and the board has him where a true must-get belongs.`;
+    } else if (needHot && staffStrong) {
+      text = `${ln}’s this high because ${gapLine} and Florida’s staff is all-in on him as a ${pos} fix — not a filler name.`;
+    } else if (needHot) {
+      text = `${ln} sits this high because ${gapLine} — Florida’s chasing him as a real ${pos} answer, not a depth add.`;
+    } else if (fitElite && staffStrong) {
+      text = `${ln}’s this high because the staff won’t let this ${pos} walk — must-get fit, and the board ranks him like it.`;
+    } else if (staffLock || staffStrong) {
+      text = `Staff has ${ln} marked as a real ${pos} priority — that’s why he’s sitting this high on our chase, not mid-board noise.`;
+    } else if (ufOwns) {
+      text = `Florida’s already ahead on ${ln} — that’s why he’s this high on the chase while the board still has him in play.`;
+    } else {
+      text = `${ln}’s this high because Florida’s ranking him as a true ${pos} priority on this board — process and fit, not a random bump.`;
+    }
+  } else if (midBoard) {
+    if (rivalFight && staffStrong) {
+      text = `There’s a real fight for ${ln} right now — Florida’s staff is still in it, and that’s why he’s this high on our chase.`;
+    } else if (ufClose && fitStrong) {
+      text = `${ln}’s still a live ${pos} chase — the board’s tight, the fit’s real, and Florida’s treating him like a name that can move.`;
+    } else if (needHot) {
+      text = `${ln} stays this high because ${gapLine} — Florida’s still chasing him as a ${pos} answer in this class.`;
+    } else if (fitElite || (fitStrong && staffStrong)) {
+      text = `${ln}’s this high because the ${pos} fit is too clean to ignore — staff’s still treating him like a real chase, not a watch-list name.`;
+    } else if (market >= 72 && staffStrong) {
+      text = `${ln} stays on the chase because Florida’s still in the ${pos} fight — staff’s invested, and the board hasn’t cooled.`;
+    } else {
+      text = `${ln}’s this high because Florida’s still ranking him as a live ${pos} target on this board — not a filler slot.`;
+    }
+  } else if (rivalFight) {
+    text = `${ln}’s still on the board because there’s a live fight for him — Florida’s chasing, even if he’s not the top name right now.`;
+  } else if (fitStrong && staffStrong) {
+    text = `${ln} stays on the chase because the ${pos} fit still grades — staff’s interested, even mid-board.`;
+  } else if (needHot) {
+    text = `${ln}’s still here because ${gapLine} — Florida’s keeping eyes on him as a ${pos} option.`;
   } else {
-    lead = "Ranked on chase heat — priority for the class, not today's lead";
+    text = `${ln}’s still on the chase as a live ${pos} name — not the top of the board, but Florida hasn’t walked away.`;
   }
 
-  // Never let "backyard" slip in from any string assembly.
-  lead = lead.replace(/\bbackyard\b/gi, 'in-state');
-
-  const tails: string[] = [];
-  const visitBits = (player.visitLabels ?? []).filter(Boolean).slice(0, 2);
-  if (visitBits.length) tails.push(visitBits.join(' · '));
-
-  const processTail = processNoteTail(String(player.notePreview || ''));
-  if (processTail) {
-    const key = processTail.slice(0, 24).toLowerCase();
-    if (!tails.some((t) => t.toLowerCase().includes(key)) && !lead.toLowerCase().includes(key)) {
-      tails.push(processTail);
-    }
-  }
-
-  if (inState && !/in-state|florida kid|\bFL\b|Tampa|Mandarin|Jacksonville|Tallahassee|Pensacola|Hudson|Miami|Orlando|Gainesville/i.test(lead)) {
-    if (place && !lead.includes(place)) tails.push(`from ${place}`);
-    else if (!place) tails.push('in-state');
-  }
-
-  if (threat?.name) {
-    const rival = threat.label || threat.name;
-    if (!lead.toLowerCase().includes(String(rival).toLowerCase())) {
-      tails.push(
-        pct > 0 && pct < 40
-          ? `live fight with ${rival} while Florida still sits at ${pct}%`
-          : `board fight with ${rival}`
-      );
-    }
-  } else if (pct > 0 && pct < 35 && !/best shot|leading On3/i.test(lead)) {
-    tails.push(`still a live chase at ${pct}% UF`);
-  }
-
-  if (fit >= 75 && fit < 80 && !/fit/i.test(lead) && !trueNeed) {
-    tails.push(`Fit ${fit} keeps ${last} high`);
-  }
-
-  if (!tails.length) {
-    const fallback = buildChaseWhy(player).summary;
-    const withStop = fallback.endsWith('.') ? fallback : `${fallback}.`;
-    return clipWhyBrief(withStop.replace(/\bbackyard\b/gi, 'in-state'));
-  }
-
-  return clipWhyBrief(`${lead} — ${tails.slice(0, 3).join('; ')}.`.replace(/\bbackyard\b/gi, 'in-state'));
+  return clipWhyBrief(text.replace(/\bbackyard\b/gi, 'in-state'));
 }
 
 export function chaseHeatLabel(score: number | null | undefined): string {

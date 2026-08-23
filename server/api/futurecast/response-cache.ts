@@ -906,6 +906,16 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
       /* optional */
     }
   }
+  // Why we chase — live override + generated prose on every serve (DISK/memory).
+  // Edits via Admin / upsert-chase-why apply on next HP GET — no Codemagic, no full rebuild.
+  try {
+    const { attachWhyWeChaseToPlayers } = require('../../lib/chase-why-brief') as {
+      attachWhyWeChaseToPlayers: (list: unknown[]) => unknown[];
+    };
+    players = attachWhyWeChaseToPlayers(players);
+  } catch {
+    /* optional */
+  }
   return {
     ...doc,
     count: Array.isArray(players) ? players.length : doc.count,

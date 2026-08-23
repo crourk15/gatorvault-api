@@ -224,6 +224,21 @@
         + '<p class="hub-meta" style="margin:8px 0 0">2027 Closing Class is hard-locked. Only 2028 extras are editable here.</p>'
         + '</div>'
         + '<div class="hub-card" style="margin-bottom:12px">'
+        + '<h3>Why we chase (live edit)</h3>'
+        + '<p class="hub-meta" style="margin:0 0 8px">Overrides Priority Chase card copy on the next API hit — no Codemagic. Max 280 chars. Clear to resume auto-generated nugget.</p>'
+        + '<div class="hub-btn-row" style="flex-wrap:wrap;gap:8px;align-items:flex-end">'
+        + '<label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#94a3b8">Slug'
+        + '<input id="hub-fc-why-slug" type="text" placeholder="izayah-vickers" style="min-width:180px;padding:8px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff"></label>'
+        + '</div>'
+        + '<label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#94a3b8;margin-top:8px">Why we chase'
+        + '<textarea id="hub-fc-why-text" rows="3" maxlength="280" placeholder="Florida already owns this CB on the board — staff is locked on Vickers…" style="width:100%;padding:8px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff;resize:vertical"></textarea></label>'
+        + '<div class="hub-btn-row" style="margin-top:8px;gap:8px">'
+        + '<button type="button" class="hub-btn" id="hub-fc-why-save">Save override</button>'
+        + '<button type="button" class="hub-btn secondary" id="hub-fc-why-clear">Clear override</button>'
+        + '<button type="button" class="hub-btn secondary" id="hub-fc-why-load">Load current</button>'
+        + '</div>'
+        + '</div>'
+        + '<div class="hub-card" style="margin-bottom:12px">'
         + '<h3>Admin allowlist (2028 extras)</h3>'
         + '<div class="hub-table-wrap"><table class="hub-table"><thead><tr><th>Player</th><th>Class</th><th></th></tr></thead><tbody>'
         + adminHtml
@@ -261,6 +276,74 @@
             })
             .catch(function (e) { setMsg(e.message || 'Add failed', true); })
             .finally(function () { addBtn.disabled = false; });
+        });
+      }
+
+      var whySave = document.getElementById('hub-fc-why-save');
+      var whyClear = document.getElementById('hub-fc-why-clear');
+      var whyLoad = document.getElementById('hub-fc-why-load');
+      function whySlug() {
+        return (document.getElementById('hub-fc-why-slug').value || '').trim();
+      }
+      function whyText() {
+        return (document.getElementById('hub-fc-why-text').value || '').trim();
+      }
+      if (whySave) {
+        whySave.addEventListener('click', function () {
+          var slug = whySlug();
+          var text = whyText();
+          if (!slug || !text) {
+            setMsg('Slug and Why we chase text required.', true);
+            return;
+          }
+          whySave.disabled = true;
+          apiPost('/api/admin/hub/chase-why', { slug: slug, text: text })
+            .then(function (j) {
+              if (!j.ok) {
+                setMsg(j.error || 'Save failed', true);
+                return;
+              }
+              setMsg('Saved Why we chase for ' + slug + ' — live on next Priority Chase refresh.');
+              pushAct({ status: 'success', message: 'Chase why override: ' + slug, subsystem: 'futurecast' });
+            })
+            .catch(function (e) { setMsg(e.message || 'Save failed', true); })
+            .finally(function () { whySave.disabled = false; });
+        });
+      }
+      if (whyClear) {
+        whyClear.addEventListener('click', function () {
+          var slug = whySlug();
+          if (!slug) {
+            setMsg('Slug required to clear.', true);
+            return;
+          }
+          whyClear.disabled = true;
+          apiPost('/api/admin/hub/chase-why/' + encodeURIComponent(slug) + '/clear', {})
+            .then(function (j) {
+              setMsg(j.cleared ? ('Cleared override for ' + slug) : ('No override for ' + slug));
+              var ta = document.getElementById('hub-fc-why-text');
+              if (ta) ta.value = '';
+            })
+            .catch(function (e) { setMsg(e.message || 'Clear failed', true); })
+            .finally(function () { whyClear.disabled = false; });
+        });
+      }
+      if (whyLoad) {
+        whyLoad.addEventListener('click', function () {
+          var slug = whySlug();
+          if (!slug) {
+            setMsg('Slug required to load.', true);
+            return;
+          }
+          whyLoad.disabled = true;
+          apiGet('/api/admin/hub/chase-why/' + encodeURIComponent(slug))
+            .then(function (j) {
+              var ta = document.getElementById('hub-fc-why-text');
+              if (ta) ta.value = j.override || j.active || j.generated || '';
+              setMsg(j.override ? ('Loaded override for ' + slug) : ('No override — showing generated for ' + slug));
+            })
+            .catch(function (e) { setMsg(e.message || 'Load failed', true); })
+            .finally(function () { whyLoad.disabled = false; });
         });
       }
 

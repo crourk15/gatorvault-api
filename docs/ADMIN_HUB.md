@@ -146,6 +146,22 @@ Curated Hudl / On3 highlight traits live in `server/data/recruiting/film-traits.
 4. Goal: paste brief → Cursor already has tape facts. Use them in the post; never announce that you’re “different” or ahead of the beat.
 5. **Rival rule:** rivals are calm mid-post board context only — never dunk, never the punchline/closer. Close on Florida process.
 
+## Why we chase (Priority Chase cards)
+
+Fan-facing **Why we chase** copy on Priority Chase cards is live from the HP API (`whyWeChase`).
+
+1. **Auto:** generator builds an insider nugget from chase rank + staff / fit / need / board (no score dumps, no hometown lead).
+2. **Override anytime:** Admin Hub → FutureCast → **Why we chase (live edit)**, or:
+
+```bash
+node server/scripts/upsert-chase-why.js --slug=izayah-vickers \
+  --text="Florida already owns this CB on the board — staff is locked on Vickers."
+```
+
+3. **API:** `GET/POST /api/admin/hub/chase-why`, `POST /api/admin/hub/chase-why/:slug/clear` (admin PIN).
+4. **Durable store:** `/var/data/recruiting/chase-why-overrides.json` (seed: `server/data/recruiting/chase-why-overrides.json`).
+5. After the one-time client bake that prefers `whyWeChase`, copy edits need **no Codemagic** — next HP refresh picks them up.
+
 ## Player projection / comp in Copy Brief
 
 Recruit briefs embed a **PLAYER PROJECTION / COMP** block from War Room breakdowns (`comparison`, `projection`, optional `schemeFit` / `nflProjection` in `server/data/war-room/breakdowns.json`). Beat Desk shows the same card on **Open**.
@@ -220,6 +236,10 @@ Modules without a live signal stay gray (never fake-green).
 | `GET /api/admin/hub/search` | Global search |
 | `GET /api/admin/members/recent` | Newest members |
 | `GET /api/admin/hub/futurecast` | Targets + allowlist summary |
+| `GET /api/admin/hub/chase-why` | List Why we chase overrides |
+| `GET /api/admin/hub/chase-why/:slug` | One override + generated preview |
+| `POST /api/admin/hub/chase-why` | Upsert override `{ slug, text }` |
+| `POST /api/admin/hub/chase-why/:slug/clear` | Clear override (resume generated) |
 | `POST /api/admin/hub/allowlist/add` | Add 2028 admin allowlist slug |
 | `POST /api/admin/hub/allowlist/remove` | Remove 2028 admin allowlist slug |
 

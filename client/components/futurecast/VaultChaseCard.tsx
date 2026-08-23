@@ -120,10 +120,11 @@ export function VaultChaseCard({
       : null;
   const priority = chaseHeatLabel(player.priorityScore);
   const visitLine = (player.visitLabels ?? []).filter(Boolean)[0] || null;
+  // Prefer live API whyWeChase (Admin-editable anytime). Fallback generates nugget prose.
   // Dedicated visit plate on the card — keep Why we chase free of the same line.
-  const why = buildChaseWhyBrief(
-    visitLine ? { ...player, visitLabels: [] } : player
-  );
+  const why = buildChaseWhyBrief(visitLine ? { ...player, visitLabels: [] } : player, {
+    chaseRank: rank,
+  });
   const stamp = stampFor(rank, player.delta7d, showMovement);
   const inState = Boolean(player.hotBadges?.inState) || schoolLooksInState(player.school);
   const race = showRace ? raceRows(player) : [];
