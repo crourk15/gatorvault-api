@@ -155,7 +155,7 @@ Fan-facing **Why we chase** copy on Priority Chase cards is live from the HP API
 
 ```bash
 node server/scripts/upsert-chase-why.js --slug=izayah-vickers \
-  --text="Florida already owns this CB on the board — staff is locked on Vickers."
+  --text="Florida already leads Vickers on On3 — staff’s locked on this in-state CB."
 ```
 
 3. **API:** `GET/POST /api/admin/hub/chase-why`, `POST /api/admin/hub/chase-why/:slug/clear` (admin PIN).
@@ -165,6 +165,8 @@ node server/scripts/upsert-chase-why.js --slug=izayah-vickers \
 Generator voice: multi-factor insider nugget (room need · staff · in-state · named rivals · visit). Admin Load shows **Built from** chips. Override anytime to lock Charles copy.
 
 **Priority Chase standard (Charles):** treat Why we chase like an X post — hand-write overrides for the live chase board in `server/data/recruiting/chase-why-overrides.json` (or Admin Hub). Do **not** ship thin generator templates as final card copy. Generator is fallback only when no override exists.
+
+**Rank language (members first):** never write ambiguous `Top-20 EDGE` / `Top-50 DL`. Say what the number is — overall vs position — e.g. `No. 17 overall and a top-5 EDGE`, `No. 22 overall and the No. 1 IOL`. Fans should not have to guess.
 
 
 ## Player projection / comp in Copy Brief
