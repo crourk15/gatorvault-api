@@ -9,6 +9,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ## Already live on iOS (no build needed)
 - [x] 2028 HP chase cards: visit lines + Why we chase notes from live visit/intel stores + soft priority nudge (API — no Codemagic; Rising still snapshot `delta7d` only)
 - [x] Home NOW / class-overview 2027 commit count lockstep with commit cards (26) — kill protected-only phantom inflate + shared `loadHubHsClassCommits` (API)
+- [x] App Store **1.0.18** approved — pre-release train closed; next bake is **1.0.19** / build 84+ (`90186` / `90062` if you re-upload 1.0.18)
 - [x] App Store **1.0.17** accepted / eligible for distribution (Aug 17, 2026) — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`
 - [x] Film Room Press Conferences: same-day speaker re-uploads / search mirrors collapsed (Sumrall Aug 4 + Media Days) — API + cache dedupe on sync/serve
 - [x] Gabriel profile Field/On3 Florida 100: stamp overlay treated residual ufRpmPct 1 as fraction×100 — parseRpmPct + live topTeams peers (API)
@@ -36,7 +37,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] FutureCast master-board soft/disk seed — Lab primary never empty `status:building` on iOS (API)
 - [x] Lab polish API — null stars, Early Discovery soft cold-miss, capped warm workers (API)
 
-These ship via Render / Netlify API — current App Store binary (1.0.17) picks them up:
+These ship via Render / Netlify API — current App Store binary (1.0.18) picks them up:
 
 - [x] FutureCast commit likelihood (live HP / GV odds)
 - [x] Official 2026 roster jersey numbers + newcomers (API)
@@ -62,7 +63,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.17) picks 
 
 ## Waiting for next Codemagic build
 
-**Next bake target: App Store `1.0.18` / build `83+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_18_BUILD83.md`.
+**Next bake target: App Store `1.0.19` / build `84+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_19_BUILD84.md`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
