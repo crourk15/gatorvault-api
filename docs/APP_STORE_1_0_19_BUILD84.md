@@ -19,7 +19,7 @@
 Client/UI backlog from `docs/IOS_CODEMAGIC_BACKLOG.md`, including:
 
 - Community: post→open thread, Staff open vs Member threads, Recent default, category tabs
-- Why we chase: truth-first voice + thin-room gate (trench/CB ≥85 only; no WR “thin room” from weight table)
+- Why we chase: truth-first voice + thin-room gate (trench/CB ≥85 only; no WR "thin room" from weight table)
 - Where Florida needs help: depth-honest need board
 - Game Week: 2026 uniforms + Helmet/Jersey/Pants color chips on the matchup hero
 - Prior chase / Closest / Articles / visit plates still waiting from the closed 1.0.18 train
@@ -29,5 +29,5 @@ API/data fixes remain live on Render without this bake.
 ## Whats New (paste)
 
 ```
-Community is easier to find and post in. Why we chase and Where Florida needs help are more honest. Game Week shows this week’s Helmet / Jersey / Pants colors. Plus chase-board and visit-intel polish from the last bake queue.
+Community is easier to find and post in. Why we chase and Where Florida needs help are more honest. Game Week shows this week's Helmet / Jersey / Pants colors. Plus chase-board and visit-intel polish from the last bake queue.
 ```
