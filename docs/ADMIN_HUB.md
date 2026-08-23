@@ -162,6 +162,9 @@ node server/scripts/upsert-chase-why.js --slug=izayah-vickers \
 4. **Durable store:** `/var/data/recruiting/chase-why-overrides.json` (seed: `server/data/recruiting/chase-why-overrides.json`).
 5. After the one-time client bake that prefers `whyWeChase`, copy edits need **no Codemagic** — next HP refresh picks them up.
 
+Generator voice: multi-factor insider nugget (room need · staff · in-state · named rivals · visit). Admin Load shows **Built from** chips. Override anytime to lock Charles copy.
+
+
 ## Player projection / comp in Copy Brief
 
 Recruit briefs embed a **PLAYER PROJECTION / COMP** block from War Room breakdowns (`comparison`, `projection`, optional `schemeFit` / `nflProjection` in `server/data/war-room/breakdowns.json`). Beat Desk shows the same card on **Open**.
