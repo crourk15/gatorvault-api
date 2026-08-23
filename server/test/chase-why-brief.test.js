@@ -128,6 +128,23 @@ describe('chase-why-brief intel nuggets', () => {
     assert.ok('whyWeChaseBuiltFrom' in out[1]);
   });
 
+
+  it('handwritten override beats generator for Vickers', () => {
+    const text = brief.resolveWhyWeChase(
+      {
+        slug: 'izayah-vickers',
+        name: 'Izayah Vickers',
+        position: 'CB',
+        ufRpmPct: 94,
+        hotLanes: { staffHeat: 80, positionalNeed: 88 },
+        hotBadges: { staffAssigned: true },
+      },
+      { chaseRank: 1 }
+    ).text;
+    assert.match(text, /Quiet CB Florida already leads|secondary still needs/i);
+    assert.doesNotMatch(text, /sitting at the top of the chase|staff is locked on Vickers/i);
+  });
+
   it('resolveWhyWeChase prefers override text', () => {
     store.upsertOverride('test-override-kid', 'Manual override for Test.', {
       updatedBy: 'test',

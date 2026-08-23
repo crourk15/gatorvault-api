@@ -1,5 +1,286 @@
 {
   "version": 1,
-  "updatedAt": null,
-  "bySlug": {}
+  "updatedAt": "2026-08-23T17:14:37.869Z",
+  "bySlug": {
+    "izayah-vickers": {
+      "text": "Quiet CB Florida already leads on On3 — secondary still needs a lockdown piece and staff has Vickers as the one they’re building the chase around.",
+      "updatedAt": "2026-08-23T17:14:23.165Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "brysen-wright": {
+      "text": "No. 1 WR nationally and Florida’s still in the fight — Miami leads, but staff heat is real and the Ole Miss game-day visit keeps Wright’s process live.",
+      "updatedAt": "2026-08-23T17:14:23.169Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "merrick-ham": {
+      "text": "Florida’s EDGE room is a real gap and Ham’s the pass-rush name they’re pressing — board’s still wide open with Georgia and Auburn in it, Ole Miss visit next.",
+      "updatedAt": "2026-08-23T17:14:23.170Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "cyion-smith": {
+      "text": "Florida owns Smith on On3 with staff already assigned — in-state safety they don’t want back on the market while the back end still needs another piece.",
+      "updatedAt": "2026-08-23T17:14:23.170Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "antonio-thomas-jr": {
+      "text": "Top-20 EDGE, elite Fit, thin Florida pass-rush room — Thomas is the in-state chase they’re pressing with Miami and Auburn loud and Ole Miss weekend coming.",
+      "updatedAt": "2026-08-23T17:14:23.171Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "asher-ghioto": {
+      "text": "Five-star EDGE with elite scheme fit — Florida has to stay in this chase even while Miami leads, and the FAU game-day visit keeps the process live.",
+      "updatedAt": "2026-08-23T17:14:23.171Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "tyzon-swann": {
+      "text": "Nationally ranked DL with real trench Fit — Florida’s still fighting Penn State and Auburn for Swann, and the Ole Miss visit keeps this chase from going quiet.",
+      "updatedAt": "2026-08-23T17:14:23.172Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "xander-edwards": {
+      "text": "In-state RB Florida’s staff is still pushing — Notre Dame leads the board, but Wright’s Bolles teammate stays a live chase with Ole Miss weekend on the calendar.",
+      "updatedAt": "2026-08-23T17:14:23.172Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "andre-alexander": {
+      "text": "Nationally ranked LB with staff already assigned — not a Florida lock, but the room need + quiet staff push is why he’s still a top-10 chase.",
+      "updatedAt": "2026-08-23T17:14:23.172Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "jamarcus-johnson": {
+      "text": "Top-50 DL and a real trench answer — Florida’s right there with Georgia on the board, and that’s why Johnson stays this high on the chase.",
+      "updatedAt": "2026-08-23T17:14:23.173Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "joey-fleming": {
+      "text": "Top-25 IOL with elite Fit — Alabama owns the On3 race, but Florida’s still treating Fleming like an OL must-get they can’t ignore.",
+      "updatedAt": "2026-08-23T17:14:23.173Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "dominick-harris-payne": {
+      "text": "Florida already owns Harris-Payne on On3 — in-state CB with film on file, and the secondary still needs another lockdown piece behind Vickers.",
+      "updatedAt": "2026-08-23T17:14:23.174Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "tristian-henderson": {
+      "text": "Florida’s EDGE room is a real gap and Henderson is the in-state pass-rush priority they’re pressing — even with the board still wide open and FSU/Georgia in it.",
+      "updatedAt": "2026-08-23T17:14:23.174Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "zylen-little": {
+      "text": "In-state DL Florida keeps pressing while FSU and Auburn fight him — trench room is thin, FAU weekend keeps Little’s process live.",
+      "updatedAt": "2026-08-23T17:14:23.174Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "gabriel-player": {
+      "text": "Top-50 LB with real Fit — Miami owns the board right now, but Florida’s still ranking Player as an in-state linebacker they need in this class.",
+      "updatedAt": "2026-08-23T17:14:23.175Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "hudson-west": {
+      "text": "Florida owns West on the board and the QB room still needs a developmental piece — in-state pocket passer staff keeps elevating, Ole Miss visit keeps eyes on him.",
+      "updatedAt": "2026-08-23T17:14:23.175Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "phoenix-evans": {
+      "text": "Elite CB Fit and a thin Florida secondary — Rutgers leads, but Evans is the in-state cover piece Florida can’t afford to quit on.",
+      "updatedAt": "2026-08-23T17:14:23.175Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "jermaine-cobbins": {
+      "text": "Elite scheme-match CB (Surtain mold) — Ohio State leads, but Cobbins is the press/man piece Florida’s Fit board won’t let fall off the chase.",
+      "updatedAt": "2026-08-23T17:14:23.176Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "quinton-rolle-jr": {
+      "text": "Miami Central CB Florida still wants in a thin secondary — board’s competitive, but Rolle stays on the chase as an in-state lockdown option.",
+      "updatedAt": "2026-08-23T17:14:23.176Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "derrell-hines-jr": {
+      "text": "In-state WR with real Fit — Florida’s leaning the board and Hines is the Carrollwood Day skill piece they keep ranking as a live chase.",
+      "updatedAt": "2026-08-23T17:14:23.176Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "samuel-bailey": {
+      "text": "Top-50 OT and an OL room Florida still has to fill — Alabama and Ohio State are loud, but Bailey stays on the chase as a true tackle answer.",
+      "updatedAt": "2026-08-23T17:14:23.176Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "cassell-cruickshank": {
+      "text": "Top-15 EDGE with a pass-rush room that’s thin — Florida’s right there on the board and Cruickshank is the out-of-state edge they won’t soft-spot.",
+      "updatedAt": "2026-08-23T17:14:23.177Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "man-robinson": {
+      "text": "Staff heat is real on Robinson and the secondary still needs help — Purdue leads, but Florida’s treating this CB like a chase they can still move.",
+      "updatedAt": "2026-08-23T17:14:23.177Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "brady-quinn": {
+      "text": "In-state QB Florida keeps on the board while Miami leads — Chaminade-Madonna pocket passer with enough Fit to stay a live chase, not a watch-list name.",
+      "updatedAt": "2026-08-23T17:14:23.177Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "braxton-rein": {
+      "text": "Staff-assigned TE Florida’s still ranking high — Alabama and Ole Miss are in it, but Rein’s the pass-catching tight end they keep pressing.",
+      "updatedAt": "2026-08-23T17:14:23.177Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "lorenzo-mcmullen-jr": {
+      "text": "Top-25 WR Ohio State is leading — Florida’s still in the room because the Fit grades and Mcmullen stays a national skill chase worth tracking.",
+      "updatedAt": "2026-08-23T17:14:23.178Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "ryan-drakeford": {
+      "text": "Elite scheme-match safety — Penn State leads, but Drakeford is the range/STAR piece Florida’s Fit board keeps near the top of the secondary chase.",
+      "updatedAt": "2026-08-23T17:14:23.178Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "bubba-brown": {
+      "text": "In-state WR Georgia is pressing — Florida stays in because Brown’s a Lowndes skill name they still rank as a live chase on this board.",
+      "updatedAt": "2026-08-23T17:14:23.178Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "prince-che": {
+      "text": "DL Florida’s still fighting Clemson for — trench need is real and Che stays on the chase as a Georgia defensive front piece they want in the room.",
+      "updatedAt": "2026-08-23T17:14:23.178Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "nehemiah-mccary": {
+      "text": "Maplesville DL and a thin Florida trench — Alabama leads, but McCary is the interior answer they keep ranking as a chase, not a filler.",
+      "updatedAt": "2026-08-23T17:14:23.179Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "ridge-janes": {
+      "text": "Rising TE chase with Missouri ahead — Florida’s still in because Janes grades as a move tight end they want in this class.",
+      "updatedAt": "2026-08-23T17:14:23.179Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "nate-dollard": {
+      "text": "Staff-assigned CB and a secondary that still needs help — NC State leads, but Dollard stays on the chase as a Carolina cover piece Florida won’t quit.",
+      "updatedAt": "2026-08-23T17:14:23.179Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "antijuan-wilkes-jr": {
+      "text": "Top-15 OT Michigan is owning — Florida stays because the OL room is thin and Wilkes is a true tackle they still have to chase nationally.",
+      "updatedAt": "2026-08-23T17:14:23.179Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "malakhi-dudley": {
+      "text": "Georgia OT battle Florida’s still in — OL need is real and Dudley stays on the chase as a Heritage tackle they won’t soft-delete.",
+      "updatedAt": "2026-08-23T17:14:23.179Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "ryan-peterson": {
+      "text": "Elite Fit LB Georgia is leading — Florida’s still pressing Peterson because the linebacker room needs him and the scheme match grades too clean to ignore.",
+      "updatedAt": "2026-08-23T17:14:23.180Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "jalanie-george": {
+      "text": "Five-star EDGE Washington basically owns — Florida stays honest: pass-rush room is thin and George is a national edge they still have to track.",
+      "updatedAt": "2026-08-23T17:14:23.180Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "zaiden-jernigan": {
+      "text": "Staff-assigned RB with Miss State/Ole Miss loud — FAU weekend keeps Jernigan’s process live and Florida in a backfield chase that can still move.",
+      "updatedAt": "2026-08-23T17:14:23.180Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "hunter-fujikawa": {
+      "text": "Hawaii QB with Stanford ahead — Florida’s still ranking Fujikawa as a live pocket-passer chase because the Fit and board fight haven’t cooled.",
+      "updatedAt": "2026-08-23T17:14:23.180Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "tyree-mannings-jr": {
+      "text": "Florida owns Mannings on On3 — in-state WR they already lead, and he stays on the chase as a Venice skill piece locked to the board.",
+      "updatedAt": "2026-08-23T17:14:23.181Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "chris-morillo": {
+      "text": "In-state ATH Florida’s still fighting FSU for — Morillo’s a Hudson name with rising board heat and a process that keeps him on the chase.",
+      "updatedAt": "2026-08-23T17:14:23.181Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "kahmaree-crumity": {
+      "text": "Tallahassee CB Florida still wants in a thin secondary — Clemson and Ole Miss are around, but Crumity stays an in-state cover chase on this board.",
+      "updatedAt": "2026-08-23T17:14:23.181Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "jordon-gorham": {
+      "text": "Staff-assigned WR South Carolina is leading — Florida stays in because Gorham grades as a skill chase they haven’t walked away from.",
+      "updatedAt": "2026-08-23T17:14:23.182Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "tristin-gaines": {
+      "text": "Texas QB with Texas Tech ahead — Florida’s still on Gaines as a live pocket-passer option while the board fight stays open.",
+      "updatedAt": "2026-08-23T17:14:23.182Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "anthony-howard-jr": {
+      "text": "In-state RB Miami is leading — Ole Miss visit keeps Howard’s process live and Florida in a backfield chase that can still swing.",
+      "updatedAt": "2026-08-23T17:14:23.182Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "zyon-robinson": {
+      "text": "Georgia WR Tennessee owns on the board — Florida stays because Robinson is a McEachern skill name they still rank as a chase.",
+      "updatedAt": "2026-08-23T17:14:23.182Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "kaleb-ballard": {
+      "text": "Top-60 TE in an Auburn/Alabama fight — Florida’s still pressing Ballard as a pass-catching tight end this class needs.",
+      "updatedAt": "2026-08-23T17:14:23.182Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "denairo-girton-jr": {
+      "text": "Elite Fit safety Penn State is leading — Girton’s the range piece Florida’s secondary board still wants in the chase.",
+      "updatedAt": "2026-08-23T17:14:23.183Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "john-matthews": {
+      "text": "Florida’s leaning Matthews on the board — Georgia WR they already own in the race, and he stays a live skill chase for that reason.",
+      "updatedAt": "2026-08-23T17:14:23.183Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "casey-barner": {
+      "text": "Five-star safety Georgia’s fighting nationally — Florida stays honest on Barner because the Fit grades and the safety room still needs a true closer.",
+      "updatedAt": "2026-08-23T17:14:23.183Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "bryce-willingham": {
+      "text": "Atlanta CB Georgia owns — Florida stays because the secondary needs another piece and Willingham remains a live cover chase.",
+      "updatedAt": "2026-08-23T17:14:23.183Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "taihj-moore": {
+      "text": "In-state RB Miami is leading — Florida keeps Moore on the chase as a Deland backfield option they still want in the room.",
+      "updatedAt": "2026-08-23T17:14:23.184Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "keoni-snipes": {
+      "text": "EDGE room is thin and Snipes is a live Alabama-border chase — Florida’s right there on the board and won’t soft-spot this pass rusher.",
+      "updatedAt": "2026-08-23T17:14:23.184Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "pj-evans": {
+      "text": "Interior line with real trench value and a board that’s moving — not a top-target yet, but Fit keeps Evans on the chase while Ole Miss sits ahead.",
+      "updatedAt": "2026-08-23T17:14:23.184Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "landon-dawson": {
+      "text": "Ohio TE Ohio State is leading — Florida stays on Dawson as a move tight end chase while Purdue and Pitt stay in the fight.",
+      "updatedAt": "2026-08-23T17:14:23.185Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "jaxen-cepeda": {
+      "text": "Elite Fit OT with Florida already on the offer trail — Alabama leads, but Cepeda is an Arkansas tackle they still rank as a real OL chase.",
+      "updatedAt": "2026-08-23T17:14:23.185Z",
+      "updatedBy": "upsert-chase-why-file"
+    },
+    "dion-edwards": {
+      "text": "Nationally ranked safety Tennessee is leading — Ole Miss visit keeps Edwards’ process live and Florida in a secondary chase that can still move.",
+      "updatedAt": "2026-08-23T17:14:23.185Z",
+      "updatedBy": "upsert-chase-why-file"
+    }
+  }
 }
