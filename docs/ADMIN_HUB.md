@@ -164,6 +164,8 @@ node server/scripts/upsert-chase-why.js --slug=izayah-vickers \
 
 Generator voice: multi-factor insider nugget (room need · staff · in-state · named rivals · visit). Admin Load shows **Built from** chips. Override anytime to lock Charles copy.
 
+**Priority Chase standard (Charles):** treat Why we chase like an X post — hand-write overrides for the live chase board in `server/data/recruiting/chase-why-overrides.json` (or Admin Hub). Do **not** ship thin generator templates as final card copy. Generator is fallback only when no override exists.
+
 
 ## Player projection / comp in Copy Brief
 
