@@ -174,9 +174,22 @@ function classifyStrength(avg: number | null, targets: number): BoardStrength {
   return 'behind';
 }
 
-function needTier(score: number, shortfall: number, departing: number): NeedTier {
+function needTier(
+  score: number,
+  shortfall: number,
+  departing: number,
+  projectedDepth: number,
+  schemeMin: number
+): NeedTier {
+  // Depth already meets the scheme floor — never "Must add" / "Needs help"
+  // just because a few seniors are leaving a loaded room (WR/CB/DL trap).
+  const depthOk = shortfall <= 0 && projectedDepth >= schemeMin;
+  if (depthOk) {
+    if (departing >= 3) return 'watch';
+    return 'stable';
+  }
   if (score >= 90 || shortfall >= 3 || (shortfall >= 2 && departing >= 2)) return 'critical';
-  if (score >= 55 || shortfall >= 2 || departing >= 2) return 'high';
+  if (score >= 55 || shortfall >= 2 || (shortfall >= 1 && departing >= 2)) return 'high';
   if (score >= 28 || shortfall >= 1 || departing >= 1) return 'watch';
   return 'stable';
 }
@@ -290,18 +303,28 @@ export function buildPositionNeedBoard(input: {
     const boardStrength = classifyStrength(avgUfPct, boardTargets);
 
     const commitGap = Math.max(0, Math.min(schemeMin, 3) - commits2027);
+    // When the room already clears the depth floor, departing seniors are a
+    // watch signal — not a chase-heat score that floats fat WR/CB rooms to #1.
     const needScore =
-      shortfall * 42 +
-      departingSoon * 18 +
-      commitGap * 10 +
-      battles * 4 +
-      (boardTargets === 0 && shortfall > 0 ? 12 : 0) -
-      Math.min(commits2027, 4) * 7;
+      shortfall <= 0
+        ? Math.max(0, departingSoon * 6 + commitGap * 4 - Math.min(commits2027, 4) * 7)
+        : shortfall * 42 +
+          departingSoon * 18 +
+          commitGap * 10 +
+          battles * 4 +
+          (boardTargets === 0 && shortfall > 0 ? 12 : 0) -
+          Math.min(commits2027, 4) * 7;
 
     const rowBase = {
       position,
       needScore: Math.max(0, Math.round(needScore)),
-      needTier: needTier(Math.max(0, needScore), shortfall, departingSoon),
+      needTier: needTier(
+        Math.max(0, needScore),
+        shortfall,
+        departingSoon,
+        projectedDepth,
+        schemeMin
+      ),
       schemeMin,
       rosterCount,
       departingSoon,
@@ -349,7 +372,7 @@ export function buildPositionNeedBoard(input: {
         ? `Live roster loaded · ${commitCount} UF commit${commitCount === 1 ? '' : 's'} in the 2027 class.`
         : 'Waiting on the roster feed — need order not ready yet.',
     methodNote:
-      'Need order = current roster depth, players with ≤1 year of eligibility left, and 2027 UF commits vs a typical depth target. Early NFL exits and unofficial portal rumors are not counted until the roster/commit feeds update.',
+      'Need order = roster depth vs a typical scholarship floor, plus players with ≤1 year left and 2027 UF commits. Rooms already at/above the floor stay In good shape (or Keep an eye if several are leaving) — we do not mark a loaded WR/CB room as Needs help just because two seniors graduate. Early NFL exits and unofficial portal rumors are not counted until the roster/commit feeds update.',
     updatedAt: input.updatedAt || new Date().toISOString(),
   };
 }

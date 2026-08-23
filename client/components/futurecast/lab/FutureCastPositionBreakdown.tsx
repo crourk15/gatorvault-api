@@ -173,7 +173,9 @@ export function FutureCastPositionBreakdown({
 
   const featured = useMemo(() => {
     const priority = board.rows.filter((r) => r.needTier === 'critical' || r.needTier === 'high');
-    if (priority.length >= 3) return priority.slice(0, 3);
+    if (priority.length >= 1) return priority.slice(0, 3);
+    const watch = board.rows.filter((r) => r.needTier === 'watch');
+    if (watch.length >= 1) return watch.slice(0, 3);
     return board.rows.slice(0, 3);
   }, [board.rows]);
 
