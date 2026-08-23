@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-23T20:58:12.685Z",
+  "updatedAt": "2026-08-23T21:18:04.081Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -18566,29 +18566,31 @@
           "writer": "Charles Power",
           "writerId": "power",
           "outlet": "GatorVault film desk (Hudl)",
-          "url": null,
+          "url": "https://www.hudl.com/embed/video/3/19652373/68c345b5d05742189f892449",
           "publishedAt": "2026-08-23"
         }
       ],
       "strengths": [
-        "Battle carries with feature-back volume and finishes runs with scoring juice between the tackles and outside.",
-        "Battle shows real receiving value out of the backfield — not just a downhill pounder.",
-        "Battle wins as a compact, decisive runner who stresses defenses in space once he clears the first level."
+        "Battle presses the line, plants once, and is already gone — one-cut decisiveness with no dance in the hole.",
+        "Battle finds cutback daylight when outside zone over-pursues and finishes with a clear second gear that pulls away in the open field.",
+        "Battle keeps his feet through arm tackles and low-ankle grabs, falling forward with compact contact balance.",
+        "Battle catches the ball cleanly in stride on swing/check work and turns upfield without gearing down."
       ],
       "weaknesses": [
-        "Battle still needs SEC mass on a ~5-9 / 180 frame before he can lean on every early-down snap."
+        "Battle still needs SEC mass on a ~5-9 / 180 frame — square hits from bigger LBs can stand him up before he can use elusiveness.",
+        "Battle runs a tick upright through interior creases at times and needs to sink pads more consistently into contact."
       ],
-      "comparison": "Battle comps to Justice Hill — 5-10 / ~190 mold; compact burst, one-cut decisiveness, and enough receiving juice to stay on the field (size-matched within ~1–2\" of Battle's ~5-9 / 180 frame).",
-      "schemeFit": "Battle fits a zone/gap RB room that wants a compact one-cut runner with pass-game versatility.",
-      "staffNotes": "PROVISIONAL — no Hudl/On3 highlight link on Beat Desk Open 2026-08-23. Projection/comp drafted from board + public production only. Confirm with Charles before treating as live FutureCast Vault Scouting card. Not a Florida-alum default.",
-      "projection": "Battle projects as a Year 1–2 package / change-of-pace back who develops into the RB rotation, then competes for every-down snaps — ceiling as a compact SEC feature back with third-down value.",
-      "insiderNotes": "Battle is a compact in-state RB with feature-back production and receiving juice. Florida has ramped communication nonstop and already locked a game-day visit while sitting atop his On3 RPM board.",
+      "comparison": "Battle comps to Justice Hill — 5-10 / ~190 mold; compact one-cut burst, cutback vision, and enough receiving juice to stay on the field (size-matched within ~1–2\" of Battle's ~5-9 / 180 frame).",
+      "schemeFit": "Battle fits a zone/gap RB room that wants one-cut vision, cutback feel, and pass-game versatility out of the backfield.",
+      "staffNotes": "Vault film desk verified 2026-08-23 from Hudl embed (Kameron Battle 2,000 & 27 TD C/o 2028). Comp size-matched within ~1–2\" — not a Florida-alum default. Beat Desk session + Charles Hudl link.",
+      "projection": "Battle projects as a Year 1–2 package / big-play back who develops into the RB rotation, then competes for every-down snaps — ceiling as a compact SEC feature back who stresses defenses between the tackles and in space.",
+      "insiderNotes": "Battle is a compact one-cut runner with cutback vision and a real second gear once he clears the second level. Presses the designed hole without dancing, keeps his feet through arm tackles, and shows natural hands on swing routes. Florida has ramped communication nonstop and already locked a game-day visit while sitting atop his On3 RPM board.",
       "recruitingStory": "Kameron Battle is a 2028 RB · listed ~5-9 / 180 · Carrollwood Day (Tampa, FL) · On3 Industry ~#505 overall · ~#38 RB · ~#63 FL · Florida offered · UF leads RPM (~20%) over Ohio State / Oregon · Chris Foster room · Florida game-day visit locked.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-08-23T20:58:12.675Z",
-      "filmWatched": false,
-      "provisional": true
+      "updatedAt": "2026-08-23T21:18:04.067Z",
+      "filmWatched": true,
+      "provisional": false
     }
   }
 }
