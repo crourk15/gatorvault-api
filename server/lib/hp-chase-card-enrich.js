@@ -143,9 +143,19 @@ function looksLikeTraitOrRankPlate(text) {
 }
 
 function truncateNote(text, max = 120) {
-  const t = String(text || '').trim();
+  const t = String(text || '').replace(/\s+/g, ' ').trim();
   if (!t) return null;
-  return t.length > max ? `${t.slice(0, max)}…` : t;
+  if (t.length <= max) return t;
+  // Prefer a clean clause break — never return mid-sentence "and is…"
+  const cut = t.slice(0, max);
+  const breakAt = Math.max(
+    cut.lastIndexOf('. '),
+    cut.lastIndexOf('; '),
+    cut.lastIndexOf(' · '),
+    cut.lastIndexOf(' — '),
+  );
+  if (breakAt >= 36) return cut.slice(0, breakAt).trim();
+  return null;
 }
 
 /**

@@ -138,8 +138,28 @@ test('buildChaseWhyBrief wires process notePreview, not film traits', () => {
     visitLabels: [],
   });
   const brief = buildChaseWhyBrief(p);
-  assert.match(brief, /Florida offered|June 15 UOV/i);
+  assert.match(brief, /Florida offer on file|Florida offered|UOV on file/i);
   assert.ok(brief.length <= 180, `brief too long: ${brief.length}`);
+});
+
+test('buildChaseWhyBrief never dumps mid-sentence visit prose with …', () => {
+  const p = target({
+    slug: 'brysen-wright',
+    name: 'Brysen Wright',
+    position: 'WR',
+    school: 'Mandarin (Jacksonville, FL)',
+    ufProbability: 16,
+    fitScore: 68,
+    hotLanes: null,
+    hotBadges: { inState: true },
+    competingSchools: [{ name: 'Miami', pct: 38 }],
+    notePreview:
+      'Brysen Wright has visited Florida previously this offseason and is expected to return for a game',
+    visitLabels: [],
+  });
+  const brief = buildChaseWhyBrief(p);
+  assert.doesNotMatch(brief, /and is…|and is\.\.\.|offseason and is/i);
+  assert.match(brief, /UF visit already on file|UOV on file|OV on file/i);
 });
 
 test('buildChaseWhyBrief combines thin room + fit when both fire', () => {

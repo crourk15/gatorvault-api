@@ -86,8 +86,8 @@ export function buildChaseWhy(
 
   const note = String(player.notePreview || '').trim();
   if (note && !looksLikeTraitNote(note) && bullets.length < 3) {
-    const short = note.length > 72 ? `${note.slice(0, 69).trim()}…` : note;
-    bullets.push(short);
+    const chip = processNoteTail(note);
+    if (chip) bullets.push(chip);
   }
 
   const threat = topThreatVsFlorida(player);
@@ -131,17 +131,48 @@ function clipWhyBrief(text: string, max = WHY_BRIEF_MAX): string {
   return `${t.slice(0, Math.max(0, max - 1)).trim()}…`;
 }
 
-/** Process intel only — offers, visits, staff push (not film/trait blurbs). */
+/**
+ * Compress process intel into a short Vault chip.
+ * Never dump raw notes with mid-sentence "…" — that reads unfinished, not elite.
+ */
 function processNoteTail(note: string): string | null {
-  const raw = String(note || '').trim();
+  const raw = String(note || '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s*Continuous allowlist intel sweep\.?/gi, '')
+    .trim();
   if (!raw || looksLikeTraitNote(raw)) return null;
-  // Prefer clear process language; still allow short board notes that aren't traits.
-  const processLike =
-    /\b(offer|offered|visit|uov|ov|staff|push|campus|gainesville|unofficial|official|rpm|in-state|pipeline)\b/i.test(
-      raw
-    );
-  if (!processLike && raw.length > 90) return null;
-  return raw.length > 70 ? `${raw.slice(0, 67).trim()}…` : raw;
+
+  const lower = raw.toLowerCase();
+
+  // Visit / UOV narratives → one clean chip
+  if (
+    /\b(visited|visit(?:ed)?|uov|unofficial|official)\b/.test(lower) &&
+    /\b(florida|gators|gainesville|\buf\b)\b/.test(lower)
+  ) {
+    if (/\buov\b|unofficial/.test(lower)) return 'UF UOV on file';
+    if (/\bofficial\b|\bov\b/.test(lower)) return 'UF OV on file';
+    return 'UF visit already on file';
+  }
+
+  // Offer narratives
+  if (
+    (/\boffer(?:ed)?\b/.test(lower) && /\b(florida|gators|\buf\b)\b/.test(lower)) ||
+    /\bflorida offer\b/.test(lower)
+  ) {
+    return 'Florida offer on file';
+  }
+
+  // Already a short, complete process line (e.g. "Florida offered · June 15 UOV on file")
+  if (raw.length <= 56 && !/\b(and is|and are|and will)\b/i.test(raw) && !/…|\.\.\.\s*$/.test(raw)) {
+    const processLike =
+      /\b(offer|offered|visit|uov|ov|staff|push|campus|gainesville|unofficial|official|rpm)\b/i.test(
+        raw
+      );
+    return processLike ? raw : null;
+  }
+
+  // Long / incomplete prose — skip rather than clip mid-thought
+  return null;
 }
 
 export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): string {
