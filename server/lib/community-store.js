@@ -251,6 +251,7 @@ function ensureDailyOpenThread() {
   for (const t of threads) {
     if (t.dailyKey && t.dailyKey !== today) {
       t.pinned = false;
+      t.featured = false;
     }
   }
 
@@ -623,7 +624,19 @@ function getThreads({ sort = 'trending', category, limit = 50 } = {}) {
   ensureDailyOpenThread();
   const categoryMap = getCategoryMap();
   const users = loadUsers();
+  const today = todayKeyET();
   let threads = loadThreads().filter((t) => !t.deleted);
+  // Past Daily opens with zero replies spam the board — keep only today's daily
+  // (or any daily that actually got conversation). Direct /thread/:id still works.
+  threads = threads.filter((t) => {
+    const key = String(t.dailyKey || '').trim();
+    if (key && key !== today && !(Number(t.replyCount) > 0)) return false;
+    if (!key && /^Daily open:/i.test(String(t.title || '')) && !(Number(t.replyCount) > 0)) {
+      // Legacy rows without dailyKey — same rule.
+      return false;
+    }
+    return true;
+  });
   if (category) {
     threads = threads.filter((t) => t.categorySlug === category || t.categoryId === category);
   }

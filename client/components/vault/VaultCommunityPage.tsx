@@ -409,16 +409,25 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
 
   /** Member lane — exclude staff pins / daily so new threads aren't buried visually under pins. */
   const memberThreads = useMemo(
-    () => threads.filter((t) => !t.pinned && !t.featured && !t.dailyKey),
+    () =>
+      threads.filter(
+        (t) =>
+          !t.pinned &&
+          !t.featured &&
+          !t.dailyKey &&
+          !/^Daily open:/i.test(String(t.title || '')),
+      ),
     [threads],
   );
 
-  /** Daily-open hook — ET daily staff OP first, then pinned/featured. */
+  /** Daily-open hook — today's staff OP only (not the archive flood). */
   const todaysThread = useMemo(() => {
-    const daily = threads.find((t) => Boolean(t.dailyKey));
+    const daily = threads.find((t) => Boolean(t.dailyKey) && (t.pinned || t.featured));
     if (daily) return daily;
+    const anyDaily = threads.find((t) => Boolean(t.dailyKey));
+    if (anyDaily) return anyDaily;
     const pinned = threads.find((t) => t.pinned || t.featured);
-    return pinned || threads[0] || null;
+    return pinned || null;
   }, [threads]);
 
   useEffect(() => {
