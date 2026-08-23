@@ -183,3 +183,82 @@ test('buildChaseWhyBrief combines thin room + fit when both fire', () => {
   const brief = buildChaseWhyBrief(p);
   assert.match(brief, /Thin EDGE room \+ Fit 78/);
 });
+
+test('buildChaseWhyBrief does not force need when the room is loaded', () => {
+  const p = target({
+    slug: 'brysen-wright',
+    name: 'Brysen Wright',
+    position: 'WR',
+    school: 'Mandarin (Jacksonville, FL)',
+    stars: 5,
+    nationalRank: 3,
+    ufProbability: 16,
+    fitScore: 84,
+    hotLanes: {
+      positionalNeed: 28,
+      mustGetFit: 60,
+      staffHeat: 40,
+      geoPipeline: 80,
+      marketPressure: 30,
+    },
+    hotBadges: { inState: true },
+    competingSchools: [{ name: 'Miami', pct: 38 }],
+    notePreview: null,
+    visitLabels: [],
+  });
+  const brief = buildChaseWhyBrief(p);
+  assert.doesNotMatch(brief, /Thin WR room|position of need|fills a thin/i);
+  assert.match(brief, /still chases even with the room set/i);
+  assert.match(brief, /Top-10 WR|Five-star|Mandarin|Jacksonville/i);
+});
+
+test('buildChaseWhyBrief never says backyard', () => {
+  const p = target({
+    slug: 'jax-wr',
+    name: 'Jax WR',
+    position: 'WR',
+    school: 'Mandarin (Jacksonville, FL)',
+    stars: 4,
+    ufProbability: 22,
+    fitScore: 70,
+    hotLanes: {
+      positionalNeed: 20,
+      mustGetFit: 30,
+      staffHeat: 20,
+      geoPipeline: 90,
+      marketPressure: 10,
+    },
+    hotBadges: { inState: true },
+    competingSchools: [{ name: 'Miami', pct: 40 }],
+    notePreview: null,
+    visitLabels: [],
+  });
+  const brief = buildChaseWhyBrief(p);
+  assert.doesNotMatch(brief, /backyard/i);
+  assert.match(brief, /Mandarin|Jacksonville|in-state|keep warm/i);
+});
+
+test('buildChaseWhyBrief still claims thin room when need is real', () => {
+  const p = target({
+    slug: 'true-need',
+    name: 'True Need',
+    position: 'OT',
+    school: 'Plant (Tampa, FL)',
+    stars: 4,
+    ufProbability: 24,
+    fitScore: 79,
+    hotLanes: {
+      positionalNeed: 72,
+      mustGetFit: 50,
+      staffHeat: 25,
+      geoPipeline: 70,
+      marketPressure: 15,
+    },
+    hotBadges: { inState: true },
+    competingSchools: [{ name: 'Georgia', pct: 36 }],
+    notePreview: null,
+    visitLabels: [],
+  });
+  const brief = buildChaseWhyBrief(p);
+  assert.match(brief, /Thin OT room \+ Fit 79/);
+});
