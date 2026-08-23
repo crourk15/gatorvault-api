@@ -119,7 +119,31 @@ function looksLikeTraitNote(note: string): boolean {
 /**
  * Fan-facing chase brief for card skinny - why Florida is chasing him,
  * not how he plays. Traits stay on the profile.
+ *
+ * Elite bar: one dense sentence (~160–180 chars) with board stakes
+ * (need/fit/staff/shot + process note/rival) — not mad-libs only.
  */
+const WHY_BRIEF_MAX = 180;
+
+function clipWhyBrief(text: string, max = WHY_BRIEF_MAX): string {
+  const t = String(text || '').replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  return `${t.slice(0, Math.max(0, max - 1)).trim()}…`;
+}
+
+/** Process intel only — offers, visits, staff push (not film/trait blurbs). */
+function processNoteTail(note: string): string | null {
+  const raw = String(note || '').trim();
+  if (!raw || looksLikeTraitNote(raw)) return null;
+  // Prefer clear process language; still allow short board notes that aren't traits.
+  const processLike =
+    /\b(offer|offered|visit|uov|ov|staff|push|campus|gainesville|unofficial|official|rpm|in-state|pipeline)\b/i.test(
+      raw
+    );
+  if (!processLike && raw.length > 90) return null;
+  return raw.length > 70 ? `${raw.slice(0, 67).trim()}…` : raw;
+}
+
 export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): string {
   const pct = ufPctFromFc(player.ufProbability);
   const fit = player.fitScore != null ? Math.round(Number(player.fitScore)) : 0;
@@ -137,10 +161,12 @@ export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): str
 
   const headLane = lanes[0]?.key;
   let lead = '';
-  if (headLane === 'positionalNeed') {
+  if (headLane === 'positionalNeed' && fit >= 75) {
+    lead = `Thin ${pos} room + Fit ${fit}`;
+  } else if (headLane === 'positionalNeed') {
     lead = `Top ${pos} need for the class`;
   } else if (headLane === 'mustGetFit' || fit >= 80) {
-    lead = `Must-get scheme fit (${fit || '-'})`;
+    lead = `Must-get Fit (${fit || '—'}) on the board`;
   } else if (headLane === 'staffHeat' || player.hotBadges?.staffAssigned) {
     lead = 'Staff heat is already on him';
   } else if (pct >= 35) {
@@ -155,6 +181,15 @@ export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): str
   const visitBits = (player.visitLabels ?? []).filter(Boolean).slice(0, 2);
   if (visitBits.length) tails.push(visitBits.join(' · '));
   if (inState && !/in-state/i.test(lead)) tails.push('in-state');
+
+  const processTail = processNoteTail(String(player.notePreview || ''));
+  if (processTail) {
+    const key = processTail.slice(0, 24).toLowerCase();
+    if (!tails.some((t) => t.toLowerCase().includes(key)) && !lead.toLowerCase().includes(key)) {
+      tails.push(processTail);
+    }
+  }
+
   if (threat?.name) {
     tails.push(
       pct > 0 && pct < 40
@@ -170,10 +205,11 @@ export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): str
 
   if (!tails.length) {
     const fallback = buildChaseWhy(player).summary;
-    return fallback.endsWith('.') ? fallback : `${fallback}.`;
+    const withStop = fallback.endsWith('.') ? fallback : `${fallback}.`;
+    return clipWhyBrief(withStop);
   }
 
-  return `${lead} - ${tails.slice(0, 3).join('; ')}.`;
+  return clipWhyBrief(`${lead} — ${tails.slice(0, 3).join('; ')}.`);
 }
 
 export function chaseHeatLabel(score: number | null | undefined): string {

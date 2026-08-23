@@ -98,7 +98,7 @@ test('buildChaseWhyBrief is a chase reason, not a trait blurb', () => {
     notePreview: 'Henderson fits a bend-and-burst EDGE with first-step burst.',
   });
   const brief = buildChaseWhyBrief(p);
-  assert.match(brief, /need|fit|fight|pipeline|chase/i);
+  assert.match(brief, /Thin EDGE room \+ Fit 76|need|fit|fight|pipeline|chase/i);
   assert.doesNotMatch(brief, /first-step|bend-and-burst/i);
 });
 
@@ -115,4 +115,51 @@ test('buildChaseWhyBrief includes Expected visit labels on the skinny', () => {
   });
   const brief = buildChaseWhyBrief(p);
   assert.match(brief, /Expected Ole Miss visit · Sep 26/);
+});
+
+test('buildChaseWhyBrief wires process notePreview, not film traits', () => {
+  const p = target({
+    slug: 'chris-morillo',
+    name: 'Chris Morillo',
+    position: 'ATH',
+    school: 'Hudson (Hudson, FL)',
+    ufProbability: 28,
+    fitScore: 72,
+    hotLanes: {
+      staffHeat: 60,
+      mustGetFit: 40,
+      positionalNeed: 30,
+      geoPipeline: 70,
+      marketPressure: 20,
+    },
+    hotBadges: { inState: true, staffAssigned: true },
+    competingSchools: [{ name: 'Florida State', pct: 34 }],
+    notePreview: 'Florida offered · June 15 UOV on file',
+    visitLabels: [],
+  });
+  const brief = buildChaseWhyBrief(p);
+  assert.match(brief, /Florida offered|June 15 UOV/i);
+  assert.ok(brief.length <= 180, `brief too long: ${brief.length}`);
+});
+
+test('buildChaseWhyBrief combines thin room + fit when both fire', () => {
+  const p = target({
+    slug: 'edge-need',
+    name: 'Edge Need',
+    position: 'EDGE',
+    ufProbability: 18,
+    fitScore: 78,
+    hotLanes: {
+      positionalNeed: 90,
+      mustGetFit: 55,
+      staffHeat: 20,
+      geoPipeline: 10,
+      marketPressure: 10,
+    },
+    competingSchools: [{ name: 'Miami', pct: 40 }],
+    notePreview: null,
+    visitLabels: [],
+  });
+  const brief = buildChaseWhyBrief(p);
+  assert.match(brief, /Thin EDGE room \+ Fit 78/);
 });
