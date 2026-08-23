@@ -19,7 +19,7 @@ function lastName(name) {
     .trim()
     .split(/\s+/)
     .filter(Boolean)
-    .filter((p) => !/^(jr\\.?|sr\\.?|ii|iii|iv|v)$/i.test(p));
+    .filter((p) => !/^(jr\.?|sr\.?|ii|iii|iv|v)$/i.test(p));
   return parts.length ? parts[parts.length - 1] : 'Him';
 }
 

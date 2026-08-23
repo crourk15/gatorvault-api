@@ -128,6 +128,29 @@ describe('chase-why-brief intel nuggets', () => {
     assert.ok('whyWeChaseBuiltFrom' in out[1]);
   });
 
+  it('lastName strips Jr so Antonio Thomas Jr is Thomas', () => {
+    assert.equal(brief.lastName('Antonio Thomas Jr'), 'Thomas');
+    assert.equal(brief.lastName('Antonio Thomas Jr.'), 'Thomas');
+    const text = brief.generateWhyWeChase(
+      {
+        slug: 'antonio-thomas-jr',
+        name: 'Antonio Thomas Jr',
+        position: 'EDGE',
+        ufRpmPct: 41,
+        hotLanes: { staffHeat: 70, positionalNeed: 90, mustGetFit: 79 },
+        hotBadges: { inState: true, staffAssigned: true },
+        competingSchools: [
+          { name: 'Miami', pct: 30 },
+          { name: 'Auburn', pct: 25 },
+        ],
+        on3Lead: 'Miami',
+      },
+      { chaseRank: 5 }
+    );
+    assert.match(text, /\bThomas\b/);
+    assert.doesNotMatch(text, /\bJr is\b/);
+  });
+
   it('resolveWhyWeChase prefers override text', () => {
     store.upsertOverride('test-override-kid', 'Manual override for Test.', {
       updatedBy: 'test',
