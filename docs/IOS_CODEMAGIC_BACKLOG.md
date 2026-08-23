@@ -37,7 +37,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] FutureCast master-board soft/disk seed — Lab primary never empty `status:building` on iOS (API)
 - [x] Lab polish API — null stars, Early Discovery soft cold-miss, capped warm workers (API)
 
-These ship via Render / Netlify API — current App Store binary (1.0.17) picks them up:
+These ship via Render / Netlify API — current App Store binary (1.0.18) picks them up:
 
 - [x] FutureCast commit likelihood (live HP / GV odds)
 - [x] Official 2026 roster jersey numbers + newcomers (API)
