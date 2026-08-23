@@ -6,8 +6,8 @@ import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 /** Bump when high-priority payload shape changes (align with server FUTURECAST_API_CACHE_VERSION). */
-/** v20: bust localStorage so chase cards pick up API `on3Lead` stamp field. */
-export const FUTURECAST_CLIENT_CACHE_VERSION = 20;
+/** v21: bust localStorage so chase cards pick up API `whyWeChase` field. */
+export const FUTURECAST_CLIENT_CACHE_VERSION = 21;
 export const HIGH_PRIORITY_CACHE_KEY = `gv:futurecast:high-priority:v${FUTURECAST_CLIENT_CACHE_VERSION}`;
 export const HIGH_PRIORITY_YEAR = 2027;
 export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;
@@ -104,7 +104,8 @@ export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
   ufProbabilitySource?: string;
   ufProbabilityLabel?: string | null;
   ufProbabilityLowConfidence?: boolean;
-  /** Hot-target lane breakdown when API returns chase scoring. */
+  /** Live Why we chase prose from HP API (Admin override or generated). */
+  whyWeChase?: string | null;
   hotLanes?: {
     staffHeat?: number;
     mustGetFit?: number;

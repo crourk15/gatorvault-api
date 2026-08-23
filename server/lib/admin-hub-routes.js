@@ -1223,6 +1223,72 @@ function mountAdminHubRoutes(app) {
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
+
+  /** Why we chase — live overrides on Priority Chase cards (no Codemagic after client bake). */
+  app.get('/api/admin/hub/chase-why', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const store = require('./chase-why-store');
+      return res.status(200).json({ ok: true, ...store.listOverrides() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/admin/hub/chase-why/:slug', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const store = require('./chase-why-store');
+      const brief = require('./chase-why-brief');
+      const slug = String(req.params.slug || '').trim();
+      const override = store.getOverride(slug);
+      const preview = brief.generateWhyWeChase(
+        {
+          slug,
+          name: req.query.name || slug,
+          position: req.query.pos || req.query.position || '',
+          ufRpmPct: Number(req.query.ufRpmPct) || null,
+          hotLanes: {},
+        },
+        { chaseRank: Number(req.query.rank) || 1 }
+      );
+      return res.status(200).json({
+        ok: true,
+        slug,
+        override: override || null,
+        generated: preview,
+        active: override || preview,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/admin/hub/chase-why', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const store = require('./chase-why-store');
+      const body = req.body || {};
+      const slug = body.slug || body.playerSlug;
+      const text = body.text || body.whyWeChase || body.why;
+      const row = store.upsertOverride(slug, text, { updatedBy: body.updatedBy || 'admin-hub' });
+      return res.status(200).json({ ok: true, slug: String(slug).toLowerCase(), override: row });
+    } catch (err) {
+      const code = /required|too long/i.test(String(err.message || '')) ? 400 : 500;
+      return res.status(code).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/admin/hub/chase-why/:slug/clear', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const store = require('./chase-why-store');
+      const cleared = store.clearOverride(req.params.slug);
+      return res.status(200).json({ ok: true, cleared: Boolean(cleared) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 }
 
 module.exports = {

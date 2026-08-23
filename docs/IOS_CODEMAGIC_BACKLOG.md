@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Why we chase generator + Admin/script overrides on HP API (`whyWeChase`) — live after Render; **client prefer-field needs Codemagic bake below**
 - [x] 2028 HP chase cards: visit lines + Why we chase notes from live visit/intel stores + soft priority nudge (API — no Codemagic; Rising still snapshot `delta7d` only)
 - [x] Home NOW / class-overview 2027 commit count lockstep with commit cards (26) — kill protected-only phantom inflate + shared `loadHubHsClassCommits` (API)
 - [x] App Store **1.0.18** approved — pre-release train closed; next bake is **1.0.19** / build 84+ (`90186` / `90062` if you re-upload 1.0.18)
@@ -70,6 +71,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-23 | Why we chase: prefer live API `whyWeChase` (Admin-editable anytime after this bake); nugget voice fallback — no hometown / no score dumps | `VaultChaseCard` + `chase-priority` + HP map in binary; API generator/overrides already live without bake | pending |
 | 2026-08-23 | Why we chase: explain chase rank (talent + board/priority/process) — never hometown as the reason; pass `#N` into brief | `chase-priority` + `VaultChaseCard` in binary | pending |
 | 2026-08-23 | Game Week matchup hero: Helmet / Jersey / Pants color chips for this week’s uniform | `MatchupHeroWidget` + `uf-uniform-colors` + GW CSS in binary | pending |
 | 2026-08-23 | Where Florida needs help: depth-ok rooms stay In good shape — no Needs help from 2 departing seniors alone | `fc-position-need-board` + Lab position breakdown in binary | pending |
