@@ -327,20 +327,57 @@
 
 .gv-gw-matchup-hero__uniform {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.35rem 0.55rem;
-  margin: 0.45rem 0 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.55rem 0 0;
   font-size: 0.84rem;
   color: rgba(255, 255, 255, 0.9);
 }
 
 .gv-gw-matchup-hero__uniform-label {
   font-size: 0.68rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #fa4616;
   font-weight: 700;
+}
+
+.gv-gw-matchup-hero__uniform-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.gv-gw-uniform-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  min-width: 4.4rem;
+}
+
+.gv-gw-uniform-chip__part {
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  font-weight: 650;
+}
+
+.gv-gw-uniform-chip__swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.4rem;
+  padding: 0.38rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1.1;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
 }
 
 .gv-gw-matchup-hero__uniform-combo {
@@ -349,6 +386,7 @@
 
 .gv-gw-matchup-hero__uniform-note {
   width: 100%;
+  text-align: center;
   font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.65);
 }
