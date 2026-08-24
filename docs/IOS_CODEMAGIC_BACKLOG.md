@@ -72,6 +72,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-24 | **Game Week chips bake gap:** 1.0.19 shipped Helmet/Jersey/Pants UI but `SCHEDULE_GAMES` seed had **type only** (no per-game colors) → iOS blank until live `/api/schedule` lands; remount “fixes” it. Seed+merge now on `main` (#557) — **must be in next Codemagic** so cold open always shows chips | `schedule-data` uniforms + `schedule-api` backfill in binary | #557 merged; needs 1.0.20+ bake |
 | 2026-08-24 | Community: show member display name on open thread + list (not generic “Member”) | `VaultCommunityPage` + `community-api` + CSS in binary; API nests `thread.author` on detail | pending |
 | 2026-08-23 | Why we chase: prefer live API `whyWeChase` (Admin-editable anytime after this bake); nugget voice fallback — no hometown / no score dumps | `VaultChaseCard` + `chase-priority` + HP map in binary; API generator/overrides already live without bake | pending |
 | 2026-08-23 | Why we chase: explain chase rank (talent + board/priority/process) — never hometown as the reason; pass `#N` into brief | `chase-priority` + `VaultChaseCard` in binary | pending |
