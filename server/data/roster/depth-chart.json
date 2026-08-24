@@ -2,9 +2,9 @@
   "version": 1,
   "mode": "fall-camp",
   "label": "Week 1 board \u00b7 Aug 24",
-  "subtitle": "Sumrall named Philo Week 1 QB1 (Aug 24). OL soft-locked as camp ones (Boyer\u2013Harris\u2013Moore\u2013Shanahan\u2013Ugorji); tackles still need consistency.",
-  "updatedAt": "2026-08-24T16:15:00.000Z",
-  "source": "sumrall-presser-2026-08-24-philo-ol-softlock",
+  "subtitle": "Sumrall named Philo Week 1 QB1 (Aug 24). OL soft locks: Lovett\u2013Harris\u2013Moore\u2013Shanahan\u2013Ugorji (Lovett at LT per presser).",
+  "updatedAt": "2026-08-24T16:50:00.000Z",
+  "source": "sumrall-presser-2026-08-24-philo-ol-lovett-lt",
   "offense": [
     {
       "pos": "QB",
@@ -78,13 +78,13 @@
     },
     {
       "pos": "LT",
-      "s": "Eagan Boyer",
-      "si": "R-So.",
-      "b": "Tavaris Dice",
-      "bi": "R-Fr.",
-      "third": "Fletcher Westphal (R-So.)",
+      "s": "Bryce Lovett",
+      "si": "R-Jr.",
+      "b": "Eagan Boyer",
+      "bi": "R-So.",
+      "third": "Tavaris Dice (R-Fr.) / Fletcher Westphal (R-So.)",
       "status": "locked",
-      "analysis": "Soft Week 1 lock at LT after Sumrall presser lean \u2014 Boyer has been the ones tackle. Dice/Westphal next; consistency still the ask."
+      "analysis": "Sumrall presser soft lock: Lovett at LT for Week 1. Boyer slides to the next tackle tier with Dice/Westphal."
     },
     {
       "pos": "LG",
@@ -94,7 +94,7 @@
       "bi": "R-Jr.",
       "third": "Desmond Green (Fr.)",
       "status": "locked",
-      "analysis": "Harris remains the locked left guard \u2014 interior group Sumrall has been comfortable with. Kearney primary backup."
+      "analysis": "Harris locked at left guard \u2014 interior soft lock with Moore/Shanahan. Kearney primary backup."
     },
     {
       "pos": "C",
@@ -110,11 +110,11 @@
       "pos": "RG",
       "s": "T.J. Shanahan Jr.",
       "si": "R-Jr.",
-      "b": "Bryce Lovett",
-      "bi": "R-Jr.",
-      "third": "Daniel Pierre Louis (R-Fr.)",
+      "b": "Daniel Pierre Louis",
+      "bi": "R-Fr.",
+      "third": "Mark Faircloth (R-So.)",
       "status": "locked",
-      "analysis": "Shanahan soft-locked at RG for Week 1 (mid-camp lean + interior comfort). Lovett still the push; not a forever anointing."
+      "analysis": "Shanahan soft-locked at RG. Lovett moved to LT per Sumrall presser; Pierre Louis is the primary interior backup."
     },
     {
       "pos": "RT",
@@ -124,7 +124,7 @@
       "bi": "R-So.",
       "third": "Tyler Chukuyem (Fr.)",
       "status": "locked",
-      "analysis": "Soft Week 1 lock at RT \u2014 Ugorji has been the ones tackle opposite Boyer. Jones challenged to elevate; continuity still the question mark."
+      "analysis": "Soft Week 1 lock at RT \u2014 Ugorji opposite Lovett at LT. Jones challenged to elevate; continuity still the ask."
     }
   ],
   "defense": [
