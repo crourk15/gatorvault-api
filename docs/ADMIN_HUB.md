@@ -34,6 +34,16 @@ Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTu
 
 **Live schedule (no Codemagic for slate + Game Week intel edits):** `GET /api/schedule?year=2026` reads `server/data/schedule/2026-season.json` (Render override `/var/data/schedule/2026-season.json`). Schedule page + Game Week Command Center (Keys / Film Notes / Scouting) fetch that API. After the live-fetch client bake is in the iOS binary, add/move games **and** update weekly film intel (`film`, `keys`, `opponentTendencies`, `defenseTendencies`, `howUFWins`, `scoutingReport`) by editing the JSON / admin `PUT /api/schedule` only — same pattern as depth chart. `opponentTendencies` = opponent offense; `defenseTendencies` = opponent defense (label film vs box vs staff-public in the copy). Each game’s `tickets` object should hold **event deep links** (`official` / Ticketmaster, TickPick, StubHub) — not marketplace search URLs — so Buy Tickets opens that matchup.
 
+**Community Staff open (no Codemagic):** Cron publishes a rotating daily prompt. To set today’s topic on demand:
+
+```bash
+curl -sS -X POST https://gatorvault-api.onrender.com/api/community/admin/daily-open \
+  -H 'Content-Type: application/json' -H 'x-ops-pin: YOUR_PIN' \
+  -d '{"title":"Daily open: your topic here","body":"Prompt for members…","categorySlug":"locker"}'
+```
+
+Omit `title`/`body` for the normal cron ensure. Optional edit any thread: `POST /api/community/admin/thread/:id/edit`.
+
 **Tier B (request path):** Hub + FutureCast Lab **GETs never sync-rebuild**. They serve memory → stale → durable `hub-runtime` / deploy snapshot, and return `status: building` only on a true cold miss. Refill is owned by:
 
 - **Keepalive:** ping-only (`KEEPALIVE_FULL_TOUCH=false`). Do **not** re-enable full touch — it stampeded HP/bundle and sync-parsed `players.json` on the web dyno, starving Render `/ready` into 502 restart loops.

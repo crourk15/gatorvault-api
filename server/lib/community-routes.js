@@ -206,21 +206,65 @@ function mountCommunityRoutes(app) {
     }
   });
 
-  /** Cron or admin: publish today's staff open thread (idempotent per ET day). */
+  /** Cron or admin: publish today's staff open thread (idempotent per ET day).
+   *  On-demand override (no Codemagic): pass { title, body?, categorySlug? } to replace today's topic.
+   */
   app.post('/api/community/admin/daily-open', (req, res) => {
     if (!verifyCronOrAdmin(req)) {
       return res.status(401).json({ ok: false, error: 'Unauthorized' });
     }
     try {
-      const result = store.ensureDailyOpenThread();
+      const body = req.body || {};
+      const title = body.title != null ? String(body.title).trim() : '';
+      const text = body.body != null ? String(body.body).trim() : '';
+      const categorySlug =
+        body.categorySlug != null
+          ? String(body.categorySlug).trim()
+          : body.category != null
+            ? String(body.category).trim()
+            : '';
+      const wantsOverride = Boolean(title || text || categorySlug);
+      const result = wantsOverride
+        ? store.adminSetDailyOpen({
+            title: title || undefined,
+            body: text || undefined,
+            categorySlug: categorySlug || undefined,
+          })
+        : store.ensureDailyOpenThread();
       return res.json({
         ok: true,
         created: result.created,
+        replaced: Boolean(result.replaced),
         thread: result.thread,
         dataDir: store.DATA_DIR,
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Admin: edit any thread title/body (PIN). Use for Staff open when daily-open override is enough for most cases. */
+  app.post('/api/community/admin/thread/:id/edit', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const title = req.body?.title != null ? String(req.body.title).trim() : '';
+      const text = req.body?.body != null ? String(req.body.body).trim() : '';
+      if (!title && !text) {
+        return res.status(400).json({ ok: false, error: 'title or body required' });
+      }
+      const threads = store.loadThreads();
+      const idx = threads.findIndex((t) => t.id === req.params.id && !t.deleted);
+      if (idx < 0) return res.status(404).json({ ok: false, error: 'Thread not found' });
+      if (title) threads[idx].title = title;
+      if (text) threads[idx].body = text;
+      threads[idx].lastActivityAt = new Date().toISOString();
+      store.saveThreads(threads);
+      const thread = store.getThreadById(req.params.id);
+      return res.json({ ok: true, thread });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
     }
   });
 

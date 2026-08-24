@@ -36,6 +36,21 @@ describe('community daily open thread', () => {
     assert.equal(pulse.trending, 0);
   });
 
+  it('adminSetDailyOpen replaces today title/body on demand', () => {
+    const first = store.ensureDailyOpenThread();
+    assert.equal(first.created, false); // already created in prior test
+    const overridden = store.adminSetDailyOpen({
+      title: 'Daily open: Philo Week 1 — your take?',
+      body: 'Sumrall named Philo. Drop your read.',
+      categorySlug: 'locker',
+    });
+    assert.equal(overridden.replaced, true);
+    assert.equal(overridden.thread.id, first.thread.id);
+    assert.equal(overridden.thread.title, 'Daily open: Philo Week 1 — your take?');
+    assert.match(overridden.thread.body, /Philo/);
+    assert.equal(overridden.thread.pinned, true);
+  });
+
   it('resolves seed_founding_* aliases to thr_founding_*', () => {
     assert.equal(store.resolveThreadId('seed_founding_gameweek'), 'thr_founding_gameweek');
   });
