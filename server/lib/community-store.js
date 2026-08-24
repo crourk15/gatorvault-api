@@ -240,7 +240,7 @@ function ensureDailyOpenThread() {
       existing.featured = true;
       saveThreads(threads);
     }
-    return { created: false, thread: existing };
+    return { created: false, thread: existing, replaced: false };
   }
 
   const prompt = DAILY_OPEN_PROMPTS[dayOfYearET() % DAILY_OPEN_PROMPTS.length];
@@ -274,7 +274,63 @@ function ensureDailyOpenThread() {
   };
   threads.unshift(thread);
   saveThreads(threads);
-  return { created: true, thread };
+  return { created: true, thread, replaced: false };
+}
+
+/**
+ * Set or replace today's Staff open (daily) topic on demand.
+ * Ensures today's daily thread exists, then overwrites title/body (and optional category).
+ * No Codemagic — durable community store only.
+ */
+function adminSetDailyOpen({ title, body, categorySlug } = {}) {
+  const titleIn = String(title || '').trim();
+  const bodyIn = String(body || '').trim();
+  if (!titleIn && !bodyIn && !categorySlug) {
+    throw new Error('title, body, or categorySlug required');
+  }
+
+  const ensured = ensureDailyOpenThread();
+  const today = todayKeyET();
+  const threads = loadThreads();
+  const idx = threads.findIndex((t) => t.dailyKey === today && !t.deleted);
+  if (idx < 0) {
+    throw new Error('daily open thread missing after ensure');
+  }
+
+  const cats = ensureCategories();
+  let changed = false;
+  if (titleIn && threads[idx].title !== titleIn) {
+    threads[idx].title = titleIn;
+    changed = true;
+  }
+  if (bodyIn && threads[idx].body !== bodyIn) {
+    threads[idx].body = bodyIn;
+    changed = true;
+  }
+  if (categorySlug) {
+    const cat = cats.find((c) => c.slug === String(categorySlug).trim());
+    if (cat && (threads[idx].categoryId !== cat.id || threads[idx].categorySlug !== cat.slug)) {
+      threads[idx].categoryId = cat.id;
+      threads[idx].categorySlug = cat.slug;
+      changed = true;
+    }
+  }
+  threads[idx].pinned = true;
+  threads[idx].featured = true;
+  threads[idx].lastActivityAt = nowIso();
+  threads[idx].staffOverrideAt = nowIso();
+
+  for (const t of threads) {
+    if (t.dailyKey && t.dailyKey !== today) t.pinned = false;
+  }
+
+  saveThreads(threads);
+
+  return {
+    created: Boolean(ensured.created),
+    replaced: changed,
+    thread: enrichThread(threads[idx], getCategoryMap()),
+  };
 }
 
 function sortThreads(threads, sort) {
@@ -1012,6 +1068,7 @@ module.exports = {
   ensureCategories,
   ensureFoundingSurface,
   ensureDailyOpenThread,
+  adminSetDailyOpen,
   getOrCreateUser,
   getThreads,
   getThreadById,
