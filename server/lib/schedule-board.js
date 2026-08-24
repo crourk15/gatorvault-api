@@ -52,15 +52,41 @@ function readJson(filePath) {
   return JSON.parse(text);
 }
 
+/**
+ * Expand a combo label into helmet/jersey/pants when parts were omitted.
+ * Game Week chips need the three parts — label-only rows used to drop entirely.
+ */
+function expandUniformParts(label, helmet, jersey, pants) {
+  let h = helmet;
+  let j = jersey;
+  let p = pants;
+  if (h || j || p) return { helmet: h, jersey: j, pants: p };
+  const text = String(label || '').trim();
+  if (!text) return { helmet: h, jersey: j, pants: p };
+  if (/^all[- ]?blue$/i.test(text)) {
+    return { helmet: 'Blue', jersey: 'Blue', pants: 'Blue' };
+  }
+  const parts = text
+    .split('/')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (parts.length >= 3) {
+    return { helmet: parts[0], jersey: parts[1], pants: parts[2] };
+  }
+  return { helmet: h, jersey: j, pants: p };
+}
+
 function normalizeUniform(raw) {
   if (!raw || typeof raw !== 'object') return undefined;
-  const helmet = String(raw.helmet || '').trim();
-  const jersey = String(raw.jersey || '').trim();
-  const pants = String(raw.pants || '').trim();
-  if (!helmet && !jersey && !pants) return undefined;
-  const label =
+  let helmet = String(raw.helmet || '').trim();
+  let jersey = String(raw.jersey || '').trim();
+  let pants = String(raw.pants || '').trim();
+  let label =
     String(raw.label || '').trim() ||
     [helmet, jersey, pants].filter(Boolean).join(' / ');
+  ({ helmet, jersey, pants } = expandUniformParts(label, helmet, jersey, pants));
+  if (!helmet && !jersey && !pants) return undefined;
+  label = label || [helmet, jersey, pants].filter(Boolean).join(' / ');
   const out = {
     helmet: helmet || undefined,
     jersey: jersey || undefined,
@@ -70,6 +96,64 @@ function normalizeUniform(raw) {
   if (raw.note != null && String(raw.note).trim()) out.note = String(raw.note).trim();
   if (raw.source != null && String(raw.source).trim()) out.source = String(raw.source).trim();
   return out;
+}
+
+/** Bundled season uniforms — always available even when durable disk is stale. */
+function loadBundleUniformMap(season) {
+  const year = String(season || 2026);
+  try {
+    const doc = readJson(bundlePath(year));
+    const map = new Map();
+    for (const row of Array.isArray(doc?.games) ? doc.games : []) {
+      const id = String(row?.id || '').trim();
+      const uniform = normalizeUniform(row?.uniform);
+      if (id && uniform) map.set(id, uniform);
+    }
+    return map;
+  } catch {
+    return new Map();
+  }
+}
+
+/**
+ * Ensure every non-bye game carries helmet/jersey/pants for the baked Game Week chips.
+ * Prefers live/durable row; backfills from repo bundle when durable PUT stripped them.
+ */
+function backfillUniforms(games, season) {
+  const list = Array.isArray(games) ? games : [];
+  const bundleMap = loadBundleUniformMap(season);
+  let healed = 0;
+  const out = list.map((game) => {
+    if (!game || game.kind === 'bye') return game;
+    const current = normalizeUniform(game.uniform);
+    if (current?.helmet && current?.jersey && current?.pants) {
+      // Re-attach if label-only was expanded into parts.
+      if (
+        game.uniform &&
+        game.uniform.helmet === current.helmet &&
+        game.uniform.jersey === current.jersey &&
+        game.uniform.pants === current.pants
+      ) {
+        return game;
+      }
+      return { ...game, uniform: current };
+    }
+    const fromBundle = bundleMap.get(String(game.id || ''));
+    const merged = normalizeUniform({
+      ...(fromBundle || {}),
+      ...(current || {}),
+      helmet: current?.helmet || fromBundle?.helmet,
+      jersey: current?.jersey || fromBundle?.jersey,
+      pants: current?.pants || fromBundle?.pants,
+      label: current?.label || fromBundle?.label,
+      note: current?.note || fromBundle?.note,
+      source: current?.source || fromBundle?.source,
+    });
+    if (!merged) return game;
+    healed += 1;
+    return { ...game, uniform: merged };
+  });
+  return { games: out, healed };
 }
 
 function normalizeGame(row) {
@@ -158,6 +242,34 @@ function getScheduleBoard(season = 2026) {
       throw err;
     }
   }
+  const filled = backfillUniforms(doc.games, year);
+  doc = { ...doc, games: filled.games };
+  // Durable disk can lag the bundle (admin PUT without uniform). Rewrite so
+  // Game Week chips stay stable without waiting for a client bake.
+  if (filled.healed > 0 && filePath !== bundlePath(year)) {
+    try {
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
+      fs.writeFileSync(
+        filePath,
+        JSON.stringify(
+          {
+            season: doc.season,
+            updatedAt: doc.updatedAt,
+            label: doc.label,
+            source: doc.source,
+            games: doc.games.map((g) => {
+              const { expectedVisitors: _ev, ...rest } = g || {};
+              return rest;
+            }),
+          },
+          null,
+          2
+        ) + '\n'
+      );
+    } catch {
+      /* read path still served healed games */
+    }
+  }
   try {
     const { attachExpectedVisitorsToGames } = require('./game-week-visitors');
     doc = {
@@ -172,9 +284,12 @@ function getScheduleBoard(season = 2026) {
 
 function saveScheduleBoard(raw, season = 2026) {
   const year = String(season || raw?.season || 2026);
+  const incoming = Array.isArray(raw?.games) ? raw.games : [];
+  const filled = backfillUniforms(incoming, year);
   const doc = normalizeDoc(
     {
       ...raw,
+      games: filled.games,
       season: Number(year),
       updatedAt: String(raw?.updatedAt || '').trim() || new Date().toISOString(),
     },
@@ -208,4 +323,7 @@ module.exports = {
   saveScheduleBoard,
   toApiPayload,
   normalizeDoc,
+  normalizeUniform,
+  backfillUniforms,
+  loadBundleUniformMap,
 };
