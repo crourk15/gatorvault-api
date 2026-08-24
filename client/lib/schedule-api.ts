@@ -15,8 +15,35 @@ export type ScheduleBoardResponse = {
   count?: number;
 };
 
+function normalizeUniform(raw: ScheduleGame['uniform'] | null | undefined): ScheduleGame['uniform'] | undefined {
+  if (!raw || typeof raw !== 'object') return undefined;
+  const helmet = String(raw.helmet || '').trim();
+  const jersey = String(raw.jersey || '').trim();
+  const pants = String(raw.pants || '').trim();
+  const label =
+    String(raw.label || '').trim() ||
+    [helmet, jersey, pants].filter(Boolean).join(' / ');
+  if (!helmet && !jersey && !pants && !label) return undefined;
+  const out: ScheduleGame['uniform'] = { label };
+  if (helmet) out.helmet = helmet;
+  if (jersey) out.jersey = jersey;
+  if (pants) out.pants = pants;
+  if (raw.note != null && String(raw.note).trim()) out.note = String(raw.note).trim();
+  if (raw.source != null && String(raw.source).trim()) out.source = String(raw.source).trim();
+  return out;
+}
+
+/** Prefer live uniform; if API row omitted it (stale disk / flap), keep seed combo. */
+function mergeUniform(
+  live: ScheduleGame['uniform'] | undefined,
+  seed: ScheduleGame['uniform'] | undefined
+): ScheduleGame['uniform'] | undefined {
+  return normalizeUniform(live) || normalizeUniform(seed);
+}
+
 function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] {
   if (!Array.isArray(raw) || !raw.length) return [];
+  const seedById = new Map(SCHEDULE_GAMES.map((g) => [g.id, g]));
   return raw
     .map((g) => {
       if (!g || typeof g !== 'object') return null;
@@ -24,6 +51,8 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
       const opp = String(g.opp || '').trim();
       const date = String(g.date || '').trim();
       if (!id || !opp || !date) return null;
+      const seed = seedById.get(id);
+      const uniform = mergeUniform(g.uniform, seed?.uniform);
       return {
         ...g,
         id,
@@ -44,6 +73,7 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
           Array.isArray((g.expectedVisitors as { visitors?: unknown }).visitors)
             ? (g.expectedVisitors as ScheduleGame['expectedVisitors'])
             : undefined,
+        ...(uniform ? { uniform } : {}),
       } as ScheduleGame;
     })
     .filter(Boolean) as ScheduleGame[];
@@ -68,3 +98,6 @@ export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]>
   }
   return fallbackScheduleGames();
 }
+
+/** Test helpers */
+export const __scheduleApiTest = { normalizeGames, normalizeUniform, mergeUniform };

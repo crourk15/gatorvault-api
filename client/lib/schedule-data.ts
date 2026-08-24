@@ -125,6 +125,13 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       stubhub: "https://www.stubhub.com/florida-gators-football-gainesville-tickets-9-5-2026/event/160067981/",
       ticketmaster: "https://www.ticketmaster.com/florida-gators-football-vs-florida-atlantic-gainesville-florida-09-05-2026/event/2200645C21820922",
     },
+    uniform: {
+      helmet: "Orange",
+      jersey: "Blue",
+      pants: "White",
+      label: "Orange / Blue / White",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
+    },
   },
   {
     id: "campbell",
@@ -149,6 +156,13 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       tickpick: "https://www.tickpick.com/buy-florida-gators-vs-campbell-fighting-camels-tickets-ben-hill-griffin-stadium-9-12-26-5pm/7622668/",
       stubhub: "https://www.stubhub.com/florida-gators-football-gainesville-tickets-9-12-2026/event/160067983/",
       ticketmaster: "https://www.ticketmaster.com/florida-gators-football-vs-campbell-university-gainesville-florida-09-12-2026/event/2200645C21870928",
+    },
+    uniform: {
+      helmet: "Blue",
+      jersey: "Orange",
+      pants: "White",
+      label: "Blue / Orange / White",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
     },
   },
   {
@@ -177,6 +191,13 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       gameCenter: "https://floridagators.com/game-center/27905",
       tickpick: "https://www.tickpick.com/buy-auburn-tigers-vs-florida-gators-tickets-jordan-hare-stadium-9-19-26-6pm/7620863/",
       stubhub: "https://www.stubhub.com/auburn-tigers-football-auburn-tickets-9-19-2026/event/159474210/",
+    },
+    uniform: {
+      helmet: "Orange",
+      jersey: "White",
+      pants: "Orange",
+      label: "Orange / White / Orange",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
     },
   },
   {
@@ -211,6 +232,13 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       tickpick: "https://www.tickpick.com/buy-florida-gators-vs-mississippi-rebels-tickets-ben-hill-griffin-stadium-9-26-26-3am/7620866/",
       ticketmaster: "https://www.ticketmaster.com/florida-gators-football-vs-ole-miss-gainesville-florida-09-26-2026/event/2200645C218D0934",
     },
+    uniform: {
+      helmet: "Orange",
+      jersey: "Blue",
+      pants: "White",
+      label: "Orange / Blue / White",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
+    },
   },
   {
     id: "missouri",
@@ -234,6 +262,13 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       official: "https://www.ticketmaster.com/2026-mizzou-football-v-florida-columbia-missouri-10-03-2026/event/060064A9DD1A37BC",
       tickpick: "https://www.tickpick.com/buy-missouri-tigers-vs-florida-gators-tickets-faurot-field-at-memorial-stadium-10-3-26-3am/7620964/",
       ticketmaster: "https://www.ticketmaster.com/2026-mizzou-football-v-florida-columbia-missouri-10-03-2026/event/060064A9DD1A37BC",
+    },
+    uniform: {
+      helmet: "Orange",
+      jersey: "White",
+      pants: "Blue",
+      label: "Orange / White / Blue",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
     },
   },
   {
@@ -259,6 +294,14 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       tickpick: "https://www.tickpick.com/buy-florida-gators-vs-south-carolina-gamecocks-tickets-ben-hill-griffin-stadium-10-10-26-3am/7620865/",
       ticketmaster: "https://www.ticketmaster.com/florida-gators-football-vs-univ-of-gainesville-florida-10-10-2026/event/2200645C21920948",
     },
+    uniform: {
+      helmet: "Retro",
+      jersey: "White",
+      pants: "White",
+      label: "Retro / White / White",
+      note: "Retro whites — Homecoming",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
+    },
   },
   {
     id: "texas",
@@ -280,6 +323,13 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27909",
       tickpick: "https://www.tickpick.com/buy-texas-longhorns-vs-florida-gators-tickets-darrell-k-royal-texas-memorial-stadium-10-17-26-3am/7620985/",
+    },
+    uniform: {
+      helmet: "Orange",
+      jersey: "White",
+      pants: "Blue",
+      label: "Orange / White / Blue",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
     },
   },
   {
@@ -325,6 +375,14 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       tickpick: "https://www.tickpick.com/buy-georgia-bulldogs-vs-florida-gators-tickets-mercedes-benz-stadium-10-31-26-3am/7621006/",
       ticketmaster: "https://am.ticketmaster.com/gators/en/buy/ism/RkIyNjA4R0E=",
     },
+    uniform: {
+      helmet: "Orange",
+      jersey: "White",
+      pants: "White",
+      label: "Orange / White / White",
+      note: "Neutral site — Atlanta",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
+    },
   },
   {
     id: "oklahoma",
@@ -348,6 +406,14 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       official: "https://www.ticketmaster.com/florida-gators-football-vs-oklahoma-sooners-gainesville-florida-11-07-2026/event/2200645C2197098A",
       tickpick: "https://www.tickpick.com/buy-florida-gators-vs-oklahoma-sooners-tickets-ben-hill-griffin-stadium-11-7-26-3am/7620868/",
       ticketmaster: "https://www.ticketmaster.com/florida-gators-football-vs-oklahoma-sooners-gainesville-florida-11-07-2026/event/2200645C2197098A",
+    },
+    uniform: {
+      helmet: "Blue",
+      jersey: "Blue",
+      pants: "Blue",
+      label: "All-Blue",
+      note: "All-Blue in The Swamp",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
     },
   },
   {
@@ -373,6 +439,13 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       tickpick: "https://www.tickpick.com/buy-kentucky-wildcats-vs-florida-gators-tickets-kroger-field-11-14-26-3am/7620880/",
       ticketmaster: "https://www.ticketmaster.com/kentucky-wildcats-football-vs-florida-gators-lexington-kentucky-11-14-2026/event/160064ACA20A7989",
     },
+    uniform: {
+      helmet: "Orange",
+      jersey: "White",
+      pants: "Orange",
+      label: "Orange / White / Orange",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
+    },
   },
   {
     id: "vandy",
@@ -396,6 +469,13 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       official: "https://www.ticketmaster.com/florida-gators-football-vs-vanderbilt-commodores-gainesville-florida-11-21-2026/event/2200645C219C0A2B",
       tickpick: "https://www.tickpick.com/buy-florida-gators-vs-vanderbilt-commodores-tickets-ben-hill-griffin-stadium-11-21-26-3am/7620867/",
       ticketmaster: "https://www.ticketmaster.com/florida-gators-football-vs-vanderbilt-commodores-gainesville-florida-11-21-2026/event/2200645C219C0A2B",
+    },
+    uniform: {
+      helmet: "Orange",
+      jersey: "Blue",
+      pants: "White",
+      label: "Orange / Blue / White",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
     },
   },
   {
@@ -423,6 +503,13 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27914",
       tickpick: "https://www.tickpick.com/buy-florida-state-seminoles-vs-florida-gators-tickets-doak-campbell-stadium-11-27-26-3pm/7528939/",
+    },
+    uniform: {
+      helmet: "Blue",
+      jersey: "White",
+      pants: "White",
+      label: "Blue / White / White",
+      source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
     },
   },
 ];
