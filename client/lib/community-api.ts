@@ -95,8 +95,15 @@ function communityFetchInit(json = false): RequestInit {
 export function communityAuthorLabel(item: {
   author?: CommunityAuthor | null;
   authorDisplay?: string;
+  authorEmail?: string;
 }): string {
-  return item.author?.displayName || item.authorDisplay || 'Member';
+  const named =
+    String(item.author?.displayName || '').trim() ||
+    String(item.authorDisplay || '').trim();
+  if (named) return named;
+  const email = String(item.authorEmail || '').trim();
+  if (email.includes('@')) return email.split('@')[0] || 'Member';
+  return 'Member';
 }
 
 export async function fetchCommunityCategories(): Promise<CommunityCategory[]> {
@@ -128,12 +135,21 @@ export async function fetchCommunityThread(id: string): Promise<{
   thread: CommunityThread;
   posts: CommunityPost[];
 }> {
-  const data = await apiFetch<{ thread?: CommunityThread; posts?: CommunityPost[] }>(
-    `/api/community/thread/${encodeURIComponent(id)}`,
-    communityFetchInit(),
-  );
+  const data = await apiFetch<{
+    thread?: CommunityThread;
+    posts?: CommunityPost[];
+    author?: CommunityAuthor | null;
+  }>(`/api/community/thread/${encodeURIComponent(id)}`, communityFetchInit());
   if (!data.thread) throw new Error('Thread not found');
-  return { thread: data.thread, posts: data.posts ?? [] };
+  const thread = { ...data.thread };
+  // Older API nested author only at top-level; prefer thread.author, then merge top-level.
+  if (!thread.author?.displayName && data.author?.displayName) {
+    thread.author = data.author;
+    thread.authorDisplay = data.author.displayName;
+  } else if (!thread.authorDisplay && thread.author?.displayName) {
+    thread.authorDisplay = thread.author.displayName;
+  }
+  return { thread, posts: data.posts ?? [] };
 }
 
 export async function fetchCommunityPulse(): Promise<CommunityPulse> {

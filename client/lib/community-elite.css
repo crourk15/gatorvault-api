@@ -373,6 +373,13 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
 }
 
+.gv-community-page .gv-community__thread-author {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--cm-orange);
+  margin: 0;
+}
+
 .gv-community-page .gv-community__thread-title {
   font-size: 0.9375rem;
   font-weight: 700;
