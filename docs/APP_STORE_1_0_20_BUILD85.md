@@ -16,8 +16,11 @@
 
 ## Ships in this bake
 
+**Must-include bake gap:** Game Week Helmet/Jersey/Pants color chips were in **1.0.19**, but the bundled `SCHEDULE_GAMES` seed never got the per-game colors (type-only). Cold open / flaky first `/api/schedule` left the strip blank until leave+reopen. `#557` put the combos in the seed — this bake closes that gap.
+
 Client/UI backlog from `docs/IOS_CODEMAGIC_BACKLOG.md` not yet in the 1.0.19 binary, including:
 
+- Game Week: seed helmet/jersey/pants so matchup chips always paint (bake gap above)
 - Why we chase: prefer live API `whyWeChase` (Admin-editable elite copy anytime after this bake)
 - Chase cards: Expected visit line + clearer On3 lead stamps/labels
 - Closest / Chase board-truth client gates (no fake Florida locks from crumb RPM)
