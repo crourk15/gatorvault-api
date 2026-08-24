@@ -1,10 +1,10 @@
 {
   "version": 1,
   "mode": "fall-camp",
-  "label": "Mid-camp projection \u00b7 Aug 17",
-  "subtitle": "Aligned to Gators Online mid-camp board (Abolverdi) \u2014 not an official locked depth chart. Plans still change.",
-  "updatedAt": "2026-08-17T02:52:00.000Z",
-  "source": "gators-online-abolverdi-midcamp",
+  "label": "Week 1 board · Aug 24",
+  "subtitle": "Sumrall named Philo Week 1 QB1 (Aug 24). OL soft locks: Lovett–Harris–Moore–Shanahan–Ugorji (Lovett at LT per presser).",
+  "updatedAt": "2026-08-24T23:41:29.036Z",
+  "source": "sumrall-presser-2026-08-24-philo-ol-lovett-lt",
   "offense": [
     {
       "pos": "QB",
@@ -13,8 +13,8 @@
       "b": "Tramell Jones Jr.",
       "bi": "R-Fr.",
       "third": "Aidan Warner (R-Jr.)",
-      "status": "battle",
-      "analysis": "Philo remains the mid-camp lean; Jones Jr. is still the primary challenger. No starter named."
+      "status": "locked",
+      "analysis": "Sumrall (Aug 24): Philo is the Week 1 starter vs FAU and is getting most of the practice snaps. Not forever — Jones Jr. stays in the room fight."
     },
     {
       "pos": "RB",
@@ -78,13 +78,13 @@
     },
     {
       "pos": "LT",
-      "s": "Eagan Boyer",
-      "si": "R-So.",
-      "b": "Tavaris Dice",
-      "bi": "R-Fr.",
-      "third": "Fletcher Westphal (R-So.)",
-      "status": "battle",
-      "analysis": "Biggest mid-camp move: Boyer projected at LT (was an OR with Ugorji)."
+      "s": "Bryce Lovett",
+      "si": "R-Jr.",
+      "b": "Eagan Boyer",
+      "bi": "R-So.",
+      "third": "Tavaris Dice (R-Fr.) / Fletcher Westphal (R-So.)",
+      "status": "locked",
+      "analysis": "Sumrall presser soft lock: Lovett at LT for Week 1. Boyer slides to the next tackle tier with Dice/Westphal."
     },
     {
       "pos": "LG",
@@ -94,7 +94,7 @@
       "bi": "R-Jr.",
       "third": "Desmond Green (Fr.)",
       "status": "locked",
-      "analysis": "Harris anchors left guard; Kearney is the primary backup."
+      "analysis": "Harris locked at left guard — interior soft lock with Moore/Shanahan. Kearney primary backup."
     },
     {
       "pos": "C",
@@ -104,17 +104,17 @@
       "bi": "R-So.",
       "third": "Mark Faircloth (R-So.)",
       "status": "locked",
-      "analysis": "Moore runs the interior line."
+      "analysis": "Moore locked at center — interior soft lock with Harris/Shanahan. Zandamela next up."
     },
     {
       "pos": "RG",
       "s": "T.J. Shanahan Jr.",
       "si": "R-Jr.",
-      "b": "Bryce Lovett",
-      "bi": "R-Jr.",
-      "third": "Daniel Pierre Louis (R-Fr.)",
-      "status": "battle",
-      "analysis": "Shanahan gets the mid-camp RG lean over Lovett."
+      "b": "Daniel Pierre Louis",
+      "bi": "R-Fr.",
+      "third": "Mark Faircloth (R-So.)",
+      "status": "locked",
+      "analysis": "Shanahan soft-locked at RG. Lovett moved to LT per Sumrall presser; Pierre Louis is the primary interior backup."
     },
     {
       "pos": "RT",
@@ -123,8 +123,8 @@
       "b": "Caden Jones",
       "bi": "R-So.",
       "third": "Tyler Chukuyem (Fr.)",
-      "status": "battle",
-      "analysis": "Ugorji slides to RT in the mid-camp projection; Jones is next up."
+      "status": "locked",
+      "analysis": "Soft Week 1 lock at RT — Ugorji opposite Lovett at LT. Jones challenged to elevate; continuity still the ask."
     }
   ],
   "defense": [
