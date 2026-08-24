@@ -1,10 +1,10 @@
 {
   "version": 1,
   "mode": "fall-camp",
-  "label": "Mid-camp projection \u00b7 Aug 17",
-  "subtitle": "Aligned to Gators Online mid-camp board (Abolverdi) \u2014 not an official locked depth chart. Plans still change.",
-  "updatedAt": "2026-08-17T02:52:00.000Z",
-  "source": "gators-online-abolverdi-midcamp",
+  "label": "Week 1 board \u00b7 Aug 24",
+  "subtitle": "Sumrall named Aaron Philo Week 1 QB1 (Aug 24 presser). Other spots still camp projection \u2014 plans can change.",
+  "updatedAt": "2026-08-24T16:00:00.000Z",
+  "source": "sumrall-presser-2026-08-24-philo-week1",
   "offense": [
     {
       "pos": "QB",
@@ -13,8 +13,8 @@
       "b": "Tramell Jones Jr.",
       "bi": "R-Fr.",
       "third": "Aidan Warner (R-Jr.)",
-      "status": "battle",
-      "analysis": "Philo remains the mid-camp lean; Jones Jr. is still the primary challenger. No starter named."
+      "status": "locked",
+      "analysis": "Sumrall (Aug 24): preparing Philo as Week 1 starter vs FAU; lion's share of reps. Not forever \u2014 Jones Jr. stays in the room fight."
     },
     {
       "pos": "RB",

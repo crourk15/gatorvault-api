@@ -5,15 +5,17 @@ const os = require('os');
 const path = require('path');
 
 describe('depth-chart-board', () => {
-  it('loads bundled fall-camp board with open battles', () => {
+  it('loads bundled fall-camp board with Philo locked Week 1', () => {
     const board = require('../../lib/depth-chart-board');
     const doc = board.getDepthChartBoard();
     assert.equal(doc.mode, 'fall-camp');
-    assert.match(doc.label, /camp/i);
+    assert.match(doc.label, /week\s*1|camp/i);
     assert.ok(doc.offense.length >= 10);
     assert.ok(doc.defense.length >= 10);
     const qb = doc.offense.find((r) => r.pos === 'QB');
-    assert.equal(qb.status, 'battle');
+    assert.equal(qb.s, 'Aaron Philo');
+    assert.equal(qb.status, 'locked');
+    assert.match(qb.analysis, /Week 1|Philo/i);
     const payload = board.toApiPayload(doc);
     assert.equal(payload.ok, true);
     assert.deepEqual(payload.byPhase.off, doc.offense);
