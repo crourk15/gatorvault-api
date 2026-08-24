@@ -609,10 +609,12 @@ function enrichThreadWithAuthor(thread, categoryMap, users) {
       isFounding: author.isFounding,
       joinDate: author.joinDate
     };
+    enriched.authorDisplay = author.displayName;
     enriched.badge = badge.badge;
     enriched.badgeClass = badge.badgeClass;
   } else if (thread.authorId) {
     enriched.author = { displayName: 'Deleted member', avatarUrl: null, tier: null, isFounding: false };
+    enriched.authorDisplay = 'Deleted member';
   }
   return enriched;
 }
@@ -645,23 +647,29 @@ function getThreadById(id, incrementView = false) {
     .filter((p) => p.threadId === resolvedId && !p.deleted)
     .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
   const users = loadUsers();
+  const thread = enrichThreadWithAuthor(threads[idx], categoryMap, users);
   const author = users.find((u) => u.id === threads[idx].authorId);
   return {
-    thread: enrichThread(threads[idx], categoryMap),
+    // Nest author on thread so clients reading thread.author (not top-level author) show the member name.
+    thread,
     posts: posts.map((p) => {
       const pu = users.find((u) => u.id === p.authorId);
       const badge = pu ? badgeForUser(pu) : TIER_BADGE.locker;
+      const postAuthor = pu
+        ? {
+            displayName: pu.displayName,
+            avatarUrl: pu.avatarUrl,
+            tier: pu.tier,
+            isFounding: pu.isFounding,
+            joinDate: pu.joinDate
+          }
+        : p.authorId
+          ? { displayName: 'Deleted member', avatarUrl: null, tier: null, isFounding: false }
+          : null;
       return {
         ...p,
-        author: pu
-          ? {
-              displayName: pu.displayName,
-              avatarUrl: pu.avatarUrl,
-              tier: pu.tier,
-              isFounding: pu.isFounding,
-              joinDate: pu.joinDate
-            }
-          : null,
+        author: postAuthor,
+        authorDisplay: postAuthor?.displayName || null,
         badge: badge.badge,
         badgeClass: badge.badgeClass
       };
@@ -679,7 +687,7 @@ function getThreadById(id, incrementView = false) {
             badgeClass: badge.badgeClass
           };
         })()
-      : null
+      : thread.author || null
   };
 }
 

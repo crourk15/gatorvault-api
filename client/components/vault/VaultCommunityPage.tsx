@@ -817,6 +817,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                         }${isJustPosted ? ' gv-community__thread-row--just-posted' : ''}`}
                         onClick={() => void openThread(t.id)}
                       >
+                        <span className="gv-community__thread-author">{communityAuthorLabel(t)}</span>
                         <span className="gv-community__thread-title">
                           {isJustPosted ? <Chip variant="staff">Just posted</Chip> : null}{' '}
                           {isYours && !isJustPosted ? <Chip variant="trending">Yours</Chip> : null}{' '}
