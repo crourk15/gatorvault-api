@@ -2,9 +2,9 @@
   "version": 1,
   "mode": "fall-camp",
   "label": "Week 1 board \u00b7 Aug 24",
-  "subtitle": "Sumrall named Aaron Philo Week 1 QB1 (Aug 24 presser). Other spots still camp projection \u2014 plans can change.",
-  "updatedAt": "2026-08-24T16:00:00.000Z",
-  "source": "sumrall-presser-2026-08-24-philo-week1",
+  "subtitle": "Sumrall named Philo Week 1 QB1 (Aug 24). OL soft-locked as camp ones (Boyer\u2013Harris\u2013Moore\u2013Shanahan\u2013Ugorji); tackles still need consistency.",
+  "updatedAt": "2026-08-24T16:15:00.000Z",
+  "source": "sumrall-presser-2026-08-24-philo-ol-softlock",
   "offense": [
     {
       "pos": "QB",
@@ -83,8 +83,8 @@
       "b": "Tavaris Dice",
       "bi": "R-Fr.",
       "third": "Fletcher Westphal (R-So.)",
-      "status": "battle",
-      "analysis": "Biggest mid-camp move: Boyer projected at LT (was an OR with Ugorji)."
+      "status": "locked",
+      "analysis": "Soft Week 1 lock at LT after Sumrall presser lean \u2014 Boyer has been the ones tackle. Dice/Westphal next; consistency still the ask."
     },
     {
       "pos": "LG",
@@ -94,7 +94,7 @@
       "bi": "R-Jr.",
       "third": "Desmond Green (Fr.)",
       "status": "locked",
-      "analysis": "Harris anchors left guard; Kearney is the primary backup."
+      "analysis": "Harris remains the locked left guard \u2014 interior group Sumrall has been comfortable with. Kearney primary backup."
     },
     {
       "pos": "C",
@@ -104,7 +104,7 @@
       "bi": "R-So.",
       "third": "Mark Faircloth (R-So.)",
       "status": "locked",
-      "analysis": "Moore runs the interior line."
+      "analysis": "Moore locked at center \u2014 interior soft lock with Harris/Shanahan. Zandamela next up."
     },
     {
       "pos": "RG",
@@ -113,8 +113,8 @@
       "b": "Bryce Lovett",
       "bi": "R-Jr.",
       "third": "Daniel Pierre Louis (R-Fr.)",
-      "status": "battle",
-      "analysis": "Shanahan gets the mid-camp RG lean over Lovett."
+      "status": "locked",
+      "analysis": "Shanahan soft-locked at RG for Week 1 (mid-camp lean + interior comfort). Lovett still the push; not a forever anointing."
     },
     {
       "pos": "RT",
@@ -123,8 +123,8 @@
       "b": "Caden Jones",
       "bi": "R-So.",
       "third": "Tyler Chukuyem (Fr.)",
-      "status": "battle",
-      "analysis": "Ugorji slides to RT in the mid-camp projection; Jones is next up."
+      "status": "locked",
+      "analysis": "Soft Week 1 lock at RT \u2014 Ugorji has been the ones tackle opposite Boyer. Jones challenged to elevate; continuity still the question mark."
     }
   ],
   "defense": [

@@ -1,6 +1,6 @@
 # X draft — Sumrall presser recap (Aug 24, 2026)
 
-**Status:** Ready to post · facts only (free beat + CBS/GatorsWire/OnlyGators)
+**Status:** Ready to post · facts only + Charles presser listen on OL soft locks
 **Account:** @gatorvault
 **Category:** news
 
@@ -13,7 +13,8 @@ Aaron Philo is Florida's Week 1 starting QB.
 
 Sumrall: "We are preparing for him to be the starter for Week 1."
 
-Philo gets the lion's share of reps as FAU prep starts. Jones Jr. stays in the fight — Sumrall made clear this isn't forever.
+OL soft locks for Week 1 lean: Boyer–Harris–Moore–Shanahan–Ugorji.
+Interior's been the comfort zone; tackles still have to stack clean days.
 
 Vault depth chart updated -> gatorvaultinsider.com/vault/team/
 ```
@@ -25,20 +26,19 @@ BREAKING from Sumrall:
 
 Aaron Philo = Week 1 QB1.
 
-"We are preparing for him to be the starter for Week 1."
+OL ones soft-locked too — Boyer / Harris / Moore / Shanahan / Ugorji.
 
-Jones Jr. still in the room. Depth chart locked in the Vault.
+Depth chart live in the Vault.
 ```
 
 ## Sources
 
-- Jon Sumrall presser 8-24-26 (GatorsFB broadcast)
-- On3 / Gators Online — Philo named Week 1 starter
-- Gators Wire — Michael Long
-- CBS Sports — Sumrall quotes (line ops / not forever)
+- Jon Sumrall presser 8-24-26 (GatorsFB broadcast) — Philo named; OL soft locks per presser
+- On3 / Gators Online / Gators Wire / CBS — Philo Week 1 starter quotes
+- Camp context: Sumrall has been comfortable with the interior; tackle consistency still the ask
 
 ## Depth chart note
 
-Only formal starter named in free coverage: **QB Aaron Philo**. Other positions left as prior camp projection. Dallas Wilson injury update was discussed (On3) but details paywalled — no WR change until status is clear.
-
-If Charles heard additional named starters on the broadcast, drop names and we'll update the board.
+- **QB locked:** Aaron Philo (formal Week 1 name)
+- **OL soft-locked:** LT Boyer, LG Harris, C Moore, RG Shanahan, RT Ugorji
+- Dallas Wilson injury discussed (On3 paywall) — no WR change yet
