@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-24T15:00:44.696Z",
+  "updatedAt": "2026-08-25T14:40:56.200Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -15634,31 +15634,36 @@
     "ismael-schiefer": {
       "playerSlug": "ismael-schiefer",
       "playerName": "Ismael Schiefer",
-      "playerType": "commit",
+      "playerType": "target",
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": null,
+          "publishedAt": "2026-08-25"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Schiefer carries a 6-3.5 / 247 EDGE frame with enough mass to hold the point as he develops.",
+        "Schiefer's board path shows real multi-SEC interest — Georgia, South Carolina, Florida, LSU, Alabama and more already on the offer sheet.",
+        "Schiefer's most recent campus stamp is Florida (UOV 2026-04-11) — freshest visit on a crowded ladder."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Schiefer (PROVISIONAL): no Hudl/On3 highlight package reviewed yet — tape traits stay open until film desk verifies."
+      ],
+      "comparison": "Schiefer comps to Azeez Ojulari — listed 6-3.5 / 247 vs Ojulari's ~6-3 / 240 EDGE mold (height within ~1\", same early-career rush frame); then matching length-to-mass mix for a developmental every-down edge (size-matched; not a Florida-alum default).",
+      "schemeFit": "Schiefer fits a multiple front that wants a thick developmental JACK/EDGE who can grow into setting the edge and rushing in sub packages.",
+      "staffNotes": "PROVISIONAL 2026-08-25 — Beat Desk Open with no Hudl/On3 highlight link. Comp/projection drafted from board size + offer/visit ladder only. Re-open when film lands before treating as fan Vault Scouting.",
+      "projection": "Schiefer projects as a Year-1 special-teams / developmental EDGE, Year 2–3 compete for a rotational rush role, with every-down EDGE upside if the 6-3.5 / 247 frame adds a counter package and consistency vs SEC tackles.",
+      "insiderNotes": "Schiefer — No highlight package on this Open. Board only: 6-3.5/247 EDGE mold, Florida offer + April 2026 UOV, Georgia still leads On3 RPM.",
+      "recruitingStory": "Ismael Schiefer is a 2028 IMG Academy (Grayson, GA) EDGE/ATH · listed 6-3.5 / 247 · 3★ On3 · Natl #407 · Pos #41 · State #53 · Florida offered with a 2026-04-11 UOV — Georgia leads RPM (~18%) with Florida ~14%.",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-07-11T05:15:00.143Z"
+      "featured": false,
+      "updatedAt": "2026-08-25T14:40:56.190Z",
+      "filmWatched": false,
+      "provisional": true
     },
     "xander-edwards": {
       "playerSlug": "xander-edwards",
