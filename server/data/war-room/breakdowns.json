@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-24T15:00:44.696Z",
+  "updatedAt": "2026-08-25T14:58:13.916Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -15490,27 +15490,32 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": null,
+          "publishedAt": "2026-08-25"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Lewis carries a 6-0 / 175 ATH frame with room to fill into a lean perimeter skill mold.",
+        "Lewis's On3 board already shows Florida clear of the pack — RPM ~73% vs Troy ~6% and Florida State ~5%.",
+        "Lewis's campus stamp is Florida (1 UOV, latest 2025-06-03) with the Gators already on the offer sheet."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Lewis (PROVISIONAL): no Hudl/On3 highlight package reviewed yet — tape traits stay open until film desk verifies."
+      ],
+      "comparison": "Lewis comps to Jordan Addison — listed 6-0 / 175 vs Addison's ~5-11 / 175 sudden WR/ATH mold (height within ~1\", same lean skill frame); then matching perimeter twitch-and-space profile for a developmental separator (size-matched; not a Florida-alum default).",
+      "schemeFit": "Lewis fits a multiple skill package that can park a lean 6-0 ATH outside or in the slot while the position settles.",
+      "staffNotes": "PROVISIONAL 2026-08-25 — Beat Desk Open with no Hudl/On3 highlight link. Comp/projection drafted from board size + offer/visit ladder only. Re-open when film lands before treating as fan Vault Scouting.",
+      "projection": "Lewis projects as a Year-1 scout-team / developmental perimeter ATH-WR, Year 2–3 compete for rotational snaps, with every-down WR/ATH upside if the 6-0 / 175 frame fills and the skill set locks at one spot.",
+      "insiderNotes": "Lewis — No highlight package on this Open. Board only: 6-0/175 ATH mold, Florida offer + June 2025 UOV, Florida leads On3 RPM ~73%.",
+      "recruitingStory": "Gionni Lewis is a 2028 Booker T. Washington (Pensacola, FL) ATH · listed 6-0 / 175 · Florida offered with a 2025-06-03 UOV — Florida leads On3 RPM (~73%) with Troy ~6% and Florida State ~5%.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:15:46.658Z"
+      "updatedAt": "2026-08-25T14:58:13.907Z",
+      "filmWatched": false,
+      "provisional": true
     },
     "garrett-rosenberger": {
       "playerSlug": "garrett-rosenberger",
