@@ -623,13 +623,16 @@ function buildIntelSummary(row, meta) {
     return detail ? `Battle movement — ${detail.slice(0, 90)}` : 'Battle movement';
   }
   if (et === 'staff_note' || et === 'target_update') {
-    return detail ? `Staff note — ${detail.slice(0, 100)}` : 'Staff note';
+    // Beat Desk / internal staff notes — never fan Home NOW / hub ticker.
+    return null;
   }
   if (et === 'recruiting_narrative') {
-    return detail ? detail.slice(0, 120) : 'Beat intel';
+    const { toFanFacingIntelDetail } = require('./fan-facing-intel-copy');
+    return toFanFacingIntelDetail(detail || 'Beat intel', { eventType: et });
   }
   if (et === 'flip_watch' || et === 'commit_watch') {
-    return detail ? detail.slice(0, 120) : 'Flip watch';
+    const { toFanFacingIntelDetail } = require('./fan-facing-intel-copy');
+    return toFanFacingIntelDetail(detail || 'Flip watch', { eventType: et }) || 'Flip watch';
   }
 
   const delta = Number(row.movementDelta);
@@ -637,7 +640,8 @@ function buildIntelSummary(row, meta) {
     return `UF momentum ${delta > 0 ? 'up' : 'down'} (${delta > 0 ? '+' : ''}${delta})`;
   }
 
-  return detail.length > 140 ? `${detail.slice(0, 137)}…` : detail;
+  const { toFanFacingIntelDetail } = require('./fan-facing-intel-copy');
+  return toFanFacingIntelDetail(detail, { eventType: et });
 }
 
 function mapIntelToFeedItem(row, meta) {
@@ -646,6 +650,8 @@ function mapIntelToFeedItem(row, meta) {
   if (meta?.isWatch && event !== 'offer' && event !== 'visit') {
     event = 'intel';
   }
+  const summary = buildIntelSummary(row, meta);
+  if (!summary) return null;
   return {
     id: String(row.fingerprint || row.id),
     timestamp: row.reportedAt || row.timestamp || row.createdAt,
@@ -653,7 +659,7 @@ function mapIntelToFeedItem(row, meta) {
     position: meta.position,
     class: meta.classYear,
     event,
-    summary: buildIntelSummary(row, meta),
+    summary,
     profileUrl: meta.profileUrl,
     watch: Boolean(meta?.isWatch),
   };
@@ -974,7 +980,8 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
     const playerCtx = { ...(rawMap.get(slug) || {}), ...(meta || {}), slug };
     const filtered = filterMovementIntelForPlayer([row], playerCtx);
     if (!filtered.length) continue;
-    items.push(mapIntelToFeedItem(filtered[0], meta));
+    const feedItem = mapIntelToFeedItem(filtered[0], meta);
+    if (feedItem) items.push(feedItem);
     covered.add(slug);
   }
 

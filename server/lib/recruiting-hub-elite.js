@@ -417,10 +417,13 @@ async function buildHubTicker(year = 2027) {
 
   const { buildHubMovementFeed } = require('./recruiting-hub-data');
   const feed = await buildHubMovementFeed(year);
-  for (const row of feed.slice(0, 6)) {
+  for (const row of feed.slice(0, 8)) {
     if (!row?.summary) continue;
-    // Keep the player name — bare "unofficial visit · Florida" reads as dead filler.
-    const line = row.name ? `${row.name} — ${row.summary}` : String(row.summary);
+    const { toFanFacingHubSummary, isDeskOpsIntelCopy } = require('./fan-facing-intel-copy');
+    const summary = toFanFacingHubSummary(row.summary, { eventType: row.event });
+    if (!summary) continue;
+    const line = row.name ? `${row.name} — ${summary}` : String(summary);
+    if (isDeskOpsIntelCopy(line)) continue;
     if (!items.includes(line)) items.push(line);
     if (items.length >= 6) break;
   }
