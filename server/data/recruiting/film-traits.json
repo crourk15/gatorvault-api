@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-25T14:58:13.928Z",
+  "updatedAt": "2026-08-25T15:19:58.355Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -2971,15 +2971,22 @@
       "playerName": "Gionni Lewis",
       "position": null,
       "classYear": null,
-      "sources": [],
-      "traits": [
-        "frame",
-        "perimeter-ath",
-        "florida-rpm-lead",
-        "uov",
-        "provisional"
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/13505482/6729958eff35398cdbaf0b37"
+        }
       ],
-      "vaultFilmAngle": "Pensacola ATH with Florida already clear atop On3 RPM and a UOV stamp on file — board separation without inventing tape.",
+      "traits": [
+        "vertical-speed",
+        "tracking-hands",
+        "yac",
+        "release",
+        "punt-return",
+        "perimeter-wr"
+      ],
+      "vaultFilmAngle": "Pensacola ATH with freshman tape that stacks vertical juice + YAC — Florida already clear atop On3 RPM with offer + UOV on file.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"

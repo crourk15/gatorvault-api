@@ -1,17 +1,19 @@
 # X draft — Gionni Lewis (2028 ATH)
 
-**Note:** Board-first Open (no highlight link). Vault eval PROVISIONAL until film desk. Do not mention missing film in the post.
+**Note:** Film desk verified from Hudl freshman season. War Room cleared provisional.
 
 ```
-HEADER: Gionni Lewis’s On3 board just stretched Florida’s lead into daylight
+HEADER: Gionni Lewis’s freshman tape just made Florida’s RPM lead feel earned
 
-Florida isn’t chasing Gionni Lewis — the board already has the Gators clear of everyone else.
+Florida already sits clear atop Gionni Lewis’s On3 board — and the freshman Hudl package shows why Gainesville stays locked in.
 
-Lewis, a 2028 Booker T. Washington (Pensacola, FL) ATH listed 6-0 / 175, sits uncommitted with Florida’s offer locked and a UOV stamped 2025-06-03. On3 RPM: Florida ~73%, Troy ~6%, Florida State ~5%, Mississippi State and Memphis trailing in the 4% band. Offer sheet also includes Georgia Tech and Arkansas State.
+Lewis, a 2028 Booker T. Washington (Pensacola, FL) ATH listed 6-0 / 175, posted 45-832-8 as a true freshman. On tape as #1 outside: sudden vertical stack past off coverage, clean over-the-shoulder tracking on go/fade balls, and twitchy YAC — screen cuts plus an in-breaker he takes the distance. Also flashes house-call vision as a punt returner.
 
-Projection: Year-1 scout / developmental perimeter ATH-WR, Year 2–3 rotation chase, every-down WR/ATH ceiling if the frame fills. GatorVault comp: Jordan Addison (~5-11 / 175) for the same lean 6-0 sudden skill mold.
+Projection: Year-1 scout / developmental perimeter WR, Year 2–3 rotation chase, every-down Z/slot ceiling if the lean frame fills. GatorVault comp: Jordan Addison (~5-11 / 175) for the same sudden lean separator mold.
 
-The Florida offer is live on his card, and the visit trail already points Gainesville. Next step is simple: keep stacking process until this Pensacola ATH race stops being a race.
+Florida offered with a UOV stamped 2025-06-03. On3 RPM ~73% (Troy ~6%, FSU ~5%). Keep stacking process — this Pensacola race is already Florida’s to separate.
 ```
 
-War Room: `server/data/war-room/vault-evals/gionni-lewis.json` (provisional until film desk).
+Hudl: https://www.hudl.com/embed/video/3/13505482/6729958eff35398cdbaf0b37
+
+War Room: `server/data/war-room/vault-evals/gionni-lewis.json`
