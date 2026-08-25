@@ -68,6 +68,20 @@ function isDeepVaultPath(pathname: string): boolean {
   return p !== '/vault' && p !== '/vault/';
 }
 
+/** Password setup / reset emails — never bounce these to Sign in (wipes token). */
+export function isPasswordResetDeepLink(pathname?: string, search?: string): boolean {
+  const path = normalizeNativeRoutePath(
+    pathname || (typeof window !== 'undefined' ? window.location.pathname : '/')
+  );
+  const q = new URLSearchParams(
+    search ?? (typeof window !== 'undefined' ? window.location.search : '')
+  );
+  if (path === '/reset' || path.startsWith('/reset/')) return true;
+  if (path !== '/join') return false;
+  const mode = q.get('mode');
+  return mode === 'reset' || (mode === 'forgot' && Boolean(q.get('email') || q.get('token')));
+}
+
 /**
  * Cold start: sign-in or /vault/ home — unless a deep vault URL / universal link
  * already landed us on a real destination (film-room, recruiting, etc.).
@@ -83,6 +97,7 @@ export function nativeBootRedirect(): string | null {
   }
   // Preserve universal-link / push deep links on first paint.
   if (isDeepVaultPath(path)) return null;
+  if (isPasswordResetDeepLink(path, window.location.search)) return null;
   return nativeEntryDestination();
 }
 

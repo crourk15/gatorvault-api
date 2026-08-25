@@ -13,7 +13,6 @@ const paths = [
   '/vault/*',
   '/privacy/*',
   '/terms/*',
-  '/join/*',
   '/welcome/*',
   '/recruiting-hub/*',
   '/futurecast/*',

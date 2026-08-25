@@ -39,6 +39,9 @@ const REACT_REWRITES = [
   { from: '/join', to: '/join/index.html', status: 200 },
   { from: '/join/', to: '/join/index.html', status: 200 },
   { from: '/join/*', to: '/join/index.html', status: 200 },
+  { from: '/reset', to: '/reset/index.html', status: 200 },
+  { from: '/reset/', to: '/reset/index.html', status: 200 },
+  { from: '/reset/*', to: '/reset/index.html', status: 200 },
   // Public standalone (non-vault) pages
   { from: '/player/*', to: '/player/index.html', status: 200 },
   { from: '/futurecast/predictions', to: '/futurecast', status: 301 },

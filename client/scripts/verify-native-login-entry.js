@@ -9,7 +9,7 @@ const root = path.join(__dirname, '..');
 const checks = [
   {
     file: 'lib/native-app-entry.ts',
-    mustInclude: ["/join/?mode=signin&next=/vault/"],
+    mustInclude: ["/join/?mode=signin&next=/vault/", "isPasswordResetDeepLink"],
     mustNotInclude: ["mode=signup", "hasRememberedEmail"],
   },
   {

@@ -46,7 +46,7 @@
 
 - Disabled so members are not flooded. Requires explicit `FAN_DIGEST_ENABLED=true` to send.
 - Render cron removed from blueprint. Prefer keeping this off.
-- Password reset: `POST /api/auth/forgot-password` + `POST /api/auth/reset-password` (Resend link, 1 hour).
+- Password reset: `POST /api/auth/forgot-password` + `POST /api/auth/reset-password` (signed Resend link, 24 hours, `/reset/` so iOS does not steal it). Admin Hub → Members can grant a complimentary account and email a create-password link.
 - Web checkout: see `docs/STRIPE_WEB_CHECKOUT.md`.
 
 ### EmailJS template (optional fallback)
