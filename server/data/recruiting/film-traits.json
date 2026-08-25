@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-25T15:19:58.355Z",
+  "updatedAt": "2026-08-25T16:37:02.071Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -2979,14 +2979,14 @@
         }
       ],
       "traits": [
+        "play-speed",
         "vertical-speed",
-        "tracking-hands",
         "yac",
-        "release",
+        "tracking-hands",
         "punt-return",
         "perimeter-wr"
       ],
-      "vaultFilmAngle": "Pensacola ATH with freshman tape that stacks vertical juice + YAC — Florida already clear atop On3 RPM with offer + UOV on file.",
+      "vaultFilmAngle": "Pensacola ATH with freshman tape built on play speed — vertical gear, YAC burst, return juice. Florida already clear atop On3 RPM with offer + UOV.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"
