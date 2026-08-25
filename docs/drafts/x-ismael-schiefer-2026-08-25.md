@@ -1,17 +1,17 @@
 # X draft — Ismael Schiefer (2028 EDGE)
 
-**Note:** No Hudl/On3 highlight on Beat Desk Open — board-first. Vault eval persisted as PROVISIONAL.
+**Note:** Board-first Open (no highlight link). Vault eval PROVISIONAL until film desk. Do not mention missing film in the post.
 
 ```
-HEADER: Florida’s April UOV is the freshest stamp on Ismael Schiefer’s board
+HEADER: The Schiefer visit trail just put Florida back in the front of the picture
 
-Florida already has paper on Ismael Schiefer — and the last campus visit on his sheet is Gainesville.
+Ismael Schiefer’s board still has Georgia up in On3 RPM — but his latest unofficial visit is Florida.
 
-Schiefer is a 2028 IMG Academy (Grayson, GA) EDGE/ATH listed 6-3.5 / 247 · 3★ On3 · Natl #407 · Pos #41 · State #53 (85.33). No Hudl/On3 highlight package on this Open, so this stays board-first.
+Schiefer, a 2028 IMG Academy (Grayson, GA) EDGE listed 6-3.5 / 247, checks in at 3★ · Natl #407 · Pos #41 · State #53. Florida already offered. His UOV log shows Gainesville on 2026-04-11 after a spring run through Ohio State, Alabama, Georgia, LSU, and USC.
 
-Projection: Year-1 special teams / developmental EDGE, Year 2–3 compete for a rotational rush role, every-down EDGE upside if the frame adds a counter package. GatorVault comp: Azeez Ojulari — ~6-3 / 240 EDGE mold next to Schiefer’s 6-3.5 / 247 (height within ~1").
+Projection: Year-1 special teams / developmental EDGE, Year 2–3 rotation chase, starter-level EDGE ceiling if the mass turns into a full rush package. GatorVault comp: Azeez Ojulari (~6-3 / 240) for the same height-and-frame EDGE mold.
 
-Georgia still leads On3 RPM (~18%) with South Carolina ~16% and Florida ~14%. Florida’s offer is live, and his most recent UOV is Florida on 2026-04-11 — fresher than the Georgia / Alabama / LSU / USC spring stamps. That’s the process to watch: keep stacking Swamp time while the RPM race stays tight.
+Georgia ~18%, South Carolina ~16%, Florida ~14% — tight enough that the freshest campus date becomes the story. Florida’s job now is simple: turn that April visit into separation.
 ```
 
 War Room: `server/data/war-room/vault-evals/ismael-schiefer.json` (provisional until film desk).
