@@ -877,6 +877,64 @@ function mountAdminHubRoutes(app) {
   });
 
   /**
+   * Media comps / support: set a known password when reset email fails.
+   * Body: { email, password }
+   */
+  app.post('/api/admin/members/set-password', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const { setPasswordForEmail } = require('./password-reset');
+      const result = setPasswordForEmail(req.body?.email, req.body?.password);
+      if (!result.ok) {
+        const status = result.error === 'account_not_found' ? 404 : 400;
+        return res.status(status).json({ ok: false, error: result.error });
+      }
+      return res.status(200).json({ ok: true, email: result.email, passwordSet: true });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /**
+   * Media comps / support: mint a fresh reset URL (optional email send).
+   * Body: { email, sendEmail?: boolean }
+   * Returns resetUrl so ops can paste into a DM.
+   */
+  app.post('/api/admin/members/issue-password-reset', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const { issuePasswordResetLink } = require('./password-reset');
+      const sendEmail =
+        req.body?.sendEmail === true ||
+        req.body?.sendEmail === 'true' ||
+        req.body?.emailSend === true;
+      const mail =
+        sendEmail &&
+        global.__GV_SUBSCRIPTION_MAIL__ &&
+        typeof global.__GV_SUBSCRIPTION_MAIL__.deliverEmail === 'function'
+          ? global.__GV_SUBSCRIPTION_MAIL__.deliverEmail
+          : null;
+      const result = await issuePasswordResetLink(req.body?.email, {
+        deliverEmail: mail || undefined,
+      });
+      if (!result.ok) {
+        const status = result.error === 'account_not_found' ? 404 : 400;
+        return res.status(status).json({ ok: false, error: result.error });
+      }
+      return res.status(200).json({
+        ok: true,
+        email: result.email,
+        resetUrl: result.resetUrl,
+        expiresAt: result.expiresAt,
+        emailSent: result.emailSent,
+        provider: result.provider,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /**
    * Email members about an App Store update (default 1.0.15).
    * Body: { version?, dryRun?, force?, limit?, requireActiveAccess? }
    * Skips App Review / test / Charles-Rourk / operator accounts.
