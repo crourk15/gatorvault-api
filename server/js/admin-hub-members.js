@@ -112,6 +112,7 @@
 
   function render(container, ctx) {
     var apiGet = ctx.apiGet;
+    var apiPost = ctx.apiPost;
     var onNavigate = ctx.onNavigate || function () {};
     var state = { since: '30d', access: 'all', limit: 50 };
 
@@ -141,6 +142,18 @@
       + '<div id="hub-mem-counts" class="hub-mem-counts hub-meta"></div>'
       + '<div id="hub-mem-loading" class="hub-dash-loading">Loading members…</div>'
       + '<div id="hub-mem-body" class="hidden"></div>'
+      + '<form id="hub-mem-comp" class="hub-mem-comp" style="margin:16px 0;padding:14px 16px;border:1px solid #1e3a5f;border-radius:10px;background:#07111f">'
+      + '<div class="hub-dash-sub" style="margin-bottom:8px">Complimentary / media account — creates if missing, grants War Room, emails a 24-hour password setup link (opens in Safari/Chrome)</div>'
+      + '<div class="hub-btn-row" style="flex-wrap:wrap;gap:8px;align-items:center">'
+      + '<input id="hub-mem-comp-email" type="email" placeholder="email@outlet.com" style="min-width:220px;padding:8px 10px;border-radius:8px;border:1px solid #1e3a5f;background:#030712;color:#e2e8f0" />'
+      + '<input id="hub-mem-comp-name" type="text" placeholder="Display name" style="min-width:160px;padding:8px 10px;border-radius:8px;border:1px solid #1e3a5f;background:#030712;color:#e2e8f0" />'
+      + '<select id="hub-mem-comp-tier" style="padding:8px 10px;border-radius:8px;border:1px solid #1e3a5f;background:#030712;color:#e2e8f0">'
+      + '<option value="war" selected>War Room</option>'
+      + '<option value="film">Film Room</option>'
+      + '<option value="locker">Locker Room</option>'
+      + '</select>'
+      + '<button type="submit" class="hub-btn" id="hub-mem-comp-send">Grant + send setup email</button>'
+      + '</div></form>'
       + '<p id="hub-mem-msg" class="hub-meta" style="margin-top:12px"></p>'
       + '</div>';
 
@@ -153,6 +166,34 @@
     document.getElementById('hub-mem-points').addEventListener('click', function () {
       onNavigate('#settings/platform');
     });
+    var compForm = document.getElementById('hub-mem-comp');
+    if (compForm) {
+      compForm.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        if (typeof apiPost !== 'function') {
+          setMsg('Hub POST is not available — hard-refresh Admin Hub.', true);
+          return;
+        }
+        var email = (document.getElementById('hub-mem-comp-email').value || '').trim();
+        var name = (document.getElementById('hub-mem-comp-name').value || '').trim();
+        var tier = (document.getElementById('hub-mem-comp-tier').value || 'war').trim();
+        if (!email) {
+          setMsg('Enter the member email.', true);
+          return;
+        }
+        setMsg('Sending setup email…');
+        apiPost('/api/admin/members/provision-comp', { email: email, name: name, tier: tier, sendSetupEmail: true })
+          .then(function (payload) {
+            var sent = payload && payload.emailSent ? 'Setup email sent.' : 'Account ready — email did not send.';
+            var created = payload && payload.created ? 'Created new account. ' : 'Updated existing account. ';
+            setMsg(created + sent + ' Tell them to open the latest email in Safari or Chrome.');
+            load();
+          })
+          .catch(function (e) {
+            setMsg((e && e.message) || 'Could not provision account', true);
+          });
+      });
+    }
 
     container.querySelectorAll('[data-since]').forEach(function (btn) {
       btn.addEventListener('click', function () {

@@ -877,6 +877,44 @@ function mountAdminHubRoutes(app) {
   });
 
   /**
+   * Create / grant a complimentary account and email a 24-hour password setup link.
+   * Body: { email, name?, tier?, sendSetupEmail? }
+   */
+  app.post('/api/admin/members/provision-comp', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const { provisionComplimentaryAccount } = require('./comp-account-provision');
+      const mail =
+        (global.__GV_SUBSCRIPTION_MAIL__ && global.__GV_SUBSCRIPTION_MAIL__.deliverEmail) ||
+        null;
+      const sendSetupEmail = req.body?.sendSetupEmail !== false && req.body?.sendSetupEmail !== 'false';
+      const result = await provisionComplimentaryAccount({
+        email: req.body?.email,
+        name: req.body?.name,
+        tier: req.body?.tier || 'war',
+        deliverEmail: mail,
+        sendSetupEmail,
+      });
+      if (!result.ok) {
+        return res.status(result.status || 400).json({ ok: false, error: result.error });
+      }
+      return res.status(200).json({
+        ok: true,
+        created: result.created,
+        email: result.email,
+        name: result.name,
+        tier: result.tier,
+        emailSent: result.emailSent,
+        emailError: result.emailError || null,
+        setupEmailed: result.setupEmailed,
+        status: result.statusPayload,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /**
    * Email members about an App Store update (default 1.0.15).
    * Body: { version?, dryRun?, force?, limit?, requireActiveAccess? }
    * Skips App Review / test / Charles-Rourk / operator accounts.

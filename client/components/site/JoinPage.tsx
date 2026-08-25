@@ -66,11 +66,17 @@ function redirectAfterAuth(): void {
   }, 150);
 }
 
+function isResetLinkPath(): boolean {
+  if (typeof window === 'undefined') return false;
+  const path = window.location.pathname || '';
+  return /\/reset(?:\/|index\.html|$)/.test(path);
+}
+
 function initialJoinMode(): Mode {
   if (typeof window === 'undefined') return 'signup';
   const params = new URLSearchParams(window.location.search);
   if (params.get('mode') === 'forgot') return 'forgot';
-  if (params.get('mode') === 'reset') return 'reset';
+  if (params.get('mode') === 'reset' || isResetLinkPath()) return 'reset';
   if (params.get('mode') === 'signin') return 'signin';
   if (params.get('mode') === 'signup') return 'signup';
   // Native shell: Sign in first (App Review). Web guests without a remembered email → Create account.
@@ -103,7 +109,7 @@ export function JoinPage(): React.ReactElement {
     if (params.get('mode') === 'signin') setMode('signin');
     if (params.get('mode') === 'signup') setMode('signup');
     if (params.get('mode') === 'forgot') setMode('forgot');
-    if (params.get('mode') === 'reset') {
+    if (params.get('mode') === 'reset' || isResetLinkPath()) {
       setMode('reset');
       const token = params.get('token') || '';
       const resetEmail = params.get('email') || '';
@@ -111,7 +117,7 @@ export function JoinPage(): React.ReactElement {
       if (resetEmail) setEmail(resetEmail);
     }
     const remembered = readLastEmail();
-    if (remembered && params.get('mode') !== 'reset') setEmail(remembered);
+    if (remembered && params.get('mode') !== 'reset' && !isResetLinkPath()) setEmail(remembered);
     if (params.get('reauth') === '1' || params.get('switch') === '1') {
       clearSession();
       setExistingSession(null);
@@ -288,7 +294,9 @@ export function JoinPage(): React.ReactElement {
     setError(null);
     setSuccess(null);
     if (!email.trim() || !resetToken.trim()) {
-      setError('This reset link is invalid or incomplete. Request a new one.');
+      setError(
+        'This reset link is invalid or incomplete. Open the latest email in Safari or Chrome (not the GatorVault app), or request a new link.'
+      );
       return;
     }
     if (password.length < 8) {
@@ -336,7 +344,7 @@ export function JoinPage(): React.ReactElement {
               : mode === 'forgot'
                 ? 'Enter your account email and we will send a reset link if it exists.'
                 : mode === 'reset'
-                  ? 'Set a new password for your GatorVault account.'
+                  ? 'Set a password for your GatorVault account. Use the latest email link — it stays valid for 24 hours.'
               : `${tierMeta.name} — 30-day free trial, no card required.`}
         </p>
 

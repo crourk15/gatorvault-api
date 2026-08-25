@@ -1465,6 +1465,7 @@
           if (global.GVAdminMembers) {
             GVAdminMembers.render(panelEl, {
               apiGet: apiGet,
+              apiPost: apiPost,
               onNavigate: navigateFromHash
             });
           } else {
