@@ -835,6 +835,48 @@ function mountAdminHubRoutes(app) {
   });
 
   /**
+   * Fix member display name / attribution (media comps, typos).
+   * Body: { email, name?, firstTouch? }
+   */
+  app.post('/api/admin/members/update-profile', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const email = String(req.body?.email || '').trim().toLowerCase();
+      if (!email) return res.status(400).json({ ok: false, error: 'email is required' });
+      const existing = findUserByEmail(email);
+      if (!existing) return res.status(404).json({ ok: false, error: 'account_not_found' });
+
+      const patch = {};
+      if (req.body?.name != null) {
+        const name = String(req.body.name || '').trim();
+        if (!name) return res.status(400).json({ ok: false, error: 'name cannot be empty' });
+        patch.name = name;
+      }
+      if (req.body?.firstTouch && typeof req.body.firstTouch === 'object') {
+        const { sanitizeFirstTouch } = require('./member-attribution');
+        const nextTouch = sanitizeFirstTouch({
+          ...(existing.firstTouch && typeof existing.firstTouch === 'object' ? existing.firstTouch : {}),
+          ...req.body.firstTouch,
+        });
+        if (nextTouch) patch.firstTouch = nextTouch;
+      }
+      if (!Object.keys(patch).length) {
+        return res.status(400).json({ ok: false, error: 'name or firstTouch required' });
+      }
+
+      const updated = updateUser(email, patch);
+      return res.status(200).json({
+        ok: true,
+        email: updated?.email || email,
+        name: updated?.name || null,
+        firstTouch: updated?.firstTouch || null,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /**
    * Email members about an App Store update (default 1.0.15).
    * Body: { version?, dryRun?, force?, limit?, requireActiveAccess? }
    * Skips App Review / test / Charles-Rourk / operator accounts.
