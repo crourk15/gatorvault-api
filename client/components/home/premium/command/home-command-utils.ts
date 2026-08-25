@@ -175,6 +175,37 @@ function isWeakAnonPulse(text: string): boolean {
   return /^(uv|unofficial visit|official visit|offer)\b/i.test(text);
 }
 
+/** Beat Desk / allowlist-intel ops — never Gator Nation Home NOW. */
+function isDeskOpsPulseCopy(text: string): boolean {
+  const t = String(text || '').trim();
+  if (!t) return true;
+  return (
+    /continuous allowlist intel sweep|from player card|allowlist board pulse|beat brief|beat desk|copy brief|open brief|staff note\s*—|auto:allowlist/i.test(
+      t
+    ) || /^(staff note|visit update|beat intel|commit check-?ins)\b/i.test(t)
+  );
+}
+
+function fanFacingPulseLine(text: string): string | null {
+  const src = String(text || '').trim();
+  if (!src) return null;
+  let raw = src
+    .replace(/\s*Continuous allowlist intel sweep\.?/gi, '')
+    .replace(/\s*from player card\.?/gi, '')
+    .replace(/\s*\(allowlist board pulse\)\.?/gi, '')
+    .replace(/^staff note\s*—\s*/i, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/^[\s·•\-—–|]+/, '')
+    .trim();
+  if (!raw || isDeskOpsPulseCopy(raw)) {
+    if (/\bflorida\s+offer\b/i.test(src)) return 'Florida offer';
+    if (/\bflorida\s+(?:unofficial\s+|official\s+)?visit\b/i.test(src)) return 'Florida visit';
+    return null;
+  }
+  return raw;
+}
+
 /** Hardcoded "N commits locked for YEAR" — never leave these baked in the binary. */
 const COMMIT_COUNT_LINE_RE = /^\d+\s+(commits|signees)\s+locked\s+for\s+(\d{4})\b/i;
 
@@ -237,7 +268,7 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
   const generic: string[] = [];
 
   const pushBucket = (bucket: string[], value?: string | null) => {
-    const text = String(value || '').trim();
+    const text = fanFacingPulseLine(value);
     if (!text) return;
     bucket.push(text);
   };
@@ -266,9 +297,18 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
     if (row.movementNarrative) pushBucket(named, `${row.name} — ${row.movementNarrative}`);
   }
   for (const alert of input.movement?.alerts ?? []) {
-    const detail = alert.detail?.trim();
+    const detailRaw = String(alert.detail || '').trim();
+    if (!detailRaw) continue;
+    const detail = fanFacingPulseLine(detailRaw);
     if (!detail) continue;
-    pushBucket(named, alert.player ? `${alert.player}: ${detail}` : detail);
+    const player = String(alert.player || '').trim();
+    if (player && detail.toLowerCase().startsWith(player.toLowerCase())) {
+      pushBucket(named, detail);
+    } else if (player) {
+      pushBucket(named, `${player} — ${detail}`);
+    } else {
+      pushBucket(named, detail);
+    }
   }
   for (const player of input.movement?.risers ?? []) {
     const ufPct = Math.round(player.ufProb <= 1 ? player.ufProb * 100 : player.ufProb);

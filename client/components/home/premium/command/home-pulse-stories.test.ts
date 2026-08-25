@@ -68,4 +68,37 @@ describe('buildHomePulseStories', () => {
       ]
     );
   });
+
+  it('does not paint Beat Desk / allowlist-intel ops into Home NOW', () => {
+    const stories = buildHomePulseStories({
+      hubTicker: [
+        '26 commits locked for 2027',
+        'Dominick Harris Payne — Staff note — Brandon Harris cooking',
+        'Tranard Roberts — unofficial visit · Florida',
+      ],
+      hpIntel: [],
+      movement: {
+        alerts: [
+          {
+            id: '1',
+            type: 'OFFER',
+            player: 'Gionni Lewis',
+            detail: 'Gionni Lewis — Florida offer from player card.',
+            timestamp: '2026-08-24T18:03:06.055Z',
+          },
+          {
+            id: '2',
+            type: 'OFFER',
+            player: 'Kaleb Ballard',
+            detail:
+              'Kaleb Ballard — Florida offer on file (2026-07-11). Continuous allowlist intel sweep.',
+            timestamp: '2026-08-24T12:28:57.660Z',
+          },
+        ],
+      } as any,
+    });
+    assert.ok(stories.some((s) => /Tranard Roberts/.test(s)));
+    assert.ok(stories.some((s) => /Gionni Lewis — Florida offer/.test(s)));
+    assert.ok(!stories.some((s) => /Staff note|from player card|allowlist intel sweep/i.test(s)));
+  });
 });

@@ -134,6 +134,12 @@ function mapTags(events: IntelRow[]): string[] {
 }
 
 function buildAlerts(intel: IntelRow[], limit: number): MovementIntelAlert[] {
+  const { toFanFacingIntelDetail } = require('../../lib/fan-facing-intel-copy') as {
+    toFanFacingIntelDetail: (
+      text: string,
+      opts?: { eventType?: string; playerName?: string }
+    ) => string | null;
+  };
   const alerts: MovementIntelAlert[] = [];
 
   for (const row of intel) {
@@ -142,12 +148,21 @@ function buildAlerts(intel: IntelRow[], limit: number): MovementIntelAlert[] {
 
     const type = alertType(eventType);
     if (!type) continue;
+    // Staff / target-update rows are Beat Desk ops — not Home NOW / Gator Nation pulse.
+    if (type === 'STAFF_NOTE') continue;
+
+    const player = String(row.playerName || row.player_name || row.playerSlug || 'Recruit');
+    const detail = toFanFacingIntelDetail(String(row.text || row.detail || ''), {
+      eventType,
+      playerName: player,
+    });
+    if (!detail) continue;
 
     alerts.push({
       id: String(row.id || row.fingerprint || `alert_${alerts.length}`),
       type,
-      player: String(row.playerName || row.player_name || row.playerSlug || 'Recruit'),
-      detail: String(row.text || row.detail || 'New recruiting intel'),
+      player,
+      detail,
       timestamp: String(row.reportedAt || row.timestamp || row.createdAt || new Date().toISOString()),
     });
 
