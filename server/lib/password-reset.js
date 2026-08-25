@@ -12,7 +12,8 @@ const {
   SUPPORT_EMAIL,
 } = require('./onboarding-emails');
 
-const TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
+/** 48h — media comps + delayed inbox opens were dying on the old 1h window. */
+const TOKEN_TTL_MS = 48 * 60 * 60 * 1000;
 const RESET_PATH = '/join/?mode=reset';
 
 function hashToken(token) {
@@ -38,7 +39,7 @@ function getPasswordResetEmail({ name, email, resetUrl } = {}) {
   const bodyInner = `
   <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">Hey ${displayName},</p>
   <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">We received a request to reset the password for <strong>${email}</strong>.</p>
-  <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">This link expires in 1 hour. If you did not request a reset, you can ignore this email.</p>
+  <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">This link expires in 48 hours. If you did not request a reset, you can ignore this email.</p>
   ${ctaButton(resetUrl, 'Reset password')}
   <p style="margin:12px 0 0;font-size:12px;color:#64748b;line-height:1.55;">Or paste this URL into your browser:<br/>${resetUrl}</p>
   <p style="margin:16px 0 0;font-size:14px;color:#94a3b8;line-height:1.6;">— GatorVault Media, LLC</p>`;
@@ -152,6 +153,88 @@ function resetPasswordWithToken({ email: emailRaw, token, password } = {}) {
   return { ok: true, email };
 }
 
+/**
+ * Admin/ops: mint a fresh reset token and return the URL (for DM paste when email lags).
+ * Does not send email unless deliverEmail is provided.
+ */
+async function issuePasswordResetLink(emailRaw, { deliverEmail } = {}) {
+  const email = String(emailRaw || '').trim().toLowerCase();
+  if (!email || !email.includes('@')) {
+    return { ok: false, error: 'email is required' };
+  }
+  const user = findUserByEmail(email);
+  if (!user) {
+    return { ok: false, error: 'account_not_found' };
+  }
+
+  const token = createResetToken();
+  const expiresAt = new Date(Date.now() + TOKEN_TTL_MS).toISOString();
+  updateUser(email, {
+    passwordResetTokenHash: hashToken(token),
+    passwordResetExpiresAt: expiresAt,
+    passwordResetRequestedAt: new Date().toISOString(),
+  });
+
+  const resetUrl = buildResetUrl({ email, token });
+  let emailSent = false;
+  let provider = null;
+  if (typeof deliverEmail === 'function') {
+    const built = getPasswordResetEmail({
+      name: user.name,
+      email,
+      resetUrl,
+    });
+    try {
+      const delivery = await deliverEmail(email, built.subject, built.html, {
+        name: built.templateParams.name,
+        bodyHtml: built.templateParams.body_html,
+        emailSubject: built.subject,
+        html: built.html,
+        vault_url: built.templateParams.vault_url,
+        vault_link_label: built.templateParams.vault_link_label,
+      });
+      emailSent = Boolean(delivery?.sent);
+      provider = delivery?.provider || null;
+    } catch {
+      emailSent = false;
+    }
+  }
+
+  return {
+    ok: true,
+    email,
+    resetUrl,
+    expiresAt,
+    emailSent,
+    provider,
+  };
+}
+
+/**
+ * Admin/ops: set a known password (media comps unlock when reset email fails).
+ */
+function setPasswordForEmail(emailRaw, passwordRaw) {
+  const email = String(emailRaw || '').trim().toLowerCase();
+  const nextPassword = String(passwordRaw || '');
+  if (!email || !email.includes('@')) {
+    return { ok: false, error: 'email is required' };
+  }
+  if (nextPassword.length < 8) {
+    return { ok: false, error: 'Password must be at least 8 characters.' };
+  }
+  const user = findUserByEmail(email);
+  if (!user) {
+    return { ok: false, error: 'account_not_found' };
+  }
+  updateUser(email, {
+    passwordHash: hashPassword(nextPassword),
+    passwordResetTokenHash: null,
+    passwordResetExpiresAt: null,
+    passwordResetCompletedAt: new Date().toISOString(),
+  });
+  return { ok: true, email };
+}
+
 module.exports = {
   TOKEN_TTL_MS,
   hashToken,
@@ -160,4 +243,6 @@ module.exports = {
   getPasswordResetEmail,
   requestPasswordReset,
   resetPasswordWithToken,
+  issuePasswordResetLink,
+  setPasswordForEmail,
 };

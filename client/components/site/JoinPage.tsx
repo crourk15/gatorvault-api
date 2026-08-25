@@ -109,6 +109,11 @@ export function JoinPage(): React.ReactElement {
       const resetEmail = params.get('email') || '';
       if (token) setResetToken(token);
       if (resetEmail) setEmail(resetEmail);
+      // Never block the reset form behind an existing session — comps + support links must work.
+      clearSession();
+      setExistingSession(null);
+      setCheckingSession(false);
+      return;
     }
     const remembered = readLastEmail();
     if (remembered && params.get('mode') !== 'reset') setEmail(remembered);

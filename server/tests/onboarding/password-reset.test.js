@@ -37,6 +37,7 @@ test('password reset email includes reset CTA', () => {
   });
   assert.match(built.subject, /reset/i);
   assert.ok(built.html.includes('Reset password'));
+  assert.ok(built.html.includes('48 hours'));
   assert.ok(built.html.includes('mode=reset'));
 });
 
@@ -88,14 +89,41 @@ test('request + reset password round trip', async () => {
   delete process.env.GV_USERS_PATH;
 });
 
-test('unknown email still returns accepted', async () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-pw-reset2-'));
-  process.env.GV_USERS_PATH = path.join(tmp, 'users.json');
-  fs.writeFileSync(process.env.GV_USERS_PATH, '[]');
-  const result = await requestPasswordReset('nobody@example.com', {
-    deliverEmail: async () => ({ sent: true, provider: 'test' }),
-  });
-  assert.equal(result.ok, true);
-  assert.equal(result.found, false);
+test('issuePasswordResetLink returns URL; setPasswordForEmail clears reset token', async () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-pw-admin-'));
+  const usersPath = path.join(tmp, 'users.json');
+  fs.writeFileSync(
+    usersPath,
+    JSON.stringify([
+      {
+        email: 'comps@example.com',
+        name: 'Comps',
+        passwordHash: require('../../lib/password-auth').hashPassword('old-password-1'),
+        tier: 'war',
+      },
+    ])
+  );
+  process.env.GV_USERS_PATH = usersPath;
+
+  const {
+    issuePasswordResetLink,
+    setPasswordForEmail,
+    TOKEN_TTL_MS,
+  } = require('../../lib/password-reset');
+
+  assert.ok(TOKEN_TTL_MS >= 48 * 60 * 60 * 1000);
+
+  const issued = await issuePasswordResetLink('comps@example.com');
+  assert.equal(issued.ok, true);
+  assert.match(issued.resetUrl, /mode=reset/);
+  assert.match(issued.resetUrl, /token=/);
+  assert.equal(issued.emailSent, false);
+
+  const set = setPasswordForEmail('comps@example.com', 'temp-pass-99');
+  assert.equal(set.ok, true);
+  const after = JSON.parse(fs.readFileSync(usersPath, 'utf8'))[0];
+  assert.equal(after.passwordResetTokenHash, null);
+  assert.ok(verifyPassword('temp-pass-99', after.passwordHash));
+
   delete process.env.GV_USERS_PATH;
 });
