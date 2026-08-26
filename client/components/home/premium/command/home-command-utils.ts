@@ -180,7 +180,7 @@ function isDeskOpsPulseCopy(text: string): boolean {
   const t = String(text || '').trim();
   if (!t) return true;
   return (
-    /continuous allowlist intel sweep|from player card|allowlist board pulse|beat brief|beat desk|copy brief|open brief|staff note\s*—|auto:allowlist/i.test(
+    /continuous allowlist intel sweep|from player card|allowlist board pulse|beat brief|beat desk|copy brief|open brief|staff note\s*—|auto:allowlist|\bon file\b/i.test(
       t
     ) || /^(staff note|visit update|beat intel|commit check-?ins)\b/i.test(t)
   );
@@ -193,12 +193,15 @@ function fanFacingPulseLine(text: string): string | null {
     .replace(/\s*Continuous allowlist intel sweep\.?/gi, '')
     .replace(/\s*from player card\.?/gi, '')
     .replace(/\s*\(allowlist board pulse\)\.?/gi, '')
+    .replace(/\s+on file(?:\s*\([^)]*\))?\.?/gi, '')
     .replace(/^staff note\s*—\s*/i, '')
     .replace(/\s+/g, ' ')
     .trim()
     .replace(/^[\s·•\-—–|]+/, '')
     .trim();
   if (!raw || isDeskOpsPulseCopy(raw)) {
+    const m = src.match(/^(.+?)\s*[—-]\s*.*\bflorida\s+offer\b/i);
+    if (m) return `${m[1].trim()} — Florida offer`;
     if (/\bflorida\s+offer\b/i.test(src)) return 'Florida offer';
     if (/\bflorida\s+(?:unofficial\s+|official\s+)?visit\b/i.test(src)) return 'Florida visit';
     return null;
@@ -246,7 +249,9 @@ export function applyLiveCommitCountToTicker(
       opts.commitLabel || (year <= new Date().getFullYear() ? 'Signees' : 'Commits')
     );
     const label = labelRaw.toLowerCase();
-    const line = `${Math.round(n)} ${label} locked for ${year}`;
+    const nRound = Math.round(n);
+    const unit = nRound === 1 ? label.replace(/s$/i, '') : label;
+    const line = `${nRound} ${unit} locked for ${year}`;
     let insertAt = 0;
     for (let i = 0; i < base.length; i += 1) {
       if (isGenericClassPulse(base[i])) insertAt = i + 1;

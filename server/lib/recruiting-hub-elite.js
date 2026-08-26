@@ -413,7 +413,11 @@ async function buildHubTicker(year = 2027) {
 
   if (rank) items.push(`${year} class trending nationally — UF at #${rank}`);
   if (chip != null) items.push(`Blue chip % at ${chip}%`);
-  if (commits.length) items.push(`${commits.length} ${countLabel} locked for ${year}`);
+  if (commits.length) {
+    const n = commits.length;
+    const label = n === 1 ? countLabel.replace(/s$/i, '') : countLabel;
+    items.push(`${n} ${label} locked for ${year}`);
+  }
 
   const { buildHubMovementFeed } = require('./recruiting-hub-data');
   const feed = await buildHubMovementFeed(year);

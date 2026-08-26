@@ -290,7 +290,7 @@ async function runAllowlistIntelSweepInner({
     const ctx = await loadPlayerContext(slug, row.playerName);
     const name = ctx.playerName;
     const detail =
-      String(row.detail || '').trim() || `${name} — Florida ${label} on file (${day}).`;
+      String(row.detail || '').trim() || `${name} — Florida ${label} (${day}).`;
     const fp = `allowlist_sweep_visit_${slug}_${day}_${String(vType).toLowerCase().replace(/\s+/g, '_')}`;
     try {
       if (results.created.length >= maxCreates) break;
@@ -340,7 +340,7 @@ async function runAllowlistIntelSweepInner({
     const ctx = await loadPlayerContext(slug, row.playerName);
     const name = ctx.playerName;
     const detail =
-      String(row.detail || '').trim() || `${name} — Florida offer on file (${day}).`;
+      String(row.detail || '').trim() || `${name} — Florida offer (${day}).`;
     const fp = `allowlist_sweep_offer_${slug}_${day}`;
     try {
       if (results.created.length >= maxCreates) break;
@@ -391,7 +391,7 @@ async function runAllowlistIntelSweepInner({
       const detail =
         note && /\b(florida|gators|gainesville|uf|collins|chatman)\b/i.test(note)
           ? `${name} — ${note.replace(/\s+/g, ' ').slice(0, 220)}`
-          : `${name} — Florida process on file.`;
+          : `${name} — Florida process.`;
       const fp = `allowlist_sweep_board_pulse_${slug}_${day}`;
       const now = new Date().toISOString();
       const out = await ensureIntelRow(
