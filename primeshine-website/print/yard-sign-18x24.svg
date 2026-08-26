@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="18in" height="24in" viewBox="0 0 1800 2400">
+  <rect width="1800" height="2400" fill="#0A1A2F"/>
+  <rect x="0" y="0" width="1800" height="48" fill="#00C2C7"/>
+  <rect x="0" y="2352" width="1800" height="48" fill="#00C2C7"/>
+  <text x="900" y="380" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="140" font-weight="800" fill="#FFFFFF">Prime<tspan fill="#00C2C7">Shine</tspan></text>
+  <text x="900" y="500" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="52" font-weight="700" letter-spacing="8" fill="#C8C8C8">MOBILE DETAILING</text>
+  <rect x="250" y="620" width="1300" height="220" rx="20" fill="#102a45" stroke="#00C2C7" stroke-width="6"/>
+  <text x="900" y="720" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="72" font-weight="800" fill="#00C2C7">WE COME TO YOU</text>
+  <text x="900" y="800" text-anchor="middle" font-family="Open Sans, Arial, sans-serif" font-size="40" fill="#E8EEF5">Home or workplace service</text>
+  <text x="900" y="1050" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="64" font-weight="700" fill="#FFFFFF">Call / Text</text>
+  <text x="900" y="1180" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="110" font-weight="800" fill="#00C2C7">863-860-9238</text>
+  <text x="900" y="1320" text-anchor="middle" font-family="Open Sans, Arial, sans-serif" font-size="52" fill="#FFFFFF">primeshinefl.com</text>
+  <text x="900" y="1500" text-anchor="middle" font-family="Open Sans, Arial, sans-serif" font-size="44" fill="#C8C8C8">Bartow · Lakeland · Winter Haven</text>
+  <rect x="280" y="1680" width="1240" height="280" rx="24" fill="#00C2C7"/>
+  <text x="900" y="1800" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="70" font-weight="800" fill="#0A1A2F">LAUNCH SPECIAL</text>
+  <text x="900" y="1900" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="56" font-weight="700" fill="#0A1A2F">50% OFF · First 10 Customers</text>
+  <text x="900" y="2150" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="36" fill="#FFFFFF">Prime Results. Mobile Convenience.</text>
+</svg>

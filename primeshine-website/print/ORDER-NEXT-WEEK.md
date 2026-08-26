@@ -1,3 +1,13 @@
+# Order next week — PrimeShine promo stands + optional cards
+
+## PRIMARY (what you asked for): site stands that promote the business
+See **`SITE-STANDS-ORDER.md`**
+
+Buy first:
+1. 18×24 yard signs + stakes
+2. 24×36 A-frame sidewalk stand
+3. Optional retractable banner stand
+
 # Order cards next week — PrimeShine
 
 ## What to buy
