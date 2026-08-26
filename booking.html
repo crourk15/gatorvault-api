@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book a Detail | PrimeShine Mobile Detailing</title>
+  <meta name="description" content="Book PrimeShine Mobile Detailing in Bartow, Lakeland & Winter Haven. Request your appointment online — we confirm by phone." />
+  <meta name="keywords" content="Book mobile detailing Bartow, Lakeland mobile detailing, Winter Haven car detailing" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">Prime<span>Shine</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="nav" id="site-nav">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a class="nav-cta" href="booking.html" aria-current="page">Book a Detail</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Appointments</p>
+        <h1>Book Your Mobile Detail</h1>
+        <p>Fill out the form below and we’ll confirm your appointment. Prefer to talk now? Call <a href="tel:8638609238">863-860-9238</a>.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container split">
+        <div class="panel reveal">
+          <div id="booking-success" class="form-success" role="status" aria-live="polite"></div>
+          <form id="booking-form" name="booking" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/booking">
+            <input type="hidden" name="form-name" value="booking" />
+            <p class="sr-only" aria-hidden="true">Don’t fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></p>
+            <label>Full Name
+              <input type="text" name="name" required autocomplete="name" placeholder="Your name" />
+            </label>
+            <label>Address
+              <input type="text" name="address" required autocomplete="street-address" placeholder="Service address" />
+            </label>
+            <label>Phone Number
+              <input type="tel" name="phone" required autocomplete="tel" placeholder="863-555-0123" />
+            </label>
+            <label>Vehicle Make/Model
+              <input type="text" name="vehicle" required placeholder="e.g. Honda Accord" />
+            </label>
+            <label>Service Requested
+              <select name="service" required>
+                <option value="">Select a service</option>
+                <option>Exterior Wash</option>
+                <option>Interior Detail</option>
+                <option>Full Detail Package</option>
+                <option>Shampoo Package</option>
+                <option>Odor Treatment</option>
+                <option>Pet Hair Removal</option>
+                <option>Launch Offer — 50% Off</option>
+              </select>
+            </label>
+            <label>Preferred Date/Time
+              <input type="text" name="datetime" required placeholder="e.g. Saturday 10AM" />
+            </label>
+            <label>Notes (pet hair, stains, odors, etc.)
+              <textarea name="notes" placeholder="Tell us anything that helps us prepare"></textarea>
+            </label>
+            <p class="form-note">Submitting sends your request to PrimeShine by email and text. For immediate booking, call <a href="tel:8638609238">863-860-9238</a>.</p>
+            <button class="btn btn-primary" type="submit">Schedule My Detail</button>
+          </form>
+        </div>
+        <div class="reveal">
+          <h2>What happens next</h2>
+          <ul class="feature-list">
+            <li>We review your request and service area</li>
+            <li>You get a confirmation call or text</li>
+            <li>We arrive with the fully equipped PrimeShine van</li>
+            <li>You get prime results without leaving home</li>
+          </ul>
+          <div class="btn-row">
+            <a class="btn btn-accent" href="pricing.html#launch-offer">Claim 50% Off Launch Offer</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h4>PrimeShine Mobile Detailing</h4>
+        <p>Serving Bartow • Lakeland • Winter Haven</p>
+        <p>Mobile Detailing • Interior • Exterior • Shampoo • Odor Treatment</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="booking.html">Book Online Anytime</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Call</h4>
+        <p><a href="tel:8638609238">863-860-9238</a></p>
+        <p>Hours: 8AM–6PM, 7 days a week</p>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>PrimeShine Mobile Detailing © 2026</span>
+      <span>“Prime Results. Mobile Convenience.”</span>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>
