@@ -6,6 +6,7 @@ const {
   isFreshHomeNowVisit,
   isVisitPulseSummary,
   HOME_NOW_VISIT_MAX_AGE_MS,
+  HOME_NOW_MAX_AGE_MS,
 } = require('../../lib/elite-home-now');
 
 test('stale Tranard-style UOV is not Home NOW fresh', () => {
@@ -24,9 +25,12 @@ test('stale Tranard-style UOV is not Home NOW fresh', () => {
     ),
     true
   );
+  // Fresh reporting without a visit day still counts (≤3 weeks).
   assert.equal(isFreshHomeNowVisit({ reportedAt: '2026-08-14T00:12:49.325Z' }, now), true);
-  // Undated history never paints as NOW.
+  // Reporting older than 3 weeks does not.
+  assert.equal(isFreshHomeNowVisit({ reportedAt: '2026-07-01T00:00:00.000Z' }, now), false);
   assert.equal(isFreshHomeNowVisit({}, now), false);
   assert.ok(isVisitPulseSummary('unofficial visit · Florida'));
-  assert.ok(HOME_NOW_VISIT_MAX_AGE_MS === 21 * 24 * 60 * 60 * 1000);
+  assert.equal(HOME_NOW_VISIT_MAX_AGE_MS, HOME_NOW_MAX_AGE_MS);
+  assert.ok(HOME_NOW_MAX_AGE_MS === 21 * 24 * 60 * 60 * 1000);
 });

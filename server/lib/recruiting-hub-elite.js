@@ -415,6 +415,7 @@ async function buildHubTicker(year = 2027) {
     isThinClassMetricLine,
     isVisitPulseSummary,
     isFreshHomeNowVisit,
+    isFreshHomeNowTimestamp,
     isOfferPulseSummary,
     isFreshHomeNowOffer,
     isRivalOnlyOfferLine,
@@ -455,18 +456,30 @@ async function buildHubTicker(year = 2027) {
     }
     // Stale / undated offers + rival offer spam — not Home NOW.
     const lineProbe = row.name ? `${row.name} — ${summary}` : String(summary);
-    if (row.event === 'offer' || isOfferPulseSummary(summary) || isRivalOnlyOfferLine(lineProbe)) {
-      if (isRivalOnlyOfferLine(lineProbe)) continue;
+    if (isRivalOnlyOfferLine(lineProbe)) continue;
+    if (row.event === 'offer' || isOfferPulseSummary(summary)) {
+      // Florida offer must be a real offer day inside 3 weeks — never rematerialization.
       if (
         !isFreshHomeNowOffer({
           offerDate: row.offerDate,
           date: row.offerDate || row.date,
-          timestamp: row.timestamp,
-          reportedAt: row.reportedAt,
         })
       ) {
         continue;
       }
+    } else if (
+      !(row.event === 'visit' || isVisitPulseSummary(summary)) &&
+      !isFreshHomeNowTimestamp({
+        offerDate: row.offerDate,
+        visitDate: row.visitDate,
+        visitStart: row.visitStart,
+        date: row.date,
+        timestamp: row.timestamp,
+        reportedAt: row.reportedAt,
+      })
+    ) {
+      // Other named intel: hard 3-week cap (undated drops).
+      continue;
     }
     const line = lineProbe;
     if (isDeskOpsIntelCopy(line)) continue;

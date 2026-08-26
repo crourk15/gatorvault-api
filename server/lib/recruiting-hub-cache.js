@@ -22,7 +22,7 @@ const FOOTPRINT_CACHE_REV = 'fp3';
 const COMMITS_CACHE_REV = 'c5';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
-const TICKER_CACHE_REV = 't7';
+const TICKER_CACHE_REV = 't8';
 
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
@@ -181,6 +181,13 @@ function parseHubSnapshotDoc(endpoint, doc) {
     if (rev !== COMMITS_CACHE_REV) return null;
     return Array.isArray(items) ? items : null;
   }
+  if (endpoint === 'ticker') {
+    const rev = meta?.cacheRev || doc.cacheRev || null;
+    // Disk paths are not keyed by rev — reject pre-t8 plates so Home NOW
+    // cannot keep serving April offers / rival Offer-from spam after gate fixes.
+    if (rev !== TICKER_CACHE_REV) return null;
+    return Array.isArray(items) ? items : null;
+  }
   if (
     endpoint === 'class-overview' ||
     endpoint === 'class-overview-all' ||
@@ -235,6 +242,7 @@ function writeHubDiskSnapshot(endpoint, year, value) {
       source: 'hub-runtime',
       ...(diskName === 'footprint' ? { cacheRev: FOOTPRINT_CACHE_REV } : {}),
       ...(diskName === 'commits' ? { cacheRev: COMMITS_CACHE_REV } : {}),
+      ...(diskName === 'ticker' ? { cacheRev: TICKER_CACHE_REV } : {}),
       ...(diskName === 'class-overview' || diskName === 'class-overview-all' || diskName === 'class-metrics'
         ? { cacheRev: HUB_METRICS_CACHE_REV }
         : {}),

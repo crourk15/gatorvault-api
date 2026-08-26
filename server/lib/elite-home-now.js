@@ -105,10 +105,13 @@ function shortenSchoolLabel(school) {
 
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-/** Home NOW visit window — history belongs on the profile, not the strip. */
-const HOME_NOW_VISIT_MAX_AGE_MS = 21 * DAY_MS;
+/** Hard Home NOW window — Charles: nothing 3 weeks+ on the strip. */
+const HOME_NOW_MAX_AGE_MS = 21 * DAY_MS;
+const HOME_NOW_VISIT_MAX_AGE_MS = HOME_NOW_MAX_AGE_MS;
 /** Upcoming scheduled visits still count as NOW pulse. */
 const HOME_NOW_VISIT_UPCOMING_MS = 120 * DAY_MS;
+/** Florida offers must be a real offer day inside the same 3-week window. */
+const HOME_NOW_OFFER_MAX_AGE_MS = HOME_NOW_MAX_AGE_MS;
 
 function parseHomeNowTimestamp(value) {
   if (value == null || value === '') return NaN;
@@ -133,16 +136,40 @@ function isVisitPulseSummary(text) {
 
 /**
  * Fresh enough for Home NOW.
- * Prefer actual visit date over allowlist rematerialization reportedAt.
- * Undated visit history never paints as NOW.
+ * Prefer actual visit day when known (past ≤3 weeks / upcoming ≤120d).
+ * If no visit day, only fresh reporting (≤3 weeks) counts — never undated history.
  */
 function isFreshHomeNowVisit(raw, nowMs = Date.now()) {
   const row = raw && typeof raw === 'object' ? raw : { timestamp: raw };
+  let visitTs = NaN;
+  for (const c of [row.visitDate, row.visitStart, row.visitEnd, row.date]) {
+    visitTs = parseHomeNowTimestamp(c);
+    if (Number.isFinite(visitTs)) break;
+  }
+  if (Number.isFinite(visitTs)) {
+    if (visitTs > nowMs) return visitTs - nowMs <= HOME_NOW_VISIT_UPCOMING_MS;
+    return nowMs - visitTs <= HOME_NOW_VISIT_MAX_AGE_MS;
+  }
+  let reportTs = NaN;
+  for (const c of [row.timestamp, row.reportedAt, row.createdAt]) {
+    reportTs = parseHomeNowTimestamp(c);
+    if (Number.isFinite(reportTs)) break;
+  }
+  if (!Number.isFinite(reportTs) || reportTs > nowMs) return false;
+  return nowMs - reportTs <= HOME_NOW_MAX_AGE_MS;
+}
+
+/**
+ * Generic named-row freshness (intel / movement) — 3-week hard cap.
+ * Class metric lines are not dated events.
+ */
+function isFreshHomeNowTimestamp(raw, nowMs = Date.now()) {
+  const row = raw && typeof raw === 'object' ? raw : { timestamp: raw };
   const candidates = [
+    row.offerDate,
     row.visitDate,
-    row.date,
     row.visitStart,
-    row.visitEnd,
+    row.date,
     row.timestamp,
     row.reportedAt,
     row.createdAt,
@@ -154,11 +181,8 @@ function isFreshHomeNowVisit(raw, nowMs = Date.now()) {
   }
   if (!Number.isFinite(ts)) return false;
   if (ts > nowMs) return ts - nowMs <= HOME_NOW_VISIT_UPCOMING_MS;
-  return nowMs - ts <= HOME_NOW_VISIT_MAX_AGE_MS;
+  return nowMs - ts <= HOME_NOW_MAX_AGE_MS;
 }
-
-/** Home NOW offer window — older offers live on the profile, not the strip. */
-const HOME_NOW_OFFER_MAX_AGE_MS = 14 * DAY_MS;
 
 function isOfferPulseSummary(text) {
   const t = String(text || '').trim();
@@ -196,8 +220,10 @@ module.exports = {
   parseHomeNowTimestamp,
   isVisitPulseSummary,
   isFreshHomeNowVisit,
+  isFreshHomeNowTimestamp,
   isOfferPulseSummary,
   isFreshHomeNowOffer,
+  HOME_NOW_MAX_AGE_MS,
   HOME_NOW_VISIT_MAX_AGE_MS,
   HOME_NOW_VISIT_UPCOMING_MS,
   HOME_NOW_OFFER_MAX_AGE_MS,

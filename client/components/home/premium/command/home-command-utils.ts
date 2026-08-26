@@ -455,12 +455,14 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
     }
     if (isRivalOnlyOfferPulse(detail)) continue;
     if (alertType === 'OFFER' || /\bFlorida offer\b/i.test(detail)) {
-      // Prefer embedded offer day; rematerialization timestamps are not offer news.
-      const onFile = detail.match(/on file\s*\((\d{4}-\d{2}-\d{2})\)/i);
-      if (onFile) {
-        const ts = Date.parse(onFile[1]);
-        if (!Number.isFinite(ts) || Date.now() - ts > 14 * 24 * 60 * 60 * 1000) continue;
-      }
+      // Offer day from raw detail (fanFacing strips "on file (date)").
+      const onFile = detailRaw.match(/on file\s*\((\d{4}-\d{2}-\d{2})\)/i);
+      const iso = detailRaw.match(/\b(\d{4}-\d{2}-\d{2})\b/);
+      const day = onFile ? onFile[1] : iso ? iso[1] : null;
+      // Undated Florida offer alerts are rematerialization — not NOW.
+      if (!day) continue;
+      const ts = Date.parse(day);
+      if (!Number.isFinite(ts) || Date.now() - ts > 21 * 24 * 60 * 60 * 1000) continue;
     }
     const player = String(alert.player || '').trim();
     if (player && detail.toLowerCase().startsWith(player.toLowerCase())) {
