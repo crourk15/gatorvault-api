@@ -168,6 +168,23 @@ function buildAlerts(intel: IntelRow[], limit: number): MovementIntelAlert[] {
     });
     if (!detail) continue;
 
+    if (type === 'VISIT') {
+      const { isFreshHomeNowVisit } = require('../../lib/elite-home-now') as {
+        isFreshHomeNowVisit: (raw: Record<string, unknown>) => boolean;
+      };
+      if (
+        !isFreshHomeNowVisit({
+          visitDate: row.visitDate || row.date || row.visitStart,
+          date: row.date || row.visitDate,
+          visitStart: row.visitStart,
+          timestamp: row.timestamp,
+          reportedAt: row.reportedAt || row.createdAt,
+        })
+      ) {
+        continue;
+      }
+    }
+
     candidates.push({
       id: String(row.id || row.fingerprint || `alert_${candidates.length}`),
       type,
