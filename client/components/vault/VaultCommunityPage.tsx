@@ -11,6 +11,10 @@ import {
   communityAuthorLabel,
   createCommunityReply,
   createCommunityThread,
+  deleteCommunityPost,
+  deleteCommunityThread,
+  editCommunityPost,
+  editCommunityThread,
   fetchCommunityPageData,
   fetchCommunityThread,
   flagCommunityPost,
@@ -49,6 +53,14 @@ type BlockTarget = {
   email: string;
   displayName: string;
 };
+
+type EditTarget =
+  | { kind: 'thread'; threadId: string }
+  | { kind: 'post'; postId: string };
+
+type DeleteTarget =
+  | { kind: 'thread'; thread: CommunityThread }
+  | { kind: 'post'; post: CommunityPost };
 
 const FALLBACK_TOPICS = ['2027 board', 'Portal watch', 'Game week keys', 'NIL pulse', 'Film Room'];
 
@@ -125,6 +137,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const [blockedEmails, setBlockedEmails] = useState<string[]>([]);
   const [reportTarget, setReportTarget] = useState<ReportTarget | null>(null);
   const [blockTarget, setBlockTarget] = useState<BlockTarget | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null);
+  const [editTarget, setEditTarget] = useState<EditTarget | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editBody, setEditBody] = useState('');
+  const [editSaving, setEditSaving] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
   const [moderationLoading, setModerationLoading] = useState(false);
 
   const session = useMemo(() => loadSession(), []);
@@ -356,6 +374,108 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const handleBlockOpen = (target: BlockTarget) => {
     if (!requireSignIn()) return;
     setBlockTarget(target);
+  };
+
+  const startEditThread = (thread: CommunityThread) => {
+    if (!requireSignIn('Sign in to edit your posts.')) return;
+    setEditTarget({ kind: 'thread', threadId: thread.id });
+    setEditTitle(thread.title || '');
+    setEditBody(thread.body || '');
+    setEditError(null);
+  };
+
+  const startEditPost = (post: CommunityPost) => {
+    if (!requireSignIn('Sign in to edit your posts.')) return;
+    setEditTarget({ kind: 'post', postId: post.id });
+    setEditTitle('');
+    setEditBody(post.body || '');
+    setEditError(null);
+  };
+
+  const cancelEdit = () => {
+    setEditTarget(null);
+    setEditTitle('');
+    setEditBody('');
+    setEditError(null);
+  };
+
+  const submitEdit = async () => {
+    if (!editTarget) return;
+    if (editTarget.kind === 'thread' && (!editTitle.trim() || !editBody.trim())) {
+      setEditError('Title and body are required.');
+      return;
+    }
+    if (editTarget.kind === 'post' && !editBody.trim()) {
+      setEditError('Reply body is required.');
+      return;
+    }
+    setEditSaving(true);
+    setEditError(null);
+    try {
+      if (editTarget.kind === 'thread') {
+        const thread = await editCommunityThread(editTarget.threadId, {
+          title: editTitle.trim(),
+          body: editBody.trim(),
+        });
+        setSelectedThread((prev) => (prev && prev.id === thread.id ? { ...prev, ...thread } : prev));
+        setThreads((prev) => prev.map((t) => (t.id === thread.id ? { ...t, ...thread } : t)));
+        pushToast({ kind: 'success', title: 'Post updated', body: 'Your thread was saved.' });
+      } else {
+        const post = await editCommunityPost(editTarget.postId, editBody.trim());
+        setSelectedPosts((prev) => prev.map((p) => (p.id === post.id ? { ...p, ...post } : p)));
+        pushToast({ kind: 'success', title: 'Reply updated', body: 'Your reply was saved.' });
+      }
+      cancelEdit();
+    } catch (err) {
+      setEditError(err instanceof Error ? err.message : 'Could not save changes.');
+    } finally {
+      setEditSaving(false);
+    }
+  };
+
+  const handleDeleteOpen = (target: DeleteTarget) => {
+    if (!requireSignIn('Sign in to delete your posts.')) return;
+    setDeleteTarget(target);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return;
+    setModerationLoading(true);
+    try {
+      if (deleteTarget.kind === 'thread') {
+        await deleteCommunityThread(deleteTarget.thread.id);
+        setDeleteTarget(null);
+        setSelectedId(null);
+        setSelectedThread(null);
+        setSelectedPosts([]);
+        cancelEdit();
+        setThreads((prev) => prev.filter((t) => t.id !== deleteTarget.thread.id));
+        pushToast({ kind: 'success', title: 'Thread deleted', body: 'Your thread was removed.' });
+        void load();
+      } else {
+        await deleteCommunityPost(deleteTarget.post.id);
+        const postId = deleteTarget.post.id;
+        setDeleteTarget(null);
+        setSelectedPosts((prev) => prev.filter((p) => p.id !== postId));
+        if (editTarget?.kind === 'post' && editTarget.postId === postId) cancelEdit();
+        if (selectedThread) {
+          setSelectedThread((prev) =>
+            prev
+              ? { ...prev, replyCount: Math.max(0, (prev.replyCount || 1) - 1) }
+              : prev,
+          );
+        }
+        pushToast({ kind: 'success', title: 'Reply deleted', body: 'Your reply was removed.' });
+      }
+    } catch (err) {
+      pushToast({
+        kind: 'error',
+        title: 'Could not delete',
+        body: err instanceof Error ? err.message : 'Please try again.',
+      });
+    } finally {
+      setModerationLoading(false);
+    }
   };
 
   const handleBlockConfirm = () => {
@@ -713,13 +833,63 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                               displayName: communityAuthorLabel(selectedThread),
                             })
                           }
+                          onEdit={() => startEditThread(selectedThread)}
+                          onDelete={() => handleDeleteOpen({ kind: 'thread', thread: selectedThread })}
                         />
                       </div>
-                      <h3 className="gv-community__thread-op-title">{selectedThread.title}</h3>
-                      <p className="gv-community__post-body">{selectedThread.body}</p>
-                      <p className="gv-community__post-meta">
-                        {threadCategoryLabel(selectedThread)} · {timeAgo(selectedThread.createdAt)}
-                      </p>
+                      {editTarget?.kind === 'thread' && editTarget.threadId === selectedThread.id ? (
+                        <div className="gv-community__form gv-community__edit-form">
+                          <label className="gv-community__reply-label" htmlFor="community-edit-thread-title">
+                            Edit title
+                          </label>
+                          <input
+                            id="community-edit-thread-title"
+                            className="gv-alert-input"
+                            value={editTitle}
+                            onChange={(e) => setEditTitle(e.target.value)}
+                            maxLength={200}
+                          />
+                          <label className="gv-community__reply-label" htmlFor="community-edit-thread-body">
+                            Edit post
+                          </label>
+                          <textarea
+                            id="community-edit-thread-body"
+                            className="gv-alert-input gv-community__textarea"
+                            value={editBody}
+                            onChange={(e) => setEditBody(e.target.value)}
+                            maxLength={4000}
+                            rows={5}
+                          />
+                          {editError ? <p className="gv-community__post-error">{editError}</p> : null}
+                          <div className="gv-community__edit-actions">
+                            <button
+                              type="button"
+                              className="gv-community__action-btn"
+                              disabled={editSaving}
+                              onClick={cancelEdit}
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="button"
+                              className="gv-community__new-btn"
+                              disabled={editSaving || !editTitle.trim() || !editBody.trim()}
+                              onClick={() => void submitEdit()}
+                            >
+                              {editSaving ? 'Saving…' : 'Save'}
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <h3 className="gv-community__thread-op-title">{selectedThread.title}</h3>
+                          <p className="gv-community__post-body">{selectedThread.body}</p>
+                          <p className="gv-community__post-meta">
+                            {threadCategoryLabel(selectedThread)} · {timeAgo(selectedThread.createdAt)}
+                            {selectedThread.editedAt ? ' · Edited' : ''}
+                          </p>
+                        </>
+                      )}
                     </>
                   )}
                 </li>
@@ -750,10 +920,52 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                                   displayName: communityAuthorLabel(p),
                                 })
                               }
+                              onEdit={() => startEditPost(p)}
+                              onDelete={() => handleDeleteOpen({ kind: 'post', post: p })}
                             />
                           </div>
-                          <p className="gv-community__post-body">{p.body}</p>
-                          <p className="gv-community__post-meta">{timeAgo(p.createdAt)}</p>
+                          {editTarget?.kind === 'post' && editTarget.postId === p.id ? (
+                            <div className="gv-community__form gv-community__edit-form">
+                              <label className="gv-community__reply-label" htmlFor={`community-edit-post-${p.id}`}>
+                                Edit reply
+                              </label>
+                              <textarea
+                                id={`community-edit-post-${p.id}`}
+                                className="gv-alert-input gv-community__textarea"
+                                value={editBody}
+                                onChange={(e) => setEditBody(e.target.value)}
+                                maxLength={4000}
+                                rows={4}
+                              />
+                              {editError ? <p className="gv-community__post-error">{editError}</p> : null}
+                              <div className="gv-community__edit-actions">
+                                <button
+                                  type="button"
+                                  className="gv-community__action-btn"
+                                  disabled={editSaving}
+                                  onClick={cancelEdit}
+                                >
+                                  Cancel
+                                </button>
+                                <button
+                                  type="button"
+                                  className="gv-community__new-btn"
+                                  disabled={editSaving || !editBody.trim()}
+                                  onClick={() => void submitEdit()}
+                                >
+                                  {editSaving ? 'Saving…' : 'Save'}
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <p className="gv-community__post-body">{p.body}</p>
+                              <p className="gv-community__post-meta">
+                                {timeAgo(p.createdAt)}
+                                {p.editedAt ? ' · Edited' : ''}
+                              </p>
+                            </>
+                          )}
                         </>
                       )}
                     </li>
@@ -1005,6 +1217,21 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
         loading={moderationLoading}
         onCancel={() => setBlockTarget(null)}
         onConfirm={handleBlockConfirm}
+      />
+
+      <CommunityConfirmModal
+        open={Boolean(deleteTarget)}
+        title={deleteTarget?.kind === 'thread' ? 'Delete this thread?' : 'Delete this reply?'}
+        description={
+          deleteTarget?.kind === 'thread'
+            ? 'This removes your thread from Community. This can’t be undone.'
+            : 'This removes your reply from the thread. This can’t be undone.'
+        }
+        confirmLabel="Delete"
+        confirmTone="danger"
+        loading={moderationLoading}
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={() => void handleDeleteConfirm()}
       />
     </PageLayout>
     </div>

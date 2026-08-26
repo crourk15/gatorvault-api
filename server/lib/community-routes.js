@@ -106,6 +106,63 @@ function mountCommunityRoutes(app) {
     }
   });
 
+  /** Author: edit own thread title/body. */
+  app.post('/api/community/thread/:id/edit', (req, res) => {
+    const session = requireSession(req, res);
+    if (!session) return;
+    try {
+      const result = store.editThread(session, req.params.id, {
+        title: req.body?.title,
+        body: req.body?.body,
+      });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      const status = err.statusCode || 400;
+      return res.status(status).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Author: soft-delete own thread. */
+  app.delete('/api/community/thread/:id', (req, res) => {
+    const session = requireSession(req, res);
+    if (!session) return;
+    try {
+      const result = store.deleteThread(session, req.params.id);
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      const status = err.statusCode || 400;
+      return res.status(status).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Author: edit own reply. */
+  app.post('/api/community/post/:id/edit', (req, res) => {
+    const session = requireSession(req, res);
+    if (!session) return;
+    try {
+      const result = store.editPost(session, req.params.id, {
+        body: req.body?.body ?? req.body?.text,
+      });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      const status = err.statusCode || 400;
+      return res.status(status).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Author: soft-delete own reply. */
+  app.delete('/api/community/post/:id', (req, res) => {
+    const session = requireSession(req, res);
+    if (!session) return;
+    try {
+      const result = store.deletePost(session, req.params.id);
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      const status = err.statusCode || 400;
+      return res.status(status).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/community/post/:id/flag', (req, res) => {
     const session = requireSession(req, res);
     if (!session) return;

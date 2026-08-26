@@ -10,6 +10,8 @@ type Props = {
   onReport: () => void;
   onBlock: () => void;
   onUnblock?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
 export function CommunityPostActions({
@@ -20,8 +22,12 @@ export function CommunityPostActions({
   onReport,
   onBlock,
   onUnblock,
+  onEdit,
+  onDelete,
 }: Props): React.ReactElement | null {
-  if (!canModerate && !flagged) return null;
+  const showOwnActions = isOwnContent && Boolean(onEdit || onDelete);
+  const showModActions = canModerate && !isOwnContent;
+  if (!showOwnActions && !showModActions && !flagged) return null;
 
   return (
     <div className="gv-community__post-actions">
@@ -30,7 +36,25 @@ export function CommunityPostActions({
           Reported
         </span>
       ) : null}
-      {canModerate && !isOwnContent ? (
+      {showOwnActions ? (
+        <>
+          {onEdit ? (
+            <button type="button" className="gv-community__action-btn" onClick={onEdit}>
+              Edit
+            </button>
+          ) : null}
+          {onDelete ? (
+            <button
+              type="button"
+              className="gv-community__action-btn gv-community__action-btn--danger"
+              onClick={onDelete}
+            >
+              Delete
+            </button>
+          ) : null}
+        </>
+      ) : null}
+      {showModActions ? (
         <>
           <button type="button" className="gv-community__action-btn" onClick={onReport}>
             Report

@@ -970,6 +970,126 @@ function adminDeletePost(id) {
   return posts[idx];
 }
 
+function isAuthorOf(session, record) {
+  const email = String(session?.email || '').trim().toLowerCase();
+  if (!email || !record) return false;
+  const authorEmail = String(record.authorEmail || '').trim().toLowerCase();
+  if (authorEmail && authorEmail === email) return true;
+  try {
+    const user = getOrCreateUser(session);
+    return Boolean(record.authorId && user?.id && record.authorId === user.id);
+  } catch {
+    return false;
+  }
+}
+
+function authorForbidden(message = 'You can only change your own posts.') {
+  const err = new Error(message);
+  err.statusCode = 403;
+  return err;
+}
+
+function notFound(message) {
+  const err = new Error(message);
+  err.statusCode = 404;
+  return err;
+}
+
+/** Member: edit own thread title/body. */
+function editThread(session, threadId, { title, body } = {}) {
+  const resolvedId = resolveThreadId(threadId);
+  const threads = loadThreads();
+  const idx = threads.findIndex((t) => t.id === resolvedId && !t.deleted);
+  if (idx < 0) throw notFound('Thread not found');
+  if (!isAuthorOf(session, threads[idx])) throw authorForbidden();
+
+  const nextTitle = title != null ? String(title).trim() : null;
+  const nextBody = body != null ? String(body).trim() : null;
+  if (nextTitle === null && nextBody === null) throw new Error('title or body required');
+  if (nextTitle !== null) {
+    if (!nextTitle) throw new Error('Title required');
+    if (nextTitle.length > 200) throw new Error('Title too long');
+    threads[idx].title = nextTitle;
+  }
+  if (nextBody !== null) {
+    if (!nextBody) throw new Error('Body required');
+    if (nextBody.length > 4000) throw new Error('Body too long');
+    threads[idx].body = nextBody;
+  }
+  threads[idx].editedAt = nowIso();
+  threads[idx].lastActivityAt = nowIso();
+  saveThreads(threads);
+  return { thread: enrichThread(threads[idx], getCategoryMap()) };
+}
+
+/** Member: edit own reply body. */
+function editPost(session, postId, { body } = {}) {
+  const posts = loadPosts();
+  const idx = posts.findIndex((p) => p.id === postId && !p.deleted);
+  if (idx < 0) throw notFound('Post not found');
+  if (!isAuthorOf(session, posts[idx])) throw authorForbidden();
+
+  const text = body != null ? String(body).trim() : '';
+  if (!text) throw new Error('Body required');
+  if (text.length > 4000) throw new Error('Body too long');
+  posts[idx].body = text;
+  posts[idx].editedAt = nowIso();
+  savePosts(posts);
+
+  const threads = loadThreads();
+  const tidx = threads.findIndex((t) => t.id === posts[idx].threadId && !t.deleted);
+  if (tidx >= 0) {
+    threads[tidx].lastActivityAt = nowIso();
+    saveThreads(threads);
+  }
+
+  const user = getOrCreateUser(session);
+  const badge = badgeForUser(user);
+  return {
+    post: {
+      ...posts[idx],
+      author: {
+        displayName: user.displayName,
+        avatarUrl: user.avatarUrl,
+        tier: user.tier,
+        isFounding: user.isFounding,
+        joinDate: user.joinDate,
+      },
+      badge: badge.badge,
+      badgeClass: badge.badgeClass,
+    },
+  };
+}
+
+/** Member: soft-delete own thread. */
+function deleteThread(session, threadId) {
+  const resolvedId = resolveThreadId(threadId);
+  const threads = loadThreads();
+  const idx = threads.findIndex((t) => t.id === resolvedId && !t.deleted);
+  if (idx < 0) throw notFound('Thread not found');
+  if (!isAuthorOf(session, threads[idx])) throw authorForbidden();
+  threads[idx].deleted = true;
+  saveThreads(threads);
+  return { thread: threads[idx] };
+}
+
+/** Member: soft-delete own reply. */
+function deletePost(session, postId) {
+  const posts = loadPosts();
+  const idx = posts.findIndex((p) => p.id === postId && !p.deleted);
+  if (idx < 0) throw notFound('Post not found');
+  if (!isAuthorOf(session, posts[idx])) throw authorForbidden();
+  posts[idx].deleted = true;
+  savePosts(posts);
+  const threads = loadThreads();
+  const tidx = threads.findIndex((t) => t.id === posts[idx].threadId);
+  if (tidx >= 0) {
+    threads[tidx].replyCount = Math.max(0, (threads[tidx].replyCount || 1) - 1);
+    saveThreads(threads);
+  }
+  return { post: posts[idx] };
+}
+
 function flagPost(session, postId, reason) {
   const flags = loadFlags();
   const normalizedReason = normalizeReportReason(reason);
@@ -1074,6 +1194,11 @@ module.exports = {
   getThreadById,
   createThread,
   createReply,
+  editThread,
+  editPost,
+  deleteThread,
+  deletePost,
+  isAuthorOf,
   toggleFollow,
   getFollowedThreadIds,
   getPulseStats,

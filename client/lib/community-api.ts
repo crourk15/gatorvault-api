@@ -37,6 +37,7 @@ export type CommunityThread = {
   flagged?: boolean;
   createdAt?: string;
   lastActivityAt?: string;
+  editedAt?: string;
   dailyKey?: string;
   category?: { name?: string; slug?: string } | null;
 };
@@ -50,6 +51,7 @@ export type CommunityPost = {
   author?: CommunityAuthor | null;
   flagged?: boolean;
   createdAt?: string;
+  editedAt?: string;
 };
 
 export type CommunityPulse = {
@@ -201,6 +203,49 @@ export async function createCommunityReply(threadId: string, body: string): Prom
     ...communityFetchInit(true),
     method: 'POST',
     body: JSON.stringify({ body }),
+  });
+}
+
+export async function editCommunityThread(
+  threadId: string,
+  input: { title?: string; body?: string },
+): Promise<CommunityThread> {
+  const data = await apiFetch<{ ok?: boolean; thread?: CommunityThread }>(
+    `/api/community/thread/${encodeURIComponent(threadId)}/edit`,
+    {
+      ...communityFetchInit(true),
+      method: 'POST',
+      body: JSON.stringify(input),
+    },
+  );
+  if (!data?.thread?.id) throw new Error('Thread edit failed.');
+  return data.thread;
+}
+
+export async function editCommunityPost(postId: string, body: string): Promise<CommunityPost> {
+  const data = await apiFetch<{ ok?: boolean; post?: CommunityPost }>(
+    `/api/community/post/${encodeURIComponent(postId)}/edit`,
+    {
+      ...communityFetchInit(true),
+      method: 'POST',
+      body: JSON.stringify({ body }),
+    },
+  );
+  if (!data?.post?.id) throw new Error('Post edit failed.');
+  return data.post;
+}
+
+export async function deleteCommunityThread(threadId: string): Promise<void> {
+  await apiFetch(`/api/community/thread/${encodeURIComponent(threadId)}`, {
+    ...communityFetchInit(true),
+    method: 'DELETE',
+  });
+}
+
+export async function deleteCommunityPost(postId: string): Promise<void> {
+  await apiFetch(`/api/community/post/${encodeURIComponent(postId)}`, {
+    ...communityFetchInit(true),
+    method: 'DELETE',
   });
 }
 

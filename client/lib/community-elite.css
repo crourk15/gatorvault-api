@@ -319,6 +319,18 @@
   min-height: 4rem;
 }
 
+.gv-community-page .gv-community__edit-form {
+  margin-top: 0.35rem;
+}
+
+.gv-community-page .gv-community__edit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
 .gv-community-page .gv-community__reply-form {
   margin-top: 1rem;
 }
