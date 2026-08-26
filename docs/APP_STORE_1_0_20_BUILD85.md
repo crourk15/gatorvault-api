@@ -23,7 +23,8 @@ Client/UI backlog from `docs/IOS_CODEMAGIC_BACKLOG.md` not yet in the 1.0.19 bin
 - Closest / Chase board-truth client gates (no fake Florida locks from crumb RPM)
 - Game Week: Expected visitors panel + live `/api/schedule` path
 - Articles: Authors + Tags filters; no duplicate Related rail
-- Home NOW live commit counts; Alerts Board Intel UV + recent-window copy
+- Home NOW: kill Tranard Auburn seed stone; 3-week freshness; no mid-cut article blurbs; live commit counts
+- Alerts Board Intel UV + recent-window copy
 - Team depth chart live from camp API
 - Remaining Community / Footprint / signup-channel rows still waiting from the closed 1.0.19 train
 
@@ -32,5 +33,5 @@ API/data Why we chase handwrites remain live on Render without this bake — thi
 ## Whats New (paste)
 
 ```
-Priority Chase Why we chase is live from GatorVault — clearer, staff-led reasons that update without waiting on an app rebuild. Expected visits show on chase cards. Game Week Expected visitors + live schedule polish. More accurate On3 leads on Chase/Closest, Articles Authors & Tags, Home NOW commit counts, Community posting, and Team depth chart updates from camp.
+Home NOW is sharper — no stale visit stones (including Tranard Auburn), only recent Florida process. Priority Chase Why we chase is live from GatorVault. Expected visits on chase cards. Game Week Expected visitors + live schedule polish. More accurate On3 leads on Chase/Closest, Articles Authors & Tags, Community posting, and Team depth chart updates from camp.
 ```

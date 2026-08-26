@@ -72,6 +72,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-26 | Capacitor seed: scrub movementFeed visit/offer school lines (Tranard Auburn + rival offers) — only live ticker/alerts paint schools | `recruiting-hub-bundle-seed` in binary | pending |
 | 2026-08-26 | Home NOW: hard 3-week cap + Florida offer requires real offer day; ticker disk cacheRev t8 | pulse gates in binary; **API ticker/alerts live without bake** | pending |
 | 2026-08-26 | Home NOW: drop stale/undated offers + rival offer spam (14d offer day) | pulse offer gate in binary; **API ticker/alerts live without bake** | pending |
 | 2026-08-26 | Home NOW: compress article blurbs to finished chips (no mid-word …) | pulse prose compress in binary; **API alerts sanitize live without bake** | pending |
