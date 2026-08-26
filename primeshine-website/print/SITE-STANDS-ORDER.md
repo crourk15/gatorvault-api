@@ -33,9 +33,9 @@ These are the **physical stands/signs** that promote the business (not business 
 - Outdoor / waterproof material for yard + A-frame
 
 ## Promo line on all stands
-- 50% OFF Launch · First 10 customers · Code **LAUNCH**
 - Phone **863-860-9238**
 - Web **primeshinefl.com**
+- No discount text (evergreen — launch promo stays on the website only)
 
 ## Do next week
 1. Confirm van purchase
