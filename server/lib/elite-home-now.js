@@ -72,6 +72,8 @@ function rankEliteHomeNowLines(lines, limit = 6) {
 
     let score = eliteHomeNowScore(line);
     if (score <= 5) continue;
+    // Rival offer spam is profile noise — not Gator Nation NOW.
+    if (isRivalOnlyOfferLine(line)) continue;
 
     const isBareFlOffer = /\bFlorida offer\b/i.test(line) || /\bOffer from Florida\b/i.test(line);
     if (isBareFlOffer) {
@@ -155,6 +157,35 @@ function isFreshHomeNowVisit(raw, nowMs = Date.now()) {
   return nowMs - ts <= HOME_NOW_VISIT_MAX_AGE_MS;
 }
 
+/** Home NOW offer window — older offers live on the profile, not the strip. */
+const HOME_NOW_OFFER_MAX_AGE_MS = 14 * DAY_MS;
+
+function isOfferPulseSummary(text) {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  if (/\bFlorida offer\b/i.test(t)) return true;
+  if (/\bOffer from\b/i.test(t)) return true;
+  return false;
+}
+
+/**
+ * Fresh enough for Home NOW.
+ * Prefer actual offer date — never allowlist rematerialization / board "has offer" now().
+ * Undated offers never paint as NOW.
+ */
+function isFreshHomeNowOffer(raw, nowMs = Date.now()) {
+  const row = raw && typeof raw === 'object' ? raw : { offerDate: raw };
+  const candidates = [row.offerDate, row.date, row.offer_date];
+  let ts = NaN;
+  for (const c of candidates) {
+    ts = parseHomeNowTimestamp(c);
+    if (Number.isFinite(ts)) break;
+  }
+  if (!Number.isFinite(ts)) return false;
+  if (ts > nowMs + DAY_MS) return false;
+  return nowMs - ts <= HOME_NOW_OFFER_MAX_AGE_MS;
+}
+
 module.exports = {
   isThinClassMetricLine,
   isFloridaProcessLine,
@@ -165,6 +196,9 @@ module.exports = {
   parseHomeNowTimestamp,
   isVisitPulseSummary,
   isFreshHomeNowVisit,
+  isOfferPulseSummary,
+  isFreshHomeNowOffer,
   HOME_NOW_VISIT_MAX_AGE_MS,
   HOME_NOW_VISIT_UPCOMING_MS,
+  HOME_NOW_OFFER_MAX_AGE_MS,
 };

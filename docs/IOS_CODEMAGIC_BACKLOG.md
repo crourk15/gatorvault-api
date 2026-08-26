@@ -72,6 +72,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-26 | Home NOW: drop stale/undated offers + rival offer spam (14d offer day) | pulse offer gate in binary; **API ticker/alerts live without bake** | pending |
 | 2026-08-26 | Home NOW: compress article blurbs to finished chips (no mid-word …) | pulse prose compress in binary; **API alerts sanitize live without bake** | pending |
 | 2026-08-26 | Home NOW: visit lines only if ≤21d (or upcoming) — drop stale Tranard-style UOVs | pulse visit timestamp gate in binary; **API ticker/alerts live without bake** | pending |
 | 2026-08-26 | Home NOW elite curation (rank Florida visits/class heat; merge chase ticker; cap offer spam) | `HomePremiumPage` + pulse ranking in binary; **API ticker/alerts live without bake** | pending |

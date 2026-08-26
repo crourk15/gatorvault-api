@@ -415,6 +415,9 @@ async function buildHubTicker(year = 2027) {
     isThinClassMetricLine,
     isVisitPulseSummary,
     isFreshHomeNowVisit,
+    isOfferPulseSummary,
+    isFreshHomeNowOffer,
+    isRivalOnlyOfferLine,
   } = require('./elite-home-now');
 
   // Class metrics earn a NOW slot only when the class is real — never thin open-cycle stone.
@@ -450,7 +453,22 @@ async function buildHubTicker(year = 2027) {
     ) {
       continue;
     }
-    const line = row.name ? `${row.name} — ${summary}` : String(summary);
+    // Stale / undated offers + rival offer spam — not Home NOW.
+    const lineProbe = row.name ? `${row.name} — ${summary}` : String(summary);
+    if (row.event === 'offer' || isOfferPulseSummary(summary) || isRivalOnlyOfferLine(lineProbe)) {
+      if (isRivalOnlyOfferLine(lineProbe)) continue;
+      if (
+        !isFreshHomeNowOffer({
+          offerDate: row.offerDate,
+          date: row.offerDate || row.date,
+          timestamp: row.timestamp,
+          reportedAt: row.reportedAt,
+        })
+      ) {
+        continue;
+      }
+    }
+    const line = lineProbe;
     if (isDeskOpsIntelCopy(line)) continue;
     if (!named.includes(line)) named.push(line);
   }
