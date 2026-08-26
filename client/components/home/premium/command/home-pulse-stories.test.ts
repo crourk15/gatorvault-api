@@ -115,6 +115,27 @@ describe('buildHomePulseStories', () => {
     assert.ok(stories.filter((s) => /Florida offer/i.test(s)).length <= 2);
   });
 
+
+  it('drops stale unofficial visit alerts from Home NOW', () => {
+    const stories = buildHomePulseStories({
+      hubTicker: ['2027 class trending nationally — UF at #8', '26 commits locked for 2027'],
+      hpIntel: [],
+      movement: {
+        alerts: [
+          {
+            id: '1',
+            type: 'VISIT',
+            player: 'Tranard Roberts',
+            detail: 'Tranard Roberts — unofficial visit · Florida',
+            timestamp: '2026-04-11T00:00:00.000Z',
+          },
+        ],
+      } as any,
+    });
+    assert.ok(!stories.some((s) => /Tranard Roberts/i.test(s)));
+    assert.ok(stories.some((s) => /2027 class trending nationally/i.test(s)));
+  });
+
   it('does not paint Beat Desk / allowlist-intel ops into Home NOW', () => {
     const stories = buildHomePulseStories({
       hubTicker: [

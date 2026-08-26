@@ -175,6 +175,23 @@ function isWeakAnonPulse(text: string): boolean {
   return /^(uv|unofficial visit|official visit|offer)\b/i.test(text);
 }
 
+const HOME_NOW_VISIT_MAX_AGE_MS = 21 * 24 * 60 * 60 * 1000;
+
+function isFreshHomeNowVisitClient(timestamp?: string | null): boolean {
+  if (!timestamp) return false;
+  const ts = Date.parse(String(timestamp));
+  if (!Number.isFinite(ts)) return false;
+  const now = Date.now();
+  if (ts > now) return ts - now <= 120 * 24 * 60 * 60 * 1000;
+  return now - ts <= HOME_NOW_VISIT_MAX_AGE_MS;
+}
+
+function isVisitPulseLine(text: string): boolean {
+  return /\b(unofficial|official)\s+visit\b|\bVisit scheduled\b|\bVerified OV\b|\bFlorida\s+(?:unofficial\s+|official\s+)?visit\b/i.test(
+    String(text || '')
+  );
+}
+
 function isThinClassMetricPulse(text: string): boolean {
   const t = String(text || '').trim();
   if (!t) return true;
@@ -380,6 +397,13 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
     if (!detailRaw) continue;
     const detail = fanFacingPulseLine(detailRaw);
     if (!detail) continue;
+    const alertType = String((alert as { type?: string }).type || '').toUpperCase();
+    if (
+      (alertType === 'VISIT' || isVisitPulseLine(detail)) &&
+      !isFreshHomeNowVisitClient((alert as { timestamp?: string }).timestamp)
+    ) {
+      continue;
+    }
     const player = String(alert.player || '').trim();
     if (player && detail.toLowerCase().startsWith(player.toLowerCase())) {
       push(detail);

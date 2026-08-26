@@ -101,6 +101,60 @@ function shortenSchoolLabel(school) {
     .trim();
 }
 
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+/** Home NOW visit window — history belongs on the profile, not the strip. */
+const HOME_NOW_VISIT_MAX_AGE_MS = 21 * DAY_MS;
+/** Upcoming scheduled visits still count as NOW pulse. */
+const HOME_NOW_VISIT_UPCOMING_MS = 120 * DAY_MS;
+
+function parseHomeNowTimestamp(value) {
+  if (value == null || value === '') return NaN;
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value < 1e12 ? value * 1000 : value;
+  }
+  const raw = String(value).trim();
+  if (!raw) return NaN;
+  const ms = Date.parse(raw);
+  return Number.isFinite(ms) ? ms : NaN;
+}
+
+function isVisitPulseSummary(text) {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  if (/\bVisit scheduled\b/i.test(t)) return true;
+  if (/\b(unofficial|official)\s+visit\b/i.test(t)) return true;
+  if (/\bFlorida\s+(?:unofficial\s+|official\s+)?visit\b/i.test(t)) return true;
+  if (/\bVerified OV\b/i.test(t)) return true;
+  return false;
+}
+
+/**
+ * Fresh enough for Home NOW.
+ * Prefer actual visit date over allowlist rematerialization reportedAt.
+ * Undated visit history never paints as NOW.
+ */
+function isFreshHomeNowVisit(raw, nowMs = Date.now()) {
+  const row = raw && typeof raw === 'object' ? raw : { timestamp: raw };
+  const candidates = [
+    row.visitDate,
+    row.date,
+    row.visitStart,
+    row.visitEnd,
+    row.timestamp,
+    row.reportedAt,
+    row.createdAt,
+  ];
+  let ts = NaN;
+  for (const c of candidates) {
+    ts = parseHomeNowTimestamp(c);
+    if (Number.isFinite(ts)) break;
+  }
+  if (!Number.isFinite(ts)) return false;
+  if (ts > nowMs) return ts - nowMs <= HOME_NOW_VISIT_UPCOMING_MS;
+  return nowMs - ts <= HOME_NOW_VISIT_MAX_AGE_MS;
+}
+
 module.exports = {
   isThinClassMetricLine,
   isFloridaProcessLine,
@@ -108,4 +162,9 @@ module.exports = {
   eliteHomeNowScore,
   rankEliteHomeNowLines,
   shortenSchoolLabel,
+  parseHomeNowTimestamp,
+  isVisitPulseSummary,
+  isFreshHomeNowVisit,
+  HOME_NOW_VISIT_MAX_AGE_MS,
+  HOME_NOW_VISIT_UPCOMING_MS,
 };

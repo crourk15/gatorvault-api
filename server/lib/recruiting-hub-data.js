@@ -669,9 +669,12 @@ function mapVisitLogFeedItem(log, meta) {
   const name = meta?.name || log.playerName || log.playerSlug;
   const visitLabel = String(log.visitType || 'visit').replace(/_/g, ' ');
   const school = log.school || 'Florida';
+  // Prefer the actual visit day for Home NOW recency — not allowlist rematerialization time.
+  const visitDate = log.date || log.visitDate || null;
   return {
     id: `visit-log-${log.id || log.fingerprint}`,
-    timestamp: log.reportedAt || log.date || new Date().toISOString(),
+    timestamp: visitDate || log.reportedAt || new Date().toISOString(),
+    visitDate,
     name,
     position: meta?.position || null,
     class: meta?.classYear || null,

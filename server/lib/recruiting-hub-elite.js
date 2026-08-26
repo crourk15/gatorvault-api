@@ -413,6 +413,8 @@ async function buildHubTicker(year = 2027) {
   const {
     rankEliteHomeNowLines,
     isThinClassMetricLine,
+    isVisitPulseSummary,
+    isFreshHomeNowVisit,
   } = require('./elite-home-now');
 
   // Class metrics earn a NOW slot only when the class is real — never thin open-cycle stone.
@@ -435,6 +437,19 @@ async function buildHubTicker(year = 2027) {
     const { toFanFacingHubSummary, isDeskOpsIntelCopy } = require('./fan-facing-intel-copy');
     const summary = toFanFacingHubSummary(row.summary, { eventType: row.event });
     if (!summary) continue;
+    // Stale UOVs/OVs are profile history — not Home NOW.
+    if (
+      (row.event === 'visit' || isVisitPulseSummary(summary)) &&
+      !isFreshHomeNowVisit({
+        visitDate: row.visitDate,
+        date: row.visitDate || row.date,
+        visitStart: row.visitStart,
+        timestamp: row.timestamp,
+        reportedAt: row.reportedAt,
+      })
+    ) {
+      continue;
+    }
     const line = row.name ? `${row.name} — ${summary}` : String(summary);
     if (isDeskOpsIntelCopy(line)) continue;
     if (!named.includes(line)) named.push(line);
