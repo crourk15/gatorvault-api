@@ -263,7 +263,7 @@ function isDeskOpsPulseCopy(text: string): boolean {
   );
 }
 
-function fanFacingPulseLine(text: string): string | null {
+function fanFacingPulseLine(text?: string | null): string | null {
   const src = String(text || '').trim();
   if (!src) return null;
   let raw = src
