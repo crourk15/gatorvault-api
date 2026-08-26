@@ -689,9 +689,12 @@ function mapOfferLogFeedItem(log, meta) {
   const { shortenSchoolLabel } = require('./elite-home-now');
   const school = shortenSchoolLabel(log.school || 'Florida') || 'Florida';
   const summary = /^florida$/i.test(school) ? 'Florida offer' : `Offer from ${school}`;
+  // Prefer actual offer day for Home NOW recency — not rematerialization time.
+  const offerDate = log.date || log.offerDate || null;
   return {
     id: `offer-log-${log.id || log.fingerprint}`,
-    timestamp: log.reportedAt || log.date || new Date().toISOString(),
+    timestamp: offerDate || log.reportedAt || new Date().toISOString(),
+    offerDate,
     name,
     position: meta?.position || null,
     class: meta?.classYear || null,
@@ -735,9 +738,12 @@ function boardVisitItem(meta) {
 }
 
 function boardOfferItem(meta) {
+  // Evergreen "has Florida offer" is profile truth — never stamp now() or it floods Home NOW.
+  const offerDate = meta.offerDate || meta.floridaOfferDate || null;
   return {
     id: `board-offer-${meta.slug}`,
-    timestamp: new Date().toISOString(),
+    timestamp: offerDate || meta.updatedAt || '1970-01-01T00:00:00.000Z',
+    offerDate,
     name: meta.name,
     position: meta.position,
     class: meta.classYear,

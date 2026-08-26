@@ -244,6 +244,8 @@ export function rankEliteHomeNowStories(lines: string[], limit = 6): string[] {
     seen.add(key);
     let score = eliteHomeNowScore(line);
     if (score <= 5) continue;
+    // Rival offer spam is profile noise — not Gator Nation NOW.
+    if (isRivalOnlyOfferPulse(line)) continue;
     const bareFl =
       /\bFlorida offer\b/i.test(line) || /\bOffer from Florida\b/i.test(line);
     if (bareFl) {
@@ -450,6 +452,15 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
       !isFreshHomeNowVisitClient((alert as { timestamp?: string }).timestamp)
     ) {
       continue;
+    }
+    if (isRivalOnlyOfferPulse(detail)) continue;
+    if (alertType === 'OFFER' || /\bFlorida offer\b/i.test(detail)) {
+      // Prefer embedded offer day; rematerialization timestamps are not offer news.
+      const onFile = detail.match(/on file\s*\((\d{4}-\d{2}-\d{2})\)/i);
+      if (onFile) {
+        const ts = Date.parse(onFile[1]);
+        if (!Number.isFinite(ts) || Date.now() - ts > 14 * 24 * 60 * 60 * 1000) continue;
+      }
     }
     const player = String(alert.player || '').trim();
     if (player && detail.toLowerCase().startsWith(player.toLowerCase())) {

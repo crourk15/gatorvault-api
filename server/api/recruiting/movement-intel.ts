@@ -185,6 +185,20 @@ function buildAlerts(intel: IntelRow[], limit: number): MovementIntelAlert[] {
       }
     }
 
+    if (type === 'OFFER') {
+      const { isFreshHomeNowOffer, isRivalOnlyOfferLine } = require('../../lib/elite-home-now') as {
+        isFreshHomeNowOffer: (raw: Record<string, unknown>) => boolean;
+        isRivalOnlyOfferLine: (text: string) => boolean;
+      };
+      if (isRivalOnlyOfferLine(detail)) continue;
+      const blob = String(row.text || row.detail || '');
+      const onFile = blob.match(/on file\s*\((\d{4}-\d{2}-\d{2})\)/i);
+      const offerDate =
+        row.offerDate || row.date || (onFile ? onFile[1] : null) || null;
+      // Rematerialized "Florida offer" without a real offer day is profile truth — not NOW.
+      if (!isFreshHomeNowOffer({ offerDate, date: offerDate })) continue;
+    }
+
     candidates.push({
       id: String(row.id || row.fingerprint || `alert_${candidates.length}`),
       type,
