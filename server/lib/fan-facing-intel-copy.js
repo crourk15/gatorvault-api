@@ -5,7 +5,7 @@
 'use strict';
 
 const DESK_OPS_RE =
-  /continuous allowlist intel sweep|from player card|allowlist board pulse|beat brief|beat desk|copy brief|open brief|staff note\s*—|gatorvault beat brief|auto:allowlist|provisional.*?film desk|film desk verified/i;
+  /continuous allowlist intel sweep|from player card|allowlist board pulse|beat brief|beat desk|copy brief|open brief|staff note\s*—|gatorvault beat brief|auto:allowlist|provisional.*?film desk|film desk verified|\bon file\b/i;
 
 const THIN_DESK_SUMMARY_RE =
   /^(staff note|visit update|beat intel|commit check-?ins)\b/i;
@@ -38,6 +38,18 @@ function cleanFanFacingResidue(raw) {
     .trim();
 }
 
+/** Strip allowlist / desk residue while keeping the fan fact. */
+function stripDeskOpsResidue(text) {
+  return String(text || '')
+    .replace(/\s*Continuous allowlist intel sweep\.?/gi, '')
+    .replace(/\s*from player card\.?/gi, '')
+    .replace(/\s*\(allowlist board pulse\)\.?/gi, '')
+    .replace(/\s+on file(?:\s*\([^)]*\))?\.?/gi, '')
+    .replace(/^staff note\s*[—\-]\s*/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function toFanFacingIntelDetail(text, opts) {
   opts = opts || {};
   var eventType = opts.eventType || '';
@@ -50,14 +62,7 @@ function toFanFacingIntelDetail(text, opts) {
     return null;
   }
 
-  raw = raw
-    .replace(/\s*Continuous allowlist intel sweep\.?/gi, '')
-    .replace(/\s*from player card\.?/gi, '')
-    .replace(/\s*\(allowlist board pulse\)\.?/gi, '')
-    .replace(/^staff note\s*[—\-]\s*/i, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-  raw = cleanFanFacingResidue(raw);
+  raw = cleanFanFacingResidue(stripDeskOpsResidue(raw));
 
   if (!raw || isDeskOpsIntelCopy(raw)) {
     return salvageFloridaProcess(text, playerName);
@@ -83,6 +88,12 @@ function toFanFacingHubSummary(summary, opts) {
   if (isDeskOpsIntelCopy(raw)) {
     return toFanFacingIntelDetail(raw, { eventType: et });
   }
+  // Prefer fan phrasing over offer-log "Offer from Florida".
+  if (/^offer from florida$/i.test(raw)) return 'Florida offer';
+  if (/^offer from\b/i.test(raw)) {
+    const school = raw.replace(/^offer from\s+/i, '').replace(/\s+Aggies$/i, '').trim();
+    return school ? 'Offer from ' + school : raw;
+  }
   return raw;
 }
 
@@ -90,4 +101,5 @@ module.exports = {
   isDeskOpsIntelCopy: isDeskOpsIntelCopy,
   toFanFacingIntelDetail: toFanFacingIntelDetail,
   toFanFacingHubSummary: toFanFacingHubSummary,
+  stripDeskOpsResidue: stripDeskOpsResidue,
 };

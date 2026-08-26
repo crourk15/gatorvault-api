@@ -99,6 +99,9 @@ describe('buildHomePulseStories', () => {
     });
     assert.ok(stories.some((s) => /Tranard Roberts/.test(s)));
     assert.ok(stories.some((s) => /Gionni Lewis — Florida offer/.test(s)));
-    assert.ok(!stories.some((s) => /Staff note|from player card|allowlist intel sweep/i.test(s)));
+    assert.ok(stories.some((s) => /Kaleb Ballard — Florida offer/.test(s)));
+    assert.ok(
+      !stories.some((s) => /Staff note|from player card|allowlist intel sweep|on file/i.test(s))
+    );
   });
 });

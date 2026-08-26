@@ -72,6 +72,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-26 | Home NOW: strip allowlist “on file” offer/visit copy + 1-commit grammar | `home-command-utils` pulse in binary; **API sanitize live without bake** | pending |
 | 2026-08-25 | Home NOW: strip Beat Desk / allowlist-intel ops copy (Staff note, from player card) — fan process language only | `home-command-utils` + pulse in binary; **API ticker/alerts sanitize live without bake** | pending |
 | 2026-08-24 | Community: show member display name on open thread + list (not generic “Member”) | `VaultCommunityPage` + `community-api` + CSS in binary; API nests `thread.author` on detail | pending |
 | 2026-08-23 | Why we chase: prefer live API `whyWeChase` (Admin-editable anytime after this bake); nugget voice fallback — no hometown / no score dumps | `VaultChaseCard` + `chase-priority` + HP map in binary; API generator/overrides already live without bake | pending |
