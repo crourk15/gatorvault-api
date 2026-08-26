@@ -29,5 +29,12 @@ Point the domain root at this folder.
 - Slogan: “Prime Results. Mobile Convenience.”
 - Phone: 863-860-9238
 
-## Note
-Booking form shows an on-page confirmation (no backend yet). Wire to Formspree, Netlify Forms, or SMS later when ready.
+## Booking notifications
+The booking form sends:
+- **Email** to `crourk15@gmail.com` (FormSubmit — confirm the first activation email)
+- **Text** to `863-860-9238` (Twilio if configured on Netlify; otherwise best-effort carrier email-to-SMS)
+- A backup copy into **Netlify Forms** (Project → Forms)
+
+Optional Netlify env vars for reliable SMS:
+`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `PRIMESHINE_NOTIFY_EMAIL`, `PRIMESHINE_SMS_TO`
+

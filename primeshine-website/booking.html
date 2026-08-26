@@ -40,7 +40,9 @@
       <div class="container split">
         <div class="panel reveal">
           <div id="booking-success" class="form-success" role="status" aria-live="polite"></div>
-          <form id="booking-form" action="#" method="post">
+          <form id="booking-form" name="booking" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/booking">
+            <input type="hidden" name="form-name" value="booking" />
+            <p class="sr-only" aria-hidden="true">Don’t fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></p>
             <label>Full Name
               <input type="text" name="name" required autocomplete="name" placeholder="Your name" />
             </label>
@@ -71,7 +73,7 @@
             <label>Notes (pet hair, stains, odors, etc.)
               <textarea name="notes" placeholder="Tell us anything that helps us prepare"></textarea>
             </label>
-            <p class="form-note">Submitting sends a local request confirmation on this page. For immediate booking, call 863-860-9238.</p>
+            <p class="form-note">Submitting sends your request to PrimeShine by email and text. For immediate booking, call <a href="tel:8638609238">863-860-9238</a>.</p>
             <button class="btn btn-primary" type="submit">Schedule My Detail</button>
           </form>
         </div>
