@@ -40,11 +40,17 @@ import {
   buildHomePulseHeadline,
   buildHomePulseStories,
   applyLiveCommitCountToTicker,
+  mergeEliteHomeTickers,
 } from '@/components/home/premium/command/home-command-utils';
 
 function seedHomeTicker(year: number): string[] {
   const fromSeed = RECRUITING_HUB_BUNDLE_SEED?.byYear?.[String(year)]?.ticker;
-  const raw = Array.isArray(fromSeed) ? fromSeed.filter((t) => String(t || '').trim()) : [];
+  const raw = (Array.isArray(fromSeed) ? fromSeed : [])
+    .map((t) => String(t || '').trim())
+    .filter(Boolean)
+    // Named visit/offer schools only from live API — never Capacitor seed stone.
+    .filter((t) => !/(unofficial|official)\s+visit/i.test(t))
+    .filter((t) => !/Offer from/i.test(t));
   // Never paint a stone commit/signee count from the Capacitor seed.
   return applyLiveCommitCountToTicker(raw, { year, commits: null });
 }
@@ -157,10 +163,13 @@ export function HomePremiumPage(): React.ReactElement {
     try {
       const year = ACTIVE_RECRUITING_CLASS_YEAR;
       // APIs that already warm-poll internally — do not nest another warm layer.
-      const [hubTickerLive, hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets] =
+      const chaseYear = year + 1;
+      const [hubTickerLive, chaseTickerLive, hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets] =
         await Promise.all([
           // Dedicated ticker — lighter than full bundle; keeps NOW live without Codemagic.
           fetchWithWarmPoll(() => fetchRecruitingHubTicker(year), poll).catch(() => []),
+          // Chase-class process (2028 while closing 2027) — elite NOW mixes both.
+          fetchWithWarmPoll(() => fetchRecruitingHubTicker(chaseYear), poll).catch(() => []),
           fetchWithWarmPoll(() => fetchRecruitingHubBundle(year), poll).catch(() => null),
           fetchHighPriorityIntel().catch(() => null),
           fetchMovementIntel().catch(() => null),
@@ -171,9 +180,13 @@ export function HomePremiumPage(): React.ReactElement {
         ]);
       // Cold API miss must NOT wipe build-time seeds — first-open chill was clearing
       // metrics/beat to null/[] and looking broken until a later warm revisit.
-      const nextTicker =
+      const primaryTicker =
         (Array.isArray(hubTickerLive) && hubTickerLive.length && hubTickerLive) ||
         (hubBundle?.ticker?.length ? hubBundle.ticker : null);
+      const nextTicker = mergeEliteHomeTickers(
+        primaryTicker,
+        Array.isArray(chaseTickerLive) ? chaseTickerLive : []
+      );
       const liveMetrics = hubBundle?.classOverview
         ? ({ ...hubBundle.classOverview } as ClassMetricsResponse)
         : null;

@@ -133,6 +133,16 @@ function mapTags(events: IntelRow[]): string[] {
   return [...tags];
 }
 
+function alertEliteRank(type: MovementIntelAlert['type'], detail: string): number {
+  const d = String(detail || '');
+  if (type === 'VISIT' && /florida/i.test(d)) return 100;
+  if (type === 'VISIT') return 80;
+  if (type === 'OFFER' && /florida offer/i.test(d)) return 55;
+  if (type === 'OFFER') return 25;
+  if (type === 'PREDICTION_SHIFT') return 70;
+  return 40;
+}
+
 function buildAlerts(intel: IntelRow[], limit: number): MovementIntelAlert[] {
   const { toFanFacingIntelDetail } = require('../../lib/fan-facing-intel-copy') as {
     toFanFacingIntelDetail: (
@@ -140,7 +150,7 @@ function buildAlerts(intel: IntelRow[], limit: number): MovementIntelAlert[] {
       opts?: { eventType?: string; playerName?: string }
     ) => string | null;
   };
-  const alerts: MovementIntelAlert[] = [];
+  const candidates: Array<MovementIntelAlert & { rank: number }> = [];
 
   for (const row of intel) {
     const eventType = String(row.eventType || row.event_type || '').toLowerCase();
@@ -158,14 +168,36 @@ function buildAlerts(intel: IntelRow[], limit: number): MovementIntelAlert[] {
     });
     if (!detail) continue;
 
-    alerts.push({
-      id: String(row.id || row.fingerprint || `alert_${alerts.length}`),
+    candidates.push({
+      id: String(row.id || row.fingerprint || `alert_${candidates.length}`),
       type,
       player,
       detail,
       timestamp: String(row.reportedAt || row.timestamp || row.createdAt || new Date().toISOString()),
+      rank: alertEliteRank(type, detail),
     });
+  }
 
+  candidates.sort((a, b) => {
+    if (b.rank !== a.rank) return b.rank - a.rank;
+    return String(b.timestamp).localeCompare(String(a.timestamp));
+  });
+
+  const alerts: MovementIntelAlert[] = [];
+  let bareFloridaOffers = 0;
+  for (const row of candidates) {
+    const bareOffer = row.type === 'OFFER' && /^[^—\-]+[—\-]\s*Florida offer\.?$/i.test(row.detail);
+    if (bareOffer) {
+      bareFloridaOffers += 1;
+      if (bareFloridaOffers > 2) continue;
+    }
+    alerts.push({
+      id: row.id,
+      type: row.type,
+      player: row.player,
+      detail: row.detail,
+      timestamp: row.timestamp,
+    });
     if (alerts.length >= limit) break;
   }
 

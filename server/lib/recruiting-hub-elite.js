@@ -401,38 +401,47 @@ async function loadHubHsClassCommits(year = 2027) {
 async function buildHubTicker(year = 2027) {
   // Same commit universe as class-overview / commits cards — avoid 25/26/27 drift.
   const { commits } = await loadHubHsClassCommits(year);
-  const board = await store.getBoard(year);
-  const targets = board?.targets || [];
   const rankingsList = await store.getRankings();
   const rankings =
     (rankingsList || []).find((r) => Number(r.classYear) === Number(year)) || null;
   const rank = rankings?.nationalRank;
   const chip = blueChipPct(commits);
-  const items = [];
+  const classLines = [];
+  const named = [];
   const countLabel = classCommitMetricLabel(year).toLowerCase();
+  const nCommits = commits.length;
+  const {
+    rankEliteHomeNowLines,
+    isThinClassMetricLine,
+  } = require('./elite-home-now');
 
-  if (rank) items.push(`${year} class trending nationally — UF at #${rank}`);
-  if (chip != null) items.push(`Blue chip % at ${chip}%`);
-  if (commits.length) {
-    const n = commits.length;
-    const label = n === 1 ? countLabel.replace(/s$/i, '') : countLabel;
-    items.push(`${n} ${label} locked for ${year}`);
+  // Class metrics earn a NOW slot only when the class is real — never thin open-cycle stone.
+  if (rank && nCommits >= 5) {
+    classLines.push(`${year} class trending nationally — UF at #${rank}`);
+  }
+  if (chip != null && nCommits >= 5 && !(Number(chip) >= 100 && nCommits <= 2)) {
+    const line = `Blue chip % at ${chip}%`;
+    if (!isThinClassMetricLine(line)) classLines.push(line);
+  }
+  if (nCommits >= 5) {
+    const label = nCommits === 1 ? countLabel.replace(/s$/i, '') : countLabel;
+    classLines.push(`${nCommits} ${label} locked for ${year}`);
   }
 
   const { buildHubMovementFeed } = require('./recruiting-hub-data');
   const feed = await buildHubMovementFeed(year);
-  for (const row of feed.slice(0, 8)) {
+  for (const row of feed.slice(0, 16)) {
     if (!row?.summary) continue;
     const { toFanFacingHubSummary, isDeskOpsIntelCopy } = require('./fan-facing-intel-copy');
     const summary = toFanFacingHubSummary(row.summary, { eventType: row.event });
     if (!summary) continue;
     const line = row.name ? `${row.name} — ${summary}` : String(summary);
     if (isDeskOpsIntelCopy(line)) continue;
-    if (!items.includes(line)) items.push(line);
-    if (items.length >= 6) break;
+    if (!named.includes(line)) named.push(line);
   }
 
-  return items.slice(0, 6);
+  // Named Florida process first; class metrics fill remaining elite slots.
+  return rankEliteHomeNowLines([...named, ...classLines], 6);
 }
 
 async function buildHubClassOverview(year = 2027) {

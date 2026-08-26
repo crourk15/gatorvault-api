@@ -175,6 +175,83 @@ function isWeakAnonPulse(text: string): boolean {
   return /^(uv|unofficial visit|official visit|offer)\b/i.test(text);
 }
 
+function isThinClassMetricPulse(text: string): boolean {
+  const t = String(text || '').trim();
+  if (!t) return true;
+  if (/^Blue chip % at 100%/i.test(t)) return true;
+  if (/^1\s+(commit|signee)s?\s+locked\b/i.test(t)) return true;
+  return false;
+}
+
+function isRivalOnlyOfferPulse(text: string): boolean {
+  const t = String(text || '').trim();
+  return /\bOffer from\b/i.test(t) && !/\bOffer from Florida\b/i.test(t);
+}
+
+/** Higher = more elite for Gator Nation NOW. */
+export function eliteHomeNowScore(text: string): number {
+  const t = String(text || '').trim();
+  if (!t) return 0;
+  if (isThinClassMetricPulse(t)) return 5;
+  if (/\bVerified OV\b/i.test(t)) return 104;
+  if (/\bFlip Watch\b/i.test(t)) return 102;
+  if (/\b(unofficial|official)\s+visit\s*[·•]\s*Florida\b/i.test(t)) return 100;
+  if (/\bFlorida\s+(?:unofficial\s+|official\s+)?visit\b/i.test(t)) return 98;
+  if (/\brising\s*—\s*UF\b/i.test(t)) return 90;
+  if (/\b(unofficial|official)\s+visit\s*[·•]/i.test(t)) return 72;
+  if (/\bFlorida offer\b/i.test(t) || /\bOffer from Florida\b/i.test(t)) return 58;
+  if (/class trending nationally/i.test(t) && /#\d+/i.test(t)) return 70;
+  if (/^\d+\s+(commits|signees)\s+locked\b/i.test(t)) {
+    const n = Number((t.match(/^(\d+)/) || [])[1] || 0);
+    if (n >= 10) return 68;
+    if (n >= 5) return 50;
+    return 12;
+  }
+  if (/^Blue chip % at\b/i.test(t)) return 35;
+  if (/\bVisit scheduled\b/i.test(t)) return 48;
+  if (isRivalOnlyOfferPulse(t)) return 22;
+  return 40;
+}
+
+export function rankEliteHomeNowStories(lines: string[], limit = 6): string[] {
+  const incoming = (Array.isArray(lines) ? lines : [])
+    .map((t) => String(t || '').trim())
+    .filter(Boolean);
+  const seen = new Set<string>();
+  const scored: Array<{ line: string; score: number }> = [];
+  let floridaOfferCount = 0;
+
+  for (const line of incoming) {
+    const key = line.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    let score = eliteHomeNowScore(line);
+    if (score <= 5) continue;
+    const bareFl =
+      /\bFlorida offer\b/i.test(line) || /\bOffer from Florida\b/i.test(line);
+    if (bareFl) {
+      floridaOfferCount += 1;
+      if (floridaOfferCount > 2) continue;
+    }
+    scored.push({ line, score });
+  }
+
+  scored.sort((a, b) => b.score - a.score || a.line.localeCompare(b.line));
+  return scored.slice(0, limit).map((row) => row.line);
+}
+
+/** Merge closing-class + chase tickers into one elite NOW strip. */
+export function mergeEliteHomeTickers(
+  primary: string[] | null | undefined,
+  chase: string[] | null | undefined,
+  limit = 8
+): string[] {
+  return rankEliteHomeNowStories(
+    [...(Array.isArray(primary) ? primary : []), ...(Array.isArray(chase) ? chase : [])],
+    limit
+  );
+}
+
 /** Beat Desk / allowlist-intel ops — never Gator Nation Home NOW. */
 function isDeskOpsPulseCopy(text: string): boolean {
   const t = String(text || '').trim();
@@ -267,39 +344,36 @@ export function applyLiveCommitCountToTicker(
 
 /** Ranked NOW stories from live hub/intel — rotates on the home strip. */
 export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): string[] {
-  const named: string[] = [];
-  const commits: string[] = [];
-  const board: string[] = [];
-  const generic: string[] = [];
+  const pool: string[] = [];
 
-  const pushBucket = (bucket: string[], value?: string | null) => {
+  const push = (value?: string | null) => {
     const text = fanFacingPulseLine(value);
     if (!text) return;
-    bucket.push(text);
+    if (isThinClassMetricPulse(text)) return;
+    pool.push(text);
   };
 
   for (const row of input.visitRecap ?? []) {
     if (row.movementNarrative) {
-      pushBucket(named, `${row.name} — ${row.movementNarrative}`);
+      push(`${row.name} — ${row.movementNarrative}`);
       continue;
     }
     const range =
       row.visitEnd && row.visitEnd !== row.visitStart
         ? `${row.visitStart}–${row.visitEnd}`
         : row.visitStart;
-    if (range) pushBucket(named, `Verified OV: ${row.name} (${range})`);
+    if (range) push(`Verified OV: ${row.name} (${range})`);
   }
   for (const row of input.flipWatch ?? []) {
-    if (row.movementNarrative) pushBucket(named, `${row.name} — ${row.movementNarrative}`);
+    if (row.movementNarrative) push(`${row.name} — ${row.movementNarrative}`);
     else if (row.flipScore != null) {
-      pushBucket(
-        named,
+      push(
         `Flip Watch: ${row.name} (${row.committedShort || 'elsewhere'}) · Flip ${row.flipScore}`
       );
     }
   }
   for (const row of input.movementNarratives ?? []) {
-    if (row.movementNarrative) pushBucket(named, `${row.name} — ${row.movementNarrative}`);
+    if (row.movementNarrative) push(`${row.name} — ${row.movementNarrative}`);
   }
   for (const alert of input.movement?.alerts ?? []) {
     const detailRaw = String(alert.detail || '').trim();
@@ -308,35 +382,32 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
     if (!detail) continue;
     const player = String(alert.player || '').trim();
     if (player && detail.toLowerCase().startsWith(player.toLowerCase())) {
-      pushBucket(named, detail);
+      push(detail);
     } else if (player) {
-      pushBucket(named, `${player} — ${detail}`);
+      push(`${player} — ${detail}`);
     } else {
-      pushBucket(named, detail);
+      push(detail);
     }
   }
   for (const player of input.movement?.risers ?? []) {
     const ufPct = Math.round(player.ufProb <= 1 ? player.ufProb * 100 : player.ufProb);
-    pushBucket(named, `${player.name} rising — UF at ${ufPct}%`);
+    push(`${player.name} rising — UF at ${ufPct}%`);
   }
 
   for (const item of input.hubTicker) {
     const text = item.trim();
     if (!text) continue;
-    if (/commit/i.test(text)) pushBucket(commits, text);
-    else if (isGenericClassPulse(text) || isWeakAnonPulse(text)) pushBucket(generic, text);
-    else pushBucket(board, text);
+    if (isWeakAnonPulse(text)) continue;
+    push(text);
   }
   for (const item of input.hpIntel) {
     const text = item.text?.trim();
     if (!text) continue;
-    if (/commit/i.test(text)) pushBucket(commits, text);
-    else pushBucket(board, text);
+    push(text);
   }
 
-  const ordered = [...named, ...commits, ...board, ...generic];
-  const unique = [...new Set(ordered)].filter(Boolean);
-  if (unique.length > 0) return unique.slice(0, limit);
+  const ranked = rankEliteHomeNowStories(pool, limit);
+  if (ranked.length > 0) return ranked;
   return [...HOME_TICKER_FALLBACKS].slice(0, limit);
 }
 

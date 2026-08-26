@@ -683,6 +683,9 @@ function mapVisitLogFeedItem(log, meta) {
 
 function mapOfferLogFeedItem(log, meta) {
   const name = meta?.name || log.playerName || log.playerSlug;
+  const { shortenSchoolLabel } = require('./elite-home-now');
+  const school = shortenSchoolLabel(log.school || 'Florida') || 'Florida';
+  const summary = /^florida$/i.test(school) ? 'Florida offer' : `Offer from ${school}`;
   return {
     id: `offer-log-${log.id || log.fingerprint}`,
     timestamp: log.reportedAt || log.date || new Date().toISOString(),
@@ -690,7 +693,7 @@ function mapOfferLogFeedItem(log, meta) {
     position: meta?.position || null,
     class: meta?.classYear || null,
     event: 'offer',
-    summary: `Offer from ${log.school || 'Florida'}`,
+    summary,
     profileUrl: meta?.profileUrl || (log.playerSlug ? `/vault/recruiting/player/${log.playerSlug}` : null),
   };
 }
@@ -736,7 +739,7 @@ function boardOfferItem(meta) {
     position: meta.position,
     class: meta.classYear,
     event: 'offer',
-    summary: 'UF offer on record',
+    summary: 'Florida offer',
     profileUrl: meta.profileUrl,
   };
 }

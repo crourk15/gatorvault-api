@@ -44,7 +44,10 @@ describe('buildHomePulseStories', () => {
       hpIntel: [],
       movement: null,
     });
-    assert.equal(stories[0], '26 commits locked for 2027');
+    assert.ok(
+      stories[0] === '2027 class trending nationally — UF at #8' ||
+        stories[0] === '26 commits locked for 2027'
+    );
     assert.ok(!stories.some((s) => /UF in the mix/i.test(s)));
   });
 
@@ -67,6 +70,49 @@ describe('buildHomePulseStories', () => {
         '26 commits locked for 2027',
       ]
     );
+  });
+
+  it('ranks Florida visits and real class heat over allowlist offer spam', () => {
+    const stories = buildHomePulseStories({
+      hubTicker: [
+        'Blue chip % at 100%',
+        '1 commits locked for 2028',
+        '2027 class trending nationally — UF at #8',
+        '26 commits locked for 2027',
+        'Tranard Roberts — unofficial visit · Florida',
+      ],
+      hpIntel: [],
+      movement: {
+        alerts: [
+          {
+            id: '1',
+            type: 'OFFER',
+            player: 'Antijuan Wilkes Jr.',
+            detail: 'Antijuan Wilkes Jr. — Florida offer',
+            timestamp: '2026-08-26T11:26:34.092Z',
+          },
+          {
+            id: '2',
+            type: 'OFFER',
+            player: 'Prince Che',
+            detail: 'Prince Che — Florida offer',
+            timestamp: '2026-08-26T11:26:33.874Z',
+          },
+          {
+            id: '3',
+            type: 'OFFER',
+            player: 'Derrell Hines Jr.',
+            detail: 'Derrell Hines Jr. — Florida offer',
+            timestamp: '2026-08-26T11:26:33.737Z',
+          },
+        ],
+      } as any,
+    });
+    assert.equal(stories[0], 'Tranard Roberts — unofficial visit · Florida');
+    assert.ok(stories.some((s) => /2027 class trending nationally — UF at #8/.test(s)));
+    assert.ok(stories.some((s) => /26 commits locked for 2027/.test(s)));
+    assert.ok(!stories.some((s) => /Blue chip % at 100%|1 commits locked/i.test(s)));
+    assert.ok(stories.filter((s) => /Florida offer/i.test(s)).length <= 2);
   });
 
   it('does not paint Beat Desk / allowlist-intel ops into Home NOW', () => {
