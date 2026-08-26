@@ -280,6 +280,50 @@ function isDeskOpsPulseCopy(text: string): boolean {
   );
 }
 
+function looksLikeArticleProsePulse(text: string): boolean {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  if (t.length > 100) return true;
+  if (/[…]|\.{3}\s*$/.test(t)) return true;
+  if (
+    /\b(four|three|five)-star\b|\btells?\s+@|\bNEW:\s*\d{4}\b|has not been on .{0,40}campus|visit the Swamp|along with \d+ other/i.test(
+      t
+    )
+  ) {
+    return true;
+  }
+  return (t.match(/[.!?]/g) || []).length >= 2;
+}
+
+function compressArticleProsePulse(text: string): string | null {
+  const src = String(text || '');
+  const when = /\bthis fall\b/i.test(src)
+    ? ' this fall'
+    : /\bthis weekend\b/i.test(src)
+      ? ' this weekend'
+      : /\bthis week\b/i.test(src)
+        ? ' this week'
+        : /\bnext week\b/i.test(src)
+          ? ' next week'
+          : '';
+  // Do not scrape a "name" from article lead-ins (Four-star…); caller prepends player.
+  if (
+    /\bflorida\s+(?:unofficial\s+|official\s+)?visit\b/i.test(src) ||
+    /visit(?:ing|s)?\s+(?:the\s+)?(?:swamp|florida|gainesville)/i.test(src) ||
+    /(?:florida|gainesville|the swamp)(?:['\u2019]s)?\s+campus/i.test(src) ||
+    /on campus for flor/i.test(src) ||
+    /gainesville visit/i.test(src)
+  ) {
+    return `Florida visit${when}`;
+  }
+  if (/\bflorida\s+offer\b|\boffer from florida\b/i.test(src)) {
+    return 'Florida offer';
+  }
+  // Never paint mid-cut article residue on NOW.
+  if (/[…]|\.{3}\s*$/.test(src) || src.length > 100) return null;
+  return null;
+}
+
 function fanFacingPulseLine(text?: string | null): string | null {
   const src = String(text || '').trim();
   if (!src) return null;
@@ -299,6 +343,9 @@ function fanFacingPulseLine(text?: string | null): string | null {
     if (/\bflorida\s+offer\b/i.test(src)) return 'Florida offer';
     if (/\bflorida\s+(?:unofficial\s+|official\s+)?visit\b/i.test(src)) return 'Florida visit';
     return null;
+  }
+  if (looksLikeArticleProsePulse(raw)) {
+    return compressArticleProsePulse(raw) || compressArticleProsePulse(src);
   }
   return raw;
 }
