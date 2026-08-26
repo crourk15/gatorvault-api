@@ -171,4 +171,25 @@ describe('buildHomePulseStories', () => {
       !stories.some((s) => /Staff note|from player card|allowlist intel sweep|on file/i.test(s))
     );
   });
+
+  it('compresses article blurbs into finished Florida visit chips', () => {
+    const stories = buildHomePulseStories({
+      hubTicker: [],
+      hpIntel: [],
+      movement: {
+        alerts: [
+          {
+            type: 'VISIT',
+            player: 'Dion Edwards',
+            detail:
+              "Four-star 2028 ATH Dion Edwards has not been on Florida's campus yet. That will change this fall, as he's set to visit the Swamp along wi…",
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      } as any,
+    });
+    assert.ok(stories.some((s) => /Dion Edwards — Florida visit this fall/i.test(s)));
+    assert.ok(!stories.some((s) => /along wi|…|\.{3}/.test(s)));
+  });
+
 });
