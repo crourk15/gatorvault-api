@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="3.5in" height="2in" viewBox="0 0 1050 600">
+  <rect width="1050" height="600" fill="#F7FAFC"/>
+  <rect x="0" y="0" width="18" height="600" fill="#00C2C7"/>
+  <text x="80" y="150" font-family="Montserrat, Arial, sans-serif" font-size="34" font-weight="800" fill="#0A1A2F">Call / Text</text>
+  <text x="80" y="210" font-family="Montserrat, Arial, sans-serif" font-size="42" font-weight="700" fill="#00C2C7">863-860-9238</text>
+  <text x="80" y="290" font-family="Open Sans, Arial, sans-serif" font-size="26" fill="#0A1A2F">primeshinefl.com</text>
+  <text x="80" y="350" font-family="Open Sans, Arial, sans-serif" font-size="22" fill="#445566">Hours: 8AM–6PM · 7 days a week</text>
+  <text x="80" y="430" font-family="Montserrat, Arial, sans-serif" font-size="22" font-weight="700" fill="#0A1A2F">Prime Results. Mobile Convenience.</text>
+  <text x="80" y="520" font-family="Open Sans, Arial, sans-serif" font-size="20" font-weight="700" fill="#00C2C7">LAUNCH: First 10 customers — 50% OFF</text>
+</svg>

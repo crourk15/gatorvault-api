@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="4in" height="6in" viewBox="0 0 1200 1800">
+  <rect width="1200" height="1800" fill="#0A1A2F"/>
+  <rect x="0" y="0" width="1200" height="28" fill="#00C2C7"/>
+  <text x="600" y="180" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="64" font-weight="800" fill="#FFFFFF">Prime<tspan fill="#00C2C7">Shine</tspan></text>
+  <text x="600" y="250" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="28" letter-spacing="4" fill="#C8C8C8">MOBILE DETAILING</text>
+  <rect x="150" y="320" width="900" height="280" rx="18" fill="#102a45" stroke="#00C2C7" stroke-width="4"/>
+  <text x="600" y="430" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="72" font-weight="800" fill="#00C2C7">50% OFF</text>
+  <text x="600" y="510" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="36" font-weight="700" fill="#FFFFFF">LAUNCH SPECIAL</text>
+  <text x="600" y="570" text-anchor="middle" font-family="Open Sans, Arial, sans-serif" font-size="28" fill="#C8C8C8">First 10 customers only</text>
+  <text x="600" y="720" text-anchor="middle" font-family="Open Sans, Arial, sans-serif" font-size="30" fill="#E8EEF5">Exterior  ·  Interior  ·  Full Detail</text>
+  <text x="600" y="780" text-anchor="middle" font-family="Open Sans, Arial, sans-serif" font-size="28" fill="#E8EEF5">Shampoo  ·  Odor  ·  Pet Hair</text>
+  <text x="600" y="900" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="30" font-weight="700" fill="#FFFFFF">We come to your home or work</text>
+  <text x="600" y="970" text-anchor="middle" font-family="Open Sans, Arial, sans-serif" font-size="28" fill="#C8C8C8">Bartow · Lakeland · Winter Haven</text>
+  <rect x="180" y="1100" width="840" height="160" rx="16" fill="#00C2C7"/>
+  <text x="600" y="1170" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="40" font-weight="800" fill="#0A1A2F">863-860-9238</text>
+  <text x="600" y="1230" text-anchor="middle" font-family="Open Sans, Arial, sans-serif" font-size="28" fill="#0A1A2F">primeshinefl.com/booking</text>
+  <text x="600" y="1420" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="26" fill="#FFFFFF">Prime Results. Mobile Convenience.</text>
+  <text x="600" y="1680" text-anchor="middle" font-family="Open Sans, Arial, sans-serif" font-size="22" fill="#8899AA">Mention LAUNCH when you book</text>
+</svg>

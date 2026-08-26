@@ -31,3 +31,8 @@ Replace `OPENING_DATE` with your first service day (about 1–2 weeks after van 
 ## Do NOT promise
 - Same-day service before plate/insurance/equipment ready
 - Exact arrival times you cannot keep
+
+
+## Next week — print order
+- [ ] Order business cards + promo cards from `../print/ORDER-NEXT-WEEK.md`
+- [ ] Promo code on site/cards: **LAUNCH** (50% off first 10)
