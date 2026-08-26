@@ -219009,7 +219009,7 @@
     "name": "Bubba Brown",
     "pos": "WR",
     "classYear": 2028,
-    "school": "Lowndes (Valdosta, GA)",
+    "school": "Florida High (Tallahassee, FL)",
     "htWt": "6-1 / 190",
     "stars": 4,
     "rating": 91.39891304347826,
@@ -219026,7 +219026,7 @@
     "fromSchool": null,
     "commitDate": null,
     "skinny": "4★ WR · #95 natl · Lowndes, GA",
-    "profileNote": "",
+    "profileNote": "Returned to Florida High (Aug 2026) after Lowndes sophomore year; freshman at Florida High.",
     "on3Id": "250868",
     "on3Slug": "bubba-brown-250868",
     "on3ProfileUrl": "https://www.on3.com/rivals/bubba-brown-250868/",
@@ -221341,7 +221341,9 @@
     "updatedAt": "2026-08-14T01:47:28.929Z",
     "state": "FL",
     "displayRating": 91.39891304347826,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "hometown": "Tallahassee, FL",
+    "previousSchool": "Lowndes (Valdosta, GA)"
   },
   {
     "id": "hunter-fujikawa",
