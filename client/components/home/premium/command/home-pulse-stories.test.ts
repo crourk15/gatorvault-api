@@ -150,7 +150,7 @@ describe('buildHomePulseStories', () => {
             id: '1',
             type: 'OFFER',
             player: 'Gionni Lewis',
-            detail: 'Gionni Lewis — Florida offer from player card.',
+            detail: 'Gionni Lewis — Florida offer on file (2026-08-20) from player card.',
             timestamp: '2026-08-24T18:03:06.055Z',
           },
           {
@@ -158,7 +158,7 @@ describe('buildHomePulseStories', () => {
             type: 'OFFER',
             player: 'Kaleb Ballard',
             detail:
-              'Kaleb Ballard — Florida offer on file (2026-07-11). Continuous allowlist intel sweep.',
+              'Kaleb Ballard — Florida offer on file (2026-08-18). Continuous allowlist intel sweep.',
             timestamp: '2026-08-24T12:28:57.660Z',
           },
         ],
@@ -190,6 +190,32 @@ describe('buildHomePulseStories', () => {
     });
     assert.ok(stories.some((s) => /Dion Edwards — Florida visit this fall/i.test(s)));
     assert.ok(!stories.some((s) => /along wi|…|\.{3}/.test(s)));
+  });
+
+
+  it('drops Florida offers older than 3 weeks', () => {
+    const stories = buildHomePulseStories({
+      hubTicker: ['2027 class trending nationally — UF at #8'],
+      hpIntel: [],
+      movement: {
+        alerts: [
+          {
+            type: 'OFFER',
+            player: 'Jordyn Murray',
+            detail: 'Jordyn Murray — Florida offer on file (2026-04-01).',
+            timestamp: new Date().toISOString(),
+          },
+          {
+            type: 'OFFER',
+            player: 'No Day',
+            detail: 'No Day — Florida offer',
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      } as any,
+    });
+    assert.ok(!stories.some((s) => /Jordyn Murray|No Day/i.test(s)));
+    assert.ok(stories.some((s) => /2027 class trending nationally/i.test(s)));
   });
 
 });
