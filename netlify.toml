@@ -60,6 +60,48 @@
   compress = false
   skip = true
 
+
+# Scrub denied visit stones (Tranard Auburn UV) on the iOS same-origin API path.
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/recruiting/hub/ticker"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/recruiting/hub/ticker/*"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/recruiting/hub/bundle"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/recruiting/hub/bundle/*"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/recruiting/hub/movement-feed"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/recruiting/hub/movement-feed/*"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/recruiting/hub/hero"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/players/*"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/recruiting/intelligence/*"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/player/full-profile/*"
+
 # Proxy API through same origin — no external API URLs in the browser
 [[redirects]]
   from = "/api/*"
