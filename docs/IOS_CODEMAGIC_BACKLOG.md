@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Tranard Auburn UV: hub serve scrub + ticker cacheRev t9 + durable players heal — Home NOW/movement cannot replay stone from disk/CDN (API; no Codemagic)
 - [x] Tranard Roberts: hard-scrub false Auburn unofficial visit from players.json + store normalize/merge + intel buildVisits + visit-log ingest (On3 cannot reintroduce) — API
 - [x] HP stale-DISK rebuild + warm force bypass (`DISK-STALE` / cache v40) — FutureCast chase/delta7d unfreeze after Render (API)
 - [x] Why we chase generator + Admin/script overrides on HP API (`whyWeChase`) — live after Render; **client prefer-field needs Codemagic bake below**

@@ -22,7 +22,7 @@ const FOOTPRINT_CACHE_REV = 'fp3';
 const COMMITS_CACHE_REV = 'c5';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
-const TICKER_CACHE_REV = 't8';
+const TICKER_CACHE_REV = 't9';
 
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
@@ -183,10 +183,11 @@ function parseHubSnapshotDoc(endpoint, doc) {
   }
   if (endpoint === 'ticker') {
     const rev = meta?.cacheRev || doc.cacheRev || null;
-    // Disk paths are not keyed by rev — reject pre-t8 plates so Home NOW
-    // cannot keep serving April offers / rival Offer-from spam after gate fixes.
+    // Disk paths are not keyed by rev — reject pre-t9 plates so Home NOW
+    // cannot keep serving April offers / rival Offer-from spam / denied UVs.
     if (rev !== TICKER_CACHE_REV) return null;
-    return Array.isArray(items) ? items : null;
+    const { scrubHubTickerLines } = require('./recruiting-visit-scrub');
+    return Array.isArray(items) ? scrubHubTickerLines(items) : null;
   }
   if (
     endpoint === 'class-overview' ||
@@ -195,7 +196,13 @@ function parseHubSnapshotDoc(endpoint, doc) {
     endpoint === 'bundle' ||
     endpoint === 'hero'
   ) {
-    return Object.keys(spreadRest).length ? spreadRest : null;
+    if (!Object.keys(spreadRest).length) return null;
+    // Durable bundle/hero can outlive visit scrubs — strip denied UV stones on read.
+    if (endpoint === 'bundle' || endpoint === 'hero') {
+      const { scrubHubPayload } = require('./recruiting-visit-scrub');
+      return scrubHubPayload(spreadRest);
+    }
+    return spreadRest;
   }
   return items ?? (Object.keys(spreadRest).length ? spreadRest : null);
 }
@@ -864,10 +871,19 @@ async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = fa
     ...(result.diskSnapshot ? { diskSnapshot: true } : {}),
     ...(result.buildMs != null ? { buildMs: result.buildMs } : {}),
   });
+  // Last-mile scrub so memory/disk poison never reaches iOS Home NOW / Movement.
+  const { scrubHubPayload, scrubHubTickerLines } = require('./recruiting-visit-scrub');
   if (spread) {
-    return res.json({ ok: true, status: 'ready', meta, ...result.value });
+    const value = scrubHubPayload(result.value);
+    return res.json({ ok: true, status: 'ready', meta, ...value });
   }
-  return res.json({ ok: true, status: 'ready', meta, items: result.value });
+  const items =
+    endpoint === 'ticker' || (Array.isArray(result.value) && typeof result.value[0] === 'string')
+      ? scrubHubTickerLines(result.value)
+      : Array.isArray(result.value) && result.value[0] && typeof result.value[0] === 'object'
+        ? scrubHubPayload(result.value)
+        : result.value;
+  return res.json({ ok: true, status: 'ready', meta, items });
 }
 
 function scheduleBackgroundRefresh() {

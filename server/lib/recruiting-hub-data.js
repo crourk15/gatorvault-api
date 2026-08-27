@@ -666,9 +666,12 @@ function mapIntelToFeedItem(row, meta) {
 }
 
 function mapVisitLogFeedItem(log, meta) {
+  const { isDeniedVisit } = require('./recruiting-visit-scrub');
+  const slug = log.playerSlug || meta?.slug || '';
+  const school = log.school || 'Florida';
+  if (isDeniedVisit(slug, school)) return null;
   const name = meta?.name || log.playerName || log.playerSlug;
   const visitLabel = String(log.visitType || 'visit').replace(/_/g, ' ');
-  const school = log.school || 'Florida';
   // Prefer the actual visit day for Home NOW recency — not allowlist rematerialization time.
   const visitDate = log.date || log.visitDate || null;
   return {
@@ -1028,7 +1031,9 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
     const meta = resolveFeedMeta(slug, pool, rawMap);
     if (!meta || meta.isCommit) continue;
     if (focusYear != null && Number(meta.classYear) !== focusYear) continue;
-    items.push(mapVisitLogFeedItem(log, meta));
+    const visitItem = mapVisitLogFeedItem(log, meta);
+    if (!visitItem) continue;
+    items.push(visitItem);
     covered.add(slug);
   }
 

@@ -97,4 +97,56 @@ describe('recruiting-visit-scrub (Tranard Auburn UV)', () => {
     assert.equal((player.visits || []).length, 0);
     assert.equal((player.visitHistory || []).length, 1);
   });
+
+
+  it('scrubs hub ticker + movement feed stones', () => {
+    const {
+      isDeniedVisitTickerLine,
+      scrubHubTickerLines,
+      scrubMovementFeedItems,
+      scrubHubPayload,
+    } = require('../lib/recruiting-visit-scrub');
+    assert.equal(
+      isDeniedVisitTickerLine('Tranard Roberts — unofficial visit · Auburn Tigers'),
+      true
+    );
+    assert.equal(
+      isDeniedVisitTickerLine('Tranard Roberts — unofficial visit · Florida'),
+      false
+    );
+    const lines = scrubHubTickerLines([
+      '2027 class trending nationally — UF at #8',
+      'Tranard Roberts — unofficial visit · Auburn Tigers',
+      'Tranard Roberts — unofficial visit · Florida',
+    ]);
+    assert.deepEqual(lines, [
+      '2027 class trending nationally — UF at #8',
+      'Tranard Roberts — unofficial visit · Florida',
+    ]);
+    const feed = scrubMovementFeedItems([
+      {
+        name: 'Tranard Roberts',
+        event: 'visit',
+        summary: 'unofficial visit · Auburn Tigers',
+      },
+      {
+        name: 'Tranard Roberts',
+        event: 'visit',
+        summary: 'unofficial visit · Florida',
+      },
+    ]);
+    assert.equal(feed.length, 1);
+    assert.match(feed[0].summary, /Florida/i);
+    const bundle = scrubHubPayload({
+      ticker: ['Tranard Roberts — unofficial visit · Auburn Tigers'],
+      movementFeed: [
+        { name: 'Tranard Roberts', summary: 'unofficial visit · Auburn Tigers' },
+      ],
+      battles: [{ id: 'tranard-roberts', competitors: [{ school: 'Auburn' }] }],
+    });
+    assert.equal(bundle.ticker.length, 0);
+    assert.equal(bundle.movementFeed.length, 0);
+    assert.equal(bundle.battles[0].competitors[0].school, 'Auburn');
+  });
+
 });
