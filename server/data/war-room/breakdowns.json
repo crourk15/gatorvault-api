@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-25T16:45:58.529Z",
+  "updatedAt": "2026-08-27T16:59:13.374Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -18566,6 +18566,42 @@
       "nflProjection": null,
       "featured": false,
       "updatedAt": "2026-08-20T16:34:39.189Z",
+      "filmWatched": true,
+      "provisional": false
+    },
+    "malachi-lee": {
+      "playerSlug": "malachi-lee",
+      "playerName": "Malachi Lee",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19893077/692db9c1ca1cd327c34da6ec",
+          "publishedAt": "2026-08-27"
+        }
+      ],
+      "strengths": [
+        "Lee stacks corners on vertical go-routes and creates clear separation once he gets over the top.",
+        "Lee tracks deep balls over his shoulder cleanly and high-points contested catches in traffic.",
+        "Lee is linear and urgent after the catch — runs through arm tackles and turns short throws into chunk YAC.",
+        "Lee also plays safety (#1 WR/SS) — ballhawk traits show up with production (7 INTs on the sophomore reel)."
+      ],
+      "weaknesses": [
+        "Lee still needs mass on the 6-2 / 185 frame to finish through SEC press — most of this reel is off-coverage looks.",
+        "Lee wins more linear than lateral — COD/wiggle after the catch is not the primary separator yet."
+      ],
+      "comparison": "Lee comps to Romeo Doubs — 6-2 perimeter WR mold who wins vertically with length, tracking, and outside separation (size-matched within ~1–2\" of Lee's 6-2 / 185).",
+      "schemeFit": "Lee fits a Faulkner-style rhythm room that wants a lengthy outside WR who can stretch the field and win over the top.",
+      "staffNotes": "Vault film desk verified 2026-08-27 from Hudl embed https://www.hudl.com/embed/video/3/19893077/692db9c1ca1cd327c34da6ec (~5:48 End of Sophomore Season Highlights). Comp size-matched within ~1–2\" — not a Florida-alum default. Confirm with Charles before treating as live FutureCast card copy.",
+      "projection": "Lee projects as Year 1 package/rotation WR snaps, then compete for a starting perimeter job by Year 2 — ceiling is every-down SEC WR who takes the top off coverage and finishes contested.",
+      "insiderNotes": "Lee is a 4-star 2028 WR from Loudoun Sports Academy (formerly Westfield), listed 6-2 / 185. Hudl 'End of Sophomore Season Highlights' (~5:48): vertical stack/go separation, over-the-shoulder tracking, contested high-points, linear YAC, two-way SS production. Florida offered Aug 27, 2026 (Lee announced). Comp: Romeo Doubs.",
+      "recruitingStory": "Malachi Lee is a 4-star 2028 WR · listed 6-2 / 185 · Loudoun Sports Academy (Leesburg, VA) · Florida offered Aug 27, 2026 · uncommitted.",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-08-27T16:59:13.362Z",
       "filmWatched": true,
       "provisional": false
     }
