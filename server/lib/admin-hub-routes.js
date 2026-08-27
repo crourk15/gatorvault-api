@@ -211,11 +211,15 @@ function beatDeskModuleHealth(ops) {
   return api.status;
 }
 
-/** FutureCast desk health follows recruiting board — not Film Room catalog age. */
+/** FutureCast desk health — recruiting board + HP plate freshness (not Film Room). */
 function futurecastModuleHealth(ops) {
   const rec = tileById(ops, 'recruiting-board');
-  if (rec && rec.status) return rec.status;
-  return ops && ops.overall ? ops.overall : 'unknown';
+  const hp = tileById(ops, 'futurecast-hp');
+  const statuses = [rec?.status, hp?.status].filter(Boolean);
+  if (!statuses.length) return ops && ops.overall ? ops.overall : 'unknown';
+  if (statuses.includes('red')) return 'red';
+  if (statuses.includes('yellow')) return 'yellow';
+  return 'green';
 }
 
 /** Never default green without a real signal — unchecked modules stay `unknown`. */

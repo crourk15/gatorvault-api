@@ -50,6 +50,7 @@ Omit `title`/`body` for the normal cron ensure. Optional edit any thread: `POST 
 - **Boot:** `HUB_BOOT_FORCE_WARM=true` — priority-**lite** (hero/class/**footprint+commits**) first, then **spaced elite fill** (HP → sequential bundle → master-board) with large gaps so Starter does not OOM. HP board-truth heal index warms deferred after lite (never on GET).
 - `POST /api/recruiting/hub/warm-memory?mode=spaced` (cron `gatorvault-api-hub-warm`, every ~30m; Admin PIN also works). Modes: `lite` | `spaced`/`elite` | `bundle` — **lite includes Class footprint + commits** so map tallies refresh without Codemagic. Cron uses **2028-only** spaced years and does **not** pass `force=1` (force-restart every tick overlapped fork workers → OOM exit 143 + `/ready` 5s timeouts). Pass `?force=1` only for a manual restart.
 - `POST /api/futurecast/lab-warm` (Admin PIN / optional; spaced warm owns HP + master on cron)
+- **HP plate freshness:** `GET /api/futurecast/health` → `freshness.hp` / `hpPlateStale`. Pipeline health (~15m) alerts Discord/email on `hp_plate_stale` and schedules a cooldown rebuild. Ops tile **FutureCast HP** (36h warn / 72h red) feeds Admin Hub FutureCast dots.
 - `POST /api/recruiting/hub/refresh?warmAfter=priority` (cron `gatorvault-api-hub-refresh`)
 
 **Periodic / no-Codemagic surfaces:** Footprint Class tabs, hub commits, class overview, home **NOW** pulse (`GET /api/recruiting/hub/ticker`), FutureCast HP / Closing Top UF Targets, allowlist intel, War Room vault evals. Prefer API/data + durable `/var/data/.../hub-runtime` with bundled seed fallback under `server/data/recruiting/hub-runtime/` (and `futurecast-runtime` for Lab HP). Bump `FOOTPRINT_CACHE_REV` when tally logic changes so poisoned runtime disks cannot stick; lite warm rewrites footprint/commits/**ticker** on the ~25m cron. Home NOW ranks visits → flips → commits → board lines and rotates; never depends on Codemagic for copy refreshes.
@@ -231,7 +232,7 @@ Sidebar dots are **honest**, but desks are scoped so Charles is not blocked by u
 | Module | Dot source |
 |---|---|
 | **Beat Desk** | API posting health only (wake-lag / 0% 5xx → green) |
-| **FutureCast** | Recruiting board freshness |
+| **FutureCast** | Recruiting board + HP plate freshness (36h) |
 | **Dashboard** | Full ops overall (Film Room, drafts, API, etc.) |
 | **Content** | Film Room + Insider articles |
 

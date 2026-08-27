@@ -24,15 +24,16 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** v40: stale DISK GET schedules rebuild; warm bypasses wrap-hit on stale/force plates. */
 export const FUTURECAST_API_CACHE_VERSION = 40;
 
+const {
+  HP_DISK_MAX_AGE_MS: HP_DISK_MAX_AGE_MS_JS,
+  isHpPlateFresh: isHpPlateFreshJs,
+} = require('../../lib/futurecast-hp-freshness');
+
 /** Disk/memory plate older than this is stale — GET still serves it, warm/GET schedule rebuild. */
-export const HP_DISK_MAX_AGE_MS = 36 * 60 * 60 * 1000; // 36h
+export const HP_DISK_MAX_AGE_MS = HP_DISK_MAX_AGE_MS_JS;
 
 export function isHpPlateFresh(payload: unknown, maxAgeMs = HP_DISK_MAX_AGE_MS): boolean {
-  if (!payload || typeof payload !== 'object') return false;
-  const doc = payload as { updatedAt?: string; lastUpdated?: string };
-  const ts = Date.parse(String(doc.updatedAt || doc.lastUpdated || ''));
-  if (!Number.isFinite(ts)) return false;
-  return Date.now() - ts <= maxAgeMs;
+  return isHpPlateFreshJs(payload, maxAgeMs);
 }
 
 export function underclassmenCacheKey(years: Array<number | string>): string {

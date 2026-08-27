@@ -395,6 +395,25 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
     (thresholds.filmRoomStaleDays || 8) * 36
   );
 
+  let hp28 = null;
+  try {
+    const { getHighPriorityPlateFreshness } = require('./futurecast-hp-freshness');
+    hp28 = getHighPriorityPlateFreshness(2028);
+  } catch {
+    hp28 = null;
+  }
+  const hpWarnHours = thresholds.futurecastHpStaleHours || 36;
+  const hpFresh = freshnessStatus(
+    hp28?.updatedAt || null,
+    hpWarnHours,
+    hpWarnHours * 2
+  );
+  // Missing plate is always red (same as freshnessStatus null).
+  const hpStatus =
+    hp28?.missing || !hp28?.updatedAt
+      ? 'red'
+      : hpFresh.status;
+
   const cronTiles = buildCronTiles(config, heartbeats);
   const trackedCronTiles = cronTiles.filter((j) => j.heartbeatRequired !== false);
   const cronParentStatus = trackedCronTiles.some((j) => j.status === 'red')
@@ -465,6 +484,20 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
       lastUpdateHours: filmFresh.hours,
       summary: filmUpdated ? `Catalog ${filmFresh.hours ?? '?'}h ago` : 'No catalog timestamp',
       errors24h: opsMonitor.getErrorCount24h('cron:film-room-weekly')
+    }),
+    tile('futurecast-hp', 'FutureCast HP', hpStatus, {
+      lastRun: hp28?.updatedAt || null,
+      lastUpdateHours: hpFresh.hours,
+      summary: hp28?.missing
+        ? '2028 HP plate missing'
+        : hp28?.updatedAt
+          ? `2028 plate ${hpFresh.hours ?? '?'}h ago · ${hp28.playerCount || 0} players`
+          : 'No 2028 HP timestamp',
+      year: 2028,
+      playerCount: hp28?.playerCount || 0,
+      stale: hp28?.stale === true,
+      maxAgeHours: hpWarnHours,
+      errors24h: 0
     }),
     buildInsiderArticlesTile(heartbeats),
     buildIdentityPatternsTile(),

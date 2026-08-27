@@ -38,6 +38,8 @@ function loadFreshness() {
     } catch {
       labPromote = null;
     }
+    const { getHighPriorityFreshnessReport } = require('../../lib/futurecast-hp-freshness');
+    const hp = getHighPriorityFreshnessReport([2027, 2028]);
     return {
       ufTrend: {
         durable: trend.durable === true,
@@ -47,6 +49,14 @@ function loadFreshness() {
         multiPointSlugs: trend.multiPointSlugs,
         ageDays,
         stale: ageDays == null ? true : ageDays > 2,
+      },
+      /** Open + Closing Class HP plates — stale when older than 36h (DISK-STALE gate). */
+      hp: {
+        stale: hp.stale,
+        missing: hp.missing,
+        maxAgeHours: hp.maxAgeHours,
+        checkedAt: hp.checkedAt,
+        byYear: hp.byYear,
       },
       rivalsPmLastRun,
       labPromote,
@@ -68,6 +78,10 @@ export async function handleGetFutureCastHealth(_req: Request, res: Response): P
     const { rows: predictionRows } = await db.query<{ count: string }>(
       "select count(*)::text as count from futurecast.predictions where status = 'ACTIVE'"
     );
+    const hpStale =
+      freshness &&
+      typeof freshness === 'object' &&
+      (freshness as { hp?: { stale?: boolean } }).hp?.stale === true;
     res.json({
       ok: true,
       connected: true,
@@ -77,6 +91,8 @@ export async function handleGetFutureCastHealth(_req: Request, res: Response): P
       databaseConfigured: !!(process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL),
       ssl: process.env.FUTURECAST_DB_SSL === 'true' || process.env.NODE_ENV === 'production',
       freshness,
+      /** Convenience flag for monitors — true when any HP plate is stale/missing. */
+      hpPlateStale: hpStale,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
