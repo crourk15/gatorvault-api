@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-25T16:45:58.545Z",
+  "updatedAt": "2026-08-27T16:34:13.840Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -2987,6 +2987,32 @@
         "perimeter-wr"
       ],
       "vaultFilmAngle": "Pensacola ATH with freshman + sophomore tape built on play speed — vertical gear, YAC burst, return juice. Florida already clear atop On3 RPM with offer + UOV.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "malachi-lee": {
+      "playerName": "Malachi Lee",
+      "position": null,
+      "classYear": null,
+      "sources": [],
+      "traits": [
+        "length",
+        "perimeter",
+        "frame",
+        "offer",
+        "board"
+      ],
+      "vaultFilmAngle": "Lead with Florida offer on Top-10 WR Malachi Lee — stack 6-2 frame + VA board perch.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"
