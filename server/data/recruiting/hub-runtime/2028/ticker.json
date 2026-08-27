@@ -1,8 +1,20 @@
-[
-  "Blue chip % at 100%",
-  "1 commits locked for 2028",
-  "Quinton Rolle Jr — Offer from Liberty Flames",
-  "Malakhi Dudley — Offer from Nebraska Cornhuskers",
-  "Anthony Howard Jr — unofficial visit · Florida State Seminoles",
-  "Pj Evans — unofficial visit · Ole Miss Rebels"
-]
+{
+  "ok": true,
+  "status": "ready",
+  "meta": {
+    "generatedAt": "2026-08-27T21:00:00.000Z",
+    "snapshot": true,
+    "endpoint": "ticker",
+    "year": 2028,
+    "source": "hub-runtime",
+    "cacheRev": "t9"
+  },
+  "items": [
+    "Blue chip % at 100%",
+    "1 commits locked for 2028",
+    "Quinton Rolle Jr \u2014 Offer from Liberty Flames",
+    "Malakhi Dudley \u2014 Offer from Nebraska Cornhuskers",
+    "Anthony Howard Jr \u2014 unofficial visit \u00b7 Florida State Seminoles",
+    "Pj Evans \u2014 unofficial visit \u00b7 Ole Miss Rebels"
+  ]
+}
