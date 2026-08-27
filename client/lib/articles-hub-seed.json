@@ -1,7 +1,17 @@
 {
-  "generatedAt": "2026-07-21T14:06:09.152Z",
-  "source": "prod-api",
+  "generatedAt": "2026-08-27T01:11:42.905Z",
+  "source": "local-articles",
   "articles": [
+    {
+      "id": "art-fau-season-opener-2026",
+      "category": "GAME WEEK",
+      "title": "Season Opener Package: Depth Chart, Camp Winners, and What to Watch vs FAU",
+      "preview": "Sumrall’s debut vs FAU is 10 days out. Philo is Week 1 QB1, the OL has soft locks, camp battles are narrowed, and here’s the offense/defense setup plus season lookouts — all from the Vault board.",
+      "author": "GatorVault Staff",
+      "date": "Aug 27, 2026",
+      "readTime": 7,
+      "trending": false
+    },
     {
       "id": "insider_1782917403035_2pmphs",
       "category": "Insider",
@@ -11,16 +21,76 @@
       "date": "Jul 14, 2026",
       "readTime": 4,
       "trending": false
+    },
+    {
+      "id": "art-portal-class-2026",
+      "category": "PORTAL RADAR",
+      "title": "2026 Portal Class Recap: 23 In, 29 Out",
+      "preview": "UF's 2026 transfer cycle in one clean read — who arrived, who left, where exits landed, and which returning defenders anchor the new scheme.",
+      "author": "GatorVault Staff",
+      "date": "Jul 13, 2026",
+      "readTime": 9,
+      "trending": false
+    },
+    {
+      "id": "art-335-revolution",
+      "category": "FILM ROOM",
+      "title": "The 3-3-5 Revolution: Why {{ coach.DC }}'s Scheme Changes Everything",
+      "preview": "{{ coach.DC }}'s 3-3-5 isn't a gimmick — it's a personnel-driven answer to modern spread offenses. Here's how it works, who benefits, and why Jayden Woods makes it dangerous.",
+      "author": "GatorVault Film Desk",
+      "date": "Jul 12, 2026",
+      "readTime": 8,
+      "trending": false
+    },
+    {
+      "id": "art-sumrall-6mo",
+      "category": "INSIDER",
+      "title": "{{ coach.HC }}'s First 6 Months: A Real Assessment",
+      "preview": "Six months in, {{ coach.HC }} has rebuilt the roster through the portal, installed a new defensive identity, and kept the locker room bought in. We grade every major decision.",
+      "author": "GatorVault Staff",
+      "date": "Jul 14, 2026",
+      "readTime": 7,
+      "trending": false
+    },
+    {
+      "id": "art-philo-film",
+      "category": "FILM ROOM",
+      "title": "Aaron Philo Film Study: Who Is The New UF Quarterback?",
+      "preview": "Georgia Tech transfer Aaron Philo brings pro-style mechanics and anticipatory throwing to Gainesville. We broke down 12 games of film to map his strengths, weaknesses, and fit in {{ coach.OC }}'s offense.",
+      "author": "GatorVault Film Desk",
+      "date": "Jul 11, 2026",
+      "readTime": 10,
+      "trending": false
+    },
+    {
+      "id": "art-win-model",
+      "category": "WAR ROOM",
+      "title": "War Room: 2026 Schedule Win Probability Model",
+      "preview": "Florida's 2026 model projects ~7.6 expected wins. The season turns on Auburn, Ole Miss, Oklahoma, FSU, and Missouri — with Georgia (Atlanta) and Texas as the stretch games.",
+      "author": "GatorVault Analytics",
+      "date": "Jul 14, 2026",
+      "readTime": 9,
+      "trending": false
+    },
+    {
+      "id": "art-summer-battles",
+      "category": "SUMMER PREVIEW",
+      "title": "Summer Camp Preview: 5 Position Battles to Watch",
+      "preview": "Fall camp opens August 2nd. These five position battles will shape the starting lineup, the two-deep, and how {{ coach.HC }}'s first season unfolds.",
+      "author": "GatorVault Staff",
+      "date": "Jul 10, 2026",
+      "readTime": 6,
+      "trending": false
     }
   ],
   "featured": {
-    "id": "insider_1782917403035_2pmphs",
-    "category": "Insider",
-    "title": "Insider: Defensive scheme install ahead of schedule",
-    "preview": "Florida's 2026 floor turns on 3-3-5 install pace — JACK/STAR and the trenches — not a laundry list of portal and board stats.",
+    "id": "art-fau-season-opener-2026",
+    "category": "GAME WEEK",
+    "title": "Season Opener Package: Depth Chart, Camp Winners, and What to Watch vs FAU",
+    "preview": "Sumrall’s debut vs FAU is 10 days out. Philo is Week 1 QB1, the OL has soft locks, camp battles are narrowed, and here’s the offense/defense setup plus season lookouts — all from the Vault board.",
     "author": "GatorVault Staff",
-    "date": "Jul 14, 2026",
-    "readTime": 4,
+    "date": "Aug 27, 2026",
+    "readTime": 7,
     "trending": false
   },
   "storylines": [],
