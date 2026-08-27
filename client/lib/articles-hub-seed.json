@@ -1,17 +1,7 @@
 {
-  "generatedAt": "2026-08-27T01:11:42.905Z",
+  "generatedAt": "2026-08-27T01:14:46.627Z",
   "source": "local-articles",
   "articles": [
-    {
-      "id": "art-fau-season-opener-2026",
-      "category": "GAME WEEK",
-      "title": "Season Opener Package: Depth Chart, Camp Winners, and What to Watch vs FAU",
-      "preview": "Sumrall’s debut vs FAU is 10 days out. Philo is Week 1 QB1, the OL has soft locks, camp battles are narrowed, and here’s the offense/defense setup plus season lookouts — all from the Vault board.",
-      "author": "GatorVault Staff",
-      "date": "Aug 27, 2026",
-      "readTime": 7,
-      "trending": false
-    },
     {
       "id": "insider_1782917403035_2pmphs",
       "category": "Insider",
@@ -84,13 +74,13 @@
     }
   ],
   "featured": {
-    "id": "art-fau-season-opener-2026",
-    "category": "GAME WEEK",
-    "title": "Season Opener Package: Depth Chart, Camp Winners, and What to Watch vs FAU",
-    "preview": "Sumrall’s debut vs FAU is 10 days out. Philo is Week 1 QB1, the OL has soft locks, camp battles are narrowed, and here’s the offense/defense setup plus season lookouts — all from the Vault board.",
+    "id": "insider_1782917403035_2pmphs",
+    "category": "Insider",
+    "title": "Insider: Defensive scheme install ahead of schedule",
+    "preview": "Florida's 2026 floor turns on 3-3-5 install pace — JACK/STAR and the trenches — not a laundry list of portal and board stats.",
     "author": "GatorVault Staff",
-    "date": "Aug 27, 2026",
-    "readTime": 7,
+    "date": "Jul 14, 2026",
+    "readTime": 4,
     "trending": false
   },
   "storylines": [],

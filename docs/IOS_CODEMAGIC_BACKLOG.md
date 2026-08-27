@@ -73,7 +73,6 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-08-27 | Articles hub seed: FAU season-opener package (depth chart / camp / lookouts) cold paint | `articles-hub-seed.json` in binary; **live `/api/insider/articles` after Render without bake** | pending |
 | 2026-08-26 | Community: Edit + Delete on own threads/replies (author-only) | `VaultCommunityPage` + `CommunityPostActions` + community-api in binary; **API routes live without bake** | pending |
 | 2026-08-26 | Capacitor seed: scrub movementFeed visit/offer school lines (Tranard Auburn + rival offers) — only live ticker/alerts paint schools | `recruiting-hub-bundle-seed` in binary | pending |
 | 2026-08-26 | Home NOW: hard 3-week cap + Florida offer requires real offer day; ticker disk cacheRev t8 | pulse gates in binary; **API ticker/alerts live without bake** | pending |
