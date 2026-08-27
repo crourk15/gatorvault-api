@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] HP plate freshness monitor (health + pipeline alert + Ops tile) — API only
 - [x] HP stale-DISK rebuild + warm force bypass (`DISK-STALE` / cache v40) — FutureCast chase/delta7d unfreeze after Render (API)
 - [x] Why we chase generator + Admin/script overrides on HP API (`whyWeChase`) — live after Render; **client prefer-field needs Codemagic bake below**
 - [x] 2028 HP chase cards: visit lines + Why we chase notes from live visit/intel stores + soft priority nudge (API — no Codemagic; Rising still snapshot `delta7d` only)

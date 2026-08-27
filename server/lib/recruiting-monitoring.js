@@ -289,6 +289,32 @@ async function runHealthCheck() {
     });
   }
 
+  // FutureCast HP durable plates — catch week-old DISK freezes before fans notice.
+  let hpFreshness = null;
+  try {
+    const {
+      getHighPriorityFreshnessReport,
+      scheduleStaleHighPriorityRebuilds,
+    } = require('./futurecast-hp-freshness');
+    hpFreshness = getHighPriorityFreshnessReport([2027, 2028]);
+    const open = hpFreshness.byYear?.['2028'];
+    if (open?.stale) {
+      issues.push({
+        code: 'hp_plate_stale',
+        message: open.missing
+          ? 'FutureCast 2028 HP plate missing on disk'
+          : `FutureCast 2028 HP plate age ${open.ageHours ?? '?'}h (threshold ${open.maxAgeHours}h)`
+      });
+      try {
+        scheduleStaleHighPriorityRebuilds([2028], 'pipeline-healthcheck');
+      } catch {
+        /* schedule is best-effort */
+      }
+    }
+  } catch (e) {
+    console.warn('[recruiting-monitoring] HP freshness check failed:', e.message);
+  }
+
   const healthReport = {
     ok: issues.length === 0,
     at: new Date().toISOString(),
@@ -314,12 +340,17 @@ async function runHealthCheck() {
       idleThresholdMs: AUTOPOSTER_IDLE_MS,
       lastError: report.autoposter?.lastError || null
     },
+    highPriority: hpFreshness,
     counters: getCounters(),
     recentIngestLog: status.recentLog || [],
     issues
   };
 
-  if (issues.some((i) => ['beat_stream_error', 'autoposter_error', 'on3_ingest_stale'].includes(i.code))) {
+  if (
+    issues.some((i) =>
+      ['beat_stream_error', 'autoposter_error', 'on3_ingest_stale', 'hp_plate_stale'].includes(i.code)
+    )
+  ) {
     counters.healthAlerts += 1;
     await sendMonitoringAlert({
       level: 'warning',

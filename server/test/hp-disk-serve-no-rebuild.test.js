@@ -29,8 +29,8 @@ describe('HP DISK serve rebuild policy', () => {
     assert.match(src, /needRebuild = force \|\| existing == null \|\| !isHpPlateFresh\(existing\)/);
     assert.match(src, /cache\.remove\(key\)/);
     assert.match(src, /FUTURECAST_API_CACHE_VERSION = 40/);
-    // Freshness uses updatedAt or lastUpdated.
-    assert.match(src, /updatedAt \|\| doc\.lastUpdated/);
+    // Shared JS probe owns the age math — response-cache re-exports it.
+    assert.match(src, /futurecast-hp-freshness/);
   });
 
   it('lab-warm accepts force and passes it into Lab warm', () => {

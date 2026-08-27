@@ -15,6 +15,7 @@
     "deployStaleDays": 7,
     "jobFailureStreak": 3,
     "recruitingBoardStaleHours": 24,
+    "futurecastHpStaleHours": 36,
     "portalTrackerStaleHours": 12,
     "nilDashboardStaleDays": 7,
     "depthChartStaleHours": 24,
