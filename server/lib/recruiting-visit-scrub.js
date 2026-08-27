@@ -1,11 +1,11 @@
 /**
- * Hard denylist for known-bad visit rows that must never surface on profiles,
- * Home NOW, hub ticker/movement, or intel — even if On3 / seed / durable disk
- * re-introduces them.
+ * Hard denylist for known-bad player↔school rows that must never surface on
+ * profiles, Home NOW, hub ticker/movement/battle, or intel — even if On3 /
+ * seed / durable disk re-introduces them.
  *
- * Tranard Roberts: Auburn "unofficial visit" was a false stone wiped for the
- * 1.0.20/1.0.21 bake. Keep scrubbing forever so ingest + durable hub plates
- * cannot resurrect it (live iOS must pick this up without Codemagic).
+ * Tranard Roberts × Auburn: false unofficial-visit stone + any residual
+ * Auburn competitor/offer paint. Wipe forever so live iOS updates without
+ * waiting on a binary bake.
  */
 
 'use strict';
@@ -20,17 +20,45 @@ function rulesForSlug(slug) {
   return DENIED_VISITS.filter((r) => r.slug === s);
 }
 
+function schoolFromUnknown(value) {
+  if (value == null) return '';
+  if (typeof value === 'string') return value.trim();
+  if (typeof value !== 'object') return String(value || '').trim();
+  const nestedTeam =
+    value.team && typeof value.team === 'object'
+      ? value.team.name || value.team.fullName || value.team.slug || ''
+      : typeof value.team === 'string'
+        ? value.team
+        : '';
+  return String(
+    value.school ||
+      value.schoolName ||
+      value.visitSchool ||
+      value.host ||
+      nestedTeam ||
+      value.name ||
+      value.fullName ||
+      value.competitorName ||
+      value.slug ||
+      ''
+  ).trim();
+}
+
 function isDeniedVisit(slug, school) {
-  const schoolStr = String(school || '').trim();
+  const schoolStr = schoolFromUnknown(school);
   if (!schoolStr) return false;
   return rulesForSlug(slug).some((r) => r.schoolRe.test(schoolStr));
+}
+
+function isDeniedPlayerSchool(slug, school) {
+  return isDeniedVisit(slug, school);
 }
 
 /** Home NOW / hub ticker line: "Tranard Roberts — unofficial visit · Auburn Tigers" */
 function isDeniedVisitTickerLine(line) {
   const text = String(line || '');
   if (!text.trim()) return false;
-  if (!/\b(unofficial|official)\s+visit\b|\bUOV\b|\bOV\b/i.test(text)) return false;
+  // Any Tranard + Auburn ticker/movement line — visit or otherwise.
   return DENIED_VISITS.some((r) => r.nameRe.test(text) && r.schoolRe.test(text));
 }
 
@@ -47,24 +75,92 @@ function scrubMovementFeedItems(items) {
     const summary = String(item.summary || item.detail || '');
     const school = String(item.school || '');
     const blob = `${name} ${summary} ${school}`;
-    if (!/\b(unofficial|official)\s+visit\b|\bUOV\b|\bOV\b|visit/i.test(blob)) return true;
     return !DENIED_VISITS.some((r) => r.nameRe.test(blob) && r.schoolRe.test(blob));
   });
 }
 
-/** Scrub hub bundle/hero payloads (ticker + movementFeed) before serve. */
+function scrubCompetitorList(slug, competitors) {
+  if (!Array.isArray(competitors) || !competitors.length) {
+    return Array.isArray(competitors) ? competitors : [];
+  }
+  const rules = rulesForSlug(slug);
+  if (!rules.length) return competitors;
+  return competitors.filter((c) => {
+    const school = schoolFromUnknown(c);
+    if (!school) return true;
+    return !rules.some((r) => r.schoolRe.test(school));
+  });
+}
+
+function scrubTopTeamsList(slug, teams) {
+  if (!Array.isArray(teams) || !teams.length) return Array.isArray(teams) ? teams : [];
+  const rules = rulesForSlug(slug);
+  if (!rules.length) return teams;
+  return teams.filter((t) => {
+    const school = schoolFromUnknown(t);
+    if (!school) return true;
+    return !rules.some((r) => r.schoolRe.test(school));
+  });
+}
+
+function scrubOfferList(slug, offers) {
+  if (!Array.isArray(offers) || !offers.length) return Array.isArray(offers) ? offers : [];
+  const rules = rulesForSlug(slug);
+  if (!rules.length) return offers;
+  return offers.filter((o) => {
+    const school = schoolFromUnknown(o);
+    if (!school) return true;
+    return !rules.some((r) => r.schoolRe.test(school));
+  });
+}
+
+function scrubHeatOrBattleRow(row) {
+  if (!row || typeof row !== 'object') return row;
+  const id = String(row.id || row.slug || '');
+  const name = String(row.name || '');
+  const rules = DENIED_VISITS.filter((r) => r.slug === id.toLowerCase() || r.nameRe.test(name));
+  if (!rules.length) return row;
+  const out = { ...row };
+  if (Array.isArray(out.competitors)) {
+    out.competitors = out.competitors.filter((c) => {
+      const school = schoolFromUnknown(c);
+      return !rules.some((r) => r.schoolRe.test(school));
+    });
+  }
+  if (out.battle && typeof out.battle === 'object') {
+    const battle = { ...out.battle };
+    const compName = String(battle.competitorName || '');
+    if (compName && rules.some((r) => r.schoolRe.test(compName))) {
+      const next = Array.isArray(out.competitors) && out.competitors[0] ? out.competitors[0] : null;
+      battle.competitorName = next ? schoolFromUnknown(next) || null : null;
+      battle.competitor = next && next.score != null ? next.score : null;
+    }
+    out.battle = battle;
+  }
+  return out;
+}
+
+/** Scrub hub bundle/hero payloads before serve. */
 function scrubHubPayload(value) {
   if (value == null) return value;
   if (Array.isArray(value)) {
-    // ticker items are string[]; movement feed is object[]
     if (value.length && typeof value[0] === 'string') return scrubHubTickerLines(value);
-    if (value.length && value[0] && typeof value[0] === 'object') return scrubMovementFeedItems(value);
+    if (value.length && value[0] && typeof value[0] === 'object') {
+      // movement feed OR heat/battle rows
+      if (value[0].summary != null || value[0].detail != null || value[0].school != null) {
+        return scrubMovementFeedItems(value);
+      }
+      return value.map(scrubHeatOrBattleRow);
+    }
     return value;
   }
   if (typeof value !== 'object') return value;
   const out = { ...value };
   if (Array.isArray(out.ticker)) out.ticker = scrubHubTickerLines(out.ticker);
   if (Array.isArray(out.movementFeed)) out.movementFeed = scrubMovementFeedItems(out.movementFeed);
+  if (Array.isArray(out.heatIndex)) out.heatIndex = out.heatIndex.map(scrubHeatOrBattleRow);
+  if (Array.isArray(out.battleBoard)) out.battleBoard = out.battleBoard.map(scrubHeatOrBattleRow);
+  if (Array.isArray(out.battles)) out.battles = out.battles.map(scrubHeatOrBattleRow);
   if (out.hero && typeof out.hero === 'object') {
     out.hero = scrubHubPayload(out.hero);
   }
@@ -76,10 +172,7 @@ function scrubPlayerVisits(slug, visits) {
   const rules = rulesForSlug(slug);
   if (!rules.length) return visits;
   return visits.filter((v) => {
-    const school =
-      typeof v === 'string'
-        ? v
-        : String(v?.school || v?.schoolName || v?.visitSchool || v?.host || v?.team || '').trim();
+    const school = schoolFromUnknown(v);
     if (!school) return true;
     return !rules.some((r) => r.schoolRe.test(school));
   });
@@ -94,7 +187,7 @@ function scrubVisitLogRows(rows) {
   });
 }
 
-function scrubPlayerVisitFields(player) {
+function scrubPlayerSchoolFields(player) {
   if (!player || typeof player !== 'object') return player;
   const slug = player.slug || player.id || '';
   if (Array.isArray(player.visits)) {
@@ -103,17 +196,49 @@ function scrubPlayerVisitFields(player) {
   if (Array.isArray(player.visitHistory)) {
     player.visitHistory = scrubPlayerVisits(slug, player.visitHistory);
   }
+  if (Array.isArray(player.competitors)) {
+    player.competitors = scrubCompetitorList(slug, player.competitors);
+  }
+  if (Array.isArray(player.offers)) {
+    player.offers = scrubOfferList(slug, player.offers);
+  }
+  if (Array.isArray(player.offerList)) {
+    player.offerList = scrubOfferList(slug, player.offerList);
+  }
+  if (Array.isArray(player.topTeams)) {
+    player.topTeams = scrubTopTeamsList(slug, player.topTeams);
+  }
+  if (Array.isArray(player.on3TopTeams)) {
+    player.on3TopTeams = scrubTopTeamsList(slug, player.on3TopTeams);
+  }
+  if (Array.isArray(player.competingSchools)) {
+    player.competingSchools = scrubCompetitorList(slug, player.competingSchools);
+  }
+  if (player.portalPredictions && typeof player.portalPredictions === 'object') {
+    const pp = { ...player.portalPredictions };
+    if (Array.isArray(pp.predictions)) {
+      pp.predictions = scrubCompetitorList(slug, pp.predictions);
+    }
+    player.portalPredictions = pp;
+  }
   return player;
+}
+
+/** @deprecated use scrubPlayerSchoolFields */
+function scrubPlayerVisitFields(player) {
+  return scrubPlayerSchoolFields(player);
 }
 
 /**
  * One-shot durable disk heal — /var/data/players.json survives deploys and can
- * keep denied visit rows forever. Rewrite when any denied row is present.
+ * keep denied rows forever. Rewrite when any denied row is present.
  */
 function healDurableDeniedVisits(playersPath) {
   const fs = require('fs');
   const path = require('path');
-  const filePath = playersPath || path.join(require('./recruiting-data-dir').resolveRecruitingDataDir(), 'players.json');
+  const filePath =
+    playersPath ||
+    path.join(require('./recruiting-data-dir').resolveRecruitingDataDir(), 'players.json');
   if (!fs.existsSync(filePath)) return { healed: false, reason: 'missing' };
   let players;
   try {
@@ -125,10 +250,24 @@ function healDurableDeniedVisits(playersPath) {
   let changed = 0;
   for (const p of players) {
     if (!p || !p.slug) continue;
-    const before = Array.isArray(p.visits) ? p.visits.length : 0;
-    scrubPlayerVisitFields(p);
-    const after = Array.isArray(p.visits) ? p.visits.length : 0;
-    if (after < before) changed += 1;
+    const before = JSON.stringify({
+      visits: p.visits,
+      competitors: p.competitors,
+      offers: p.offers,
+      offerList: p.offerList,
+      topTeams: p.topTeams,
+      on3TopTeams: p.on3TopTeams,
+    });
+    scrubPlayerSchoolFields(p);
+    const after = JSON.stringify({
+      visits: p.visits,
+      competitors: p.competitors,
+      offers: p.offers,
+      offerList: p.offerList,
+      topTeams: p.topTeams,
+      on3TopTeams: p.on3TopTeams,
+    });
+    if (after !== before) changed += 1;
   }
   if (!changed) return { healed: false, reason: 'clean', changed: 0 };
   try {
@@ -142,12 +281,17 @@ function healDurableDeniedVisits(playersPath) {
 module.exports = {
   DENIED_VISITS,
   isDeniedVisit,
+  isDeniedPlayerSchool,
   isDeniedVisitTickerLine,
   scrubHubTickerLines,
   scrubMovementFeedItems,
   scrubHubPayload,
   scrubPlayerVisits,
+  scrubCompetitorList,
+  scrubOfferList,
+  scrubTopTeamsList,
   scrubVisitLogRows,
   scrubPlayerVisitFields,
+  scrubPlayerSchoolFields,
   healDurableDeniedVisits,
 };

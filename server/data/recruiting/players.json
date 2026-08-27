@@ -20472,11 +20472,6 @@
     "nilSource": null,
     "competitors": [
       {
-        "school": "Auburn",
-        "score": 8.425275827482444,
-        "pct": 8.425275827482444
-      },
-      {
         "school": "UCF",
         "score": 1.2036108324974923,
         "pct": 1.2036108324974923
@@ -20495,12 +20490,6 @@
     "offers": [
       {
         "school": "Florida",
-        "offerType": "Offered",
-        "date": null,
-        "source": "on3"
-      },
-      {
-        "school": "Auburn Tigers",
         "offerType": "Offered",
         "date": null,
         "source": "on3"
@@ -20611,12 +20600,6 @@
     "offerList": [
       {
         "school": "Florida",
-        "offerType": "Offered",
-        "date": null,
-        "source": "on3"
-      },
-      {
-        "school": "Auburn Tigers",
         "offerType": "Offered",
         "date": null,
         "source": "on3"
@@ -20864,74 +20847,6 @@
         "committedDate": null,
         "draftPositionCount": 1,
         "draftTotal": 24,
-        "positionAbbreviation": "RB",
-        "positionKey": 2
-      },
-      {
-        "team": {
-          "assetUrl": {
-            "key": 1894,
-            "url": "https://on3static.com/uploads/assets/732/149/149732.svg",
-            "slug": "auburn-tigers",
-            "fullName": "Auburn Tigers"
-          },
-          "fullName": "Auburn Tigers",
-          "key": 1894,
-          "name": "Auburn",
-          "mascot": "Tigers",
-          "abbreviation": "AUB",
-          "asset": {
-            "key": 149732,
-            "domainOverride": null,
-            "domain": "on3static.com",
-            "sourceOverride": null,
-            "source": "/uploads/assets/732/149/149732.svg",
-            "title": "Organization Logo",
-            "description": null,
-            "caption": null,
-            "category": null,
-            "altText": null,
-            "height": 1600,
-            "width": 2000,
-            "assetType": "Image",
-            "fileSystem": "s3",
-            "path": "/uploads/assets/732/149",
-            "type": "svg",
-            "thumbnail": null,
-            "duration": 0,
-            "mimeType": "image/svg+xml"
-          },
-          "slug": "auburn-tigers",
-          "urlSlug": "auburn-tigers-1894",
-          "primaryColor": "#002649"
-        },
-        "year": 2027,
-        "sport": {
-          "key": 1,
-          "name": "Football",
-          "isScoutable": true,
-          "isRankable": true,
-          "isIndustryRankable": true
-        },
-        "coaches": [
-          null,
-          null
-        ],
-        "status": "Offered",
-        "interest": 1,
-        "distance": 282.43579700636985,
-        "classRank": 12,
-        "officialVisitCount": 0,
-        "unOfficialVisitCount": 1,
-        "latestVisit": {
-          "official": false,
-          "dateOccurred": 1764374400,
-          "organizationKey": 1894
-        },
-        "prediction": 8.425275827482444,
-        "committedDate": null,
-        "draftPositionCount": 2,
-        "draftTotal": 19,
         "positionAbbreviation": "RB",
         "positionKey": 2
       },
@@ -22230,74 +22145,6 @@
         "committedDate": null,
         "draftPositionCount": 1,
         "draftTotal": 24,
-        "positionAbbreviation": "RB",
-        "positionKey": 2
-      },
-      {
-        "team": {
-          "assetUrl": {
-            "key": 1894,
-            "url": "https://on3static.com/uploads/assets/732/149/149732.svg",
-            "slug": "auburn-tigers",
-            "fullName": "Auburn Tigers"
-          },
-          "fullName": "Auburn Tigers",
-          "key": 1894,
-          "name": "Auburn",
-          "mascot": "Tigers",
-          "abbreviation": "AUB",
-          "asset": {
-            "key": 149732,
-            "domainOverride": null,
-            "domain": "on3static.com",
-            "sourceOverride": null,
-            "source": "/uploads/assets/732/149/149732.svg",
-            "title": "Organization Logo",
-            "description": null,
-            "caption": null,
-            "category": null,
-            "altText": null,
-            "height": 1600,
-            "width": 2000,
-            "assetType": "Image",
-            "fileSystem": "s3",
-            "path": "/uploads/assets/732/149",
-            "type": "svg",
-            "thumbnail": null,
-            "duration": 0,
-            "mimeType": "image/svg+xml"
-          },
-          "slug": "auburn-tigers",
-          "urlSlug": "auburn-tigers-1894",
-          "primaryColor": "#002649"
-        },
-        "year": 2027,
-        "sport": {
-          "key": 1,
-          "name": "Football",
-          "isScoutable": true,
-          "isRankable": true,
-          "isIndustryRankable": true
-        },
-        "coaches": [
-          null,
-          null
-        ],
-        "status": "Offered",
-        "interest": 1,
-        "distance": 282.43579700636985,
-        "classRank": 12,
-        "officialVisitCount": 0,
-        "unOfficialVisitCount": 1,
-        "latestVisit": {
-          "official": false,
-          "dateOccurred": 1764374400,
-          "organizationKey": 1894
-        },
-        "prediction": 8.425275827482444,
-        "committedDate": null,
-        "draftPositionCount": 2,
-        "draftTotal": 19,
         "positionAbbreviation": "RB",
         "positionKey": 2
       },

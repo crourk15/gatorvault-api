@@ -7,6 +7,9 @@ const {
   scrubPlayerVisits,
   scrubPlayerVisitFields,
   scrubVisitLogRows,
+  scrubCompetitorList,
+  scrubOfferList,
+  scrubHubPayload,
 } = require('../lib/recruiting-visit-scrub');
 const { buildVisits } = require('../lib/player-intelligence');
 const store = require('../lib/recruiting-store');
@@ -98,13 +101,11 @@ describe('recruiting-visit-scrub (Tranard Auburn UV)', () => {
     assert.equal((player.visitHistory || []).length, 1);
   });
 
-
-  it('scrubs hub ticker + movement feed stones', () => {
+  it('scrubs hub ticker, movement, battle/heat, and competitor Auburn', () => {
     const {
       isDeniedVisitTickerLine,
       scrubHubTickerLines,
       scrubMovementFeedItems,
-      scrubHubPayload,
     } = require('../lib/recruiting-visit-scrub');
     assert.equal(
       isDeniedVisitTickerLine('Tranard Roberts — unofficial visit · Auburn Tigers'),
@@ -137,16 +138,45 @@ describe('recruiting-visit-scrub (Tranard Auburn UV)', () => {
     ]);
     assert.equal(feed.length, 1);
     assert.match(feed[0].summary, /Florida/i);
+
+    const competitors = scrubCompetitorList('tranard-roberts', [
+      { school: 'Auburn', score: 8 },
+      { school: 'UCF', score: 1 },
+    ]);
+    assert.deepEqual(
+      competitors.map((c) => c.school),
+      ['UCF']
+    );
+    assert.equal(scrubOfferList('tranard-roberts', [{ school: 'Auburn Tigers' }, { school: 'Florida' }]).length, 1);
+
     const bundle = scrubHubPayload({
       ticker: ['Tranard Roberts — unofficial visit · Auburn Tigers'],
-      movementFeed: [
-        { name: 'Tranard Roberts', summary: 'unofficial visit · Auburn Tigers' },
+      movementFeed: [{ name: 'Tranard Roberts', summary: 'unofficial visit · Auburn Tigers' }],
+      heatIndex: [
+        {
+          id: 'tranard-roberts',
+          name: 'Tranard Roberts',
+          battle: { uf: 74, competitor: 8, competitorName: 'Auburn' },
+          competitors: [
+            { school: 'Auburn', score: 8 },
+            { school: 'UCF', score: 1 },
+          ],
+        },
       ],
-      battles: [{ id: 'tranard-roberts', competitors: [{ school: 'Auburn' }] }],
+      battleBoard: [
+        {
+          id: 'tranard-roberts',
+          name: 'Tranard Roberts',
+          competitors: [{ school: 'Auburn', score: 8 }, { school: 'UCF', score: 1 }],
+        },
+      ],
     });
     assert.equal(bundle.ticker.length, 0);
     assert.equal(bundle.movementFeed.length, 0);
-    assert.equal(bundle.battles[0].competitors[0].school, 'Auburn');
+    assert.equal(bundle.heatIndex[0].battle.competitorName, 'UCF');
+    assert.deepEqual(
+      bundle.battleBoard[0].competitors.map((c) => c.school),
+      ['UCF']
+    );
   });
-
 });

@@ -520,6 +520,7 @@ function normalizePlayer(raw) {
   if (player.weight == null || !Number.isFinite(player.weight)) delete player.weight;
   const geoPatch = normalizePlayerGeo({ ...raw, ...player });
   Object.assign(player, geoPatch);
+  require('./recruiting-visit-scrub').scrubPlayerSchoolFields(player);
   if (player.ratingOverride != null && player.ratingOverride !== '') {
     player.displayRating = Number(player.ratingOverride);
     player.ratingIsOverride = true;
@@ -988,7 +989,7 @@ function preservePlayerFields(existing, incoming) {
   if (mergedCompetitors) merged.competitors = mergedCompetitors;
   else if (Array.isArray(existing.competitors) && existing.competitors.length) merged.competitors = existing.competitors;
 
-  const { scrubPlayerVisits } = require('./recruiting-visit-scrub');
+  const { scrubPlayerVisits, scrubPlayerSchoolFields } = require('./recruiting-visit-scrub');
   const mergedVisits = scrubPlayerVisits(
     merged.slug || existing.slug || incoming.slug,
     mergeVisitOfferArrays(existing.visits, incoming.visits, visitArrayKey) ||
@@ -1001,6 +1002,8 @@ function preservePlayerFields(existing, incoming) {
   const mergedOffers = mergeVisitOfferArrays(existing.offers, incoming.offers, offerArrayKey);
   if (mergedOffers) merged.offers = mergedOffers;
   else if (Array.isArray(existing.offers) && existing.offers.length) merged.offers = existing.offers;
+
+  scrubPlayerSchoolFields(merged);
 
   // Keep On3 prediction boards across upserts that omit topTeams.
   if (!merged.on3TopTeams?.length && Array.isArray(existing.on3TopTeams) && existing.on3TopTeams.length) {
