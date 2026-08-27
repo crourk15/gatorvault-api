@@ -481,7 +481,9 @@ function normalizePlayer(raw) {
     // Chase / Detectives / desk-intel need offer + On3 team signals — never drop them.
     offers: Array.isArray(raw.offers) ? raw.offers : Array.isArray(raw.offerList) ? raw.offerList : undefined,
     offerList: Array.isArray(raw.offerList) ? raw.offerList : Array.isArray(raw.offers) ? raw.offers : undefined,
-    visits: Array.isArray(raw.visits) ? raw.visits : undefined,
+    visits: Array.isArray(raw.visits)
+      ? require('./recruiting-visit-scrub').scrubPlayerVisits(slug, raw.visits)
+      : undefined,
     on3TopTeams: Array.isArray(raw.on3TopTeams) ? raw.on3TopTeams : Array.isArray(raw.topTeams) ? raw.topTeams : undefined,
     topTeams: Array.isArray(raw.topTeams) ? raw.topTeams : Array.isArray(raw.on3TopTeams) ? raw.on3TopTeams : undefined,
     height: raw.height || null,
@@ -986,9 +988,15 @@ function preservePlayerFields(existing, incoming) {
   if (mergedCompetitors) merged.competitors = mergedCompetitors;
   else if (Array.isArray(existing.competitors) && existing.competitors.length) merged.competitors = existing.competitors;
 
-  const mergedVisits = mergeVisitOfferArrays(existing.visits, incoming.visits, visitArrayKey);
-  if (mergedVisits) merged.visits = mergedVisits;
-  else if (Array.isArray(existing.visits) && existing.visits.length) merged.visits = existing.visits;
+  const { scrubPlayerVisits } = require('./recruiting-visit-scrub');
+  const mergedVisits = scrubPlayerVisits(
+    merged.slug || existing.slug || incoming.slug,
+    mergeVisitOfferArrays(existing.visits, incoming.visits, visitArrayKey) ||
+      (Array.isArray(existing.visits) && existing.visits.length ? existing.visits : undefined) ||
+      []
+  );
+  if (mergedVisits.length) merged.visits = mergedVisits;
+  else if (Array.isArray(existing.visits) || Array.isArray(incoming.visits)) merged.visits = [];
 
   const mergedOffers = mergeVisitOfferArrays(existing.offers, incoming.offers, offerArrayKey);
   if (mergedOffers) merged.offers = mergedOffers;

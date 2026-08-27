@@ -73,6 +73,11 @@ function appendVisitLog(entry) {
     return { item: null, created: false, duplicate: false, reason: 'invalid' };
   }
 
+  const { isDeniedVisit } = require('./recruiting-visit-scrub');
+  if (isDeniedVisit(row.playerSlug, row.school)) {
+    return { item: null, created: false, duplicate: false, reason: 'denied_visit' };
+  }
+
   const { isVerifiedVisitLogSource, isOfficialVisitType } = require('./visit-intel-utils');
   if (isOfficialVisitType(row.visitType) && !isVerifiedVisitLogSource(row.source, entry)) {
     return { item: null, created: false, duplicate: false, reason: 'unverified_source' };
@@ -129,8 +134,9 @@ function appendVisitLog(entry) {
 }
 
 function listVisitLogs({ playerSlug = null, limit = 100, since = null } = {}) {
+  const { scrubVisitLogRows } = require('./recruiting-visit-scrub');
   const doc = loadDoc();
-  let items = [...(doc.items || [])];
+  let items = scrubVisitLogRows([...(doc.items || [])]);
   if (playerSlug) {
     const key = String(playerSlug).toLowerCase();
     items = items.filter((i) => String(i.playerSlug || '').toLowerCase() === key);
