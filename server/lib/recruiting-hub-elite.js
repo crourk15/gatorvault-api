@@ -483,11 +483,14 @@ async function buildHubTicker(year = 2027) {
     }
     const line = lineProbe;
     if (isDeskOpsIntelCopy(line)) continue;
+    const { isDeniedVisitTickerLine } = require('./recruiting-visit-scrub');
+    if (isDeniedVisitTickerLine(line)) continue;
     if (!named.includes(line)) named.push(line);
   }
 
   // Named Florida process first; class metrics fill remaining elite slots.
-  return rankEliteHomeNowLines([...named, ...classLines], 6);
+  const { scrubHubTickerLines } = require('./recruiting-visit-scrub');
+  return scrubHubTickerLines(rankEliteHomeNowLines([...named, ...classLines], 6));
 }
 
 async function buildHubClassOverview(year = 2027) {

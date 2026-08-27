@@ -308,6 +308,21 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
     if (rankMerge.updated) {
       console.log('[recruiting-data-dir] merged Industry ranks from bundle', rankMerge.updated);
     }
+    // Denied visit stones (e.g. Tranard Auburn UV) must not survive on durable disk.
+    let visitScrub = { healed: false };
+    try {
+      visitScrub = require('./recruiting-visit-scrub').healDurableDeniedVisits(
+        path.join(dataDir, 'players.json')
+      );
+      if (visitScrub.healed) {
+        console.log('[recruiting-data-dir] scrubbed denied visits from durable players', visitScrub.changed);
+      }
+    } catch (err) {
+      console.warn(
+        '[recruiting-data-dir] denied-visit scrub failed:',
+        err && err.message ? err.message : err
+      );
+    }
     // Defer board-truth merge — sync parse/stringify of players.json (~9MB) during
     // recruiting-store require can spike memory right as Render health-checks /ready
     // and contribute to exit-143 restart loops after deploy.
@@ -325,9 +340,10 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
       }
     }, 45_000);
     return {
-      migrated: copied > 0 || !!rankMerge.updated,
+      migrated: copied > 0 || !!rankMerge.updated || !!visitScrub.healed,
       copied,
       rankMerge,
+      visitScrub,
       boardMerge: { merged: false, deferred: true },
       to: dataDir,
     };

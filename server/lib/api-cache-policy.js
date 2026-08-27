@@ -36,7 +36,9 @@ const NO_STORE_PREFIXES = [
 /** Short TTL (seconds) — semi-static catalog/board data. */
 const SHORT_TTL_ROUTES = [
   { prefix: '/api/recruiting/hub/bundle', maxAge: 15, sMaxAge: 45, swr: 60 },
-  { prefix: '/api/recruiting/hub/ticker', maxAge: 15, sMaxAge: 45, swr: 60 },
+  // no-store: Home NOW must not stick on Netlify/CDN copies of denied UV stones.
+  { prefix: '/api/recruiting/hub/ticker', maxAge: 0, sMaxAge: 0, swr: 0, noStore: true },
+  { prefix: '/api/recruiting/hub/movement-feed', maxAge: 0, sMaxAge: 0, swr: 0, noStore: true },
   { prefix: '/api/recruiting/hub/class-overview', maxAge: 20, sMaxAge: 45, swr: 60 },
   { prefix: '/api/recruiting/hub/hero', maxAge: 20, sMaxAge: 45, swr: 60 },
   { prefix: '/api/recruiting/class-metrics', maxAge: 45, sMaxAge: 90, swr: 120 },
@@ -68,6 +70,9 @@ function cacheControlForPath(pathname) {
 
   for (const route of SHORT_TTL_ROUTES) {
     if (path === route.prefix || path.startsWith(`${route.prefix}/`)) {
+      if (route.noStore || (route.maxAge === 0 && route.sMaxAge === 0)) {
+        return 'no-store, must-revalidate';
+      }
       const sMax = route.sMaxAge ?? route.maxAge;
       const swr = route.swr ?? 60;
       return `public, max-age=${route.maxAge}, s-maxage=${sMax}, stale-while-revalidate=${swr}`;
