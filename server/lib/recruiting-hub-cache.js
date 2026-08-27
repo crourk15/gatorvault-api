@@ -182,12 +182,19 @@ function parseHubSnapshotDoc(endpoint, doc) {
     return Array.isArray(items) ? items : null;
   }
   if (endpoint === 'ticker') {
-    const rev = meta?.cacheRev || doc.cacheRev || null;
-    // Disk paths are not keyed by rev — reject pre-t9 plates so Home NOW
-    // cannot keep serving April offers / rival Offer-from spam / denied UVs.
-    if (rev !== TICKER_CACHE_REV) return null;
     const { scrubHubTickerLines } = require('./recruiting-visit-scrub');
-    return Array.isArray(items) ? scrubHubTickerLines(items) : null;
+    // Bare list snapshots (older hub-runtime) + { items } docs.
+    const rawItems = Array.isArray(items)
+      ? items
+      : Array.isArray(doc)
+        ? doc
+        : null;
+    const scrubbed = rawItems ? scrubHubTickerLines(rawItems) : null;
+    if (!scrubbed || !scrubbed.length) return null;
+    // Soft-serve scrubbed plates even when cacheRev mismatches (pre-t9 disk).
+    // Empty ticker → iOS Capacitor seed paints Tranard Auburn UV; website seed
+    // is already scrubbed so web looks fine while App Store stays poisoned.
+    return scrubbed;
   }
   if (
     endpoint === 'class-overview' ||
@@ -826,6 +833,11 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   // stampeding buildHubBundle after every restart and crash-looping Render → 502.
   // Only cron warm-memory / hub-refresh / explicit warmEliteHubCaches refill memory.
   if (noSync) {
+    // Home NOW ticker miss must not stay empty — schedule lite warm so t9 disk
+    // rewrites, and iOS stops falling back to Capacitor seed.
+    if (diskFallback?.endpoint === 'ticker') {
+      scheduleAsyncWarm({ priorityLite: true, priorityOnly: true });
+    }
     return { status: 'building', hit: false, reason: 'deferred_rebuild' };
   }
 

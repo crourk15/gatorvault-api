@@ -6,12 +6,13 @@
     "snapshot": true,
     "endpoint": "ticker",
     "year": 2027,
-    "source": "hub-runtime"
+    "source": "hub-runtime",
+    "cacheRev": "t9"
   },
   "items": [
-    "2027 class trending nationally — UF at #8",
+    "2027 class trending nationally \u2014 UF at #8",
     "Blue chip % at 65%",
     "26 commits locked for 2027",
-    "Tranard Roberts — unofficial visit · Florida"
+    "Tranard Roberts \u2014 unofficial visit \u00b7 Florida"
   ]
 }
