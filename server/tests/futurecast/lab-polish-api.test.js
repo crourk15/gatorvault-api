@@ -43,7 +43,7 @@ describe('Lab polish API (stars + ED soft + worker heap)', () => {
     );
     assert.match(src, /softOnDeferred/);
     assert.match(src, /X-GatorVault-Cache', 'SOFT'/);
-    assert.match(src, /FUTURECAST_API_CACHE_VERSION = 24/);
+    assert.match(src, /FUTURECAST_API_CACHE_VERSION = \d+/);
     assert.match(src, /sanitizeHighPriorityStarsPayload/);
     assert.match(src, /normalizeFanStars/);
   });

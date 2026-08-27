@@ -85,7 +85,7 @@ describe('FutureCast elite Lab load path', () => {
       path.join(__dirname, '..', '..', 'api', 'futurecast', 'response-cache.ts'),
       'utf8'
     );
-    assert.match(src, /const hpPromise = warmFuturecastHighPriorityCaches\(years\)/);
+    assert.match(src, /const hpPromise = warmFuturecastHighPriorityCaches\(years(?:, opts)?\)/);
     assert.match(src, /Promise\.all/);
   });
 

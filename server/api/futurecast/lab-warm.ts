@@ -46,10 +46,14 @@ export async function handlePostFutureCastLabWarm(req: Request, res: Response): 
     .filter((y) => Number.isFinite(y));
 
   const yearsFinal = years.length ? years : [2027, 2028];
+  const force =
+    req.query.force === '1' ||
+    req.query.force === 'true' ||
+    String((req.body as { force?: unknown } | undefined)?.force || '').toLowerCase() === 'true';
   const { runHeavyJob } = require('../../lib/heavy-job-gate');
 
   // Accept and continue — Lab warm is heavy; do not hold the cron HTTP open.
-  void runHeavyJob('futurecast-lab-warm', () => warmFuturecastLabCaches(yearsFinal))
+  void runHeavyJob('futurecast-lab-warm', () => warmFuturecastLabCaches(yearsFinal, { force }))
     .then((result: { warmed?: string[]; failed?: string[] }) => {
       console.log('[futurecast] lab-warm complete', JSON.stringify(result));
     })
@@ -62,5 +66,6 @@ export async function handlePostFutureCastLabWarm(req: Request, res: Response): 
     ok: true,
     accepted: true,
     years: yearsFinal,
+    force,
   });
 }

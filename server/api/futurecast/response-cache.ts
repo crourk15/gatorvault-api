@@ -21,7 +21,19 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** v37: underclassmen soft plate from slim younger-prospects-soft.json (no players.json sync parse). */
 /** v38: 2029 early-target On3/Rivals enrich + chase-style Names to know cards. */
 /** v39: Chase UV/OV soft filter — drop plates older than Board Intel window (~21d). */
-export const FUTURECAST_API_CACHE_VERSION = 39;
+/** v40: stale DISK GET schedules rebuild; warm bypasses wrap-hit on stale/force plates. */
+export const FUTURECAST_API_CACHE_VERSION = 40;
+
+/** Disk/memory plate older than this is stale — GET still serves it, warm/GET schedule rebuild. */
+export const HP_DISK_MAX_AGE_MS = 36 * 60 * 60 * 1000; // 36h
+
+export function isHpPlateFresh(payload: unknown, maxAgeMs = HP_DISK_MAX_AGE_MS): boolean {
+  if (!payload || typeof payload !== 'object') return false;
+  const doc = payload as { updatedAt?: string; lastUpdated?: string };
+  const ts = Date.parse(String(doc.updatedAt || doc.lastUpdated || ''));
+  if (!Number.isFinite(ts)) return false;
+  return Date.now() - ts <= maxAgeMs;
+}
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
@@ -137,16 +149,34 @@ export async function sendCachedJson(
 
 /** Prime Lab caches at boot / keepalive (does not throw — logs and continues). */
 export async function warmFuturecastHighPriorityCaches(
-  years: number[] = [2027, 2028]
-): Promise<{ warmed: number; years: number[] }> {
+  years: number[] = [2027, 2028],
+  opts?: { force?: boolean }
+): Promise<{ warmed: number; years: number[]; rebuilt: number[] }> {
   const { buildHighPriorityPayload } = require('./high-priority');
+  const force = opts?.force === true;
   let warmed = 0;
+  const rebuilt: number[] = [];
   for (const year of years) {
     const key = highPriorityCacheKey(year);
     try {
-      const { value } = await cache.wrap(key, () => buildHighPriorityPayload(year), CACHE_TTL_MS);
-      if (value != null) {
-        writeHighPriorityRuntime(year, value);
+      // Never treat a wrap memory-hit on an Aug-stale plate as "warmed" — that froze
+      // chase/delta7d for days while lab-warm / spaced warm kept succeeding.
+      const existing = loadHighPriorityCached(year);
+      const needRebuild = force || existing == null || !isHpPlateFresh(existing);
+      if (needRebuild) {
+        try {
+          cache.remove(key);
+        } catch {
+          /* ignore */
+        }
+        const value = await buildHighPriorityPayload(year);
+        if (value != null) {
+          primeFuturecastCache(key, value);
+          writeHighPriorityRuntime(year, value);
+          warmed += 1;
+          rebuilt.push(year);
+        }
+      } else {
         warmed += 1;
       }
     } catch (err) {
@@ -154,7 +184,7 @@ export async function warmFuturecastHighPriorityCaches(
       console.warn(`[futurecast-cache] warm ${year} failed:`, message);
     }
   }
-  return { warmed, years };
+  return { warmed, years, rebuilt };
 }
 
 /**
@@ -162,7 +192,8 @@ export async function warmFuturecastHighPriorityCaches(
  * Master-board was previously unwarmed — first Lab open paid the full board rebuild.
  */
 export async function warmFuturecastLabCaches(
-  years: number[] = [2027, 2028]
+  years: number[] = [2027, 2028],
+  opts?: { force?: boolean }
 ): Promise<{ warmed: string[]; failed: string[] }> {
   const {
     buildMasterBoardPayload,
@@ -177,7 +208,7 @@ export async function warmFuturecastLabCaches(
 
   // Hero commit-likelihood meter needs high-priority ASAP — kick it off first,
   // in parallel with master-board, instead of waiting until every ED warm finishes.
-  const hpPromise = warmFuturecastHighPriorityCaches(years);
+  const hpPromise = warmFuturecastHighPriorityCaches(years, opts);
 
   const jobs: Array<{ key: string; label: string; build: () => Promise<unknown> }> = [
     {
