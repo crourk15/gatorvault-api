@@ -31,9 +31,11 @@ import {
 import {
   sendCachedJson,
   highPriorityCacheKey,
+  isHpPlateFresh,
   loadHighPriorityCached,
   primeFuturecastCache,
   sanitizeHighPriorityStarsPayload,
+  scheduleHighPriorityDiskRebuild,
   writeHighPriorityRuntime,
 } from './response-cache';
 
@@ -1473,21 +1475,27 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
 
     const cacheKey = highPriorityCacheKey(classYear);
     // Elite: serve worker/disk snapshot before returning status:building —
-    // Heal on serve so poisoned odds/boards never ship. Do NOT background
-    // buildHighPriorityPayload on every DISK hit — that OOM'd Pro and caused
-    // exit-143 / 502 loops once HP was no-store (TestFlight hammer).
+    // Heal on serve so poisoned odds/boards never ship. Fresh DISK: do NOT
+    // background rebuild on every hit (OOM'd Pro / exit-143 under no-store).
+    // Stale DISK (>36h): still serve immediately, but schedule one cooldown
+    // rebuild so chase/delta7d cannot freeze for a week after warm wrap-hits.
     const primed = loadHighPriorityCached(classYear);
     if (primed != null) {
       const healed = sanitizeHighPriorityStarsPayload(primed);
       primeFuturecastCache(cacheKey, healed);
-      res.setHeader('X-GatorVault-Cache', 'DISK');
+      const fresh = isHpPlateFresh(healed);
+      if (fresh) {
+        res.setHeader('X-GatorVault-Cache', 'DISK');
+      } else {
+        scheduleHighPriorityDiskRebuild(classYear, () => buildHighPriorityPayload(classYear));
+        res.setHeader('X-GatorVault-Cache', 'DISK-STALE');
+      }
       // Odds/board heals must reach iOS — never let URLCache keep a poisoned plate.
       res.setHeader('Cache-Control', 'no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.json(healed);
-      // Persist healed plate cheaply (no full rebuild). Full refresh stays on
-      // hub-warm / boot spaced Lab warm. Throttle writes so no-store traffic
-      // does not stringify the plate on every phone refresh.
+      // Persist healed plate cheaply (no full rebuild) only when fresh — never
+      // rewrite a week-old plate over a background rebuild in flight.
       // Only persist when heal actually repaired UF RPM / leads — cold heal used to
       // stamp Miami on Antonio and rewrite durable disk every minute.
       const writeKey = `hp-healed-write:${classYear}`;
@@ -1500,7 +1508,7 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         const lead = String(p?.on3Lead || '');
         return (Number.isFinite(rpm) && rpm > 0) || (lead && lead !== '—' && lead !== '-');
       });
-      if (healLookedUseful && Date.now() - lastWrite > 60_000) {
+      if (fresh && healLookedUseful && Date.now() - lastWrite > 60_000) {
         (global as any).__GV_HP_HEALED_WRITE_AT__ = {
           ...((global as any).__GV_HP_HEALED_WRITE_AT__ || {}),
           [writeKey]: Date.now(),
