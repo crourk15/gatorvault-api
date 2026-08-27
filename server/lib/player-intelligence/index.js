@@ -60,10 +60,13 @@ function buildOffers(player = {}, offerLogs = []) {
 }
 
 function buildVisits(player = {}, visitLogs = [], intelRows = []) {
+  const { scrubPlayerVisits, scrubVisitLogRows, isDeniedVisit } = require('../recruiting-visit-scrub');
+  const slug = normalizeSlug(player.slug || player.id);
   const out = [];
   const seen = new Set();
   const push = (school, visitType, visitDate, source, sourceUrl) => {
     if (!school && !visitDate) return;
+    if (isDeniedVisit(slug, school)) return;
     const key = `${String(school || '').toLowerCase()}|${String(visitDate || '').slice(0, 10)}`;
     if (seen.has(key)) return;
     seen.add(key);
@@ -79,7 +82,7 @@ function buildVisits(player = {}, visitLogs = [], intelRows = []) {
   if (player.visitStart) {
     push(player.nextVisitSchool || 'Florida', player.ufOvStatus || 'visit', player.visitStart, 'store');
   }
-  for (const v of player.visits || []) {
+  for (const v of scrubPlayerVisits(slug, player.visits || [])) {
     push(
       v.school || v.visitSchool || v.host,
       v.visitType || v.type || 'visit',
@@ -88,7 +91,7 @@ function buildVisits(player = {}, visitLogs = [], intelRows = []) {
       v.sourceUrl
     );
   }
-  for (const row of visitLogs) {
+  for (const row of scrubVisitLogRows(visitLogs)) {
     push(row.school || row.visitSchool, row.visitType || row.type, row.date || row.visitDate, 'visit_log');
   }
   for (const row of intelRows) {

@@ -476,6 +476,11 @@ function extractOn3ProfileVisits(profile) {
   return visits;
 }
 
+function scrubExtractedVisits(slug, visits) {
+  const { scrubPlayerVisits } = require('./recruiting-visit-scrub');
+  return scrubPlayerVisits(slug, visits);
+}
+
 function extractOn3ProfileOffers(topTeams, classYear) {
   const teams = on3Recruit.getYearTopTeams(topTeams, classYear);
   const offers = [];
@@ -604,7 +609,7 @@ async function syncOn3VisitOfferIntel(classYears, options = {}) {
       }
       results.profilesFetched += 1;
       const classYear = player.classYear || profile.classYear;
-      const visitRecords = extractOn3ProfileVisits(profile);
+      const visitRecords = scrubExtractedVisits(player.slug, extractOn3ProfileVisits(profile));
       const offerRecords = extractOn3ProfileOffers(profile.topTeams, classYear);
       const competitorEntries = extractOn3CompetitorEntries(profile.topTeams, classYear);
 
