@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T16:34:13.840Z",
+  "updatedAt": "2026-08-27T16:59:13.388Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -3004,15 +3004,23 @@
       "playerName": "Malachi Lee",
       "position": null,
       "classYear": null,
-      "sources": [],
-      "traits": [
-        "length",
-        "perimeter",
-        "frame",
-        "offer",
-        "board"
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/19893077/692db9c1ca1cd327c34da6ec"
+        }
       ],
-      "vaultFilmAngle": "Lead with Florida offer on Top-10 WR Malachi Lee — stack 6-2 frame + VA board perch.",
+      "traits": [
+        "vertical",
+        "separation",
+        "ball-tracking",
+        "contested",
+        "YAC",
+        "length",
+        "two-way"
+      ],
+      "vaultFilmAngle": "Lead with Florida offer + Westfield sophomore Hudl vertical/tracking tape — stack go-routes, contested, YAC.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"
