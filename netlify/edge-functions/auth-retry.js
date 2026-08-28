@@ -19,15 +19,37 @@ export default async (request, context) => {
   const url = new URL(request.url);
   const originUrl = `https://gatorvault-api.onrender.com${url.pathname}${url.search}`;
 
-  // Preflight — pass through once.
+  // Preflight — must allow X-GV-Client or iOS WKWebView fails with "Load failed".
   if (request.method === 'OPTIONS') {
+    const reqHeaders = request.headers.get('Access-Control-Request-Headers') || 'content-type,x-gv-client';
+    const origin = request.headers.get('Origin') || 'capacitor://localhost';
     try {
-      return await fetch(originUrl, {
+      const upstream = await fetch(originUrl, {
         method: 'OPTIONS',
         headers: request.headers,
       });
+      const headers = new Headers(upstream.headers);
+      headers.set('Access-Control-Allow-Origin', origin);
+      headers.set('Access-Control-Allow-Credentials', 'true');
+      headers.set(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization, X-GV-Client, X-Recruiting-Pin, X-Roster-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron, X-War-Room-Pin, X-X-Autopost-Pin, X-X-Cron, X-Media-Ingest-Pin, X-Monitoring-Secret, X-Monitoring-Cron, X-Ops-Pin'
+      );
+      headers.set('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
+      headers.set('Vary', 'Origin');
+      return new Response(null, { status: 204, headers });
     } catch {
-      return context.next();
+      return new Response(null, {
+        status: 204,
+        headers: {
+          'Access-Control-Allow-Origin': origin,
+          'Access-Control-Allow-Credentials': 'true',
+          'Access-Control-Allow-Headers':
+            'Content-Type, Authorization, X-GV-Client, X-Recruiting-Pin, X-Roster-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron, X-War-Room-Pin, X-X-Autopost-Pin, X-X-Cron, X-Media-Ingest-Pin, X-Monitoring-Secret, X-Monitoring-Cron, X-Ops-Pin',
+          'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS',
+          Vary: 'Origin',
+        },
+      });
     }
   }
 
