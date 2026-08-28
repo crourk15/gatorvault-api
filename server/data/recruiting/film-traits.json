@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-28T15:18:44.494Z",
+  "updatedAt": "2026-08-28T15:39:51.539Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -3038,16 +3038,22 @@
       "playerName": "Skylar Alston",
       "position": null,
       "classYear": null,
-      "sources": [],
-      "traits": [
-        "frame",
-        "chase",
-        "fill",
-        "second-level",
-        "board-pedigree",
-        "visit-heat"
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22515524/68e4620d68491f9f2a3f34f5"
+        }
       ],
-      "vaultFilmAngle": "Florida offer landed on a busy 2028 LB — Roberts attached; SC still leads RPM; visit heat already real across Auburn/Georgia/UNC/SC/NC State.",
+      "traits": [
+        "downhill-trigger",
+        "shed",
+        "gap-fill",
+        "tackle-finish",
+        "edge-pressure",
+        "MIKE"
+      ],
+      "vaultFilmAngle": "Florida offer on a MIKE-leaning 2028 LB with real Hudl violence — SC still leads RPM; visit heat already deep.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"
