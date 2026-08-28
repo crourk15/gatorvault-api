@@ -184,16 +184,53 @@ async function authPost<T>(path: string, body: Record<string, unknown>): Promise
   data: T;
 }> {
   const base = getApiBase();
-  const res = await fetch(`${base}${path}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-GV-Client': isNativeApp() ? 'ios' : 'website',
-    },
-    body: JSON.stringify(body),
-  });
-  const data = (await res.json()) as T;
-  return { ok: res.ok, status: res.status, data };
+  const payload = JSON.stringify(body);
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-GV-Client': isNativeApp() ? 'ios' : 'website',
+  };
+  let lastErr: unknown = null;
+  for (let attempt = 1; attempt <= 4; attempt += 1) {
+    try {
+      const res = await fetch(`${base}${path}`, {
+        method: 'POST',
+        headers,
+        body: payload,
+        cache: 'no-store',
+      });
+      const text = await res.text();
+      let data: T;
+      try {
+        data = (text ? JSON.parse(text) : {}) as T;
+      } catch {
+        // Netlify/Render HTML 502 page — retry instead of throwing opaque parse errors.
+        if (attempt < 4 && (res.status >= 502 || res.status === 0)) {
+          await new Promise((r) => setTimeout(r, 700 * attempt));
+          continue;
+        }
+        throw new Error('Server is waking up — wait a few seconds and try again.');
+      }
+      if (attempt < 4 && (res.status === 502 || res.status === 503 || res.status === 504)) {
+        await new Promise((r) => setTimeout(r, 700 * attempt));
+        continue;
+      }
+      return { ok: res.ok, status: res.status, data };
+    } catch (err) {
+      lastErr = err;
+      const msg = String((err as Error)?.message || err || '');
+      const retryable = /load failed|failed to fetch|network|fetch failed|waking up/i.test(msg);
+      if (attempt < 4 && retryable) {
+        await new Promise((r) => setTimeout(r, 700 * attempt));
+        continue;
+      }
+      if (/load failed|failed to fetch|network/i.test(msg)) {
+        throw new Error('Server is waking up — wait a few seconds and try again.');
+      }
+      throw err;
+    }
+  }
+  if (lastErr instanceof Error) throw lastErr;
+  throw new Error('Server is waking up — wait a few seconds and try again.');
 }
 
 /**
