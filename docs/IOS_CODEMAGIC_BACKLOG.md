@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Web→iOS auth handoff Universal Link (`/vault/auth/callback/?token&email`) — App Store binary already handles callback; web Join button ships via Netlify
 - [x] Auth login/register edge retry on 502/503 — kills iOS “Load failed” during Render flaps (Netlify edge; no Codemagic)
 - [x] Tranard × Auburn lock: deny inside extractRealCompetitors + board-merge re-heal + offer-log deny + FC edge scrub (stops On3 rebuild resurfacing — API)
 - [x] Tranard × Auburn: strip competitor/offer/topTeams + hub heat/battle on live serve + Netlify edge (API — App Store picks up without Codemagic)
