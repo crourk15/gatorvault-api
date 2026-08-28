@@ -5,6 +5,7 @@ import {
   loginAccount,
   registerAccount,
   saveSession,
+  loadSession,
   ensureSessionHydrated,
   verifyStoredSession,
   clearSession,
@@ -12,6 +13,7 @@ import {
   replaceAuthLocation,
   requestPasswordReset,
   resetPasswordWithToken,
+  buildIosAuthHandoffUrl,
   type PaymentTierId,
 } from '@/lib/auth-api';
 import { findPricingTier, publicPricingTiers, PRICING_TIERS } from '@/lib/pricing-tiers';
@@ -354,10 +356,52 @@ export function JoinPage(): React.ReactElement {
               <button type="button" className="gv-join__submit" onClick={continueAsExisting}>
                 Continue to Vault
               </button>
+              <button
+                type="button"
+                className="gv-join__secondary"
+                data-testid="join-open-ios-app"
+                onClick={() => {
+                  const href = buildIosAuthHandoffUrl(loadSession(), '/vault/');
+                  if (!href) {
+                    setError('Sign in again on the web, then retry Open in iOS app.');
+                    return;
+                  }
+                  // Universal Link — on iPhone this opens the App Store binary and plants gv_session.
+                  window.location.assign(href);
+                }}
+              >
+                Open in iOS app
+              </button>
+              <button
+                type="button"
+                className="gv-join__secondary"
+                data-testid="join-copy-ios-handoff"
+                onClick={async () => {
+                  const href = buildIosAuthHandoffUrl(loadSession(), '/vault/');
+                  if (!href) {
+                    setError('Sign in again on the web, then retry Copy iPhone link.');
+                    return;
+                  }
+                  try {
+                    await navigator.clipboard.writeText(href);
+                    setSuccess('iPhone link copied — open it on your phone to sign the app in.');
+                    setError(null);
+                  } catch {
+                    setSuccess(null);
+                    setError('Could not copy. Long-press Open in iOS app on your iPhone Safari instead.');
+                  }
+                }}
+              >
+                Copy iPhone sign-in link
+              </button>
               <button type="button" className="gv-join__secondary" onClick={switchAccount}>
                 Use a different account
               </button>
             </div>
+            <p className="gv-join__sub">
+              After a reinstall the app has no session. Use <strong>Open in iOS app</strong> on your
+              iPhone (Safari), or copy the link and open it on the phone.
+            </p>
           </div>
         ) : (
           <>

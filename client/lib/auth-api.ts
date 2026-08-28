@@ -110,6 +110,19 @@ function persistNativeSession(raw: string | null): void {
 }
 
 /** Sync read — localStorage only. Call ensureSessionHydrated() first on native. */
+/** Universal-link handoff — open on iPhone to plant gv_session into the App Store binary. */
+export function buildIosAuthHandoffUrl(session?: AuthSession | null, next = '/vault/'): string | null {
+  const s = session || loadSession();
+  if (!s?.token || !s?.email) return null;
+  const url = new URL('https://gatorvaultinsider.com/vault/auth/callback/');
+  url.searchParams.set('token', s.token);
+  url.searchParams.set('email', s.email);
+  url.searchParams.set('tier', String(s.tier || 'film'));
+  if (s.name) url.searchParams.set('name', s.name);
+  url.searchParams.set('next', safeAuthRedirectPath(next, '/vault/'));
+  return url.toString();
+}
+
 export function loadSession(): AuthSession | null {
   if (typeof window === 'undefined') return null;
   try {
