@@ -237,12 +237,215 @@ async function sendIosUpdateAnnounce({
   };
 }
 
+const SEASON_PREVIEW_2026_URL =
+  `${SITE_URL}/vault/articles/art-season-preview-2026-eight-days/`;
+
+function buildArticleAnnounceBodyHtml({
+  name,
+  email,
+  articleUrl,
+  articleTitle,
+  introHtml,
+} = {}) {
+  const displayName = displayNameFrom({ name, email });
+  const url = String(articleUrl || '').trim() || SEASON_PREVIEW_2026_URL;
+  const title =
+    String(articleTitle || '').trim() || 'Eight Days Out: What This Florida Season Actually Is';
+  const intro =
+    String(introHtml || '').trim() ||
+    `<p style="margin:0 0 16px;font-size:15px;line-height:1.6;">Eight days from kickoff. Philo has the keys, Baugh is the engine, Graham is the heartbeat — and the full season preview is live in your Vault.</p>`;
+  return `
+  <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">Hey ${displayName},</p>
+  ${intro}
+  <p style="margin:0 0 8px;font-size:14px;line-height:1.55;color:#94a3b8;">${title}</p>
+  ${ctaButton(url, 'Read the season preview')}
+  <p style="margin:20px 0 0;font-size:13px;color:#64748b;line-height:1.55;word-break:break-all;">${url}</p>
+  <p style="margin:24px 0 0;font-size:13px;color:#64748b;line-height:1.55;">— GatorVault</p>
+  <p style="margin:12px 0 0;font-size:12px;color:#475569;line-height:1.55;">Questions? Reply or email <a href="mailto:${SUPPORT_EMAIL}" style="color:#94a3b8;">${SUPPORT_EMAIL}</a>.</p>
+`;
+}
+
+function getArticleAnnounceEmail(opts = {}) {
+  const articleUrl = String(opts.articleUrl || SEASON_PREVIEW_2026_URL).trim();
+  const articleTitle =
+    String(opts.articleTitle || '').trim() ||
+    'Eight Days Out: What This Florida Season Actually Is';
+  const subject =
+    String(opts.subject || '').trim() ||
+    'Season preview live — eight days out';
+  const bodyInner = buildArticleAnnounceBodyHtml({
+    ...opts,
+    articleUrl,
+    articleTitle,
+  });
+  const html = emailShell(bodyInner);
+  return {
+    kind: 'member_article_announce',
+    articleUrl,
+    articleTitle,
+    subject,
+    html,
+    templateParams: {
+      name: displayNameFrom(opts),
+      email: opts.email || '',
+      body_html: bodyInner,
+      email_subject: subject,
+      vault_url: articleUrl,
+      support_email: SUPPORT_EMAIL,
+    },
+  };
+}
+
+/**
+ * One-shot member email for a published Vault article (stampKey prevents re-blast).
+ */
+async function sendArticleAnnounce({
+  loadUsers,
+  deliverEmail,
+  updateUser = null,
+  saveUsers = null,
+  articleUrl = SEASON_PREVIEW_2026_URL,
+  articleTitle = 'Eight Days Out: What This Florida Season Actually Is',
+  subject = 'Season preview live — eight days out',
+  introHtml = '',
+  stampKey = 'articleAnnounce_season_preview_2026_eight_days',
+  dryRun = false,
+  force = false,
+  requireActiveAccess = true,
+  limit = null,
+  concurrency = announceEmailConcurrency(),
+  saveEvery = announceSaveEvery(),
+} = {}) {
+  if (typeof loadUsers !== 'function' || typeof deliverEmail !== 'function') {
+    throw new Error('sendArticleAnnounce requires loadUsers and deliverEmail');
+  }
+
+  const key = String(stampKey || 'articleAnnounce_custom')
+    .replace(/[^a-zA-Z0-9_]/g, '_')
+    .slice(0, 80);
+  const { recipients, skipped } = listAnnounceRecipients(loadUsers, { requireActiveAccess });
+  const queue =
+    Number.isFinite(Number(limit)) && Number(limit) > 0
+      ? recipients.slice(0, Number(limit))
+      : recipients;
+
+  const details = [];
+  let sent = 0;
+  let failed = 0;
+  let sinceSave = 0;
+
+  let stampChain = Promise.resolve();
+  function enqueueStamp(work) {
+    const run = stampChain.then(work);
+    stampChain = run.catch(() => {});
+    return run;
+  }
+
+  async function persistStamp(user) {
+    const iso = new Date().toISOString();
+    user[key] = iso;
+    if (typeof updateUser === 'function') {
+      await enqueueStamp(async () => {
+        updateUser(user.email, { [key]: iso });
+      });
+      return;
+    }
+    sinceSave += 1;
+    if (typeof saveUsers === 'function' && sinceSave >= saveEvery) {
+      await enqueueStamp(async () => {
+        saveUsers(loadUsers());
+        sinceSave = 0;
+      });
+    }
+  }
+
+  await mapPool(queue, dryRun ? 1 : concurrency, async (user) => {
+    if (!force && user[key]) {
+      details.push({ email: user.email, sent: false, reason: 'already_sent' });
+      return;
+    }
+
+    const built = getArticleAnnounceEmail({
+      email: user.email,
+      name: user.name,
+      articleUrl,
+      articleTitle,
+      subject,
+      introHtml,
+    });
+
+    if (dryRun) {
+      details.push({ email: user.email, sent: false, dryRun: true, subject: built.subject });
+      return;
+    }
+
+    try {
+      const delivery = await deliverEmail(user.email, built.subject, built.html, {
+        name: built.templateParams.name,
+        bodyHtml: built.templateParams.body_html,
+        emailSubject: built.subject,
+        html: built.html,
+      });
+      sent += 1;
+      details.push({
+        email: user.email,
+        sent: true,
+        provider: delivery?.provider || null,
+        id: delivery?.id || null,
+      });
+      await persistStamp(user);
+    } catch (err) {
+      failed += 1;
+      details.push({
+        email: user.email,
+        sent: false,
+        reason: 'send_failed',
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  });
+
+  await stampChain;
+
+  if (
+    !dryRun &&
+    sent > 0 &&
+    typeof updateUser !== 'function' &&
+    typeof saveUsers === 'function' &&
+    sinceSave > 0
+  ) {
+    saveUsers(loadUsers());
+  }
+
+  return {
+    ok: failed === 0,
+    kind: 'member_article_announce',
+    stampKey: key,
+    articleUrl,
+    articleTitle,
+    subject,
+    dryRun,
+    candidateCount: recipients.length,
+    queued: queue.length,
+    sent,
+    failed,
+    skippedCount: skipped.length,
+    skipped: skipped.slice(0, 50),
+    details,
+    concurrency: dryRun ? 1 : concurrency,
+  };
+}
+
 module.exports = {
   DEFAULT_VERSION,
   APP_STORE_URL,
+  SEASON_PREVIEW_2026_URL,
   shouldSkipMemberAnnounceRecipient,
   listAnnounceRecipients,
   buildIosUpdateBodyHtml,
   getIosUpdateAnnounceEmail,
   sendIosUpdateAnnounce,
+  buildArticleAnnounceBodyHtml,
+  getArticleAnnounceEmail,
+  sendArticleAnnounce,
 };

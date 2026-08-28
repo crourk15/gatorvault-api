@@ -920,6 +920,49 @@ function mountAdminHubRoutes(app) {
     }
   });
 
+  /**
+   * Email active members about a published Vault article.
+   * Body: { articleUrl?, articleTitle?, subject?, introHtml?, stampKey?, dryRun?, force?, limit? }
+   * Defaults to the 2026 season preview piece.
+   */
+  app.post('/api/admin/members/announce-article', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const body = req.body || {};
+      const dryRun = body.dryRun === true || body.dryRun === 'true' || body.dry_run === true;
+      const force = body.force === true || body.force === 'true';
+      const requireActiveAccess = body.requireActiveAccess !== false && body.requireActiveAccess !== 'false';
+      const limit = body.limit != null ? Number(body.limit) : null;
+
+      const mail =
+        (global.__GV_SUBSCRIPTION_MAIL__ && global.__GV_SUBSCRIPTION_MAIL__.deliverEmail) ||
+        null;
+      if (!mail && !dryRun) {
+        return res.status(503).json({ ok: false, error: 'Email deliverer not ready' });
+      }
+
+      const users = loadUsers();
+      const result = await memberAnnounce.sendArticleAnnounce({
+        loadUsers: () => users,
+        updateUser,
+        deliverEmail: mail || (async () => ({ sent: false, provider: 'dry' })),
+        articleUrl: body.articleUrl,
+        articleTitle: body.articleTitle,
+        subject: body.subject,
+        introHtml: body.introHtml,
+        stampKey: body.stampKey,
+        dryRun,
+        force,
+        requireActiveAccess,
+        limit,
+      });
+
+      return res.status(200).json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   /** FutureCast targeting + admin allowlist control surface. */
   app.get('/api/admin/hub/futurecast', (req, res) => {
     if (!requireAdmin(req, res)) return;
