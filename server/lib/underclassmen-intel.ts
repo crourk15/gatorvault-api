@@ -259,6 +259,15 @@ function competingSchoolsFromRecruitingRecord(
   ) => {
     const school = String(nameRaw || '').trim();
     if (!school || isUfGatorsSchoolName(school)) return;
+    try {
+      const { isDeniedPlayerSchool } = require('./recruiting-visit-scrub') as {
+        isDeniedPlayerSchool: (slug: string, school: string) => boolean;
+      };
+      const slug = String(recruiting?.slug || recruiting?.id || '');
+      if (slug && isDeniedPlayerSchool(slug, school)) return;
+    } catch {
+      /* optional */
+    }
     const pct = peerPctWithScale(pctRaw, scale);
     if (pct == null || pct < MIN_PEER_BOARD_PCT) return;
     const key = school.toLowerCase();
