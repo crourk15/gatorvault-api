@@ -61,6 +61,28 @@
   skip = true
 
 
+
+# Auth retry — iOS "Load failed" on 502 during Render flaps (no Codemagic needed).
+[[edge_functions]]
+  function = "auth-retry"
+  path = "/api/login"
+
+[[edge_functions]]
+  function = "auth-retry"
+  path = "/api/register"
+
+[[edge_functions]]
+  function = "auth-retry"
+  path = "/api/session"
+
+[[edge_functions]]
+  function = "auth-retry"
+  path = "/api/auth/forgot-password"
+
+[[edge_functions]]
+  function = "auth-retry"
+  path = "/api/auth/reset-password"
+
 # Scrub denied visit stones (Tranard Auburn UV) on the iOS same-origin API path.
 [[edge_functions]]
   function = "scrub-denied-visits"

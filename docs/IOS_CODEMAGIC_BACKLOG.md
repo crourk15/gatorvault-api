@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Auth login/register edge retry on 502/503 — kills iOS “Load failed” during Render flaps (Netlify edge; no Codemagic)
 - [x] Tranard × Auburn lock: deny inside extractRealCompetitors + board-merge re-heal + offer-log deny + FC edge scrub (stops On3 rebuild resurfacing — API)
 - [x] Tranard × Auburn: strip competitor/offer/topTeams + hub heat/battle on live serve + Netlify edge (API — App Store picks up without Codemagic)
 - [x] Hub ticker t9 empty-building miss: soft-serve scrubbed disk plates so iOS never falls back to Capacitor Auburn UV seed (API)
@@ -80,6 +81,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-28 | Auth `authPost` client retries + friendly wake-up copy (belt under edge retry) | `auth-api.ts` in binary | pending |
 | 2026-08-26 | Community: Edit + Delete on own threads/replies (author-only) | `VaultCommunityPage` + `CommunityPostActions` + community-api in binary; **API routes live without bake** | pending |
 | 2026-08-26 | Capacitor seed: scrub movementFeed visit/offer school lines (Tranard Auburn + rival offers) — only live ticker/alerts paint schools | `recruiting-hub-bundle-seed` in binary | pending |
 | 2026-08-26 | Home NOW: hard 3-week cap + Florida offer requires real offer day; ticker disk cacheRev t8 | pulse gates in binary; **API ticker/alerts live without bake** | pending |
