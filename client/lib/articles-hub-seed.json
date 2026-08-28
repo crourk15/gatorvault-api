@@ -1,7 +1,17 @@
 {
-  "generatedAt": "2026-08-27T01:14:46.627Z",
+  "generatedAt": "2026-08-28T14:01:13.177Z",
   "source": "local-articles",
   "articles": [
+    {
+      "id": "art-season-preview-2026-eight-days",
+      "category": "SEASON PREVIEW",
+      "title": "Eight Days Out: What This Florida Season Actually Is",
+      "preview": "Eight days from FAU, Florida finally has a Week 1 shape — Philo under center, Baugh as the engine, Graham as the heartbeat, and an odd-front defense finding its hybrid language. A season preview for members, not a game plan.",
+      "author": "GatorVault Staff",
+      "date": "Aug 28, 2026",
+      "readTime": 7,
+      "trending": true
+    },
     {
       "id": "insider_1782917403035_2pmphs",
       "category": "Insider",
@@ -74,14 +84,14 @@
     }
   ],
   "featured": {
-    "id": "insider_1782917403035_2pmphs",
-    "category": "Insider",
-    "title": "Insider: Defensive scheme install ahead of schedule",
-    "preview": "Florida's 2026 floor turns on 3-3-5 install pace — JACK/STAR and the trenches — not a laundry list of portal and board stats.",
+    "id": "art-season-preview-2026-eight-days",
+    "category": "SEASON PREVIEW",
+    "title": "Eight Days Out: What This Florida Season Actually Is",
+    "preview": "Eight days from FAU, Florida finally has a Week 1 shape — Philo under center, Baugh as the engine, Graham as the heartbeat, and an odd-front defense finding its hybrid language. A season preview for members, not a game plan.",
     "author": "GatorVault Staff",
-    "date": "Jul 14, 2026",
-    "readTime": 4,
-    "trending": false
+    "date": "Aug 28, 2026",
+    "readTime": 7,
+    "trending": true
   },
   "storylines": [],
   "authors": [],
