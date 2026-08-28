@@ -100,4 +100,46 @@ describe('schedule uniform board', () => {
       delete require.cache[require.resolve('../lib/schedule-board')];
     }
   });
+
+  it('getScheduleBoard overlays newer bundle FSU model onto stale durable', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-sched-pred-'));
+    const file = path.join(tmp, '2026-season.json');
+    const seed = JSON.parse(
+      fs.readFileSync(path.join(__dirname, '..', 'data/schedule/2026-season.json'), 'utf8')
+    );
+    seed.updatedAt = '2026-08-24T23:09:30.420Z';
+    seed.games = seed.games.map((g) => {
+      if (g.id !== 'fsu') return g;
+      return {
+        ...g,
+        ufPct: 49,
+        pred: 'UF 24 · FSU 27',
+        predUF: 24,
+        predOpp: 27,
+        film: 'Everything on the line. Preparation wins this game.',
+      };
+    });
+    fs.writeFileSync(file, JSON.stringify(seed));
+    const prev = process.env.GV_SCHEDULE_PATH;
+    process.env.GV_SCHEDULE_PATH = file;
+    try {
+      delete require.cache[require.resolve('../lib/schedule-board')];
+      const fresh = require('../lib/schedule-board');
+      const board = fresh.getScheduleBoard(2026);
+      const fsu = board.games.find((g) => g.id === 'fsu');
+      assert.equal(fsu.pred, 'UF 27 · FSU 24');
+      assert.equal(fsu.predUF, 27);
+      assert.equal(fsu.predOpp, 24);
+      assert.equal(fsu.ufPct, 56);
+      assert.match(fsu.film, /UF takes Doak/i);
+      const rewritten = JSON.parse(fs.readFileSync(file, 'utf8'));
+      const rewrittenFsu = rewritten.games.find((g) => g.id === 'fsu');
+      assert.equal(rewrittenFsu.pred, 'UF 27 · FSU 24');
+      assert.equal(rewrittenFsu.ufPct, 56);
+    } finally {
+      if (prev == null) delete process.env.GV_SCHEDULE_PATH;
+      else process.env.GV_SCHEDULE_PATH = prev;
+      delete require.cache[require.resolve('../lib/schedule-board')];
+    }
+  });
 });

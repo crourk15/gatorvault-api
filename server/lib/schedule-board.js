@@ -115,6 +115,84 @@ function loadBundleUniformMap(season) {
   }
 }
 
+/** Model / film intel fields that git-bundle edits should win when the bundle is newer. */
+const BUNDLE_MODEL_KEYS = [
+  'ufPct',
+  'pred',
+  'predUF',
+  'predOpp',
+  'film',
+  'keys',
+  'swing',
+  'opponentTendencies',
+  'defenseTendencies',
+  'howUFWins',
+  'scoutingReport',
+];
+
+function parseTs(value) {
+  const ms = Date.parse(String(value || '').trim());
+  return Number.isFinite(ms) ? ms : 0;
+}
+
+function loadBundleDoc(season) {
+  try {
+    return normalizeDoc(readJson(bundlePath(season)), season);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * When durable disk lags a newer git bundle (admin PUT left an older slate),
+ * overlay prediction + film intel from the bundle so schedule edits ship without
+ * waiting for a manual durable wipe.
+ */
+function overlayBundleModelFields(doc, season) {
+  const bundle = loadBundleDoc(season);
+  if (!bundle) return { doc, healed: 0 };
+  if (parseTs(bundle.updatedAt) <= parseTs(doc.updatedAt)) {
+    return { doc, healed: 0 };
+  }
+  const byId = new Map((bundle.games || []).map((g) => [String(g.id || ''), g]));
+  let healed = 0;
+  const games = (doc.games || []).map((game) => {
+    if (!game || game.kind === 'bye') return game;
+    const fromBundle = byId.get(String(game.id || ''));
+    if (!fromBundle) return game;
+    let changed = false;
+    const next = { ...game };
+    for (const key of BUNDLE_MODEL_KEYS) {
+      const incoming = fromBundle[key];
+      if (incoming === undefined) continue;
+      const same =
+        typeof incoming === 'object'
+          ? JSON.stringify(incoming) === JSON.stringify(game[key])
+          : incoming === game[key];
+      if (same) continue;
+      next[key] = incoming;
+      changed = true;
+    }
+    if (!changed) return game;
+    healed += 1;
+    return next;
+  });
+  if (!healed) {
+    return {
+      doc: { ...doc, updatedAt: bundle.updatedAt },
+      healed: 0,
+    };
+  }
+  return {
+    doc: {
+      ...doc,
+      updatedAt: bundle.updatedAt,
+      games,
+    },
+    healed,
+  };
+}
+
 /**
  * Ensure every non-bye game carries helmet/jersey/pants for the baked Game Week chips.
  * Prefers live/durable row; backfills from repo bundle when durable PUT stripped them.
@@ -244,9 +322,12 @@ function getScheduleBoard(season = 2026) {
   }
   const filled = backfillUniforms(doc.games, year);
   doc = { ...doc, games: filled.games };
-  // Durable disk can lag the bundle (admin PUT without uniform). Rewrite so
-  // Game Week chips stay stable without waiting for a client bake.
-  if (filled.healed > 0 && filePath !== bundlePath(year)) {
+  const modelOverlay =
+    filePath !== bundlePath(year) ? overlayBundleModelFields(doc, year) : { doc, healed: 0 };
+  doc = modelOverlay.doc;
+  // Durable disk can lag the bundle (admin PUT without uniform / stale model).
+  // Rewrite so Game Week chips + predictions stay stable without a manual wipe.
+  if ((filled.healed > 0 || modelOverlay.healed > 0) && filePath !== bundlePath(year)) {
     try {
       fs.mkdirSync(path.dirname(filePath), { recursive: true });
       fs.writeFileSync(
@@ -325,5 +406,6 @@ module.exports = {
   normalizeDoc,
   normalizeUniform,
   backfillUniforms,
+  overlayBundleModelFields,
   loadBundleUniformMap,
 };
