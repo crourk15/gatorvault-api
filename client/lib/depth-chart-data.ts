@@ -16,7 +16,7 @@ export type DepthChartRow = {
 export type DepthPhase = 'off' | 'def' | 'st';
 
 export const DEPTH_CHART_OFF: DepthChartRow[] = [
-  { pos: 'QB', s: 'Aaron Philo', si: 'R-So.', b: 'Tramell Jones Jr.', bi: 'R-Fr.', third: 'Aidan Warner (R-Jr.)', status: 'battle', analysis: 'Open QB competition into fall camp. Philo is the early lean; Jones Jr. is the primary challenger. Sumrall has not named a starter.' },
+  { pos: 'QB', s: 'Aaron Philo', si: 'R-So.', b: 'Tramell Jones Jr.', bi: 'R-Fr.', third: 'Will Griffin (Fr.)', status: 'battle', analysis: 'Open QB competition into fall camp. Philo is the early lean; Jones Jr. is the primary challenger. Sumrall has not named a starter.' },
   { pos: 'RB', s: 'Jadan Baugh', si: 'Jr.', b: 'Duke Clark', bi: 'R-Fr.', third: 'Evan Pryor (R-Sr.) / Byron Louis (R-Fr.)', status: 'locked', analysis: 'Baugh is the clear starter and workhorse.' },
   { pos: 'WR (X)', s: 'Dallas Wilson', si: 'R-Fr.', b: 'Micah Mays Jr.', bi: 'R-Jr.', third: 'Kahleil Jackson (R-Sr.)', status: 'battle', analysis: 'Wilson is winning grass in camp and leads the X lean; Mays Jr. is still pushing.' },
   { pos: 'WR (Z)', s: 'Eric Singleton Jr.', si: 'Sr.', b: 'TJ Abrams', bi: 'R-So.', third: 'Jaylen Lloyd (R-Jr.)', status: 'locked', analysis: 'Singleton Jr. is the clear #1 option.' },
