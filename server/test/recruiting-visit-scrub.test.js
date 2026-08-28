@@ -180,3 +180,23 @@ describe('recruiting-visit-scrub (Tranard Auburn UV)', () => {
     );
   });
 });
+
+describe('extractRealCompetitors denies Tranard Auburn from on3TopTeams', () => {
+  it('does not rebuild Auburn when only on3TopTeams has it', () => {
+    const { extractRealCompetitors } = require('../lib/recruiting-hub-competitors');
+    const out = extractRealCompetitors(
+      {
+        slug: 'tranard-roberts',
+        classYear: 2027,
+        competitors: [{ school: 'UCF', score: 1 }],
+        on3TopTeams: [
+          { team: { name: 'Florida', fullName: 'Florida Gators' }, prediction: { percentage: 74 } },
+          { team: { name: 'Auburn', fullName: 'Auburn Tigers' }, prediction: { percentage: 8.4 } },
+          { team: { name: 'UCF', fullName: 'UCF Knights' }, prediction: { percentage: 1.2 } },
+        ],
+      },
+      []
+    );
+    assert.ok(out.every((c) => !/auburn/i.test(String(c.school || ''))));
+  });
+});
