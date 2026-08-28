@@ -10,6 +10,8 @@ const {
   shouldSkipMemberAnnounceRecipient,
   listAnnounceRecipients,
   getIosUpdateAnnounceEmail,
+  getArticleAnnounceEmail,
+  SEASON_PREVIEW_2026_URL,
 } = require('../lib/member-announce-email');
 
 describe('member announce email', () => {
