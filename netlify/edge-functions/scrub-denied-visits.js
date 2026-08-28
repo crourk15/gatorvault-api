@@ -240,7 +240,9 @@ export default async (request, context) => {
   headers.set('cache-control', 'no-store, must-revalidate');
   headers.set('pragma', 'no-cache');
   headers.set('x-gv-visit-scrub', changed ? '1' : '0');
-  headers.set('clear-site-data', '"cache"');
+  // Do not Clear-Site-Data on every hub hit — thrashing WKWebView cache contributed
+  // to flaky post-reinstall sign-in ("Load failed") while API was also 502-flapping.
+  if (changed) headers.set('clear-site-data', '"cache"');
   headers.delete('content-length');
   headers.delete('etag');
   headers.delete('age');

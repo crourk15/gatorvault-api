@@ -102,21 +102,6 @@
   function = "scrub-denied-visits"
   path = "/api/player/full-profile/*"
 
-[[edge_functions]]
-  function = "scrub-denied-visits"
-  path = "/api/recruiting/hub/heat-index"
-
-[[edge_functions]]
-  function = "scrub-denied-visits"
-  path = "/api/recruiting/hub/battle-board"
-
-[[edge_functions]]
-  function = "scrub-denied-visits"
-  path = "/api/futurecast/*"
-
-[[edge_functions]]
-  function = "scrub-denied-visits"
-  path = "/api/recruiting/player/*"
 
 # Proxy API through same origin — no external API URLs in the browser
 [[redirects]]

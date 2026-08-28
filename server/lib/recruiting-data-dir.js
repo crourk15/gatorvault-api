@@ -333,20 +333,11 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
     // and contribute to exit-143 restart loops after deploy.
     setTimeout(() => {
       try {
+        // Per-row scrub inside mergeBundledOn3BoardTruthIfFresher — do NOT
+        // rewrite all of players.json here (sync parse/stringify starves /ready → 502).
         const boardMerge = mergeBundledOn3BoardTruthIfFresher(dataDir);
         if (boardMerge.updated) {
           console.log('[recruiting-data-dir] merged On3 board truth from bundle', boardMerge.updated);
-        }
-        // Board merge can reintroduce denied schools from an older bundle plate —
-        // re-heal after every deferred merge so Tranard × Auburn cannot stick.
-        const postHeal = require('./recruiting-visit-scrub').healDurableDeniedVisits(
-          path.join(dataDir, 'players.json')
-        );
-        if (postHeal.healed) {
-          console.log(
-            '[recruiting-data-dir] re-scrubbed denied schools after board merge',
-            postHeal.changed
-          );
         }
       } catch (err) {
         console.warn(
