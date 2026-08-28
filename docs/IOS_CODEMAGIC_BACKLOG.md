@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Tranard × Auburn lock: deny inside extractRealCompetitors + board-merge re-heal + offer-log deny + FC edge scrub (stops On3 rebuild resurfacing — API)
 - [x] Tranard × Auburn: strip competitor/offer/topTeams + hub heat/battle on live serve + Netlify edge (API — App Store picks up without Codemagic)
 - [x] Hub ticker t9 empty-building miss: soft-serve scrubbed disk plates so iOS never falls back to Capacitor Auburn UV seed (API)
 - [x] Tranard Auburn UV: Netlify edge scrub on `/api/recruiting/hub/*` + Clear-Site-Data cache bust — App Store binary picks up wipe without Codemagic

@@ -71,9 +71,21 @@ async function mergeCompetitorsOnPlayer(slug, entries = []) {
   if (!existing) return null;
 
   let competitors = existing.competitors || [];
+  let denied = null;
+  try {
+    denied = require('./recruiting-visit-scrub').isDeniedPlayerSchool;
+  } catch {
+    denied = () => false;
+  }
   for (const entry of entries) {
     if (!entry?.school) continue;
+    if (denied(key, entry.school)) continue;
     competitors = mergeCompetitorEntry(competitors, entry);
+  }
+  try {
+    competitors = require('./recruiting-visit-scrub').scrubCompetitorList(key, competitors);
+  } catch {
+    /* optional */
   }
 
   return store.upsertPlayer({ slug: key, competitors });

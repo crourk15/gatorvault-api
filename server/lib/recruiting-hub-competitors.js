@@ -168,7 +168,14 @@ function extractRealCompetitors(player, intelRows = []) {
   const scored = all.filter((c) => c.score != null && Number.isFinite(Number(c.score)));
   // Prefer confirmed RPM rows; fall back to named rivals only when no scores exist.
   const preferred = scored.length ? scored : all;
-  return preferred.sort((a, b) => Number(b.score ?? -1) - Number(a.score ?? -1)).slice(0, 5);
+  const ranked = preferred.sort((a, b) => Number(b.score ?? -1) - Number(a.score ?? -1)).slice(0, 5);
+  // Hard denylist (Tranard × Auburn) — never rebuild from on3TopTeams/intel.
+  try {
+    const { scrubCompetitorList } = require('./recruiting-visit-scrub');
+    return scrubCompetitorList(slug, ranked);
+  } catch {
+    return ranked;
+  }
 }
 
 function resolveStrictUfScore(player, intelRows = []) {

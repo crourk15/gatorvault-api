@@ -127,6 +127,29 @@ function scrubPayload(data, pathname) {
     if (JSON.stringify(next) !== JSON.stringify(out.battles)) changed = true;
     out.battles = next;
   }
+  // FutureCast / Lab soft plates
+  for (const key of ['targets', 'players', 'highPriority', 'closing', 'chase', 'items']) {
+    if (!Array.isArray(out[key])) continue;
+    const next = out[key].map((row) => {
+      if (!row || typeof row !== 'object') return row;
+      const id = String(row.id || row.slug || '');
+      const name = String(row.name || row.fullName || '');
+      if (!/tranard/i.test(id + name)) return row;
+      const copy = { ...row };
+      if (Array.isArray(copy.competingSchools)) {
+        copy.competingSchools = scrubSchoolArray(copy.competingSchools, 'tranard-roberts');
+      }
+      if (Array.isArray(copy.competitors)) {
+        copy.competitors = scrubSchoolArray(copy.competitors, 'tranard-roberts');
+      }
+      if (copy.battle && typeof copy.battle === 'object' && /auburn/i.test(String(copy.battle.competitorName || ''))) {
+        copy.battle = { ...copy.battle, competitorName: null, competitor: null };
+      }
+      return scrubHeatOrBattleRow(copy);
+    });
+    if (JSON.stringify(next) !== JSON.stringify(out[key])) changed = true;
+    out[key] = next;
+  }
 
   const slugMatch = String(pathname || '').match(/\/(?:players|player|intelligence)\/([^/]+)/i);
   const slug = slugMatch ? decodeURIComponent(slugMatch[1]) : '';

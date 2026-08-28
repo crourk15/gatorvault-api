@@ -85,6 +85,11 @@ function mergeBundledIndustryRanksIfFresher(dataDir = resolveRecruitingDataDir()
       }
       if (src.on3Source && !row.on3Source) row.on3Source = src.on3Source;
       if (changed) {
+        try {
+          require('./recruiting-visit-scrub').scrubPlayerSchoolFields(row);
+        } catch {
+          /* optional */
+        }
         durable[i] = row;
         updated += 1;
       }
@@ -331,6 +336,17 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
         const boardMerge = mergeBundledOn3BoardTruthIfFresher(dataDir);
         if (boardMerge.updated) {
           console.log('[recruiting-data-dir] merged On3 board truth from bundle', boardMerge.updated);
+        }
+        // Board merge can reintroduce denied schools from an older bundle plate —
+        // re-heal after every deferred merge so Tranard × Auburn cannot stick.
+        const postHeal = require('./recruiting-visit-scrub').healDurableDeniedVisits(
+          path.join(dataDir, 'players.json')
+        );
+        if (postHeal.healed) {
+          console.log(
+            '[recruiting-data-dir] re-scrubbed denied schools after board merge',
+            postHeal.changed
+          );
         }
       } catch (err) {
         console.warn(

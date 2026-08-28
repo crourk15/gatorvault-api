@@ -91,6 +91,14 @@ function appendOfferLog(entry) {
   if (!row.playerSlug || !row.fingerprint) {
     return { item: null, created: false, duplicate: false, reason: 'invalid' };
   }
+  try {
+    const { isDeniedPlayerSchool } = require('./recruiting-visit-scrub');
+    if (isDeniedPlayerSchool(row.playerSlug, row.school)) {
+      return { item: null, created: false, duplicate: false, reason: 'denied_school' };
+    }
+  } catch {
+    /* optional */
+  }
 
   const doc = loadDoc();
   doc.items = doc.items || [];
