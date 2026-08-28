@@ -146,12 +146,17 @@ function resolveStaffEntry(player) {
 }
 
 function buildCompetitors(player, intelRows) {
-  return extractRealCompetitors(player, intelRows).map((c) => ({
-    school: c.school,
-    logo: c.logo,
-    score: c.score,
-    trend: c.trend || 'flat',
-  }));
+  const { scrubCompetitorList } = require('./recruiting-visit-scrub');
+  const slug = String(player?.slug || player?.id || '');
+  return scrubCompetitorList(
+    slug,
+    extractRealCompetitors(player, intelRows).map((c) => ({
+      school: c.school,
+      logo: c.logo,
+      score: c.score,
+      trend: c.trend || 'flat',
+    }))
+  );
 }
 
 function movementArrow(player) {

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Tranard × Auburn: strip competitor/offer/topTeams + hub heat/battle on live serve + Netlify edge (API — App Store picks up without Codemagic)
 - [x] Hub ticker t9 empty-building miss: soft-serve scrubbed disk plates so iOS never falls back to Capacitor Auburn UV seed (API)
 - [x] Tranard Auburn UV: Netlify edge scrub on `/api/recruiting/hub/*` + Clear-Site-Data cache bust — App Store binary picks up wipe without Codemagic
 - [x] Tranard Auburn UV: hub serve scrub + ticker cacheRev t9 + durable players heal — Home NOW/movement cannot replay stone from disk/CDN (API; no Codemagic)
