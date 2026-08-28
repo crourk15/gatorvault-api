@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T16:59:13.388Z",
+  "updatedAt": "2026-08-28T15:18:44.494Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -3021,6 +3021,33 @@
         "two-way"
       ],
       "vaultFilmAngle": "Lead with Florida offer + Westfield sophomore Hudl vertical/tracking tape — stack go-routes, contested, YAC.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "skylar-alston": {
+      "playerName": "Skylar Alston",
+      "position": null,
+      "classYear": null,
+      "sources": [],
+      "traits": [
+        "frame",
+        "chase",
+        "fill",
+        "second-level",
+        "board-pedigree",
+        "visit-heat"
+      ],
+      "vaultFilmAngle": "Florida offer landed on a busy 2028 LB — Roberts attached; SC still leads RPM; visit heat already real across Auburn/Georgia/UNC/SC/NC State.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"
