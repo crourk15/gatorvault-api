@@ -528,7 +528,7 @@
       "opp": "Florida State Seminoles",
       "date": "November 27, 2026 · 3:30 PM ET",
       "venue": "Doak Campbell Stadium, Tallahassee FL",
-      "ufPct": 49,
+      "ufPct": 56,
       "tv": "ABC",
       "keys": [
         "Win field position battle",
@@ -545,10 +545,10 @@
           "role": "Contain their TE weapon"
         }
       ],
-      "film": "Everything on the line. Preparation wins this game.",
-      "pred": "UF 24 · FSU 27",
-      "predUF": 24,
-      "predOpp": 27,
+      "film": "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
+      "pred": "UF 27 · FSU 24",
+      "predUF": 27,
+      "predOpp": 24,
       "filmLessonId": "frl00010-0000-4000-8000-00000000000a",
       "opponentTendencies": [
         "RPO and quick game in rivalry setting",
