@@ -93,10 +93,40 @@ function normalizeDoc(raw) {
   };
 }
 
+function parseTs(iso) {
+  const ms = Date.parse(String(iso || ''));
+  return Number.isFinite(ms) ? ms : 0;
+}
+
+/**
+ * Prefer a newer git bundle over a stale Render durable file (same pattern as schedule-board).
+ * Writes the newer bundle back to durable when possible so the next read stays healed.
+ */
+function preferNewerBundle(doc, filePath) {
+  if (filePath === BUNDLE_PATH || !fs.existsSync(BUNDLE_PATH)) return doc;
+  let bundle;
+  try {
+    bundle = normalizeDoc(readJson(BUNDLE_PATH));
+  } catch {
+    return doc;
+  }
+  if (parseTs(bundle.updatedAt) <= parseTs(doc.updatedAt)) return doc;
+  try {
+    const writePath = resolveWritePath();
+    if (writePath !== BUNDLE_PATH) {
+      fs.mkdirSync(path.dirname(writePath), { recursive: true });
+      fs.writeFileSync(writePath, JSON.stringify(bundle, null, 2));
+    }
+  } catch {
+    /* serve newer bundle even if durable write fails */
+  }
+  return bundle;
+}
+
 function getDepthChartBoard() {
   const filePath = resolveReadPath();
   try {
-    return normalizeDoc(readJson(filePath));
+    return preferNewerBundle(normalizeDoc(readJson(filePath)), filePath);
   } catch (err) {
     if (filePath !== BUNDLE_PATH && fs.existsSync(BUNDLE_PATH)) {
       return normalizeDoc(readJson(BUNDLE_PATH));

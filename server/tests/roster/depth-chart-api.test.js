@@ -9,11 +9,13 @@ describe('depth-chart-board', () => {
     const board = require('../../lib/depth-chart-board');
     const doc = board.getDepthChartBoard();
     assert.equal(doc.mode, 'fall-camp');
-    assert.match(doc.label, /camp/i);
+    assert.match(doc.label, /Week 1|camp/i);
     assert.ok(doc.offense.length >= 10);
     assert.ok(doc.defense.length >= 10);
     const qb = doc.offense.find((r) => r.pos === 'QB');
-    assert.equal(qb.status, 'battle');
+    assert.equal(qb.s, 'Aaron Philo');
+    assert.equal(qb.third, 'Will Griffin (Fr.)');
+    assert.equal(qb.status, 'locked');
     const payload = board.toApiPayload(doc);
     assert.equal(payload.ok, true);
     assert.deepEqual(payload.byPhase.off, doc.offense);
@@ -48,4 +50,38 @@ describe('depth-chart-board', () => {
       }
     }
   });
+
+  it('heals stale durable from newer git bundle by updatedAt', () => {
+    const board = require('../../lib/depth-chart-board');
+    const tmp = path.join(os.tmpdir(), `gv-depth-stale-${Date.now()}.json`);
+    const prev = process.env.GV_DEPTH_CHART_PATH;
+    process.env.GV_DEPTH_CHART_PATH = tmp;
+    try {
+      const base = board.getDepthChartBoard();
+      const stale = {
+        ...base,
+        updatedAt: '2020-01-01T00:00:00.000Z',
+        offense: base.offense.map((r) =>
+          r.pos === 'QB' ? { ...r, third: 'Aidan Warner (R-Jr.)' } : r
+        ),
+      };
+      fs.writeFileSync(tmp, JSON.stringify(stale, null, 2));
+      const healed = board.getDepthChartBoard();
+      assert.equal(healed.offense.find((r) => r.pos === 'QB').third, 'Will Griffin (Fr.)');
+      assert.ok(parseTs(healed.updatedAt) > parseTs('2020-01-01T00:00:00.000Z'));
+    } finally {
+      if (prev == null) delete process.env.GV_DEPTH_CHART_PATH;
+      else process.env.GV_DEPTH_CHART_PATH = prev;
+      try {
+        fs.unlinkSync(tmp);
+      } catch {
+        /* ignore */
+      }
+    }
+  });
 });
+
+function parseTs(iso) {
+  const ms = Date.parse(String(iso || ''));
+  return Number.isFinite(ms) ? ms : 0;
+}

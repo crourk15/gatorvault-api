@@ -237,7 +237,7 @@ function defaultDepthChart(): DepthChartGroup[] {
     })),
   });
   return [
-    mk('QB', ['Aaron Philo', 'Tramell Jones Jr.', 'Aidan Warner']),
+    mk('QB', ['Aaron Philo', 'Tramell Jones Jr.', 'Will Griffin']),
     mk('RB', ['Jaden Baugh', 'Duke Clark']),
     mk('WR', ['Eric Singleton Jr.', 'Dallas Wilson', 'Vernell Brown III']),
     mk('TE', ['Lacota Dippre', 'Amir Jackson']),
