@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] War Room: Jayden Bell provisional board eval (Boye Mafe comp) — fan Vault Scouting HIDDEN until film (API)
 - [x] War Room: Jordon Gorham film re-watch — Justyn Ross comp + X projection (API / FutureCast Vault Scouting)
 - [x] Game Week expected visitors: Taylor → Ole Miss + FAU row enrichment (API — no Codemagic)
 - [x] Roster: Tramell Jones Jr. depthChartTier → rotation (QB2); only Philo keeps starter tag (API)
