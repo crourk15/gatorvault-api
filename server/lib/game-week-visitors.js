@@ -74,6 +74,13 @@ function titleCaseSlug(slug) {
     .join(' ');
 }
 
+function metaFromDoc(key, doc = loadDoc()) {
+  const meta = doc?.visitorMeta && typeof doc.visitorMeta === 'object' ? doc.visitorMeta : null;
+  if (!meta) return null;
+  const row = meta[key];
+  return row && typeof row === 'object' ? row : null;
+}
+
 function resolveVisitorRow(slug) {
   const key = String(slug || '')
     .trim()
@@ -97,13 +104,28 @@ function resolveVisitorRow(slug) {
   } catch {
     /* optional */
   }
+  // Fallback when slug is on the visitor list but missing from recruiting players.json
+  if (!position || !school || !classYear || stars == null) {
+    const meta = metaFromDoc(key);
+    if (meta) {
+      if (!name || name === titleCaseSlug(key)) {
+        name = String(meta.name || name).trim() || name;
+      }
+      if (!position && meta.position) position = meta.position;
+      if (!school && meta.school) school = meta.school;
+      if (stars == null && meta.stars != null && Number(meta.stars) > 0) {
+        stars = Number(meta.stars);
+      }
+      if (!classYear && meta.classYear != null) classYear = Number(meta.classYear);
+    }
+  }
   return {
     slug: key,
     name,
     position: position ? String(position) : null,
     school: school ? String(school) : null,
     stars,
-    classYear,
+    classYear: Number.isFinite(classYear) ? classYear : null,
   };
 }
 

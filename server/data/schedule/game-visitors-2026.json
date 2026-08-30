@@ -1,6 +1,36 @@
 {
-  "updatedAt": "2026-08-17T02:15:00.000Z",
-  "source": "Gators Online / Blake Alderman early visitor look — plans can change",
+  "updatedAt": "2026-08-30T04:05:00.000Z",
+  "source": "Gators Online / Blake Alderman early visitor look + public confirmations — plans can change",
+  "visitorMeta": {
+    "zylen-little": {
+      "name": "Zylen Little",
+      "position": "DL",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "kameron-battle": {
+      "name": "Kameron Battle",
+      "position": "RB",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "chayse-brown": {
+      "name": "Chayse Brown",
+      "position": "ATH",
+      "school": "Lennard (Ruskin, FL)",
+      "stars": null,
+      "classYear": 2028
+    },
+    "josiah-taylor": {
+      "name": "Josiah Taylor",
+      "position": "DL",
+      "school": "Vero Beach (FL)",
+      "stars": 3,
+      "classYear": 2028
+    }
+  },
   "games": [
     {
       "gameId": "fau",
@@ -41,7 +71,8 @@
         "jaxon-flowers",
         "anthony-howard-jr",
         "hudson-west",
-        "cooper-martenson"
+        "cooper-martenson",
+        "josiah-taylor"
       ]
     }
   ]
