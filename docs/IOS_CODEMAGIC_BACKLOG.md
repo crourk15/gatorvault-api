@@ -8,6 +8,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 
 ## Already live on iOS (no build needed)
 - [x] War Room: Jordon Gorham film re-watch — Justyn Ross comp + X projection (API / FutureCast Vault Scouting)
+- [x] Game Week expected visitors: Taylor → Ole Miss + FAU row enrichment (API — no Codemagic)
 - [x] Roster: Tramell Jones Jr. depthChartTier → rotation (QB2); only Philo keeps starter tag (API)
 - [x] Depth chart QB3 → Will Griffin (Fr.); newer git bundle heals stale Render durable depth board (API)
 - [x] iOS login Load failed: allow `X-GV-Client` in CORS Access-Control-Allow-Headers (API — App Store binary already sends it)

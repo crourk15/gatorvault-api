@@ -39,6 +39,18 @@ describe('game-week-visitors', () => {
     assert.ok(panel.visitors.length >= 5);
     assert.ok(panel.visitors.every((v) => v.slug && v.name));
     assert.match(String(panel.source || ''), /plans can change/i);
+    const little = panel.visitors.find((v) => v.slug === 'zylen-little');
+    assert.ok(little);
+    assert.equal(little.position, 'DL');
+    assert.match(String(little.school || ''), /Carrollwood/i);
+    assert.equal(little.classYear, 2028);
+  });
+
+  it('includes Josiah Taylor on Ole Miss expected list', () => {
+    const panel = visitorsPanelForGameId('olemiss');
+    assert.ok(panel);
+    assert.ok(panel.visitors.some((v) => v.slug === 'josiah-taylor'));
+    assert.equal(expectedVisitLabelForSlug('josiah-taylor'), 'Expected FAU visit · Sep 5');
   });
 
   it('attaches expectedVisitors onto schedule games', () => {
