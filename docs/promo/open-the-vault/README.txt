@@ -1,7 +1,16 @@
 GatorVault — Open the Vault promo pack
 ======================================
 
-PRIMARY (use this first)
+META APP INSTALL (paid — use this first)
+  META-APP-INSTALL-AD.md
+    Ads Manager paste pack (copy + setup).
+  meta-exports/
+    feed-1080-app-install.png   Primary 1080×1080 feed
+    feed-1080-features.png      Alt feed (feature boxes)
+    story-1080x1920-app-install.png
+    reel-1080x1920-open-the-vault.mp4
+
+PRIMARY (organic / general)
   PRIMARY-elite-vault-square.png
     Square feed / social promo.
     Open vault door with GatorVault engraved on the door.
