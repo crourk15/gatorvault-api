@@ -14,8 +14,17 @@ describe('depth-chart-board', () => {
     assert.ok(doc.defense.length >= 10);
     const qb = doc.offense.find((r) => r.pos === 'QB');
     assert.equal(qb.s, 'Aaron Philo');
-    assert.equal(qb.third, 'Will Griffin (Fr.)');
+    assert.equal(qb.b, 'Tramell Jones Jr.');
+    assert.equal(qb.third, '');
     assert.equal(qb.status, 'locked');
+    assert.match(doc.label, /Florida Atlantic|Week 1/i);
+    assert.equal(qb.third.includes('Griffin'), false);
+    const teH = doc.offense.find((r) => r.pos === 'TE (H)');
+    assert.match(teH.s, /Amir Jackson/);
+    assert.match(teH.s, /Luke Harpring/);
+    assert.equal(teH.status, 'battle');
+    const rg = doc.offense.find((r) => r.pos === 'RG');
+    assert.equal(rg.b, 'TJ Dice Jr.');
     const payload = board.toApiPayload(doc);
     assert.equal(payload.ok, true);
     assert.deepEqual(payload.byPhase.off, doc.offense);
@@ -67,7 +76,8 @@ describe('depth-chart-board', () => {
       };
       fs.writeFileSync(tmp, JSON.stringify(stale, null, 2));
       const healed = board.getDepthChartBoard();
-      assert.equal(healed.offense.find((r) => r.pos === 'QB').third, 'Will Griffin (Fr.)');
+      assert.equal(healed.offense.find((r) => r.pos === 'QB').b, 'Tramell Jones Jr.');
+      assert.equal(healed.offense.find((r) => r.pos === 'QB').third, '');
       assert.ok(parseTs(healed.updatedAt) > parseTs('2020-01-01T00:00:00.000Z'));
     } finally {
       if (prev == null) delete process.env.GV_DEPTH_CHART_PATH;

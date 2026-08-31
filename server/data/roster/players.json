@@ -419,7 +419,7 @@
     "bio": "Lagonza Hayward is a So. S from Lyons, Ga. Toombs County. Spring roster profile for the 2026 Gators.",
     "stats": "s - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Coverage twitch and recovery speed in phase",
       "Ball skills and route recognition",
@@ -506,7 +506,7 @@
     "bio": "Bailey Stockton is a R-Jr. WR from Bogart, Ga. Prince Avenue Christian. Transfer from Georgia Tech. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Georgia Tech - wr on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Route nuance and separation at all three levels",
       "Hands and body control in traffic",
@@ -644,7 +644,7 @@
     "bio": "Micah Mays Jr. is a R-Jr. WR from West Palm Beach, Fla. The Benjamin School. Transfer from Wake Forest. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Wake Forest - wr on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Route nuance and separation at all three levels",
       "Hands and body control in traffic",
@@ -891,7 +891,7 @@
     "bio": "J'Vari Flowers is a So. CB from Miami, Fla. Northwestern. Spring roster profile for the 2026 Gators.",
     "stats": "cb - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "starter",
     "strengths": [
       "Coverage twitch and recovery speed in phase",
       "Ball skills and route recognition",
@@ -978,7 +978,7 @@
     "bio": "Amir Jackson is a R-So. TE from Statesboro, Ga. Portal. Spring roster profile for the 2026 Gators.",
     "stats": "te - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "starter",
     "strengths": [
       "Inline blocking strength at the point of attack",
       "Soft hands as a seam and intermediate target",
@@ -1087,7 +1087,7 @@
     "bio": "Ty Jackson is a So. ILB from Fort Lauderdale, Fla. Seminole Ridge. Spring roster profile for the 2026 Gators.",
     "stats": "linebacker - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Instincts and pursuit angles to the football",
       "Tackling reliability in space",
@@ -1566,7 +1566,7 @@
     "bio": "LJ McCray is a R-So. DL from Daytona, Fla. Mainland. Spring roster profile for the 2026 Gators.",
     "stats": "dl - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation",
+    "depthChartTier": "starter",
     "strengths": [
       "Get-off and first-step quickness at the line",
       "Hand usage to disengage blockers",
@@ -2054,7 +2054,7 @@
     "bio": "KJ Ford is a Fr. JACK from Dallas, Texas Duncanville. Spring roster profile for the 2026 Gators.",
     "stats": "hybrid edge - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Explosive first step off the edge",
       "Pass-rush bend and finish ability",
@@ -2142,7 +2142,7 @@
     "bio": "Luke Harpring is a R-So. TE from Atlanta, Ga. Marist School. Transfer from Georgia Tech. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Georgia Tech - te on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "starter",
     "strengths": [
       "Inline blocking strength at the point of attack",
       "Soft hands as a seam and intermediate target",
@@ -2567,7 +2567,7 @@
     "bio": "Duke Clark is a R-Fr. RB from Tampa, Fla. Plant. Spring roster profile for the 2026 Gators.",
     "stats": "rb - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Vision and patience between the tackles",
       "Contact balance through second-level defenders",
@@ -3094,7 +3094,7 @@
     "bio": "Kamran James is a Sr. DL from Orlando, Fla. Olympia. Spring roster profile for the 2026 Gators.",
     "stats": "dl - Sr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation",
+    "depthChartTier": "starter",
     "strengths": [
       "Get-off and first-step quickness at the line",
       "Hand usage to disengage blockers",
@@ -3512,7 +3512,7 @@
     "bio": "Byron Louis is a R-Fr. RB from Miramar, Fla. American Heritage. Spring roster profile for the 2026 Gators.",
     "stats": "rb - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Vision and patience between the tackles",
       "Contact balance through second-level defenders",
@@ -3597,7 +3597,7 @@
     "bio": "Press-man corner with physical coverage skills. Rotates with McClain in the secondary.",
     "stats": "Press-man corner - Physical coverage.",
     "injury": "green",
-    "depthChartTier": "starter",
+    "depthChartTier": "rotation",
     "strengths": [
       "Coverage twitch and recovery speed in phase",
       "Ball skills and route recognition",
@@ -4599,7 +4599,7 @@
     "bio": "Brandon Rabasco is a R-So. K from Hollywood, Fla. South Broward. Spring roster profile for the 2026 Gators.",
     "stats": "k - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Leg strength on field goals and kickoffs",
       "Routine consistency in pressure moments",
@@ -4882,7 +4882,7 @@
     "bio": "Myles Johnson is a So. ILB from Brewton, Ala. T.R. Miller. Spring roster profile for the 2026 Gators.",
     "stats": "linebacker - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Instincts and pursuit angles to the football",
       "Tackling reliability in space",
@@ -5059,7 +5059,7 @@
     "bio": "Nicholas Inglis is a R-So. P from Dallas, Texas Episcopal. Spring roster profile for the 2026 Gators.",
     "stats": "p - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Hang time and directional punting",
       "Operation speed and consistency",
@@ -5501,7 +5501,7 @@
     "jersey": 54,
     "unit": "special",
     "transferInfo": null,
-    "depthChartTier": "depth",
+    "depthChartTier": "rotation",
     "stars": null,
     "rank": null,
     "rating": null,
@@ -5583,7 +5583,7 @@
     "bio": "TJ Dice Jr. is a R-Fr. OL from College Park, Ga. Langston Hughes. Spring roster profile for the 2026 Gators.",
     "stats": "ol - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Core strength and pad level in the run game",
       "Hand placement and footwork in pass pro",
@@ -6620,7 +6620,7 @@
     "bio": "Heze Kent is a Fr. TE from Brunswick, Ga. Brunswick. Spring roster profile for the 2026 Gators.",
     "stats": "te - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Inline blocking strength at the point of attack",
       "Soft hands as a seam and intermediate target",
@@ -7018,7 +7018,7 @@
     "bio": "DK Kalu is a R-Jr. DL from Missouri City, Texas Ridge Point. Transfer from Baylor. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Baylor - dl on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Get-off and first-step quickness at the line",
       "Hand usage to disengage blockers",
@@ -7108,7 +7108,7 @@
     "bio": "Jamari Lyons is a R-Jr. DL from Cocoa, Fla. Viera. Spring roster profile for the 2026 Gators.",
     "stats": "dl - R-Jr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Get-off and first-step quickness at the line",
       "Hand usage to disengage blockers",
@@ -7297,7 +7297,7 @@
     "bio": "Joseph Mbatchou is a So. DL from Loganville, Ga. Grayson. Spring roster profile for the 2026 Gators.",
     "stats": "dl - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental",
+    "depthChartTier": "rotation",
     "strengths": [
       "Get-off and first-step quickness at the line",
       "Hand usage to disengage blockers",
@@ -7430,7 +7430,7 @@
     "bio": "Emmanuel Oyebadejo is a R-Sr. DL from Manchester, England Loreto College. Transfer from University of Exeter / Jacksonville State. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from University of Exeter / Jacksonville State - dl on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation",
+    "depthChartTier": "starter",
     "strengths": [
       "Get-off and first-step quickness at the line",
       "Hand usage to disengage blockers",

@@ -11,6 +11,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Game Week expected visitors: Taylor → Ole Miss + FAU row enrichment (API — no Codemagic)
 - [x] Roster: Tramell Jones Jr. depthChartTier → rotation (QB2); only Philo keeps starter tag (API)
 - [x] Depth chart QB3 → Will Griffin (Fr.); newer git bundle heals stale Render durable depth board (API)
+- [x] Official Week 1 FAU depth chart bake — Philo/Tramell two-deep (Griffin off board), H-TE/END/CB ORs, Dice at RG backup (API; heals durable via newer `updatedAt`)
 - [x] iOS login Load failed: allow `X-GV-Client` in CORS Access-Control-Allow-Headers (API — App Store binary already sends it)
 - [x] Web→iOS auth handoff Universal Link (`/vault/auth/callback/?token&email`) — App Store binary already handles callback; web Join button ships via Netlify
 - [x] Auth login/register edge retry on 502/503 — kills iOS “Load failed” during Render flaps (Netlify edge; no Codemagic)

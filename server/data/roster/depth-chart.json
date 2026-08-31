@@ -1,252 +1,252 @@
 {
   "version": 1,
   "mode": "fall-camp",
-  "label": "Week 1 board · Aug 24",
-  "subtitle": "Sumrall named Philo Week 1 QB1 (Aug 24). OL soft locks: Lovett–Harris–Moore–Shanahan–Ugorji (Lovett at LT per presser).",
-  "updatedAt": "2026-08-28T21:45:00.000Z",
-  "source": "week1-board-griffin-qb3",
+  "label": "Week 1 · Florida Atlantic",
+  "subtitle": "Official UF depth chart (Aug 31). Philo QB1 · Tramell QB2 · Will Griffin off the two-deep. Open ORs at END, H-TE, and one CB.",
+  "updatedAt": "2026-08-31T17:10:00.000Z",
+  "source": "official-week1-fau-depth-chart",
   "offense": [
     {
       "pos": "QB",
       "s": "Aaron Philo",
-      "si": "R-So.",
+      "si": "Jr.",
       "b": "Tramell Jones Jr.",
-      "bi": "R-Fr.",
-      "third": "Will Griffin (Fr.)",
+      "bi": "So.",
+      "third": "",
       "status": "locked",
-      "analysis": "Sumrall (Aug 24): Philo is the Week 1 starter vs FAU and is getting most of the practice snaps. Not forever — Jones Jr. stays in the room fight."
+      "analysis": "Official Week 1 chart: Philo starts vs FAU. Tramell is the listed backup. Will Griffin is not on the two-deep."
     },
     {
       "pos": "RB",
       "s": "Jadan Baugh",
       "si": "Jr.",
       "b": "Evan Pryor / Duke Clark",
-      "bi": "R-Sr. / R-Fr.",
-      "third": "London Montgomery (R-Jr.) / Byron Louis (R-Fr.)",
+      "bi": "6th / So.",
+      "third": "London Montgomery (Sr.) / Byron Louis (So.)",
       "status": "locked",
-      "analysis": "Baugh is the clear RB1. Pryor and Clark share the next tier."
+      "analysis": "Baugh is RB1. Pryor and Clark are next; Montgomery and Louis share the fourth tier (OR on the official sheet)."
     },
     {
       "pos": "WR (X)",
       "s": "Dallas Wilson",
-      "si": "R-Fr.",
-      "b": "Micah Mays Jr.",
-      "bi": "R-Jr.",
-      "third": "Davian Groce (Fr.)",
-      "status": "battle",
-      "analysis": "Wilson leads the X lean; Mays Jr. is still pushing."
+      "si": "So.",
+      "b": "Micah Mays Jr. / Kahleil Jackson",
+      "bi": "Sr. / 7th",
+      "third": "",
+      "status": "locked",
+      "analysis": "Wilson starts at X. Mays Jr. and Kahleil are listed as the OR behind him."
     },
     {
       "pos": "WR (Z)",
       "s": "Eric Singleton Jr.",
       "si": "Sr.",
       "b": "TJ Abrams",
-      "bi": "R-So.",
-      "third": "Jaylen Lloyd (R-Jr.)",
+      "bi": "Jr.",
+      "third": "",
       "status": "locked",
-      "analysis": "Singleton Jr. is the clear Z option."
+      "analysis": "Singleton Jr. starts at Z with Abrams next."
     },
     {
       "pos": "WR (F)",
       "s": "Vernell Brown III",
       "si": "So.",
       "b": "Bailey Stockton",
-      "bi": "R-Jr.",
-      "third": "Justin Williams (Fr.)",
+      "bi": "Sr.",
+      "third": "",
       "status": "locked",
-      "analysis": "VB3 holds the F spot."
+      "analysis": "VB3 holds the F with Stockton behind him (also the PR two-deep)."
     },
     {
       "pos": "TE (Y)",
       "s": "Lacota Dippre",
-      "si": "R-Jr.",
-      "b": "Evan Chieca",
-      "bi": "R-Jr.",
-      "third": "Heze Kent (Fr.)",
+      "si": "Sr.",
+      "b": "Heze Kent",
+      "bi": "Fr.",
+      "third": "",
       "status": "locked",
-      "analysis": "Dippre is the top Y tight end."
+      "analysis": "Dippre is the Y starter. Kent is the listed backup — Sumrall flagged him as one of the most improved freshmen."
     },
     {
       "pos": "TE (H)",
-      "s": "Luke Harpring",
-      "si": "R-So.",
-      "b": "Amir Jackson",
-      "bi": "R-So.",
-      "third": "Micah Jones (R-Fr.)",
+      "s": "Amir Jackson / Luke Harpring",
+      "si": "Jr. / Jr.",
+      "b": "",
+      "bi": "",
+      "third": "",
       "status": "battle",
-      "analysis": "Mid-camp lean flips to Harpring at H; Jackson remains close."
+      "analysis": "Official co-starters at H (OR). Jackson listed first; Harpring shares the first team."
     },
     {
       "pos": "LT",
       "s": "Bryce Lovett",
-      "si": "R-Jr.",
+      "si": "Sr.",
       "b": "Eagan Boyer",
-      "bi": "R-So.",
-      "third": "Tavaris Dice (R-Fr.) / Fletcher Westphal (R-So.)",
+      "bi": "Jr.",
+      "third": "",
       "status": "locked",
-      "analysis": "Sumrall presser soft lock: Lovett at LT for Week 1. Boyer slides to the next tackle tier with Dice/Westphal."
+      "analysis": "Lovett starts at LT; Boyer is the backup."
     },
     {
       "pos": "LG",
       "s": "Knijeah Harris",
       "si": "Sr.",
       "b": "Roderick Kearney",
-      "bi": "R-Jr.",
-      "third": "Desmond Green (Fr.)",
+      "bi": "Sr.",
+      "third": "",
       "status": "locked",
-      "analysis": "Harris locked at left guard — interior soft lock with Moore/Shanahan. Kearney primary backup."
+      "analysis": "Harris at left guard; Kearney next."
     },
     {
       "pos": "C",
       "s": "Harrison Moore",
       "si": "Jr.",
       "b": "Jason Zandamela",
-      "bi": "R-So.",
-      "third": "Mark Faircloth (R-So.)",
+      "bi": "Jr.",
+      "third": "",
       "status": "locked",
-      "analysis": "Moore locked at center — interior soft lock with Harris/Shanahan. Zandamela next up."
+      "analysis": "Moore at center; Zandamela is the backup."
     },
     {
       "pos": "RG",
-      "s": "T.J. Shanahan Jr.",
-      "si": "R-Jr.",
-      "b": "Daniel Pierre Louis",
-      "bi": "R-Fr.",
-      "third": "Mark Faircloth (R-So.)",
+      "s": "TJ Shanahan Jr.",
+      "si": "Sr.",
+      "b": "TJ Dice Jr.",
+      "bi": "So.",
+      "third": "",
       "status": "locked",
-      "analysis": "Shanahan soft-locked at RG. Lovett moved to LT per Sumrall presser; Pierre Louis is the primary interior backup."
+      "analysis": "Shanahan at right guard. Dice Jr. is the official backup (not Pierre Louis)."
     },
     {
       "pos": "RT",
       "s": "Emeka Ugorji",
-      "si": "So.",
+      "si": "Sr.",
       "b": "Caden Jones",
-      "bi": "R-So.",
-      "third": "Tyler Chukuyem (Fr.)",
+      "bi": "Sr.",
+      "third": "",
       "status": "locked",
-      "analysis": "Soft Week 1 lock at RT — Ugorji opposite Lovett at LT. Jones challenged to elevate; continuity still the ask."
+      "analysis": "Ugorji starts at RT; Caden Jones is next."
     }
   ],
   "defense": [
     {
-      "pos": "DT",
-      "s": "Jeramiah McCloud",
-      "si": "So.",
-      "b": "Jamari Lyons / Joseph Mbatchou",
-      "bi": "R-Sr. / So.",
-      "third": "Mason Clinton (R-Jr.)",
-      "status": "locked",
-      "analysis": "McCloud is the starting DT lean."
+      "pos": "END",
+      "s": "Kamran James / LJ McCray / Emmanuel Oyebadejo",
+      "si": "Sr. / Jr. / 5th",
+      "b": "",
+      "bi": "",
+      "third": "",
+      "status": "battle",
+      "analysis": "Three-way OR at defensive end on the official sheet — all listed first team."
     },
     {
       "pos": "NOSE",
       "s": "Brendan Bett",
-      "si": "R-Jr.",
-      "b": "DK Kalu",
-      "bi": "R-Jr.",
-      "third": "Joseph Mbatchou (So.)",
+      "si": "Sr.",
+      "b": "Joseph Mbatchou",
+      "bi": "So.",
+      "third": "",
       "status": "locked",
-      "analysis": "Bett anchors the nose."
+      "analysis": "Bett starts at nose; Mbatchou is the backup."
     },
     {
-      "pos": "END",
-      "s": "LJ McCray",
-      "si": "R-So.",
-      "b": "Kamran James / Emmanuel Oyebadejo",
-      "bi": "Sr. / R-Sr.",
-      "third": "Jalen Wiggins (R-Fr.)",
+      "pos": "DT",
+      "s": "Jeramiah McCloud",
+      "si": "So.",
+      "b": "DK Kalu / Jamari Lyons",
+      "bi": "Sr. / 5th",
+      "third": "",
       "status": "locked",
-      "analysis": "McCray leads END; James and Oyebadejo share the next tier."
+      "analysis": "McCloud starts at DT. Kalu and Lyons are the OR behind him."
     },
     {
       "pos": "JACK",
       "s": "Jayden Woods",
       "si": "So.",
-      "b": "KJ Ford",
-      "bi": "Fr.",
-      "third": "Kofi Asare (R-Sr.)",
+      "b": "Kofi Asare / KJ Ford",
+      "bi": "5th / Fr.",
+      "third": "",
       "status": "locked",
-      "analysis": "Woods remains the JACK centerpiece."
-    },
-    {
-      "pos": "MIKE",
-      "s": "Jaden Robinson",
-      "si": "Sr.",
-      "b": "Myles Johnson",
-      "bi": "So.",
-      "third": "Matthew Kade (R-So.)",
-      "status": "locked",
-      "analysis": "Robinson is the MIKE field general."
+      "analysis": "Woods starts at JACK. Asare and Ford share the next tier (OR)."
     },
     {
       "pos": "WILL",
       "s": "Myles Graham",
       "si": "Jr.",
-      "b": "Ty Jackson",
+      "b": "Myles Johnson",
       "bi": "So.",
-      "third": "TJ Bullard (R-Sr.)",
+      "third": "",
       "status": "locked",
-      "analysis": "Graham holds WILL."
+      "analysis": "Graham starts; Myles Johnson is the listed backup."
     },
     {
       "pos": "SAM",
       "s": "Aaron Chiles",
       "si": "Jr.",
-      "b": "Malik Morris",
-      "bi": "Fr.",
-      "third": "Dylan Leighton (R-Fr.)",
+      "b": "Ty Jackson",
+      "bi": "So.",
+      "third": "",
       "status": "locked",
-      "analysis": "Chiles leads SAM."
+      "analysis": "Chiles starts; Ty Jackson is next."
+    },
+    {
+      "pos": "MIKE",
+      "s": "Jaden Robinson",
+      "si": "Sr.",
+      "b": "TJ Bullard",
+      "bi": "5th",
+      "third": "",
+      "status": "locked",
+      "analysis": "Robinson starts in the middle; Bullard is the backup."
+    },
+    {
+      "pos": "STAR",
+      "s": "Kanye Clark",
+      "si": "Sr.",
+      "b": "Alfonzo Allen Jr.",
+      "bi": "5th",
+      "third": "",
+      "status": "locked",
+      "analysis": "Clark starts at STAR; Allen Jr. is behind him."
     },
     {
       "pos": "CB",
       "s": "Ben Hanks III",
       "si": "So.",
-      "b": "J'Vari Flowers",
-      "bi": "So.",
-      "third": "Jordy Lowery (R-Sr.)",
-      "status": "battle",
-      "analysis": "Mid-camp lean puts Hanks on the field with Flowers next."
+      "b": "Dijon Johnson",
+      "bi": "Sr.",
+      "third": "",
+      "status": "locked",
+      "analysis": "Hanks starts on one side; Dijon is the backup."
     },
     {
       "pos": "CB",
       "s": "Cormani McClain",
-      "si": "R-So.",
-      "b": "Dijon Johnson",
-      "bi": "R-Jr.",
-      "third": "CJ Bronaugh (Fr.)",
-      "status": "locked",
-      "analysis": "McClain locks one side; Dijon is the primary challenge."
-    },
-    {
-      "pos": "STAR",
-      "s": "Kanye Clark",
-      "si": "R-So.",
-      "b": "Alfonso Allen Jr.",
-      "bi": "Sr.",
-      "third": "Dylan Purter (Fr.)",
+      "si": "Sr.",
+      "b": "J'Vari Flowers",
+      "bi": "So.",
+      "third": "",
       "status": "battle",
-      "analysis": "Clark holds the STAR lean; Allen Jr. is next."
+      "analysis": "Official OR at the other corner — McClain and Flowers share the first team."
     },
     {
       "pos": "SS",
       "s": "Bryce Thornton",
       "si": "Sr.",
-      "b": "Lagonza Hayward",
-      "bi": "So.",
-      "third": "Drake Stubbs (So.)",
+      "b": "Cam Dooley",
+      "bi": "Jr.",
+      "third": "",
       "status": "locked",
-      "analysis": "Thornton is the strong safety."
+      "analysis": "Thornton starts; Dooley is the backup."
     },
     {
       "pos": "FS",
       "s": "DJ Coleman",
       "si": "Sr.",
-      "b": "Cam Dooley",
-      "bi": "Jr.",
-      "third": "Brayden Slade (R-Jr.)",
-      "status": "battle",
-      "analysis": "Mid-camp lean flips Coleman ahead of Dooley at free safety."
+      "b": "Lagonza Hayward",
+      "bi": "So.",
+      "third": "",
+      "status": "locked",
+      "analysis": "Coleman starts at free safety; Hayward is next."
     }
   ],
   "specialTeams": [
@@ -254,51 +254,61 @@
       "pos": "PR",
       "s": "Vernell Brown III",
       "si": "So.",
-      "b": "Justin Williams",
-      "bi": "Fr.",
-      "third": "Jaylen Lloyd (R-Jr.)",
+      "b": "Bailey Stockton",
+      "bi": "Sr.",
+      "third": "",
       "status": "locked",
-      "analysis": "VB3 is the top punt-return option."
+      "analysis": "Official PR two-deep: Brown III, then Stockton."
     },
     {
       "pos": "KR",
       "s": "London Montgomery",
-      "si": "R-Jr.",
+      "si": "Sr.",
       "b": "J'Vari Flowers",
       "bi": "So.",
-      "third": "CJ Hester (Fr.)",
+      "third": "",
       "status": "locked",
-      "analysis": "Montgomery leads kick return in the mid-camp look."
+      "analysis": "Montgomery leads kick return; Flowers is next."
     },
     {
       "pos": "K",
       "s": "Patrick Durkin",
-      "si": "R-So.",
+      "si": "Jr.",
       "b": "Liam Padron",
-      "bi": "R-So.",
-      "third": "Brandon Rabasco (R-So.)",
+      "bi": "Jr.",
+      "third": "",
       "status": "locked",
-      "analysis": "Durkin remains the placekicker lean."
+      "analysis": "Durkin is the placekicker; Padron is the backup. Durkin also handles kickoffs."
+    },
+    {
+      "pos": "KO",
+      "s": "Patrick Durkin",
+      "si": "Jr.",
+      "b": "Brandon Rabasco",
+      "bi": "Jr.",
+      "third": "",
+      "status": "locked",
+      "analysis": "Durkin on kickoffs; Rabasco is the backup."
     },
     {
       "pos": "P",
       "s": "Alec Clark",
-      "si": "R-Jr.",
-      "b": "Miller Fealy",
-      "bi": "So.",
-      "third": "Nicholas Inglis (R-So.)",
+      "si": "Sr.",
+      "b": "Nicholas Inglis",
+      "bi": "Jr.",
+      "third": "",
       "status": "locked",
-      "analysis": "Clark is the punter."
+      "analysis": "Clark punts (and holds); Inglis is next."
     },
     {
       "pos": "LS",
       "s": "Carter Milliron",
-      "si": "R-Sr.",
-      "b": "Hunter Solwold",
-      "bi": "R-Fr.",
+      "si": "5th",
+      "b": "Lincoln Anderson",
+      "bi": "Fr.",
       "third": "",
       "status": "locked",
-      "analysis": "Veteran long snapper."
+      "analysis": "Milliron on long snaps; Anderson is the backup (and short-snapper first)."
     }
   ]
 }
