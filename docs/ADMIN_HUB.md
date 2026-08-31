@@ -108,6 +108,12 @@ Set `OPS_ADMIN_PIN` in Render for production.
 | **Job Queue** | `#dashboard/jobs` | Safe re-runs + heartbeats + recent ops logs |
 | **Post Studio** | `#dashboard/post-studio` | Advanced inbox/drafts (secondary to Beat Desk) |
 | **Members** | `#members/recent` | Newest signups: trial / paid / expired · **Channel** (Website vs iOS app) · marketing Source |
+
+### Trial / onboarding email (Members)
+
+Trial members should get: **Day 0 welcome** on register, then drip Days **1 / 3 / 7 / 25**, plus trial-clock convert at **5 days** and **1 day** left (`docs/MEMBERSHIP_TRIAL_AND_EMAIL.md`). Paid skipped. Provider: Resend-first (`GET /api/email-status`).
+
+If trials get nothing: (1) check Resend dashboard for delivers/bounces/spam, (2) confirm welcome on a fresh signup returns `emailSent:true` / `provider:resend`, (3) Render cron `gatorvault-api-onboarding-drip` logs (must have `MONITORING_CRON_SECRET` — soft-fail looks green), (4) kill switch `ONBOARDING_DRIP_DISABLED` must be unset. One-shot blasts (iOS update / season preview) are separate Admin routes (`POST /api/admin/members/announce-*`) and include active trials.
 | **FutureCast** | `#futurecast/control` | Targets, 2028 admin allowlist add/remove, early watch |
 | **Recruiting Daily** | `#recruiting/daily` | Events, ingest, pipeline |
 | **Unresolved Predictions** | `#recruiting/unresolved` | Nameless RPM teasers |

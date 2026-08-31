@@ -943,10 +943,12 @@ app.post('/api/auth/bridge-session', (req, res) => {
 
 app.get('/api/onboarding/sequence', (req, res) => {
   const { TRIAL_REMINDER_SEQUENCE } = require('./lib/onboarding-emails');
+  const providers = getEmailProviders();
   return res.json({
     ok: true,
     mode: 'drip',
-    provider: 'emailjs',
+    provider: providers[0] || EMAIL_PROVIDER || null,
+    providers,
     emails: ONBOARDING_SEQUENCE.map((e) => ({
       day: e.day,
       delayDays: e.delayDays,
@@ -1028,6 +1030,7 @@ app.get('/api/version', (req, res) => {
     features: {
       globalTicker: true,
       bannerAlerts: true,
+      // True when drip kill-switch is off (in-process scheduler starts regardless of X_SCHEDULED_JOBS_ENABLED).
       onboardingScheduler: shouldUseServerScheduler(),
       welcomeEmailOnly: false,
       onboardingDrip: true,
@@ -2026,11 +2029,13 @@ function startPostBootRecruitingAndSchedulers() {
     console.warn('Live dashboard scheduler failed to start', e.message);
   }
   try {
-    if (!pipelineGuards.scheduledJobsEnabled()) {
-      console.log('[onboarding] scheduler skipped — X_SCHEDULED_JOBS_ENABLED is not true');
-    } else {
-      startOnboardingScheduler({ loadUsers, saveUsers, deliverEmail, pushEmailLog });
-    }
+    // Trial onboarding drip is budgeted/lightweight and must NOT share the
+    // X_SCHEDULED_JOBS_ENABLED kill switch (false on Starter for heavy X/hub work).
+    // Previously that gate left drip dependent only on Render cron
+    // gatorvault-api-onboarding-drip, which soft-exits 0 when MONITORING_CRON_SECRET
+    // is missing — silent zero sends for all trial members.
+    // Kill switch remains ONBOARDING_DRIP_DISABLED; cron still runs as backup.
+    startOnboardingScheduler({ loadUsers, saveUsers, deliverEmail, pushEmailLog });
   } catch (e) {
     console.warn('Onboarding scheduler init skipped', e.message);
   }

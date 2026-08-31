@@ -14,6 +14,8 @@ const DEFAULT_INTERVAL_MS = 60 * 60 * 1000; // hourly
 let timer = null;
 
 function dripEnabled() {
+  // Sole kill switch for trial drip. Do NOT also gate on X_SCHEDULED_JOBS_ENABLED —
+  // that flag stays false on Starter for heavy X/hub work and previously silenced drip.
   const raw = String(process.env.ONBOARDING_DRIP_DISABLED || '').toLowerCase();
   return !(raw === '1' || raw === 'true' || raw === 'yes');
 }

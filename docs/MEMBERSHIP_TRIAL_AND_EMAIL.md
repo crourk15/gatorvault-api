@@ -32,8 +32,11 @@
   - **1 day left**
 - Paid members are skipped.
 - Kill switch: `ONBOARDING_DRIP_DISABLED=true`.
+- **Not** gated by `X_SCHEDULED_JOBS_ENABLED` (that flag stays false on Starter for heavy X/hub work). In-process drip always starts unless the drip kill switch is on; Render cron is the backup.
+- Cron `gatorvault-api-onboarding-drip` POSTs `/api/onboarding/process` with `MONITORING_CRON_SECRET`. If that secret is missing on the cron service, the job soft-exits 0 (looks green in Render, sends nothing) — run `node server/scripts/sync-cron-secrets-from-web.js` or check cron logs for `MONITORING_CRON_SECRET is not set`.
 - Optional Beehiiv enroll on register when `BEEHIIV_*` env is set (does not replace the server drip).
 - If no provider can send, signup still succeeds; the app may say welcome email was not sent.
+- Health: `GET /api/email-status` (Resend preferred) · `GET /api/version` → `features.onboardingScheduler` · `GET /api/onboarding/sequence`.
 
 ## Paid membership confirmation
 

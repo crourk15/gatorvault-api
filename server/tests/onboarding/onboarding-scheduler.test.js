@@ -167,3 +167,45 @@ test('processOnboardingQueue respects maxSends budget and leaves work for next t
   assert.ok(users[0].onboardingSent.includes(1) || users[1].onboardingSent.includes(1));
 });
 
+test('dripEnabled ignores X_SCHEDULED_JOBS_ENABLED (Starter kill switch)', () => {
+  const { dripEnabled } = require('../../lib/onboarding-scheduler');
+  const prevJobs = process.env.X_SCHEDULED_JOBS_ENABLED;
+  const prevDrip = process.env.ONBOARDING_DRIP_DISABLED;
+  try {
+    process.env.X_SCHEDULED_JOBS_ENABLED = 'false';
+    delete process.env.ONBOARDING_DRIP_DISABLED;
+    assert.equal(dripEnabled(), true);
+    process.env.ONBOARDING_DRIP_DISABLED = 'true';
+    assert.equal(dripEnabled(), false);
+  } finally {
+    if (prevJobs == null) delete process.env.X_SCHEDULED_JOBS_ENABLED;
+    else process.env.X_SCHEDULED_JOBS_ENABLED = prevJobs;
+    if (prevDrip == null) delete process.env.ONBOARDING_DRIP_DISABLED;
+    else process.env.ONBOARDING_DRIP_DISABLED = prevDrip;
+  }
+});
+
+test('boot starts onboarding scheduler without X_SCHEDULED_JOBS_ENABLED gate', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const src = fs.readFileSync(path.join(__dirname, '../../server.js'), 'utf8');
+  const block = src.slice(
+    src.indexOf('startOnboardingScheduler'),
+    src.indexOf('startOnboardingScheduler') + 800
+  );
+  // Ensure we did not re-introduce the Starter kill switch around the boot call.
+  assert.match(src, /startOnboardingScheduler\(\{\s*loadUsers/);
+  const gateIdx = src.indexOf("scheduler skipped — X_SCHEDULED_JOBS_ENABLED is not true");
+  const startIdx = src.indexOf('startOnboardingScheduler({ loadUsers, saveUsers, deliverEmail, pushEmailLog })');
+  assert.ok(startIdx > 0, 'expected unconditional startOnboardingScheduler boot call');
+  // Autoposter may still log that skip message; onboarding must not be inside that if-branch.
+  const onboardingBlock = src.slice(startIdx - 400, startIdx + 120);
+  assert.equal(
+    /scheduledJobsEnabled\(\)/.test(onboardingBlock),
+    false,
+    'onboarding boot must not call scheduledJobsEnabled'
+  );
+  void block;
+  void gateIdx;
+});
+

@@ -5,9 +5,8 @@ EmailJS dashboard **Save** can fail during their outages. Resend sends **raw HTM
 ## Status (live)
 
 - API prefers Resend when `RESEND_API_KEY` is set.
-- **Current blocker:** `gatorvaultinsider.com` must be **verified** in Resend.
-  - Unverified domain error: `The gatorvaultinsider.com domain is not verified`
-  - Until verified, production **falls back to EmailJS** for fan sends.
+- Production `/api/email-status` should show `preferredProvider: "resend"` and `from: GatorVault <onboarding@gatorvaultinsider.com>` when the domain is verified.
+- If Resend returns `The gatorvaultinsider.com domain is not verified`, production **falls back to EmailJS** for fan sends — re-verify DNS in Resend.
 
 ## Charles — verify domain (required)
 
