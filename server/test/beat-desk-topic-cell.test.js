@@ -40,24 +40,34 @@ describe('Beat Desk TOPIC / PLAYER cell', () => {
     );
     assert.equal(desk.formatTopicLabel('Jamarcus Johnson', 'jamarcus-johnson', 'recruit'), 'Jamarcus Johnson');
     assert.equal(desk.formatTopicLabel('Team news', 'uf-team-general', 'team'), 'Team news');
+    assert.equal(desk.formatTopicLabel('CAMP DAY ONE', 'uf-team-camp', 'team'), 'Camp Day One');
+    assert.equal(desk.formatTopicLabel('uf-program-facilities', 'uf-program-facilities', 'program'), 'Facilities');
+    assert.equal(desk.formatTopicLabel('john_smith_qb', 'john_smith_qb', 'recruit'), 'John Smith QB');
   });
 
   it('renders stacked topic cell with kind chip (not status pill)', () => {
     const desk = loadBeatDesk();
-    const html = desk.topicCellHtml('Team news', 'uf-team-general', 'team');
-    assert.match(html, /hub-bd-topic/);
-    assert.match(html, /hub-bd-topic__name/);
-    assert.match(html, /hub-bd-topic__slug/);
-    assert.match(html, /hub-bd-topic__kind--team/);
-    assert.match(html, />TEAM</);
-    assert.doesNotMatch(html, /hub-env-badge/);
-    assert.match(html, /uf-team-general/);
+    const teamHtml = desk.topicCellHtml('Team news', 'uf-team-general', 'team');
+    assert.match(teamHtml, /hub-bd-topic/);
+    assert.match(teamHtml, /hub-bd-topic__name/);
+    assert.match(teamHtml, /hub-bd-topic__slug/);
+    assert.match(teamHtml, /hub-bd-topic__kind--team/);
+    assert.match(teamHtml, />TEAM</);
+    assert.doesNotMatch(teamHtml, /hub-env-badge/);
+    assert.match(teamHtml, /uf-team-general/);
+
+    const playerHtml = desk.topicCellHtml('Jamarcus Johnson', 'jamarcus-johnson', 'recruit');
+    assert.match(playerHtml, /hub-bd-topic__kind--recruit/);
+    assert.match(playerHtml, />PLAYER</);
+    assert.match(playerHtml, /Jamarcus Johnson/);
+    assert.match(playerHtml, /jamarcus-johnson/);
   });
 
   it('wires CSS + cache-busted desk script in admin.html', () => {
     const html = fs.readFileSync(path.join(__dirname, '..', 'admin.html'), 'utf8');
     assert.match(html, /\.hub-bd-topic__main/);
     assert.match(html, /\.hub-bd-topic__kind--team/);
-    assert.match(html, /admin-hub-beat-desk\.js\?v=hub-bd-v17/);
+    assert.match(html, /\.hub-bd-topic__kind--player/);
+    assert.match(html, /admin-hub-beat-desk\.js\?v=hub-bd-v18/);
   });
 });

@@ -300,18 +300,22 @@
     .hub-nc-alert-body{color:#cbd5e1;font-size:13px;line-height:1.45}
     .hub-bd-legend{color:#94a3b8;font-size:12px;line-height:1.55}
     .hub-bd-legend .hub-env-badge{margin-right:2px}
-    .hub-bd-topic{min-width:168px;max-width:260px;vertical-align:middle}
-    .hub-bd-topic__main{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
-    .hub-bd-topic__name{color:#fff;font-weight:700;font-size:13px;line-height:1.3;letter-spacing:0}
+    .hub-bd-topic{min-width:176px;max-width:280px;vertical-align:middle}
+    .hub-bd-topic__main{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;min-width:0}
+    .hub-bd-topic__name{
+      color:#fff;font-weight:700;font-size:13px;line-height:1.3;letter-spacing:0;
+      min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    }
     .hub-bd-topic__slug{
-      margin-top:5px;font-size:11px;color:#64748b;line-height:1.3;
+      margin-top:4px;font-size:10px;color:#64748b;line-height:1.25;
       font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      word-break:break-word;
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
     }
     .hub-bd-topic__kind{
-      flex:0 0 auto;font-size:10px;font-weight:800;letter-spacing:.05em;
-      padding:2px 7px;border-radius:4px;text-transform:uppercase;line-height:1.2;
+      flex:0 0 auto;font-size:9px;font-weight:800;letter-spacing:.04em;
+      padding:2px 6px;border-radius:999px;text-transform:uppercase;line-height:1.2;
     }
+    .hub-bd-topic__kind--player,.hub-bd-topic__kind--recruit{background:rgba(51,65,85,.55);color:#cbd5e1;border:1px solid rgba(148,163,184,.28)}
     .hub-bd-topic__kind--team{background:rgba(29,78,216,.32);color:#93c5fd;border:1px solid rgba(59,130,246,.4)}
     .hub-bd-topic__kind--program{background:rgba(67,56,202,.32);color:#c4b5fd;border:1px solid rgba(129,140,248,.4)}
     .hub-bd-topic__kind--roster{background:rgba(15,118,110,.32);color:#5eead4;border:1px solid rgba(45,212,191,.4)}
@@ -455,7 +459,7 @@
   <script src="/js/admin-hub-runbooks.js?v=hub-runbooks-v4"></script>
   <script src="/js/admin-hub-ops.js?v=hub-ops-v3"></script>
   <script src="/js/admin-hub-job-queue.js?v=hub-jobs-v2"></script>
-  <script src="/js/admin-hub-beat-desk.js?v=hub-bd-v17"></script>
+  <script src="/js/admin-hub-beat-desk.js?v=hub-bd-v18"></script>
   <script src="/js/admin-hub-futurecast.js?v=hub-fc-v8"></script>
   <script src="/js/admin-hub-post-studio.js?v=hub-ps-v1"></script>
   <script src="/js/admin-hub-qa-summary.js?v=hub-qa-sum-v1"></script>

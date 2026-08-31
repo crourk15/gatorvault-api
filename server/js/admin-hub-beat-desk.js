@@ -24,23 +24,58 @@
 
   /** Clean TOPIC / PLAYER label — no shouty ALL CAPS, no raw-slug titles. */
   function formatTopicLabel(name, slug, kind) {
-    var raw = String(name || '').trim();
     var s = String(slug || '').trim().toLowerCase();
     var k = String(kind || 'recruit').toLowerCase();
+    var raw = tidyTopicRaw(name);
+
     if (k === 'team' || k === 'program' || k === 'roster') {
+      if (!raw || raw === s || looksLikeSlug(raw) || looksLikeHubSlugLabel(raw, s)) {
+        raw = prettyHubSlug(s) || prettySlug(s);
+      } else if (isShouty(raw) || isAllLowerPhrase(raw)) {
+        raw = titleCaseWords(raw.toLowerCase());
+      }
       return raw || prettySlug(s) || '—';
     }
-    if (raw && raw.length > 2 && raw === raw.toUpperCase() && /[A-Z]/.test(raw)) {
+
+    if (isShouty(raw)) {
       raw = titleCaseWords(raw.toLowerCase());
     }
     if (!raw || raw === s || looksLikeSlug(raw)) {
       raw = prettySlug(s);
+    } else if (isAllLowerPhrase(raw)) {
+      // Underscore/hyphen slugs often arrive already "tidied" into lowercase words.
+      raw = titleCaseWords(raw);
     }
     return raw || s || '—';
   }
 
+  function isAllLowerPhrase(value) {
+    var raw = String(value || '').trim();
+    return raw.length > 1 && raw === raw.toLowerCase() && /[a-z]/.test(raw);
+  }
+
+  function tidyTopicRaw(value) {
+    return String(value || '')
+      .replace(/[_/]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .replace(/^[\s\-–—|:]+|[\s\-–—|:]+$/g, '')
+      .trim();
+  }
+
+  function isShouty(value) {
+    var raw = String(value || '').trim();
+    return raw.length > 2 && raw === raw.toUpperCase() && /[A-Z]/.test(raw);
+  }
+
   function looksLikeSlug(value) {
-    return /^[a-z0-9]+(?:-[a-z0-9]+)+$/.test(String(value || '').trim());
+    var v = String(value || '').trim();
+    return /^[a-z0-9]+(?:[-_][a-z0-9]+)+$/.test(v);
+  }
+
+  function looksLikeHubSlugLabel(raw, slug) {
+    var a = String(raw || '').trim().toLowerCase().replace(/\s+/g, '-');
+    var b = String(slug || '').trim().toLowerCase();
+    return !!a && !!b && (a === b || a === b.replace(/^uf-(team|program|roster)-/, ''));
   }
 
   function titleCaseWords(value) {
@@ -52,16 +87,36 @@
           return w.toUpperCase();
         }
         if (/^(jr|sr|ii|iii|iv)$/i.test(w)) {
-          return w.toUpperCase().replace('JR', 'Jr').replace('SR', 'Sr');
+          var u = w.toUpperCase();
+          if (u === 'JR') return 'Jr';
+          if (u === 'SR') return 'Sr';
+          return u;
         }
-        return w.charAt(0).toUpperCase() + w.slice(1);
+        // Keep short particles tidy when mid-name.
+        if (/^(of|the|and)$/i.test(w)) return w.toLowerCase();
+        // O'Brien / McDonald style — best-effort, not perfect genealogy.
+        if (/^o'[a-z]/i.test(w)) {
+          return 'O\'' + w.slice(2, 3).toUpperCase() + w.slice(3).toLowerCase();
+        }
+        if (/^mc[a-z]/i.test(w) && w.length > 3) {
+          return 'Mc' + w.charAt(2).toUpperCase() + w.slice(3).toLowerCase();
+        }
+        return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
       })
       .join(' ');
   }
 
   function prettySlug(slug) {
     if (!slug) return '';
-    return titleCaseWords(String(slug).replace(/-/g, ' '));
+    return titleCaseWords(String(slug).replace(/[_-]+/g, ' '));
+  }
+
+  function prettyHubSlug(slug) {
+    var s = String(slug || '').trim().toLowerCase();
+    if (!s) return '';
+    var m = s.match(/^uf-(team|program|roster)-(.+)$/);
+    if (!m) return '';
+    return titleCaseWords(m[2].replace(/[_-]+/g, ' '));
   }
 
   function topicKindMeta(kind) {
@@ -69,22 +124,22 @@
     if (k === 'program') return { key: 'program', label: 'PROGRAM' };
     if (k === 'roster') return { key: 'roster', label: 'ROSTER' };
     if (k === 'team') return { key: 'team', label: 'TEAM' };
-    return null;
+    if (k === 'recruit') return { key: 'recruit', label: 'PLAYER' };
+    return { key: 'recruit', label: 'PLAYER' };
   }
 
   function topicCellHtml(name, slug, kind) {
     var meta = topicKindMeta(kind);
     var label = formatTopicLabel(name, slug, kind);
-    var kindHtml = meta
-      ? '<span class="hub-bd-topic__kind hub-bd-topic__kind--' + esc(meta.key) + '">' + esc(meta.label) + '</span>'
-      : '';
+    var slugText = String(slug || '').trim();
+    var showSlug = !!slugText && slugText.toLowerCase() !== String(label || '').trim().toLowerCase();
     return '<td class="hub-bd-topic">'
       + '<div class="hub-bd-topic__main">'
-      + '<span class="hub-bd-topic__name">' + esc(label) + '</span>'
-      + kindHtml
+      + '<span class="hub-bd-topic__name" title="' + esc(label) + '">' + esc(label) + '</span>'
+      + '<span class="hub-bd-topic__kind hub-bd-topic__kind--' + esc(meta.key) + '">' + esc(meta.label) + '</span>'
       + '</div>'
-      + (slug
-        ? '<div class="hub-bd-topic__slug" title="' + esc(slug) + '">' + esc(slug) + '</div>'
+      + (showSlug
+        ? '<div class="hub-bd-topic__slug" title="' + esc(slugText) + '">' + esc(slugText) + '</div>'
         : '')
       + '</td>';
   }
