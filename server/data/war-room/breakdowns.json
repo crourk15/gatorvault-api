@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-30T02:28:46.998Z",
+  "updatedAt": "2026-09-01T14:49:57.721Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -18610,6 +18610,40 @@
       "updatedAt": "2026-08-27T16:59:13.362Z",
       "filmWatched": true,
       "provisional": false
+    },
+    "tatum-white": {
+      "playerSlug": "tatum-white",
+      "playerName": "Tatum White",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": null,
+          "publishedAt": "2026-09-01"
+        }
+      ],
+      "strengths": [
+        "White brings a true 6-5 / 290 frame with length to play over the ball as an interior/hybrid DL.",
+        "White already flashed disruptiveness as a freshman — TFLs and early production against varsity.",
+        "White has the mass-and-length mold to grow into an every-down interior presence if he keeps adding functional strength."
+      ],
+      "weaknesses": [
+        "White is still early in the evaluation cycle — full Hudl package not on file for a verified Vault film desk watch yet."
+      ],
+      "comparison": "White comps to Christian Barmore — 6-4/6-5 interior DL mold with length and early disruptive juice who grows into an every-down presence.",
+      "schemeFit": "White fits as a hybrid interior DL who can line over the guard/center and grow into run-and-pass disruptiveness.",
+      "staffNotes": "PROVISIONAL — no On3/Hudl highlight link on Copy Brief Open 2026-09-01. Drafted from listed size (6-5 / 290-291) + public freshman production + board offer news. Re-Open to pull Hudl before fan Vault Scouting. Comp size-matched within ~1-2 inches — not a Florida-alum default.",
+      "projection": "White projects as a Year 2–3 SEC rotation DL (develop Year 1). Ceiling: every-down interior starter — the long Heard County 4-star who can two-gap and push the pocket.",
+      "insiderNotes": "White is a 6-5 / 290 Heard County (Franklin, GA) 2029 DL. Florida offered Sept 1, 2026. Board already includes Georgia, FSU, Auburn, Tennessee, and Georgia Tech. Provisional Vault eval — no verified Hudl watch yet.",
+      "recruitingStory": "Tatum White is a 4-star 2029 DL · listed 6-5 / 290 · Heard County (Franklin, GA) · Florida offered Sept 1, 2026 · uncommitted.",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-09-01T14:49:57.711Z",
+      "filmWatched": false,
+      "provisional": true
     }
   }
 }
