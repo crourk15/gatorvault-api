@@ -3,30 +3,34 @@
   "name": "Tatum White",
   "pos": "DL",
   "type": "target",
-  "hudl": "",
+  "hudl": "https://www.hudl.com/embed/video/3/26746762/68ee7956ef5f0b59df40527c",
   "publishedAt": "2026-09-01",
-  "filmWatched": false,
-  "provisional": true,
+  "filmWatched": true,
+  "provisional": false,
   "strengths": [
-    "White brings a true 6-5 / 290 frame with length to play over the ball as an interior/hybrid DL.",
-    "White already flashed disruptiveness as a freshman — TFLs and early production against varsity.",
-    "White has the mass-and-length mold to grow into an every-down interior presence if he keeps adding functional strength."
+    "White explodes off the snap with forward lean for a 290-lb freshman — beat the center's hands clean on multiple interior clips.",
+    "White punches and sheds: violent two-hand strike at 3-tech lifts the guard's pads and clears a path for TFL pursuit.",
+    "White absorbs double teams and holds the point without walking backward — goal-line snaps show him clogging the A-gap and forcing bounce.",
+    "White's motor shows on backside pursuit 15–20 yards downfield; length also gets into throwing lanes when he plays over the ball."
   ],
   "weaknesses": [
-    "White is still early in the evaluation cycle — full Hudl package not on file for a verified Vault film desk watch yet."
+    "White rises out of his stance too early on some snaps — guards get under him when pad level climbs.",
+    "White is mostly one-speed bull/push as a freshman — needs rip/swim/push-pull counters as a pass rusher.",
+    "White can lunge and overrun gaps chasing splash plays, opening cutback lanes."
   ],
-  "comparison": "White comps to Christian Barmore — 6-4/6-5 interior DL mold with length and early disruptive juice who grows into an every-down presence.",
-  "projection": "White projects as a Year 2–3 SEC rotation DL (develop Year 1). Ceiling: every-down interior starter — the long Heard County 4-star who can two-gap and push the pocket.",
-  "schemeFit": "White fits as a hybrid interior DL who can line over the guard/center and grow into run-and-pass disruptiveness.",
-  "insiderNotes": "White is a 6-5 / 290 Heard County (Franklin, GA) 2029 DL. Florida offered Sept 1, 2026. Board already includes Georgia, FSU, Auburn, Tennessee, and Georgia Tech. Provisional Vault eval — no verified Hudl watch yet.",
-  "staffNotes": "PROVISIONAL — no On3/Hudl highlight link on Copy Brief Open 2026-09-01. Drafted from listed size (6-5 / 290-291) + public freshman production + board offer news. Re-Open to pull Hudl before fan Vault Scouting. Comp size-matched within ~1-2 inches — not a Florida-alum default.",
+  "comparison": "White comps to Christian Barmore — 6-4/6-5 interior mold with length, violent hands, and early disruptive juice who grows into an every-down presence.",
+  "projection": "White projects as a Year 2–3 SEC rotation interior DL (develop Year 1). Ceiling: every-down 3-tech / hybrid starter — the long Heard County freshman who already holds doubles and finishes TFLs.",
+  "schemeFit": "White fits as a 3-tech / 4i who can two-gap on early downs and push the pocket inside on obvious pass.",
+  "insiderNotes": "White's freshman Hudl (1:54 package) shows real interior tools at 6-5 / 290: get-off, hand violence, double-team anchor, and pursuit motor. Pass-rush counters and pad-level consistency are the growth items. Florida offered Sept 1, 2026.",
+  "staffNotes": "Vault film desk verified 2026-09-01 from Hudl embed https://www.hudl.com/embed/video/3/26746762/68ee7956ef5f0b59df40527c (Freshman Year package, ~1:54). filmWatched:true. Comp size-matched within ~1-2 inches (Barmore) — not a Florida-alum default.",
   "recruitingStory": "Tatum White is a 4-star 2029 DL · listed 6-5 / 290 · Heard County (Franklin, GA) · Florida offered Sept 1, 2026 · uncommitted.",
-  "angle": "Florida just entered the 2029 DL chase on White — offer day, provisional size/production eval only.",
+  "angle": "Lead with freshman interior tape — get-off, hand violence, doubles anchor — then Florida offer stake.",
   "traits": [
+    "get-off",
+    "hand violence",
+    "double-team anchor",
     "length",
-    "mass",
-    "interior",
-    "early production",
-    "projectable frame"
+    "pursuit motor",
+    "interior"
   ]
 }
