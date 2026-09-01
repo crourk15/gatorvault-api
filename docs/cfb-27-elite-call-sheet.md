@@ -1,3 +1,4 @@
-# CFB 27 Elite Call Sheet (PS5)
+# CFB 27 Full Custom Book + Gameplan (PS5)
 
-Live version is in chat for copy/paste.
+Primary copy/paste version lives in chat.
+Sources: Mills CFB27 channel (defense/scheme pick), Civil.GG Ohio State schemes, collegefootball.gg formation maps, competitive Tight Doubles / Bunch X Nasty meta.
