@@ -25,7 +25,8 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Why we chase generator + Admin/script overrides on HP API (`whyWeChase`) — live after Render; **client prefer-field needs Codemagic bake below**
 - [x] 2028 HP chase cards: visit lines + Why we chase notes from live visit/intel stores + soft priority nudge (API — no Codemagic; Rising still snapshot `delta7d` only)
 - [x] Home NOW / class-overview 2027 commit count lockstep with commit cards (26) — kill protected-only phantom inflate + shared `loadHubHsClassCommits` (API)
-- [x] App Store **1.0.20** approved — pre-release train closed; next bake is **1.0.21** / build 86+
+- [x] App Store **1.0.21** approved — pre-release train closed; next bake is **1.0.22** / build 87+
+- [x] App Store **1.0.20** approved — prior train
 - [x] App Store **1.0.19** approved — prior train
 - [x] App Store **1.0.18** approved — prior train (`90186` / `90062`)
 - [x] App Store **1.0.17** accepted / eligible for distribution (Aug 17, 2026) — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`
@@ -82,7 +83,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 ## Waiting for next Codemagic build
 
-**Next bake target: App Store `1.0.21` / build `86+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_21_BUILD86.md`.
+**Next bake target: App Store `1.0.22` / build `87+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_22_BUILD87.md`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
@@ -188,5 +189,6 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Build | Shipped |
 |---|---|
+| 1.0.21 (approved Sep 2026) | Prior train — Home NOW / Why we chase / Community / Game Week backlog from closed 1.0.20 queue |
 | 1.0.19 (approved Aug 23, 2026) | Community, Why we chase truth-first + thin-room, Where Florida needs help, Game Week uniform color chips, chase/visit polish from 1.0.18 queue |
 | 1.0.12 (accepted Aug 5, 2026) | Baseline — pre-backlog |
