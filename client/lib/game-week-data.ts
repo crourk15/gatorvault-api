@@ -134,18 +134,25 @@ function difficultyFromPct(ufPct: number, gameId: string): GameWeekBundle['diffi
   return 'hard';
 }
 
-function parseSpread(pred: string, ufPct: number): string {
-  if (ufPct >= 60) return 'UF -14.5';
-  if (ufPct >= 50) return 'UF -3.5';
-  if (ufPct >= 45) return 'PK';
-  return 'UF +3.5';
+/** Optional sportsbook overlay — never invent Vegas from win% / score sum. */
+export type GameWeekBettingLine = {
+  spreadLine?: string | null;
+  total?: number | string | null;
+};
+
+function formatSpreadLine(line: GameWeekBettingLine | null | undefined): string | null {
+  const raw = String(line?.spreadLine || '').trim();
+  return raw || null;
 }
 
-function parseTotal(pred: string): string {
-  const nums = pred.match(/\d+/g);
-  if (!nums || nums.length < 2) return 'O/U 52.5';
-  const sum = Number(nums[0]) + Number(nums[1]);
-  return `O/U ${sum}.5`;
+function formatTotalLine(line: GameWeekBettingLine | null | undefined): string | null {
+  if (line?.total == null || line.total === '') return null;
+  if (typeof line.total === 'number' && Number.isFinite(line.total)) {
+    return `O/U ${line.total}`;
+  }
+  const raw = String(line.total).trim();
+  if (!raw) return null;
+  return /^o\/?u\b/i.test(raw) ? raw : `O/U ${raw}`;
 }
 
 function buildKeys(game: ScheduleGame): GameKeyIntel[] {
@@ -267,16 +274,24 @@ function buildScouting(game: ScheduleGame): ScoutingReportIntel {
   };
 }
 
-function buildPrediction(game: ScheduleGame): PredictionIntel {
+function buildPrediction(
+  game: ScheduleGame,
+  betting?: GameWeekBettingLine | null
+): PredictionIntel {
   const movement = game.ufPct >= 55 ? 'up' : game.ufPct <= 45 ? 'down' : 'flat';
+  const spread = formatSpreadLine(betting) || 'Line pending';
+  const total = formatTotalLine(betting) || 'O/U pending';
+  const expertPicks: PredictionIntel['expertPicks'] = [
+    { source: 'FutureCast', pick: game.pred },
+  ];
+  if (formatSpreadLine(betting)) {
+    expertPicks.push({ source: 'Vegas consensus', pick: spread });
+  }
   return {
     scoreLine: game.pred,
-    spread: parseSpread(game.pred, game.ufPct),
-    total: parseTotal(game.pred),
-    expertPicks: [
-      { source: 'FutureCast', pick: game.pred },
-      { source: 'Vegas consensus', pick: parseSpread(game.pred, game.ufPct) },
-    ],
+    spread,
+    total,
+    expertPicks,
     fanUfPct: game.ufPct,
     confidence: Math.min(92, Math.abs(game.ufPct - 50) + 40),
     movement,
@@ -284,7 +299,10 @@ function buildPrediction(game: ScheduleGame): PredictionIntel {
   };
 }
 
-function generateBundle(game: ScheduleGame): GameWeekBundle {
+function generateBundle(
+  game: ScheduleGame,
+  betting?: GameWeekBettingLine | null
+): GameWeekBundle {
   return {
     game,
     difficulty: difficultyFromPct(game.ufPct, game.id),
@@ -299,20 +317,88 @@ function generateBundle(game: ScheduleGame): GameWeekBundle {
     radar: defaultRadar(game.ufPct),
     depthChart: defaultDepthChart(),
     scouting: buildScouting(game),
-    prediction: buildPrediction(game),
+    prediction: buildPrediction(game, betting),
   };
+}
+
+type BettingLinesLike = {
+  nextGame?: {
+    id?: string;
+    opponent?: string;
+    game?: string;
+    spread?: { line?: string; uf?: number } | string;
+    total?: number | string;
+  };
+  schedule?: Array<{
+    id?: string;
+    opponent?: string;
+    game?: string;
+    spread?: { line?: string; uf?: number } | string;
+    total?: number | string;
+  }>;
+};
+
+function opponentMatchTokens(game: ScheduleGame): string[] {
+  const tokens = new Set<string>();
+  const id = String(game.id || '').toLowerCase().trim();
+  if (id) tokens.add(id);
+  const opp = String(game.opp || '').toLowerCase();
+  if (/florida\s*atlantic|fau|\bowls\b/.test(opp) || id === 'fau') tokens.add('fau');
+  if (/florida\s*state|\bseminoles\b|\bfsu\b/.test(opp) || id === 'fsu') tokens.add('fsu');
+  if (/\bgeorgia\b|\bbulldogs\b|\buga\b/.test(opp) || id === 'uga') tokens.add('uga');
+  for (const part of opp.split(/[\s/]+/)) {
+    const t = part.replace(/[^a-z0-9]/g, '');
+    if (t && !/^(vs|at|the|owls|gators|florida|state|atlantic)$/.test(t)) tokens.add(t);
+  }
+  return [...tokens];
+}
+
+function rowMatchesGame(
+  row: { id?: string; opponent?: string; game?: string },
+  tokens: string[]
+): boolean {
+  const hay = `${row.id || ''} ${row.opponent || ''} ${row.game || ''}`.toLowerCase();
+  return tokens.some((t) => t.length >= 2 && hay.includes(t));
+}
+
+function spreadToLine(spread: { line?: string; uf?: number } | string | undefined): string | null {
+  if (spread == null) return null;
+  if (typeof spread === 'string') return spread.trim() || null;
+  if (spread.line) return String(spread.line).trim() || null;
+  if (typeof spread.uf === 'number' && Number.isFinite(spread.uf)) {
+    const sign = spread.uf > 0 ? '+' : '';
+    return `UF ${sign}${spread.uf}`;
+  }
+  return null;
+}
+
+/**
+ * Match schedule row → betting/lines nextGame or schedule entry by opponent token.
+ */
+export function bettingLineForScheduleGame(
+  game: ScheduleGame,
+  lines: BettingLinesLike | null | undefined
+): GameWeekBettingLine | null {
+  if (!lines) return null;
+  const tokens = opponentMatchTokens(game);
+  const pool = [...(lines.nextGame ? [lines.nextGame] : []), ...(lines.schedule || [])];
+  const hit = pool.find((row) => rowMatchesGame(row, tokens));
+  if (!hit) return null;
+  return { spreadLine: spreadToLine(hit.spread), total: hit.total ?? null };
 }
 
 /**
  * Build Game Week intel from a schedule row (live API or seed).
  * Prefer `games` from `fetchScheduleGames` so weekly film updates need no Codemagic.
+ * Pass `betting` from `/api/betting/lines` so Vegas consensus is not invented.
  */
 export function getGameWeekBundle(
   gameId: string,
-  games: ScheduleGame[] = SCHEDULE_GAMES
+  games: ScheduleGame[] = SCHEDULE_GAMES,
+  betting?: GameWeekBettingLine | null
 ): GameWeekBundle {
   const pool = games.length ? games : SCHEDULE_GAMES;
   const game = pool.find((g) => g.id === gameId) ?? SCHEDULE_GAMES.find((g) => g.id === gameId) ?? SCHEDULE_GAMES[0];
-  return generateBundle(game);
+  return generateBundle(game, betting);
 }
 
