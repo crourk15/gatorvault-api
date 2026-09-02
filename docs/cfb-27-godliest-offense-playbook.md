@@ -1,18 +1,7 @@
 # CFB 27 Offense Playbook Guide
 
-**Verified play names live here:** [`docs/cfb-27-elite-call-sheet.md`](./cfb-27-elite-call-sheet.md)
+**Full verified install (formations + every My Gameplan category):**
+[`docs/cfb-27-elite-call-sheet.md`](./cfb-27-elite-call-sheet.md)
 
-That sheet lists **only** plays that exist in CFB 27 for each formation, pulled from the [cfb.fan CFB 27 playbook database](https://cfb.fan/27/playbooks/) (Ohio State + West Virginia Gun Power I Tight).
-
-Older drafts of this guide mixed concept nicknames and Madden-style titles. Do **not** use invented names like “Shot Fake Cross,” generic “Y Post,” or Power I “Iso / Lead Dive.” Use the elite call sheet spelling exactly.
-
-## Scheme (still valid)
-
-- Custom playbook base: **Ohio State** depth + **West Virginia Gun Power I Tight**
-- Identity: Bunch X Nasty primary, Cluster / Wing Trips Wk Nasty as changeups, Trips TE Flex for explosive, Power I for short yardage
-- 4 audibles per formation; My Gameplan meters filled from the verified list
-- PS5: Square audible · Triangle hot route · **L1 Custom Adjustments** (road Stadium Pulse does not kill L1 the way it kills audibles)
-
-## Install
-
-See [`docs/cfb-27-copy-paste-install.md`](./cfb-27-copy-paste-install.md) and the full inventories / gameplan blocks in the elite call sheet.
+Covers: all downs, Red Zone, **Red Zone Frenzy**, **Backed Up**, **Goal Line Run**, **Goal Line Pass**, Two/Four Minute, Hail Mary.
+Exactly 4 audibles per formation. Plays verified from cfb.fan CFB 27 (Ohio State + West Virginia Power I Tight).

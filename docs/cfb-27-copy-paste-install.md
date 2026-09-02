@@ -1,23 +1,8 @@
-# CFB 27 — Copy-Paste Install (Verified Names)
+# CFB 27 — Copy-Paste Install
 
-Use **`docs/cfb-27-elite-call-sheet.md`** as the source of truth.
+Full sheet (all formation plays + every My Gameplan category):
 
-All play names on that sheet were pulled from the **CFB 27** playbook DB on [cfb.fan](https://cfb.fan/27/playbooks/) (Ohio State + West Virginia Gun Power I Tight). Older versions of this install sheet mixed guessed / Madden-style names — ignore those.
+**`docs/cfb-27-elite-call-sheet.md`**
 
-## Quick install
-
-1. Create & Share → Custom Offense Playbook  
-2. Add formations from **Ohio State**:  
-   Gun Tight Doubles, Gun Bunch X Nasty, Gun Cluster, Gun Trips TE Flex, Gun Wing Trips Wk Nasty, Gun Tight Y Off, Gun Trips TE, Singleback Bunch TE, Singleback Deuce Close  
-3. Add from **West Virginia**: Gun Power I Tight  
-4. Set **4 audibles per formation** exactly as listed on the elite call sheet  
-5. Fill **My Gameplan** situations from the same sheet (~10 plays each)  
-6. PS5: Square audible · Triangle hot route · **L1 Custom Adjustments** (works on road when Pulse kills audibles)
-
-## Critical spelling fixes
-
-- **Shot Fade Cross** (not Shot Fake Cross)  
-- **Mtn Fk Cross** (Tight Doubles)  
-- **Drive HB Under** (Bunch X Nasty)  
-- **Mtn Y Post** (Trips TE Flex — not a plain “Y Post”)  
-- Power I Tight runs: **Power, Duo, HB Dive, QB Power, QB Blast** — not Iso/Lead Dive from other games
+Includes Backed Up, Red Zone Frenzy, Goal Line Run, Goal Line Pass, Extra Long, Two/Four Minute, Hail Mary.
+Exactly 4 audibles per formation. Verified CFB 27 play names from cfb.fan.
