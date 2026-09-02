@@ -36,7 +36,7 @@ describe('game-week-visitors', () => {
     const panel = visitorsPanelForGameId('fau');
     assert.ok(panel);
     assert.equal(panel.gameId, 'fau');
-    assert.ok(panel.visitors.length >= 5);
+    assert.ok(panel.visitors.length >= 9);
     assert.ok(panel.visitors.every((v) => v.slug && v.name));
     assert.match(String(panel.source || ''), /plans can change/i);
     const little = panel.visitors.find((v) => v.slug === 'zylen-little');
@@ -44,6 +44,24 @@ describe('game-week-visitors', () => {
     assert.equal(little.position, 'DL');
     assert.match(String(little.school || ''), /Carrollwood/i);
     assert.equal(little.classYear, 2028);
+    // Alderman early list — open 2028 + elite 2029; no 2027 commits
+    for (const slug of [
+      'derrell-hines-jr',
+      'dominick-harris-payne',
+      'john-odwyer',
+      'james-allen',
+    ]) {
+      assert.ok(
+        panel.visitors.some((v) => v.slug === slug),
+        `missing FAU visitor ${slug}`
+      );
+      assert.equal(expectedVisitLabelForSlug(slug), 'Expected FAU visit · Sep 5');
+    }
+    assert.equal(
+      panel.visitors.find((v) => v.slug === 'james-allen')?.classYear,
+      2029
+    );
+    assert.ok(!panel.visitors.some((v) => v.slug === 'davin-davidson'));
   });
 
   it('includes Josiah Taylor on Ole Miss expected list', () => {

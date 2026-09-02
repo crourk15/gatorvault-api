@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-30T04:05:00.000Z",
+  "updatedAt": "2026-09-02T17:35:00.000Z",
   "source": "Gators Online / Blake Alderman early visitor look + public confirmations — plans can change",
   "visitorMeta": {
     "zylen-little": {
@@ -13,7 +13,7 @@
       "name": "Kameron Battle",
       "position": "RB",
       "school": "Carrollwood Day (Tampa, FL)",
-      "stars": 4,
+      "stars": 3,
       "classYear": 2028
     },
     "chayse-brown": {
@@ -29,6 +29,34 @@
       "school": "Vero Beach (FL)",
       "stars": 3,
       "classYear": 2028
+    },
+    "derrell-hines-jr": {
+      "name": "Derrell Hines Jr.",
+      "position": "WR",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "dominick-harris-payne": {
+      "name": "Dominick Harris-Payne",
+      "position": "CB",
+      "school": "Lakeland (FL)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "john-odwyer": {
+      "name": "John O'Dwyer",
+      "position": "OL",
+      "school": "Nease (Ponte Vedra Beach, FL)",
+      "stars": null,
+      "classYear": 2028
+    },
+    "james-allen": {
+      "name": "James Allen",
+      "position": "CB",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "stars": 4,
+      "classYear": 2029
     }
   },
   "games": [
@@ -40,10 +68,14 @@
       "slugs": [
         "asher-ghioto",
         "zaiden-jernigan",
+        "derrell-hines-jr",
         "zylen-little",
+        "dominick-harris-payne",
         "kameron-battle",
         "chayse-brown",
-        "josiah-taylor"
+        "josiah-taylor",
+        "john-odwyer",
+        "james-allen"
       ]
     },
     {
