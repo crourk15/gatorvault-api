@@ -1,7 +1,5 @@
-# CFB 27 Playsheet
+# CFB 27 Final Playbook
 
-- **Full playsheet:** [`docs/cfb-27-playsheet.txt`](./cfb-27-playsheet.txt)
-- **Audible matrix only:** [`docs/cfb-27-audible-matrix.txt`](./cfb-27-audible-matrix.txt)
+**Playsheet (use this):** [`docs/cfb-27-playsheet.txt`](./cfb-27-playsheet.txt)
 
-Audibles are a fixed pre-snap matrix on every formation:
-A1 Cover 0/Blitz · A2 Man · A3 Zone/2-high · A4 Run/RPO
+Personal coordinator build: Bunch + Tight Doubles + Trips TE Flex base, Wing/Tight Y Off stress layer, Power I + Deuce + GL short/GL. Coverage audibles. Full My Gameplan. Verified CFB 27 names only.

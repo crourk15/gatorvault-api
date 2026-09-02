@@ -1,9 +1,7 @@
-# CFB 27 — Motion / RPO / Shuffle Identity Install
+# Install
 
-Full sheet: **`docs/cfb-27-elite-call-sheet.md`**
+Open and use: `docs/cfb-27-playsheet.txt`
 
-Identity: Wing Trips Wk Nasty (shuffle) + Tight Y Off (cheat) + Trips TE Flex (Mtn/RPO).
-Secondary: Bunch return/Mtn RPO + Tight Doubles Mtn.
-Short: Power I (Load Option/PA) + Deuce Close motion + Goal Line Normal.
-
-Exactly 4 audibles per formation. All My Gameplan categories filled. Verified CFB 27 names only.
+1) Add formations from Section 1
+2) Set A1-A4 audibles
+3) Fill My Gameplan from Section 2

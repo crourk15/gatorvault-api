@@ -1,3 +1,3 @@
-# CFB 27 Offense — Motion Identity
+# CFB 27 Final Playbook
 
-See **`docs/cfb-27-elite-call-sheet.md`** for the full verified motion/RPO/shuffle/cheat playbook (formations, 4 audibles, every My Gameplan category).
+Use [`docs/cfb-27-playsheet.txt`](./cfb-27-playsheet.txt).
