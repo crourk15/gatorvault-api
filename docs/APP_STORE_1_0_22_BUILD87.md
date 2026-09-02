@@ -1,0 +1,33 @@
+# Submit 1.0.22 (Build 87+) — new train after 1.0.21 approved
+
+**Why:** App Store Connect closed the **1.0.21** pre-release train. New uploads must use a higher `CFBundleShortVersionString` than the previously approved **1.0.21**.
+
+## iOS
+
+- `MARKETING_VERSION = 1.0.22`
+- `CURRENT_PROJECT_VERSION = 87` (Codemagic may auto-bump above ASC latest)
+
+## App Store Connect (you)
+
+1. **Apps → GatorVault → + Version → 1.0.22** (if ASC does not auto-create it)
+2. Merge this version bump to `main`
+3. Re-run Codemagic **iOS Release Build** on `main`
+4. Attach the processed build to **1.0.22** / TestFlight
+
+## Ships in this bake
+
+Client/UI backlog queued after the closed 1.0.21 train, including:
+
+- Game Week Prediction: Vegas from `/api/betting/lines` (no invented -14.5 / O/U)
+- Auth client retries + friendly wake-up copy
+- Community Edit + Delete on own posts
+- Home NOW freshness / seed scrub / elite curation rows still pending from 1.0.21 queue
+- Remaining Community / Footprint / signup-channel / Team depth chart rows from the backlog
+
+API/data fixes remain live on Render without this bake.
+
+## Whats New (paste)
+
+```
+Game Week Prediction now shows real Vegas lines from the live board — no invented spreads. Sharper Home NOW (recent Florida process only). Community Edit/Delete on your posts. Auth wake-up retries when the API is cold. Chase/Game Week polish and other UI backlog from the 1.0.21 train.
+```
