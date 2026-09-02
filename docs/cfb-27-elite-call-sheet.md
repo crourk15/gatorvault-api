@@ -1,443 +1,424 @@
-# CFB 27 — COMPLETE INSTALL (Verified Plays + Full My Gameplan)
+# CFB 27 — MOTION / RPO / SHUFFLE IDENTITY BOOK (Verified)
 
-**Play source:** CFB 27 playbook DB on cfb.fan (Ohio State + West Virginia Gun Power I Tight + OSU Goal Line Normal / Hail Mary).
-**Situation source:** EA Custom Playbook **My Gameplan** situation meters (same system as Madden/CFB). Confirmed by CFB custom-playbook guides (Coach Suggestions) + your in-game categories: **Backed Up, Red Zone Frenzy, Goal Line Run / Goal Line Pass**, downs, clock, Hail Mary.
-**Rule:** If your build labels a meter slightly differently, fill **every meter you can scroll to with L2/R2 or LT** in My Gameplan. Do not leave Frenzy / Backed Up empty.
+**Identity:** Pre-snap stress offense. Same looks hit run, RPO, shuffle/cheat motion pass, and shot — so DCs cannot sell out.
+**Play source:** CFB 27 cfb.fan (Ohio State + West Virginia Gun Power I Tight).
+**Rule:** Real names only. Exactly **4 audibles** per formation. On the road, audibles may fail — My Gameplan / Coach Suggestions carry the scheme; **L1 Custom Adjustments still work**.
 
----
-
-## HOW THIS IS BUILT (game mechanics — read once)
-
-### Audibles (PS5)
-- **Square** opens audibles. You get **exactly 4 plays** in the formation you are in.
-- You can audible to another formation **only if personnel matches** (EA: same personnel groupings).
-- On the **road**, Stadium Pulse / HFA can make audibles and hot routes fail. **L1 Custom Adjustments still work.**
-- So: the **4 audibles = your only live escape hatch**. This sheet does **not** tell you to "also audible to play #7." If it is not one of the 4, it is for **play-call / Coach Suggestions only**.
-
-### My Gameplan
-- Stars = how often a play shows under **Coach Suggestions** for that situation.
-- On the road, when audibles are unreliable, **Coach Suggestions + picking from your situation list is the real playbook**.
-- That is why every category must be filled — including **Backed Up** and **Red Zone Frenzy**.
-
-### Anti-predictable design (your DC critique)
-Each situation’s 10 plays is built as a **menu**, not a telegraph:
-- What a DC **expects** for that down/field position
-- A **constraint-breaker** (opposite of that expectation)
-- Intermediate / chain-movers (especially on long yardage)
-- Run + pass mix so the box can’t sell out
-
-You still choose the play. The sheet just stops feeding the defense free tendency tells.
+### Scheme hierarchy
+1. **Primary:** Gun Wing Trips Wk Nasty (shuffle/Y Mtn) · Gun Tight Y Off (cheat) · Gun Trips TE Flex (Mtn/RPO)
+2. **Secondary:** Gun Bunch X Nasty (return/Mtn RPO) · Gun Tight Doubles (Mtn Fk / Cross)
+3. **Short / GL:** Gun Power I Tight · Singleback Deuce Close (motion) · Goal Line Normal
+4. **Changeups:** Gun Cluster · Gun Trips TE · Singleback Bunch TE (jet/RPO) · Hail Mary
 
 ---
 
-## PART A — FORMATIONS (ALL PLAYS + EXACTLY 4 AUDIBLES)
+## PART A — FORMATIONS (FULL LISTS + 4 AUDIBLES = MINI-SERIES)
 
-**Pull from:** Ohio State (main) + West Virginia (**Gun Power I Tight**) + keep OSU **Goal Line Normal** + **Hail Mary**.
+Each audible package is a **series**: motion/RPO answer · pass beater · run · constraint.
 
-### 1) Gun Tight Doubles (Ohio State) — 15 plays
-**Full list:** Bench · Cross Wheels · Dbl Stick · Flood Drive · HB Draw · HB Quick Base · HB Slip Screen · Mtn Bunch Option · Mtn Cross HB Sneak · Mtn Fk Cross · PA Deep Curls · PA WR Cross · Shot Fade Cross · Tight Curl · Z Spot
-
-**Audibles (ONLY these 4):**
-1. Cross Wheels *(zone/match)*
-2. Shot Fade Cross *(man)*
-3. HB Quick Base *(run / short)*
-4. Dbl Stick *(quick / pressure / intermediate)*
-
----
-
-### 2) Gun Bunch X Nasty (Ohio State) — 21 plays
-**Full list:** Counter Y · Deep Flood · Drive HB Under · HB Base · Inside Zone · Mesh Corner · Mesh Traffic · Mtn Cross Post · Mtn RPO Zone Alert · Mtn Y Corner Under · Post Wheel Shallow · Return Mesh Spot · Return Spot · Return Whip Trail · RZ PA X Whip · Whip Double Spot · X Cross · Y Corner Pivot · Y Flat Goalline · Z Mesh Goalline · Z Spot Goalline
-
-**Audibles (ONLY these 4):**
-1. Drive HB Under *(man / traffic)*
-2. Mesh Corner *(zone)*
-3. Inside Zone *(run)*
-4. X Cross *(man cross / explosive underneath)*
-
-*(Goalline-named plays stay in formation for Goal Line Pass / Frenzy gameplan — they are NOT audibles unless you swap them into the 4.)*
-
----
-
-### 3) Gun Cluster (Ohio State) — 12 plays
-**Full list:** Cluster Bunch · HB Counter · HB Mid Draw · HB Slip Screen · Mesh · Mesh Post · Outside Zone · PA Read · Spacing · Verticals · Z Spot · Z Spot Shake
-
-**Audibles (ONLY these 4):**
-1. Mesh *(man)*
-2. Spacing *(quick / short-medium)*
-3. Outside Zone *(run)*
-4. Verticals *(shot / soft zone)*
-
----
-
-### 4) Gun Trips TE Flex (Ohio State) — 15 plays
-**Full list:** Dagger · Double In Sail · HB Angle · HB Draw · HB Slip Screen · Inside Zone · Levels Sail · Mtn Fork H Choice · Mtn Hitch N Go · Mtn Y Post · PA Crossers · RPO Zone Alert Omaha · Scat · Stick · Verticals
-
-**Audibles (ONLY these 4):**
-1. Stick *(chains / short-medium)*
-2. Mtn Y Post *(man / explosive)*
-3. Inside Zone *(run)*
-4. Levels Sail *(zone intermediate)*
-
----
-
-### 5) Gun Wing Trips Wk Nasty (Ohio State) — 15 plays
+### 1) Gun Wing Trips Wk Nasty (Ohio State) — PRIMARY — 15 plays
 **Full list:** All Go HB Choice · HB Base · Inside Zone Split · Outside Zone · PA Crossers · RPO Buck Alert Out · Shallow Cross Smash · Shuffle Shock HB Choice Go · Shuffle Smash Y Shake · Shuffle Wheel Y Drag · Stick · Stick N Nod · Y Mtn Bench Ins · Y Mtn Drive · Y Mtn Flood
 
-**Audibles (ONLY these 4):**
-1. Y Mtn Drive *(zone drive)*
-2. Shuffle Wheel Y Drag *(man / YAC)*
-3. Stick *(chains)*
+**Audibles (ONLY 4):**
+1. Shuffle Wheel Y Drag *(man / YAC — motion stress)*
+2. Y Mtn Flood *(zone flood)*
+3. RPO Buck Alert Out *(conflict / check)*
 4. Inside Zone Split *(run)*
 
----
-
-### 6) Gun Power I Tight (West Virginia) — 12 plays
-**Full list:** Duo · Fk Toss Trail · HB Dive · HB Toss · Lead Zone Wk · Load Option · PA Duo Flood · Power · QB Blast · QB Power · QB Sweep · QB Zone
-
-**Audibles (ONLY these 4):**
-1. Power *(expected short)*
-2. Duo *(inside)*
-3. PA Duo Flood *(constraint vs loaded box)*
-4. QB Power *(QB run threat)*
+**Series tip:** Live here. Same wing look → shuffle pass / Y Mtn / RPO / zone run.
 
 ---
 
-### 7) Gun Tight Y Off (Ohio State) — 18 plays
+### 2) Gun Tight Y Off (Ohio State) — PRIMARY — 18 plays
 **Full list:** Cheat Outside Zone · Cheat Slash Wheel Cross · Cheat Spot Y Quick · Flood Drive · HB Scissors · HB Slip Screen · Inside Zone · Mesh Spot · Mtn Mesh Spot · Mtn Slot Choice · Mtn Y-Corner · PA Go Slot Cross · PA Jailbreak Screen · PA Slot Cross · Read Option · RPO Peek Slant Bubble · Switch WR Drag · TE Corner
 
-**Audibles (ONLY these 4):**
-1. Mesh Spot *(man/zone hybrid)*
-2. Flood Drive *(zone)*
-3. Inside Zone *(run)*
-4. Switch WR Drag *(quick / intermediate)*
+**Note spelling:** in-game **RPO Peek Slant Bubble**
+
+**Audibles (ONLY 4):**
+1. Cheat Slash Wheel Cross *(cheat motion explosive)*
+2. Cheat Spot Y Quick *(cheat condensed / RZ)*
+3. RPO Peek Slant Bubble *(RPO conflict)*
+4. Cheat Outside Zone *(motion run)*
+
+**Series tip:** Cheat package is your “nobody labs this” look vs Bunch spam defenses.
 
 ---
 
-### 8) Gun Trips TE (Ohio State) — 15 plays
-**Full list:** Deep In · Drive Post · HB Angle · HB Counter · HB Slip Screen · Inside Zone · Mtn Fk Screen Wheel · Mtn HB Swing · Mtn Levels Y-Corner · PA Boot Shot · RPO Alert Bubble · Shallow X Dig · Texas · Verticals · WR Short Post
+### 3) Gun Trips TE Flex (Ohio State) — PRIMARY — 15 plays
+**Full list:** Dagger · Double In Sail · HB Angle · HB Draw · HB Slip Screen · Inside Zone · Levels Sail · Mtn Fork H Choice · Mtn Hitch N Go · Mtn Y Post · PA Crossers · RPO Zone Alert Omaha · Scat · Stick · Verticals
 
-**Audibles (ONLY these 4):**
-1. Texas *(man angle)*
-2. Drive Post *(levels / zone)*
-3. Inside Zone *(run)*
-4. Shallow X Dig *(intermediate chain)*
-
----
-
-### 9) Singleback Bunch TE (Ohio State) — 12 plays
-**Full list:** Cross Drag · HB Misdirection Lead · Inside Zone · Inside Zone Split · Jet Sweep · PA Boot Slide · PA Jet Sweep · Spacing · Stick · Stretch Alert Bubble · Verticals · Zone Fake Jet
-
-**Audibles (ONLY these 4):**
-1. Stick
-2. Spacing
-3. Inside Zone
-4. Stretch Alert Bubble *(RPO / constraint)*
+**Audibles (ONLY 4):**
+1. Mtn Y Post *(motion man/explosive)*
+2. RPO Zone Alert Omaha *(RPO)*
+3. Mtn Hitch N Go *(double-move / soft)*
+4. Inside Zone *(run)*
 
 ---
 
-### 10) Singleback Deuce Close (Ohio State) — 18 plays
+### 4) Gun Bunch X Nasty (Ohio State) — SECONDARY — 21 plays
+**Full list:** Counter Y · Deep Flood · Drive HB Under · HB Base · Inside Zone · Mesh Corner · Mesh Traffic · Mtn Cross Post · Mtn RPO Zone Alert · Mtn Y Corner Under · Post Wheel Shallow · Return Mesh Spot · Return Spot · Return Whip Trail · RZ PA X Whip · Whip Double Spot · X Cross · Y Corner Pivot · Y Flat Goalline · Z Mesh Goalline · Z Spot Goalline
+
+**Audibles (ONLY 4):**
+1. Mtn RPO Zone Alert *(RPO — not plain Inside Zone)*
+2. Return Whip Trail *(return/motion traffic)*
+3. Drive HB Under *(man traffic)*
+4. Mtn Cross Post *(motion shot)*
+
+---
+
+### 5) Gun Tight Doubles (Ohio State) — SECONDARY — 15 plays
+**Full list:** Bench · Cross Wheels · Dbl Stick · Flood Drive · HB Draw · HB Quick Base · HB Slip Screen · Mtn Bunch Option · Mtn Cross HB Sneak · Mtn Fk Cross · PA Deep Curls · PA WR Cross · Shot Fade Cross · Tight Curl · Z Spot
+
+**Audibles (ONLY 4):**
+1. Mtn Fk Cross *(motion man)*
+2. Cross Wheels *(zone/match)*
+3. Mtn Cross HB Sneak *(motion / short / trick look)*
+4. Mtn Bunch Option *(option conflict)*
+
+---
+
+### 6) Singleback Deuce Close (Ohio State) — SHORT / RZ MOTION — 18 plays
 **Full list:** 0 1 Trap · Bench · Flood Trail · HB Stretch · Inside Zone Split · Motion Power · Motion Zone Split · Motion Zone Toss · Mtn Duo · Mtn PA Boot Screen · PA Boot Corner Post · PA Boot Scissors · PA Boot Slide · PA Drag Wheel · PA Slide Y Screen · PA Stretch Shot · Spacing Switch · Zone Split Wk
 
-**Audibles (ONLY these 4):**
-1. Motion Power *(run)*
-2. Spacing Switch *(quick pass)*
-3. PA Boot Slide *(PA constraint)*
-4. Inside Zone Split *(run changeup)*
+**Audibles (ONLY 4):**
+1. Motion Power *(motion run)*
+2. Motion Zone Toss *(edge constraint)*
+3. Mtn PA Boot Screen *(PA/motion constraint)*
+4. Mtn Duo *(inside)*
+
+---
+
+### 7) Gun Power I Tight (West Virginia) — SHORT — 12 plays
+**Full list:** Duo · Fk Toss Trail · HB Dive · HB Toss · Lead Zone Wk · Load Option · PA Duo Flood · Power · QB Blast · QB Power · QB Sweep · QB Zone
+
+**Audibles (ONLY 4):**
+1. Load Option *(dual-threat — not plain dive)*
+2. Power *(expected convert)*
+3. PA Duo Flood *(box sell-out beater)*
+4. Fk Toss Trail *(misdirection)*
+
+---
+
+### 8) Singleback Bunch TE (Ohio State) — JET / RPO CHANGEUP — 12 plays
+**Full list:** Cross Drag · HB Misdirection Lead · Inside Zone · Inside Zone Split · Jet Sweep · PA Boot Slide · PA Jet Sweep · Spacing · Stick · Stretch Alert Bubble · Verticals · Zone Fake Jet
+
+**Audibles (ONLY 4):**
+1. Jet Sweep *(speed)*
+2. Zone Fake Jet *(jet fake run)*
+3. Stretch Alert Bubble *(RPO)*
+4. PA Jet Sweep *(PA off jet)*
+
+---
+
+### 9) Gun Cluster (Ohio State) — CHANGEUP — 12 plays
+**Full list:** Cluster Bunch · HB Counter · HB Mid Draw · HB Slip Screen · Mesh · Mesh Post · Outside Zone · PA Read · Spacing · Verticals · Z Spot · Z Spot Shake
+
+**Audibles (ONLY 4):**
+1. Mesh
+2. PA Read *(read/option flavor)*
+3. Outside Zone
+4. Z Spot Shake *(RZ / condensed)*
+
+---
+
+### 10) Gun Trips TE (Ohio State) — CHANGEUP — 15 plays
+**Full list:** Deep In · Drive Post · HB Angle · HB Counter · HB Slip Screen · Inside Zone · Mtn Fk Screen Wheel · Mtn HB Swing · Mtn Levels Y-Corner · PA Boot Shot · RPO Alert Bubble · Shallow X Dig · Texas · Verticals · WR Short Post
+
+**Audibles (ONLY 4):**
+1. Mtn Fk Screen Wheel *(motion screen/wheel)*
+2. RPO Alert Bubble *(RPO)*
+3. Mtn Levels Y-Corner *(motion levels)*
+4. Texas *(man angle)*
 
 ---
 
 ### 11) Goal Line Normal (Ohio State) — 12 plays
 **Full list:** FB Dive Weak · HB Counter Wk · HB Dive · HB Split 0 · HB Sting · PA Power O · PA Spot · PA Sprint HB Flat · PA Waggle · Power O · QB Sneak · Strong Toss
 
-**Audibles (ONLY these 4):**
+**Audibles (ONLY 4):**
 1. Power O
 2. QB Sneak
-3. PA Spot *(pass constraint)*
-4. HB Dive
+3. PA Spot
+4. Strong Toss *(edge — not all dive)*
 
 ---
 
 ### 12) Hail Mary (Ohio State) — 3 plays
 **Full list:** Goal Post · Hail Mary · Shot Save Clock
 
-**Audibles (ONLY these — use what exists; fill remaining slots with Goal Post / Shot Save Clock duplicates if forced):**
-1. Hail Mary
-2. Goal Post
-3. Shot Save Clock
-4. Hail Mary *(repeat if game requires 4)*
+**Audibles:** Hail Mary · Goal Post · Shot Save Clock · Hail Mary
 
 ---
 
-## PART B — MY GAMEPLAN (EVERY CATEGORY · 10 PLAYS · ANTI-TELL)
+## PART B — MY GAMEPLAN (MOTION-FIRST · ANTI-TELL · ALL CATEGORIES)
 
-Star these high (4–5★) so they dominate **Coach Suggestions**. Mix is intentional.
+Star these high. Lead with pre-snap stress; stock concepts are changeups, not the whole personality.
 
 ### 1st and 10
-*(DC expects balanced — give balanced + one shot + one quick)*
-1. Gun Bunch X Nasty — Inside Zone
-2. Gun Tight Doubles — Cross Wheels
-3. Gun Trips TE Flex — Stick
-4. Gun Cluster — Outside Zone
-5. Gun Tight Doubles — Shot Fade Cross *(constraint shot)*
-6. Gun Bunch X Nasty — Drive HB Under
-7. Gun Trips TE Flex — Inside Zone
-8. Gun Wing Trips Wk Nasty — Y Mtn Drive
-9. Gun Tight Y Off — Mesh Spot
-10. Gun Cluster — Mesh
+1. Wing Trips Wk Nasty — RPO Buck Alert Out
+2. Tight Y Off — Cheat Outside Zone
+3. Trips TE Flex — Mtn Y Post
+4. Wing Trips Wk Nasty — Shuffle Wheel Y Drag
+5. Bunch X Nasty — Mtn RPO Zone Alert
+6. Tight Doubles — Mtn Fk Cross
+7. Deuce Close — Motion Power
+8. Tight Y Off — Cheat Slash Wheel Cross
+9. Trips TE Flex — Inside Zone
+10. Wing Trips Wk Nasty — Y Mtn Drive
 
 ### 2nd and Short
-*(DC expects LOS aggression — mix power + quick pass + PA so they cannot pin their ears back)*
-1. Gun Power I Tight — Power
-2. Gun Power I Tight — PA Duo Flood *(constraint)*
-3. Gun Bunch X Nasty — Drive HB Under
-4. Gun Trips TE Flex — Stick
-5. Gun Tight Doubles — HB Quick Base
-6. Gun Cluster — Spacing
-7. Gun Power I Tight — Duo
-8. Gun Wing Trips Wk Nasty — Stick
-9. Singleback Deuce Close — Motion Power
-10. Gun Bunch X Nasty — X Cross *(softens box for next short)*
+*(DC loads box — option/PA/motion pass + power)*
+1. Power I Tight — Load Option
+2. Power I Tight — PA Duo Flood
+3. Deuce Close — Motion Power
+4. Wing Trips Wk Nasty — Stick N Nod
+5. Bunch X Nasty — Mtn Y Corner Under
+6. Power I Tight — Power
+7. Tight Doubles — Mtn Cross HB Sneak
+8. Trips TE Flex — Stick
+9. SB Bunch TE — Stretch Alert Bubble
+10. Power I Tight — Fk Toss Trail
 
 ### 2nd and Medium
-1. Gun Tight Doubles — Cross Wheels
-2. Gun Bunch X Nasty — Mesh Traffic
-3. Gun Trips TE Flex — Levels Sail
-4. Gun Tight Doubles — Dbl Stick
-5. Gun Bunch X Nasty — Inside Zone
-6. Gun Cluster — Z Spot
-7. Gun Wing Trips Wk Nasty — Shuffle Wheel Y Drag
-8. Gun Tight Y Off — Flood Drive
-9. Gun Trips TE — Texas
-10. Gun Trips TE Flex — Scat
+1. Wing Trips Wk Nasty — Shuffle Wheel Y Drag
+2. Tight Y Off — Mtn Mesh Spot
+3. Trips TE Flex — Mtn Fork H Choice
+4. Bunch X Nasty — Return Whip Trail
+5. Wing Trips Wk Nasty — Y Mtn Bench Ins
+6. Tight Doubles — Mtn Bunch Option
+7. Trips TE Flex — RPO Zone Alert Omaha
+8. Tight Y Off — RPO Peek Slant Bubble
+9. Deuce Close — Motion Zone Split
+10. Wing Trips Wk Nasty — Shallow Cross Smash
 
 ### 2nd and Long
-*(DC expects deep shot — prioritize 5–12 yd chain movers first, then one shot)*
-1. Gun Tight Doubles — Cross Wheels *(wheel/cross = chunk without hero ball)*
-2. Gun Trips TE Flex — Stick
-3. Gun Bunch X Nasty — Mesh Corner
-4. Gun Cluster — Mesh
-5. Gun Tight Doubles — HB Draw *(constraint vs soft)*
-6. Gun Trips TE — Shallow X Dig
-7. Gun Wing Trips Wk Nasty — Shuffle Wheel Y Drag
-8. Gun Tight Y Off — Switch WR Drag
-9. Gun Tight Doubles — Shot Fade Cross *(one real shot)*
-10. Gun Trips TE Flex — Dagger
+*(chain first via motion underneath — not all bombs)*
+1. Wing Trips Wk Nasty — Shuffle Wheel Y Drag
+2. Tight Y Off — Switch WR Drag
+3. Trips TE Flex — Mtn Hitch N Go
+4. Bunch X Nasty — Return Spot
+5. Tight Doubles — Cross Wheels *(changeup)*
+6. Wing Trips Wk Nasty — Y Mtn Flood
+7. Trips TE — Mtn Fk Screen Wheel
+8. Cluster — Mesh
+9. Tight Doubles — HB Draw
+10. Trips TE Flex — Dagger *(one shot)*
 
 ### 3rd and Short
-*(same logic as 2nd short — convert + break the sell-out)*
-1. Gun Power I Tight — Power
-2. Gun Power I Tight — PA Duo Flood
-3. Gun Bunch X Nasty — Y Corner Pivot
-4. Gun Trips TE Flex — Stick
-5. Gun Cluster — Spacing
-6. Gun Power I Tight — QB Blast
-7. Singleback Bunch TE — Stick
-8. Gun Tight Doubles — Tight Curl
-9. Gun Wing Trips Wk Nasty — Stick N Nod
-10. Goal Line Normal — QB Sneak *(inches only)*
+1. Power I Tight — Load Option
+2. Power I Tight — PA Duo Flood
+3. Deuce Close — Mtn Duo
+4. Wing Trips Wk Nasty — Stick N Nod
+5. Bunch X Nasty — Drive HB Under
+6. Tight Y Off — Cheat Spot Y Quick
+7. Power I Tight — Power
+8. SB Bunch TE — Zone Fake Jet
+9. Goal Line Normal — QB Sneak
+10. Trips TE Flex — Scat
 
 ### 3rd and Medium
-1. Gun Tight Doubles — Cross Wheels
-2. Gun Bunch X Nasty — Mesh Corner
-3. Gun Trips TE Flex — Double In Sail
-4. Gun Tight Doubles — Z Spot
-5. Gun Cluster — Mesh
-6. Gun Wing Trips Wk Nasty — Shallow Cross Smash
-7. Gun Trips TE — Shallow X Dig
-8. Gun Tight Y Off — Switch WR Drag
-9. Gun Bunch X Nasty — Whip Double Spot
-10. Gun Trips TE Flex — Mtn Hitch N Go
+1. Wing Trips Wk Nasty — Shuffle Smash Y Shake
+2. Tight Y Off — Cheat Slash Wheel Cross
+3. Trips TE Flex — Mtn Y Post
+4. Bunch X Nasty — Return Mesh Spot
+5. Wing Trips Wk Nasty — Y Mtn Drive
+6. Tight Doubles — Mtn Fk Cross
+7. Trips TE Flex — Double In Sail
+8. Tight Y Off — Mtn Y-Corner
+9. Bunch X Nasty — Whip Double Spot
+10. Trips TE — Mtn Levels Y-Corner
 
 ### 3rd and Long
-*(not all bombs — move the sticks, then punish soft)*
-1. Gun Tight Doubles — Cross Wheels
-2. Gun Bunch X Nasty — Deep Flood
-3. Gun Trips TE Flex — Levels Sail
-4. Gun Cluster — Mesh Post
-5. Gun Tight Doubles — Mtn Fk Cross
-6. Gun Wing Trips Wk Nasty — Y Mtn Flood
-7. Gun Trips TE — Deep In
-8. Gun Tight Doubles — HB Slip Screen *(constraint vs pin-ears rush)*
-9. Gun Trips TE Flex — PA Crossers
-10. Gun Bunch X Nasty — Post Wheel Shallow
+1. Wing Trips Wk Nasty — Y Mtn Flood
+2. Tight Y Off — Cheat Slash Wheel Cross
+3. Trips TE Flex — PA Crossers
+4. Bunch X Nasty — Mtn Cross Post
+5. Tight Doubles — Mtn Fk Cross
+6. Wing Trips Wk Nasty — Shuffle Shock HB Choice Go
+7. Trips TE Flex — Verticals
+8. Tight Doubles — HB Slip Screen *(vs pin-ears)*
+9. Bunch X Nasty — Post Wheel Shallow
+10. Tight Y Off — PA Go Slot Cross
 
-### 3rd and Extra Long
-*(if this meter exists — fill it; if not, skip)*
-1. Gun Trips TE Flex — Verticals
-2. Gun Tight Doubles — Shot Fade Cross
-3. Gun Bunch X Nasty — Deep Flood
-4. Gun Cluster — Verticals
-5. Gun Wing Trips Wk Nasty — All Go HB Choice
-6. Gun Tight Doubles — Cross Wheels *(still a live underneath)*
-7. Gun Trips TE — Verticals
-8. Gun Tight Doubles — HB Slip Screen
-9. Gun Tight Y Off — PA Go Slot Cross
-10. Gun Bunch X Nasty — Mtn Cross Post
+### 3rd and Extra Long *(if meter exists)*
+1. Wing Trips Wk Nasty — All Go HB Choice
+2. Trips TE Flex — Verticals
+3. Tight Doubles — Shot Fade Cross
+4. Bunch X Nasty — Deep Flood
+5. Tight Y Off — Cheat Slash Wheel Cross
+6. Wing Trips Wk Nasty — PA Crossers
+7. Cluster — Verticals
+8. Tight Doubles — HB Slip Screen
+9. Trips TE — Verticals
+10. Bunch X Nasty — Mtn Cross Post
 
 ### 4th and Short
-1. Gun Power I Tight — Power
-2. Gun Power I Tight — QB Power
+1. Power I Tight — Power
+2. Power I Tight — Load Option
 3. Goal Line Normal — QB Sneak
-4. Gun Power I Tight — Duo
-5. Gun Bunch X Nasty — HB Base
-6. Gun Tight Doubles — HB Quick Base
-7. Gun Trips TE Flex — Stick
-8. Singleback Deuce Close — 0 1 Trap
-9. Goal Line Normal — Power O
-10. Gun Cluster — Spacing
+4. Deuce Close — Motion Power
+5. Power I Tight — Duo
+6. Goal Line Normal — Power O
+7. Wing Trips Wk Nasty — Stick
+8. Deuce Close — 0 1 Trap
+9. Power I Tight — QB Power
+10. SB Bunch TE — Jet Sweep *(edge surprise)*
 
 ### 4th and Medium
-1. Gun Tight Doubles — Cross Wheels
-2. Gun Bunch X Nasty — Drive HB Under
-3. Gun Trips TE Flex — Stick
-4. Gun Cluster — Mesh
-5. Gun Trips TE Flex — Mtn Y Post
-6. Gun Wing Trips Wk Nasty — Y Mtn Drive
-7. Gun Tight Y Off — Mesh Spot
-8. Gun Trips TE — Drive Post
-9. Gun Bunch X Nasty — X Cross
-10. Gun Tight Doubles — Dbl Stick
+1. Wing Trips Wk Nasty — Shuffle Wheel Y Drag
+2. Trips TE Flex — Mtn Y Post
+3. Tight Y Off — Cheat Slash Wheel Cross
+4. Bunch X Nasty — Drive HB Under
+5. Wing Trips Wk Nasty — Y Mtn Drive
+6. Tight Doubles — Mtn Fk Cross
+7. Trips TE Flex — Stick
+8. Bunch X Nasty — Return Whip Trail
+9. Tight Y Off — Mesh Spot
+10. Trips TE — Texas
 
 ### 4th and Long
-1. Gun Tight Doubles — Shot Fade Cross
-2. Gun Trips TE Flex — Mtn Y Post
-3. Gun Bunch X Nasty — Deep Flood
-4. Gun Cluster — Mesh Post
-5. Gun Wing Trips Wk Nasty — Y Mtn Flood
-6. Gun Tight Doubles — Cross Wheels
-7. Gun Trips TE — Deep In
-8. Gun Tight Y Off — Cheat Slash Wheel Cross
-9. Gun Trips TE Flex — Verticals
-10. Gun Bunch X Nasty — X Cross
+1. Wing Trips Wk Nasty — Y Mtn Flood
+2. Trips TE Flex — Mtn Y Post
+3. Tight Y Off — Cheat Slash Wheel Cross
+4. Bunch X Nasty — Mtn Cross Post
+5. Tight Doubles — Shot Fade Cross
+6. Wing Trips Wk Nasty — All Go HB Choice
+7. Trips TE Flex — Verticals
+8. Bunch X Nasty — X Cross
+9. Tight Doubles — Cross Wheels
+10. Trips TE — Deep In
 
-### Red Zone (normal ~20–8)
-*(compressed field — spots/whips/stick + run; one PA)*
-1. Gun Tight Doubles — Z Spot
-2. Gun Bunch X Nasty — Whip Double Spot
-3. Gun Cluster — Z Spot Shake
-4. Gun Trips TE Flex — Stick
-5. Gun Power I Tight — Duo
-6. Gun Wing Trips Wk Nasty — Shuffle Smash Y Shake
-7. Gun Tight Doubles — Tight Curl
-8. Gun Bunch X Nasty — Y Corner Pivot
-9. Singleback Deuce Close — Spacing Switch
-10. Gun Power I Tight — PA Duo Flood
+### Red Zone (~20–8)
+1. Tight Y Off — Cheat Spot Y Quick
+2. Wing Trips Wk Nasty — Shuffle Smash Y Shake
+3. Trips TE Flex — HB Angle
+4. Bunch X Nasty — Whip Double Spot
+5. Deuce Close — Motion Zone Toss
+6. Tight Doubles — Z Spot
+7. Power I Tight — Load Option
+8. Bunch X Nasty — Y Corner Pivot
+9. Cluster — Z Spot Shake
+10. Tight Y Off — RPO Peek Slant Bubble
 
 ### Red Zone Frenzy
-*(must-score / urgency inside ~20 — still not all fades; attack + convert)*
-1. Gun Bunch X Nasty — RZ PA X Whip
-2. Gun Trips TE Flex — HB Angle
-3. Gun Tight Doubles — Shot Fade Cross *(boundary shot if soft)*
-4. Gun Power I Tight — Power
-5. Gun Cluster — Mesh Post
-6. Gun Bunch X Nasty — Whip Double Spot
-7. Gun Wing Trips Wk Nasty — Shuffle Smash Y Shake
-8. Gun Tight Doubles — Z Spot
-9. Gun Trips TE Flex — Mtn Y Post
-10. Singleback Deuce Close — PA Boot Slide
+1. Bunch X Nasty — RZ PA X Whip
+2. Wing Trips Wk Nasty — Shuffle Smash Y Shake
+3. Tight Y Off — Cheat Spot Y Quick
+4. Trips TE Flex — Mtn Y Post
+5. Power I Tight — Load Option
+6. Deuce Close — Mtn PA Boot Screen
+7. Bunch X Nasty — Return Whip Trail
+8. Tight Doubles — Mtn Fk Cross
+9. Trips TE Flex — HB Angle
+10. Power I Tight — PA Duo Flood
 
 ### Goal Line Run
 1. Goal Line Normal — Power O
 2. Goal Line Normal — QB Sneak
-3. Goal Line Normal — HB Dive
-4. Gun Power I Tight — Power
-5. Gun Power I Tight — QB Blast
-6. Gun Power I Tight — Duo
-7. Goal Line Normal — FB Dive Weak
-8. Gun Power I Tight — HB Dive
-9. Goal Line Normal — Strong Toss *(edge constraint)*
-10. Singleback Deuce Close — Motion Power
+3. Power I Tight — Power
+4. Power I Tight — Load Option
+5. Deuce Close — Motion Power
+6. Goal Line Normal — HB Dive
+7. Power I Tight — QB Blast
+8. Goal Line Normal — Strong Toss
+9. Deuce Close — Mtn Duo
+10. Power I Tight — Duo
 
 ### Goal Line Pass
-1. Gun Bunch X Nasty — Y Flat Goalline
-2. Gun Bunch X Nasty — Z Spot Goalline
-3. Gun Bunch X Nasty — Z Mesh Goalline
-4. Gun Bunch X Nasty — RZ PA X Whip
+1. Bunch X Nasty — Y Flat Goalline
+2. Bunch X Nasty — Z Spot Goalline
+3. Bunch X Nasty — Z Mesh Goalline
+4. Bunch X Nasty — RZ PA X Whip
 5. Goal Line Normal — PA Spot
 6. Goal Line Normal — PA Waggle
-7. Gun Tight Doubles — Tight Curl
-8. Gun Cluster — Spacing
+7. Tight Y Off — Cheat Spot Y Quick
+8. Wing Trips Wk Nasty — Shuffle Smash Y Shake
 9. Goal Line Normal — PA Sprint HB Flat
-10. Gun Bunch X Nasty — Y Corner Pivot
+10. Cluster — Spacing
 
-### Backed Up (own ~1–10)
-*(avoid safety — quick game, outside run, screens; no deep drop bombs)*
-1. Gun Tight Doubles — Bench
-2. Gun Tight Doubles — HB Slip Screen
-3. Gun Cluster — Outside Zone
-4. Gun Trips TE Flex — Scat
-5. Gun Bunch X Nasty — Return Spot
-6. Gun Wing Trips Wk Nasty — Stick
-7. Gun Tight Y Off — Cheat Outside Zone
-8. Gun Trips TE Flex — Stick
-9. Gun Tight Doubles — Dbl Stick
-10. Gun Cluster — Spacing
+### Backed Up (own 1–10)
+*(quick / outside / screen / RPO — no deep drops)*
+1. Tight Doubles — Bench
+2. Wing Trips Wk Nasty — RPO Buck Alert Out
+3. Tight Y Off — Cheat Outside Zone
+4. Trips TE Flex — Scat
+5. Trips TE — Mtn Fk Screen Wheel
+6. Tight Doubles — HB Slip Screen
+7. SB Bunch TE — Jet Sweep
+8. Bunch X Nasty — Return Spot
+9. Cluster — Outside Zone
+10. Wing Trips Wk Nasty — Stick
 
 ### Two Minute Offense
-*(clock + chains; mix tempo throws + one screen + one shot)*
-1. Gun Tight Doubles — Cross Wheels
-2. Gun Tight Doubles — Bench
-3. Gun Tight Doubles — Dbl Stick
-4. Gun Bunch X Nasty — Drive HB Under
-5. Gun Trips TE Flex — Stick
-6. Gun Trips TE Flex — Scat
-7. Gun Cluster — Spacing
-8. Gun Wing Trips Wk Nasty — Stick
-9. Gun Tight Doubles — HB Slip Screen
-10. Gun Tight Doubles — Shot Fade Cross
+1. Wing Trips Wk Nasty — Shuffle Wheel Y Drag
+2. Tight Doubles — Bench
+3. Trips TE Flex — Scat
+4. Tight Y Off — Cheat Spot Y Quick
+5. Bunch X Nasty — Return Spot
+6. Wing Trips Wk Nasty — Stick
+7. Tight Doubles — Dbl Stick
+8. Trips TE Flex — Stick
+9. Tight Doubles — HB Slip Screen
+10. Trips TE Flex — Mtn Y Post *(if need chunk)*
 
 ### Four Minute Offense
-*(protect lead — run clock, high %, avoid turnovers)*
-1. Gun Bunch X Nasty — Inside Zone
-2. Gun Trips TE Flex — Inside Zone
-3. Gun Tight Doubles — HB Draw
-4. Gun Cluster — Outside Zone
-5. Gun Power I Tight — Duo
-6. Gun Power I Tight — Lead Zone Wk
-7. Gun Wing Trips Wk Nasty — Outside Zone
-8. Gun Tight Y Off — Inside Zone
-9. Singleback Bunch TE — Inside Zone
-10. Gun Trips TE Flex — Stick *(only if needed for a manageable 3rd)*
+1. Tight Y Off — Cheat Outside Zone
+2. Wing Trips Wk Nasty — Outside Zone
+3. Deuce Close — Motion Zone Split
+4. Power I Tight — Duo
+5. Trips TE Flex — Inside Zone
+6. Bunch X Nasty — Inside Zone
+7. Power I Tight — Lead Zone Wk
+8. SB Bunch TE — Inside Zone
+9. Cluster — Outside Zone
+10. Wing Trips Wk Nasty — RPO Buck Alert Out *(keep them honest)*
 
 ### Hail Mary
 1. Hail Mary — Hail Mary
 2. Hail Mary — Goal Post
 3. Hail Mary — Shot Save Clock
-4. Gun Trips TE Flex — Verticals
-5. Gun Cluster — Verticals
-6. Gun Tight Doubles — Shot Fade Cross
-7. Gun Wing Trips Wk Nasty — All Go HB Choice
-8. Gun Trips TE — Verticals
-9. Gun Bunch X Nasty — Deep Flood
-10. Gun Tight Y Off — PA Go Slot Cross
+4. Wing Trips Wk Nasty — All Go HB Choice
+5. Trips TE Flex — Verticals
+6. Tight Doubles — Shot Fade Cross
+7. Bunch X Nasty — Deep Flood
+8. Cluster — Verticals
+9. Trips TE — Verticals
+10. Tight Y Off — PA Go Slot Cross
 
 ---
 
-## PART C — ROAD / AUDIBLE RULES (do not break these)
+## PART C — HOW TO CALL IT (IDENTITY)
 
-1. Before the snap on the road: assume **Square audibles may fail**. Have the right play already called from Coach Suggestions.
-2. Your **only** in-formation escapes are the **4 audibles** listed above.
-3. If you need a different answer, it must already be in that situation’s My Gameplan so it shows under Coach Suggestions — **not** “just audible to it.”
-4. Use **L1 Custom Adjustments** for protection / hot answers when Pulse is killing audibles.
+### Drive starter script (first 6 calls — stay unpredictable)
+1. Wing — RPO Buck Alert Out
+2. Tight Y Off — Cheat Outside Zone
+3. Wing — Shuffle Wheel Y Drag
+4. Trips TE Flex — Mtn Y Post
+5. Deuce Close — Motion Power
+6. Tight Y Off — Cheat Slash Wheel Cross
 
-### What each formation’s 4 audibles are built to cover
-| Formation | Zone | Man | Run | Quick/Pressure |
-|---|---|---|---|---|
-| Tight Doubles | Cross Wheels | Shot Fade Cross | HB Quick Base | Dbl Stick |
-| Bunch X Nasty | Mesh Corner | Drive HB Under / X Cross | Inside Zone | (X Cross doubles) |
-| Cluster | Verticals | Mesh | Outside Zone | Spacing |
-| Trips TE Flex | Levels Sail | Mtn Y Post | Inside Zone | Stick |
-| Wing Trips Wk Nasty | Y Mtn Drive | Shuffle Wheel Y Drag | Inside Zone Split | Stick |
-| Power I Tight | PA Duo Flood | — | Power / Duo | QB Power |
-| Goal Line Normal | — | PA Spot | Power O / HB Dive | QB Sneak |
+Same personnel families as much as possible; stress motion early so later stock Cross Wheels/Stick become changeups, not tells.
+
+### If DC adjusts
+| They do this | You answer from the 4 audibles / gameplan |
+|---|---|
+| Jump motion / overplay shuffle | RPO Buck Alert Out · Cheat Outside Zone · Inside Zone Split · Motion Power |
+| Soft zone / soft cushion | Y Mtn Flood · Cheat Slash Wheel Cross · Mtn Hitch N Go · Cross Wheels |
+| Press man | Shuffle Wheel Y Drag · Mtn Y Post · Mtn Fk Cross · Drive HB Under |
+| Load box on short | Load Option · PA Duo Flood · Fk Toss Trail · Mtn Cross HB Sneak |
+| Pin ears on long | HB Slip Screen · Mtn Fk Screen Wheel · Jet Sweep · Scat |
+
+### Road reminder
+- Call the right play from **Coach Suggestions** (this gameplan).
+- Use only the **4 audibles** if Pulse allows.
+- Else **L1** — do not invent a 5th audible.
 
 ---
 
 ## INSTALL ORDER
-1. Add all 12 formations/plays from Part A (OSU + WVU Power I Tight).
-2. Set **exactly 4 audibles** per formation — nothing else.
-3. Open **My Gameplan** and scroll **every** situation meter (including Backed Up + Red Zone Frenzy + Goal Line Run + Goal Line Pass + Extra Long / Four Minute / Hail Mary if present).
-4. Star the 10 plays listed for each.
-5. Save.
+1. Add formations from Part A (OSU + WVU Power I Tight).
+2. Set the **4 audibles** exactly as listed (motion/RPO series).
+3. Fill **every** My Gameplan meter from Part B (including Backed Up, Red Zone Frenzy, Goal Line Run/Pass, Extra Long, Two/Four Minute, Hail Mary).
+4. Save. Practice the Wing + Tight Y Off + Trips TE Flex series first — that is the identity.
 
-If a play name is missing in a formation, you pulled that formation from the wrong school — re-add from **Ohio State** or **West Virginia** as labeled.
+**Verify in-game:** if a name is missing, re-add the formation from the listed school.
