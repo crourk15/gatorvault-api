@@ -1,0 +1,107 @@
+CFB 27 PLAYSHEET — PRE-SNAP AUDIBLE MATRIX
+PS5: Square=Audible | Triangle=Hot Route | L1=Custom Adj (works on road) | L2=Prot | R3=Flip
+Build: Ohio State + West Virginia (Gun Power I Tight)
+
+EVERY FORMATION USES THE SAME 4 JOBS:
+  A1 = C0 / ALL-OUT BLITZ    (ball out NOW or QB hit now)
+  A2 = MAN                   (Cover 1 / press / man trail)
+  A3 = ZONE / 2-HIGH         (Cover 2/3/4 soft or 2-high zone)
+  A4 = RUN / RPO CHECK       (light box, conflict, declare)
+
+Pre-snap: ID the shell -> hit that audible.
+2-HIGH MAN: take A2 (man) first; if soft cushion, A3 also works.
+Road Pulse: if audibles fail, call the SAME play from Coach Suggestions / gameplan.
+
+
+================================================================================
+SECTION 1 — AUDIBLES (PRE-SNAP MATRIX)
+================================================================================
+
+GUN WING TRIPS WK NASTY (PRIMARY)
+  A1  [C0/BLITZ ]  Stick
+  A2  [MAN      ]  Shuffle Wheel Y Drag
+  A3  [ZONE/2H  ]  Y Mtn Flood
+  A4  [RUN/RPO  ]  RPO Buck Alert Out
+
+GUN TIGHT Y OFF (PRIMARY)
+  A1  [C0/BLITZ ]  Cheat Spot Y Quick
+  A2  [MAN      ]  Mesh Spot
+  A3  [ZONE/2H  ]  Cheat Slash Wheel Cross
+  A4  [RUN/RPO  ]  RPO Peek Slant Bubble
+
+GUN TRIPS TE FLEX (PRIMARY)
+  A1  [C0/BLITZ ]  Scat
+  A2  [MAN      ]  Mtn Y Post
+  A3  [ZONE/2H  ]  Levels Sail
+  A4  [RUN/RPO  ]  RPO Zone Alert Omaha
+
+GUN BUNCH X NASTY (SECONDARY)
+  A1  [C0/BLITZ ]  Return Spot
+  A2  [MAN      ]  Drive HB Under
+  A3  [ZONE/2H  ]  Mesh Corner
+  A4  [RUN/RPO  ]  Mtn RPO Zone Alert
+
+GUN TIGHT DOUBLES (SECONDARY)
+  A1  [C0/BLITZ ]  Dbl Stick
+  A2  [MAN      ]  Mtn Fk Cross
+  A3  [ZONE/2H  ]  Cross Wheels
+  A4  [RUN/RPO  ]  Mtn Bunch Option
+
+SINGLEBACK DEUCE CLOSE (SHORT / RZ)
+  A1  [C0/BLITZ ]  Spacing Switch
+  A2  [MAN      ]  PA Boot Slide
+  A3  [ZONE/2H  ]  Flood Trail
+  A4  [RUN/RPO  ]  Motion Power
+
+GUN POWER I TIGHT — WVU (SHORT)
+  A1  [C0/BLITZ ]  QB Blast
+  A2  [MAN      ]  PA Duo Flood
+  A3  [ZONE/2H  ]  Load Option
+  A4  [RUN/RPO  ]  Power
+
+SINGLEBACK BUNCH TE (JET)
+  A1  [C0/BLITZ ]  Stick
+  A2  [MAN      ]  Cross Drag
+  A3  [ZONE/2H  ]  Stretch Alert Bubble
+  A4  [RUN/RPO  ]  Jet Sweep
+
+GUN CLUSTER
+  A1  [C0/BLITZ ]  Spacing
+  A2  [MAN      ]  Mesh
+  A3  [ZONE/2H  ]  Verticals
+  A4  [RUN/RPO  ]  Outside Zone
+
+GUN TRIPS TE
+  A1  [C0/BLITZ ]  RPO Alert Bubble
+  A2  [MAN      ]  Texas
+  A3  [ZONE/2H  ]  Mtn Levels Y-Corner
+  A4  [RUN/RPO  ]  Mtn Fk Screen Wheel
+
+GOAL LINE NORMAL
+  A1  [C0/BLITZ ]  QB Sneak
+  A2  [MAN      ]  PA Spot
+  A3  [ZONE/2H  ]  PA Waggle
+  A4  [RUN/RPO  ]  Power O
+
+HAIL MARY
+  A1  [C0/BLITZ ]  Shot Save Clock
+  A2  [MAN      ]  Hail Mary
+  A3  [ZONE/2H  ]  Goal Post
+  A4  [RUN/RPO  ]  Hail Mary
+
+
+================================================================================
+SECTION 4 — PRE-SNAP CHEAT SHEET (WHICH BUTTON)
+================================================================================
+SEE COVER 0 / ALL-OUT BLITZ / EMPTY MIDDLE   -> A1
+SEE MAN (press, Cover 1, man trail)          -> A2
+SEE ZONE / 2-HIGH / SOFT CUSHION             -> A3
+SEE LIGHT BOX / WANT RUN OR RPO CONFLICT     -> A4
+
+QUICK PRIMARY OUTS
+  C0:   Stick | Scat | Dbl Stick | Spacing | Return Spot | Cheat Spot Y Quick | QB Blast | QB Sneak
+  MAN:  Shuffle Wheel Y Drag | Mtn Y Post | Drive HB Under | Mtn Fk Cross | Mesh Spot | Texas | Mesh
+  ZONE: Y Mtn Flood | Cheat Slash Wheel Cross | Levels Sail | Mesh Corner | Cross Wheels | Verticals
+  CHECK: RPO Buck Alert Out | RPO Zone Alert Omaha | Mtn RPO Zone Alert | Load Option | Motion Power | Jet Sweep
+
+
