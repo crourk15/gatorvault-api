@@ -25,8 +25,9 @@ const STATIC_LINES = [
     opponent: 'FAU',
     date: '2026-09-05T23:45:00.000Z',
     venue: 'Ben Hill Griffin Stadium',
-    spread: { line: 'UF -31.5', uf: -31.5 },
-    total: 52.5,
+    // Market consensus ~Sep 1–2 2026 (BetMGM / USA Today / Athletic): UF -26.5 to -27.5, O/U 59.5
+    spread: { line: 'UF -27.5', uf: -27.5 },
+    total: 59.5,
     moneyline: { uf: -4500, opp: +1600 },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,

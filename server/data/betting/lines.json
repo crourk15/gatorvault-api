@@ -23,10 +23,10 @@
     "date": "2026-09-05T23:45:00.000Z",
     "venue": "Ben Hill Griffin Stadium",
     "spread": {
-      "line": "UF -31.5",
-      "uf": -31.5
+      "line": "UF -27.5",
+      "uf": -27.5
     },
-    "total": 52.5,
+    "total": 59.5,
     "moneyline": {
       "uf": -4500,
       "opp": 1600
@@ -55,10 +55,10 @@
       "date": "2026-09-05T23:45:00.000Z",
       "venue": "Ben Hill Griffin Stadium",
       "spread": {
-        "line": "UF -31.5",
-        "uf": -31.5
+        "line": "UF -27.5",
+        "uf": -27.5
       },
-      "total": 52.5,
+      "total": 59.5,
       "moneyline": {
         "uf": -4500,
         "opp": 1600
@@ -141,8 +141,8 @@
       "source": "schedule"
     }
   ],
-  "updatedAt": "2026-07-07T12:49:21.351Z",
-  "refreshedAt": "2026-07-07T12:49:21.351Z",
+  "updatedAt": "2026-09-02T02:30:00.000Z",
+  "refreshedAt": "2026-09-02T02:30:00.000Z",
   "pendingTeamEvents": [],
   "announcedKickoffs": {}
 }

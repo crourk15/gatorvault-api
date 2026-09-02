@@ -88,6 +88,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-02 | Game Week Prediction: Vegas from `/api/betting/lines` (no invented -14.5 / O/U from win% or score sum) | `GameWeekCommandCenter` + `game-week-data` in binary; **API static FAU line live without bake** | pending |
 | 2026-08-28 | Auth `authPost` client retries + friendly wake-up copy (belt under edge retry) | `auth-api.ts` in binary | pending |
 | 2026-08-26 | Community: Edit + Delete on own threads/replies (author-only) | `VaultCommunityPage` + `CommunityPostActions` + community-api in binary; **API routes live without bake** | pending |
 | 2026-08-26 | Capacitor seed: scrub movementFeed visit/offer school lines (Tranard Auburn + rival offers) — only live ticker/alerts paint schools | `recruiting-hub-bundle-seed` in binary | pending |

@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { getGameWeekBundle } from '@/lib/game-week-data';
+import {
+  bettingLineForScheduleGame,
+  getGameWeekBundle,
+  type GameWeekBettingLine,
+} from '@/lib/game-week-data';
+import { fetchBettingLines } from '@/lib/betting-api';
 import { fetchScheduleGames } from '@/lib/schedule-api';
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 import { InsiderPaywall } from '@/components/futurecast/InsiderPaywall';
@@ -45,6 +50,7 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
   const [gameId, setGameId] = useState(initialGameId);
   const [tab, setTab] = useState('intel');
   const [games, setGames] = useState<ScheduleGame[]>(SCHEDULE_GAMES);
+  const [bettingByGameId, setBettingByGameId] = useState<Record<string, GameWeekBettingLine | null>>({});
 
   useEffect(() => {
     if (initialGameId) setGameId(initialGameId);
@@ -65,7 +71,32 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
     };
   }, []);
 
-  const bundle = useMemo(() => getGameWeekBundle(gameId, games), [gameId, games]);
+  // Vegas from /api/betting/lines — never invent spread/total from win% or FutureCast score.
+  useEffect(() => {
+    let cancelled = false;
+    fetchBettingLines()
+      .then((lines) => {
+        if (cancelled) return;
+        const pool = games.length ? games : SCHEDULE_GAMES;
+        const next: Record<string, GameWeekBettingLine | null> = {};
+        for (const g of pool) {
+          next[g.id] = bettingLineForScheduleGame(g, lines);
+        }
+        setBettingByGameId(next);
+      })
+      .catch(() => {
+        /* leave pending until lines load */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [games]);
+
+  const betting = bettingByGameId[gameId] ?? null;
+  const bundle = useMemo(
+    () => getGameWeekBundle(gameId, games, betting),
+    [gameId, games, betting]
+  );
 
   const handleGameSelect = useCallback(
     (id: string) => {
