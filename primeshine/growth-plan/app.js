@@ -279,6 +279,28 @@ function goToToday() {
   document.getElementById("plan-sec")?.scrollIntoView({ behavior: "smooth" });
 }
 
+
+function bindCopyButtons() {
+  document.querySelectorAll('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-copy');
+      const el = id ? document.getElementById(id) : null;
+      const text = el ? el.value : '';
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (e) {
+        el.focus();
+        el.select();
+        document.execCommand('copy');
+      }
+      const prev = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = prev; }, 1400);
+    });
+  });
+}
+
 function init() {
   if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
     lucide.createIcons();
@@ -290,6 +312,7 @@ function init() {
     btn.classList.toggle("active", parseInt(btn.dataset.week, 10) === currentWeek);
   });
 
+  bindCopyButtons();
   updateWelcome();
   updateDashboard();
   renderWeekTheme();
