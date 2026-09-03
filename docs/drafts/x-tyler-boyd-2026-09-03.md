@@ -10,4 +10,4 @@ Boyd, a 2028 Carrollton (GA) CB listed 5-11 / 190, is a top-five industry corner
 
 Projection: Year 2 nickel/boundary packages, then compete for a starting job by Year 3 with every-down SEC press/man ceiling. GatorVault comp: Jaire Alexander (5-10/5-11 physical cover mold) for the same compact twitch-and-toughness corner.
 
-Florida offered in January, hosted a March 28 Swamp UOV, and is hitting him daily across Sumrall / White / Harris / Collins while he plans another trip back. Early RPM. Keep stacking this Georgia CB.
+Florida offered in January, hosted a March 28 Swamp UOV, and the staff push stays constant across Sumrall, White, Harris, and Collins while he plans another trip back. Early RPM. Keep stacking this Georgia CB.
