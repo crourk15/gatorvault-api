@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-03T01:48:06.220Z",
+  "updatedAt": "2026-09-03T13:33:22.164Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -14123,7 +14123,7 @@
       "recruitingStory": "Tyler Boyd is a 4-star CB · listed 5-11 / 190 · Carrollton (GA) · open-board Florida target with daily staff push and return visit plans.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-09-03T01:48:06.209Z",
+      "updatedAt": "2026-09-03T13:33:22.109Z",
       "filmWatched": true,
       "provisional": false
     },
@@ -18652,6 +18652,41 @@
       "nflProjection": null,
       "featured": false,
       "updatedAt": "2026-09-01T15:00:50.518Z",
+      "filmWatched": true,
+      "provisional": false
+    },
+    "caron-williams": {
+      "playerSlug": "caron-williams",
+      "playerName": "Ca'ron Williams",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22639822/68be2b9cc61c168b949281f9",
+          "publishedAt": "2026-09-03"
+        }
+      ],
+      "strengths": [
+        "Williams plays island off-man with a clean cushion and a low athletic platform: ready feet that stay balanced before the pedal.",
+        "Williams shows fluid hip transition in the backpedal and keeps eyes inside on the quarterback while shadowing the receiver.",
+        "Williams brings a lean 5-11 / 6-0 length frame with long arms that disrupt windows, plus press flashes when the call asks.",
+        "Williams finishes with ball production: 2025 taped 3 INT (1 pick-six), 4 PBU, and 47 tackles; open-field return juice shows once he has the ball."
+      ],
+      "weaknesses": [
+        "Williams is still filling out a lean 170-ish frame: White's press/man room will want more mass and consistent press strength at the LOS."
+      ],
+      "comparison": "Williams comps to Derek Stingley Jr. - lean ~6-0 cover corner mold with length, fluid hips, and ball skills (size-matched to Williams' 5-11 / 6-0 / ~170-175 listing).",
+      "schemeFit": "Williams fits Brad White length-first CB who can live off the hash in pattern-match / off-man and grow into press technique as the frame fills.",
+      "staffNotes": "Vault film desk verified 2026-09-03 from Santa Margarita #5 sophomore film. Comp size-matched within ~1-2\" (Stingley mold) - not a Florida-alum default. Not provisional. Beat Desk Open wrongly slugged santa-margarita-catholic; correct player slug is caron-williams.",
+      "projection": "Williams projects as a Year 2 CB contributor in nickel/boundary packages who can compete for a starting job by Year 3. Ceiling: every-down SEC length corner with filled-out mass on a 5-11 / 6-0 frame.",
+      "insiderNotes": "Williams is a lean 5-11 / 6-0 Santa Margarita CB with length and fluid cover feet. On film as #5: island off-man with cushion, ready platform, smooth hip flips, and eyes that stay inside on the QB. Press flashes when asked. Sophomore production (3 INT / 1 pick-six / 4 PBU / 47 tackles) backs the playmaking. Florida just put an offer on him: early West Coast CB process.",
+      "recruitingStory": "Ca'ron Williams is a 4-star CB · listed ~5-11 / 6-0 / 170-175 · Santa Margarita Catholic (Rancho Santa Margarita, CA) · open-board Florida offer target.",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-09-03T13:33:22.155Z",
       "filmWatched": true,
       "provisional": false
     }
