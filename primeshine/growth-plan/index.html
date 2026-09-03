@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="dark"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>PrimeShine 30-Day Growth Plan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy: { 900: '#0f172a', 800: '#1e293b', 700: '#334155', 600: '#475569' },
+          gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309' },
+          sky: { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7' },
+        }
+      }
+    }
+  };
+  </script>
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --navy-900: #0f172a;
+      --navy-800: #1e293b;
+      --navy-700: #334155;
+      --gold-500: #f59e0b;
+      --gold-400: #fbbf24;
+      --sky-400: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy-900); color: #f1f5f9; min-height: 100vh; }
+    .glass-card {
+      background: linear-gradient(135deg, rgba(30,41,59,0.85) 0%, rgba(15,23,42,0.95) 100%);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+    }
+    .glass-card-light {
+      background: linear-gradient(135deg, rgba(51,65,85,0.5) 0%, rgba(30,41,59,0.7) 100%);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+    }
+    .gold-glow { box-shadow: 0 0 20px rgba(245,158,11,0.15), 0 0 40px rgba(245,158,11,0.05); }
+    .day-card { transition: all 0.3s ease; cursor: pointer; }
+    .day-card:hover { transform: translateY(-2px); border-color: rgba(245,158,11,0.4); }
+    .day-card.completed { border-color: rgba(34,197,94,0.5) !important; }
+    .day-card.active-day { border-color: var(--sky-400) !important; box-shadow: 0 0 20px rgba(56,189,248,0.25); }
+    .task-done .task-text { text-decoration: line-through; opacity: 0.5; }
+    .tab-btn { transition: all 0.2s ease; }
+    .tab-btn.active { background: var(--gold-500); color: var(--navy-900); font-weight: 700; }
+    .progress-fill { transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+    .badge-morning { background: rgba(56,189,248,0.2); color: #38bdf8; }
+    .badge-evening { background: rgba(168,85,247,0.2); color: #a855f7; }
+    .badge-weekend { background: rgba(34,197,94,0.2); color: #22c55e; }
+    .badge-rest { background: rgba(148,163,184,0.2); color: #94a3b8; }
+    .cat-detailing { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .cat-marketing { background: rgba(239,68,68,0.15); color: #f87171; }
+    .cat-outreach { background: rgba(56,189,248,0.15); color: #38bdf8; }
+    .cat-social { background: rgba(168,85,247,0.15); color: #c084fc; }
+    .cat-admin { background: rgba(148,163,184,0.15); color: #cbd5e1; }
+    .cat-revenue { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .cat-optional { background: rgba(100,116,139,0.15); color: #94a3b8; }
+    .tipbox { background: linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(245,158,11,0.04) 100%); border-left: 3px solid var(--gold-500); }
+    .stat-card { transition: transform 0.2s ease; }
+    .stat-card:hover { transform: scale(1.03); }
+    .fade-in { animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .checkbox-custom { appearance: none; width: 20px; height: 20px; min-width: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 4px; cursor: pointer; transition: all 0.2s; background: transparent; }
+    .checkbox-custom:checked { background: #22c55e; border-color: #22c55e; }
+    .checkbox-custom:checked::after { content: '✓'; color: white; font-size: 13px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    input[type="number"] { -moz-appearance: textfield; }
+  </style>
+</head>
+<body class="antialiased">
+  <nav id="mobile-menu-ov4k" class="hidden fixed inset-0 bg-navy-900/98 z-[60] flex flex-col p-6 overflow-y-auto">
+    <div class="flex justify-between items-center mb-8">
+      <span class="text-gold-500 font-bold text-xl">PrimeShine</span>
+      <button id="mobile-close-btn-x9r2" class="p-2 text-white" type="button" aria-label="Close menu"><i data-lucide="x" class="w-6 h-6"></i></button>
+    </div>
+    <div class="flex flex-col gap-4">
+      <a href="#dashboard-sec" class="text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Dashboard</a>
+      <a href="#plan-sec" class="text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">30-Day Plan</a>
+      <a href="#pricing-sec" class="text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Pricing</a>
+      <a href="#blueprint-sec" class="text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Revenue Blueprint</a>
+      <a href="../index.html" class="text-slate-400 text-lg py-3 px-4 rounded-lg hover:bg-navy-800">Public site</a>
+    </div>
+  </nav>
+
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-navy-900/80 border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="text-2xl md:text-3xl font-black text-gold-500 tracking-tight truncate">PrimeShine</span>
+        <span class="hidden sm:block text-xs md:text-sm text-slate-400 border-l border-slate-600 pl-3">30-Day Growth Plan</span>
+      </div>
+      <div class="hidden md:flex items-center gap-4">
+        <a href="#dashboard-sec" class="text-sm text-slate-300 hover:text-gold-400 transition">Dashboard</a>
+        <a href="#plan-sec" class="text-sm text-slate-300 hover:text-gold-400 transition">Plan</a>
+        <a href="#pricing-sec" class="text-sm text-slate-300 hover:text-gold-400 transition">Pricing</a>
+        <a href="#blueprint-sec" class="text-sm text-slate-300 hover:text-gold-400 transition">Blueprint</a>
+        <a href="../index.html" class="text-xs text-slate-500 hover:text-slate-300">Site</a>
+        <span class="text-xs text-slate-500">863-860-9238</span>
+      </div>
+      <button id="mobile-menu-btn-q8w1" class="md:hidden p-2 text-white" type="button" aria-label="Open menu"><i data-lucide="menu" class="w-6 h-6"></i></button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10">
+    <section class="text-center mb-8 md:mb-12">
+      <h1 class="text-3xl md:text-5xl font-black text-white mb-2">PrimeShine Mobile Detailing</h1>
+      <p class="text-lg md:text-xl text-gold-400 font-semibold mb-1">30-Day Business Growth Plan</p>
+      <p class="text-sm text-slate-400">Bartow · Lakeland · Winter Haven, FL &nbsp;|&nbsp; <a class="text-sky-400 hover:underline" href="https://primeshinefl.com">primeshinefl.com</a> &nbsp;|&nbsp; 863-860-9238</p>
+      <p id="welcome-line" class="text-xs text-slate-500 mt-2">Welcome back, Charles! Loading today's plan...</p>
+      <p class="text-xs text-slate-600 mt-2">Progress saves in this browser. Bookmark this page for your daily checklist.</p>
+    </section>
+
+    <section id="dashboard-sec" class="glass-card gold-glow p-4 md:p-6 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+        <div>
+          <h2 class="text-lg md:text-xl font-bold text-white">Overall Progress</h2>
+          <p class="text-sm text-slate-400"><span id="days-done-label-p1a2">0</span>/30 days completed</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-sm text-slate-400">Revenue:</span>
+          <span class="text-gold-400 font-bold">$</span>
+          <input id="revenue-input-r5t6" type="number" min="0" max="99999" value="0" class="w-24 bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white text-right font-bold text-lg focus:outline-none focus:border-gold-500"/>
+          <span class="text-slate-400 font-semibold">/ $3,000</span>
+        </div>
+      </div>
+      <div class="w-full bg-navy-800 rounded-full h-4 mb-2 overflow-hidden">
+        <div id="progress-bar-main-b3c4" class="progress-fill h-4 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400" style="width: 0%"></div>
+      </div>
+      <div class="flex justify-between text-xs text-slate-500">
+        <span id="progress-pct-d5e6">0%</span>
+        <span>Revenue: <span id="revenue-pct-f7g8">0%</span></span>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
+      <div class="glass-card-light stat-card p-4 text-center">
+        <div class="text-sky-400 mb-1"><i data-lucide="calendar-check" class="w-5 h-5 mx-auto"></i></div>
+        <div id="stat-days-h9i0" class="text-2xl md:text-3xl font-black text-white tabular-nums">0</div>
+        <div class="text-xs text-slate-400">Days Completed</div>
+      </div>
+      <div class="glass-card-light stat-card p-4 text-center">
+        <div class="text-green-400 mb-1"><i data-lucide="check-circle" class="w-5 h-5 mx-auto"></i></div>
+        <div id="stat-tasks-j1k2" class="text-2xl md:text-3xl font-black text-white tabular-nums">0</div>
+        <div class="text-xs text-slate-400">Tasks Done</div>
+      </div>
+      <div class="glass-card-light stat-card p-4 text-center">
+        <div class="text-gold-400 mb-1"><i data-lucide="car" class="w-5 h-5 mx-auto"></i></div>
+        <div class="flex items-center justify-center gap-2">
+          <button class="jobs-minus-btn text-slate-400 hover:text-white p-1 rounded bg-navy-700 min-h-[28px] min-w-[28px] flex items-center justify-center" type="button"><i data-lucide="minus" class="w-3 h-3"></i></button>
+          <span id="stat-jobs-l3m4" class="text-2xl md:text-3xl font-black text-white tabular-nums">0</span>
+          <button class="jobs-plus-btn text-slate-400 hover:text-white p-1 rounded bg-navy-700 min-h-[28px] min-w-[28px] flex items-center justify-center" type="button"><i data-lucide="plus" class="w-3 h-3"></i></button>
+        </div>
+        <div class="text-xs text-slate-400">Jobs This Month</div>
+      </div>
+      <div class="glass-card-light stat-card p-4 text-center">
+        <div class="text-yellow-400 mb-1"><i data-lucide="star" class="w-5 h-5 mx-auto"></i></div>
+        <div class="flex items-center justify-center gap-2">
+          <button class="reviews-minus-btn text-slate-400 hover:text-white p-1 rounded bg-navy-700 min-h-[28px] min-w-[28px] flex items-center justify-center" type="button"><i data-lucide="minus" class="w-3 h-3"></i></button>
+          <span id="stat-reviews-n5o6" class="text-2xl md:text-3xl font-black text-white tabular-nums">0</span>
+          <button class="reviews-plus-btn text-slate-400 hover:text-white p-1 rounded bg-navy-700 min-h-[28px] min-w-[28px] flex items-center justify-center" type="button"><i data-lucide="plus" class="w-3 h-3"></i></button>
+        </div>
+        <div class="text-xs text-slate-400">Reviews Earned</div>
+      </div>
+    </section>
+
+    <section id="plan-sec" class="mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h2 class="text-xl md:text-2xl font-bold text-white">Daily Plan</h2>
+        <button id="today-btn" type="button" class="text-sm font-bold bg-sky-500/20 text-sky-400 px-3 py-2 rounded-full hover:bg-sky-500/30">Open today</button>
+      </div>
+      <div class="flex gap-2 overflow-x-auto pb-2 sticky top-[60px] z-40 bg-navy-900/95 backdrop-blur-md py-3 -mx-4 px-4 md:-mx-6 md:px-6" id="week-tabs-container-q7r8">
+        <button class="tab-btn active whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-navy-800 text-slate-300 min-h-[44px]" data-week="1" type="button">Week 1<span class="hidden sm:inline"> — Foundation</span></button>
+        <button class="tab-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-navy-800 text-slate-300 min-h-[44px]" data-week="2" type="button">Week 2<span class="hidden sm:inline"> — First Clients</span></button>
+        <button class="tab-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-navy-800 text-slate-300 min-h-[44px]" data-week="3" type="button">Week 3<span class="hidden sm:inline"> — Momentum</span></button>
+        <button class="tab-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-navy-800 text-slate-300 min-h-[44px]" data-week="4" type="button">Week 4<span class="hidden sm:inline"> — Scale</span></button>
+        <button class="tab-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-navy-800 text-slate-300 min-h-[44px]" data-week="5" type="button">Week 4+<span class="hidden sm:inline"> — Finish Strong</span></button>
+      </div>
+      <div id="week-theme-banner-s9t0" class="glass-card-light p-3 md:p-4 mb-4 fade-in"></div>
+      <div id="day-cards-grid-u1v2" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4"></div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <section id="pricing-sec" class="glass-card p-5 md:p-6">
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="tag" class="w-5 h-5 text-gold-400"></i> Service Pricing</h3>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Interior Only</span><span class="text-gold-400 font-bold">$80–$120</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Exterior Only</span><span class="text-gold-400 font-bold">$60–$100</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Full Detail (Int + Ext)</span><span class="text-gold-400 font-bold">$140–$200</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Add-on: Shampoo</span><span class="text-sky-400 font-bold">+$40</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Add-on: Odor Treatment</span><span class="text-sky-400 font-bold">+$30</span></div>
+          <div class="flex justify-between items-center py-2"><span class="text-slate-300">Monthly Maintenance</span><span class="text-green-400 font-bold">$55/mo recurring</span></div>
+        </div>
+      </section>
+
+      <section id="blueprint-sec" class="glass-card p-5 md:p-6">
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="target" class="w-5 h-5 text-gold-400"></i> Revenue Blueprint</h3>
+        <div class="space-y-3 text-sm">
+          <div class="tipbox p-3 rounded-lg">
+            <p class="text-gold-400 font-semibold mb-1">30-Day Goal: $3,000</p>
+            <p class="text-slate-300">Aim for ~15–20 details at $150–200 average per job.</p>
+          </div>
+          <div class="glass-card-light p-3 rounded-lg text-slate-300">
+            <p>Average job value: <strong class="text-white">~$120</strong></p>
+            <p>Jobs needed: <strong class="text-white">~25 jobs</strong></p>
+            <p>Weekday window: <strong class="text-white">5 hrs (1–2 jobs/day)</strong></p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="text-center mb-8">
+      <button id="reset-btn-w3x4" type="button" class="px-6 py-3 bg-red-900/30 hover:bg-red-900/50 text-red-400 rounded-xl text-sm font-semibold border border-red-500/20 transition min-h-[44px]">
+        Reset All Progress
+      </button>
+    </div>
+  </main>
+
+  <div id="day-modal-overlay-y5z6" class="hidden fixed inset-0 bg-black/70 z-50 flex items-start justify-center overflow-y-auto p-4 pt-10 md:pt-16">
+    <div id="day-modal-content-a7b8" class="glass-card w-full max-w-2xl p-5 md:p-8 mb-10 relative fade-in">
+      <button id="modal-close-btn-c9d0" type="button" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close"><i data-lucide="x" class="w-6 h-6"></i></button>
+      <div id="modal-body-e1f2"></div>
+    </div>
+  </div>
+
+  <div id="reset-modal-g3h4" class="hidden fixed inset-0 bg-black/70 z-[55] flex items-center justify-center p-4">
+    <div class="glass-card p-6 max-w-sm w-full text-center">
+      <h3 class="text-lg font-bold text-white mb-2">Reset All Progress?</h3>
+      <p class="text-sm text-slate-400 mb-4">This clears checked tasks, revenue, jobs, and reviews in this browser.</p>
+      <div class="flex gap-3 justify-center">
+        <button id="reset-cancel-i5j6" type="button" class="px-5 py-2 bg-navy-700 text-slate-300 rounded-lg text-sm font-semibold min-h-[44px]">Cancel</button>
+        <button id="reset-confirm-k7l8" type="button" class="px-5 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold min-h-[44px]">Yes, Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center py-6 text-xs text-slate-600 border-t border-white/5">
+    <p>PrimeShine Mobile Detailing — Bartow · Lakeland · Winter Haven, FL</p>
+    <p class="mt-1"><a class="hover:text-slate-400" href="../index.html">Back to public site</a></p>
+  </footer>
+
+  <script src="plan-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

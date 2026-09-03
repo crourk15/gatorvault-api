@@ -1,8 +1,10 @@
 const BUSINESS = {
-  name: "Primeshine Mobile Detailing",
+  name: "PrimeShine Mobile Detailing",
   email: "",
-  phone: "",
-  serviceArea: "Gainesville & North Central Florida",
+  phone: "863-860-9238",
+  bookingUrl: "https://primeshinefl.com/booking",
+  siteUrl: "https://primeshinefl.com",
+  serviceArea: "Bartow · Lakeland · Winter Haven, FL",
 };
 
 const menuBtn = document.querySelector("[data-menu]");
@@ -75,8 +77,10 @@ form?.addEventListener("submit", (event) => {
   ].filter(Boolean).join("\n");
 
   if (BUSINESS.email) {
-    const subject = encodeURIComponent(`Primeshine booking — ${name}`);
+    const subject = encodeURIComponent(`PrimeShine booking — ${name}`);
     window.location.href = `mailto:${BUSINESS.email}?subject=${subject}&body=${encodeURIComponent(body)}`;
+  } else if (BUSINESS.bookingUrl) {
+    window.open(BUSINESS.bookingUrl, "_blank", "noopener");
   }
 
   form.classList.add("hidden");
