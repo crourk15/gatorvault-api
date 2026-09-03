@@ -18,6 +18,7 @@ python3 -m http.server 4174 --directory primeshine-growth
 1. Bookmark the owner URL (add `?today=1`).
 2. Tap **Open today** if the checklist is not already open.
 3. Check off tasks. Progress stays in this browser (`localStorage` key `primeshine_30day_v2`).
+4. **Job calendar** on the same page tracks new clients and monthly maintenance (`primeshine_jobs_v1`).
 
 ## Deploy
 

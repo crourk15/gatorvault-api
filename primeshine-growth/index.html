@@ -72,6 +72,9 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .checkbox-custom { appearance: none; width: 20px; height: 20px; min-width: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 4px; cursor: pointer; transition: all 0.2s; background: transparent; }
     .checkbox-custom:checked { background: #22c55e; border-color: #22c55e; }
+    .cal-day { cursor: pointer; }
+    .cal-day-today { border-color: rgba(56,189,248,0.5); background: rgba(56,189,248,0.08); }
+    .cal-day-selected { border-color: #f59e0b; background: rgba(245,158,11,0.12); box-shadow: 0 0 0 1px rgba(245,158,11,0.25); }
     .checkbox-custom:checked::after { content: '✓'; color: white; font-size: 13px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
     input[type="number"] { -moz-appearance: textfield; }
@@ -85,6 +88,7 @@
     </div>
     <div class="flex flex-col gap-4">
       <a href="#dashboard-sec" class="text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Dashboard</a>
+      <a href="#calendar-sec" class="text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Job calendar</a>
       <a href="#plan-sec" class="text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">30-Day Plan</a>
       <a href="#pricing-sec" class="text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Pricing</a>
       <a href="#blueprint-sec" class="text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Revenue Blueprint</a>
@@ -100,6 +104,7 @@
       </div>
       <div class="hidden md:flex items-center gap-4">
         <a href="#dashboard-sec" class="text-sm text-slate-300 hover:text-gold-400 transition">Dashboard</a>
+        <a href="#calendar-sec" class="text-sm text-slate-300 hover:text-gold-400 transition">Calendar</a>
         <a href="#plan-sec" class="text-sm text-slate-300 hover:text-gold-400 transition">Plan</a>
         <a href="#pricing-sec" class="text-sm text-slate-300 hover:text-gold-400 transition">Pricing</a>
         <a href="#blueprint-sec" class="text-sm text-slate-300 hover:text-gold-400 transition">Blueprint</a>
@@ -122,11 +127,16 @@
     <section id="how-to-open" class="glass-card p-4 md:p-6 mb-6">
       <h2 class="text-lg md:text-xl font-bold text-white mb-3">How to open this page</h2>
       <ol class="text-sm text-slate-300 space-y-2 list-decimal pl-5 mb-4">
-        <li>This page is <strong class="text-white">not</strong> on the customer website. Bookmark this owner URL on your phone. Best bookmark: add <code class="text-sky-400">?today=1</code> so it opens today’s tasks automatically.</li>
-        <li>Tap the blue <strong class="text-sky-400">Open today</strong> button (next to Daily Plan). That jumps to the current day and opens the checklist.</li>
-        <li>Check off each task when you finish it. Your checks stay on this phone/browser. Do not tap Reset unless you mean to start over.</li>
+        <li>This page is <strong class="text-white">not</strong> on the customer website. Open it from the link in our chat, or from a text you send yourself.</li>
+        <li>On the computer where it is bookmarked: tap <strong class="text-sky-400">Copy this page link</strong> below, then text that link to your own cell number. On your iPhone, open the text and tap the link.</li>
+        <li>On the iPhone: tap the Share button → <strong class="text-white">Add to Home Screen</strong> → name it PrimeShine Plan. If you bookmarked it in Safari on a Mac with the same iCloud, it may already be under Safari Bookmarks.</li>
+        <li>Tap the blue <strong class="text-sky-400">Open today</strong> button for Day 1 tasks. Use <strong class="text-white">Job calendar</strong> to track new clients and monthly maintenance.</li>
       </ol>
-      <p class="text-xs text-slate-500">Today is Day 1 (Thu Sep 3). Google Business Profile first — fully filled profiles get ~5× more clicks.</p>
+      <div class="flex flex-col sm:flex-row gap-2 mt-4">
+        <button type="button" id="copy-page-link" class="text-sm font-bold bg-sky-500 text-navy-900 px-4 py-3 rounded-lg min-h-[44px]">Copy this page link</button>
+      </div>
+      <input id="page-link-fallback" hidden readonly class="mt-2 w-full bg-navy-800 border border-white/10 rounded-lg p-2 text-xs text-white"/>
+      <p class="text-xs text-slate-500 mt-3">Today is Day 1 (Thu Sep 3). Google Business Profile first — fully filled profiles get ~5× more clicks.</p>
     </section>
 
     <section id="day1-kit" class="glass-card p-4 md:p-6 mb-6">
@@ -260,6 +270,72 @@ QUOTE LINE
       </div>
     </section>
 
+
+    <section id="calendar-sec" class="glass-card p-4 md:p-6 mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+        <div>
+          <h2 class="text-lg md:text-xl font-bold text-white">Job calendar</h2>
+          <p class="text-sm text-slate-400">Track new clients and $55/mo maintenance. This stays on your owner page only.</p>
+        </div>
+        <div class="flex gap-2">
+          <button type="button" id="cal-prev" class="px-3 py-2 rounded-lg bg-navy-800 text-white min-h-[44px] min-w-[44px]" aria-label="Previous month">‹</button>
+          <button type="button" id="cal-today" class="px-3 py-2 rounded-lg bg-sky-500/20 text-sky-400 text-sm font-semibold min-h-[44px]">Today</button>
+          <button type="button" id="cal-next" class="px-3 py-2 rounded-lg bg-navy-800 text-white min-h-[44px] min-w-[44px]" aria-label="Next month">›</button>
+        </div>
+      </div>
+      <p id="cal-month-label" class="text-gold-400 font-bold mb-3"></p>
+      <div class="grid grid-cols-4 gap-2 mb-4">
+        <div class="bg-navy-800/70 rounded-lg p-2 text-center"><div id="cal-stat-booked" class="text-lg font-black text-white">0</div><div class="text-[10px] text-slate-500">On the books</div></div>
+        <div class="bg-navy-800/70 rounded-lg p-2 text-center"><div id="cal-stat-new" class="text-lg font-black text-gold-400">0</div><div class="text-[10px] text-slate-500">New clients</div></div>
+        <div class="bg-navy-800/70 rounded-lg p-2 text-center"><div id="cal-stat-monthly" class="text-lg font-black text-green-400">0</div><div class="text-[10px] text-slate-500">Monthly</div></div>
+        <div class="bg-navy-800/70 rounded-lg p-2 text-center"><div id="cal-stat-money" class="text-lg font-black text-white">$0</div><div class="text-[10px] text-slate-500">Listed $</div></div>
+      </div>
+      <div id="cal-grid" class="grid grid-cols-7 gap-1 mb-5"></div>
+      <div class="flex flex-wrap gap-3 text-[11px] text-slate-500 mb-5">
+        <span><span class="inline-block w-1.5 h-1.5 rounded-full bg-gold-400"></span> New client</span>
+        <span><span class="inline-block w-1.5 h-1.5 rounded-full bg-green-400"></span> Monthly</span>
+        <span><span class="inline-block w-1.5 h-1.5 rounded-full bg-sky-400"></span> One-time</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div>
+          <h3 class="text-sm font-bold text-white mb-2">Jobs on <span id="cal-day-label">today</span></h3>
+          <div id="cal-day-jobs" class="space-y-2 mb-4"></div>
+          <form id="job-form" class="space-y-2 bg-navy-800/50 rounded-lg p-3">
+            <p class="text-sm font-bold text-gold-400">Add a job</p>
+            <input id="job-name" required placeholder="Client name" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <input id="job-phone" type="tel" placeholder="Phone" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <div class="grid grid-cols-2 gap-2">
+              <input id="job-date" type="date" required class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+              <input id="job-time" type="time" value="09:00" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            </div>
+            <select id="job-service" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]">
+              <option value="exterior">Exterior Only — from $60</option>
+              <option value="interior">Interior Only — from $80</option>
+              <option value="full">Full Detail — from $140</option>
+              <option value="monthly">Monthly maintenance — $55</option>
+              <option value="custom">Custom / quote</option>
+            </select>
+            <select id="job-kind" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]">
+              <option value="new">New client</option>
+              <option value="onetime">One-time return</option>
+              <option value="monthly">Monthly maintenance (adds next 5 months)</option>
+            </select>
+            <input id="job-price" type="number" min="0" step="1" placeholder="Price" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <input id="job-notes" placeholder="Address / notes (optional)" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <button type="submit" class="w-full bg-gold-500 text-navy-900 font-bold rounded-lg py-3 min-h-[44px]">Save job</button>
+          </form>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold text-white mb-2">Coming up (21 days)</h3>
+          <ul id="cal-upcoming" class="mb-4"></ul>
+          <h3 class="text-sm font-bold text-white mb-2">Overdue</h3>
+          <ul id="cal-overdue"></ul>
+          <p class="text-xs text-slate-500 mt-4">Tap <strong class="text-slate-300">Add to phone calendar</strong> on a job to download an event you can open in the iPhone Calendar app. Jobs save in this browser — use the same phone/bookmark so they stay put.</p>
+        </div>
+      </div>
+    </section>
+
     <section id="plan-sec" class="mb-6">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h2 class="text-xl md:text-2xl font-bold text-white">Daily Plan</h2>
@@ -337,5 +413,6 @@ QUOTE LINE
 
   <script src="plan-data.js"></script>
   <script src="app.js"></script>
+  <script src="calendar.js"></script>
 </body>
 </html>
