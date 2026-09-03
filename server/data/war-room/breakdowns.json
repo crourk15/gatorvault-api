@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-01T15:00:50.530Z",
+  "updatedAt": "2026-09-03T01:11:21.716Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -14099,26 +14099,32 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Cody Bellaire",
-          "writerId": "bellaire",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/tyler-boyd-243599/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": null,
+          "publishedAt": "2026-09-03"
         }
       ],
       "strengths": [
-        "– Thursday morning, 120 of the best prospects in the country arrived at Nike Headquarters, ready to go head-to-head with each"
+        "Boyd brings a compact 5-11 / 190 CB frame with early mass for a 2028 press/man corner.",
+        "Boyd ranks as a top-five industry CB (Pos #5) with State #6 GA juice on a 4-star rating.",
+        "Boyd already has Florida process on file — January offer, March 28 UOV, and daily staff contact with return-to-Swamp plans."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "BEAVERTON, Ore. – Thursday morning, 120 of the best prospects in the country arrived at Nike Headquarters, ready to go head-to-head with each",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Boyd film desk has no Hudl/On3 highlight link verified yet — tape traits stay provisional until a real watch."
+      ],
+      "comparison": "Boyd comps to Jaire Alexander — compact 5-10/5-11 physical cover corner who plays bigger than the listing and wins with twitch and toughness in man.",
+      "schemeFit": "Boyd fits White press/man + pattern-match CB who can play physical on the perimeter once film is verified.",
+      "staffNotes": "PROVISIONAL board/process draft 2026-09-03 — no Hudl watched. Do not treat as live Vault Scouting On Tape until film desk confirms. Comp size-matched within ~1–2\" (Jaire Alexander mold) — not a Florida-alum default.",
+      "projection": "Boyd projects as a Year 2 CB contributor who can push nickel/boundary packages early and compete for a starting job by Year 3. Ceiling: every-down SEC press/man corner with a filled-out 5-11 / 190 frame.",
+      "insiderNotes": "Boyd is a compact 5-11 / 190 Georgia CB with top-five position rank juice. Florida offered early (January), hosted a March 28 unofficial, and is hitting him daily across Sumrall / White / Harris / Collins while he plans another Swamp trip. Board still open — UF RPM ~9%.",
+      "recruitingStory": "Tyler Boyd is a 4-star CB · listed 5-11 / 190 · Carrollton (GA) · open-board Florida target with daily staff push and return visit plans.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:12:51.289Z"
+      "updatedAt": "2026-09-03T01:11:21.704Z",
+      "filmWatched": false,
+      "provisional": true
     },
     "faraji-tucker": {
       "playerSlug": "faraji-tucker",
