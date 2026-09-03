@@ -8,6 +8,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 
 ## Already live on iOS (no build needed)
 - [x] War Room: Ca'ron Williams 2028 CB film watch — Derek Stingley Jr. comp + Florida offer (API / FutureCast Vault Scouting)
+- [x] War Room: Tyler Boyd 2028 CB film watch — Jaire Alexander comp + island off-man / wrap finish (API / FutureCast Vault Scouting)
 - [x] War Room: Jordon Gorham film re-watch — Justyn Ross comp + X projection (API / FutureCast Vault Scouting)
 - [x] Game Week expected visitors: FAU + Hines / Harris-Payne / O'Dwyer + 2029 James Allen (API — no Codemagic; 2027 commits stay off panel)
 - [x] Game Week expected visitors: Taylor → Ole Miss + FAU row enrichment (API — no Codemagic)
