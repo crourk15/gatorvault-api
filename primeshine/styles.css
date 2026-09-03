@@ -58,17 +58,21 @@ button, input, select, textarea {
   margin: 0 auto;
 }
 
-.nav-shell { position: relative; z-index: 40; }
+.nav-shell {
+  height: var(--nav-h);
+}
 
 .nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 42;
   height: var(--nav-h);
   display: flex;
   align-items: center;
   backdrop-filter: blur(18px);
-  background: rgba(7, 8, 11, 0.78);
+  background: rgba(7, 8, 11, 0.92);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
