@@ -34,6 +34,8 @@ img, svg { display: block; max-width: 100%; }
 
 a { color: inherit; }
 
+[hidden] { display: none !important; }
+
 button, input, select, textarea {
   font: inherit;
   color: inherit;
@@ -495,15 +497,21 @@ details p {
   .nav.is-open .nav-links {
     display: flex;
     flex-direction: column;
-    position: absolute;
+    position: fixed;
     top: var(--nav-h);
     left: 0;
     right: 0;
+    bottom: 0;
     background: #0c0d12;
-    padding: 18px 20px 22px;
+    padding: 28px 24px 96px;
     border-bottom: 1px solid rgba(255,255,255,0.06);
     align-items: flex-start;
+    gap: 18px;
+    z-index: 35;
+    overflow: auto;
   }
+  .nav.is-open .nav-links a { font-size: 20px; }
+  body.menu-open { overflow: hidden; }
   .menu-btn { display: inline-flex; }
   .hero-grid, .cards, .steps, .stats, .book-grid, .fields {
     grid-template-columns: 1fr;

@@ -15,17 +15,19 @@ const phoneLink = document.querySelector("[data-phone-link]");
 
 if (year) year.textContent = String(new Date().getFullYear());
 
+function setMenu(open) {
+  nav?.classList.toggle("is-open", open);
+  document.body.classList.toggle("menu-open", open);
+  menuBtn?.setAttribute("aria-expanded", open ? "true" : "false");
+}
+
 if (menuBtn && nav) {
   menuBtn.addEventListener("click", () => {
-    const open = nav.classList.toggle("is-open");
-    menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    setMenu(!nav.classList.contains("is-open"));
   });
 
   nav.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      nav.classList.remove("is-open");
-      menuBtn.setAttribute("aria-expanded", "false");
-    });
+    link.addEventListener("click", () => setMenu(false));
   });
 }
 
