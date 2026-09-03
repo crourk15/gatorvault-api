@@ -20,7 +20,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 12px); }
 
 body {
   font-family: var(--font);
@@ -58,10 +58,12 @@ button, input, select, textarea {
   margin: 0 auto;
 }
 
+.nav-shell { position: relative; z-index: 40; }
+
 .nav {
   position: sticky;
   top: 0;
-  z-index: 40;
+  z-index: 42;
   height: var(--nav-h);
   display: flex;
   align-items: center;
@@ -494,7 +496,7 @@ details p {
 
 @media (max-width: 900px) {
   .nav-links { display: none; }
-  .nav.is-open .nav-links {
+  .nav-shell.is-open .nav-links {
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -510,8 +512,9 @@ details p {
     z-index: 35;
     overflow: auto;
   }
-  .nav.is-open .nav-links a { font-size: 20px; }
+  .nav-shell.is-open .nav-links a { font-size: 20px; }
   body.menu-open { overflow: hidden; }
+  body.menu-open .mobile-cta { display: none; }
   .menu-btn { display: inline-flex; }
   .hero-grid, .cards, .steps, .stats, .book-grid, .fields {
     grid-template-columns: 1fr;
