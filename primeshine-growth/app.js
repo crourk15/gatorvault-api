@@ -71,19 +71,29 @@ function updateWelcome() {
 
 function updateDashboard() {
   const stats = computeStats();
-  document.getElementById("stat-days-h9i0").textContent = stats.daysComplete;
-  document.getElementById("stat-tasks-j1k2").textContent = stats.doneTasks;
-  document.getElementById("stat-jobs-l3m4").textContent = state.jobs;
-  document.getElementById("stat-reviews-n5o6").textContent = state.reviews;
-  document.getElementById("days-done-label-p1a2").textContent = stats.daysComplete;
+  if (window.PrimeStore) {
+    state.revenue = PrimeStore.collectedRevenue();
+    state.jobs = PrimeStore.doneJobCount();
+    state.reviews = PrimeStore.reviewCount();
+  }
+  const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setTxt("stat-days-h9i0", stats.daysComplete);
+  setTxt("stat-tasks-j1k2", stats.doneTasks);
+  setTxt("stat-jobs-l3m4", state.jobs);
+  setTxt("stat-reviews-n5o6", state.reviews);
+  setTxt("days-done-label-p1a2", stats.daysComplete);
 
   const dayPct = Math.round((stats.daysComplete / 30) * 100);
-  document.getElementById("progress-bar-main-b3c4").style.width = `${dayPct}%`;
-  document.getElementById("progress-pct-d5e6").textContent = `${dayPct}% days`;
+  const bar = document.getElementById("progress-bar-main-b3c4");
+  if (bar) bar.style.width = `${dayPct}%`;
+  setTxt("progress-pct-d5e6", `${dayPct}% days`);
 
   const revPct = Math.min(100, Math.round((state.revenue / REVENUE_GOAL) * 100));
-  document.getElementById("revenue-pct-f7g8").textContent = `${revPct}%`;
-  document.getElementById("revenue-input-r5t6").value = state.revenue;
+  setTxt("revenue-pct-f7g8", `${revPct}%`);
+  const revInput = document.getElementById("revenue-input-r5t6");
+  if (revInput) revInput.value = state.revenue;
+  const live = document.getElementById("rev-live");
+  if (live) live.textContent = `$${state.revenue}`;
 }
 
 function getTypeBadge(type) {
@@ -255,6 +265,7 @@ function openDayModal(dayNum) {
       const parent = e.target.closest("[data-task-key]");
       if (parent) parent.classList.toggle("task-done", e.target.checked);
       renderDayCards();
+      if (typeof refreshOs === "function") refreshOs();
     });
   });
 }
@@ -276,6 +287,7 @@ function goToToday() {
   renderWeekTheme();
   renderDayCards();
   openDayModal(todayDay);
+  if (typeof showRoom === "function") showRoom("plan");
   document.getElementById("plan-sec")?.scrollIntoView({ behavior: "smooth" });
 }
 
@@ -330,29 +342,34 @@ function init() {
     });
   });
 
-  document.getElementById("revenue-input-r5t6").addEventListener("input", (e) => {
+  document.getElementById("revenue-input-r5t6")?.addEventListener("input", (e) => {
+    if (window.PrimeStore) return;
     state.revenue = parseInt(e.target.value, 10) || 0;
     saveState();
     updateDashboard();
   });
 
-  document.querySelector(".jobs-plus-btn").addEventListener("click", () => {
+  document.querySelector(".jobs-plus-btn")?.addEventListener("click", () => {
+    if (window.PrimeStore) return;
     state.jobs += 1;
     saveState();
     updateDashboard();
   });
-  document.querySelector(".jobs-minus-btn").addEventListener("click", () => {
+  document.querySelector(".jobs-minus-btn")?.addEventListener("click", () => {
+    if (window.PrimeStore) return;
     if (state.jobs > 0) state.jobs -= 1;
     saveState();
     updateDashboard();
   });
 
-  document.querySelector(".reviews-plus-btn").addEventListener("click", () => {
+  document.querySelector(".reviews-plus-btn")?.addEventListener("click", () => {
+    if (window.PrimeStore) return;
     state.reviews += 1;
     saveState();
     updateDashboard();
   });
-  document.querySelector(".reviews-minus-btn").addEventListener("click", () => {
+  document.querySelector(".reviews-minus-btn")?.addEventListener("click", () => {
+    if (window.PrimeStore) return;
     if (state.reviews > 0) state.reviews -= 1;
     saveState();
     updateDashboard();
@@ -401,9 +418,7 @@ function init() {
     }
   });
 
-  if (new URLSearchParams(window.location.search).get("today") === "1") {
-    goToToday();
-  }
+  // Today room is the home. ?today=1 no longer auto-opens the day modal.
 }
 
 if (document.readyState === "loading") {

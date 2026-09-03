@@ -1,8 +1,8 @@
-# PrimeShine owner growth plan
+# PrimeShine Owner OS
 
-Private 30-day checklist for Charles. **Separate from the customer website.** Do not publish this folder with `primeshine/` (the public landing).
+Private operator page for Charles. **Not the customer website.** Do not publish this folder with `primeshine/`.
 
-Customers book at [primeshinefl.com](https://primeshinefl.com). This page is bookmark-only.
+Rooms: **Today** · **30-day plan** · **Calendar** · **Client book** · **Books** (money, pipeline, PIN, CSV backup).
 
 ## Local preview
 
@@ -11,15 +11,16 @@ python3 -m http.server 4174 --directory primeshine-growth
 ```
 
 - http://127.0.0.1:4174/
-- http://127.0.0.1:4174/?today=1  (opens today’s tasks)
+- http://127.0.0.1:4174/?today=1
 
-## How Charles opens it
+## Data (this browser only)
 
-1. Bookmark the owner URL (add `?today=1`).
-2. Tap **Open today** if the checklist is not already open.
-3. Check off tasks. Progress stays in this browser (`localStorage` key `primeshine_30day_v2`).
-4. **Job calendar** on the same page tracks new clients and monthly maintenance (`primeshine_jobs_v1`).
+- Plan checks: `primeshine_30day_v2`
+- Jobs: `primeshine_jobs_v1`
+- Clients / expenses / leads / PIN: `primeshine_os_v1`
+
+Download CSV or JSON from **Books** before clearing Safari.
 
 ## Deploy
 
-Point a **second** Netlify site at `primeshine-growth/` (or keep it local/bookmark-only). Do not add this URL to the customer site menu or footer.
+Second Netlify site on `primeshine-growth/` only. Never link it from the customer site.

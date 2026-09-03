@@ -34,6 +34,7 @@ function addMonthsIso(iso, count) {
 }
 
 function loadJobs() {
+  if (window.PrimeStore && Array.isArray(PrimeStore.jobs)) return PrimeStore.jobs;
   try {
     const saved = localStorage.getItem(JOBS_KEY);
     if (saved) {
@@ -45,6 +46,10 @@ function loadJobs() {
 }
 
 function saveJobs() {
+  if (window.PrimeStore && typeof PrimeStore.persist === 'function') {
+    PrimeStore.persist();
+    return;
+  }
   try {
     localStorage.setItem(JOBS_KEY, JSON.stringify(jobs));
   } catch (e) {}
@@ -254,6 +259,9 @@ function toggleDone(id) {
   const job = jobs.find((j) => j.id === id);
   if (!job) return;
   job.done = !job.done;
+  if (job.done) {
+    document.dispatchEvent(new CustomEvent('primeshine:job-done', { detail: { id: job.id } }));
+  }
   if (job.done && job.kind === 'monthly') {
     const next = addMonthsIso(job.date, 1);
     const exists = jobs.some((j) => j.seriesId && j.seriesId === job.seriesId && j.date === next);
@@ -274,7 +282,8 @@ function toggleDone(id) {
 }
 
 function deleteJob(id) {
-  jobs = jobs.filter((j) => j.id !== id);
+  const next = jobs.filter((j) => j.id !== id);
+  jobs.splice(0, jobs.length, ...next);
   saveJobs();
   renderCalGrid();
   renderDayPanel();
@@ -320,8 +329,8 @@ function downloadIcs(id) {
 function addJobFromForm(event) {
   event.preventDefault();
   const name = document.getElementById('job-name').value.trim();
-  const date = document.getElementById('job-date').value;
-  if (!name || !date) return;
+  const date = document.getElementById('job-date').value || selectedIso || todayIso();
+  if (!name) return;
   const service = document.getElementById('job-service').value;
   const kind = document.getElementById('job-kind').value;
   const priceRaw = document.getElementById('job-price').value;
@@ -337,6 +346,11 @@ function addJobFromForm(event) {
     kind,
     notes: document.getElementById('job-notes').value.trim(),
     done: false,
+    paid: false,
+    paidAmount: 0,
+    paidMethod: '',
+    reviewAsked: false,
+    reviewReceived: false,
   };
   const created = [job];
   if (kind === 'monthly') {
@@ -352,6 +366,10 @@ function addJobFromForm(event) {
     }
   }
   jobs.push(...created);
+  if (window.PrimeStore) {
+    const client = PrimeStore.upsertClient({ name, phone: job.phone, address: job.notes, source: kind === 'new' ? 'new' : '' });
+    created.forEach((row) => { row.clientId = client ? client.id : null; });
+  }
   saveJobs();
   selectedIso = date;
   const { y, m } = parseIso(date);
@@ -400,23 +418,6 @@ function bindCalendar() {
     }
   });
   document.getElementById('job-form')?.addEventListener('submit', addJobFromForm);
-  document.getElementById('copy-page-link')?.addEventListener('click', async (e) => {
-    const btn = e.currentTarget;
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-    } catch (err) {
-      const hint = document.getElementById('page-link-fallback');
-      if (hint) {
-        hint.value = window.location.href;
-        hint.hidden = false;
-        hint.focus();
-        hint.select();
-      }
-    }
-    const prev = btn.textContent;
-    btn.textContent = 'Copied — now text it to yourself';
-    setTimeout(() => { btn.textContent = prev; }, 2200);
-  });
 }
 
 function initCalendar() {
