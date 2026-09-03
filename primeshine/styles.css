@@ -113,11 +113,23 @@ button, input, select, textarea {
 }
 
 .nav-links {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 43;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 22px;
   list-style: none;
+  height: var(--nav-h);
+  width: min(var(--max), calc(100% - 40px));
+  margin: 0 auto;
+  pointer-events: none;
 }
+
+.nav-links > * { pointer-events: auto; }
 
 .nav-links a {
   text-decoration: none;
@@ -504,12 +516,17 @@ details p {
     left: 0;
     right: 0;
     bottom: 0;
+    width: auto;
+    height: auto;
+    margin: 0;
+    justify-content: flex-start;
+    pointer-events: auto;
     background: #0c0d12;
     padding: 28px 24px 96px;
     border-bottom: 1px solid rgba(255,255,255,0.06);
     align-items: flex-start;
     gap: 18px;
-    z-index: 35;
+    z-index: 41;
     overflow: auto;
   }
   .nav-shell.is-open .nav-links a { font-size: 20px; }
