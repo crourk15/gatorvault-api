@@ -1,13 +1,14 @@
-# Primeshine Mobile Detailing
+# PrimeShine Mobile Detailing — customer site
 
-Standalone marketing site for **PrimeShine**. This folder is **not** part of the GatorVault Netlify publish (`server/`). Deploy it as its own Netlify site.
+Standalone public marketing site. This folder is **not** part of the GatorVault Netlify publish (`server/`). Deploy it as its own Netlify site.
+
+The owner 30-day growth plan is a **separate site** in `primeshine-growth/`. It is not linked from this customer site and must not be published with it.
 
 ## Pages
 
 | Path | Purpose |
 |------|---------|
 | `/` (`index.html`) | Public landing — services, booking, FAQ |
-| `/growth-plan/` | Owner 30-day growth plan (daily checklist, progress, revenue tracker) |
 
 ## Local preview
 
@@ -16,7 +17,6 @@ python3 -m http.server 4173 --directory primeshine
 ```
 
 - Landing: http://127.0.0.1:4173/
-- Growth plan: http://127.0.0.1:4173/growth-plan/
 
 ## Business details
 
@@ -26,15 +26,6 @@ Edit `app.js` → `BUSINESS` and `site-config.js` for shared phone/site URLs.
 - Booking: https://primeshinefl.com/booking
 - Areas: Bartow · Lakeland · Winter Haven, FL
 
-## Growth plan
-
-- 30 days of tasks (Sep 3 – Oct 3, 2026) in `growth-plan/plan-data.js`
-- Progress saves in browser `localStorage` (`primeshine_30day_v2`)
-- **Today** button jumps to the current day and opens the task modal
-- Add `?today=1` to the URL to open today on load
-
 ## Deploy
 
-Point a new Netlify site at this folder (`primeshine/`), not the repo root.
-
-**Note:** The growth plan is linked from the public footer. For production, consider hiding it behind a bookmark-only URL or adding simple auth if you do not want it public.
+Point a new Netlify site at this folder (`primeshine/`), not the repo root, and not `primeshine-growth/`.
