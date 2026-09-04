@@ -64,6 +64,15 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
         keys: Array.isArray(g.keys) ? g.keys : [],
         swing: Array.isArray(g.swing) ? g.swing : [],
         film: String(g.film || ''),
+        filmNotes: Array.isArray(g.filmNotes)
+          ? g.filmNotes.map((n) => String(n || '').trim()).filter(Boolean)
+          : seed?.filmNotes,
+        offenseScout: Array.isArray(g.offenseScout)
+          ? g.offenseScout.map((n) => String(n || '').trim()).filter(Boolean)
+          : seed?.offenseScout,
+        defenseScout: Array.isArray(g.defenseScout)
+          ? g.defenseScout.map((n) => String(n || '').trim()).filter(Boolean)
+          : seed?.defenseScout,
         pred: String(g.pred || ''),
         predUF: Number.isFinite(Number(g.predUF)) ? Number(g.predUF) : 0,
         predOpp: Number.isFinite(Number(g.predOpp)) ? Number(g.predOpp) : 0,

@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-08-28T03:10:52.565Z",
+  "updatedAt": "2026-09-04T02:20:00.000Z",
   "label": "2026 Florida football schedule",
   "games": [
     {
@@ -30,30 +30,20 @@
           "role": "JACK — set the edge and rush Veltkamp off rhythm"
         }
       ],
-      "film": "Offense (ESPN highlights): FAU W at Rice 27-21 (401762477) + W vs Tulsa 40-21 (401762505) — shotgun spread, pass-heavy, vertical + explosive run confirmed; tempo/RPO not confirmed. Defense (ESPN highlights + full 2025 drive/box dig): 4-down front + nickel/dime looks confirmed on Maryland/Memphis scoring clips; coverage shells not confirmed. Season: 36.3 PPG / 435.5 YPG allowed; only 3 INTs.",
+      "film": "What the tape shows vs FAU. Shotgun. Pass first. Take the shot and the run. Then throw it over a 3 INT secondary.",
       "pred": "UF 38 · FAU 10",
       "predUF": 38,
       "predOpp": 10,
       "filmLessonId": "frl00004-0000-4000-8000-000000000004",
       "opponentTendencies": [
-        "Shotgun spread on every snap reviewed — no under-center observed",
-        "Pass-heavy even in wins (Veltkamp 24/33, 290 vs Rice; 22/29, 272 vs Tulsa)",
-        "Vertical shot confirmed: deep TD pass vs Rice (~46-yard clip)",
-        "Quick red-zone throw confirmed: short TD pass vs Rice",
-        "Explosive run confirmed: long TD rush vs Rice (~68-yard clip)",
-        "Tempo / no-huddle between snaps: not confirmed on highlight packages",
-        "RPO mesh: not confirmed on these highlight packages"
+        "Shotgun every snap we have. No under center.",
+        "Pass first even when they win. Veltkamp is clean if you let him sit.",
+        "They will take the deep shot. Rice clip was about 46 yards.",
+        "They will hit the explosive run too. Rice about 68. Navy ran for 397 last year."
       ],
       "defenseTendencies": [
-        "Film-confirmed (ESPN Maryland + Memphis highlight clips): 4-down front on multiple snaps; nickel/dime DB looks in obvious pass situations",
-        "Coverage shells (Cover 2/3/man) + specific pressure packages: NOT confirmed on available highlight angles",
-        "Box-confirmed 2025: 36.3 PPG allowed (436 pts / 12) and 435.5 YPG (200 rush / 235 pass)",
-        "Explosive-run problem (play results): Memphis 90-yd TD run; Rice 68-yd TD run; Navy 397 rush yards; FIU 224 rush yards",
-        "Explosive-pass problem (play results): UConn 446 pass yards; USF 60-yd TD; Memphis 73-yd TD; even in Rice win — 46-yd TD pass allowed",
-        "Takeaway-light: only 3 INTs all season (Tied-130th); 8 total takeaways vs 29 giveaways on offense",
-        "Pressure volume modest: 23 sacks (Tied-76th) — leaders Batiste 4, Doggette 3.5, Denaud 3, Roberts 3",
-        "Tackle volume: Hart 93, Stolsky 86, Williams 62 — they chase plays; explosives still land",
-        "Staff/public (not film fronts): DC Brett Dewhurst sells aggressive/havoc, multiple fronts, DB-heavy packages — do not treat as confirmed coverage calls"
+        "Front is 4 down with extra DBs on obvious pass. Coverage calls not on the tape we have.",
+        "That defense gave up 200 rush yards a game and only 3 INTs. Run it, then throw it over them."
       ],
       "howUFWins": [
         "Veltkamp was efficient in rhythm when protected (24/33 for 290 vs Rice; 22/29 for 272 vs Tulsa) — pressure before the first read; help over the top on the confirmed vertical shot.",
@@ -74,7 +64,35 @@
         "pants": "White",
         "label": "Orange / Blue / White",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
-      }
+      },
+      "filmNotes": [
+        "Shotgun every snap we have. No under center.",
+        "Pass first even when they win. Veltkamp is clean if you let him sit.",
+        "They will take the deep shot. Rice clip was about 46 yards.",
+        "They will hit the explosive run too. Rice about 68. Navy ran for 397 last year.",
+        "Front is 4 down with extra DBs on obvious pass. Coverage calls not on the tape we have.",
+        "That defense gave up 200 rush yards a game and only 3 INTs. Run it, then throw it over them."
+      ],
+      "offenseScout": [
+        "Shotgun spread on every snap reviewed — no under-center observed",
+        "Pass-heavy even in wins (Veltkamp 24/33, 290 vs Rice; 22/29, 272 vs Tulsa)",
+        "Vertical shot confirmed: deep TD pass vs Rice (~46-yard clip)",
+        "Quick red-zone throw confirmed: short TD pass vs Rice",
+        "Explosive run confirmed: long TD rush vs Rice (~68-yard clip)",
+        "Tempo / no-huddle between snaps: not confirmed on highlight packages",
+        "RPO mesh: not confirmed on these highlight packages"
+      ],
+      "defenseScout": [
+        "Film-confirmed (ESPN Maryland + Memphis highlight clips): 4-down front on multiple snaps; nickel/dime DB looks in obvious pass situations",
+        "Coverage shells (Cover 2/3/man) + specific pressure packages: NOT confirmed on available highlight angles",
+        "Box-confirmed 2025: 36.3 PPG allowed (436 pts / 12) and 435.5 YPG (200 rush / 235 pass)",
+        "Explosive-run problem (play results): Memphis 90-yd TD run; Rice 68-yd TD run; Navy 397 rush yards; FIU 224 rush yards",
+        "Explosive-pass problem (play results): UConn 446 pass yards; USF 60-yd TD; Memphis 73-yd TD; even in Rice win — 46-yd TD pass allowed",
+        "Takeaway-light: only 3 INTs all season (Tied-130th); 8 total takeaways vs 29 giveaways on offense",
+        "Pressure volume modest: 23 sacks (Tied-76th) — leaders Batiste 4, Doggette 3.5, Denaud 3, Roberts 3",
+        "Tackle volume: Hart 93, Stolsky 86, Williams 62 — they chase plays; explosives still land",
+        "Staff/public (not film fronts): DC Brett Dewhurst sells aggressive/havoc, multiple fronts, DB-heavy packages — do not treat as confirmed coverage calls"
+      ]
     },
     {
       "id": "campbell",
