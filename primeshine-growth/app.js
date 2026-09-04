@@ -414,6 +414,8 @@ function init() {
       closeDayModal();
       document.getElementById("reset-modal-g3h4").classList.add("hidden");
       document.getElementById("mobile-menu-ov4k").classList.add("hidden");
+      document.getElementById("collect-overlay")?.classList.add("hidden");
+      document.getElementById("review-overlay")?.classList.add("hidden");
       document.body.style.overflow = "";
     }
   });

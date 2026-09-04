@@ -2,7 +2,9 @@
 
 Private operator page for Charles. **Not the customer website.** Do not publish this folder with `primeshine/`.
 
-Rooms: **Today** · **30-day plan** · **Calendar** · **Client book** · **Books** (money, pipeline, PIN, CSV backup).
+Rooms: **Today** · **30-day plan** · **Calendar** · **Client book** · **Books**.
+
+Prices and the first-10 50% offer must match [primeshinefl.com/pricing](https://primeshinefl.com/pricing). After Collect, send the review text from the review screen.
 
 ## Local preview
 

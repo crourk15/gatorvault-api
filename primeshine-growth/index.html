@@ -133,34 +133,15 @@
 
   <main class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10">
     <section class="text-center mb-8 md:mb-12">
-      <h1 class="text-3xl md:text-5xl font-black text-white mb-2">PrimeShine Mobile Detailing</h1>
-      <p class="text-lg md:text-xl text-gold-400 font-semibold mb-1">30-day planner · book · books</p>
-      <p class="text-sm text-slate-400">Bartow · Lakeland · Winter Haven, FL &nbsp;|&nbsp; <a class="text-sky-400 hover:underline" href="https://primeshinefl.com">primeshinefl.com</a> &nbsp;|&nbsp; 863-860-9238</p>
-      <p id="welcome-line" class="text-xs text-slate-500 mt-2">Welcome back, Charles! Loading today's plan...</p>
-      <p class="text-xs text-slate-600 mt-2">This is not the customer website. Money comes from paid jobs. Back up from Books.</p>
+      <h1 class="text-2xl md:text-4xl font-black text-white mb-1">Owner OS</h1>
+      <p class="text-sm text-slate-400">Same menu as <a class="text-sky-400 hover:underline" href="https://primeshinefl.com/pricing">primeshinefl.com</a> · 863-860-9238</p>
+      <p id="welcome-line" class="text-xs text-slate-500 mt-2">Welcome back, Charles.</p>
     </section>
 
     <section id="room-today" data-room="today">
       <div id="today-root"></div>
-    <details id="how-to-open" class="glass-card p-4 md:p-6 mb-6">
-      <summary class="text-lg md:text-xl font-bold text-white cursor-pointer">How to get this on your phone</summary>
-      <div class="mt-3">
-      <h2 class="sr-only">How to open this page</h2>
-      <ol class="text-sm text-slate-300 space-y-2 list-decimal pl-5 mb-4">
-        <li>This page is <strong class="text-white">not</strong> on the customer website. Open it from the link in our chat, or from a text you send yourself.</li>
-        <li>On the computer where it is bookmarked: tap <strong class="text-sky-400">Copy this page link</strong> below, then text that link to your own cell number. On your iPhone, open the text and tap the link.</li>
-        <li>On the iPhone: tap the Share button → <strong class="text-white">Add to Home Screen</strong> → name it PrimeShine Plan. If you bookmarked it in Safari on a Mac with the same iCloud, it may already be under Safari Bookmarks.</li>
-        <li>Tap the blue <strong class="text-sky-400">Open today</strong> button for Day 1 tasks. Use <strong class="text-white">Job calendar</strong> to track new clients and monthly maintenance.</li>
-      </ol>
-      <div class="flex flex-col sm:flex-row gap-2 mt-4">
-        <button type="button" id="copy-page-link" class="text-sm font-bold bg-sky-500 text-navy-900 px-4 py-3 rounded-lg min-h-[44px]">Copy this page link</button>
-      </div>
-      <input id="page-link-fallback" hidden readonly class="mt-2 w-full bg-navy-800 border border-white/10 rounded-lg p-2 text-xs text-white"/>
-      <p class="text-xs text-slate-500 mt-3">Today is Day 1 (Thu Sep 3). Google Business Profile first — fully filled profiles get ~5× more clicks.</p>
-      </div>
-    </details>
 
-    <section id="day1-kit" class="glass-card p-4 md:p-6 mb-6">
+    <section id="day1-kit" class="glass-card p-4 md:p-6 mb-6 hidden">
       <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
         <h2 class="text-lg md:text-xl font-bold text-white">Day 1 copy kit</h2>
         <span class="text-xs font-semibold bg-sky-500/20 text-sky-400 px-2 py-1 rounded-full">Paste these into Google + Facebook</span>
@@ -173,7 +154,7 @@
             <h3 class="text-sm font-bold text-gold-400">Google Business description</h3>
             <button type="button" class="copy-btn text-xs font-semibold bg-navy-800 text-sky-400 px-2 py-1 rounded-lg" data-copy="gbp-desc">Copy</button>
           </div>
-          <textarea id="gbp-desc" readonly rows="6" class="w-full bg-navy-800 border border-white/10 rounded-lg p-3 text-sm text-white leading-relaxed">PrimeShine Mobile Detailing brings professional car detailing to your driveway across Bartow, Lakeland, and Winter Haven, FL. We come to you — no drop-off, you keep the keys. Interior details from $80, exterior from $60, and full details from $140. Call or text 863-860-9238 or book online at primeshinefl.com/booking. Open 8AM–6PM.</textarea>
+          <textarea id="gbp-desc" readonly rows="6" class="w-full bg-navy-800 border border-white/10 rounded-lg p-3 text-sm text-white leading-relaxed">PrimeShine Mobile Detailing brings professional car detailing to your driveway across Bartow, Lakeland, and Winter Haven, FL. We come to you — no drop-off, you keep the keys. Exterior wash $40 sedan / $50 SUV. Interior $60 / $80. Full detail $120 / $150. First 10 customers: 50% off any package. Call or text 863-860-9238 or book at primeshinefl.com/booking. Open 8AM–6PM.</textarea>
         </div>
 
         <div>
@@ -181,12 +162,14 @@
             <h3 class="text-sm font-bold text-gold-400">Services + prices (add each one on Google)</h3>
             <button type="button" class="copy-btn text-xs font-semibold bg-navy-800 text-sky-400 px-2 py-1 rounded-lg" data-copy="gbp-services">Copy</button>
           </div>
-          <textarea id="gbp-services" readonly rows="8" class="w-full bg-navy-800 border border-white/10 rounded-lg p-3 text-sm text-white leading-relaxed">Interior Only — $80–$120
-Exterior Only — $60–$100
-Full Detail (interior + exterior) — $140–$200
-Carpet / seat shampoo add-on — +$40
-Odor treatment add-on — +$30
-Monthly maintenance — $55/month
+          <textarea id="gbp-services" readonly rows="10" class="w-full bg-navy-800 border border-white/10 rounded-lg p-3 text-sm text-white leading-relaxed">Exterior wash — $40 sedan / $50 SUV or truck
+Interior detail — $60 sedan / $80 SUV or truck
+Full detail — $120 sedan / $150 SUV or truck
+Shampoo package add-on — +$40
+Odor treatment add-on — +$20
+Pet hair removal add-on — +$20
+Headlight restoration add-on — +$25
+Launch: first 10 customers get 50% off any package
 Hours: 8:00 AM – 6:00 PM
 Service area: Bartow, Lakeland, Winter Haven, FL</textarea>
         </div>
@@ -210,20 +193,25 @@ We come to your driveway. Interior, exterior, and full details.</textarea>
             <h3 class="text-sm font-bold text-gold-400">Know your 3 packages cold</h3>
             <button type="button" class="copy-btn text-xs font-semibold bg-navy-800 text-sky-400 px-2 py-1 rounded-lg" data-copy="packages">Copy</button>
           </div>
-          <textarea id="packages" readonly rows="14" class="w-full bg-navy-800 border border-white/10 rounded-lg p-3 text-sm text-white leading-relaxed">1) EXTERIOR ONLY — $60–$100
-Hand wash and dry, wheels/tires/trim, glass and door jams, paint-safe finish. Usually 2–3 hours.
+          <textarea id="packages" readonly rows="16" class="w-full bg-navy-800 border border-white/10 rounded-lg p-3 text-sm text-white leading-relaxed">Match primeshinefl.com/pricing. Do not quote old ranges.
 
-2) INTERIOR ONLY — $80–$120
-Full vacuum and crevice work, wipe-down of every surface, mats/plastics/glass, odor-safe cleaners only. Usually 3–4 hours.
+1) EXTERIOR WASH — $40 sedan / $50 SUV or truck
+Hand wash, wheels, tires, and shine.
 
-3) FULL DETAIL — $140–$200
-Interior + exterior together, clay and seal on paint, dress trim/tires, engine-bay wipe. The driveway showroom package. Usually 5–6 hours.
+2) INTERIOR DETAIL — $60 sedan / $80 SUV or truck
+Vacuum, wipe-down, and interior refresh.
+
+3) FULL DETAIL — $120 sedan / $150 SUV or truck
+Interior + exterior. Wash, tire shine, and the inside. No polish or paint correction unless you actually do that.
 
 ADD-ONS
-Shampoo +$40 · Odor treatment +$30 · Monthly maintenance $55/mo
+Shampoo +$40 · Odor +$20 · Pet hair +$20 · Headlights +$25
+
+LAUNCH
+First 10 customers: 50% off any package.
 
 QUOTE LINE
-“I come to you. Interior starts at $80, exterior at $60, full detail at $140. Book at primeshinefl.com/booking or text 863-860-9238.”</textarea>
+“I come to you. Exterior $40 sedan / $50 SUV. Interior $60 / $80. Full $120 / $150. First 10 customers get 50% off. Book at primeshinefl.com/booking or text 863-860-9238.”</textarea>
         </div>
 
         <div class="tip-box p-4 rounded-lg">
@@ -232,7 +220,7 @@ QUOTE LINE
           <ul class="text-sm text-slate-300 mt-2 space-y-1 list-disc pl-5">
             <li><strong class="text-white">Before / After</strong> — split photo, caption “We come to you.”</li>
             <li><strong class="text-white">NOW BOOKING</strong> — big gold headline, phone + booking link.</li>
-            <li><strong class="text-white">Special Offer</strong> — “20% OFF your first detail — limited spots this month.” (You will print this tomorrow.)</li>
+            <li><strong class="text-white">Launch offer</strong> — “First 10 customers: 50% off any package.” Same line as the website. Do not make a 20% flyer.</li>
           </ul>
         </div>
       </div>
@@ -292,9 +280,6 @@ QUOTE LINE
         <div class="text-xs text-slate-400">Reviews Earned</div>
       </div>
     </section>
-
-
-    </section>
     </section>
 
     <section id="room-calendar" class="hidden" data-room="calendar">
@@ -302,7 +287,7 @@ QUOTE LINE
       <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
         <div>
           <h2 class="text-lg md:text-xl font-bold text-white">Job calendar</h2>
-          <p class="text-sm text-slate-400">Track new clients and $55/mo maintenance. This stays on your owner page only.</p>
+          <p class="text-sm text-slate-400">Book jobs at live website prices. They save on this phone.</p>
         </div>
         <div class="flex gap-2">
           <button type="button" id="cal-prev" class="px-3 py-2 rounded-lg bg-navy-800 text-white min-h-[44px] min-w-[44px]" aria-label="Previous month">‹</button>
@@ -329,27 +314,26 @@ QUOTE LINE
           <h3 class="text-sm font-bold text-white mb-2">Jobs on <span id="cal-day-label">today</span></h3>
           <div id="cal-day-jobs" class="space-y-2 mb-4"></div>
           <form id="job-form" class="space-y-2 bg-navy-800/50 rounded-lg p-3">
-            <p class="text-sm font-bold text-gold-400">Add a job</p>
+            <p class="text-sm font-bold text-gold-400">Schedule a job</p>
             <input id="job-name" required placeholder="Client name" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
-            <input id="job-phone" type="tel" placeholder="Phone" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <input id="job-phone" type="tel" placeholder="Phone — needed for the review text" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <div class="flex gap-2">
+              <button type="button" id="job-date-today" class="flex-1 text-xs font-bold bg-navy-700 text-white rounded-lg py-2 min-h-[40px]">Today</button>
+              <button type="button" id="job-date-tomorrow" class="flex-1 text-xs font-bold bg-sky-500 text-navy-900 rounded-lg py-2 min-h-[40px]">Tomorrow</button>
+            </div>
             <div class="grid grid-cols-2 gap-2">
               <input id="job-date" type="date" required class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
               <input id="job-time" type="time" value="09:00" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
             </div>
-            <select id="job-service" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]">
-              <option value="exterior">Exterior Only — from $60</option>
-              <option value="interior">Interior Only — from $80</option>
-              <option value="full">Full Detail — from $140</option>
-              <option value="monthly">Monthly maintenance — $55</option>
-              <option value="custom">Custom / quote</option>
-            </select>
+            <select id="job-service" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"></select>
             <select id="job-kind" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]">
               <option value="new">New client</option>
               <option value="onetime">One-time return</option>
-              <option value="monthly">Monthly maintenance (adds next 5 months)</option>
+              <option value="monthly">Monthly wash (adds next 5 months)</option>
             </select>
             <input id="job-price" type="number" min="0" step="1" placeholder="Price" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
             <input id="job-notes" placeholder="Address / notes (optional)" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <p id="cal-save-msg" class="text-xs hidden"></p>
             <button type="submit" class="w-full bg-gold-500 text-navy-900 font-bold rounded-lg py-3 min-h-[44px]">Save job</button>
           </form>
         </div>
@@ -358,7 +342,7 @@ QUOTE LINE
           <ul id="cal-upcoming" class="mb-4"></ul>
           <h3 class="text-sm font-bold text-white mb-2">Overdue</h3>
           <ul id="cal-overdue"></ul>
-          <p class="text-xs text-slate-500 mt-4">Tap <strong class="text-slate-300">Add to phone calendar</strong> on a job to download an event you can open in the iPhone Calendar app. Jobs save in this browser — use the same phone/bookmark so they stay put.</p>
+          <p class="text-xs text-slate-500 mt-4">After you save, the job shows on that day. Same phone / same bookmark keeps the list.</p>
         </div>
       </div>
     </section>
@@ -384,15 +368,18 @@ QUOTE LINE
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
       <section id="pricing-sec" class="glass-card p-5 md:p-6">
-        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="tag" class="w-5 h-5 text-gold-400"></i> Service Pricing</h3>
+        <h3 class="text-lg font-bold text-white mb-1 flex items-center gap-2"><i data-lucide="tag" class="w-5 h-5 text-gold-400"></i> Live website prices</h3>
+        <p class="text-xs text-slate-500 mb-4">Copied from primeshinefl.com/pricing. Sedan / SUV·truck.</p>
         <div class="space-y-3 text-sm">
-          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Interior Only</span><span class="text-gold-400 font-bold">$80–$120</span></div>
-          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Exterior Only</span><span class="text-gold-400 font-bold">$60–$100</span></div>
-          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Full Detail (Int + Ext)</span><span class="text-gold-400 font-bold">$140–$200</span></div>
-          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Add-on: Shampoo</span><span class="text-sky-400 font-bold">+$40</span></div>
-          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Add-on: Odor Treatment</span><span class="text-sky-400 font-bold">+$30</span></div>
-          <div class="flex justify-between items-center py-2"><span class="text-slate-300">Monthly Maintenance</span><span class="text-green-400 font-bold">$55/mo recurring</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Exterior wash</span><span class="text-gold-400 font-bold">$40 / $50</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Interior detail</span><span class="text-gold-400 font-bold">$60 / $80</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Full detail</span><span class="text-gold-400 font-bold">$120 / $150</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Shampoo</span><span class="text-sky-400 font-bold">+$40</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Odor treatment</span><span class="text-sky-400 font-bold">+$20</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Pet hair</span><span class="text-sky-400 font-bold">+$20</span></div>
+          <div class="flex justify-between items-center py-2"><span class="text-slate-300">Headlight restoration</span><span class="text-sky-400 font-bold">+$25</span></div>
         </div>
+        <p class="text-sm text-gold-400 font-semibold mt-4">First 10 customers: 50% off any package</p>
       </section>
 
       <section id="blueprint-sec" class="glass-card p-5 md:p-6">
@@ -400,12 +387,12 @@ QUOTE LINE
         <div class="space-y-3 text-sm">
           <div class="tipbox p-3 rounded-lg">
             <p class="text-gold-400 font-semibold mb-1">30-Day Goal: $3,000</p>
-            <p class="text-slate-300">Aim for ~15–20 details at $150–200 average per job.</p>
+            <p class="text-slate-300">At live prices, a full SUV is $150 ($75 if they are still in the first-10 50% offer).</p>
           </div>
           <div class="glass-card-light p-3 rounded-lg text-slate-300">
-            <p>Average job value: <strong class="text-white">~$120</strong></p>
-            <p>Jobs needed: <strong class="text-white">~25 jobs</strong></p>
-            <p>Weekday window: <strong class="text-white">5 hrs (1–2 jobs/day)</strong></p>
+            <p>Listed full SUV: <strong class="text-white">$150</strong></p>
+            <p>Jobs to $3k at $150: <strong class="text-white">20 jobs</strong></p>
+            <p>Weekday window: <strong class="text-white">1–2 jobs/day</strong></p>
           </div>
         </div>
       </section>
@@ -415,7 +402,7 @@ QUOTE LINE
     <section id="room-book" class="hidden" data-room="book">
       <div class="glass-card p-4 md:p-6 mb-4">
         <h2 class="text-xl font-black text-white mb-1">Client book</h2>
-        <p class="text-sm text-slate-400 mb-3">Every person you have detailed or booked. Call, ask for a review, pitch monthly.</p>
+        <p class="text-sm text-slate-400 mb-3">Every person you have detailed. Call them, send the review text, or pitch a monthly wash.</p>
         <input id="book-search" placeholder="Search name or phone" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-3 text-white min-h-[44px] mb-4"/>
         <div id="book-root"></div>
       </div>
@@ -450,7 +437,7 @@ QUOTE LINE
       <div class="glass-card p-4 mb-4">
         <h3 class="font-bold text-white mb-3">Backup &amp; lock</h3>
         <label class="text-xs text-slate-400">Google review link</label>
-        <input id="review-url" placeholder="https://g.page/r/..." class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+        <input id="review-url" value="https://g.page/r/CblZQEEuV9DzECE/review" placeholder="https://g.page/r/..." class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
         <button type="button" id="review-url-save" class="mb-4 text-sm font-semibold bg-navy-700 text-white px-3 py-2 rounded-lg">Save review link</button>
         <div class="flex flex-wrap gap-2 mb-4">
           <button type="button" id="export-csv" class="px-3 py-2 rounded-lg bg-sky-500/20 text-sky-400 text-sm font-bold min-h-[44px]">Download CSV</button>
@@ -487,10 +474,30 @@ QUOTE LINE
         <option value="card">Card</option>
         <option value="other">Other</option>
       </select>
-      <label class="flex items-center gap-2 text-sm text-slate-300 mb-4"><input id="collect-review" type="checkbox" checked/> Ask for a Google review</label>
+      <p class="text-xs text-slate-500 mb-4">Next screen is the review text — you send it from there.</p>
       <div class="flex gap-2">
         <button type="button" id="collect-cancel" class="flex-1 bg-navy-700 text-white rounded-lg py-3">Not now</button>
         <button type="button" id="collect-save" class="flex-1 bg-gold-500 text-navy-900 font-bold rounded-lg py-3">Collected</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="review-overlay" class="hidden fixed inset-0 bg-black/70 z-[72] flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm p-5">
+      <h3 class="text-white font-bold text-lg mb-1">Send review text</h3>
+      <p id="review-name" class="text-sm text-slate-400 mb-3"></p>
+      <label class="text-xs text-slate-400">Their phone</label>
+      <input id="review-phone" type="tel" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+      <label class="text-xs text-slate-400">Google review link</label>
+      <input id="review-link-input" value="https://g.page/r/CblZQEEuV9DzECE/review" placeholder="https://g.page/r/..." class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+      <label class="text-xs text-slate-400">Text they will get</label>
+      <textarea id="review-preview" rows="4" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm mb-2"></textarea>
+      <p id="review-warn" class="text-xs text-slate-500 mb-3">Opens Messages with this text. You tap Send.</p>
+      <div class="flex flex-col gap-2">
+        <button type="button" id="review-sms" class="w-full bg-sky-500 text-navy-900 font-bold rounded-lg py-3">Open Messages</button>
+        <button type="button" id="review-copy" class="w-full bg-navy-700 text-white font-semibold rounded-lg py-3">Copy text</button>
+        <button type="button" id="review-got" class="w-full bg-green-500/20 text-green-400 font-semibold rounded-lg py-3">They already left a review</button>
+        <button type="button" id="review-cancel" class="w-full text-slate-400 py-2">Not yet</button>
       </div>
     </div>
   </div>
@@ -519,6 +526,7 @@ QUOTE LINE
   </footer>
 
   </div>
+  <script src="menu.js"></script>
   <script src="plan-data.js"></script>
   <script src="store.js"></script>
   <script src="app.js"></script>

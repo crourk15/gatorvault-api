@@ -1,11 +1,12 @@
+(function () {
 const JOBS_KEY = 'primeshine_jobs_v1';
 
 const JOB_SERVICES = [
-  { id: 'exterior', label: 'Exterior Only', price: 60 },
-  { id: 'interior', label: 'Interior Only', price: 80 },
-  { id: 'full', label: 'Full Detail', price: 140 },
-  { id: 'monthly', label: 'Monthly maintenance', price: 55 },
-  { id: 'custom', label: 'Custom / quote', price: 0 },
+  { id: 'exterior', label: 'Exterior wash' },
+  { id: 'interior', label: 'Interior detail' },
+  { id: 'full', label: 'Full detail' },
+  { id: 'monthly', label: 'Monthly wash' },
+  { id: 'custom', label: 'Custom / quote' },
 ];
 
 function pad2(n) {
@@ -51,7 +52,7 @@ function saveJobs() {
     return;
   }
   try {
-    localStorage.setItem(JOBS_KEY, JSON.stringify(jobs));
+    localStorage.setItem(JOBS_KEY, JSON.stringify(allJobs()));
   } catch (e) {}
 }
 
@@ -59,11 +60,18 @@ function newId() {
   return `job_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
 }
 
-function defaultPrice(serviceId) {
-  return (JOB_SERVICES.find((s) => s.id === serviceId) || {}).price || 0;
+function allJobs() {
+  if (window.PrimeStore && Array.isArray(PrimeStore.jobs)) return PrimeStore.jobs;
+  return calJobsFallback;
 }
 
-function serviceLabel(serviceId) {
+function defaultPrice(serviceId, vehicle) {
+  if (window.PrimeMenu) return PrimeMenu.price(serviceId, vehicle || 'suv');
+  return 0;
+}
+
+function serviceLabel(serviceId, vehicle) {
+  if (window.PrimeMenu) return PrimeMenu.label(serviceId, vehicle);
   return (JOB_SERVICES.find((s) => s.id === serviceId) || {}).label || serviceId;
 }
 
@@ -73,20 +81,20 @@ function kindLabel(kind) {
   return 'One-time';
 }
 
-let jobs = loadJobs();
+const calJobsFallback = loadJobs();
 let calCursor = new Date();
 calCursor.setDate(1);
 let selectedIso = todayIso();
 
 function jobsOn(iso) {
-  return jobs
+  return allJobs()
     .filter((j) => j.date === iso)
     .sort((a, b) => (a.time || '').localeCompare(b.time || ''));
 }
 
 function monthJobs(year, monthIndex) {
   const prefix = `${year}-${pad2(monthIndex + 1)}-`;
-  return jobs.filter((j) => j.date.startsWith(prefix));
+  return allJobs().filter((j) => j.date.startsWith(prefix));
 }
 
 function upcomingJobs(days) {
@@ -94,14 +102,14 @@ function upcomingJobs(days) {
   const endDate = new Date();
   endDate.setDate(endDate.getDate() + days);
   const end = toIsoDate(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
-  return jobs
+  return allJobs()
     .filter((j) => !j.done && j.date >= start && j.date <= end)
     .sort((a, b) => a.date.localeCompare(b.date) || (a.time || '').localeCompare(b.time || ''));
 }
 
 function overdueJobs() {
   const start = todayIso();
-  return jobs
+  return allJobs()
     .filter((j) => !j.done && j.date < start)
     .sort((a, b) => a.date.localeCompare(b.date));
 }
@@ -169,14 +177,16 @@ function jobCard(job) {
     <div class="flex items-start justify-between gap-2">
       <div class="min-w-0">
         <p class="text-white font-semibold truncate">${escapeHtml(job.name)}</p>
-        <p class="text-xs text-slate-400">${job.time ? escapeHtml(job.time) + ' · ' : ''}${escapeHtml(serviceLabel(job.service))} · $${Number(job.price) || 0}</p>
+        <p class="text-xs text-slate-400">${job.time ? escapeHtml(job.time) + ' · ' : ''}${escapeHtml(serviceLabel(job.service, job.vehicle))} · $${Number(job.price) || 0}</p>
         ${job.phone ? `<p class="text-xs text-slate-500 mt-0.5">${escapeHtml(job.phone)}</p>` : ''}
         ${job.notes ? `<p class="text-xs text-slate-400 mt-1">${escapeHtml(job.notes)}</p>` : ''}
       </div>
       <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${kindCls} shrink-0">${kindLabel(job.kind)}</span>
     </div>
     <div class="flex flex-wrap gap-2 mt-3">
-      <button type="button" class="job-done text-xs font-semibold px-3 py-2 rounded-lg bg-navy-700 text-white min-h-[40px]" data-job-id="${job.id}">${job.done ? 'Undo done' : 'Mark done'}</button>
+      ${!job.done ? `<button type="button" class="job-done text-xs font-semibold px-3 py-2 rounded-lg bg-navy-700 text-white min-h-[40px]" data-job-id="${job.id}">Mark done</button>` : ''}
+      ${job.done && !job.paid ? `<button type="button" class="job-collect text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900 min-h-[40px]" data-job-id="${job.id}">Collect</button>` : ''}
+      ${job.done && !job.reviewReceived ? `<button type="button" class="job-review text-xs font-semibold px-3 py-2 rounded-lg bg-sky-500 text-navy-900 min-h-[40px]" data-job-id="${job.id}">Send review text</button>` : ''}
       <button type="button" class="job-ics text-xs font-semibold px-3 py-2 rounded-lg bg-sky-500/20 text-sky-400 min-h-[40px]" data-job-id="${job.id}">Add to phone calendar</button>
       <button type="button" class="job-del text-xs font-semibold px-3 py-2 rounded-lg bg-red-900/30 text-red-400 min-h-[40px]" data-job-id="${job.id}">Delete</button>
     </div>
@@ -217,7 +227,7 @@ function renderLists() {
   if (up) {
     const rows = upcomingJobs(21);
     up.innerHTML = rows.length
-      ? rows.map((j) => `<li class="text-sm text-slate-300 py-1.5 border-b border-white/5"><span class="text-gold-400 font-semibold">${j.date.slice(5)}</span> · ${escapeHtml(j.name)} · ${escapeHtml(serviceLabel(j.service))} · ${kindLabel(j.kind)}</li>`).join('')
+      ? rows.map((j) => `<li class="text-sm text-slate-300 py-1.5 border-b border-white/5"><span class="text-gold-400 font-semibold">${j.date.slice(5)}</span> · ${escapeHtml(j.name)} · ${escapeHtml(serviceLabel(j.service, j.vehicle))} · ${kindLabel(j.kind)}</li>`).join('')
       : '<li class="text-sm text-slate-500">Nothing on the books in the next 3 weeks.</li>';
   }
   if (over) {
@@ -253,10 +263,21 @@ function bindJobButtons(root) {
   root.querySelectorAll('.job-ics').forEach((btn) => {
     btn.addEventListener('click', () => downloadIcs(btn.getAttribute('data-job-id')));
   });
+  root.querySelectorAll('.job-collect').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (typeof openCollect === 'function') openCollect(btn.getAttribute('data-job-id'));
+    });
+  });
+  root.querySelectorAll('.job-review').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (typeof openReview === 'function') openReview(btn.getAttribute('data-job-id'));
+    });
+  });
 }
 
 function toggleDone(id) {
-  const job = jobs.find((j) => j.id === id);
+  const list = allJobs();
+  const job = list.find((j) => j.id === id);
   if (!job) return;
   job.done = !job.done;
   if (job.done) {
@@ -264,13 +285,15 @@ function toggleDone(id) {
   }
   if (job.done && job.kind === 'monthly') {
     const next = addMonthsIso(job.date, 1);
-    const exists = jobs.some((j) => j.seriesId && j.seriesId === job.seriesId && j.date === next);
+    const exists = list.some((j) => j.seriesId && j.seriesId === job.seriesId && j.date === next);
     if (!exists) {
-      jobs.push({
+      list.push({
         ...job,
         id: newId(),
         date: next,
         done: false,
+        paid: false,
+        paidAmount: 0,
         seriesId: job.seriesId || job.id,
       });
       job.seriesId = job.seriesId || job.id;
@@ -282,8 +305,9 @@ function toggleDone(id) {
 }
 
 function deleteJob(id) {
-  const next = jobs.filter((j) => j.id !== id);
-  jobs.splice(0, jobs.length, ...next);
+  const list = allJobs();
+  const next = list.filter((j) => j.id !== id);
+  list.splice(0, list.length, ...next);
   saveJobs();
   renderCalGrid();
   renderDayPanel();
@@ -296,13 +320,13 @@ function icsStamp(iso, time) {
 }
 
 function downloadIcs(id) {
-  const job = jobs.find((j) => j.id === id);
+  const job = allJobs().find((j) => j.id === id);
   if (!job) return;
   const start = icsStamp(job.date, job.time || '09:00');
   const [hh, mm] = (job.time || '09:00').split(':').map(Number);
   const endH = pad2(Math.min(23, (hh || 9) + 3));
   const end = `${job.date.replace(/-/g, '')}T${endH}${pad2(mm || 0)}00`;
-  const summary = `PrimeShine — ${job.name} (${serviceLabel(job.service)})`;
+  const summary = `PrimeShine — ${job.name} (${serviceLabel(job.service, job.vehicle)})`;
   const desc = [kindLabel(job.kind), job.phone, job.notes, 'primeshinefl.com/booking'].filter(Boolean).join(' · ');
   const ics = [
     'BEGIN:VCALENDAR',
@@ -326,57 +350,64 @@ function downloadIcs(id) {
   URL.revokeObjectURL(url);
 }
 
+function showCalSaved(message, ok) {
+  const el = document.getElementById('cal-save-msg');
+  if (!el) return;
+  el.textContent = message;
+  el.classList.toggle('text-red-400', !ok);
+  el.classList.toggle('text-green-400', !!ok);
+  el.classList.remove('hidden');
+}
+
 function addJobFromForm(event) {
   event.preventDefault();
   const name = document.getElementById('job-name').value.trim();
   const date = document.getElementById('job-date').value || selectedIso || todayIso();
-  if (!name) return;
-  const service = document.getElementById('job-service').value;
+  if (!name) {
+    showCalSaved('Add the client name so this job can save.', false);
+    document.getElementById('job-name')?.focus();
+    return;
+  }
+  if (!date) {
+    showCalSaved('Pick a date (Today or Tomorrow works).', false);
+    return;
+  }
+  const choice = window.PrimeMenu
+    ? PrimeMenu.parseChoice(document.getElementById('job-service').value)
+    : { service: document.getElementById('job-service').value, vehicle: 'suv', price: 0 };
   const kind = document.getElementById('job-kind').value;
   const priceRaw = document.getElementById('job-price').value;
-  const job = {
-    id: newId(),
-    seriesId: null,
+  const phone = document.getElementById('job-phone').value.trim();
+  const time = document.getElementById('job-time').value || '09:00';
+  const notes = document.getElementById('job-notes').value.trim();
+  const payload = {
     name,
-    phone: document.getElementById('job-phone').value.trim(),
+    phone,
     date,
-    time: document.getElementById('job-time').value,
-    service,
-    price: priceRaw === '' ? defaultPrice(service) : Number(priceRaw),
+    time,
+    service: kind === 'monthly' ? 'monthly' : choice.service,
+    vehicle: choice.vehicle,
+    price: priceRaw === '' ? (kind === 'monthly' ? defaultPrice('monthly') : choice.price) : Number(priceRaw),
     kind,
-    notes: document.getElementById('job-notes').value.trim(),
-    done: false,
-    paid: false,
-    paidAmount: 0,
-    paidMethod: '',
-    reviewAsked: false,
-    reviewReceived: false,
+    notes,
   };
-  const created = [job];
-  if (kind === 'monthly') {
-    job.seriesId = job.id;
-    for (let i = 1; i <= 5; i += 1) {
-      created.push({
-        ...job,
-        id: newId(),
-        seriesId: job.id,
-        date: addMonthsIso(date, i),
-        done: false,
-      });
-    }
+  if (window.PrimeStore && typeof PrimeStore.addJob === 'function') {
+    PrimeStore.addJob(payload);
+  } else {
+    allJobs().push({ id: newId(), ...payload, done: false, paid: false, reviewAsked: false, reviewReceived: false });
+    saveJobs();
   }
-  jobs.push(...created);
-  if (window.PrimeStore) {
-    const client = PrimeStore.upsertClient({ name, phone: job.phone, address: job.notes, source: kind === 'new' ? 'new' : '' });
-    created.forEach((row) => { row.clientId = client ? client.id : null; });
-  }
-  saveJobs();
   selectedIso = date;
   const { y, m } = parseIso(date);
   calCursor = new Date(y, m - 1, 1);
+  const pretty = new Date(y, m - 1, parseIso(date).d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  showCalSaved(`Saved ${name} on ${pretty} at ${time} · $${payload.price}. It stays on this phone.`, true);
   document.getElementById('job-form').reset();
+  fillJobServiceOptions(kind === 'monthly' ? 'monthly|suv' : `${choice.service}|${choice.vehicle}`);
   document.getElementById('job-date').value = date;
-  document.getElementById('job-service').value = service;
+  document.getElementById('job-time').value = time;
+  document.getElementById('job-price').value = payload.price;
+  document.getElementById('job-kind').value = kind;
   renderCalHeader();
   renderCalGrid();
   renderDayPanel();
@@ -405,23 +436,50 @@ function bindCalendar() {
   });
   document.getElementById('job-service')?.addEventListener('change', (e) => {
     const price = document.getElementById('job-price');
-    if (price && (price.value === '' || JOB_SERVICES.some((s) => String(s.price) === price.value))) {
-      price.value = defaultPrice(e.target.value);
-    }
+    const parsed = window.PrimeMenu ? PrimeMenu.parseChoice(e.target.value) : { price: defaultPrice(e.target.value) };
+    if (price) price.value = parsed.price;
   });
   document.getElementById('job-kind')?.addEventListener('change', (e) => {
     const service = document.getElementById('job-service');
+    const price = document.getElementById('job-price');
     if (e.target.value === 'monthly' && service) {
-      service.value = 'monthly';
-      const price = document.getElementById('job-price');
-      if (price) price.value = 55;
+      service.value = 'monthly|suv';
+      if (price) price.value = defaultPrice('monthly');
     }
   });
+  document.getElementById('job-date-today')?.addEventListener('click', () => setJobDate(todayIso()));
+  document.getElementById('job-date-tomorrow')?.addEventListener('click', () => setJobDate(shiftIso(todayIso(), 1)));
   document.getElementById('job-form')?.addEventListener('submit', addJobFromForm);
+}
+
+function shiftIso(iso, days) {
+  const { y, m, d } = parseIso(iso);
+  const dt = new Date(y, m - 1, d + days);
+  return toIsoDate(dt.getFullYear(), dt.getMonth(), dt.getDate());
+}
+
+function setJobDate(iso) {
+  selectedIso = iso;
+  const dateInput = document.getElementById('job-date');
+  if (dateInput) dateInput.value = iso;
+  const { y, m } = parseIso(iso);
+  calCursor = new Date(y, m - 1, 1);
+  renderCalHeader();
+  renderCalGrid();
+  renderDayPanel();
+}
+
+function fillJobServiceOptions(selected) {
+  const sel = document.getElementById('job-service');
+  if (!sel || !window.PrimeMenu) return;
+  sel.innerHTML = PrimeMenu.optionsHtml(selected || 'full|suv');
 }
 
 function initCalendar() {
   if (!document.getElementById('calendar-sec')) return;
+  fillJobServiceOptions('full|suv');
+  const price = document.getElementById('job-price');
+  if (price && !price.value) price.value = defaultPrice('full', 'suv');
   bindCalendar();
   renderCalHeader();
   renderCalGrid();
@@ -429,8 +487,23 @@ function initCalendar() {
   refreshIcons();
 }
 
+window.renderCalGrid = renderCalGrid;
+window.renderCalHeader = renderCalHeader;
+window.renderDayPanel = renderDayPanel;
+Object.defineProperty(window, 'selectedIso', {
+  get() { return selectedIso; },
+  set(v) { selectedIso = v; },
+  configurable: true,
+});
+Object.defineProperty(window, 'calCursor', {
+  get() { return calCursor; },
+  set(v) { calCursor = v; },
+  configurable: true,
+});
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initCalendar);
 } else {
   initCalendar();
 }
+})();

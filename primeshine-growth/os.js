@@ -14,12 +14,14 @@ function telHref(phone) {
 function smsHref(phone, body) {
   const d = String(phone || '').replace(/\D/g, '');
   if (!d) return '';
-  return `sms:${d}&body=${encodeURIComponent(body || '')}`;
+  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent || '');
+  const sep = ios ? '&' : '?';
+  return `sms:${d}${sep}body=${encodeURIComponent(body || '')}`;
 }
 
 function reviewScript(name) {
-  const url = PrimeStore.os.settings.reviewUrl || 'your Google review link';
-  return `Hey ${name || 'there'}, thanks so much for booking PrimeShine! If you have 2 minutes, a Google review would mean the world: ${url}`;
+  const url = (PrimeStore.os.settings.reviewUrl || '').trim() || 'https://g.page/r/CblZQEEuV9DzECE/review';
+  return `Hey ${name || 'there'}, thanks for booking PrimeShine. If you have 2 minutes, a Google review would mean a lot: ${url}`;
 }
 
 function monthlyScript(name) {
@@ -67,6 +69,24 @@ function day1Done() {
   return blocks.every((block) => day[block].every((t, i) => state.tasks[taskKey(1, block, i)]));
 }
 
+function jobStatus(j) {
+  if (j.reviewReceived) return 'Paid · review in';
+  if (j.paid && j.reviewAsked) return 'Paid · review text sent — follow up';
+  if (j.paid) return 'Paid · send the review text';
+  if (j.done) return 'Done — collect payment';
+  return 'Booked';
+}
+
+function jobActionButtons(j) {
+  const bits = [];
+  if (j.phone) bits.push(`<a class="text-xs font-semibold px-3 py-2 rounded-lg bg-navy-800 text-white min-h-[40px]" href="${telHref(j.phone)}">Call</a>`);
+  if (!j.done) bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900 min-h-[40px]" data-finish="${j.id}">Mark done</button>`);
+  if (j.done && !j.paid) bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900 min-h-[40px]" data-collect="${j.id}">Collect</button>`);
+  if (j.done && !j.reviewReceived) bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-sky-500 text-navy-900 min-h-[40px]" data-review="${j.id}">Send review text</button>`);
+  if (j.reviewAsked && !j.reviewReceived) bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-green-500/20 text-green-400 min-h-[40px]" data-got-review="${j.id}">They left a review</button>`);
+  return bits.join('');
+}
+
 function renderToday() {
   const root = document.getElementById('today-root');
   if (!root) return;
@@ -83,12 +103,15 @@ function renderToday() {
   }
   const todaysJobs = PrimeStore.jobs.filter((j) => j.date === today).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
   const unpaid = PrimeStore.jobs.filter((j) => j.done && !j.paid);
+  const needReview = PrimeStore.jobs.filter((j) => j.done && !j.reviewReceived);
   const collected = PrimeStore.collectedRevenue();
   const goal = typeof REVENUE_GOAL === 'number' ? REVENUE_GOAL : 3000;
   const pace = Math.min(100, Math.round((collected / goal) * 100));
   const week = PrimeStore.weekMoney();
   const pipe = PrimeStore.pipeline();
   const move = moneyMove();
+  const reviewUrl = (PrimeStore.os.settings.reviewUrl || '').trim();
+  const serviceOptions = window.PrimeMenu ? PrimeMenu.optionsHtml('full|suv') : '';
 
   root.innerHTML = `
     <div class="glass-card gold-glow p-4 md:p-6 mb-4">
@@ -103,54 +126,78 @@ function renderToday() {
       <div class="w-full bg-navy-800 rounded-full h-2 mb-2 overflow-hidden"><div class="h-2 bg-gradient-to-r from-gold-600 to-gold-400" style="width:${pace}%"></div></div>
       <p class="text-xs text-slate-500 mb-4">${pace}% of $3,000 from paid jobs — not a guess.</p>
       <div class="tipbox p-3 rounded-lg">
-        <p class="text-xs font-bold text-gold-400 mb-1">Money move</p>
+        <p class="text-xs font-bold text-gold-400 mb-1">Do this next</p>
         <p class="text-sm text-white">${esc(move)}</p>
       </div>
     </div>
 
-    <div class="glass-card p-4 mb-4">
-      <div class="flex justify-between items-center mb-3">
-        <h3 class="font-bold text-white">Today’s tasks</h3>
-        <button type="button" class="text-xs text-sky-400 font-semibold" data-goto="plan">Open full plan</button>
-      </div>
-      ${tasks.length ? tasks.map((t) => `
-        <label class="flex items-start gap-3 py-2 border-b border-white/5 ${t.done ? 'task-done' : ''}">
-          <input type="checkbox" class="checkbox-custom mt-0.5 today-task" data-key="${t.k}" ${t.done ? 'checked' : ''}/>
-          <span class="text-sm text-slate-300 task-text">${esc(t.text)}</span>
-        </label>`).join('') : '<p class="text-sm text-slate-500">Rest or no tasks loaded.</p>'}
-    </div>
+    ${!reviewUrl ? `<div class="glass-card p-4 mb-4 border border-gold-500/30">
+      <h3 class="font-bold text-white mb-1">Paste your Google review link once</h3>
+      <p class="text-xs text-slate-400 mb-2">Needed so “Send review text” has a real link. Find it in Google Business Profile → Ask for reviews → copy the short link.</p>
+      <input id="today-review-url" placeholder="https://g.page/r/..." class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px] mb-2"/>
+      <button type="button" id="today-review-url-save" class="w-full bg-gold-500 text-navy-900 font-bold rounded-lg py-3 min-h-[44px]">Save review link</button>
+    </div>` : ''}
+
+    ${needReview.length ? `<div class="glass-card p-4 mb-4 border border-sky-500/30">
+      <h3 class="font-bold text-white mb-1">Send a review text</h3>
+      <p class="text-xs text-slate-400 mb-3">Paid or finished jobs still waiting on a Google review. Tap the blue button — it opens Messages with the text ready.</p>
+      ${needReview.map((j) => `
+        <div class="py-3 border-b border-white/5">
+          <p class="text-white font-semibold">${esc(j.name)} · $${j.paidAmount || j.price}</p>
+          <p class="text-xs text-slate-500 mb-2">${esc(j.date)} · ${esc(j.phone || 'No phone saved')} · ${jobStatus(j)}</p>
+          <div class="flex flex-wrap gap-2">${jobActionButtons(j)}</div>
+        </div>`).join('')}
+    </div>` : ''}
 
     <div class="glass-card p-4 mb-4">
       <div class="flex justify-between items-center mb-3">
-        <h3 class="font-bold text-white">On the driveway</h3>
-        <button type="button" class="text-xs text-sky-400 font-semibold" data-goto="calendar">Calendar</button>
+        <h3 class="font-bold text-white">Jobs today</h3>
+        <button type="button" class="text-xs text-sky-400 font-semibold" data-goto="calendar">Open calendar</button>
       </div>
       ${todaysJobs.length ? todaysJobs.map((j) => `
         <div class="py-3 border-b border-white/5">
           <p class="text-white font-semibold">${esc(j.time || '')} ${esc(j.name)} · $${j.price}</p>
-          <p class="text-xs text-slate-500 mb-2">${j.done ? (j.paid ? 'Paid' : 'Done — not collected') : 'Booked'}</p>
-          <div class="flex flex-wrap gap-2">
-            ${j.phone ? `<a class="text-xs font-semibold px-3 py-2 rounded-lg bg-navy-800 text-white" href="${telHref(j.phone)}">Call</a>` : ''}
-            ${!j.done ? `<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900" data-finish="${j.id}">Mark done</button>` : ''}
-            ${j.done && !j.paid ? `<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900" data-collect="${j.id}">Collect</button>` : ''}
-          </div>
-        </div>`).join('') : '<p class="text-sm text-slate-500">No jobs today. Book one from Calendar or convert a lead.</p>'}
+          <p class="text-xs text-slate-500 mb-2">${jobStatus(j)}${j.phone ? '' : ' · add a phone to text them'}</p>
+          <div class="flex flex-wrap gap-2">${jobActionButtons(j)}</div>
+        </div>`).join('') : '<p class="text-sm text-slate-500">No jobs on today yet. Schedule one below — Tomorrow is a button, not a guess.</p>'}
       ${unpaid.length ? `<p class="text-xs text-red-300 mt-3">${unpaid.length} job(s) finished and not collected.</p>` : ''}
-      <form id="today-job-form" class="mt-4 space-y-2 bg-navy-800/50 rounded-lg p-3">
-        <p class="text-xs font-bold text-gold-400">Add a job for today</p>
+    </div>
+
+    <div class="glass-card p-4 mb-4">
+      <h3 class="font-bold text-white mb-1">Schedule a job</h3>
+      <p class="text-sm text-slate-400 mb-3">Saves on this phone. Use Tomorrow if the car is not today. Prices match primeshinefl.com.</p>
+      <form id="today-job-form" class="space-y-2 bg-navy-800/50 rounded-lg p-3">
         <input id="today-job-name" required placeholder="Client name" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
-        <input id="today-job-phone" type="tel" placeholder="Phone" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
-        <div class="grid grid-cols-2 gap-2">
-          <select id="today-job-service" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]">
-            <option value="full">Full Detail $140</option>
-            <option value="interior">Interior $80</option>
-            <option value="exterior">Exterior $60</option>
-            <option value="monthly">Monthly $55</option>
-          </select>
-          <input id="today-job-price" type="number" placeholder="Price" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+        <input id="today-job-phone" type="tel" placeholder="Phone — needed for the review text" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+        <div class="flex gap-2">
+          <button type="button" id="today-date-today" class="flex-1 text-xs font-bold bg-sky-500 text-navy-900 rounded-lg py-2 min-h-[40px]">Today</button>
+          <button type="button" id="today-date-tomorrow" class="flex-1 text-xs font-bold bg-navy-700 text-white rounded-lg py-2 min-h-[40px]">Tomorrow</button>
         </div>
-        <button type="submit" class="w-full bg-gold-500 text-navy-900 font-bold rounded-lg py-3 min-h-[44px]">Save on today</button>
+        <p id="today-job-when" class="text-xs text-gold-400 font-semibold"></p>
+        <div class="grid grid-cols-2 gap-2">
+          <input id="today-job-date" type="date" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+          <input id="today-job-time" type="time" value="09:00" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+        </div>
+        <select id="today-job-service" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]">${serviceOptions}</select>
+        <input id="today-job-price" type="number" placeholder="Price" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+        <input id="today-job-notes" placeholder="Address / notes" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+        <p id="today-job-msg" class="text-xs hidden"></p>
+        <button type="submit" class="w-full bg-gold-500 text-navy-900 font-bold rounded-lg py-3 min-h-[44px]">Save job</button>
       </form>
+    </div>
+
+    ${window.PrimeMenu ? PrimeMenu.cardHtml() : ''}
+
+    <div class="glass-card p-4 mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="font-bold text-white">Today’s growth tasks</h3>
+        <button type="button" class="text-xs text-sky-400 font-semibold" data-goto="plan">Full 30-day plan</button>
+      </div>
+      ${tasks.length ? tasks.map((t) => `
+        <label class="flex items-start gap-3 py-2 border-b border-white/5 ${t.done ? 'task-done' : ''}">
+          <input type="checkbox" class="checkbox-custom mt-0.5 today-task" data-key="${t.k}" ${t.done ? 'checked' : ''}/>
+          <span class="text-sm text-slate-300 task-text"><span class="text-[10px] text-slate-500">${esc(t.cat)} · ${esc(t.time)}</span><br/>${esc(t.text)}</span>
+        </label>`).join('') : '<p class="text-sm text-slate-500">Rest or no tasks loaded.</p>'}
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
@@ -183,35 +230,90 @@ function renderToday() {
   root.querySelectorAll('[data-collect]').forEach((btn) => {
     btn.addEventListener('click', () => openCollect(btn.getAttribute('data-collect')));
   });
-  document.getElementById('today-job-form')?.addEventListener('submit', (e) => {
+  root.querySelectorAll('[data-review]').forEach((btn) => {
+    btn.addEventListener('click', () => openReview(btn.getAttribute('data-review')));
+  });
+  root.querySelectorAll('[data-got-review]').forEach((btn) => {
+    btn.addEventListener('click', () => PrimeStore.markReview(btn.getAttribute('data-got-review'), true));
+  });
+  document.getElementById('today-review-url-save')?.addEventListener('click', () => {
+    const url = document.getElementById('today-review-url').value.trim();
+    PrimeStore.os.settings.reviewUrl = url;
+    PrimeStore.persist();
+  });
+  const dateInput = document.getElementById('today-job-date');
+  const form = document.getElementById('today-job-form');
+  const shiftDays = (iso, days) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    const dt = new Date(y, m - 1, d + days);
+    return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+  };
+  const prettyDate = (iso) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+  };
+  const setScheduleDate = (iso) => {
+    if (form) form.dataset.scheduleDate = iso;
+    if (dateInput) dateInput.value = iso;
+    const when = document.getElementById('today-job-when');
+    if (when) when.textContent = `Saving for ${prettyDate(iso)}`;
+    const todayBtn = document.getElementById('today-date-today');
+    const tomBtn = document.getElementById('today-date-tomorrow');
+    const isToday = iso === today;
+    if (todayBtn) todayBtn.className = `flex-1 text-xs font-bold rounded-lg py-2 min-h-[40px] ${isToday ? 'bg-sky-500 text-navy-900' : 'bg-navy-700 text-white'}`;
+    if (tomBtn) tomBtn.className = `flex-1 text-xs font-bold rounded-lg py-2 min-h-[40px] ${isToday ? 'bg-navy-700 text-white' : 'bg-sky-500 text-navy-900'}`;
+  };
+  setScheduleDate(today);
+  const priceInput = document.getElementById('today-job-price');
+  if (priceInput && !priceInput.value && window.PrimeMenu) priceInput.value = PrimeMenu.price('full', 'suv');
+  document.getElementById('today-job-service')?.addEventListener('change', (e) => {
+    const parsed = window.PrimeMenu ? PrimeMenu.parseChoice(e.target.value) : { price: 0 };
+    if (priceInput) priceInput.value = parsed.price;
+  });
+  document.getElementById('today-date-today')?.addEventListener('click', () => setScheduleDate(today));
+  document.getElementById('today-date-tomorrow')?.addEventListener('click', () => setScheduleDate(shiftDays(today, 1)));
+  dateInput?.addEventListener('change', () => {
+    if (dateInput.value) setScheduleDate(dateInput.value);
+  });
+  form?.addEventListener('submit', (e) => {
     e.preventDefault();
     const name = document.getElementById('today-job-name').value.trim();
-    if (!name) return;
-    const service = document.getElementById('today-job-service').value;
-    const prices = { full: 140, interior: 80, exterior: 60, monthly: 55 };
+    const msg = document.getElementById('today-job-msg');
+    if (!name) {
+      if (msg) { msg.textContent = 'Add the client name.'; msg.className = 'text-xs text-red-400'; }
+      return;
+    }
+    const parsed = window.PrimeMenu
+      ? PrimeMenu.parseChoice(document.getElementById('today-job-service').value)
+      : { service: 'full', vehicle: 'suv', price: 150 };
     const phone = document.getElementById('today-job-phone').value.trim();
-    const price = Number(document.getElementById('today-job-price').value) || prices[service] || 0;
-    const client = PrimeStore.upsertClient({ name, phone, source: 'new' });
-    PrimeStore.jobs.push({
-      id: `job_${Date.now()}_today`,
-      seriesId: null,
-      clientId: client ? client.id : null,
+    const date = (form && form.dataset.scheduleDate) || dateInput?.value || today;
+    const time = document.getElementById('today-job-time').value || '09:00';
+    const price = Number(document.getElementById('today-job-price').value) || parsed.price;
+    const notes = document.getElementById('today-job-notes').value.trim();
+    PrimeStore.addJob({
       name,
       phone,
-      date: PrimeStore.todayIso(),
-      time: '09:00',
-      service,
+      date,
+      time,
+      service: parsed.service,
+      vehicle: parsed.vehicle,
       price,
-      kind: service === 'monthly' ? 'monthly' : 'new',
-      notes: '',
-      done: false,
-      paid: false,
-      paidAmount: 0,
-      paidMethod: '',
-      reviewAsked: false,
-      reviewReceived: false,
+      kind: parsed.service === 'monthly' ? 'monthly' : 'new',
+      notes,
     });
-    PrimeStore.persist();
+    if (typeof selectedIso !== 'undefined') {
+      selectedIso = date;
+      const [yy, mm] = date.split('-').map(Number);
+      if (typeof calCursor !== 'undefined') calCursor = new Date(yy, mm - 1, 1);
+    }
+    if (msg) {
+      msg.textContent = `Saved ${name} on ${date} at ${time} · $${price}.`;
+      msg.className = 'text-xs text-green-400';
+    }
+    if (date !== today && typeof showRoom === 'function') {
+      showRoom('calendar');
+    }
   });
 
   const kit = document.getElementById('day1-kit');
@@ -246,11 +348,18 @@ function renderBook() {
       </div>
       <div class="flex flex-wrap gap-2 mt-3">
         ${c.phone ? `<a class="px-3 py-2 rounded-lg bg-navy-800 text-white text-xs font-semibold min-h-[40px]" href="${telHref(c.phone)}">Call</a>` : ''}
-        ${c.phone ? `<a class="px-3 py-2 rounded-lg bg-sky-500/20 text-sky-400 text-xs font-semibold min-h-[40px]" href="${smsHref(c.phone, reviewScript(c.name))}">Review text</a>` : ''}
+        ${last ? `<button type="button" class="px-3 py-2 rounded-lg bg-sky-500 text-navy-900 text-xs font-semibold min-h-[40px]" data-review="${last.id}">Send review text</button>` : ''}
         ${c.phone ? `<a class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" href="${smsHref(c.phone, monthlyScript(c.name))}">Monthly text</a>` : ''}
+        ${last && !last.reviewReceived ? `<button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-got-review="${last.id}">They left a review</button>` : ''}
       </div>
     </article>`;
-  }).join('') : '<p class="text-sm text-slate-500">No clients yet. Add a job on the calendar or a lead under Money.</p>';
+  }).join('') : '<p class="text-sm text-slate-500">No clients yet. Add a job on Today or Calendar.</p>';
+  root.querySelectorAll('[data-review]').forEach((btn) => {
+    btn.addEventListener('click', () => openReview(btn.getAttribute('data-review')));
+  });
+  root.querySelectorAll('[data-got-review]').forEach((btn) => {
+    btn.addEventListener('click', () => PrimeStore.markReview(btn.getAttribute('data-got-review'), true));
+  });
 }
 
 function renderMoney() {
@@ -327,9 +436,12 @@ function renderPipeline() {
     ${col('Booked', p.booked, (j) => `<p class="text-sm text-white py-1">${esc(j.date)} · ${esc(j.name)}</p>`)}
     ${col('Overdue', p.overdue, (j) => `<p class="text-sm text-red-300 py-1">${esc(j.date)} · ${esc(j.name)}</p>`)}
     ${col('Unpaid', p.unpaid, (j) => `<p class="text-sm text-gold-400 py-1">${esc(j.name)} · $${j.price}</p>`)}
-    ${col('Need review', p.needReview, (j) => `<p class="text-sm text-white py-1">${esc(j.name)}</p>`)}
+    ${col('Need review', p.needReview, (j) => `<p class="text-sm text-white py-1">${esc(j.name)} <button type="button" class="text-sky-400 text-xs font-bold" data-review="${j.id}">Text</button></p>`)}
     ${col('Monthly coming', p.monthlyDue, (j) => `<p class="text-sm text-green-400 py-1">${esc(j.date)} · ${esc(j.name)}</p>`)}
   </div>`;
+  root.querySelectorAll('[data-review]').forEach((btn) => {
+    btn.addEventListener('click', () => openReview(btn.getAttribute('data-review')));
+  });
 }
 
 function renderLeadsForm() {
@@ -363,6 +475,48 @@ function closeCollect() {
   document.getElementById('collect-overlay')?.classList.add('hidden');
 }
 
+function openReview(id) {
+  const job = PrimeStore.jobs.find((j) => j.id === id);
+  if (!job) return;
+  const overlay = document.getElementById('review-overlay');
+  if (!overlay) return;
+  overlay.dataset.jobId = id;
+  document.getElementById('review-name').textContent = `${job.name} · $${job.paidAmount || job.price}`;
+  document.getElementById('review-phone').value = job.phone || '';
+  const urlInput = document.getElementById('review-link-input');
+  if (urlInput) urlInput.value = PrimeStore.os.settings.reviewUrl || '';
+  document.getElementById('review-preview').value = reviewScript(job.name);
+  const warn = document.getElementById('review-warn');
+  if (warn) {
+    if (!job.phone) warn.textContent = 'Add their phone, then tap Open Messages.';
+    else if (!(PrimeStore.os.settings.reviewUrl || '').trim()) warn.textContent = 'Paste the Google review link so the text is useful.';
+    else warn.textContent = 'Opens Messages with this text. You tap Send.';
+  }
+  overlay.classList.remove('hidden');
+}
+
+function closeReview() {
+  document.getElementById('review-overlay')?.classList.add('hidden');
+}
+
+function syncReviewDraft() {
+  const overlay = document.getElementById('review-overlay');
+  const id = overlay?.dataset.jobId;
+  const job = PrimeStore.jobs.find((j) => j.id === id);
+  if (!job) return job;
+  const phone = document.getElementById('review-phone').value.trim();
+  const url = document.getElementById('review-link-input').value.trim();
+  if (url) PrimeStore.os.settings.reviewUrl = url;
+  if (phone !== (job.phone || '')) {
+    PrimeStore.updateJob(id, { phone });
+  } else {
+    PrimeStore.persist();
+  }
+  const preview = document.getElementById('review-preview');
+  if (preview) preview.value = reviewScript(job.name);
+  return PrimeStore.jobs.find((j) => j.id === id);
+}
+
 function refreshOs() {
   renderToday();
   renderBook();
@@ -385,13 +539,52 @@ function bindOsChrome() {
       amount: document.getElementById('collect-amount').value,
       method: document.getElementById('collect-method').value,
     });
-    const ask = document.getElementById('collect-review').checked;
-    if (ask) {
-      PrimeStore.markReview(id, false);
-      const job = PrimeStore.jobs.find((j) => j.id === id);
-      if (job?.phone) window.location.href = smsHref(job.phone, reviewScript(job.name));
-    }
     closeCollect();
+    openReview(id);
+  });
+  document.getElementById('review-cancel')?.addEventListener('click', closeReview);
+  document.getElementById('review-copy')?.addEventListener('click', async () => {
+    const job = syncReviewDraft();
+    const text = document.getElementById('review-preview').value;
+    try { await navigator.clipboard.writeText(text); } catch (e) {
+      document.getElementById('review-preview').select();
+      document.execCommand('copy');
+    }
+    if (job) PrimeStore.markReview(job.id, false);
+    const btn = document.getElementById('review-copy');
+    const prev = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(() => { btn.textContent = prev; }, 1400);
+  });
+  document.getElementById('review-sms')?.addEventListener('click', () => {
+    const job = syncReviewDraft();
+    if (!job) return;
+    const phone = document.getElementById('review-phone').value.trim();
+    if (!phone) {
+      document.getElementById('review-warn').textContent = 'Add their phone first.';
+      document.getElementById('review-phone').focus();
+      return;
+    }
+    PrimeStore.markReview(job.id, false);
+    window.location.href = smsHref(phone, document.getElementById('review-preview').value);
+  });
+  document.getElementById('review-got')?.addEventListener('click', () => {
+    const id = document.getElementById('review-overlay').dataset.jobId;
+    PrimeStore.markReview(id, true);
+    closeReview();
+  });
+  document.getElementById('review-phone')?.addEventListener('input', () => {
+    const preview = document.getElementById('review-preview');
+    const id = document.getElementById('review-overlay').dataset.jobId;
+    const job = PrimeStore.jobs.find((j) => j.id === id);
+    if (preview && job) preview.value = reviewScript(job.name);
+  });
+  document.getElementById('review-link-input')?.addEventListener('input', () => {
+    PrimeStore.os.settings.reviewUrl = document.getElementById('review-link-input').value.trim();
+    const id = document.getElementById('review-overlay').dataset.jobId;
+    const job = PrimeStore.jobs.find((j) => j.id === id);
+    const preview = document.getElementById('review-preview');
+    if (preview && job) preview.value = reviewScript(job.name);
   });
   document.getElementById('export-csv')?.addEventListener('click', () => {
     const csv = PrimeStore.exportCsv();
@@ -417,16 +610,6 @@ function bindOsChrome() {
     PrimeStore.os.settings.reviewUrl = document.getElementById('review-url').value.trim();
     PrimeStore.persist();
     document.getElementById('pin-status').textContent = 'Review link saved.';
-  });
-  document.getElementById('copy-page-link')?.addEventListener('click', async (e) => {
-    const btn = e.currentTarget;
-    try { await navigator.clipboard.writeText(window.location.href); } catch (err) {
-      const hint = document.getElementById('page-link-fallback');
-      if (hint) { hint.value = window.location.href; hint.hidden = false; hint.select(); }
-    }
-    const prev = btn.textContent;
-    btn.textContent = 'Copied — text it to yourself';
-    setTimeout(() => { btn.textContent = prev; }, 2000);
   });
 }
 
@@ -458,7 +641,7 @@ function initOs() {
       const start = sessionStorage.getItem('primeshine_room') || 'today';
       showRoom(start);
       const review = document.getElementById('review-url');
-      if (review) review.value = PrimeStore.os.settings.reviewUrl || '';
+      if (review) review.value = PrimeStore.os.settings.reviewUrl || 'https://g.page/r/CblZQEEuV9DzECE/review';
     }
   });
   PrimeStore.onChange(() => {
