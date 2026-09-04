@@ -11,7 +11,7 @@ function defaultOs() {
     clients: [],
     expenses: [],
     leads: [],
-    settings: { pinHash: '', reviewUrl: '', ownerName: 'Charles' },
+    settings: { pinHash: '', reviewUrl: 'https://g.page/r/CblZQEEuV9DzECE/review', ownerName: 'Charles' },
   };
 }
 
@@ -58,11 +58,15 @@ function loadOs() {
   if (!Array.isArray(os.clients)) os.clients = [];
   if (!Array.isArray(os.expenses)) os.expenses = [];
   if (!Array.isArray(os.leads)) os.leads = [];
-  os.settings = { pinHash: '', reviewUrl: '', ownerName: 'Charles', ...(os.settings || {}) };
+  os.settings = { pinHash: '', reviewUrl: 'https://g.page/r/CblZQEEuV9DzECE/review', ownerName: 'Charles', ...(os.settings || {}) };
+  if (!(os.settings.reviewUrl || '').trim()) {
+    os.settings.reviewUrl = 'https://g.page/r/CblZQEEuV9DzECE/review';
+  }
   return os;
 }
 
 const os = loadOs();
+try { localStorage.setItem(OS_KEY, JSON.stringify(os)); } catch (e) {}
 const jobs = loadLegacyJobs().map(normalizeJob);
 const listeners = [];
 

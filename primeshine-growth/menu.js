@@ -6,6 +6,7 @@ const PRIME_MENU = {
   phoneTel: '8638609238',
   site: 'https://primeshinefl.com',
   booking: 'https://primeshinefl.com/booking',
+  reviewUrl: 'https://g.page/r/CblZQEEuV9DzECE/review',
   areas: 'Bartow · Lakeland · Winter Haven',
   hours: '8AM-6PM',
   promo: {

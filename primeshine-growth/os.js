@@ -20,9 +20,8 @@ function smsHref(phone, body) {
 }
 
 function reviewScript(name) {
-  const url = (PrimeStore.os.settings.reviewUrl || '').trim();
-  const link = url || 'I’ll text you the Google review link as soon as I have it';
-  return `Hey ${name || 'there'}, thanks for booking PrimeShine. If you have 2 minutes, a Google review would mean a lot: ${link}`;
+  const url = (PrimeStore.os.settings.reviewUrl || '').trim() || 'https://g.page/r/CblZQEEuV9DzECE/review';
+  return `Hey ${name || 'there'}, thanks for booking PrimeShine. If you have 2 minutes, a Google review would mean a lot: ${url}`;
 }
 
 function monthlyScript(name) {
@@ -642,7 +641,7 @@ function initOs() {
       const start = sessionStorage.getItem('primeshine_room') || 'today';
       showRoom(start);
       const review = document.getElementById('review-url');
-      if (review) review.value = PrimeStore.os.settings.reviewUrl || '';
+      if (review) review.value = PrimeStore.os.settings.reviewUrl || 'https://g.page/r/CblZQEEuV9DzECE/review';
     }
   });
   PrimeStore.onChange(() => {
