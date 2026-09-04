@@ -18,11 +18,11 @@ const PLAN_DATA = [
       {
         day:2, date:'Sep 4', dow:'Fri', type:'weekday', weekNum:1,
         morning:[
-          {cat:'Marketing',time:'1hr',text:'Create a "Launch Special" flyer: "20% OFF your first detail — Limited spots this month!" Use Canva. Print 50–100 copies at Walmart or Office Depot (~$10–15)'},
+          {cat:'Marketing',time:'1hr',text:'Create a flyer that matches the LIVE website — not a new discount. Headline: "First 10 customers: 50% off any package." Prices: Exterior $40/$50 · Interior $60/$80 · Full $120/$150. Print 50–100 copies at Walmart or Office Depot (~$10–15). Do not print 20% off.'},
           {cat:'Admin',time:'30min',text:'Set up your Meta ad: Go to Meta Business Suite → Boost a post OR create an ad targeting Lakeland/Bartow/Winter Haven, 10-mile radius, age 25–55, $5/day, goal = "Get More Messages"'}
         ],
         evening:[
-          {cat:'Social Media',time:'20min',text:'Post the Launch Special on your Facebook page and Instagram'},
+          {cat:'Social Media',time:'20min',text:'Post the 50% first-10 offer on Facebook and Instagram. Use the same prices as primeshinefl.com. Do not invent a 20% deal.'},
           {cat:'Outreach',time:'20min',text:'Share the post to 3 local Facebook community groups (search "Lakeland FL", "Bartow Neighbors", "Winter Haven Community")'}
         ],
         weekend:[],
@@ -81,7 +81,7 @@ const PLAN_DATA = [
         morning:[
           {cat:'Admin',time:'30min',text:'Check your Meta ad performance — how many impressions, clicks, replies? If less than 500 impressions, widen your audience radius to 15 miles'},
           {cat:'Outreach',time:'1.5hrs',text:'Contact 5 local real estate agents on Facebook or by phone. Pitch: "I can detail a client\'s car before a showing or closing — makes a great impression. I come to them." Offer a real estate agent referral rate.'},
-          {cat:'Revenue',time:'30min',text:'Create a "Monthly Maintenance Package": 1 exterior wash/month for $60 recurring OR 1 full detail every 6 weeks. Pitch to anyone who books this week.'}
+          {cat:'Revenue',time:'30min',text:'Owner upsell only (not on the website yet): offer a monthly wash at $55 if someone asks for a repeat. Do not change website prices. Quote the live menu: Exterior $40/$50 · Interior $60/$80 · Full $120/$150.'}
         ],
         evening:[
           {cat:'Social Media',time:'20min',text:'Post a "did you know?" educational post: "Did you know regular detailing protects your car\'s paint and resale value? Book PrimeShine — we come to you! primeshinefl.com/booking"'}
@@ -121,7 +121,7 @@ const PLAN_DATA = [
         day:10, date:'Sep 12', dow:'Sat', type:'weekend', weekNum:2,
         morning:[], evening:[],
         weekend:[
-          {cat:'Social Media',time:'20min',text:'Post "Limited spots available THIS week! Interior details starting at $80. We come to YOU. Book now: primeshinefl.com/booking" — add urgency!'}
+          {cat:'Social Media',time:'20min',text:'Post: "Limited spots this week. Interior $60 sedan / $80 SUV. We come to you. Book: primeshinefl.com/booking" — same prices as the website.'}
         ],
         tip:'Urgency drives action. "Limited spots" posts consistently outperform generic posts for service businesses.',
         quote:'"Action is the foundational key to all success." — Pablo Picasso'

@@ -25,6 +25,15 @@ function loadLegacyJobs() {
   }
 }
 
+function addMonthsIso(iso, count) {
+  const [y, m, d] = String(iso || '').split('-').map(Number);
+  if (!y || !m || !d) return iso;
+  const dt = new Date(y, m - 1 + count, 1);
+  const last = new Date(dt.getFullYear(), dt.getMonth() + 1, 0).getDate();
+  const day = Math.min(d, last);
+  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
 function normalizeJob(job) {
   return {
     paid: false,
@@ -35,6 +44,7 @@ function normalizeJob(job) {
     monthlyOffered: false,
     clientId: null,
     source: '',
+    vehicle: 'suv',
     ...job,
   };
 }
@@ -165,6 +175,71 @@ window.PrimeStore = {
   os,
   onChange(fn) { listeners.push(fn); },
   persist: emit,
+  addMonthsIso,
+  addJob(partial, opts = {}) {
+    const choice = (window.PrimeMenu && partial.service && !partial.price)
+      ? { price: PrimeMenu.price(partial.service, partial.vehicle || 'suv') }
+      : {};
+    const job = normalizeJob({
+      id: osId('job'),
+      seriesId: null,
+      name: '',
+      phone: '',
+      date: this.todayIso(),
+      time: '09:00',
+      service: 'full',
+      vehicle: 'suv',
+      price: 0,
+      kind: 'new',
+      notes: '',
+      done: false,
+      ...choice,
+      ...partial,
+    });
+    if (!job.price && window.PrimeMenu) {
+      job.price = PrimeMenu.price(job.service, job.vehicle);
+    }
+    const created = [job];
+    const repeats = job.kind === 'monthly' ? (opts.monthlyRepeat ?? 5) : 0;
+    if (repeats) {
+      job.seriesId = job.id;
+      for (let i = 1; i <= repeats; i += 1) {
+        created.push(normalizeJob({
+          ...job,
+          id: osId('job'),
+          seriesId: job.id,
+          date: addMonthsIso(job.date, i),
+          done: false,
+          paid: false,
+          paidAmount: 0,
+          reviewAsked: false,
+          reviewReceived: false,
+        }));
+      }
+    }
+    const client = upsertClient({
+      name: job.name,
+      phone: job.phone,
+      address: job.notes,
+      source: job.kind === 'new' ? 'new' : '',
+    });
+    created.forEach((row) => {
+      row.clientId = client ? client.id : null;
+      jobs.push(row);
+    });
+    emit();
+    return created;
+  },
+  updateJob(id, patch) {
+    const job = jobs.find((j) => j.id === id);
+    if (!job) return null;
+    Object.assign(job, patch);
+    if (patch.phone || patch.name) {
+      upsertClient({ name: patch.name || job.name, phone: patch.phone || job.phone, address: job.notes });
+    }
+    emit();
+    return job;
+  },
   upsertClient,
   clientJobs,
   collectedRevenue,
