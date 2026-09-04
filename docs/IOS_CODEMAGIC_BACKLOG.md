@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] War Room: Jamarion Hillsman 2028 S board-only eval (Jordan Fuller size-match + Year 2 ST / Year 3 snap chase) — PROVISIONAL / filmWatched false, hidden from fan Vault Scouting until a real Hudl watch (API)
 - [x] Game Week FAU Film Notes: fan-facing bullets via `/api/schedule` (`film` + tendency arrays). Raw scout stays in `offenseScout` / `defenseScout` / `scoutingReport` (API — no Codemagic; iOS dump uses the fan arrays)
 - [x] War Room: Tyler Boyd 2028 CB film watch — Jaire Alexander comp + island off-man / wrap finish (API / FutureCast Vault Scouting)
 - [x] War Room: Jordon Gorham film re-watch — Justyn Ross comp + X projection (API / FutureCast Vault Scouting)
