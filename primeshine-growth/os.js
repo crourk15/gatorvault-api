@@ -171,11 +171,12 @@ function renderToday() {
         <input id="today-job-name" required placeholder="Client name" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
         <input id="today-job-phone" type="tel" placeholder="Phone — needed for the review text" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
         <div class="flex gap-2">
-          <button type="button" id="today-date-today" class="flex-1 text-xs font-bold bg-navy-700 text-white rounded-lg py-2 min-h-[40px]">Today</button>
-          <button type="button" id="today-date-tomorrow" class="flex-1 text-xs font-bold bg-sky-500 text-navy-900 rounded-lg py-2 min-h-[40px]">Tomorrow</button>
+          <button type="button" id="today-date-today" class="flex-1 text-xs font-bold bg-sky-500 text-navy-900 rounded-lg py-2 min-h-[40px]">Today</button>
+          <button type="button" id="today-date-tomorrow" class="flex-1 text-xs font-bold bg-navy-700 text-white rounded-lg py-2 min-h-[40px]">Tomorrow</button>
         </div>
+        <p id="today-job-when" class="text-xs text-gold-400 font-semibold"></p>
         <div class="grid grid-cols-2 gap-2">
-          <input id="today-job-date" type="date" required class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+          <input id="today-job-date" type="date" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
           <input id="today-job-time" type="time" value="09:00" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
         </div>
         <select id="today-job-service" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]">${serviceOptions}</select>
@@ -242,23 +243,40 @@ function renderToday() {
     PrimeStore.persist();
   });
   const dateInput = document.getElementById('today-job-date');
-  if (dateInput && !dateInput.value) dateInput.value = today;
+  const form = document.getElementById('today-job-form');
+  const shiftDays = (iso, days) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    const dt = new Date(y, m - 1, d + days);
+    return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+  };
+  const prettyDate = (iso) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+  };
+  const setScheduleDate = (iso) => {
+    if (form) form.dataset.scheduleDate = iso;
+    if (dateInput) dateInput.value = iso;
+    const when = document.getElementById('today-job-when');
+    if (when) when.textContent = `Saving for ${prettyDate(iso)}`;
+    const todayBtn = document.getElementById('today-date-today');
+    const tomBtn = document.getElementById('today-date-tomorrow');
+    const isToday = iso === today;
+    if (todayBtn) todayBtn.className = `flex-1 text-xs font-bold rounded-lg py-2 min-h-[40px] ${isToday ? 'bg-sky-500 text-navy-900' : 'bg-navy-700 text-white'}`;
+    if (tomBtn) tomBtn.className = `flex-1 text-xs font-bold rounded-lg py-2 min-h-[40px] ${isToday ? 'bg-navy-700 text-white' : 'bg-sky-500 text-navy-900'}`;
+  };
+  setScheduleDate(today);
   const priceInput = document.getElementById('today-job-price');
   if (priceInput && !priceInput.value && window.PrimeMenu) priceInput.value = PrimeMenu.price('full', 'suv');
   document.getElementById('today-job-service')?.addEventListener('change', (e) => {
     const parsed = window.PrimeMenu ? PrimeMenu.parseChoice(e.target.value) : { price: 0 };
     if (priceInput) priceInput.value = parsed.price;
   });
-  document.getElementById('today-date-today')?.addEventListener('click', () => {
-    if (dateInput) dateInput.value = today;
+  document.getElementById('today-date-today')?.addEventListener('click', () => setScheduleDate(today));
+  document.getElementById('today-date-tomorrow')?.addEventListener('click', () => setScheduleDate(shiftDays(today, 1)));
+  dateInput?.addEventListener('change', () => {
+    if (dateInput.value) setScheduleDate(dateInput.value);
   });
-  document.getElementById('today-date-tomorrow')?.addEventListener('click', () => {
-    const [y, m, d] = today.split('-').map(Number);
-    const dt = new Date(y, m - 1, d + 1);
-    const iso = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
-    if (dateInput) dateInput.value = iso;
-  });
-  document.getElementById('today-job-form')?.addEventListener('submit', (e) => {
+  form?.addEventListener('submit', (e) => {
     e.preventDefault();
     const name = document.getElementById('today-job-name').value.trim();
     const msg = document.getElementById('today-job-msg');
@@ -270,7 +288,7 @@ function renderToday() {
       ? PrimeMenu.parseChoice(document.getElementById('today-job-service').value)
       : { service: 'full', vehicle: 'suv', price: 150 };
     const phone = document.getElementById('today-job-phone').value.trim();
-    const date = document.getElementById('today-job-date').value || today;
+    const date = (form && form.dataset.scheduleDate) || dateInput?.value || today;
     const time = document.getElementById('today-job-time').value || '09:00';
     const price = Number(document.getElementById('today-job-price').value) || parsed.price;
     const notes = document.getElementById('today-job-notes').value.trim();
