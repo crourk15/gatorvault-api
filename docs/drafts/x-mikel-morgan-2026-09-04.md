@@ -4,7 +4,7 @@ Paste-ready. Film watched (Hudl end-of-season reel). Do not name-drop Hudl, writ
 
 HEADER: Florida just punched a 2028 EDGE offer into Lake City
 
-Florida just put a scholarship on Mikel Morgan, and the Columbia EDGE is now a live 2028 chase.
+Florida just put a scholarship on Mikel Morgan, and the Columbia EDGE is now on Florida's 2028 board.
 
 Morgan, a 2028 Columbia HS (Lake City, FL) EDGE listed 6-4 / 225, is uncommitted with a 247 87 stamp (Pos #57, FL #71). On tape he wins from a stand-up or hand-in-dirt look: first-step get-off that turns the corner with a dipped shoulder, chase that runs down scrambling QBs across the field, and a batted ball at the line plus a dive on a loose snap.
 
