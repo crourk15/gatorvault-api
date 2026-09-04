@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] War Room: Mikel Morgan 2028 EDGE film watch — Kingsley Enagbare comp + get-off / chase / bat (API / FutureCast Vault Scouting)
 - [x] Game Week FAU Film Notes: fan-facing bullets via `/api/schedule` (`film` + tendency arrays). Raw scout stays in `offenseScout` / `defenseScout` / `scoutingReport` (API — no Codemagic; iOS dump uses the fan arrays)
 - [x] War Room: Tyler Boyd 2028 CB film watch — Jaire Alexander comp + island off-man / wrap finish (API / FutureCast Vault Scouting)
 - [x] War Room: Jordon Gorham film re-watch — Justyn Ross comp + X projection (API / FutureCast Vault Scouting)
