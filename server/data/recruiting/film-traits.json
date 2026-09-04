@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-04T19:57:22.974Z",
+  "updatedAt": "2026-09-03T01:48:06.239Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -3120,30 +3120,6 @@
         "compact physical"
       ],
       "vaultFilmAngle": "Lead with island off-man + wrap finish + constant staff push / March Swamp UOV; RPM still early.",
-      "doNotClaim": [
-        "Do not invent tackle totals or grades from highlight reps alone",
-        "Do not overclaim NFL projection from camp/highlight reps alone"
-      ],
-      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
-      "ingestStatus": null,
-      "on3RecruitSlug": null,
-      "on3ProfileUrl": null,
-      "lastIngestAt": null,
-      "evaluatedBy": null,
-      "evalMode": null,
-      "evaluatedAt": null
-    },
-    "jamarion-hillsman": {
-      "playerName": "Jamarion Hillsman",
-      "position": null,
-      "classYear": null,
-      "sources": [],
-      "traits": [
-        "size",
-        "safety",
-        "in-state"
-      ],
-      "vaultFilmAngle": "Board-only: Florida offer plus June 19 UOV. No tape yet.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"
