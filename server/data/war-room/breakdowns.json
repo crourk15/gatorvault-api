@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-03T01:48:06.220Z",
+  "updatedAt": "2026-09-04T19:57:22.964Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -15589,31 +15589,36 @@
     "jamarion-hillsman": {
       "playerSlug": "jamarion-hillsman",
       "playerName": "Jamarion Hillsman",
-      "playerType": "commit",
+      "playerType": "target",
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": null,
+          "publishedAt": "2026-09-04"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Hillsman is listed 6-2 / 195 as a 2028 Vero Beach (FL) safety / ATH.",
+        "Hillsman already has a Florida unofficial visit on file (June 19, 2026).",
+        "Hillsman has a Florida offer on the player card. No Hudl or On3 highlight on file."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Hillsman has no public highlight link yet, so scheme traits stay off the card."
+      ],
+      "comparison": "Hillsman comps to Jordan Fuller (6-2 / 203) for the same long, lean 6-2 safety mold. Size first. Tape is not on file.",
+      "schemeFit": "Hillsman is a safety / ATH body for the secondary. Scheme traits wait on tape.",
+      "staffNotes": "PROVISIONAL board-only draft 2026-09-04. No Hudl watched. filmWatched false. Do not treat as live Vault Scouting.",
+      "projection": "Hillsman projects as a Year 2 special teams and scout safety, then compete for nickel or free safety snaps by Year 3. Starter upside if the 6-2 / 195 frame plays to the listing.",
+      "insiderNotes": "Hillsman is a 2028 Vero Beach safety listed 6-2 / 195. Florida has the offer and a June 19 unofficial visit. No tape on file.",
+      "recruitingStory": "Jamarion Hillsman is a 2028 Vero Beach (FL) safety listed 6-2 / 195.",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-07-11T05:14:46.891Z"
+      "featured": false,
+      "updatedAt": "2026-09-04T19:57:22.954Z",
+      "filmWatched": false,
+      "provisional": true
     },
     "brayden-doss": {
       "playerSlug": "brayden-doss",
