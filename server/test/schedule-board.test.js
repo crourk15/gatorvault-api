@@ -48,6 +48,21 @@ describe('schedule-board', () => {
     assert.equal(board.games.filter((g) => g.kind !== 'bye').length, 12);
   });
 
+  it('FAU Film Notes are fan-facing and raw scout stays on file', () => {
+    const board = scheduleBoard.getScheduleBoard(2026);
+    const fau = board.games.find((g) => g.id === 'fau');
+    assert.ok(fau.filmNotes?.length >= 6);
+    assert.match(fau.filmNotes[0], /Shotgun every snap/i);
+    assert.ok(!fau.filmNotes.some((n) => /401762477|NOT confirmed|Tied-130th/i.test(n)));
+    assert.match(fau.film, /What the tape shows vs FAU/i);
+    assert.ok(fau.offenseScout?.some((n) => /Veltkamp 24\/33/.test(n)));
+    assert.ok(fau.defenseScout?.some((n) => /Tied-130th|NOT confirmed/i.test(n)));
+    assert.ok(fau.opponentTendencies.every((n) => !/NOT confirmed|Tied-130th|401762/.test(n)));
+    const iosDump = [fau.film, ...(fau.opponentTendencies || []), ...(fau.defenseTendencies || [])];
+    assert.ok(!iosDump.some((n) => /NOT confirmed|Tied-130th|401762|highlight packages/i.test(n)));
+    assert.equal(iosDump.length, 7);
+  });
+
   it('bundle path points at repo seed', () => {
     const p = scheduleBoard.resolveReadPath(2026);
     assert.ok(p.includes(path.join('data', 'schedule', '2026-season.json')));

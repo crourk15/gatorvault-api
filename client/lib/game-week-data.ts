@@ -260,15 +260,29 @@ function defaultDepthChart(): DepthChartGroup[] {
   ];
 }
 
+/** Fan Film Notes. Prefer dedicated bullets. Never dump the raw scout log here. */
+export function buildFilmNotes(game: ScheduleGame): string[] {
+  const dedicated = (game.filmNotes || [])
+    .map((n) => String(n || '').trim())
+    .filter(Boolean);
+  if (dedicated.length) return dedicated;
+  const film = String(game.film || '').trim();
+  return film ? [film] : [];
+}
+
 function buildScouting(game: ScheduleGame): ScoutingReportIntel {
   return {
-    // UI: "Opponent offense" / "Opponent defense" — map tendencies, not howUFWins.
-    offense: game.opponentTendencies?.length
-      ? game.opponentTendencies
-      : ['Establish run game early', 'Protect the football', 'Win early downs'],
-    defense: game.defenseTendencies?.length
-      ? game.defenseTendencies
-      : ['Set the edge vs run', 'Communicate in tempo', 'Limit explosives'],
+    // UI: "Opponent offense" / "Opponent defense" — raw scout when present.
+    offense: game.offenseScout?.length
+      ? game.offenseScout
+      : game.opponentTendencies?.length
+        ? game.opponentTendencies
+        : ['Establish run game early', 'Protect the football', 'Win early downs'],
+    defense: game.defenseScout?.length
+      ? game.defenseScout
+      : game.defenseTendencies?.length
+        ? game.defenseTendencies
+        : ['Set the edge vs run', 'Communicate in tempo', 'Limit explosives'],
     specialTeams: ['Win field position', 'Clean punt coverage', 'No missed kicks'],
     matchupSummary: game.scoutingReport ?? game.film,
   };
@@ -309,11 +323,7 @@ function generateBundle(
     weather: isHomeGame(game) ? '84°F · Clear · Light wind' : '78°F · Humid · SE 8 mph',
     keys: buildKeys(game),
     swingPlayers: buildSwing(game),
-    filmNotes: [
-      game.film,
-      ...(game.opponentTendencies ?? []),
-      ...(game.defenseTendencies ?? []),
-    ].filter(Boolean),
+    filmNotes: buildFilmNotes(game),
     radar: defaultRadar(game.ufPct),
     depthChart: defaultDepthChart(),
     scouting: buildScouting(game),

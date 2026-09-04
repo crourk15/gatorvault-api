@@ -18,16 +18,22 @@ export type ScheduleGame = {
   keys: string[];
   swing: { name: string; role: string }[];
   film: string;
+  /** Fan-facing Film Notes bullets. Command Center prefers this over the scout dump. */
+  filmNotes?: string[];
   pred: string;
   /** Explicit projected score — prefer over parsing `pred`. */
   predUF: number;
   predOpp: number;
   /** Verified Film Room opponent-prep lesson id (knowledge engine). */
   filmLessonId?: string;
-  /** Opponent offense tendencies (film / box). */
+  /** Opponent offense tendencies (film / box). Fan-facing on live Game Week. */
   opponentTendencies?: string[];
-  /** Opponent defense tendencies (film / box / staff-public — label source in copy). */
+  /** Opponent defense tendencies (film / box / staff-public). Fan-facing on live Game Week. */
   defenseTendencies?: string[];
+  /** Raw offense scout log. Scouting tab prefers this when present. */
+  offenseScout?: string[];
+  /** Raw defense scout log. Scouting tab prefers this when present. */
+  defenseScout?: string[];
   howUFWins?: string[];
   scoutingReport?: string;
   /** Expected home visitors for this game week (from game-visitors JSON via API). */
@@ -86,12 +92,30 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Jayden Woods", role: "JACK — set the edge and rush Veltkamp off rhythm" },
     ],
     film:
-      "Offense (ESPN highlights): FAU W at Rice 27-21 (401762477) + W vs Tulsa 40-21 (401762505) — shotgun spread, pass-heavy, vertical + explosive run confirmed; tempo/RPO not confirmed. Defense (ESPN highlights + full 2025 drive/box dig): 4-down front + nickel/dime looks confirmed on Maryland/Memphis scoring clips; coverage shells not confirmed. Season: 36.3 PPG / 435.5 YPG allowed; only 3 INTs.",
+      "What the tape shows vs FAU. Shotgun. Pass first. Take the shot and the run. Then throw it over a 3 INT secondary.",
+    filmNotes: [
+      "Shotgun every snap we have. No under center.",
+      "Pass first even when they win. Veltkamp is clean if you let him sit.",
+      "They will take the deep shot. Rice clip was about 46 yards.",
+      "They will hit the explosive run too. Rice about 68. Navy ran for 397 last year.",
+      "Front is 4 down with extra DBs on obvious pass. Coverage calls not on the tape we have.",
+      "That defense gave up 200 rush yards a game and only 3 INTs. Run it, then throw it over them.",
+    ],
     pred: "UF 38 · FAU 10",
     predUF: 38,
     predOpp: 10,
     filmLessonId: "frl00004-0000-4000-8000-000000000004",
     opponentTendencies: [
+      "Shotgun every snap we have. No under center.",
+      "Pass first even when they win. Veltkamp is clean if you let him sit.",
+      "They will take the deep shot. Rice clip was about 46 yards.",
+      "They will hit the explosive run too. Rice about 68. Navy ran for 397 last year.",
+    ],
+    defenseTendencies: [
+      "Front is 4 down with extra DBs on obvious pass. Coverage calls not on the tape we have.",
+      "That defense gave up 200 rush yards a game and only 3 INTs. Run it, then throw it over them.",
+    ],
+    offenseScout: [
       "Shotgun spread on every snap reviewed — no under-center observed",
       "Pass-heavy even in wins (Veltkamp 24/33, 290 vs Rice; 22/29, 272 vs Tulsa)",
       "Vertical shot confirmed: deep TD pass vs Rice (~46-yard clip)",
@@ -100,7 +124,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Tempo / no-huddle between snaps: not confirmed on highlight packages",
       "RPO mesh: not confirmed on these highlight packages",
     ],
-    defenseTendencies: [
+    defenseScout: [
       "Film-confirmed (ESPN Maryland + Memphis highlight clips): 4-down front on multiple snaps; nickel/dime DB looks in obvious pass situations",
       "Coverage shells (Cover 2/3/man) + specific pressure packages: NOT confirmed on available highlight angles",
       "Box-confirmed 2025: 36.3 PPG allowed (436 pts / 12) and 435.5 YPG (200 rush / 235 pass)",

@@ -122,10 +122,13 @@ const BUNDLE_MODEL_KEYS = [
   'predUF',
   'predOpp',
   'film',
+  'filmNotes',
   'keys',
   'swing',
   'opponentTendencies',
   'defenseTendencies',
+  'offenseScout',
+  'defenseScout',
   'howUFWins',
   'scoutingReport',
 ];
@@ -263,6 +266,9 @@ function normalizeGame(row) {
     keys,
     swing,
     film: String(row.film || '').trim(),
+    filmNotes: Array.isArray(row.filmNotes)
+      ? row.filmNotes.map((x) => String(x || '').trim()).filter(Boolean)
+      : undefined,
     pred: String(row.pred || '').trim(),
     predUF: Number.isFinite(Number(row.predUF)) ? Number(row.predUF) : 0,
     predOpp: Number.isFinite(Number(row.predOpp)) ? Number(row.predOpp) : 0,
@@ -272,6 +278,12 @@ function normalizeGame(row) {
       : undefined,
     defenseTendencies: Array.isArray(row.defenseTendencies)
       ? row.defenseTendencies.map((x) => String(x || '').trim()).filter(Boolean)
+      : undefined,
+    offenseScout: Array.isArray(row.offenseScout)
+      ? row.offenseScout.map((x) => String(x || '').trim()).filter(Boolean)
+      : undefined,
+    defenseScout: Array.isArray(row.defenseScout)
+      ? row.defenseScout.map((x) => String(x || '').trim()).filter(Boolean)
       : undefined,
     howUFWins: Array.isArray(row.howUFWins)
       ? row.howUFWins.map((x) => String(x || '').trim()).filter(Boolean)
