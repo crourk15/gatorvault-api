@@ -58,6 +58,9 @@ describe('schedule-board', () => {
     assert.ok(fau.offenseScout?.some((n) => /Veltkamp 24\/33/.test(n)));
     assert.ok(fau.defenseScout?.some((n) => /Tied-130th|NOT confirmed/i.test(n)));
     assert.ok(fau.opponentTendencies.every((n) => !/NOT confirmed|Tied-130th|401762/.test(n)));
+    const iosDump = [fau.film, ...(fau.opponentTendencies || []), ...(fau.defenseTendencies || [])];
+    assert.ok(!iosDump.some((n) => /NOT confirmed|Tied-130th|401762|highlight packages/i.test(n)));
+    assert.equal(iosDump.length, 7);
   });
 
   it('bundle path points at repo seed', () => {
