@@ -1,3 +1,4 @@
+(function () {
 const JOBS_KEY = 'primeshine_jobs_v1';
 
 const JOB_SERVICES = [
@@ -51,7 +52,7 @@ function saveJobs() {
     return;
   }
   try {
-    localStorage.setItem(JOBS_KEY, JSON.stringify(jobs));
+    localStorage.setItem(JOBS_KEY, JSON.stringify(allJobs()));
   } catch (e) {}
 }
 
@@ -61,7 +62,7 @@ function newId() {
 
 function allJobs() {
   if (window.PrimeStore && Array.isArray(PrimeStore.jobs)) return PrimeStore.jobs;
-  return jobs;
+  return calJobsFallback;
 }
 
 function defaultPrice(serviceId, vehicle) {
@@ -80,7 +81,7 @@ function kindLabel(kind) {
   return 'One-time';
 }
 
-let jobs = loadJobs();
+const calJobsFallback = loadJobs();
 let calCursor = new Date();
 calCursor.setDate(1);
 let selectedIso = todayIso();
@@ -393,7 +394,7 @@ function addJobFromForm(event) {
   if (window.PrimeStore && typeof PrimeStore.addJob === 'function') {
     PrimeStore.addJob(payload);
   } else {
-    jobs.push({ id: newId(), ...payload, done: false, paid: false, reviewAsked: false, reviewReceived: false });
+    allJobs().push({ id: newId(), ...payload, done: false, paid: false, reviewAsked: false, reviewReceived: false });
     saveJobs();
   }
   selectedIso = date;
@@ -486,8 +487,23 @@ function initCalendar() {
   refreshIcons();
 }
 
+window.renderCalGrid = renderCalGrid;
+window.renderCalHeader = renderCalHeader;
+window.renderDayPanel = renderDayPanel;
+Object.defineProperty(window, 'selectedIso', {
+  get() { return selectedIso; },
+  set(v) { selectedIso = v; },
+  configurable: true,
+});
+Object.defineProperty(window, 'calCursor', {
+  get() { return calCursor; },
+  set(v) { calCursor = v; },
+  configurable: true,
+});
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initCalendar);
 } else {
   initCalendar();
 }
+})();

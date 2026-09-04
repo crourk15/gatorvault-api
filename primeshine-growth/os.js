@@ -334,7 +334,7 @@ function renderBook() {
         ${last ? `<button type="button" class="px-3 py-2 rounded-lg bg-sky-500 text-navy-900 text-xs font-semibold min-h-[40px]" data-review="${last.id}">Send review text</button>` : ''}
         ${c.phone ? `<a class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" href="${smsHref(c.phone, monthlyScript(c.name))}">Monthly text</a>` : ''}
         ${last && !last.reviewReceived ? `<button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-got-review="${last.id}">They left a review</button>` : ''}
-      </div>`
+      </div>
     </article>`;
   }).join('') : '<p class="text-sm text-slate-500">No clients yet. Add a job on Today or Calendar.</p>';
   root.querySelectorAll('[data-review]').forEach((btn) => {
