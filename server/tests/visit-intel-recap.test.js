@@ -10,6 +10,7 @@ const {
   isFloridaOfficialVisit,
   isUpcomingVisit,
   handleNewVerifiedVisitLogs,
+  shouldSkipUfCommitVisitAlert,
 } = require('../lib/visit-intel-ingest-hooks');
 
 describe('visit-intel-recap', () => {
@@ -74,6 +75,39 @@ describe('visit-intel-ingest-hooks', () => {
       }),
       false
     );
+  });
+
+  it('skips instant OV alerts for players already committed to Florida', async () => {
+    assert.equal(
+      shouldSkipUfCommitVisitAlert({ playerSlug: 'aaron-mcwilliams', playerName: 'Aaron McWilliams' }),
+      true
+    );
+    assert.equal(
+      shouldSkipUfCommitVisitAlert({
+        playerSlug: 'easton-royal',
+        playerName: 'Easton Royal',
+        status: 'committed',
+        committedTo: 'Texas',
+      }),
+      false
+    );
+    const result = await handleNewVerifiedVisitLogs(
+      [
+        {
+          playerSlug: 'aaron-mcwilliams',
+          playerName: 'Aaron McWilliams',
+          school: 'Florida',
+          visitType: 'official_visit',
+          source: 'on3',
+          date: '2099-09-05',
+          fingerprint: 'visit|aaron-mcwilliams|florida|official_visit|2099-09-05',
+        },
+      ],
+      { dryRun: true, queueX: false, asOf: '2026-09-05' }
+    );
+    assert.equal(result.results[0].skipped, true);
+    assert.equal(result.results[0].reason, 'already_uf_commit');
+    assert.equal(result.queued, 0);
   });
 
   it('handleNewVerifiedVisitLogs dryRun skips queue', async () => {

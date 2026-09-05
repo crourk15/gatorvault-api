@@ -200,6 +200,14 @@ async function dispatchVisitInstantEmail(payload, options = {}) {
 
 async function dispatchVisitScheduledEmail(log, options = {}) {
   if (!log?.playerSlug) return { ok: false, skipped: true, reason: "invalid_log" };
+  try {
+    const { resolveSkipUfCommitVisitAlert } = require("./visit-intel-ingest-hooks");
+    if (await resolveSkipUfCommitVisitAlert(log)) {
+      return { ok: true, skipped: true, reason: "already_uf_commit" };
+    }
+  } catch {
+    /* fail open to ingest hook */
+  }
   const name = log.playerName || log.playerSlug;
   const fingerprint = log.fingerprint || `visit_scheduled|${log.playerSlug}|${log.date}`;
   return dispatchVisitInstantEmail(

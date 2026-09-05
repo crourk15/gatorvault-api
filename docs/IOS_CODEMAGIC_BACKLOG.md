@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Visit emails: skip instant “Verified UF OV” for players already committed to Florida (On3 still lists commits on team-visit weekends — API)
 - [x] Admin Hub member last-seen: login + `GET /api/session` stamp into member-activity store (existing binary already hits session on vault open — API; no Codemagic)
 - [x] Gators Live: ESPN score/clock overlay on `/api/betting/lines` + `/api/gators-live` during the UF window (current App Store card already reads `homeScore` / `awayScore` / `status` — API; no Codemagic)
 - [x] Game Week FAU Film Notes: fan-facing bullets via `/api/schedule` (`film` + tendency arrays). Raw scout stays in `offenseScout` / `defenseScout` / `scoutingReport` (API — no Codemagic; iOS dump uses the fan arrays)

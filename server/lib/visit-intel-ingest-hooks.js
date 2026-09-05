@@ -44,6 +44,40 @@ function isUpcomingVisit(log, asOf = new Date()) {
   return window.visitEnd >= today || window.visitStart >= today;
 }
 
+/**
+ * UF commits still show on On3 team-visit lists (game weekends).
+ * Instant OV email/push is chase news — skip when they already pledged Florida.
+ * Flip targets committed elsewhere still alert.
+ */
+function shouldSkipUfCommitVisitAlert(log) {
+  const slug = String(log?.playerSlug || "")
+    .trim()
+    .toLowerCase();
+  if (!slug) return false;
+  const { isVerifiedUfCommitAnyYear, looksLikeFloridaCommit } = require("./recruiting-verified-commits");
+  if (isVerifiedUfCommitAnyYear(slug)) return true;
+  if (looksLikeFloridaCommit(log)) return true;
+  return false;
+}
+
+async function resolveSkipUfCommitVisitAlert(log) {
+  if (shouldSkipUfCommitVisitAlert(log)) return true;
+  const slug = String(log?.playerSlug || "")
+    .trim()
+    .toLowerCase();
+  if (!slug) return false;
+  try {
+    const store = require("./recruiting-store");
+    const player = await store.getPlayerBySlug(slug);
+    if (!player) return false;
+    if (typeof store.isFloridaCommit === "function" && store.isFloridaCommit(player)) return true;
+    const { looksLikeFloridaCommit } = require("./recruiting-verified-commits");
+    return looksLikeFloridaCommit(player);
+  } catch {
+    return false;
+  }
+}
+
 function buildUpcomingVisitPostText(log) {
   const name = log.playerName || log.playerSlug;
   return (
@@ -111,6 +145,10 @@ async function handleNewVerifiedVisitLogs(logs = [], options = {}) {
       results.push({ slug: log.playerSlug, skipped: true, reason: "already_alerted" });
       continue;
     }
+    if (await resolveSkipUfCommitVisitAlert(log)) {
+      results.push({ slug: log.playerSlug, skipped: true, reason: "already_uf_commit" });
+      continue;
+    }
 
     let queue = { queued: false, reason: dryRun ? "dry_run" : "skipped" };
     if (!dryRun && queueX) {
@@ -170,5 +208,7 @@ module.exports = {
   handleNewVerifiedVisitLogs,
   isFloridaOfficialVisit,
   isUpcomingVisit,
+  shouldSkipUfCommitVisitAlert,
+  resolveSkipUfCommitVisitAlert,
   buildUpcomingVisitPostText,
 };
