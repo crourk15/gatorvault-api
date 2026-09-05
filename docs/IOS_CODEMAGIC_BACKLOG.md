@@ -94,7 +94,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-05 | Member page trail: ping `/api/member-activity/ping` on vault navigation + `X-GV-Client` on `/api/session` | `VaultNavigationProvider` + `member-activity.ts` + session header in binary; **last-seen already live via login/session API** | pending |
+| 2026-09-05 | Member page trail: ping `/api/member-activity/ping` on vault navigation + `X-GV-Client` on `/api/session` | `VaultNavigationProvider` + `member-activity.ts` + session header in binary; **last-seen already live via login/session API** | #621 |
 | 2026-09-05 | Gators Live board: named Florida/opp scoreline, quarter·clock, drop “odds feed until wiring lands” copy | `VaultLiveScoresPage` + vault-shell CSS in binary; **score numbers already live via betting overlay** | pending |
 | 2026-09-04 | Game Week Film Notes: prefer `filmNotes`; Scouting reads `offenseScout` / `defenseScout` (stop concatenating raw tendencies into Film Notes) | `game-week-data` `buildFilmNotes` + scouting map in binary; **FAU fan copy already live via API** | pending |
 | 2026-09-02 | Game Week Prediction: Vegas from `/api/betting/lines` (no invented -14.5 / O/U from win% or score sum) | `GameWeekCommandCenter` + `game-week-data` in binary; **API static FAU line live without bake** | pending |
