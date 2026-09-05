@@ -108,6 +108,7 @@ Set `OPS_ADMIN_PIN` in Render for production.
 | **Job Queue** | `#dashboard/jobs` | Safe re-runs + heartbeats + recent ops logs |
 | **Post Studio** | `#dashboard/post-studio` | Advanced inbox/drafts (secondary to Beat Desk) |
 | **Members** | `#members/recent` | Newest signups: trial / paid / expired · **Channel** (Website vs iOS app) · marketing Source |
+| **Member Activity** | `#members/activity` | Last-seen + short page trail (24h / 7d) · iOS vs website · top pages. Last-seen from sign-in and `/api/session`; page pings from the vault client |
 
 ### Trial / onboarding email (Members)
 

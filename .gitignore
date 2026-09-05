@@ -27,6 +27,7 @@ server/.env
 server/apple-app-site-association
 server/.well-known/
 server/data/users.json
+server/data/member-activity/activity.json
 server/data/x/autoposter-queue.json
 server/data/x/autoposter-sent-commits.json
 server/data/x/autoposter-compose-angle-history.json

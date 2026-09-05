@@ -210,6 +210,8 @@
     .hub-mem-badge--trial{background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.35)}
     .hub-mem-badge--expired{background:rgba(148,163,184,.12);color:#cbd5e1;border:1px solid rgba(148,163,184,.3)}
     .hub-mem-copy{padding:6px 10px;min-height:32px;font-size:12px}
+    .hub-act-trail{display:flex;flex-wrap:wrap;gap:4px;max-width:280px}
+    .hub-act-chip{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;background:rgba(30,58,95,.65);border:1px solid rgba(148,163,184,.25);color:#cbd5e1;white-space:nowrap}
 
     /* Vault Grades Manager */
     .vge-grid{display:grid;grid-template-columns:1fr;gap:14px}
@@ -452,7 +454,7 @@
 
   <script src="/js/admin-api-fetch.js?v=4"></script>
   <script src="/js/vault-grade-editor.js?v=vge-20260611"></script>
-  <script src="/js/admin-hub-notecards.js?v=hub-nc-v9"></script>
+  <script src="/js/admin-hub-notecards.js?v=hub-nc-v10"></script>
   <script src="/js/admin-hub-fixer.js?v=hub-fixer-v2"></script>
   <script src="/js/admin-hub-coach.js?v=hub-coach-v5"></script>
   <script src="/js/admin-hub-dashboard.js?v=hub-dash-v13"></script>
@@ -470,7 +472,8 @@
   <script src="/js/admin-hub-unresolved-predictions.js?v=hub-upq-v2"></script>
   <script src="/js/admin-hub-product-intel.js?v=hub-pi-v1"></script>
   <script src="/js/admin-hub-members.js?v=hub-mem-v2"></script>
-  <script src="/js/admin-hub-core.js?v=hub-core-v11"></script>
+  <script src="/js/admin-hub-members-activity.js?v=hub-mem-act-v1"></script>
+  <script src="/js/admin-hub-core.js?v=hub-core-v12"></script>
   <script>
     document.getElementById('hub-lock-top').addEventListener('click', function () {
       document.getElementById('hub-lock').click();

@@ -290,3 +290,79 @@ test('listRecentMembers returns newest first without passwordHash', () => {
     }
   }
 });
+
+test('listMemberActivityForHub joins last-seen without leaking secrets', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-mem-act-hub-'));
+  const usersPath = path.join(tmp, 'users.json');
+  const actDir = path.join(tmp, 'activity');
+  const prevUsers = process.env.GV_USERS_PATH;
+  const prevAct = process.env.GV_MEMBER_ACTIVITY_DIR;
+  process.env.GV_USERS_PATH = usersPath;
+  process.env.GV_MEMBER_ACTIVITY_DIR = actDir;
+
+  const now = Date.now();
+  saveUsers([
+    {
+      email: 'trial@example.com',
+      name: 'Trial Fan',
+      passwordHash: 'SECRET_TRIAL',
+      createdAt: new Date(now - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      trialEnd: new Date(now + 5 * 24 * 60 * 60 * 1000).toISOString(),
+      tier: 'trial'
+    },
+    {
+      email: 'crourk15@example.com',
+      name: 'Staff',
+      passwordHash: 'SECRET_STAFF',
+      createdAt: new Date(now - 10 * 24 * 60 * 60 * 1000).toISOString(),
+      trialEnd: new Date(now + 5 * 24 * 60 * 60 * 1000).toISOString(),
+      tier: 'war'
+    }
+  ]);
+
+  delete require.cache[require.resolve('../lib/member-activity-store')];
+  const activity = require('../lib/member-activity-store');
+  activity.recordMemberActivity({
+    email: 'trial@example.com',
+    name: 'Trial Fan',
+    path: '/vault/recruiting',
+    client: 'ios',
+    at: new Date(now - 30 * 60 * 1000).toISOString()
+  });
+  activity.recordMemberActivity({
+    email: 'crourk15@example.com',
+    name: 'Staff',
+    path: '/vault/futurecast',
+    client: 'website',
+    at: new Date(now - 10 * 60 * 1000).toISOString()
+  });
+
+  try {
+    const hidden = hub.listMemberActivityForHub({ windowHours: 24, includeStaff: false });
+    assert.equal(hidden.total, 1);
+    assert.equal(hidden.members[0].email, 'trial@example.com');
+    assert.equal(hidden.members[0].lastPath, '/vault/recruiting');
+    assert.equal(hidden.members[0].lastPathLabel, 'Recruiting');
+    assert.equal(hidden.members[0].lastClient, 'ios');
+    assert.equal(hidden.members[0].access, 'trial');
+    assert.equal(hidden.counts.ios, 1);
+    assert.ok(hidden.topPages.some((p) => p.path === '/vault/recruiting'));
+    assert.equal(Object.prototype.hasOwnProperty.call(hidden.members[0], 'passwordHash'), false);
+    assert.ok(!JSON.stringify(hidden).includes('SECRET'));
+
+    const shown = hub.listMemberActivityForHub({ windowHours: 24, includeStaff: true });
+    assert.equal(shown.total, 2);
+    assert.ok(shown.members.some((m) => m.email === 'crourk15@example.com' && m.staff));
+  } finally {
+    if (prevUsers == null) delete process.env.GV_USERS_PATH;
+    else process.env.GV_USERS_PATH = prevUsers;
+    if (prevAct == null) delete process.env.GV_MEMBER_ACTIVITY_DIR;
+    else process.env.GV_MEMBER_ACTIVITY_DIR = prevAct;
+    delete require.cache[require.resolve('../lib/member-activity-store')];
+    try {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    } catch {
+      /* ignore */
+    }
+  }
+});

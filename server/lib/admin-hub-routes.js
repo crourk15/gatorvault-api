@@ -11,7 +11,7 @@ const { loadPublishedArticles } = require('./content-store');
 const { loadUsers, changeUserEmail, findUserByEmail, saveUsers, updateUser } = require('./user-store');
 const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 const { hasPaidAccess, trialState, isSubscriptionActive } = require('./subscription-service');
-const { effectiveTier } = require('./session-auth');
+const { effectiveTier, isAdminAccount } = require('./session-auth');
 const memberAnnounce = require('./member-announce-email');
 
 const MODULE_IDS = [
@@ -613,6 +613,114 @@ function listRecentMembers(opts = {}) {
   };
 }
 
+function parseWindowHours(raw) {
+  const n = parseInt(String(raw ?? '24'), 10);
+  if (!Number.isFinite(n)) return 24;
+  return Math.min(Math.max(n, 1), 24 * 14);
+}
+
+function pathLabel(raw) {
+  const p = String(raw || '');
+  if (p === '/login') return 'Signed in';
+  if (p === '/session') return 'Opened app';
+  if (p === '/vault' || p === '/vault/') return 'Home';
+  if (p.startsWith('/vault/recruiting')) return 'Recruiting';
+  if (p.startsWith('/vault/futurecast')) return 'FutureCast';
+  if (p.startsWith('/vault/team')) return 'Team';
+  if (p.startsWith('/vault/film')) return 'Film Room';
+  if (p.startsWith('/vault/live-scores') || p.startsWith('/vault/live/scores')) return 'Gators Live';
+  if (p.startsWith('/vault/live')) return 'GatorNation Live';
+  if (p.startsWith('/vault/community')) return 'Community';
+  if (p.startsWith('/vault/articles')) return 'Articles';
+  if (p.startsWith('/vault/schedule')) return 'Schedule';
+  if (p.startsWith('/vault/nil')) return 'NIL';
+  if (p.startsWith('/vault/tickets')) return 'Tickets';
+  if (p.startsWith('/vault/membership')) return 'Membership';
+  if (p.startsWith('/vault/player/')) return 'Player';
+  return p.replace(/^\/vault\/?/, '') || 'Home';
+}
+
+/**
+ * Last-seen + page trail for Admin Hub Members → Activity.
+ * Staff accounts hidden unless includeStaff.
+ */
+function listMemberActivityForHub(opts = {}) {
+  const windowHours = parseWindowHours(opts.windowHours ?? opts.hours ?? 24);
+  const sinceMs = Date.now() - windowHours * 60 * 60 * 1000;
+  const includeStaff = opts.includeStaff === true || opts.includeStaff === '1' || opts.includeStaff === 'true';
+  const limit = Math.min(Math.max(parseInt(String(opts.limit ?? 80), 10) || 80, 1), 200);
+
+  const activity = require('./member-activity-store');
+  const listed = activity.listActivity({ sinceMs, limit: 400 });
+  const pageCounts = Object.create(null);
+
+  const enriched = listed.members
+    .map((row) => {
+      const email = String(row.email || '').toLowerCase();
+      const staff = isAdminAccount(email);
+      let member = null;
+      try {
+        const user = findUserByEmail(email);
+        member = user ? toSafeMemberRow(user) : null;
+      } catch {
+        member = null;
+      }
+      const hits = activity.trailHitsSince(row, sinceMs);
+      return {
+        email,
+        name: member?.name || row.name || null,
+        access: member?.access || null,
+        tier: member?.tier || null,
+        staff,
+        lastSeenAt: row.lastSeenAt,
+        lastPath: row.lastPath,
+        lastPathLabel: pathLabel(row.lastPath),
+        lastClient: row.lastClient || 'unknown',
+        trail: hits.slice(0, 8).map((hit) => ({
+          at: hit.at,
+          path: hit.path,
+          label: pathLabel(hit.path),
+          client: hit.client,
+        })),
+      };
+    })
+    .filter((row) => includeStaff || !row.staff);
+
+  for (const row of enriched) {
+    for (const hit of row.trail) {
+      const key = hit.path || row.lastPath;
+      if (!key) continue;
+      pageCounts[key] = (pageCounts[key] || 0) + 1;
+    }
+  }
+
+  const topPages = Object.keys(pageCounts)
+    .sort((a, b) => pageCounts[b] - pageCounts[a] || a.localeCompare(b))
+    .slice(0, 8)
+    .map((p) => ({ path: p, label: pathLabel(p), count: pageCounts[p] }));
+
+  const visible = enriched.slice(0, limit);
+  const counts = {
+    active: enriched.length,
+    ios: enriched.filter((r) => r.lastClient === 'ios').length,
+    website: enriched.filter((r) => r.lastClient === 'website').length,
+    unknown: enriched.filter((r) => r.lastClient === 'unknown').length,
+  };
+
+  return {
+    members: visible,
+    total: enriched.length,
+    returned: visible.length,
+    counts,
+    topPages,
+    windowHours,
+    includeStaff,
+    limit,
+    note:
+      'Last-seen stamps on sign-in and app open (session check). Page-by-page trail needs the website (or the next iOS bake).',
+  };
+}
+
 function countOpenFeedback() {
   try {
     const feedback = require('./feedback-store');
@@ -780,6 +888,25 @@ function mountAdminHubRoutes(app) {
           articles: searchArticles(q, limit),
           users: searchUsers(q, limit)
         }
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Last-seen + short page trail — Admin Hub only. */
+  app.get('/api/admin/members/activity', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const payload = listMemberActivityForHub({
+        windowHours: req.query.hours || req.query.windowHours,
+        includeStaff: req.query.staff || req.query.includeStaff,
+        limit: req.query.limit,
+      });
+      return res.status(200).json({
+        ok: true,
+        updatedAt: new Date().toISOString(),
+        ...payload,
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -1387,6 +1514,7 @@ module.exports = {
   buildRecommendedActions,
   filterActionableAlerts,
   listRecentMembers,
+  listMemberActivityForHub,
   toSafeMemberRow,
   parseSinceMs
 };
