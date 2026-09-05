@@ -73,6 +73,7 @@ const { mountSubscriptionRoutes } = require('./lib/subscription-routes');
 const { mountPushAlertRoutes } = require('./lib/push-alert-routes');
 const { mountAlertEmailRoutes } = require('./lib/alert-email-routes');
 const { mountAccountRoutes } = require('./lib/account-routes');
+const { mountMemberActivityRoutes } = require('./lib/member-activity-routes');
 const pipelineGuards = require('./lib/pipeline-guards');
 
 const fetch = require('node-fetch');
@@ -227,6 +228,7 @@ function wireApplication() {
       mountPushAlertRoutes(app);
       mountAlertEmailRoutes(app);
       mountAccountRoutes(app);
+      mountMemberActivityRoutes(app);
     },
     function stepAdmin() {
       mountXAutoposterRoutes(app);
@@ -834,6 +836,12 @@ app.post('/api/login', async (req, res) => {
     });
     const sessionFields = buildSessionFields(user, pointsStore);
     const trialExpired = Boolean(sessionFields.membershipRequired);
+    try {
+      const { safeRecordFromReq } = require('./lib/member-activity-store');
+      safeRecordFromReq(req, { email: user.email, name: user.name, path: '/login' });
+    } catch {
+      /* last-seen must never fail login */
+    }
     return res.json({
       ok: true,
       trialExpired,
@@ -888,6 +896,12 @@ app.get('/api/session', (req, res) => {
   const user = findUserByEmail(session.email);
   if (!user) {
     return res.status(401).json({ ok: false, error: "Account not found. Sign in again." });
+  }
+  try {
+    const { safeRecordFromReq } = require('./lib/member-activity-store');
+    safeRecordFromReq(req, { email: user.email, name: user.name, path: '/session' });
+  } catch {
+    /* last-seen must never fail session */
   }
   return res.json({
     ok: true,

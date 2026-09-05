@@ -7,6 +7,7 @@ import { isVaultClientNavHref, vaultNavPathsEqual } from '@/lib/vault-nav-utils'
 import { isPlayerProfileHref, playerSlugFromHref, prefetchFullProfile } from '@/lib/player-full-profile-api';
 import { isNativeCatchAllDynamicHref, shouldUseNativeCatchAllNav } from '@/lib/native-spa-nav';
 import { navigateVaultHref, registerVaultSoftNav } from '@/lib/navigate-vault-href';
+import { pingMemberActivity } from '@/lib/member-activity';
 
 function normalizeVaultNavHref(href: string): string {
   try {
@@ -56,6 +57,7 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
 
   useEffect(() => {
     setIsNavigating(false);
+    pingMemberActivity(pathname);
   }, [pathname]);
 
   /** Prevent stuck pointer-events:none if client navigation never completes. */

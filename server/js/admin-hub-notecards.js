@@ -64,7 +64,7 @@
           ['FutureCast', 'Who’s on the board / allowlist. Check Vault feed 2028+ proof (7am/7pm) — created/updated lists must be real names.'],
           ['Runbooks', 'Only if something is broken (QA red, ingest lag, deploy).'],
           ['Job Queue', 'Safe re-runs. Don’t spam buttons — one job at a time.'],
-          ['Members', 'Who signed up recently (trial / paid / expired).']
+          ['Members', 'Who signed up recently (trial / paid / expired), plus Activity (last-seen and pages).']
         ];
 
     var ifRedYellow = deskFocus

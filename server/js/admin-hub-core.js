@@ -92,8 +92,11 @@
       label: 'Members',
       mark: 'MB',
       group: 'primary',
-      desc: 'Newest signups — trial, paid, and expired accounts',
-      panels: [{ id: 'recent', label: 'Recent Members', inline: true }]
+      desc: 'Newest signups plus last-seen and page trail',
+      panels: [
+        { id: 'recent', label: 'Recent Members', inline: true },
+        { id: 'activity', label: 'Activity', inline: true }
+      ]
     },
     {
       id: 'futurecast',
@@ -1469,6 +1472,16 @@
             });
           } else {
             panelEl.innerHTML = '<p class="hub-meta err">Members panel failed to load. Hard-refresh the page.</p>';
+          }
+        }
+        else if (panelId === 'activity' && section.id === 'members') {
+          if (global.GVAdminMembersActivity) {
+            GVAdminMembersActivity.render(panelEl, {
+              apiGet: apiGet,
+              onNavigate: navigateFromHash
+            });
+          } else {
+            panelEl.innerHTML = '<p class="hub-meta err">Activity panel failed to load. Hard-refresh the page.</p>';
           }
         }
         else if (panelId === 'platform') renderSettingsPanel(panelEl);

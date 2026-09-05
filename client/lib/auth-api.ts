@@ -259,7 +259,10 @@ export async function verifyStoredSession(opts?: { keepLocalOnNetworkError?: boo
   const keepOnSoftFailure = opts?.keepLocalOnNetworkError !== false;
   try {
     const res = await fetch(`${base}/api/session`, {
-      headers: { Authorization: `Bearer ${session.token}` },
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+        'X-GV-Client': isNativeApp() ? 'ios' : 'website',
+      },
       cache: 'no-store',
     });
     if (!res.ok) {

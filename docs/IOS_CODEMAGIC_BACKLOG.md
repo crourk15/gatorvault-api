@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Admin Hub member last-seen: login + `GET /api/session` stamp into member-activity store (existing binary already hits session on vault open — API; no Codemagic)
 - [x] Gators Live: ESPN score/clock overlay on `/api/betting/lines` + `/api/gators-live` during the UF window (current App Store card already reads `homeScore` / `awayScore` / `status` — API; no Codemagic)
 - [x] Game Week FAU Film Notes: fan-facing bullets via `/api/schedule` (`film` + tendency arrays). Raw scout stays in `offenseScout` / `defenseScout` / `scoutingReport` (API — no Codemagic; iOS dump uses the fan arrays)
 - [x] War Room: Tyler Boyd 2028 CB film watch — Jaire Alexander comp + island off-man / wrap finish (API / FutureCast Vault Scouting)
@@ -93,6 +94,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-05 | Member page trail: ping `/api/member-activity/ping` on vault navigation + `X-GV-Client` on `/api/session` | `VaultNavigationProvider` + `member-activity.ts` + session header in binary; **last-seen already live via login/session API** | pending |
 | 2026-09-05 | Gators Live board: named Florida/opp scoreline, quarter·clock, drop “odds feed until wiring lands” copy | `VaultLiveScoresPage` + vault-shell CSS in binary; **score numbers already live via betting overlay** | pending |
 | 2026-09-04 | Game Week Film Notes: prefer `filmNotes`; Scouting reads `offenseScout` / `defenseScout` (stop concatenating raw tendencies into Film Notes) | `game-week-data` `buildFilmNotes` + scouting map in binary; **FAU fan copy already live via API** | pending |
 | 2026-09-02 | Game Week Prediction: Vegas from `/api/betting/lines` (no invented -14.5 / O/U from win% or score sum) | `GameWeekCommandCenter` + `game-week-data` in binary; **API static FAU line live without bake** | pending |

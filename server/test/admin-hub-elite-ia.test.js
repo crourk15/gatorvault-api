@@ -46,7 +46,8 @@ describe('Admin Hub elite IA', () => {
 
   it('wires FutureCast script + cache-busted core/desk', () => {
     assert.match(html, /admin-hub-futurecast\.js\?v=hub-fc-v8/);
-    assert.match(html, /admin-hub-core\.js\?v=hub-core-v11/);
+    assert.match(html, /admin-hub-core\.js\?v=hub-core-v12/);
+    assert.match(html, /admin-hub-members-activity\.js\?v=hub-mem-act-v1/);
     assert.match(html, /admin-hub-beat-desk\.js\?v=hub-bd-v18/);
     assert.match(html, /#futurecast\/control/);
   });
@@ -73,7 +74,14 @@ describe('Admin Hub elite IA', () => {
   it('docs list Beat Desk default + FutureCast control', () => {
     assert.match(docs, /#beat-desk\/desk/);
     assert.match(docs, /#futurecast\/control/);
+    assert.match(docs, /#members\/activity/);
     assert.match(docs, /Legacy consoles/);
     assert.match(docs, /re-render on every visit/i);
+  });
+
+  it('Members section includes Activity panel', () => {
+    assert.match(core, /id: 'activity'/);
+    assert.match(core, /GVAdminMembersActivity/);
+    assert.match(core, /#members\/activity|#members\/recent|panelId === 'activity'/);
   });
 });
