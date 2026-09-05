@@ -541,6 +541,10 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     return pinned || threads[0] || null;
   }, [threads]);
 
+  const isGamedayTalk = Boolean(
+    todaysThread?.gameday || /game day talk/i.test(todaysThread?.title || ''),
+  );
+
   useEffect(() => {
     if (!justPostedId || selectedId) return;
     const t = window.setTimeout(() => setJustPostedId(null), 8000);
@@ -628,7 +632,9 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             <p className="gv-community__hero-brand">GatorVault</p>
             <h1 className="gv-community__hero-title">Community</h1>
             <p className="gv-community__hero-sub">
-              Staff opens today. Member threads below — use Recent to find yours.
+              {isGamedayTalk
+                ? 'Game day talk is open. Jump in now, during the game, and after.'
+                : 'Staff opens today. Member threads below — use Recent to find yours.'}
             </p>
           </div>
           <div className="gv-community__hero-accent" aria-hidden="true" />
@@ -638,13 +644,20 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
       <div className="gv-community__layout">
         <div className="gv-community__main">
           {todaysThread && !selectedId ? (
-            <PageSection title="Staff open" subtitle="Today’s staff thread — reply here to jump in.">
+            <PageSection
+              title={isGamedayTalk ? 'Game day talk' : 'Staff open'}
+              subtitle={
+                isGamedayTalk
+                  ? 'Now, during kickoff, and after the game — one thread.'
+                  : 'Today’s staff thread — reply here to jump in.'
+              }
+            >
               <button
                 type="button"
                 className="gv-community__today-card"
                 onClick={() => void openThread(todaysThread.id)}
               >
-                <Chip variant="staff">Today</Chip>
+                <Chip variant="staff">{isGamedayTalk ? 'Game day' : 'Today'}</Chip>
                 <h3 className="gv-community__today-title">{todaysThread.title}</h3>
                 <p className="gv-community__today-meta">
                   {todaysThread.authorDisplay || 'GatorVault Staff'} ·{' '}

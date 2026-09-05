@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Community Staff open: game-day talk title/body (Florida vs FAU) from daily-open API — iOS card reads live thread
 - [x] Visit emails: skip instant “Verified UF OV” for players already committed to Florida (On3 still lists commits on team-visit weekends — API)
 - [x] Admin Hub member last-seen: login + `GET /api/session` stamp into member-activity store (existing binary already hits session on vault open — API; no Codemagic)
 - [x] Gators Live: ESPN score/clock overlay on `/api/betting/lines` + `/api/gators-live` during the UF window (current App Store card already reads `homeScore` / `awayScore` / `status` — API; no Codemagic)
@@ -95,6 +96,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-05 | Community: Game day chip + hero copy on Staff open (title/body already live via API) | `VaultCommunityPage` chip/hero in binary | #623 |
 | 2026-09-05 | Member page trail: ping `/api/member-activity/ping` on vault navigation + `X-GV-Client` on `/api/session` | `VaultNavigationProvider` + `member-activity.ts` + session header in binary; **last-seen already live via login/session API** | #621 |
 | 2026-09-05 | Gators Live board: named Florida/opp scoreline, quarter·clock, drop “odds feed until wiring lands” copy | `VaultLiveScoresPage` + vault-shell CSS in binary; **score numbers already live via betting overlay** | pending |
 | 2026-09-04 | Game Week Film Notes: prefer `filmNotes`; Scouting reads `offenseScout` / `defenseScout` (stop concatenating raw tendencies into Film Notes) | `game-week-data` `buildFilmNotes` + scouting map in binary; **FAU fan copy already live via API** | pending |

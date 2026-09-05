@@ -174,16 +174,17 @@ function resolveThreadId(id) {
   return raw;
 }
 
-function todayKeyET() {
+function todayKeyET(asOf) {
+  const when = asOf ? new Date(asOf) : new Date();
   try {
     return new Intl.DateTimeFormat('en-CA', {
       timeZone: 'America/New_York',
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
-    }).format(new Date());
+    }).format(when);
   } catch {
-    return new Date().toISOString().slice(0, 10);
+    return when.toISOString().slice(0, 10);
   }
 }
 
@@ -226,13 +227,33 @@ function staffSession() {
  * One fresh staff OP per ET calendar day. Does not invent fan replies.
  * Idempotent: returns existing daily thread when already published.
  */
-function ensureDailyOpenThread() {
+function ensureDailyOpenThread(opts = {}) {
   ensureCategories();
   ensureFoundingSurface();
   ensureStaffUser();
-  const today = todayKeyET();
+  const today = opts.dayKey || todayKeyET(opts.asOf);
   const threads = loadThreads();
   const existing = threads.find((t) => t.dailyKey === today && !t.deleted);
+  let gameday = null;
+  try {
+    const { pickGamedayOpen, shouldUpgradeDailyToGameday } = require('./community-gameday-open');
+    gameday = pickGamedayOpen({ asOf: opts.asOf, dayKey: today });
+    if (existing && gameday && shouldUpgradeDailyToGameday(existing, gameday)) {
+      const cats = ensureCategories();
+      const cat = cats.find((c) => c.slug === gameday.categorySlug) || cats[0];
+      existing.title = gameday.title;
+      existing.body = gameday.body;
+      existing.gameday = true;
+      existing.categoryId = cat.id;
+      existing.categorySlug = cat.slug;
+      existing.pinned = true;
+      existing.featured = true;
+      saveThreads(threads);
+      return { created: false, thread: existing, replaced: true };
+    }
+  } catch {
+    gameday = null;
+  }
   if (existing) {
     // Keep today's daily at the top of Jump-in.
     if (!existing.pinned || !existing.featured) {
@@ -243,7 +264,7 @@ function ensureDailyOpenThread() {
     return { created: false, thread: existing, replaced: false };
   }
 
-  const prompt = DAILY_OPEN_PROMPTS[dayOfYearET() % DAILY_OPEN_PROMPTS.length];
+  const prompt = gameday || DAILY_OPEN_PROMPTS[dayOfYearET() % DAILY_OPEN_PROMPTS.length];
   const cats = ensureCategories();
   const cat = cats.find((c) => c.slug === prompt.categorySlug) || cats[0];
   const ts = nowIso();
@@ -265,6 +286,7 @@ function ensureDailyOpenThread() {
     pinned: true,
     locked: false,
     featured: true,
+    gameday: Boolean(prompt.gameday),
     replyCount: 0,
     viewCount: 0,
     lastActivityAt: ts,
@@ -317,6 +339,7 @@ function adminSetDailyOpen({ title, body, categorySlug } = {}) {
   }
   threads[idx].pinned = true;
   threads[idx].featured = true;
+  if (/game day talk/i.test(threads[idx].title || '')) threads[idx].gameday = true;
   threads[idx].lastActivityAt = nowIso();
   threads[idx].staffOverrideAt = nowIso();
 
