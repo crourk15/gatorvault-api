@@ -7,6 +7,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Chip, PageLayout, PageSection } from '@/components/brand';
 import { fetchBettingLines, type BettingGame } from '@/lib/betting-api';
+import { fetchGatorsLive } from '@/lib/gators-live-api';
 import {
   gatorsLiveMode,
   getFeaturedUfGame,
@@ -16,44 +17,48 @@ import {
 import type { ScheduleGame } from '@/lib/schedule-data';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
-const POLL_MS = 60_000;
+const POLL_MS = 30_000;
 
-function gameTeams(g: BettingGame): { home: string; away: string } {
-  const oppExtra = (g as BettingGame & { opponent?: string }).opponent;
-  return {
-    home: g.homeTeam || g.home || g.game?.split(/\s+vs\.?\s+/i)?.[0] || 'Florida',
-    away: g.awayTeam || g.away || oppExtra || g.game?.split(/\s+vs\.?\s+/i)?.[1] || 'Opponent',
-  };
-}
+type BoardModel = {
+  opponent: string;
+  ufScore: number | null;
+  oppScore: number | null;
+  status: string;
+  live: boolean;
+};
 
-function isLiveStatus(g: BettingGame): boolean {
-  const s = (g.status || '').toLowerCase();
+function isLiveStatus(status: string, liveFlag?: boolean): boolean {
+  if (liveFlag === true) return true;
+  const s = (status || '').toLowerCase();
   return s.includes('live') || s.includes('in progress') || s.includes('halftime');
 }
 
 function isUfBettingGame(g: BettingGame): boolean {
-  const blob = [
-    g.homeTeam,
-    g.awayTeam,
-    g.home,
-    g.away,
-    g.game,
-    (g as { opponent?: string }).opponent,
-  ]
+  const blob = [g.homeTeam, g.awayTeam, g.home, g.away, g.game, g.opponent]
     .filter(Boolean)
     .join(' ')
     .toLowerCase();
   return /\bflorida\b|\bgators\b|\buf\b/.test(blob);
 }
 
-function formatScore(g: BettingGame): string {
-  const h = g.homeScore != null ? g.homeScore : '—';
-  const a = g.awayScore != null ? g.awayScore : '—';
-  return `${h} – ${a}`;
-}
-
 function pickUfGame(games: BettingGame[]): BettingGame | null {
   return games.find(isUfBettingGame) || games[0] || null;
+}
+
+function boardFromBetting(g: BettingGame, scheduleGame: ScheduleGame | null): BoardModel {
+  const opp = scheduleGame?.opp || g.opponent || g.awayTeam || g.away || 'Opponent';
+  const status = String(g.status || scheduleGame?.date || g.kickoff || g.date || 'Scheduled');
+  return {
+    opponent: opp,
+    ufScore: g.homeScore != null ? Number(g.homeScore) : null,
+    oppScore: g.awayScore != null ? Number(g.awayScore) : null,
+    status,
+    live: isLiveStatus(status, g.live),
+  };
+}
+
+function scoreText(n: number | null): string {
+  return n == null || Number.isNaN(n) ? '—' : String(n);
 }
 
 function ReadyCard({ game }: { game: ScheduleGame }): React.ReactElement {
@@ -63,7 +68,7 @@ function ReadyCard({ game }: { game: ScheduleGame }): React.ReactElement {
       <p className="gv-gators-live__ready-eyebrow">Season ready</p>
       <h2 className="gv-gators-live__ready-title">Gators Live activates on game day</h2>
       <p className="gv-gators-live__ready-dek">
-        Florida football only — score, status, and clock when the Gators are on the field. No
+        Florida football only — score, quarter, and clock when the Gators are on the field. No
         national board noise.
       </p>
       <div className="gv-gators-live__next">
@@ -93,44 +98,43 @@ function ReadyCard({ game }: { game: ScheduleGame }): React.ReactElement {
 }
 
 function LiveBoard({
-  game,
+  board,
   scheduleGame,
-  live,
 }: {
-  game: BettingGame;
+  board: BoardModel;
   scheduleGame: ScheduleGame | null;
-  live: boolean;
 }): React.ReactElement {
-  const { home, away } = gameTeams(game);
-  const opp = scheduleGame?.opp || away;
   return (
     <article
-      className={`gv-gators-live__board${live ? ' is-live' : ''}`}
+      className={`gv-gators-live__board${board.live ? ' is-live' : ''}`}
       data-testid="gators-live-board"
     >
       <div className="gv-gators-live__board-head">
-        {live ? (
+        {board.live ? (
           <span className="gv-live-scores__badge">
             <span className="gv-live-scores__dot" aria-hidden="true" />
             LIVE
           </span>
         ) : (
-          <Chip variant="blue">Game window</Chip>
+          <Chip variant="blue">{/final/i.test(board.status) ? 'Final' : 'Game window'}</Chip>
         )}
         <p className="gv-gators-live__board-label">Florida Gators</p>
       </div>
       <p className="gv-gators-live__board-matchup">
-        {home.includes('Florida') || home === 'UF' ? 'Florida' : home}{' '}
-        <span>vs</span> {opp}
+        Florida <span>vs</span> {board.opponent}
       </p>
-      <p className={`gv-gators-live__board-score${live ? ' is-live' : ''}`}>{formatScore(game)}</p>
-      <p className="gv-gators-live__board-status">
-        {game.status || (live ? 'In progress' : scheduleGame?.date || game.kickoff || game.date || 'Scheduled')}
-      </p>
-      <p className="gv-gators-live__board-meta">
-        Updates every 60 seconds during the UF game window. Odds/schedule feed until full live
-        score wiring lands for kickoff.
-      </p>
+      <div className="gv-gators-live__scoreline" data-testid="gators-live-scoreline">
+        <div className="gv-gators-live__score-row">
+          <span>Florida</span>
+          <strong className={board.live ? 'is-live' : undefined}>{scoreText(board.ufScore)}</strong>
+        </div>
+        <div className="gv-gators-live__score-row">
+          <span>{board.opponent}</span>
+          <strong>{scoreText(board.oppScore)}</strong>
+        </div>
+      </div>
+      <p className="gv-gators-live__board-status">{board.status}</p>
+      <p className="gv-gators-live__board-meta">Updates every 30 seconds while the Gators are on.</p>
       {scheduleGame ? (
         <div className="gv-gators-live__links">
           <a
@@ -148,16 +152,14 @@ function LiveBoard({
 export function VaultLiveScoresPage(): React.ReactElement {
   const [mode, setMode] = useState<'live-window' | 'ready'>(() => gatorsLiveMode());
   const featured = useMemo(() => getFeaturedUfGame(), [mode]);
-  const [ufLine, setUfLine] = useState<BettingGame | null>(null);
+  const [board, setBoard] = useState<BoardModel | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [hasLive, setHasLive] = useState(false);
 
   const loadLive = useCallback(async () => {
     if (!isUfGameLiveWindow()) {
       setMode('ready');
-      setUfLine(null);
-      setHasLive(false);
+      setBoard(null);
       setLoading(false);
       return;
     }
@@ -165,25 +167,49 @@ export function VaultLiveScoresPage(): React.ReactElement {
     setLoading(true);
     setError(null);
     try {
+      try {
+        const live = await fetchGatorsLive();
+        if (live.mode === 'ready' && !live.inWindow) {
+          setMode('ready');
+          setBoard(null);
+          return;
+        }
+        if (live.board) {
+          const status = String(live.board.status || live.board.detail || 'Scheduled');
+          setBoard({
+            opponent: live.board.opponent || featured?.opp || 'Opponent',
+            ufScore: live.board.ufScore ?? null,
+            oppScore: live.board.oppScore ?? null,
+            status,
+            live: Boolean(live.board.live) || isLiveStatus(status),
+          });
+          return;
+        }
+      } catch {
+        /* fall through to betting overlay */
+      }
+
       const data = await fetchBettingLines();
       const schedule = data.schedule ?? [];
       const list = data.nextGame ? [data.nextGame, ...schedule] : schedule;
       const uf = pickUfGame(list);
-      setUfLine(uf);
-      setHasLive(Boolean(uf && isLiveStatus(uf)));
+      if (!uf) {
+        setBoard(null);
+        return;
+      }
+      setBoard(boardFromBetting(uf, featured));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load Gators Live.');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [featured]);
 
   useEffect(() => {
     const refreshMode = () => setMode(gatorsLiveMode());
     refreshMode();
 
     if (!isUfGameLiveWindow()) {
-      // Offseason / midweek — no provider calls.
       return;
     }
 
@@ -196,14 +222,14 @@ export function VaultLiveScoresPage(): React.ReactElement {
     };
   }, [loadLive]);
 
-  // If we leave the window while mounted, stop showing stale poll state.
   useEffect(() => {
     if (mode === 'ready') {
-      setUfLine(null);
-      setHasLive(false);
+      setBoard(null);
       setError(null);
     }
   }, [mode]);
+
+  const hasLive = Boolean(board?.live);
 
   return (
     <PageLayout
@@ -211,7 +237,7 @@ export function VaultLiveScoresPage(): React.ReactElement {
       title="Gators Live"
       subtitle={
         mode === 'live-window'
-          ? 'Florida football — live updates every 60 seconds in the game window'
+          ? 'Florida football — score and clock in the game window'
           : 'Florida football game-day scoreboard — ready for the 2026 season'
       }
       testId="vault-live-scores"
@@ -229,16 +255,16 @@ export function VaultLiveScoresPage(): React.ReactElement {
 
       {mode === 'live-window' ? (
         <>
-          {loading && !ufLine ? <p className="gv-page-status">Loading Gators Live…</p> : null}
+          {loading && !board ? <p className="gv-page-status">Loading Gators Live…</p> : null}
           {error && !loading ? (
             <UiError message={error} retry={() => void loadLive()} backHref="/vault" backLabel="← Vault" />
           ) : null}
-          {!error && ufLine ? (
+          {!error && board ? (
             <PageSection title="Florida game">
-              <LiveBoard game={ufLine} scheduleGame={featured} live={hasLive} />
+              <LiveBoard board={board} scheduleGame={featured} />
             </PageSection>
           ) : null}
-          {!error && !loading && !ufLine ? (
+          {!error && !loading && !board ? (
             <UiEmpty
               message="Waiting on Florida game data."
               hint="Game window is open — check back in a minute, or open Game Week."

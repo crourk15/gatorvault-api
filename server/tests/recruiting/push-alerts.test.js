@@ -154,6 +154,10 @@ describe("gators-score-alerts window", () => {
     assert.equal(isUfGameLiveWindow(new Date("2026-07-16T16:00:00-04:00")), false);
   });
 
+  it("keeps the FAU window open through a late Saturday final", () => {
+    assert.equal(isUfGameLiveWindow(new Date("2026-09-06T02:30:00.000Z")), true);
+  });
+
   it("extracts Florida from ESPN-shaped scoreboard", () => {
     const game = extractFloridaGame({
       events: [

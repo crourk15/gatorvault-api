@@ -3551,6 +3551,38 @@ body.gv-scroll-locked {
   color: #fa4616;
 }
 
+.gv-gators-live__scoreline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0.35rem 0 0.65rem;
+}
+
+.gv-gators-live__score-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.gv-gators-live__score-row span {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.gv-gators-live__score-row strong {
+  font-size: 2.35rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  line-height: 1;
+}
+
+.gv-gators-live__score-row strong.is-live {
+  color: #fa4616;
+}
+
 .gv-gators-live__board-status {
   margin: 0.35rem 0 0.75rem;
   font-size: 0.9375rem;
