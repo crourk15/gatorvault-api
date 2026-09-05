@@ -119,14 +119,26 @@ async function getBettingLines() {
   const next =
     (live && live[0]) ||
     STATIC_LINES.slice().sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+  const schedule = live || STATIC_LINES;
+  let overlay = null;
+  try {
+    const { getUfLiveBoard } = require('./uf-live-score');
+    const board = await getUfLiveBoard();
+    overlay = board?.overlay || null;
+  } catch (e) {
+    console.warn('[betting-lines] UF live score overlay failed:', e.message);
+  }
+  const nextGame = overlay ? { ...next, ...overlay } : next;
   return {
     ok: true,
     liveOddsEnabled: !!ODDS_API_KEY,
     affiliateUrl: FANDUEL_AFFILIATE,
     hardRockBetUrl: HARD_ROCK_BET_URL,
     sportsbooks: SPORTSBOOKS,
-    nextGame: next,
-    schedule: live || STATIC_LINES
+    nextGame,
+    schedule: overlay
+      ? schedule.map((g) => (g.id === next.id ? { ...g, ...overlay } : g))
+      : schedule
   };
 }
 

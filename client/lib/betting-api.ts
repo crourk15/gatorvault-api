@@ -17,6 +17,11 @@ export type BettingGame = {
   status?: string;
   homeScore?: number | null;
   awayScore?: number | null;
+  clock?: string | null;
+  period?: number | null;
+  live?: boolean;
+  completed?: boolean;
+  scoreSource?: string;
   source?: string;
 };
 

@@ -4,8 +4,16 @@
  */
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch');
 const { dispatchScorePush } = require('./push-alert-service');
+const { parseEasternKickoff } = require('./eastern-kickoff');
+const {
+  extractFloridaGame,
+  fetchEspnScoreboard,
+  isInProgressState,
+  isPrematchState,
+  isUfGameLiveWindow,
+  UF_2026_GAMES,
+} = require('./uf-live-score');
 
 function resolveStatePath() {
   const fromEnv = String(process.env.GV_OPS_DATA_DIR || process.env.GV_LIVE_DATA_DIR || '').trim();
@@ -16,45 +24,9 @@ function resolveStatePath() {
 }
 
 const STATE_PATH = resolveStatePath();
-const PREGAME_HOURS = 3;
-const POSTGAME_HOURS = 5;
-const FLORIDA_TEAM_ID = '57';
-
-/** Keep in sync with client/lib/schedule-data.ts (kickoff strings). */
-const UF_2026_GAMES = [
-  { opp: 'FAU Owls', date: 'September 5, 2026 7:45 PM ET' },
-  { opp: 'Campbell Camels', date: 'September 12, 2026 5:30 PM ET' },
-  { opp: 'Auburn Tigers', date: 'September 19, 2026 7:00 PM ET' },
-  { opp: 'Ole Miss Rebels', date: 'September 26, 2026 TBA' },
-  { opp: 'Missouri Tigers', date: 'October 3, 2026 TBA' },
-  { opp: 'South Carolina Gamecocks', date: 'October 10, 2026 TBA' },
-  { opp: 'Texas Longhorns', date: 'October 17, 2026 TBA' },
-  { opp: 'Georgia Bulldogs', date: 'October 31, 2026 3:30 PM ET' },
-  { opp: 'Kentucky Wildcats', date: 'November 14, 2026 TBA' },
-  { opp: 'Vanderbilt Commodores', date: 'November 21, 2026 TBA' },
-  { opp: 'Florida State Seminoles', date: 'November 27, 2026 TBA' },
-];
 
 function parseScheduleKickoff(dateStr) {
-  const cleaned = String(dateStr || '')
-    .replace(/\s*[|]\s*/g, ' ')
-    .replace(/\s*ET\s*$/i, '')
-    .trim();
-  if (!cleaned || /TBA/i.test(cleaned)) return null;
-  const d = new Date(cleaned);
-  return Number.isFinite(d.getTime()) ? d : null;
-}
-
-function isUfGameLiveWindow(now = new Date()) {
-  const t = now.getTime();
-  for (const g of UF_2026_GAMES) {
-    const kick = parseScheduleKickoff(g.date);
-    if (!kick) continue;
-    const start = kick.getTime() - PREGAME_HOURS * 3600_000;
-    const end = kick.getTime() + POSTGAME_HOURS * 3600_000;
-    if (t >= start && t <= end) return true;
-  }
-  return false;
+  return parseEasternKickoff(dateStr);
 }
 
 function readState() {
@@ -71,50 +43,12 @@ function writeState(doc) {
   fs.writeFileSync(STATE_PATH, JSON.stringify(doc, null, 2));
 }
 
-function extractFloridaGame(scoreboard) {
-  const events = scoreboard?.events || [];
-  for (const event of events) {
-    const comps = event.competitions || [];
-    for (const comp of comps) {
-      const competitors = comp.competitors || [];
-      const florida = competitors.find(
-        (c) => String(c.team?.id) === FLORIDA_TEAM_ID || /florida/i.test(c.team?.displayName || '')
-      );
-      if (!florida) continue;
-      const opponent = competitors.find((c) => c !== florida);
-      const status = comp.status?.type || {};
-      return {
-        eventId: String(event.id || comp.id || ''),
-        opponent: opponent?.team?.displayName || opponent?.team?.shortDisplayName || 'Opponent',
-        ufScore: florida.score != null ? Number(florida.score) : null,
-        oppScore: opponent?.score != null ? Number(opponent.score) : null,
-        state: String(status.name || status.state || '').toLowerCase(),
-        completed: Boolean(status.completed),
-        detail: status.detail || status.shortDetail || '',
-      };
-    }
-  }
-  return null;
-}
-
-async function fetchEspnScoreboard() {
-  const url =
-    process.env.ESPN_CFB_SCOREBOARD_URL ||
-    'https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=8&limit=100';
-  const res = await fetch(url, {
-    headers: { Accept: 'application/json', 'User-Agent': 'GatorVaultScoreAlerts/1.0' },
-    timeout: 20_000,
-  });
-  if (!res.ok) throw new Error(`espn_scoreboard_${res.status}`);
-  return res.json();
-}
-
 function isInProgress(state) {
-  return /in|live|halftime|end.?period|end.?half/i.test(state || '');
+  return isInProgressState(state);
 }
 
 function isPrematch(state) {
-  return /pre|sched|status_scheduled/i.test(state || '') || !state;
+  return isPrematchState(state);
 }
 
 async function runGatorsScoreAlerts(options = {}) {

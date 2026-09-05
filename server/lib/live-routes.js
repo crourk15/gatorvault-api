@@ -69,6 +69,25 @@ function mountLiveRoutes(app) {
     }
   });
 
+  app.get('/api/gators-live', async (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    try {
+      const { getUfLiveBoard } = require('./uf-live-score');
+      const force = req.query.force === '1' || req.query.refresh === '1';
+      const board = await getUfLiveBoard({ force, refresh: force });
+      return res.status(200).json(board);
+    } catch (err) {
+      return res.status(200).json({
+        ok: false,
+        mode: 'ready',
+        inWindow: false,
+        featured: null,
+        board: null,
+        error: err.message,
+      });
+    }
+  });
+
   app.get('/api/live/dashboard/health', (req, res) => {
     try {
       const dashCache = require('./live-dashboard-cache');

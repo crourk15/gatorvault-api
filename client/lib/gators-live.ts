@@ -9,31 +9,90 @@ const PREGAME_HOURS = 3;
 /** Hours after kickoff to keep polling (covers OT / final). */
 const POSTGAME_HOURS = 5;
 
+const MONTHS: Record<string, number> = {
+  january: 1,
+  february: 2,
+  march: 3,
+  april: 4,
+  may: 5,
+  june: 6,
+  july: 7,
+  august: 8,
+  september: 9,
+  october: 10,
+  november: 11,
+  december: 12,
+};
+
+function easternLocalToDate(
+  year: number,
+  month: number,
+  day: number,
+  hour24: number,
+  minute: number,
+): Date {
+  const wanted = Date.UTC(year, month - 1, day, hour24, minute, 0);
+  let utc = wanted;
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+  for (let i = 0; i < 4; i += 1) {
+    const parts = Object.fromEntries(
+      fmt.formatToParts(new Date(utc)).map((p) => [p.type, p.value]),
+    );
+    let hour = Number(parts.hour);
+    if (hour === 24) hour = 0;
+    const got = Date.UTC(
+      Number(parts.year),
+      Number(parts.month) - 1,
+      Number(parts.day),
+      hour,
+      Number(parts.minute),
+      Number(parts.second || 0),
+    );
+    const diff = wanted - got;
+    utc += diff;
+    if (diff === 0) break;
+  }
+  return new Date(utc);
+}
+
 export function parseScheduleKickoff(dateStr: string): Date | null {
   let cleaned = String(dateStr || '')
     .replace(/\s*[·|]\s*/g, ' ')
-    .replace(/\s*ET\s*$/i, '')
+    .replace(/\s+/g, ' ')
     .trim();
   if (!cleaned) return null;
-  // Open date / placeholders — use calendar date at noon local so ordering still works.
-  cleaned = cleaned.replace(/\b(OFF|FLEX|EARLY|NIGHT|TBA|TBD)\b/gi, '').trim();
-  // Kickoff windows ("3:30–8:00 PM") → use window start.
+  if (/\b(OFF|FLEX|EARLY|NIGHT|TBA|TBD)\b/i.test(cleaned)) return null;
   cleaned = cleaned
     .replace(
       /(\d{1,2}:\d{2})\s*[-–]\s*\d{1,2}:\d{2}\s*(AM|PM)/i,
       (_, t, ap) => `${t} ${ap}`,
     )
-    .replace(/\s+/g, ' ')
     .trim();
-  if (!cleaned) return null;
-  let d = new Date(cleaned);
-  if (Number.isFinite(d.getTime())) return d;
-  // Date-only fallback (month day, year).
   const m = cleaned.match(
-    /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),\s*(\d{4})\b/i,
+    /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),\s*(\d{4})(?:\s+(\d{1,2}):(\d{2})\s*(AM|PM))?(?:\s*ET)?/i,
   );
-  if (!m) return null;
-  d = new Date(`${m[1]} ${m[2]}, ${m[3]} 12:00:00`);
+  if (m) {
+    const month = MONTHS[m[1].toLowerCase()];
+    const day = Number(m[2]);
+    const year = Number(m[3]);
+    if (!m[4]) return easternLocalToDate(year, month, day, 12, 0);
+    let hour = Number(m[4]);
+    const minute = Number(m[5]);
+    const ap = String(m[6] || 'AM').toUpperCase();
+    if (ap === 'PM' && hour < 12) hour += 12;
+    if (ap === 'AM' && hour === 12) hour = 0;
+    return easternLocalToDate(year, month, day, hour, minute);
+  }
+  const d = new Date(cleaned.replace(/\s*ET\s*$/i, '').trim());
   return Number.isFinite(d.getTime()) ? d : null;
 }
 
