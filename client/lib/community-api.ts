@@ -39,6 +39,7 @@ export type CommunityThread = {
   lastActivityAt?: string;
   editedAt?: string;
   dailyKey?: string;
+  gameday?: boolean;
   category?: { name?: string; slug?: string } | null;
 };
 
