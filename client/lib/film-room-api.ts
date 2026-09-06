@@ -72,6 +72,7 @@ export async function fetchFilmRoomLesson(id: string): Promise<FilmRoomLessonDet
 }
 
 export const FILM_HUB_ORDER = [
+  'GatorVault Review',
   'Film Breakdown',
   'Scheme School',
   'UF Press Conferences',
@@ -89,11 +90,19 @@ export function isFilmBreakdownEligibleTitle(title?: string | null): boolean {
   return true;
 }
 
-/** Map legacy / ingest hub labels onto the four Film Room rails. */
+/** Map legacy / ingest hub labels onto the Film Room rails. */
 export function normalizeFilmHub(hub?: string | null): string {
   const raw = String(hub || '').trim();
   if (!raw) return 'Film Breakdown';
-  if (raw === 'GNFP Film Review' || raw === 'Game Week' || /film\s*breakdown|film\s*review/i.test(raw)) {
+  if (/gatorvault\s*review|vault\s*film\s*review|^our\s*tape$/i.test(raw)) {
+    return 'GatorVault Review';
+  }
+  if (
+    raw === 'GNFP Film Review' ||
+    raw === 'Game Week' ||
+    /film\s*breakdown|film\s*guy|gnfp/i.test(raw) ||
+    (/film\s*review/i.test(raw) && !/gatorvault|vault/i.test(raw))
+  ) {
     return 'Film Breakdown';
   }
   if (/scheme\s*school/i.test(raw)) return 'Scheme School';

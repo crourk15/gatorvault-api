@@ -30,6 +30,8 @@ export type ScheduleGame = {
   finalSource?: string;
   /** Verified Film Room opponent-prep lesson id (knowledge engine). */
   filmLessonId?: string;
+  /** GatorVault Film Review id (our weekly board). */
+  vaultReviewId?: string;
   /** True only after a real Hudl / film-desk watch. Box drafts stay false. */
   filmWatched?: boolean;
   /** Opponent offense tendencies (film / box). Fan-facing on live Game Week. */

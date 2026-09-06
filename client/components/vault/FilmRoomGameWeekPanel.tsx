@@ -114,7 +114,14 @@ export function FilmRoomGameWeekPanel({ initialGameId }: Props): React.ReactElem
         <Card className="gv-fr-gw-card">
           <h3 className="gv-fr-gw-card__title">Film Notes</h3>
           <p className="gv-fr-gw-card__body">{game.film}</p>
-          {game.filmLessonId ? (
+          {game.vaultReviewId ? (
+            <a
+              href={`/vault/film-room/?hub=GatorVault%20Review&review=${encodeURIComponent(game.vaultReviewId)}`}
+              className="gv-fr-btn gv-fr-btn--ghost"
+            >
+              GatorVault Film Review →
+            </a>
+          ) : game.filmLessonId ? (
             <a
               href={`/vault/film-room/?hub=Film%20Breakdown&lesson=${encodeURIComponent(game.filmLessonId)}`}
               className="gv-fr-btn gv-fr-btn--ghost"

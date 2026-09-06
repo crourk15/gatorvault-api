@@ -29,6 +29,7 @@ const ROUTES = [
   '/vault/futurecast/movement',
   '/vault/futurecast/staff',
   `/vault/futurecast/player/${PLAYER_SLUGS.futurecast}`,
+  '/vault/film-room/review',
   '/vault/film-room/scheme',
   '/vault/film-room/breakdowns',
   '/vault/film-room/press',

@@ -1,0 +1,482 @@
+/* GatorVault Film Review + elite Scheme School */
+
+.gv-fr-rail {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.gv-fr-review {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.gv-fr-review-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(250, 70, 22, 0.35);
+  border-radius: 16px;
+  padding: 1.25rem 1.2rem 1.15rem;
+  background:
+    radial-gradient(ellipse 70% 80% at 90% 0%, rgba(250, 70, 22, 0.22), transparent 55%),
+    linear-gradient(165deg, #001656 0%, #00112a 62%, #0b1120 100%);
+}
+
+.gv-fr-review-hero__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.gv-fr-review-hero__badge,
+.gv-fr-scheme-featured__badge,
+.gv-fr-scheme-card__badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(250, 70, 22, 0.2);
+  border: 1px solid rgba(250, 70, 22, 0.45);
+  color: #ffd4c4;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.gv-fr-review-hero__watch {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.gv-fr-review-hero__title {
+  margin: 0;
+  font-family: var(--font-display, 'Oswald', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.7rem, 4vw, 2.3rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.gv-fr-review-hero__score {
+  margin: 0.45rem 0 0;
+  font-family: var(--font-display, 'Oswald', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.35rem, 3vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.gv-fr-review-hero__score span {
+  color: #fa4616;
+}
+
+.gv-fr-review-hero__dek {
+  margin: 0.55rem 0 0;
+  max-width: 38rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.gv-fr-review-hero__cta {
+  display: inline-flex;
+  margin-top: 0.9rem;
+  min-height: 44px;
+  align-items: center;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 10px;
+  background: #fa4616;
+  color: #fff;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.gv-fr-review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.gv-fr-review-card {
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.gv-fr-review-card__btn {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.9rem;
+  width: 100%;
+  min-height: 88px;
+  padding: 0.95rem 1rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.gv-fr-review-card__week {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 3.4rem;
+  padding-right: 0.75rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gv-fr-review-card__week b {
+  font-family: var(--font-display, 'Oswald', 'Arial Narrow', sans-serif);
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.gv-fr-review-card__week span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.gv-fr-review-card__title {
+  margin: 0 0 0.25rem;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.gv-fr-review-card__dek {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.gv-fr-review-card__score {
+  align-self: center;
+  font-family: var(--font-display, 'Oswald', 'Arial Narrow', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fa4616;
+  white-space: nowrap;
+}
+
+.gv-fr-review-viewer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.gv-fr-review-viewer__scoreboard {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.65rem 1.1rem;
+}
+
+.gv-fr-review-viewer__scoreboard strong {
+  font-family: var(--font-display, 'Oswald', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.gv-fr-review-viewer__meta {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.gv-fr-review-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.gv-fr-review-tabs__btn {
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.7);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.gv-fr-review-tabs__btn.is-active {
+  color: #fff;
+  background: linear-gradient(180deg, rgba(250, 70, 22, 0.3), rgba(250, 70, 22, 0.14));
+  border-color: rgba(250, 70, 22, 0.5);
+}
+
+.gv-fr-review-unit,
+.gv-fr-review-keys,
+.gv-fr-review-next,
+.gv-fr-scheme-viewer__panel {
+  padding: 1rem 1.05rem 1.05rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.gv-fr-review-unit__kicker,
+.gv-fr-scheme-viewer__kicker,
+.gv-fr-scheme-featured__kicker {
+  margin: 0 0 0.4rem;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fa4616;
+}
+
+.gv-fr-review-unit p,
+.gv-fr-scheme-viewer__panel p {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.gv-fr-review-unit ul,
+.gv-fr-review-keys ol,
+.gv-fr-scheme-viewer__panel ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.gv-fr-review-unit li + li,
+.gv-fr-review-keys li + li,
+.gv-fr-scheme-viewer__panel li + li {
+  margin-top: 0.4rem;
+}
+
+.gv-fr-review-scheme {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.gv-fr-review-scheme__btn,
+.gv-fr-scheme-related__btn {
+  min-height: 40px;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(0, 33, 165, 0.28);
+  color: #fff;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gv-fr-review-source {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.gv-fr-review-source a {
+  color: #ffb195;
+}
+
+.gv-fr-scheme-elite {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.gv-fr-scheme-featured {
+  padding: 1.15rem 1.15rem 1.2rem;
+  border: 1px solid rgba(250, 70, 22, 0.32);
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse 60% 80% at 100% 0%, rgba(250, 70, 22, 0.16), transparent 50%),
+    rgba(255, 255, 255, 0.03);
+}
+
+.gv-fr-scheme-featured__title {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-display, 'Oswald', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.gv-fr-scheme-featured__dek {
+  margin: 0.4rem 0 0;
+  max-width: 36rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.gv-fr-scheme-featured__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.gv-fr-scheme-unit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.gv-fr-scheme-unit__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gv-fr-scheme-unit__staff {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fa4616;
+}
+
+.gv-fr-scheme-unit__dek {
+  margin: 0;
+  font-size: 0.86rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.gv-fr-scheme-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  min-height: 100%;
+}
+
+.gv-fr-scheme-card__btn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+  min-height: 100%;
+  padding: 0.95rem 0.95rem 1rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.gv-fr-scheme-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.gv-fr-scheme-card__call {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.gv-fr-scheme-card__tell {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.gv-fr-scheme-card__meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.gv-fr-scheme-card__cta {
+  margin-top: auto;
+  padding-top: 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fa4616;
+}
+
+.gv-fr-scheme-viewer__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.gv-fr-scheme-viewer__seen {
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  background: rgba(250, 70, 22, 0.12);
+  border: 1px solid rgba(250, 70, 22, 0.28);
+  color: #ffd4c4;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .gv-fr-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gv-fr-review-card__btn {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  .gv-fr-review-card__week {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0;
+    border: 0;
+  }
+
+  .gv-fr-scheme-viewer__grid {
+    grid-template-columns: 1fr;
+  }
+}

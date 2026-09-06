@@ -18,6 +18,7 @@
 
 Client/UI backlog, including:
 
+- GatorVault Film Review rail + elite Scheme School (Breakdowns stay GNFP / Film Guy). Week 1 vs FAU board stays off the platform until we watch the Florida tape.
 - Game Week + Home countdown: auto-open the next kickoff (Campbell this week; Auburn after that — no FAU hardcode)
 - Game Week Depth Chart: official two-deep with Offense / Defense / Special Teams cards
 - Game Zone: Campbell next ticket + FAU 66–21 last whistle + leftover ticket grading

@@ -19,11 +19,20 @@ import { useUser, useInsiderUnlock } from '@/lib/useUser';
 import { usePathname } from '@/lib/use-pathname';
 import {
   SCHEME_SCHOOL_LESSONS,
-  SCHEME_SCHOOL_UNITS,
   schemeSchoolLesson,
   type SchemeSchoolLesson,
 } from '@/lib/scheme-school-data';
+import {
+  VAULT_REVIEW_HUB,
+  latestVaultFilmReview,
+  liveVaultFilmReviews,
+  vaultFilmReview,
+  type VaultFilmReview,
+} from '@/lib/vault-film-review-data';
+import { EliteSchemeSchoolGrid, EliteSchemeSchoolViewer } from '@/components/vault/film-room/EliteSchemeSchool';
+import { VaultFilmReviewGrid, VaultFilmReviewViewer } from '@/components/vault/film-room/VaultFilmReviewPanel';
 import { UiEmpty, UiError, UiWarming } from '@/components/site/UiMessage';
+import '@/lib/film-room-elite.css';
 
 const HUB_TABS = FILM_HUB_ORDER.map((name) => ({
   id: name,
@@ -34,23 +43,31 @@ const HUB_TABS = FILM_HUB_ORDER.map((name) => ({
         ? 'Scheme'
         : name === 'Film Breakdown'
           ? 'Breakdowns'
-          : name,
+          : name === VAULT_REVIEW_HUB
+            ? 'Review'
+            : name,
   fullLabel:
     name === 'UF Press Conferences'
       ? 'Press Conferences'
       : name === 'Film Breakdown'
         ? 'Film Breakdowns'
-        : name,
+        : name === VAULT_REVIEW_HUB
+          ? 'GatorVault Film Review'
+          : name,
 }));
 
 const HUB_COPY: Record<string, { desc: string; kicker: string }> = {
+  [VAULT_REVIEW_HUB]: {
+    kicker: 'Our board',
+    desc: 'Offense, defense, and specials — only after we watch the Florida tape. Week 1 vs FAU is waiting on that watch.',
+  },
   'Film Breakdown': {
-    kicker: 'Tape study',
-    desc: 'Verified breakdowns from Film Guy Network, GNFP, and trusted film sources.',
+    kicker: 'Also on tape',
+    desc: 'GNFP, Film Guy Network, and trusted film sources. Their Gators tape — not ours.',
   },
   'Scheme School': {
-    kicker: 'Staff school',
-    desc: "Fan-friendly lessons from Florida's real coaching staff — no clinic jargon.",
+    kicker: 'Install board',
+    desc: 'How Faulkner, White, and Whitt actually run it — call sheet, Saturday tell, what wins.',
   },
   'UF Press Conferences': {
     kicker: 'On the record',
@@ -126,35 +143,6 @@ function sortCatalogNewest(items: FilmRoomCatalogItem[]): FilmRoomCatalogItem[] 
   });
 }
 
-function SchemeSchoolViewer({
-  lesson,
-  onClose,
-}: {
-  lesson: SchemeSchoolLesson;
-  onClose: () => void;
-}): React.ReactElement {
-  return (
-    <PageSection title={lesson.title} subtitle={lesson.staff}>
-      <button type="button" className="gv-film-lesson__back" onClick={onClose}>
-        ← Back to Scheme School
-      </button>
-      <p className="gv-fr-scheme-viewer__staff">{lesson.staff}</p>
-      <p className="gv-film-lesson__dek">{lesson.dek}</p>
-      {lesson.usageNote ? <p className="gv-film-lesson__type">{lesson.usageNote}</p> : null}
-      <div className="gv-film-lesson__body">
-        <p>{lesson.body}</p>
-      </div>
-      <div className="gv-fr-scheme-viewer__watch">
-        <h4>What to watch for</h4>
-        <ul>
-          {lesson.watchFor.map((w) => (
-            <li key={w}>{w}</li>
-          ))}
-        </ul>
-      </div>
-    </PageSection>
-  );
-}
 
 function FilmLessonViewer({
   item,
@@ -331,60 +319,6 @@ function CatalogGrid({
   );
 }
 
-function SchemeSchoolGrid({
-  insider,
-  onOpen,
-  onUnlock,
-}: {
-  insider: boolean;
-  onOpen: (lesson: SchemeSchoolLesson) => void;
-  onUnlock: () => void;
-}): React.ReactElement {
-  return (
-    <div className="gv-fr-scheme">
-      {SCHEME_SCHOOL_UNITS.map((unit) => {
-        const lessons = SCHEME_SCHOOL_LESSONS.filter((l) => l.unit === unit.id);
-        return (
-          <section key={unit.id} className="gv-fr-scheme-unit">
-            <header className="gv-fr-scheme-unit__head">
-              <h3 className="gv-fr-scheme-unit__title">{unit.label}</h3>
-              <span className="gv-fr-scheme-unit__count">{lessons.length}</span>
-            </header>
-            <div className="gv-fr-grid gv-fr-grid--scheme">
-              {lessons.map((lesson) => (
-                <article key={lesson.id} className="gv-fr-card gv-fr-card--scheme">
-                  <button
-                    type="button"
-                    className="gv-fr-card__btn"
-                    onClick={() => {
-                      if (!insider) {
-                        onUnlock();
-                        return;
-                      }
-                      onOpen(lesson);
-                    }}
-                  >
-                    <div className="gv-fr-thumb gv-fr-thumb--scheme" aria-hidden>
-                      <div className="gv-fr-thumb__slate">
-                        <span>{unit.label.slice(0, 3).toUpperCase()}</span>
-                      </div>
-                    </div>
-                    <div className="gv-fr-card__body">
-                      <h3 className="gv-fr-card__title">{lesson.title}</h3>
-                      <p className="gv-fr-card__dek">{lesson.dek}</p>
-                      <p className="gv-fr-card__meta">{lesson.staff}</p>
-                      <span className="gv-fr-card__cta">{insider ? 'Read lesson' : 'Unlock'}</span>
-                    </div>
-                  </button>
-                </article>
-              ))}
-            </div>
-          </section>
-        );
-      })}
-    </div>
-  );
-}
 
 function FilmHubRail({
   active,
@@ -410,7 +344,7 @@ function FilmHubRail({
             onClick={() => onChange(tab.id)}
           >
             <span className="gv-fr-rail__label">{tab.label}</span>
-            {tab.id !== 'Scheme School' || count > 0 ? (
+            {tab.id === 'Film Breakdown' || tab.id === 'UF Press Conferences' || tab.id === 'Highlights' || count > 0 ? (
               <span className="gv-fr-rail__count">{count}</span>
             ) : null}
           </button>
@@ -439,13 +373,16 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<FilmRoomCatalogItem | null>(null);
   const [schemeLesson, setSchemeLesson] = useState<SchemeSchoolLesson | null>(null);
+  const [review, setReview] = useState<VaultFilmReview | null>(null);
   const [lessonDetail, setLessonDetail] = useState<FilmRoomLessonDetail | null>(null);
   const [lessonLoading, setLessonLoading] = useState(false);
   const [hub, setHub] = useState<string>(() => {
     const fromUrl = hubFromUrl();
     if (fromUrl) return fromUrl;
     const seg = parseFilmRoomSegmentFromPath();
-    return seg ? filmRoomHubFromSegment(seg) : FILM_HUB_ORDER[0];
+    if (seg) return filmRoomHubFromSegment(seg);
+    // Empty Review is not the landing page — that rail waits on real Florida tape.
+    return liveVaultFilmReviews().length > 0 ? VAULT_REVIEW_HUB : 'Film Breakdown';
   });
 
   useEffect(() => {
@@ -495,6 +432,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
     const url = new URL(window.location.href);
     url.searchParams.delete('lesson');
     url.searchParams.delete('scheme');
+    url.searchParams.delete('review');
     const next = `${url.pathname}${url.search}${url.hash}`;
     window.history.replaceState({}, '', next);
   }, []);
@@ -502,6 +440,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const closeLesson = useCallback(() => {
     setSelected(null);
     setSchemeLesson(null);
+    setReview(null);
     setLessonDetail(null);
     clearLessonFromUrl();
   }, [clearLessonFromUrl]);
@@ -509,17 +448,18 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const selectHub = useCallback(
     (nextHub: string) => {
       setHub(nextHub);
-      if (selected || schemeLesson) closeLesson();
+      if (selected || schemeLesson || review) closeLesson();
       if (typeof window !== 'undefined') {
         const url = new URL(window.location.href);
         url.searchParams.set('hub', nextHub);
         url.searchParams.delete('lesson');
         url.searchParams.delete('scheme');
+        url.searchParams.delete('review');
         window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }
     },
-    [selected, schemeLesson, closeLesson]
+    [selected, schemeLesson, review, closeLesson]
   );
 
   const openLesson = useCallback(
@@ -529,12 +469,14 @@ export function VaultFilmRoomPage(): React.ReactElement {
         return;
       }
       setSchemeLesson(null);
+      setReview(null);
       setSelected(item);
       setLessonDetail(null);
       if (typeof window !== 'undefined') {
         const url = new URL(window.location.href);
         url.searchParams.set('lesson', item.id);
         url.searchParams.delete('scheme');
+        url.searchParams.delete('review');
         window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }
@@ -555,12 +497,33 @@ export function VaultFilmRoomPage(): React.ReactElement {
 
   const openSchemeLesson = useCallback((lesson: SchemeSchoolLesson) => {
     setSelected(null);
+    setReview(null);
     setLessonDetail(null);
+    setHub('Scheme School');
     setSchemeLesson(lesson);
     if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
+      url.searchParams.set('hub', 'Scheme School');
       url.searchParams.set('scheme', lesson.id);
       url.searchParams.delete('lesson');
+      url.searchParams.delete('review');
+      window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }
+  }, []);
+
+  const openReview = useCallback((next: VaultFilmReview) => {
+    setSelected(null);
+    setSchemeLesson(null);
+    setLessonDetail(null);
+    setHub(VAULT_REVIEW_HUB);
+    setReview(next);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('hub', VAULT_REVIEW_HUB);
+      url.searchParams.set('review', next.id);
+      url.searchParams.delete('lesson');
+      url.searchParams.delete('scheme');
       window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
@@ -568,14 +531,24 @@ export function VaultFilmRoomPage(): React.ReactElement {
 
   useEffect(() => {
     if (loading) return;
-    const schemeId = new URLSearchParams(window.location.search).get('scheme');
+    const params = new URLSearchParams(window.location.search);
+    const reviewId = params.get('review');
+    if (reviewId) {
+      const match = vaultFilmReview(reviewId);
+      if (match) {
+        setHub(VAULT_REVIEW_HUB);
+        setReview(match);
+        return;
+      }
+    }
+    const schemeId = params.get('scheme');
     if (schemeId) {
       const match = schemeSchoolLesson(schemeId);
       if (match) setSchemeLesson(match);
       return;
     }
     if (!items.length) return;
-    const lessonId = new URLSearchParams(window.location.search).get('lesson');
+    const lessonId = params.get('lesson');
     if (!lessonId) return;
     const match = items.find((i) => i.id === lessonId);
     if (match) void openLesson(match);
@@ -583,6 +556,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
 
   const hubCounts = useMemo(() => {
     const counts: Record<string, number> = {
+      [VAULT_REVIEW_HUB]: liveVaultFilmReviews().length,
       'Film Breakdown': 0,
       'Scheme School': SCHEME_SCHOOL_LESSONS.length,
       'UF Press Conferences': 0,
@@ -590,6 +564,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
     };
     for (const item of items) {
       const key = normalizeFilmHub(item.filmHub);
+      if (key === VAULT_REVIEW_HUB || key === 'Scheme School') continue;
       counts[key] = (counts[key] || 0) + 1;
     }
     return counts;
@@ -601,7 +576,12 @@ export function VaultFilmRoomPage(): React.ReactElement {
 
   const hubCopy = HUB_COPY[hub];
   const hubTab = HUB_TABS.find((t) => t.id === hub);
-  const viewingLesson = Boolean(selected || schemeLesson);
+  const viewingLesson = Boolean(selected || schemeLesson || review);
+  const latestReview = latestVaultFilmReview();
+  const schemeSeenVs =
+    schemeLesson && latestReview?.schemeLessonIds.includes(schemeLesson.id)
+      ? latestReview.opponentShort
+      : null;
 
   return (
     <div className="rh-page rh-page--elite gv-film-room-page mobile-app" data-testid="vault-film-room-elite">
@@ -611,11 +591,11 @@ export function VaultFilmRoomPage(): React.ReactElement {
           <div className="gv-fr-hero__inner">
             <p className="gv-fr-hero__brand">GatorVault</p>
             <h1 className="gv-fr-hero__title">Film Room</h1>
-            <p className="gv-fr-hero__sub">Real football. Real breakdowns. Real coaching intel.</p>
+            <p className="gv-fr-hero__sub">Our board. Their tape. The install.</p>
           </div>
         </header>
 
-        {loading && hub !== 'Scheme School' ? (
+        {loading && hub !== 'Scheme School' && hub !== VAULT_REVIEW_HUB ? (
           <div className="gv-page-status" role="status" aria-live="polite" aria-busy="true">
             <UiWarming hint="Loading film catalog…" />
           </div>
@@ -626,11 +606,34 @@ export function VaultFilmRoomPage(): React.ReactElement {
           <FilmHubRail active={hub} counts={hubCounts} onChange={selectHub} />
         ) : null}
 
-        {!loading && !error && schemeLesson ? (
-          <SchemeSchoolViewer lesson={schemeLesson} onClose={closeLesson} />
+        {!loading && !error && review ? (
+          <VaultFilmReviewViewer
+            review={review}
+            onClose={closeLesson}
+            onOpenScheme={(id) => {
+              const lesson = schemeSchoolLesson(id);
+              if (lesson) openSchemeLesson(lesson);
+            }}
+          />
         ) : null}
 
-        {!loading && !error && selected && !schemeLesson ? (
+        {!loading && !error && schemeLesson && !review ? (
+          <EliteSchemeSchoolViewer
+            lesson={schemeLesson}
+            seenVs={schemeSeenVs}
+            onClose={closeLesson}
+            onOpenRelated={openSchemeLesson}
+            onOpenReview={
+              latestReview
+                ? () => {
+                    openReview(latestReview);
+                  }
+                : undefined
+            }
+          />
+        ) : null}
+
+        {!loading && !error && selected && !schemeLesson && !review ? (
           <FilmLessonViewer
             item={selected}
             detail={lessonDetail}
@@ -639,7 +642,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
           />
         ) : null}
 
-        {!loading && !error && !selected && !schemeLesson ? (
+        {!loading && !error && !selected && !schemeLesson && !review ? (
           <section className="gv-fr-stage" aria-label={hubTab?.fullLabel ?? hub}>
             <div className="gv-fr-stage__head">
               <div>
@@ -648,13 +651,20 @@ export function VaultFilmRoomPage(): React.ReactElement {
                 <p className="gv-fr-stage__desc">{hubCopy?.desc ?? ''}</p>
               </div>
               <p className="gv-fr-stage__count">
-                {hub === 'Scheme School' ? hubCounts['Scheme School'] : filtered.length}{' '}
-                {hub === 'Scheme School' ? 'lessons' : 'videos'}
+                {hub === VAULT_REVIEW_HUB
+                  ? hubCounts[VAULT_REVIEW_HUB]
+                    ? `${hubCounts[VAULT_REVIEW_HUB]} reviews`
+                    : 'Waiting on tape'
+                  : hub === 'Scheme School'
+                    ? `${hubCounts['Scheme School']} installs`
+                    : `${filtered.length} videos`}
               </p>
             </div>
 
-            {hub === 'Scheme School' ? (
-              <SchemeSchoolGrid insider={insider} onOpen={openSchemeLesson} onUnlock={goToUnlock} />
+            {hub === VAULT_REVIEW_HUB ? (
+              <VaultFilmReviewGrid insider={insider} onOpen={openReview} onUnlock={goToUnlock} />
+            ) : hub === 'Scheme School' ? (
+              <EliteSchemeSchoolGrid insider={insider} onOpen={openSchemeLesson} onUnlock={goToUnlock} />
             ) : (
               <CatalogGrid items={filtered} insider={insider} onOpen={openLesson} />
             )}

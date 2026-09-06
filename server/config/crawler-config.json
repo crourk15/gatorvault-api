@@ -75,6 +75,7 @@
       "testid": "vault-film-room",
       "export": "vault/film-room/index.html",
       "subRoutes": {
+        "review": "/vault/film-room/review",
         "scheme": "/vault/film-room/scheme",
         "breakdowns": "/vault/film-room/breakdowns",
         "press": "/vault/film-room/press",

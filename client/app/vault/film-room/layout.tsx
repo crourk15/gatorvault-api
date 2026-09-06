@@ -11,7 +11,7 @@ export default function VaultFilmRoomLayout({
       <VaultPillarSsrMarkers
         testId="vault-film-room"
         className="gv-film-room"
-        label="Film Breakdown Scheme School UF Press Conferences Highlights"
+        label="GatorVault Film Review Film Breakdown Scheme School UF Press Conferences Highlights"
         extraClasses="gv-fr-hero gv-fr-rail gv-fr-grid gv-fr-card"
       />
       {children}
