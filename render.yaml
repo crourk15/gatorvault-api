@@ -546,7 +546,8 @@ services:
       - key: HUB_WARM_URL
         value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=lite&years=2028
       - key: LAB_WARM_URL
-        value: ""
+        # Lab chase/master/trending — lite hub-warm does not own these plates.
+        value: "https://gatorvault-api.onrender.com/api/futurecast/lab-warm?years=2028"
       - key: MONITORING_CRON_SECRET
         sync: false
 
