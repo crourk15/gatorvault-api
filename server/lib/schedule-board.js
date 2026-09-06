@@ -131,6 +131,7 @@ const BUNDLE_MODEL_KEYS = [
   'defenseScout',
   'howUFWins',
   'scoutingReport',
+  'filmWatched',
 ];
 
 function parseTs(value) {
@@ -273,6 +274,7 @@ function normalizeGame(row) {
     predUF: Number.isFinite(Number(row.predUF)) ? Number(row.predUF) : 0,
     predOpp: Number.isFinite(Number(row.predOpp)) ? Number(row.predOpp) : 0,
     filmLessonId: row.filmLessonId != null ? String(row.filmLessonId).trim() : undefined,
+    ...(typeof row.filmWatched === 'boolean' ? { filmWatched: row.filmWatched } : {}),
     opponentTendencies: Array.isArray(row.opponentTendencies)
       ? row.opponentTendencies.map((x) => String(x || '').trim()).filter(Boolean)
       : undefined,

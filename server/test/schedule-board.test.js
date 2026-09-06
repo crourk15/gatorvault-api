@@ -76,6 +76,10 @@ describe('schedule-board', () => {
     const iosDump = [campbell.film, ...(campbell.opponentTendencies || []), ...(campbell.defenseTendencies || [])];
     assert.ok(!iosDump.some((n) => /NOT confirmed|Hudl watch|gocamels cumulative/i.test(n)));
     assert.equal(campbell.keys[0], 'Crowd Sixkiller before the first read');
+    assert.equal(campbell.filmWatched, false);
+    assert.equal(campbell.filmLessonId, undefined);
+    assert.ok(campbell.offenseScout.some((n) => /PROVISIONAL/.test(n)));
+    assert.ok(!campbell.filmNotes.some((n) => /tape we have/i.test(n)));
   });
 
   it('bundle path points at repo seed', () => {

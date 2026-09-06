@@ -31,6 +31,10 @@ describe('Game Week Film Notes', () => {
     assert.ok(bundle.scouting.offense.some((n) => /29\/42/.test(n)));
     assert.ok(bundle.scouting.defense.some((n) => /NOT confirmed|Brandon Butcher/i.test(n)));
     assert.equal(bundle.keys[0].title, 'Crowd Sixkiller before the first read');
+    assert.equal(campbell.filmWatched, false);
+    assert.equal(campbell.filmLessonId, undefined);
+    assert.ok(bundle.scouting.offense.some((n) => /PROVISIONAL/.test(n)));
+    assert.ok(!notes.some((n) => /tape we have/i.test(n)));
   });
 
   it('defaults Game Week to the next upcoming kickoff', () => {

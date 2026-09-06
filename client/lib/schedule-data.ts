@@ -26,6 +26,8 @@ export type ScheduleGame = {
   predOpp: number;
   /** Verified Film Room opponent-prep lesson id (knowledge engine). */
   filmLessonId?: string;
+  /** True only after a real Hudl / film-desk watch. Box drafts stay false. */
+  filmWatched?: boolean;
   /** Opponent offense tendencies (film / box). Fan-facing on live Game Week. */
   opponentTendencies?: string[];
   /** Opponent defense tendencies (film / box / staff-public). Fan-facing on live Game Week. */
@@ -175,6 +177,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Jaden Baugh", role: "Run-game rhythm vs 143 rush YPG allowed" },
       { name: "Jayden Woods", role: "Keep Sixkiller in the pocket" },
     ],
+    filmWatched: false,
     film: "What the boxes show vs Campbell. Sixkiller throws it and runs it. Last year's defense gave up 37 a game. Then throw it over a 27-TD secondary.",
     pred: "UF 42 · Campbell 7",
     predUF: 42,
@@ -186,7 +189,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     defenseTendencies: [
       "Last year that defense gave up 37 a game and 27 pass TDs. Run it, then throw it over them.",
-      "New coordinator this year. Coverage calls are not on the tape we have.",
+      "New coordinator this year. We have not watched coverage yet.",
     ],
     howUFWins: [
       "Sixkiller just went 29/42 for 343 with 95 rush yards and four touchdowns at ETSU (box, Aug 29). Pressure before the first read and keep him in the pocket.",
@@ -200,10 +203,11 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "ETSU opener: 29 of 42 for 343, 95 on the ground, four touchdowns. Campbell put up 514 yards.",
       "They will take the shot. Austin went 50 yards and scored from 30 at ETSU. King had a 77-yard TD vs Bryant last year.",
       "Last year's front gave up 37 a game and 27 pass touchdowns. Run it, then throw it over them.",
-      "New defensive coordinator this year. Coverage calls are not on the tape we have.",
+      "New defensive coordinator this year. We have not watched coverage yet.",
       "Do not let this become a track meet. They scored 49 at ETSU.",
     ],
     offenseScout: [
+      "PROVISIONAL — no Hudl watch. Boxes + staff-public only. Do not treat as film-confirmed.",
       "Staff-public: HC Braxton Harris (3rd season), OC Matt Kubik, returning QB Kamden Sixkiller",
       "Box-confirmed 2025 (gocamels cumulative, posted 2-10): 23.45 PPG, 346.1 YPG (119.4 rush / 226.7 pass)",
       "Box-confirmed 2025 Sixkiller (official 10 GP): 220/351, 2102 yds, 12 TD, 5 INT — ESPN gamelog 224/357, 2154, 12 TD, 5 INT, 21 sacks",
