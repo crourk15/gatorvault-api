@@ -8,6 +8,7 @@ export type GatorsLiveBoard = {
   status?: string;
   clock?: string | null;
   period?: number | null;
+  possession?: string | null;
   live?: boolean;
   completed?: boolean;
   matchup?: string;
