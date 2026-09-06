@@ -410,7 +410,22 @@ export function VaultLiveScoresPage(): React.ReactElement {
         completed: Boolean(uf.completed) || /\bfinal\b/i.test(status),
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load Gators Live.');
+      if (featured) {
+        setBoard((prev) => prev || {
+          opponent: featured.opp,
+          ufScore: null,
+          oppScore: null,
+          status: featured.date,
+          clock: null,
+          period: null,
+          possession: null,
+          live: false,
+          completed: false,
+        });
+        setError(null);
+      } else {
+        setError(err instanceof Error ? err.message : 'Could not load Gators Live.');
+      }
     } finally {
       setLoading(false);
     }
@@ -483,13 +498,14 @@ export function VaultLiveScoresPage(): React.ReactElement {
   const showLast = phase === 'ready' && lastGame && lastGame.id !== game?.id;
 
   return (
-    <div className="rh-page rh-page--elite gv-gl-elite mobile-app gv-page" data-testid="vault-gators-live-elite">
+    <div
+      className="rh-page rh-page--elite gv-gl-elite mobile-app gv-page"
+      data-testid="vault-gators-live-elite"
+      data-loading={loading ? '1' : undefined}
+    >
       <PageLayout theme="navy" title="" testId="vault-live-scores" className="gv-gators-live-page">
         <GatorsLiveHero phase={phase} game={game} board={board} line={line} />
-        {loading && mode === 'live-window' && !board && !preview ? (
-          <p className="gv-gl-elite__status">Loading Gators Live…</p>
-        ) : null}
-        {error && !board ? (
+        {error && !game ? (
           <UiError message={error} retry={() => void loadLive()} backHref="/vault" backLabel="← Vault" />
         ) : null}
         <div className="gv-gl-elite__stack">
