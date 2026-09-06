@@ -639,9 +639,8 @@ services:
 
   - type: cron
     name: gatorvault-api-gators-score-alerts
-    # Every 5m (was */3) — run-job on the web dyno during score windows stacked with
-    # keepalive/hub-warm and contributed to brief HTML 502 flaps.
-    schedule: "*/5 * * * *"
+    # Every 2m backup. Web dyno also watches every 60s in-window (idle skip is cheap).
+    schedule: "*/2 * * * *"
     runtime: node
     region: oregon
     rootDir: server

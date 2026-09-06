@@ -20,8 +20,10 @@ Client/UI backlog, including:
 
 - Game Week + Home countdown: auto-open the next kickoff (Campbell this week; Auburn after that — no FAU hardcode)
 - Game Week Depth Chart: official two-deep with Offense / Defense / Special Teams cards
+- Game Zone: Campbell next ticket + FAU 66–21 last whistle + leftover ticket grading
 - Gators Live living room (stadium hero, talk, 3 keys, visitors, film bite)
 - Gators Live poll: 10s live / 15s idle + ticking countdown
+- My Alerts: organized Gators score beats (kickoff / every score / halftime / final)
 - Community Game day chip + hero copy
 - Member page trail ping + `X-GV-Client`
 - Game Week Prediction: Vegas from `/api/betting/lines`
@@ -29,10 +31,10 @@ Client/UI backlog, including:
 - Community Edit + Delete on own posts
 - Home NOW freshness / remaining UI backlog from the 1.0.21–1.0.22 queue
 
-API/data fixes remain live on Render without this bake.
+API/data (live on Render without this bake): in-game score pushes + official FAU 66–21 / Campbell Game Zone nextGame.
 
 ## Whats New (paste)
 
 ```
-Game Week now opens the next kickoff with a live countdown. Gators Live is now the Swamp living room: live score and clock, game-day talk, 3 keys, and visitors. Faster live refresh. Community Game day thread. Sharper Game Week Vegas lines. Edit/Delete your Community posts. Home NOW freshness and other UI backlog.
+Game Week opens the next kickoff with a live countdown and the official two-deep. Game Zone shows Campbell and the FAU 66-21 last whistle. Gators Live is the Swamp living room — live score, talk, 3 keys, visitors. Score alerts now fire kickoff, every score, halftime, and the final. Community Game day thread. Sharper Vegas lines. Edit/Delete your posts.
 ```

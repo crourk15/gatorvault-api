@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Render cron — UF kickoff/final score pushes via the main API.
+ * Render cron — UF kickoff / score / halftime / final pushes via the main API.
  *
  * Must run on gatorvault-api (not in this cron process) so APNs device tokens,
  * membership checks, and Postgres-backed push store are available.
