@@ -18,6 +18,7 @@
 
 Client/UI backlog, including:
 
+- Game Week + Home countdown: auto-open the next kickoff (Campbell this week; Auburn after that — no FAU hardcode)
 - Gators Live living room (stadium hero, talk, 3 keys, visitors, film bite)
 - Gators Live poll: 10s live / 15s idle + ticking countdown
 - Community Game day chip + hero copy
@@ -32,5 +33,5 @@ API/data fixes remain live on Render without this bake.
 ## Whats New (paste)
 
 ```
-Gators Live is now the Swamp living room: live score and clock, game-day talk, 3 keys, and visitors. Faster live refresh. Community Game day thread. Sharper Game Week Vegas lines. Edit/Delete your Community posts. Home NOW freshness and other UI backlog.
+Game Week now opens the next kickoff with a live countdown. Gators Live is now the Swamp living room: live score and clock, game-day talk, 3 keys, and visitors. Faster live refresh. Community Game day thread. Sharper Game Week Vegas lines. Edit/Delete your Community posts. Home NOW freshness and other UI backlog.
 ```
