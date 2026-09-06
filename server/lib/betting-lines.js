@@ -3,13 +3,25 @@
  */
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch');
+const { POSTGAME_HOURS, pickNextGame, pickLastCompleted } = require('./betting-next-game');
 
 const LINES_PATH = path.join(__dirname, '..', 'data', 'betting', 'lines.json');
 const FINALS_PATH = path.join(__dirname, '..', 'data', 'betting', 'finals.json');
 
-/** Hold the just-played game through the Gators Live postgame window, then advance. */
-const POSTGAME_HOURS = 5;
+/** Native fetch on Node 18+ (Codemagic). Lazy node-fetch only on older runtimes. */
+async function httpFetch(url, opts = {}) {
+  const impl = typeof fetch === 'function' ? fetch : require('node-fetch');
+  if (typeof fetch === 'function' && opts.timeout && !opts.signal) {
+    const ac = new AbortController();
+    const timer = setTimeout(() => ac.abort(), opts.timeout);
+    try {
+      return await impl(url, { ...opts, signal: ac.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  return impl(url, opts);
+}
 
 const FANDUEL_AFFILIATE = process.env.FANDUEL_AFFILIATE_URL || 'https://sportsbook.fanduel.com/navigation/ncaaf';
 const HARD_ROCK_BET_URL =
@@ -93,7 +105,7 @@ async function fetchLiveOdds() {
     const url =
       'https://api.the-odds-api.com/v4/sports/americanfootball_ncaaf/odds' +
       `?apiKey=${encodeURIComponent(ODDS_API_KEY)}&regions=us&markets=spreads,totals,h2h&oddsFormat=american`;
-    const res = await fetch(url, { timeout: 15000 });
+    const res = await httpFetch(url, { timeout: 15000 });
     if (!res.ok) return null;
     const data = await res.json();
     const ufGames = (data || []).filter((g) =>
@@ -136,36 +148,6 @@ function mapOddsApiGame(g) {
     source: 'the-odds-api',
     bookmaker: book?.title || null
   };
-}
-
-function gameKickMs(g) {
-  const d = new Date(g?.date || g?.kickoff || '');
-  return Number.isFinite(d.getTime()) ? d.getTime() : NaN;
-}
-
-/** Current live/postgame game, else the next kickoff. Never stay on a finished opener. */
-function pickNextGame(games, now = new Date()) {
-  const t = now.getTime();
-  const holdMs = POSTGAME_HOURS * 3600 * 1000;
-  const sorted = (games || [])
-    .filter((g) => g && Number.isFinite(gameKickMs(g)))
-    .sort((a, b) => gameKickMs(a) - gameKickMs(b));
-  const current = sorted.find((g) => {
-    const kick = gameKickMs(g);
-    return t >= kick && t <= kick + holdMs;
-  });
-  if (current) return current;
-  const upcoming = sorted.find((g) => gameKickMs(g) > t);
-  return upcoming || sorted[sorted.length - 1] || null;
-}
-
-function pickLastCompleted(games, now = new Date()) {
-  const t = now.getTime();
-  const holdMs = POSTGAME_HOURS * 3600 * 1000;
-  const past = (games || [])
-    .filter((g) => g && Number.isFinite(gameKickMs(g)) && gameKickMs(g) + holdMs < t)
-    .sort((a, b) => gameKickMs(b) - gameKickMs(a));
-  return past[0] || null;
 }
 
 function loadPersistedFinals() {

@@ -10,7 +10,7 @@ const http = require('http');
 const ROOT = path.resolve(__dirname, '../..');
 const OUT = path.join(__dirname, '../lib/game-zone-hub-seed.json');
 const API = process.env.GAME_ZONE_SEED_API || 'https://gatorvault-api.onrender.com';
-const { pickNextGame, getBettingLines } = require(path.join(ROOT, 'server/lib/betting-lines'));
+const { pickNextGame } = require(path.join(ROOT, 'server/lib/betting-next-game'));
 
 function fetchJson(url, timeoutMs = 35000) {
   return new Promise((resolve, reject) => {
@@ -62,6 +62,7 @@ async function main() {
   }
   if (!nextGame) {
     try {
+      const { getBettingLines } = require(path.join(ROOT, 'server/lib/betting-lines'));
       const localLive = await getBettingLines(new Date());
       nextGame = localLive.nextGame || null;
       lastGame = localLive.lastGame || lastGame;
