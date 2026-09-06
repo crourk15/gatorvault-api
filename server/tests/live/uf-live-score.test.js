@@ -17,6 +17,7 @@ const liveBoard = {
             { team: { id: '57', displayName: 'Florida Gators', abbreviation: 'FLA' }, score: '28' },
             { team: { id: '2226', displayName: 'Florida Atlantic Owls', abbreviation: 'FAU' }, score: '7' },
           ],
+          situation: { possession: '57' },
           status: {
             displayClock: '8:32',
             period: 2,
@@ -37,6 +38,7 @@ describe('uf-live-score', () => {
     assert.equal(game.clock, '8:32');
     assert.equal(game.period, 2);
     assert.equal(game.live, true);
+    assert.equal(game.possession, '57');
     assert.match(game.opponent, /Atlantic|FAU/i);
   });
 
@@ -58,6 +60,7 @@ describe('uf-live-score', () => {
     assert.equal(out.ok, true);
     assert.equal(out.mode, 'live-window');
     assert.equal(out.board.ufScore, 28);
+    assert.equal(out.board.possession, '57');
     assert.equal(out.board.status, '2nd quarter · 8:32');
     assert.equal(out.overlay.homeScore, 28);
   });

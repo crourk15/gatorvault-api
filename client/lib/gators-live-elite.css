@@ -1,0 +1,516 @@
+/**
+ * Gators Live — Swamp living room
+ * Dark stadium hero + white intel cards. Score is the heartbeat, not the page.
+ */
+
+.gv-gl-elite {
+  --gl-blue: #0021a5;
+  --gl-orange: #fa4616;
+  --gl-navy: #001a33;
+  --gl-card: #ffffff;
+  --gl-text: #0b1b4a;
+  --gl-muted: #5b6b8c;
+  --gl-border: rgba(0, 33, 165, 0.14);
+  min-height: 100%;
+  background: #0b1120;
+  color: #e2e8f0;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+}
+
+.gv-gl-elite .gv-page-layout--navy {
+  background: transparent;
+}
+
+.gv-gl-elite .gv-page-layout__body {
+  padding-top: 0;
+}
+
+.gv-gl-elite__hero {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 1.15rem;
+  padding: clamp(1.35rem, 4vw, 2.1rem) clamp(1rem, 3vw, 1.5rem) 1.5rem;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 18%, rgba(250, 70, 22, 0.22) 0%, transparent 58%),
+    linear-gradient(165deg, #0021a5 0%, #001656 52%, #001a33 100%);
+}
+
+.gv-gl-elite__hero.is-live {
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 10%, rgba(250, 70, 22, 0.34) 0%, transparent 55%),
+    linear-gradient(165deg, #0021a5 0%, #001656 52%, #001a33 100%);
+}
+
+.gv-gl-elite__hero-watermark {
+  position: absolute;
+  right: 4%;
+  top: 46%;
+  transform: translateY(-50%);
+  font-family: Oswald, 'Arial Narrow', sans-serif;
+  font-size: clamp(4.2rem, 16vw, 7.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: rgba(255, 255, 255, 0.045);
+  pointer-events: none;
+  user-select: none;
+}
+
+.gv-gl-elite__hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.gv-gl-elite__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+}
+
+.gv-gl-elite__brand {
+  margin: 0;
+  font-family: Oswald, 'Arial Narrow', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gl-orange);
+}
+
+.gv-gl-elite__phase {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.gv-gl-elite__phase.is-live {
+  background: var(--gl-orange);
+  color: #fff;
+}
+
+.gv-gl-elite__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #fff;
+  animation: gv-gl-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes gv-gl-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.gv-gl-elite__matchup-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0.35rem 0 0.55rem;
+}
+
+.gv-gl-elite__logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+}
+
+.gv-gl-elite__vs {
+  font-family: Oswald, 'Arial Narrow', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gl-orange);
+}
+
+.gv-gl-elite__title {
+  margin: 0;
+  text-align: center;
+  font-family: Oswald, 'Arial Narrow', sans-serif;
+  font-size: clamp(1.7rem, 6.4vw, 2.55rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.gv-gl-elite__voice {
+  margin: 0.55rem auto 0;
+  max-width: 34ch;
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: rgba(226, 232, 240, 0.88);
+}
+
+.gv-gl-elite__scoreboard {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 0.5rem;
+  margin: 1rem 0 0.35rem;
+}
+
+.gv-gl-elite__score-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.gv-gl-elite__score-col.is-uf .gv-gl-elite__score-num {
+  color: #fff;
+}
+
+.gv-gl-elite__score-col.is-uf.is-live .gv-gl-elite__score-num {
+  color: #ffd2c4;
+}
+
+.gv-gl-elite__score-name {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.gv-gl-elite__score-num {
+  font-family: Oswald, 'Arial Narrow', sans-serif;
+  font-size: clamp(3.1rem, 14vw, 4.4rem);
+  font-weight: 800;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+
+.gv-gl-elite__score-mid {
+  padding-bottom: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--gl-orange);
+}
+
+.gv-gl-elite__clock {
+  margin: 0.65rem 0 0;
+  text-align: center;
+}
+
+.gv-gl-elite__clock-main {
+  margin: 0;
+  font-family: Oswald, 'Arial Narrow', sans-serif;
+  font-size: clamp(1.15rem, 4vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.gv-gl-elite__poss {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--gl-orange);
+}
+
+.gv-gl-elite__meta {
+  margin: 0.7rem 0 0;
+  text-align: center;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: rgba(226, 232, 240, 0.72);
+}
+
+.gv-gl-elite__countdown {
+  display: flex;
+  justify-content: center;
+  gap: 0.65rem;
+  margin: 1rem 0 0;
+}
+
+.gv-gl-elite__count-cell {
+  min-width: 4.1rem;
+  padding: 0.45rem 0.4rem 0.4rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+}
+
+.gv-gl-elite__count-num {
+  display: block;
+  font-family: Oswald, 'Arial Narrow', sans-serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.gv-gl-elite__count-label {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.gv-gl-elite__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.85rem 0 0;
+}
+
+.gv-gl-elite__chip {
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.gv-gl-elite__hero-accent {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--gl-orange);
+}
+
+.gv-gl-elite__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 0 1rem 0.5rem;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.gv-gl-elite__card {
+  background: var(--gl-card);
+  color: var(--gl-text);
+  border-radius: 14px;
+  border: 1px solid var(--gl-border);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  padding: 1rem 1.05rem 1.05rem;
+}
+
+.gv-gl-elite__card-kicker {
+  margin: 0 0 0.25rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gl-orange);
+}
+
+.gv-gl-elite__card-title {
+  margin: 0;
+  font-family: Oswald, 'Arial Narrow', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--gl-blue);
+  text-transform: uppercase;
+}
+
+.gv-gl-elite__card-dek {
+  margin: 0.3rem 0 0.75rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--gl-muted);
+}
+
+.gv-gl-elite__talk-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--gl-text);
+  line-height: 1.3;
+}
+
+.gv-gl-elite__talk-meta {
+  margin: 0.35rem 0 0;
+  font-size: 0.8rem;
+  color: var(--gl-muted);
+}
+
+.gv-gl-elite__keys {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.gv-gl-elite__key {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr;
+  gap: 0.55rem;
+  padding: 0.65rem 0.7rem;
+  border-radius: 10px;
+  background: #f4f6fb;
+}
+
+.gv-gl-elite__key-num {
+  font-family: Oswald, 'Arial Narrow', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gl-orange);
+  line-height: 1.1;
+}
+
+.gv-gl-elite__key-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--gl-text);
+}
+
+.gv-gl-elite__key-body {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--gl-muted);
+}
+
+.gv-gl-elite__visitors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.gv-gl-elite__visitor {
+  display: block;
+}
+
+.gv-gl-elite__visitor-link {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr auto;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: 10px;
+  background: #f4f6fb;
+  color: inherit;
+  text-decoration: none;
+}
+
+.gv-gl-elite__visitor-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.15rem;
+  border-radius: 8px;
+  background: var(--gl-blue);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.gv-gl-elite__visitor-name {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--gl-text);
+}
+
+.gv-gl-elite__visitor-meta {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--gl-muted);
+}
+
+.gv-gl-elite__chevron {
+  color: var(--gl-orange);
+  font-weight: 800;
+}
+
+.gv-gl-elite__film {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--gl-text);
+}
+
+.gv-gl-elite__last {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--gl-text);
+}
+
+.gv-gl-elite__doors {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.gv-gl-elite__door {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  background: #f4f6fb;
+  color: var(--gl-blue);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.gv-gl-elite__status {
+  margin: 0.5rem 1rem 0;
+  text-align: center;
+  color: rgba(226, 232, 240, 0.7);
+}
+
+@media (min-width: 720px) {
+  .gv-gl-elite__hero-inner,
+  .gv-gl-elite__stack {
+    max-width: 52rem;
+  }
+
+  .gv-gl-elite__stack {
+    padding-left: 0;
+    padding-right: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+
+  .gv-gl-elite__stack > .gv-gl-elite__card:nth-last-child(-n + 2) {
+    grid-column: 1 / -1;
+  }
+
+  .gv-gl-elite__logo {
+    width: 68px;
+    height: 68px;
+  }
+}

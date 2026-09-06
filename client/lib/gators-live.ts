@@ -147,3 +147,116 @@ export function isUfGameLiveWindow(now = new Date()): boolean {
 export function gatorsLiveMode(now = new Date()): 'live-window' | 'ready' {
   return isUfGameLiveWindow(now) ? 'live-window' : 'ready';
 }
+
+export type GatorsLivePhase = 'ready' | 'pregame' | 'live' | 'halftime' | 'final';
+
+export function gatorsLivePhase(input: {
+  mode: 'ready' | 'live-window';
+  live?: boolean;
+  completed?: boolean;
+  status?: string;
+}): GatorsLivePhase {
+  if (input.mode === 'ready') return 'ready';
+  const status = String(input.status || '');
+  if (input.completed === true || /\bfinal\b/i.test(status)) return 'final';
+  if (/halftime/i.test(status)) return 'halftime';
+  if (input.live === true || /in progress|\blive\b/i.test(status)) return 'live';
+  return 'pregame';
+}
+
+export function gatorsLiveVoice(phase: GatorsLivePhase, opp: string): string {
+  const who = String(opp || 'the opponent').trim() || 'the opponent';
+  if (phase === 'live') return `Florida is on the field vs ${who}. Talk every snap.`;
+  if (phase === 'halftime') return `Halftime vs ${who}. What is working. What is not.`;
+  if (phase === 'final') return `Final vs ${who}. Stay for the after. What did you see?`;
+  if (phase === 'pregame') return `The window is open vs ${who}. Talk now, then through kickoff.`;
+  return `Next: Florida vs ${who}. The room stays open all week.`;
+}
+
+export function possessionSide(possession?: string | null): 'uf' | 'opp' | null {
+  const raw = String(possession || '').trim();
+  if (!raw) return null;
+  const p = raw.toLowerCase();
+  if (p === '57' || p === 'fla' || p === 'uf') return 'uf';
+  if (p.includes('florida') && !p.includes('atlantic') && !p.includes('state')) return 'uf';
+  return 'opp';
+}
+
+export function periodClockLabel(opts: {
+  phase: GatorsLivePhase;
+  period?: number | null;
+  clock?: string | null;
+  status?: string;
+}): string {
+  if (opts.phase === 'final') return 'Final';
+  if (opts.phase === 'halftime') return 'Halftime';
+  const clock = String(opts.clock || '').trim();
+  const period = opts.period;
+  if (period != null && Number.isFinite(period)) {
+    const q =
+      period === 1 ? '1st' : period === 2 ? '2nd' : period === 3 ? '3rd' : period === 4 ? '4th' : `OT${period - 4 || ''}`;
+    return clock ? `${q} · ${clock}` : `${q} quarter`;
+  }
+  const status = String(opts.status || '').trim();
+  if (status) return status;
+  if (opts.phase === 'pregame') return 'Scheduled';
+  return 'Game window';
+}
+
+export function kickCountdown(
+  dateStr: string,
+  now = new Date(),
+): { days: number; hours: number; minutes: number } | null {
+  const kick = parseScheduleKickoff(dateStr);
+  if (!kick) return null;
+  const ms = kick.getTime() - now.getTime();
+  if (ms <= 0) return null;
+  return {
+    days: Math.floor(ms / 86400000),
+    hours: Math.floor((ms % 86400000) / 3600000),
+    minutes: Math.floor((ms % 3600000) / 60000),
+  };
+}
+
+export function findLastCompletedUfGame(now = new Date()): ScheduleGame | null {
+  const games = getUfScheduleGames();
+  let best: ScheduleGame | null = null;
+  let bestEnd = -Infinity;
+  const t = now.getTime();
+  for (const g of games) {
+    if (g.kind === 'bye' || String(g.id || '').startsWith('bye')) continue;
+    const kick = parseScheduleKickoff(g.date);
+    if (!kick) continue;
+    const end = kick.getTime() + POSTGAME_HOURS * 3600_000;
+    if (end < t && end > bestEnd) {
+      bestEnd = end;
+      best = g;
+    }
+  }
+  return best;
+}
+
+export function pickCommunityTalkThread<T extends {
+  dailyKey?: string;
+  gameday?: boolean;
+  title?: string;
+  pinned?: boolean;
+  featured?: boolean;
+}>(threads: T[]): T | null {
+  if (!threads.length) return null;
+  const gameday = threads.find((t) => t.gameday || /game day talk/i.test(t.title || ''));
+  if (gameday) return gameday;
+  const daily = threads.find((t) => Boolean(t.dailyKey));
+  if (daily) return daily;
+  return threads.find((t) => t.pinned || t.featured) || threads[0] || null;
+}
+
+/** Local/dev only. Production hostnames never honor this. */
+export function readLocalPreviewPhase(): GatorsLivePhase | null {
+  if (typeof window === 'undefined') return null;
+  const host = window.location.hostname;
+  if (host !== 'localhost' && host !== '127.0.0.1') return null;
+  const q = new URLSearchParams(window.location.search).get('preview');
+  if (q === 'live' || q === 'final' || q === 'pregame' || q === 'ready') return q;
+  return null;
+}
