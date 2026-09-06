@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-09-06T05:20:00.000Z",
+  "updatedAt": "2026-09-06T05:25:00.000Z",
   "label": "2026 Florida football schedule",
   "games": [
     {
@@ -103,54 +103,51 @@
       "ufPct": 96,
       "tv": "SECN+",
       "keys": [
-        "Crowd Sixkiller before the first read",
-        "Run it at last year's front",
-        "Finish drives - do not turn this into 49"
+        "Hold for film desk",
+        "Boxes on file only",
+        "No coverage watch yet"
       ],
       "swing": [
         {
           "name": "Aaron Philo",
-          "role": "Attack a secondary that allowed 27 pass TDs in 2025"
+          "role": "Pending film desk"
         },
         {
           "name": "Jaden Baugh",
-          "role": "Run-game rhythm vs 143 rush YPG allowed"
+          "role": "Pending film desk"
         },
         {
           "name": "Jayden Woods",
-          "role": "Keep Sixkiller in the pocket"
+          "role": "Pending film desk"
         }
       ],
       "filmWatched": false,
-      "film": "What the boxes show vs Campbell. Sixkiller throws it and runs it. Last year's defense gave up 37 a game. Then throw it over a 27-TD secondary.",
+      "film": "Film desk pending vs Campbell. No Hudl watch. Boxes are on file. Do not treat this as tape.",
       "pred": "UF 42 · Campbell 7",
       "predUF": 42,
       "predOpp": 7,
       "opponentTendencies": [
-        "Sixkiller can beat you with his arm and his legs.",
-        "They will take the deep shot. Austin went 50 yards and scored from 30 at ETSU. King had a 77-yard TD vs Bryant last year.",
-        "2025 they averaged 23 a game and 346 yards. The 2026 opener was 49 points and 514 yards."
+        "Film desk pending. Boxes only until tape is watched.",
+        "2025 they averaged 23 a game and 346 yards. The 2026 ETSU opener was 49 points and 514 yards.",
+        "Do not treat those numbers as On Tape."
       ],
       "defenseTendencies": [
-        "Last year that defense gave up 37 a game and 27 pass TDs. Run it, then throw it over them.",
-        "New coordinator this year. We have not watched coverage yet."
+        "Last year that defense gave up 37 a game and 27 pass TDs. That is a box line, not a tape watch.",
+        "New coordinator this year. We have not watched coverage."
       ],
       "howUFWins": [
-        "Sixkiller just went 29/42 for 343 with 95 rush yards and four touchdowns at ETSU (box, Aug 29). Pressure before the first read and keep him in the pocket.",
-        "Official 2025 cumulative: Campbell allowed 37.18 PPG and 430.3 YPG (143 rush / 287 pass) with 27 pass TDs allowed vs 5 INTs. Establish Baugh early and take calculated shots once the run is honest.",
-        "Campbell scored 49 at ETSU and went 2-10 in 2025 after a pile of late leads. Stay on schedule, finish red-zone trips, and keep special teams clean so this does not become a track meet."
+        "Hold. No Campbell tape watch yet.",
+        "Box numbers are on the scout log. Do not write keys from boxes.",
+        "Start Game Week Intel after film desk confirms the tape."
       ],
-      "scoutingReport": "CAMPBELL OFFENSE (boxes, not a Hudl watch): Braxton Harris / OC Matt Kubik with returning QB Kamden Sixkiller. 2025 official line 23.45 PPG / 346.1 YPG. 2026 opener at ETSU (Aug 29) was 49-37, 514 yards — Sixkiller 29/42 for 343, 10-95 rushing, four TDs, no sacks. JJ Cowan was quiet that night (6-16); Evan Austin and Stevie Keener took the shots. CAMPBELL DEFENSE (boxes + staff-public): 2025 cumulative 37.18 PPG / 430.3 YPG allowed, 27 pass TDs vs 5 INTs. New 2026 DC Brandon Butcher (2025 was Eric Daniels). Coverage shells and fronts are NOT confirmed — no tape watch. WCU on Sep 5 was postponed (weather/electrical); no second 2026 box as of Sep 6. UF wins by crowding Sixkiller, running at last year's front, and finishing drives.",
+      "scoutingReport": "HOLD FOR FILM DESK. CAMPBELL boxes are on file (not a Hudl watch): Braxton Harris / OC Matt Kubik, QB Kamden Sixkiller. 2025 official line 23.45 PPG / 346.1 YPG. 2026 opener at ETSU (Aug 29) was 49-37, 514 yards — Sixkiller 29/42 for 343, 10-95 rushing, four TDs. Defense 2025: 37.18 PPG / 430.3 YPG allowed, 27 pass TDs vs 5 INTs. New DC Brandon Butcher. Coverage shells and fronts are NOT confirmed. Do not start fan Game Week prep until Charles watches tape.",
       "filmNotes": [
-        "Sixkiller is the show. He can throw it and run it.",
-        "ETSU opener: 29 of 42 for 343, 95 on the ground, four touchdowns. Campbell put up 514 yards.",
-        "They will take the shot. Austin went 50 yards and scored from 30 at ETSU. King had a 77-yard TD vs Bryant last year.",
-        "Last year's front gave up 37 a game and 27 pass touchdowns. Run it, then throw it over them.",
-        "New defensive coordinator this year. We have not watched coverage yet.",
-        "Do not let this become a track meet. They scored 49 at ETSU."
+        "Film desk pending. We have not watched Campbell tape.",
+        "Boxes are on file. Do not treat this week as On Tape.",
+        "Game Week Intel starts after the film watch."
       ],
       "offenseScout": [
-        "PROVISIONAL — no Hudl watch. Boxes + staff-public only. Do not treat as film-confirmed.",
+        "PROVISIONAL — no Hudl watch. Boxes + staff-public only. Do not treat as film-confirmed. Game prep HOLD until tape.",
         "Staff-public: HC Braxton Harris (3rd season), OC Matt Kubik, returning QB Kamden Sixkiller",
         "Box-confirmed 2025 (gocamels cumulative, posted 2-10): 23.45 PPG, 346.1 YPG (119.4 rush / 226.7 pass)",
         "Box-confirmed 2025 Sixkiller (official 10 GP): 220/351, 2102 yds, 12 TD, 5 INT — ESPN gamelog 224/357, 2154, 12 TD, 5 INT, 21 sacks",
@@ -159,7 +156,8 @@
         "Box-confirmed 2026 opener at ETSU (Aug 29): W 49-37, 514 yards; Sixkiller 29/42, 343, 2 pass TD, 0 INT, 10-95 rushing, 2 rush TD, 0 sacks",
         "ETSU play results: Evan Austin 4-93 (30-yd TD, 50-yd catch); Stevie Keener 26-yd TD; Devon Thomas 2 rush TDs; Ethan Lawrence rush TD; JJ Cowan 6-16",
         "WCU home opener postponed Sep 5 (weather/electrical) — no second 2026 box as of Sep 6",
-        "Formation / RPO / tempo between snaps: NOT confirmed — no Hudl watch"
+        "Formation / RPO / tempo between snaps: NOT confirmed — no Hudl watch",
+        "ESPN+ ETSU broadcast exists (Aug 29). Booth call is not a picture watch. Do not mark filmWatched true from it."
       ],
       "defenseScout": [
         "Staff-public: 2025 DC Eric Daniels; 2026 DC Brandon Butcher (1st year) — do not treat as a film-confirmed front",

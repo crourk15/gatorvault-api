@@ -66,20 +66,20 @@ describe('schedule-board', () => {
   it('Campbell Film Notes are fan-facing and raw scout stays on file', () => {
     const board = scheduleBoard.getScheduleBoard(2026);
     const campbell = board.games.find((g) => g.id === 'campbell');
-    assert.ok(campbell.filmNotes?.length >= 6);
-    assert.match(campbell.filmNotes[0], /Sixkiller is the show/i);
-    assert.ok(!campbell.filmNotes.some((n) => /NOT confirmed|Hudl watch|gocamels cumulative/i.test(n)));
-    assert.match(campbell.film, /What the boxes show vs Campbell/i);
+    assert.ok(campbell.filmNotes?.length >= 3);
+    assert.match(campbell.filmNotes[0], /Film desk pending/i);
+    assert.ok(!campbell.filmNotes.some((n) => /NOT confirmed|gocamels cumulative|29\/42/i.test(n)));
+    assert.match(campbell.film, /Film desk pending vs Campbell/i);
     assert.ok(campbell.offenseScout?.some((n) => /29\/42/.test(n)));
     assert.ok(campbell.defenseScout?.some((n) => /NOT confirmed|Brandon Butcher/i.test(n)));
     assert.ok(campbell.opponentTendencies.every((n) => !/NOT confirmed|Hudl/i.test(n)));
     const iosDump = [campbell.film, ...(campbell.opponentTendencies || []), ...(campbell.defenseTendencies || [])];
-    assert.ok(!iosDump.some((n) => /NOT confirmed|Hudl watch|gocamels cumulative/i.test(n)));
-    assert.equal(campbell.keys[0], 'Crowd Sixkiller before the first read');
+    assert.ok(!iosDump.some((n) => /NOT confirmed|gocamels cumulative/i.test(n)));
+    assert.equal(campbell.keys[0], 'Hold for film desk');
     assert.equal(campbell.filmWatched, false);
     assert.equal(campbell.filmLessonId, undefined);
     assert.ok(campbell.offenseScout.some((n) => /PROVISIONAL/.test(n)));
-    assert.ok(!campbell.filmNotes.some((n) => /tape we have/i.test(n)));
+    assert.ok(campbell.offenseScout.some((n) => /Game prep HOLD/i.test(n)));
   });
 
   it('bundle path points at repo seed', () => {
