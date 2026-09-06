@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
+import { fallbackDepthChartBoard } from './depth-chart-api';
 import { SCHEDULE_GAMES } from './schedule-data';
 import { getFeaturedUfGame } from './gators-live';
 import { buildFilmNotes, defaultGameWeekId, getGameWeekBundle } from './game-week-data';
@@ -45,6 +46,17 @@ describe('Game Week Film Notes', () => {
     assert.equal(getFeaturedUfGame(new Date('2026-09-04T18:00:00-04:00'))?.id, 'fau');
     assert.equal(getFeaturedUfGame(new Date('2026-09-06T12:00:00-04:00'))?.id, 'campbell');
     assert.equal(getFeaturedUfGame(new Date('2026-09-13T12:00:00-04:00'))?.id, 'auburn');
+  });
+
+  it('Game Week depth board is the official two-deep, not the placeholder dump', () => {
+    const board = fallbackDepthChartBoard();
+    const labels = board.depthChart.offense.map((p) => p.label);
+    assert.ok(labels.includes('WR (X)'));
+    assert.ok(labels.includes('LT'));
+    assert.ok(!labels.includes('OL'));
+    assert.ok(board.depthChart.defense.some((p) => p.label === 'JACK'));
+    assert.ok(board.depthChart.offense[0].players[0].name.includes('Philo'));
+    assert.ok(!board.depthChart.offense[0].players.some((p) => /Will Griffin/i.test(p.name)));
   });
 
   it('falls back to film when filmNotes is missing', () => {

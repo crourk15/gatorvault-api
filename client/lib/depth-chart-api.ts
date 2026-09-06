@@ -84,9 +84,9 @@ export function fallbackDepthChartBoard(): DepthChartBoard {
   const defense = DEPTH_CHART_DEF.map((r) => ({ ...r }));
   const specialTeams = DEPTH_CHART_ST.map((r) => ({ ...r }));
   return {
-    mode: 'fall-camp',
-    label: 'Fall camp projection · battles open',
-    subtitle: 'Camp board from Sumrall / beat leans — not an official locked depth chart.',
+    mode: 'week-1',
+    label: 'Official Week 1 two-deep',
+    subtitle: 'Official sheet. Philo starts. Rooms marked Battle are still OR.',
     updatedAt: null,
     offense,
     defense,

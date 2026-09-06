@@ -19,7 +19,7 @@ import { KeysToGameCards } from './KeysToGameCards';
 import { SwingPlayersCards } from './SwingPlayersCards';
 import { ExpectedVisitorsPanel } from './ExpectedVisitorsPanel';
 import { FilmNotesPanel } from './FilmNotesPanel';
-import { DepthChartGrid } from './DepthChartGrid';
+import { GameWeekDepthPanel } from './GameWeekDepthPanel';
 import { ScoutingReportPanel } from './ScoutingReportPanel';
 import { PredictionPanel } from './PredictionPanel';
 
@@ -194,7 +194,7 @@ export function GameWeekCommandCenter({
             <section className="gv-gw-wow-panel fc-lab-panel-shell">
               <h3 className="gv-gw-wow-panel__title">Depth chart</h3>
               <div className="gv-gw-wow-panel__body">
-                <DepthChartGrid groups={bundle.depthChart} />
+                <GameWeekDepthPanel />
               </div>
             </section>
           ) : null}
