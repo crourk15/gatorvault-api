@@ -9,6 +9,8 @@ type Props = {
   oppName: string;
   oppShort: string;
   gameId: string;
+  /** Default "Model lean". Past games with an official final use "Final". */
+  label?: string;
 };
 
 export function PredictedScoreBlock({
@@ -17,13 +19,16 @@ export function PredictedScoreBlock({
   oppName,
   oppShort,
   gameId,
+  label = 'Model lean',
 }: Props): React.ReactElement {
+  const isFinal = /^final$/i.test(label);
   return (
     <div
-      className="gv-sched-scoreboard"
-      aria-label={`Model lean Florida ${ufScore}, ${oppName} ${oppScore}`}
+      className={`gv-sched-scoreboard${isFinal ? ' gv-sched-scoreboard--final' : ''}`}
+      data-testid={isFinal ? `schedule-final-${gameId}` : `schedule-lean-${gameId}`}
+      aria-label={`${label} Florida ${ufScore}, ${oppName} ${oppScore}`}
     >
-      <p className="gv-sched-scoreboard__label">Model lean</p>
+      <p className="gv-sched-scoreboard__label">{label}</p>
       <div className="gv-sched-scoreboard__row">
         <img
           src={ufLogoUrl()}

@@ -3,7 +3,7 @@
 import React from 'react';
 import { HeadingM, BodyM } from '@/components/ui';
 import type { PremiumScheduleGame, ScheduleGameStatus } from '@/lib/schedule-premium';
-import { isRivalryGame } from '@/lib/schedule-premium';
+import { hasPostedFinal, isRivalryGame } from '@/lib/schedule-premium';
 import { opponentLogoUrl } from '@/lib/team-logos';
 import { GameActions } from './GameActions';
 import { PredictedScoreBlock } from './PredictedScoreBlock';
@@ -38,9 +38,13 @@ export function GameCard(props: Props): React.ReactElement {
     status = 'upcoming',
     isBye,
     keyTeaser,
+    finalUF,
+    finalOpp,
+    boxScoreUrl,
   } = props;
 
   const rivalry = isRivalryGame(props);
+  const postedFinal = hasPostedFinal({ finalUF, finalOpp });
   const statusLabel = status === 'next' ? 'Next' : status === 'past' ? 'Final' : null;
   const matchup = isBye
     ? 'BYE'
@@ -55,6 +59,7 @@ export function GameCard(props: Props): React.ReactElement {
         'gv-ds-card',
         status === 'next' ? 'gv-sched-game-card--next' : '',
         status === 'past' ? 'gv-sched-game-card--past' : '',
+        status === 'past' && postedFinal ? 'gv-sched-game-card--final' : '',
         rivalry ? 'gv-sched-game-card--rivalry' : '',
         isBye ? 'gv-sched-game-card--bye' : '',
       ]
@@ -123,6 +128,15 @@ export function GameCard(props: Props): React.ReactElement {
                     gameId={id}
                   />
                 </>
+              ) : postedFinal && finalUF != null && finalOpp != null ? (
+                <PredictedScoreBlock
+                  ufScore={finalUF}
+                  oppScore={finalOpp}
+                  oppName={opponentName}
+                  oppShort={opponentShort}
+                  gameId={id}
+                  label="Final"
+                />
               ) : (
                 <p className="gv-sched-game-card__past-note">Result posts after kickoff.</p>
               )}
@@ -134,6 +148,18 @@ export function GameCard(props: Props): React.ReactElement {
       {!isBye ? (
         <div className="gv-sched-game-card__right">
           <GameActions ticketVendors={ticketVendors} opponentName={opponentName} />
+          {boxScoreUrl ? (
+            <a
+              href={boxScoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gv-sched-game-card__box"
+              data-testid={`schedule-box-${id}`}
+            >
+              Box score
+              <span aria-hidden="true"> →</span>
+            </a>
+          ) : null}
         </div>
       ) : null}
     </article>

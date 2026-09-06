@@ -76,6 +76,24 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
         pred: String(g.pred || ''),
         predUF: Number.isFinite(Number(g.predUF)) ? Number(g.predUF) : 0,
         predOpp: Number.isFinite(Number(g.predOpp)) ? Number(g.predOpp) : 0,
+        ...(Number.isFinite(Number(g.finalUF)) && Number.isFinite(Number(g.finalOpp))
+          ? {
+              finalUF: Number(g.finalUF),
+              finalOpp: Number(g.finalOpp),
+              ...(g.finalSource || seed?.finalSource
+                ? { finalSource: String(g.finalSource || seed?.finalSource || '').trim() }
+                : {}),
+            }
+          : Number.isFinite(Number(seed?.finalUF)) && Number.isFinite(Number(seed?.finalOpp))
+            ? {
+                finalUF: Number(seed?.finalUF),
+                finalOpp: Number(seed?.finalOpp),
+                ...(seed?.finalSource ? { finalSource: String(seed.finalSource).trim() } : {}),
+              }
+            : {}),
+        ...(String(g.boxScoreUrl || seed?.boxScoreUrl || '').trim()
+          ? { boxScoreUrl: String(g.boxScoreUrl || seed?.boxScoreUrl || '').trim() }
+          : {}),
         expectedVisitors:
           g.expectedVisitors &&
           typeof g.expectedVisitors === 'object' &&

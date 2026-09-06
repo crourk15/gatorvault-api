@@ -28,6 +28,8 @@ export type ScheduleGame = {
   finalUF?: number;
   finalOpp?: number;
   finalSource?: string;
+  /** Official box score page (floridagators.com stats). */
+  boxScoreUrl?: string;
   /** Verified Film Room opponent-prep lesson id (knowledge engine). */
   filmLessonId?: string;
   /** GatorVault Film Review id (our weekly board). */
@@ -115,6 +117,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     finalUF: 66,
     finalOpp: 21,
     finalSource: "official",
+    boxScoreUrl: "https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903",
     filmLessonId: "frl00004-0000-4000-8000-000000000004",
     opponentTendencies: [
       "Shotgun every snap we have. No under center.",
