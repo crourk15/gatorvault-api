@@ -186,6 +186,23 @@ Generator voice: multi-factor insider nugget (room need · staff · in-state · 
 **Rank language (members first):** never write ambiguous `Top-20 EDGE` / `Top-50 DL`. Say what the number is — overall vs position — e.g. `No. 17 overall and a top-5 EDGE`, `No. 22 overall and the No. 1 IOL`. Fans should not have to guess.
 
 
+## GatorVault Film Review (weekly Florida board)
+
+Film Room **Review** is our postgame board (offense / defense / specials). It is **API-backed** so a tape watch can go live without Codemagic after the 1.0.23 fetch is in the binary.
+
+1. Author UTF-8 JSON under `server/data/film-room/reviews/<id>.json` (`week-1-fau-2026.json`).
+2. Set `filmWatched: true` and `watchStandard: "broadcast"` or `"all22"` only after the Florida tape is actually watched. Official PBP stays `"official-pbp"` and stays off the fan rail.
+3. Persist:
+
+```bash
+node server/scripts/upsert-vault-film-review.js --file=server/data/film-room/reviews/<id>.json
+```
+
+4. Confirm `GET /api/film-room/reviews` lists the board (`live: true`). Optional: set `vaultReviewId` on the schedule game so Game Week links to it.
+5. Commit the review JSON + schedule pointer. Render serves it; no App Store rebuild.
+
+Do **not** ship a live Review from box score / play-by-play alone.
+
 ## Player projection / comp in Copy Brief
 
 Recruit briefs embed a **PLAYER PROJECTION / COMP** block from War Room breakdowns (`comparison`, `projection`, optional `schemeFit` / `nflProjection` in `server/data/war-room/breakdowns.json`). Beat Desk shows the same card on **Open**.

@@ -125,6 +125,46 @@ function mountPlatformRoutes(app) {
     }
   });
 
+  /** Weekly GatorVault boards — JSON upserts go live without Codemagic after the 1.0.23 fetch bake. */
+  app.get('/api/film-room/reviews', (req, res) => {
+    try {
+      const reviews = require('./vault-film-review-store');
+      return res.json(reviews.toApiPayload());
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message, reviews: [], count: 0 });
+    }
+  });
+
+  app.get('/api/film-room/reviews/:id', (req, res) => {
+    try {
+      const reviews = require('./vault-film-review-store');
+      const review = reviews.getLiveReviewById(req.params.id);
+      if (!review) return res.status(404).json({ ok: false, error: 'Review not found' });
+      return res.json({ ok: true, review });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.put('/api/film-room/reviews/:id', (req, res) => {
+    const pin = String(req.body?.pin || req.get('X-Recruiting-Pin') || req.query.pin || '');
+    if (!verifyAdminPin(pin)) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const reviews = require('./vault-film-review-store');
+      const saved = reviews.upsertReview({ ...(req.body || {}), id: req.params.id });
+      return res.json({
+        ok: true,
+        review: saved.review,
+        live: saved.live,
+        paths: saved.paths,
+      });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/game-week/meta', (req, res) => {
     try {
       const gameWeek = require('./game-week-feed');

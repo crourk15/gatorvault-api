@@ -7,18 +7,20 @@ import {
   SCHEME_SCHOOL_UNITS,
   type SchemeSchoolLesson,
 } from '@/lib/scheme-school-data';
-import { latestVaultFilmReview } from '@/lib/vault-film-review-data';
+import { type VaultFilmReview } from '@/lib/vault-film-review-data';
 
 export function EliteSchemeSchoolGrid({
+  latestReview,
   insider,
   onOpen,
   onUnlock,
 }: {
+  latestReview?: VaultFilmReview;
   insider: boolean;
   onOpen: (lesson: SchemeSchoolLesson) => void;
   onUnlock: () => void;
 }): React.ReactElement {
-  const review = latestVaultFilmReview();
+  const review = latestReview;
   const featuredId = review?.schemeLessonIds[0];
   const featured = SCHEME_SCHOOL_LESSONS.find((lesson) => lesson.id === featuredId) || SCHEME_SCHOOL_LESSONS[0];
 

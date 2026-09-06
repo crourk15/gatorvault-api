@@ -6,6 +6,7 @@ import {
   FILM_HUB_ORDER,
   fetchFilmRoomCatalog,
   fetchFilmRoomLesson,
+  fetchVaultFilmReviews,
   normalizeFilmHub,
   type FilmRoomCatalogItem,
   type FilmRoomLessonDetail,
@@ -374,6 +375,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const [selected, setSelected] = useState<FilmRoomCatalogItem | null>(null);
   const [schemeLesson, setSchemeLesson] = useState<SchemeSchoolLesson | null>(null);
   const [review, setReview] = useState<VaultFilmReview | null>(null);
+  const [reviews, setReviews] = useState<VaultFilmReview[]>([]);
   const [lessonDetail, setLessonDetail] = useState<FilmRoomLessonDetail | null>(null);
   const [lessonLoading, setLessonLoading] = useState(false);
   const [hub, setHub] = useState<string>(() => {
@@ -382,7 +384,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
     const seg = parseFilmRoomSegmentFromPath();
     if (seg) return filmRoomHubFromSegment(seg);
     // Empty Review is not the landing page — that rail waits on real Florida tape.
-    return liveVaultFilmReviews().length > 0 ? VAULT_REVIEW_HUB : 'Film Breakdown';
+    return 'Film Breakdown';
   });
 
   useEffect(() => {
@@ -400,6 +402,8 @@ export function VaultFilmRoomPage(): React.ReactElement {
       setError(null);
     }
     try {
+      const reviewList = await fetchVaultFilmReviews();
+      setReviews(reviewList);
       const catalog = await fetchFilmRoomCatalog();
       setItems(
         (catalog.items ?? []).map((item) => ({
@@ -534,7 +538,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
     const params = new URLSearchParams(window.location.search);
     const reviewId = params.get('review');
     if (reviewId) {
-      const match = vaultFilmReview(reviewId);
+      const match = vaultFilmReview(reviewId, reviews);
       if (match) {
         setHub(VAULT_REVIEW_HUB);
         setReview(match);
@@ -552,11 +556,11 @@ export function VaultFilmRoomPage(): React.ReactElement {
     if (!lessonId) return;
     const match = items.find((i) => i.id === lessonId);
     if (match) void openLesson(match);
-  }, [loading, items, openLesson]);
+  }, [loading, items, reviews, openLesson]);
 
   const hubCounts = useMemo(() => {
     const counts: Record<string, number> = {
-      [VAULT_REVIEW_HUB]: liveVaultFilmReviews().length,
+      [VAULT_REVIEW_HUB]: liveVaultFilmReviews(reviews).length,
       'Film Breakdown': 0,
       'Scheme School': SCHEME_SCHOOL_LESSONS.length,
       'UF Press Conferences': 0,
@@ -568,7 +572,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
       counts[key] = (counts[key] || 0) + 1;
     }
     return counts;
-  }, [items]);
+  }, [items, reviews]);
 
   const filtered = useMemo(() => {
     return items.filter((i) => normalizeFilmHub(i.filmHub) === hub);
@@ -577,7 +581,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const hubCopy = HUB_COPY[hub];
   const hubTab = HUB_TABS.find((t) => t.id === hub);
   const viewingLesson = Boolean(selected || schemeLesson || review);
-  const latestReview = latestVaultFilmReview();
+  const latestReview = latestVaultFilmReview(reviews);
   const schemeSeenVs =
     schemeLesson && latestReview?.schemeLessonIds.includes(schemeLesson.id)
       ? latestReview.opponentShort
@@ -662,9 +666,19 @@ export function VaultFilmRoomPage(): React.ReactElement {
             </div>
 
             {hub === VAULT_REVIEW_HUB ? (
-              <VaultFilmReviewGrid insider={insider} onOpen={openReview} onUnlock={goToUnlock} />
+              <VaultFilmReviewGrid
+                reviews={reviews}
+                insider={insider}
+                onOpen={openReview}
+                onUnlock={goToUnlock}
+              />
             ) : hub === 'Scheme School' ? (
-              <EliteSchemeSchoolGrid insider={insider} onOpen={openSchemeLesson} onUnlock={goToUnlock} />
+              <EliteSchemeSchoolGrid
+                latestReview={latestReview}
+                insider={insider}
+                onOpen={openSchemeLesson}
+                onUnlock={goToUnlock}
+              />
             ) : (
               <CatalogGrid items={filtered} insider={insider} onOpen={openLesson} />
             )}
