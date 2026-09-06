@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-06T12:15:00.000Z",
-  "source": "local-lines",
+  "generatedAt": "2026-09-06T17:14:47.348Z",
+  "source": "prod-api",
   "nextGame": {
     "id": "uf-campbell-2026-w2",
     "week": 2,
@@ -33,19 +33,45 @@
     "opponent": "FAU",
     "date": "2026-09-05T23:45:00.000Z",
     "venue": "Ben Hill Griffin Stadium",
+    "spread": {
+      "line": "UF -27.5",
+      "uf": -27.5
+    },
+    "total": 59.5,
+    "moneyline": {
+      "uf": -4500,
+      "opp": 1600
+    },
+    "sportsbookUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
+    "sportsbookLinks": [
+      {
+        "id": "fanduel",
+        "name": "FanDuel",
+        "url": "https://sportsbook.fanduel.com/navigation/ncaaf"
+      },
+      {
+        "id": "hardrock",
+        "name": "Hard Rock Bet",
+        "url": "https://www.hardrock.bet/sportsbook/football/ncaaf/"
+      }
+    ],
+    "source": "schedule",
+    "completed": true,
     "homeScore": 66,
     "awayScore": 21,
     "status": "Final",
-    "completed": true,
     "live": false,
-    "scoreSource": "official",
-    "source": "official"
+    "scoreSource": "official"
   },
   "finals": {
     "uf-fau-2026-w1": {
+      "gameKey": "uf-fau-2026-w1",
+      "scheduleId": "fau",
+      "opponent": "FAU",
       "uf": 66,
       "opp": 21,
-      "source": "official"
+      "source": "official",
+      "completedAt": "2026-09-06T03:15:00.000Z"
     }
   }
 }
