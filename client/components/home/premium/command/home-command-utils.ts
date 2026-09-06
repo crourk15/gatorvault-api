@@ -8,12 +8,28 @@ import type { BeatIntelItem, HighPriorityIntelItem } from '@/lib/recruiting-ui-a
 import type { FlipWatchRow, MovementNarrativeRow, VisitRecapRow } from '@/lib/futurecast-high-priority-api';
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { movementDelta7d } from '@/lib/movement-intel-types';
+import { getFeaturedUfGame, parseScheduleKickoff } from '@/lib/gators-live';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
 
-export const NEXT_GAME_KICKOFF_ISO = '2026-09-05T19:45:00-04:00';
-
-const NEXT_GAME = SCHEDULE_GAMES[0];
 const RIVAL_OPPONENT_IDS = new Set(['fsu', 'uga', 'auburn', 'miami']);
+
+function nextHomeGame(now = new Date()) {
+  return getFeaturedUfGame(now) || SCHEDULE_GAMES.find((g) => g.kind !== 'bye') || SCHEDULE_GAMES[0];
+}
+
+function kickoffIsoForGame(dateStr: string): string {
+  const kick = parseScheduleKickoff(dateStr);
+  return kick ? kick.toISOString() : '';
+}
+
+/** Live next-kickoff ISO — not a hardcoded FAU date. */
+export function nextGameKickoffIso(now = new Date()): string {
+  const game = nextHomeGame(now);
+  return game ? kickoffIsoForGame(game.date) : '';
+}
+
+/** @deprecated Use nextGameKickoffIso() — value is computed at module load. */
+export const NEXT_GAME_KICKOFF_ISO = nextGameKickoffIso();
 
 export type MetricTrend = 'up' | 'down' | 'stable';
 
@@ -138,15 +154,16 @@ export function avatarInitials(name: string): string {
     .join('');
 }
 
-export function buildGameDayView(): HomeGameDayView {
+export function buildGameDayView(now = new Date()): HomeGameDayView {
+  const game = nextHomeGame(now);
   return {
-    gameId: NEXT_GAME.id,
-    opponent: NEXT_GAME.opp,
-    opponentShort: opponentInitials(NEXT_GAME.opp),
-    dateLabel: NEXT_GAME.date,
-    venue: NEXT_GAME.venue,
-    kickoffIso: NEXT_GAME_KICKOFF_ISO,
-    isRival: RIVAL_OPPONENT_IDS.has(NEXT_GAME.id),
+    gameId: game.id,
+    opponent: game.opp,
+    opponentShort: opponentInitials(game.opp),
+    dateLabel: game.date,
+    venue: game.venue,
+    kickoffIso: kickoffIsoForGame(game.date),
+    isRival: RIVAL_OPPONENT_IDS.has(game.id),
   };
 }
 

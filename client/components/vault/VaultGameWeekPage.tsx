@@ -19,6 +19,7 @@ export function VaultGameWeekPage(): React.ReactElement {
     [pathname]
   );
   const [gameId, setGameId] = useState(defaultGameWeekId());
+  const [lockToInitial, setLockToInitial] = useState(false);
 
   useEffect(() => {
     const fromQuery =
@@ -26,6 +27,7 @@ export function VaultGameWeekPage(): React.ReactElement {
     const raw = urlGameId || fromQuery;
     if (raw && SCHEDULE_GAMES.some((g) => g.id === raw)) {
       setGameId(raw);
+      setLockToInitial(true);
     }
   }, [urlGameId]);
 
@@ -33,7 +35,11 @@ export function VaultGameWeekPage(): React.ReactElement {
     <div className="rh-page rh-page--elite gv-gw-wow-page fc-lab-cc-page" data-testid="vault-game-week-elite">
       <PageLayout theme="navy" testId="vault-game-week" className="gv-gw-wow-page-layout">
         {/* Shell open for Locker; Film depth (intel + scouting) blurred inside Command Center. Trial unlocks. */}
-        <GameWeekCommandCenter initialGameId={gameId} onGameChange={setGameId} />
+        <GameWeekCommandCenter
+          initialGameId={gameId}
+          lockToInitial={lockToInitial}
+          onGameChange={setGameId}
+        />
 
         {!insider ? (
           <a

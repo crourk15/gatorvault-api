@@ -11,6 +11,7 @@ import { fetchRecruitingBoard } from './recruiting-board-api';
 import { fetchFutureCastHome, fetchFutureCastClass } from './futurecast-home-api';
 import { fetchNilDashboard, type NilDashboard } from './nil-api';
 import { SCHEDULE_GAMES, type ScheduleGame } from './schedule-data';
+import { getFeaturedUfGame, parseScheduleKickoff } from './gators-live';
 import { fetchPortalWatchlist } from './portal-api';
 import { fetchPortalIncoming } from './recruiting-api';
 import { fetchTeamHubBundle } from './team-hub-api';
@@ -327,11 +328,11 @@ export async function fetchHomeMovementIntel(force = false): Promise<HomeMovemen
   return writeCache(memoryCache.movementIntel, data);
 }
 
-const NEXT_GAME_ISO = '2026-09-05T19:45:00-04:00';
-
-export function daysUntilNextGame(): number {
-  const ms = new Date(NEXT_GAME_ISO).getTime() - Date.now();
-  return Math.max(0, Math.ceil(ms / 86_400_000));
+export function daysUntilNextGame(now = new Date()): number {
+  const game = getFeaturedUfGame(now);
+  const kick = game ? parseScheduleKickoff(game.date) : null;
+  if (!kick) return 0;
+  return Math.max(0, Math.ceil((kick.getTime() - now.getTime()) / 86_400_000));
 }
 
 export function computeMomentumPct(
@@ -380,7 +381,7 @@ export async function fetchRecruitingSnapshot(force = false): Promise<Recruiting
     fetchNilDashboard().catch(() => null),
   ]);
 
-  const nextGame = SCHEDULE_GAMES[0];
+  const nextGame = getFeaturedUfGame() || SCHEDULE_GAMES.find((g) => g.kind !== 'bye') || SCHEDULE_GAMES[0];
   const snapshot: RecruitingSnapshot = {
     commits: board?.commits?.length ?? fc?.commits?.length ?? fc?.commitTotal ?? 0,
     targets: board?.targets?.length ?? fc?.topTargets?.length ?? 0,
@@ -391,7 +392,9 @@ export async function fetchRecruitingSnapshot(force = false): Promise<Recruiting
       null,
     nilSecRank: nil?.ufStanding?.secRank ?? null,
     winProbability: nextGame?.ufPct ?? 94,
-    nextGameLabel: nextGame ? `FLORIDA vs ${nextGame.opp.split(' ')[0]?.toUpperCase() ?? 'FAU'}` : 'FLORIDA vs FAU',
+    nextGameLabel: nextGame
+      ? `FLORIDA vs ${nextGame.opp.split(' ')[0]?.toUpperCase() ?? nextGame.id.toUpperCase()}`
+      : 'FLORIDA vs Campbell',
     nextGameDays: daysUntilNextGame(),
   };
 

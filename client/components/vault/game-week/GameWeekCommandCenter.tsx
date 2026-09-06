@@ -44,11 +44,18 @@ const FILM_SCOUTING_PAYWALL = {
 
 type Props = {
   initialGameId?: string;
+  /** True when the URL picked a specific game — do not auto-advance off it. */
+  lockToInitial?: boolean;
   onGameChange?: (gameId: string) => void;
 };
 
-export function GameWeekCommandCenter({ initialGameId = defaultGameWeekId(), onGameChange }: Props): React.ReactElement {
+export function GameWeekCommandCenter({
+  initialGameId = defaultGameWeekId(),
+  lockToInitial = false,
+  onGameChange,
+}: Props): React.ReactElement {
   const [gameId, setGameId] = useState(initialGameId);
+  const [userPicked, setUserPicked] = useState(false);
   const [tab, setTab] = useState('intel');
   const [games, setGames] = useState<ScheduleGame[]>(SCHEDULE_GAMES);
   const [bettingByGameId, setBettingByGameId] = useState<Record<string, GameWeekBettingLine | null>>({});
@@ -58,11 +65,17 @@ export function GameWeekCommandCenter({ initialGameId = defaultGameWeekId(), onG
   }, [initialGameId]);
 
   // Live schedule board — weekly film/keys/scout edits publish without Codemagic.
+  // After kickoff, land on the next game unless the fan picked one.
   useEffect(() => {
     let cancelled = false;
     fetchScheduleGames(2026)
       .then((live) => {
-        if (!cancelled && live.length) setGames(live);
+        if (cancelled || !live.length) return;
+        setGames(live);
+        if (lockToInitial || userPicked) return;
+        const nextId = defaultGameWeekId(live);
+        setGameId(nextId);
+        onGameChange?.(nextId);
       })
       .catch(() => {
         /* keep seed */
@@ -70,7 +83,7 @@ export function GameWeekCommandCenter({ initialGameId = defaultGameWeekId(), onG
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [lockToInitial, userPicked, onGameChange]);
 
   // Vegas from /api/betting/lines — never invent spread/total from win% or FutureCast score.
   useEffect(() => {
@@ -101,6 +114,7 @@ export function GameWeekCommandCenter({ initialGameId = defaultGameWeekId(), onG
 
   const handleGameSelect = useCallback(
     (id: string) => {
+      setUserPicked(true);
       setGameId(id);
       onGameChange?.(id);
     },

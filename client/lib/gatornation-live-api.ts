@@ -13,6 +13,7 @@ import type {
 import { filterExcludedPortalClassItems } from './portal-class-filter';
 import { fetchLiveDashboard, type BeatPost, type LiveFeedItem, type PodcastShow } from './live-api';
 import { fetchBettingLines, type BettingGame } from './betting-api';
+import { getFeaturedUfGame } from './gators-live';
 import { SCHEDULE_GAMES } from './schedule-data';
 import {
   PODCAST_CATALOG,
@@ -194,7 +195,7 @@ export async function fetchGnlGameDay(): Promise<GnlGameDay | null> {
     /* fall through to schedule seed */
   }
 
-  const seed = SCHEDULE_GAMES[0];
+  const seed = getFeaturedUfGame() || SCHEDULE_GAMES.find((g) => g.kind !== 'bye') || SCHEDULE_GAMES[0];
   if (!seed) return null;
   return {
     opponent: seed.opp,
