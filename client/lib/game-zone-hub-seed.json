@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-06T17:14:47.348Z",
+  "generatedAt": "2026-09-06T17:45:24.479Z",
   "source": "prod-api",
   "nextGame": {
     "id": "uf-campbell-2026-w2",
@@ -8,9 +8,6 @@
     "opponent": "Campbell",
     "date": "2026-09-12T21:30:00.000Z",
     "venue": "Ben Hill Griffin Stadium",
-    "spread": null,
-    "total": null,
-    "moneyline": null,
     "sportsbookUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
     "sportsbookLinks": [
       {
