@@ -22,18 +22,19 @@ describe('Game Week Film Notes', () => {
     const campbell = SCHEDULE_GAMES.find((g) => g.id === 'campbell');
     assert.ok(campbell);
     const notes = buildFilmNotes(campbell);
-    assert.equal(notes.length, 3);
-    assert.match(notes[0], /Film desk pending/i);
+    assert.equal(notes.length, 6);
+    assert.match(notes[0], /No-huddle shotgun/i);
     assert.ok(!notes.some((n) => /NOT confirmed|gocamels cumulative|29\/42/i.test(n)));
 
     const bundle = getGameWeekBundle('campbell');
     assert.deepEqual(bundle.filmNotes, notes);
     assert.ok(bundle.scouting.offense.some((n) => /29\/42/.test(n)));
     assert.ok(bundle.scouting.defense.some((n) => /NOT confirmed|Brandon Butcher/i.test(n)));
-    assert.equal(bundle.keys[0].title, 'Hold for film desk');
-    assert.equal(campbell.filmWatched, false);
+    assert.equal(bundle.keys[0].title, 'Crowd Sixkiller before the first read');
+    assert.equal(campbell.filmWatched, true);
     assert.equal(campbell.filmLessonId, undefined);
-    assert.ok(bundle.scouting.offense.some((n) => /PROVISIONAL/.test(n)));
+    assert.ok(bundle.scouting.offense.some((n) => /Film-confirmed/i.test(n)));
+    assert.equal(bundle.prediction.spread, 'Line pending');
   });
 
   it('defaults Game Week to the next upcoming kickoff', () => {

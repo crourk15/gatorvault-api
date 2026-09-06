@@ -96,7 +96,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-06 | Game Week: default to next upcoming kickoff + empty Expected visitors state | `VaultGameWeekPage` / Command Center / `defaultGameWeekId` in binary; **Campbell intel + empty visitor list already live via API** | #627 |
+| 2026-09-06 | Game Week: default to next upcoming kickoff + empty Expected visitors state | `VaultGameWeekPage` / Command Center / `defaultGameWeekId` in binary; **Campbell film desk + empty visitor list already live via API** | #627 |
 | 2026-09-05 | Community: Game day chip + hero copy on Staff open (title/body already live via API) | `VaultCommunityPage` chip/hero in binary | #623 |
 | 2026-09-05 | Member page trail: ping `/api/member-activity/ping` on vault navigation + `X-GV-Client` on `/api/session` | `VaultNavigationProvider` + `member-activity.ts` + session header in binary; **last-seen already live via login/session API** | #621 |
 | 2026-09-06 | Gators Live poll: 10s live / 15s idle + ticking countdown (was 30s) | `VaultLiveScoresPage` poll in binary | #625 |
