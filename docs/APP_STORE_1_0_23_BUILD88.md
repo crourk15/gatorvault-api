@@ -19,6 +19,7 @@
 Client/UI backlog, including:
 
 - Game Week + Home countdown: auto-open the next kickoff (Campbell this week; Auburn after that — no FAU hardcode)
+- Game Week Depth Chart: official two-deep with Offense / Defense / Special Teams cards
 - Gators Live living room (stadium hero, talk, 3 keys, visitors, film bite)
 - Gators Live poll: 10s live / 15s idle + ticking countdown
 - Community Game day chip + hero copy

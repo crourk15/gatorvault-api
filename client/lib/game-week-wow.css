@@ -878,7 +878,251 @@
   color: var(--color-text-muted);
 }
 
-/* Depth chart — light feed */
+/* Depth chart — official two-deep (Team hub board inside Game Week) */
+.gv-gw-depth-elite {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.gv-gw-depth-elite__dek {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.gv-gw-depth-elite__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gv-gw-depth-elite__pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.gv-gw-depth-elite__pill--locked {
+  background: rgba(0, 33, 165, 0.08);
+  color: #0021a5;
+  border-color: rgba(0, 33, 165, 0.22);
+}
+
+.gv-gw-depth-elite__pill--battle {
+  background: rgba(250, 70, 22, 0.1);
+  color: #c2410c;
+  border-color: rgba(250, 70, 22, 0.28);
+}
+
+.gv-gw-depth-elite__pill--watch {
+  background: rgba(100, 116, 139, 0.1);
+  color: #475569;
+  border-color: rgba(100, 116, 139, 0.25);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 4px;
+  border-radius: 10px;
+  background: rgba(0, 26, 51, 0.04);
+  border: 1px solid rgba(0, 33, 165, 0.12);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-height: 52px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(26, 26, 26, 0.62);
+  cursor: pointer;
+  text-align: left;
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-tab__short {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-tab__label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-tab.is-active {
+  background: linear-gradient(135deg, #0021a5 0%, #001a33 100%);
+  border-color: rgba(250, 70, 22, 0.45);
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(0, 33, 165, 0.22);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-tab.is-active .gv-team-dc-tab__short,
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-tab.is-active .gv-team-dc-tab__label {
+  color: #fff !important;
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 720px) {
+  .gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-card {
+  position: relative;
+  overflow: hidden;
+  padding: 14px 14px 12px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(0, 33, 165, 0.04) 0%, #fff 42%), #fff;
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  box-shadow: 0 4px 14px rgba(0, 26, 51, 0.06);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0021a5 0%, #fa4616 100%);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-card--battle::before {
+  background: linear-gradient(90deg, #fa4616 0%, #fbbf24 100%);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-card--watch::before {
+  background: linear-gradient(90deg, #64748b 0%, #94a3b8 100%);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 33, 165, 0.1);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-card__pos {
+  margin: 0;
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #0021a5 !important;
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-status {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-status--Locked {
+  background: rgba(0, 33, 165, 0.1);
+  color: #0021a5 !important;
+  border: 1px solid rgba(0, 33, 165, 0.22);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-status--Battle {
+  background: rgba(250, 70, 22, 0.12);
+  color: #c2410c !important;
+  border: 1px solid rgba(250, 70, 22, 0.28);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-status--Watch {
+  background: rgba(100, 116, 139, 0.12);
+  color: #475569 !important;
+  border: 1px solid rgba(100, 116, 139, 0.28);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-depth {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-depth-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-top: 1px solid rgba(0, 33, 165, 0.08);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-depth-row:first-child {
+  border-top: 0;
+  padding-top: 2px;
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-depth-rank {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: rgba(0, 33, 165, 0.45);
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-depth-row:first-child .gv-team-dc-depth-rank {
+  color: #fa4616;
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-depth-name {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a !important;
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-depth-meta {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b !important;
+}
+
+.gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-analysis {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border-left: 3px solid #fa4616;
+  background: rgba(250, 70, 22, 0.06);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: #334155 !important;
+}
+
+/* Legacy column dump — kept for Film Room leftover markup */
 .gv-gw-depth-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
