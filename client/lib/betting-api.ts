@@ -11,9 +11,9 @@ export type BettingGame = {
   date?: string;
   kickoff?: string;
   venue?: string;
-  spread?: { line?: string; uf?: number } | string;
-  total?: number | string;
-  moneyline?: { uf?: number; opp?: number };
+  spread?: { line?: string; uf?: number } | string | null;
+  total?: number | string | null;
+  moneyline?: { uf?: number; opp?: number } | null;
   status?: string;
   homeScore?: number | null;
   awayScore?: number | null;

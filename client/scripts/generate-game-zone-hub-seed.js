@@ -35,6 +35,19 @@ function retainPrevious() {
   try { return JSON.parse(fs.readFileSync(OUT, 'utf8')); } catch { return null; }
 }
 
+function stripNulls(value) {
+  if (Array.isArray(value)) return value.map(stripNulls);
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const [key, next] of Object.entries(value)) {
+      if (next == null) continue;
+      out[key] = stripNulls(next);
+    }
+    return out;
+  }
+  return value;
+}
+
 function localLines() {
   try {
     return JSON.parse(fs.readFileSync(path.join(ROOT, 'server/data/betting/lines.json'), 'utf8'));
@@ -86,7 +99,7 @@ async function main() {
     finals = Object.keys(finals).length ? finals : (prev.finals || {});
     source = 'retained-previous';
   }
-  const seed = { generatedAt: new Date().toISOString(), source, nextGame, lastGame, finals };
+  const seed = stripNulls({ generatedAt: new Date().toISOString(), source, nextGame, lastGame, finals });
   fs.writeFileSync(OUT, JSON.stringify(seed, null, 2) + '\n');
   console.log('[generate-game-zone-hub-seed] wrote', OUT, 'source=', source, 'nextGame=', Boolean(nextGame), 'lastGame=', Boolean(lastGame));
 }
