@@ -32,7 +32,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Why we chase generator + Admin/script overrides on HP API (`whyWeChase`) — live after Render; **client prefer-field needs Codemagic bake below**
 - [x] 2028 HP chase cards: visit lines + Why we chase notes from live visit/intel stores + soft priority nudge (API — no Codemagic; Rising still snapshot `delta7d` only)
 - [x] Home NOW / class-overview 2027 commit count lockstep with commit cards (26) — kill protected-only phantom inflate + shared `loadHubHsClassCommits` (API)
-- [x] App Store **1.0.21** approved — pre-release train closed; next bake is **1.0.22** / build 87+
+- [x] App Store **1.0.21** approved — pre-release train closed; next bake is **1.0.23** / build 88+
 - [x] App Store **1.0.20** approved — prior train
 - [x] App Store **1.0.19** approved — prior train
 - [x] App Store **1.0.18** approved — prior train (`90186` / `90062`)
@@ -90,7 +90,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 ## Waiting for next Codemagic build
 
-**Next bake target: App Store `1.0.22` / build `87+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_22_BUILD87.md`.
+**Next bake target: App Store `1.0.23` / build `88+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_23_BUILD88.md`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
