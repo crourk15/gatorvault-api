@@ -1,0 +1,78 @@
+{
+  "id": "fau-2026-w1",
+  "week": 1,
+  "season": 2026,
+  "gameId": "fau",
+  "opponent": "Florida Atlantic Owls",
+  "opponentShort": "FAU",
+  "dateLabel": "September 5, 2026",
+  "venue": "Ben Hill Griffin Stadium, Gainesville FL",
+  "finalUF": 66,
+  "finalOpp": 21,
+  "title": "Week 1 vs FAU — Florida 66, FAU 21",
+  "dek": "Philo and Baugh blew the Swamp open. Sumrall already hates how the defense played. Official score is 66–21.",
+  "filmWatched": false,
+  "watchStandard": "official-pbp",
+  "watchNote": "PROVISIONAL — charted from the official floridagators.com box, play-by-play, recap, and Sumrall notes. SEC Network broadcast and All-22 have not been watched. Do not flip live until Charles approves a real tape watch.",
+  "sources": [
+    {
+      "label": "Official box score",
+      "url": "https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903"
+    },
+    {
+      "label": "UF recap — Florida 66, FAU 21",
+      "url": "https://floridagators.com/news/2026/9/5/football-final-florida-vs-florida-atlantic-sept-5-2026"
+    },
+    {
+      "label": "Sumrall opener notes",
+      "url": "https://floridagators.com/news/2026/9/6/football-gators-a-good-opener-for-gators-under-sumrall"
+    }
+  ],
+  "headline": "Faulkner’s offense scored on the first six drives. Sumrall already has a list on defense.",
+  "offense": {
+    "kicker": "Offense",
+    "body": "No-huddle shotgun from the first snap. After DJ Coleman picked Veltkamp at the UF 6, Philo went 16 of 21 for 275 yards and three touchdowns, plus a 3-yard score himself. First seven throws landed. Vernell Brown III took a 49-yard catch-and-run for the first points of the Sumrall era, then Bailey Stockton punched a 12-yarder, and TJ Abrams ripped a 63-yard bomb that set up Philo’s sneak. Jadan Baugh carried 14 times for 160 yards and three touchdowns (12, 7, 6) and broke a 61-yarder that set up the third. Florida piled 624 yards (343 pass, 281 rush), 9.3 yards a snap on 67 plays, and scored eight touchdowns in eight red-zone trips. Seven of those scoring drives covered at least 75 yards. Tramell Jones Jr. closed it 4 of 5 for 68 and a 6-yard toss to Micah Jones. Duke Clark spelled Baugh (Pryor out, sore hip) and added the 10-yard catch and a 4-yard run. Alec Clark never punted.",
+    "bullets": [
+      "Philo: 16/21, 275 yards, 3 passing TDs, 1 INT, plus the 3-yard run — first seven completions.",
+      "Baugh: 14 carries, 160 yards, 3 TDs, plus the 61-yard dash that set up the third score.",
+      "Brown III 6-117 and the 49-yard opener; Abrams the 63-yard shot; Stockton the 12-yard score.",
+      "624 total yards, 8-for-8 in the red zone, unused punter — highest-scoring opener since 1994."
+    ]
+  },
+  "defense": {
+    "kicker": "Defense",
+    "body": "The ball came back. Coleman’s interception ended FAU’s opening no-huddle march. Dijon Johnson added another pick. Brendan Bett stripped it and Myles Johnson fell on it. Official recap has Florida winning three fourth downs. That is the takeaway reel. The drive chart is the problem Sumrall named: FAU still ran 90 plays for 396 yards and 25 first downs. Veltkamp went 34 of 52 for 276, a rushing score, and the 20-yard toss to Kelby Valsin. Two long Owls marches (75 and 78) made it 24-14 before Baugh took over. Sumrall: “Our defense was atrocious at times, quite honestly. I don’t think we’re as good as we think we are.” Chart it that way until we sit the broadcast.",
+    "bullets": [
+      "Three takeaways: INT DJ Coleman, INT Dijon Johnson, FF Brendan Bett / FR Myles Johnson.",
+      "Three fourth-down stops — and still 90 Owl snaps, 396 yards, 25 first downs.",
+      "Veltkamp 34/52, 276, one rush TD, one pass TD, two INTs. Messer 7-73 on 13 targets.",
+      "Sumrall already said the room thinks it has arrived. That is the Week 2 tape."
+    ]
+  },
+  "specials": {
+    "kicker": "Specials",
+    "body": "Patrick Durkin’s 53-yarder made it 17-0 before FAU touched the paint. He handled the kickoffs (65-yard touchbacks to start) and the extra points until Liam Padron hit the last one. Alec Clark never punted — the offense never handed him the ball. Crowd 90,295. Kickoff 7:55 p.m., 83 and cloudy, final 11:22, 3:26 of game time.",
+    "bullets": [
+      "Durkin 53-yard field goal and the kickoff touchbacks.",
+      "Unused punter — Florida never stalled enough to need Clark.",
+      "90,295 in The Swamp for Sumrall’s first run out of the tunnel."
+    ]
+  },
+  "keys": [
+    "Philo was clean and on time — 16/21, 275, four total scores. Campbell has to make him miss.",
+    "Baugh 11.4 a carry. If the Camels load the box, the 63-yard Abrams shot is the answer.",
+    "Defense got the ball back three times and still let FAU snap it 90 times. That is the Sumrall list."
+  ],
+  "schemeLessonIds": [
+    "ss-rpo-quick",
+    "ss-gap-run",
+    "ss-qb-progression",
+    "ss-jack",
+    "ss-run-fits"
+  ],
+  "nextWeek": {
+    "opponent": "Campbell",
+    "look": "Home again Saturday, 5:30 p.m. Camels already have a no-huddle scout on the Game Week board. Florida cannot gift 90 snaps two weeks in a row."
+  },
+  "publishedAt": "2026-09-06T20:30:00.000Z"
+}
