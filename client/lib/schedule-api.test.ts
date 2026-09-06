@@ -62,6 +62,56 @@ describe('schedule-api uniforms', () => {
     assert.equal(live[0]?.uniform?.helmet, 'Orange');
   });
 
+  it('normalizeGames keeps live final and box when present', () => {
+    const live = normalizeGames([
+      {
+        id: 'fau',
+        label: 'Sep 5 vs FAU',
+        opp: 'FAU Owls',
+        date: 'September 5, 2026 · 7:45 PM ET',
+        venue: 'Ben Hill Griffin Stadium, Gainesville FL',
+        ufPct: 94,
+        keys: [],
+        swing: [],
+        film: '',
+        pred: '',
+        predUF: 38,
+        predOpp: 10,
+        finalUF: 66,
+        finalOpp: 21,
+        finalSource: 'official',
+        boxScoreUrl: 'https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903',
+      },
+    ]);
+    assert.equal(live[0]?.finalUF, 66);
+    assert.equal(live[0]?.finalOpp, 21);
+    assert.equal(live[0]?.finalSource, 'official');
+    assert.match(String(live[0]?.boxScoreUrl), /boxscore\/27903/);
+  });
+
+  it('normalizeGames backfills seed final and box when live row omits them', () => {
+    const live = normalizeGames([
+      {
+        id: 'fau',
+        label: 'Sep 5 vs FAU',
+        opp: 'FAU Owls',
+        date: 'September 5, 2026 · 7:45 PM ET',
+        venue: 'Ben Hill Griffin Stadium, Gainesville FL',
+        ufPct: 94,
+        keys: [],
+        swing: [],
+        film: '',
+        pred: '',
+        predUF: 38,
+        predOpp: 10,
+      },
+    ]);
+    assert.equal(live[0]?.finalUF, 66);
+    assert.equal(live[0]?.finalOpp, 21);
+    assert.equal(live[0]?.finalSource, 'official');
+    assert.match(String(live[0]?.boxScoreUrl), /boxscore\/27903/);
+  });
+
   it('mergeUniform prefers live over seed', () => {
     const merged = mergeUniform(
       { helmet: 'Blue', jersey: 'Blue', pants: 'Blue', label: 'All-Blue' },

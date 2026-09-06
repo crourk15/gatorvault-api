@@ -577,6 +577,10 @@
   opacity: 0.72;
 }
 
+.gv-sched-game-card--past.gv-sched-game-card--final {
+  opacity: 1;
+}
+
 .gv-sched-game-card__badges {
   display: flex;
   flex-wrap: wrap;
@@ -700,6 +704,23 @@
   min-width: 0;
   padding-left: var(--space-md, 16px);
   border-left: 1px solid var(--th-border, var(--card-border));
+}
+
+.gv-sched-game-card__box {
+  display: inline-flex;
+  margin-top: var(--space-md, 16px);
+  font-family: var(--font-display, Oswald, 'Arial Narrow', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--th-heading-light, var(--uf-blue));
+  text-decoration: none;
+  transition: color 160ms ease-out;
+}
+
+.gv-sched-game-card__box:hover {
+  color: var(--th-accent, var(--gator-orange));
 }
 
 @media (min-width: 901px) {
@@ -838,6 +859,15 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--th-meta);
+}
+
+.gv-sched-scoreboard--final {
+  background: color-mix(in srgb, var(--th-blue) 10%, var(--th-card-bg));
+  border-color: color-mix(in srgb, var(--th-blue) 28%, var(--th-border));
+}
+
+.gv-sched-scoreboard--final .gv-sched-scoreboard__label {
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .gv-sched-scoreboard__row {

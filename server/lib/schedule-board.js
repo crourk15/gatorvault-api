@@ -136,6 +136,7 @@ const BUNDLE_MODEL_KEYS = [
   'finalUF',
   'finalOpp',
   'finalSource',
+  'boxScoreUrl',
 ];
 
 function parseTs(value) {
@@ -283,6 +284,9 @@ function normalizeGame(row) {
           finalOpp: Number(row.finalOpp),
           ...(row.finalSource ? { finalSource: String(row.finalSource).trim() } : {}),
         }
+      : {}),
+    ...(row.boxScoreUrl != null && String(row.boxScoreUrl).trim()
+      ? { boxScoreUrl: String(row.boxScoreUrl).trim() }
       : {}),
     filmLessonId: row.filmLessonId != null ? String(row.filmLessonId).trim() : undefined,
     ...(typeof row.filmWatched === 'boolean' ? { filmWatched: row.filmWatched } : {}),

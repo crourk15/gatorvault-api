@@ -37,6 +37,12 @@ export type PremiumScheduleGame = {
   isBye?: boolean;
   /** One-line game-week teaser — never the full scout dump. */
   keyTeaser?: string;
+  /** Official final after the whistle — schedule card shows this instead of the model lean. */
+  finalUF?: number;
+  finalOpp?: number;
+  finalSource?: string;
+  /** Official box score URL — rendered outside the Game Week link. */
+  boxScoreUrl?: string;
 };
 
 export type ScheduleSectionMeta = {
@@ -206,7 +212,23 @@ export function toPremiumScheduleGame(game: ScheduleGame): PremiumScheduleGame {
     section: SECTION_BY_ID[game.id] ?? 'sec',
     isBye: bye || undefined,
     keyTeaser: bye ? game.film || 'Open date' : game.keys[0],
+    ...(Number.isFinite(game.finalUF) && Number.isFinite(game.finalOpp)
+      ? {
+          finalUF: Number(game.finalUF),
+          finalOpp: Number(game.finalOpp),
+          ...(game.finalSource ? { finalSource: String(game.finalSource).trim() } : {}),
+        }
+      : {}),
+    ...(game.boxScoreUrl && String(game.boxScoreUrl).trim()
+      ? { boxScoreUrl: String(game.boxScoreUrl).trim() }
+      : {}),
   };
+}
+
+export function hasPostedFinal(
+  game: Pick<PremiumScheduleGame, 'finalUF' | 'finalOpp'>,
+): boolean {
+  return typeof game.finalUF === 'number' && typeof game.finalOpp === 'number';
 }
 
 export const PREMIUM_SCHEDULE_2026: PremiumScheduleGame[] = SCHEDULE_GAMES.map(toPremiumScheduleGame);
