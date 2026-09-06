@@ -25,10 +25,21 @@ export type BettingGame = {
   source?: string;
 };
 
+export type BettingFinal = {
+  gameKey?: string;
+  scheduleId?: string;
+  opponent?: string;
+  uf: number;
+  opp: number;
+  source?: string;
+};
+
 export type BettingLinesResponse = {
   ok?: boolean;
   liveOddsEnabled?: boolean;
   nextGame?: BettingGame;
+  lastGame?: BettingGame;
+  finals?: Record<string, BettingFinal>;
   schedule?: BettingGame[];
   sportsbooks?: { name: string; url: string }[];
 };

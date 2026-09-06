@@ -10,6 +10,7 @@ const http = require('http');
 const ROOT = path.resolve(__dirname, '../..');
 const OUT = path.join(__dirname, '../lib/game-zone-hub-seed.json');
 const API = process.env.GAME_ZONE_SEED_API || 'https://gatorvault-api.onrender.com';
+const { pickNextGame, getBettingLines } = require(path.join(ROOT, 'server/lib/betting-lines'));
 
 function fetchJson(url, timeoutMs = 35000) {
   return new Promise((resolve, reject) => {
@@ -46,7 +47,9 @@ async function main() {
   for (let i = 0; i < 3; i += 1) {
     try {
       const data = await fetchJson(API + '/api/betting/lines');
-      nextGame = data.nextGame || null;
+      nextGame = pickNextGame(data.schedule || [], new Date()) || data.nextGame || null;
+      const kick = nextGame ? Date.parse(nextGame.date || nextGame.kickoff || '') : NaN;
+      if (Number.isFinite(kick) && kick + 5 * 3600 * 1000 < Date.now()) nextGame = null;
       if (nextGame) { source = 'prod-api'; break; }
     } catch (err) {
       console.warn('[generate-game-zone-hub-seed] fetch failed:', err.message);
@@ -54,8 +57,17 @@ async function main() {
     }
   }
   if (!nextGame) {
+    try {
+      const localLive = await getBettingLines(new Date());
+      nextGame = localLive.nextGame || null;
+      if (nextGame) source = 'local-picker';
+    } catch {
+      /* keep looking */
+    }
+  }
+  if (!nextGame) {
     const local = localLines();
-    nextGame = (local && local.nextGame) || null;
+    nextGame = pickNextGame((local && local.schedule) || [], new Date()) || (local && local.nextGame) || null;
     if (nextGame) source = 'local-lines';
   }
   const prev = retainPrevious();

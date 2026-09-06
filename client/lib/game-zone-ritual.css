@@ -124,6 +124,40 @@
   color: #fff;
 }
 
+.gv-gz__liveboard {
+  margin: 0.85rem auto 0;
+  max-width: 22rem;
+  padding: 0.7rem 1rem 0.85rem;
+  border: 1px solid rgba(250, 70, 22, 0.45);
+  background: linear-gradient(180deg, rgba(250, 70, 22, 0.18), rgba(10, 22, 40, 0.55));
+  text-align: center;
+}
+
+.gv-gz__liveboard-status {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gz-orange);
+}
+
+.gv-gz__liveboard-score {
+  margin: 0.2rem 0 0;
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.35rem, 5vw, 1.85rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.gv-gz__last {
+  margin: 1.25rem 0 0;
+  padding: 1.1rem 1rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(8, 18, 32, 0.55);
+}
+
 .gv-gz__matchup {
   margin: 0.2rem 0 0;
   display: flex;

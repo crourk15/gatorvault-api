@@ -16,6 +16,31 @@
     }
   ],
   "nextGame": {
+    "id": "uf-campbell-2026-w2",
+    "week": 2,
+    "game": "Florida vs Campbell",
+    "opponent": "Campbell",
+    "date": "2026-09-12T21:30:00.000Z",
+    "venue": "Ben Hill Griffin Stadium",
+    "spread": null,
+    "total": null,
+    "moneyline": null,
+    "sportsbookUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
+    "sportsbookLinks": [
+      {
+        "id": "fanduel",
+        "name": "FanDuel",
+        "url": "https://sportsbook.fanduel.com/navigation/ncaaf"
+      },
+      {
+        "id": "hardrock",
+        "name": "Hard Rock Bet",
+        "url": "https://www.hardrock.bet/sportsbook/football/ncaaf/"
+      }
+    ],
+    "source": "schedule"
+  },
+  "lastGame": {
     "id": "uf-fau-2026-w1",
     "week": 1,
     "game": "Florida vs FAU",
@@ -44,8 +69,15 @@
         "url": "https://www.hardrock.bet/sportsbook/football/ncaaf/"
       }
     ],
-    "source": "schedule"
+    "source": "schedule",
+    "completed": true,
+    "homeScore": 66,
+    "awayScore": 21,
+    "status": "Final",
+    "live": false,
+    "scoreSource": "official"
   },
+  "finals": {},
   "schedule": [
     {
       "id": "uf-fau-2026-w1",
@@ -63,6 +95,37 @@
         "uf": -4500,
         "opp": 1600
       },
+      "sportsbookUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
+      "sportsbookLinks": [
+        {
+          "id": "fanduel",
+          "name": "FanDuel",
+          "url": "https://sportsbook.fanduel.com/navigation/ncaaf"
+        },
+        {
+          "id": "hardrock",
+          "name": "Hard Rock Bet",
+          "url": "https://www.hardrock.bet/sportsbook/football/ncaaf/"
+        }
+      ],
+      "source": "schedule",
+      "completed": true,
+      "homeScore": 66,
+      "awayScore": 21,
+      "status": "Final",
+      "live": false,
+      "scoreSource": "official"
+    },
+    {
+      "id": "uf-campbell-2026-w2",
+      "week": 2,
+      "game": "Florida vs Campbell",
+      "opponent": "Campbell",
+      "date": "2026-09-12T21:30:00.000Z",
+      "venue": "Ben Hill Griffin Stadium",
+      "spread": null,
+      "total": null,
+      "moneyline": null,
       "sportsbookUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
       "sportsbookLinks": [
         {
@@ -141,8 +204,8 @@
       "source": "schedule"
     }
   ],
-  "updatedAt": "2026-09-02T02:30:00.000Z",
-  "refreshedAt": "2026-09-02T02:30:00.000Z",
+  "updatedAt": "2026-09-06T12:15:00.000Z",
+  "refreshedAt": "2026-09-06T12:15:00.000Z",
   "pendingTeamEvents": [],
   "announcedKickoffs": {}
 }

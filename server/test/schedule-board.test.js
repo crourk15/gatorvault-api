@@ -61,6 +61,8 @@ describe('schedule-board', () => {
     const iosDump = [fau.film, ...(fau.opponentTendencies || []), ...(fau.defenseTendencies || [])];
     assert.ok(!iosDump.some((n) => /NOT confirmed|Tied-130th|401762|highlight packages/i.test(n)));
     assert.equal(iosDump.length, 7);
+    assert.equal(fau.finalUF, 66);
+    assert.equal(fau.finalOpp, 21);
   });
 
   it('Campbell Film Notes are fan-facing and raw scout stays on file', () => {
