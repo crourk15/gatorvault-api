@@ -19,6 +19,7 @@ import {
   findLastCompletedUfGame,
   gatorsLiveMode,
   gatorsLivePhase,
+  gatorsLivePollMs,
   gatorsLiveVoice,
   getFeaturedUfGame,
   isUfGameLiveWindow,
@@ -37,8 +38,6 @@ import { playerProfilePath } from '@/lib/player-routes';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import { UiError } from '@/components/site/UiMessage';
 import '@/lib/gators-live-elite.css';
-
-const POLL_MS = 30_000;
 
 type BoardModel = {
   opponent: string;
@@ -111,7 +110,12 @@ function previewBoard(phase: GatorsLivePhase, game: ScheduleGame | null): BoardM
   };
 }
 
-function formatCountdown(parts: { days: number; hours: number; minutes: number }): Array<{
+function formatCountdown(parts: {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}): Array<{
   n: number;
   label: string;
 }> {
@@ -119,6 +123,7 @@ function formatCountdown(parts: { days: number; hours: number; minutes: number }
     { n: parts.days, label: 'Days' },
     { n: parts.hours, label: 'Hrs' },
     { n: parts.minutes, label: 'Min' },
+    { n: parts.seconds, label: 'Sec' },
   ];
 }
 
@@ -127,11 +132,13 @@ function GatorsLiveHero({
   game,
   board,
   line,
+  now,
 }: {
   phase: GatorsLivePhase;
   game: ScheduleGame | null;
   board: BoardModel | null;
   line: GameWeekBettingLine | null;
+  now: Date;
 }): React.ReactElement {
   const opp = board?.opponent || game?.opp || 'Opponent';
   const showScores = phase === 'live' || phase === 'halftime' || phase === 'final';
@@ -142,7 +149,8 @@ function GatorsLiveHero({
     status: board?.status,
   });
   const ball = possessionSide(board?.possession);
-  const count = game && (phase === 'ready' || phase === 'pregame') ? kickCountdown(game.date) : null;
+  const count =
+    game && (phase === 'ready' || phase === 'pregame') ? kickCountdown(game.date, now) : null;
   const kick = game ? parseScheduleKickoff(game.date) : null;
   const kickLabel = kick
     ? kick.toLocaleString('en-US', {
@@ -341,6 +349,7 @@ export function VaultLiveScoresPage(): React.ReactElement {
   const [talk, setTalk] = useState<CommunityThread | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [now, setNow] = useState(() => new Date());
 
   const loadLive = useCallback(async () => {
     const localPreview = readLocalPreviewPhase();
@@ -431,11 +440,23 @@ export function VaultLiveScoresPage(): React.ReactElement {
     }
   }, [featured]);
 
+  const phase = preview || gatorsLivePhase({
+    mode,
+    live: board?.live,
+    completed: board?.completed,
+    status: board?.status,
+  });
+
   useEffect(() => {
     void loadLive();
-    const id = window.setInterval(() => void loadLive(), POLL_MS);
+    const id = window.setInterval(() => void loadLive(), gatorsLivePollMs(phase));
     return () => window.clearInterval(id);
-  }, [loadLive]);
+  }, [loadLive, phase]);
+
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(new Date()), 1000);
+    return () => window.clearInterval(id);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -485,12 +506,6 @@ export function VaultLiveScoresPage(): React.ReactElement {
     featured ||
     games[0] ||
     null;
-  const phase = preview || gatorsLivePhase({
-    mode,
-    live: board?.live,
-    completed: board?.completed,
-    status: board?.status,
-  });
   const bundle = useMemo(
     () => (game ? getGameWeekBundle(game.id, games, line) : null),
     [game, games, line],
@@ -504,7 +519,7 @@ export function VaultLiveScoresPage(): React.ReactElement {
       data-loading={loading ? '1' : undefined}
     >
       <PageLayout theme="navy" title="" testId="vault-live-scores" className="gv-gators-live-page">
-        <GatorsLiveHero phase={phase} game={game} board={board} line={line} />
+        <GatorsLiveHero phase={phase} game={game} board={board} line={line} now={now} />
         {error && !game ? (
           <UiError message={error} retry={() => void loadLive()} backHref="/vault" backLabel="← Vault" />
         ) : null}

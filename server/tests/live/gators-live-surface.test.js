@@ -9,6 +9,7 @@ const {
   possessionSide,
   periodClockLabel,
   pickCommunityTalkThread,
+  gatorsLivePollMs,
 } = require('../../lib/gators-live-surface');
 
 describe('gators live surface helpers', () => {
@@ -37,6 +38,14 @@ describe('gators live surface helpers', () => {
     assert.equal(periodClockLabel({ phase: 'final' }), 'Final');
     assert.match(gatorsLiveVoice('live', 'FAU Owls'), /on the field vs FAU Owls/);
     assert.match(gatorsLiveVoice('ready', 'Campbell Camels'), /Next: Florida vs Campbell Camels/);
+  });
+
+  it('polls live at 10s and stays at 15s off the field', () => {
+    assert.equal(gatorsLivePollMs('live'), 10_000);
+    assert.equal(gatorsLivePollMs('halftime'), 10_000);
+    assert.equal(gatorsLivePollMs('pregame'), 15_000);
+    assert.equal(gatorsLivePollMs('ready'), 15_000);
+    assert.equal(gatorsLivePollMs('final'), 15_000);
   });
 
   it('prefers game-day talk over a generic daily open', () => {

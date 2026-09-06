@@ -52,10 +52,21 @@ function pickCommunityTalkThread(threads) {
   return threads.find((t) => t.pinned || t.featured) || threads[0] || null;
 }
 
+const GATORS_LIVE_POLL_MS = 10_000;
+const GATORS_LIVE_IDLE_POLL_MS = 15_000;
+
+function gatorsLivePollMs(phase) {
+  if (phase === 'live' || phase === 'halftime') return GATORS_LIVE_POLL_MS;
+  return GATORS_LIVE_IDLE_POLL_MS;
+}
+
 module.exports = {
   gatorsLivePhase,
   gatorsLiveVoice,
   possessionSide,
   periodClockLabel,
   pickCommunityTalkThread,
+  gatorsLivePollMs,
+  GATORS_LIVE_POLL_MS,
+  GATORS_LIVE_IDLE_POLL_MS,
 };
