@@ -346,15 +346,15 @@ type BettingLinesLike = {
     id?: string;
     opponent?: string;
     game?: string;
-    spread?: { line?: string; uf?: number } | string;
-    total?: number | string;
+    spread?: { line?: string; uf?: number } | string | null;
+    total?: number | string | null;
   };
   schedule?: Array<{
     id?: string;
     opponent?: string;
     game?: string;
-    spread?: { line?: string; uf?: number } | string;
-    total?: number | string;
+    spread?: { line?: string; uf?: number } | string | null;
+    total?: number | string | null;
   }>;
 };
 
@@ -381,7 +381,7 @@ function rowMatchesGame(
   return tokens.some((t) => t.length >= 2 && hay.includes(t));
 }
 
-function spreadToLine(spread: { line?: string; uf?: number } | string | undefined): string | null {
+function spreadToLine(spread: { line?: string; uf?: number } | string | null | undefined): string | null {
   if (spread == null) return null;
   if (typeof spread === 'string') return spread.trim() || null;
   if (spread.line) return String(spread.line).trim() || null;
