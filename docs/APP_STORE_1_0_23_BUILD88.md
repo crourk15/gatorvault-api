@@ -18,6 +18,7 @@
 
 Client/UI backlog, including:
 
+- GatorVault Film Review + elite Scheme School (Breakdowns stay GNFP / Film Guy)
 - Game Week + Home countdown: auto-open the next kickoff (Campbell this week; Auburn after that — no FAU hardcode)
 - Game Week Depth Chart: official two-deep with Offense / Defense / Special Teams cards
 - Gators Live living room (stadium hero, talk, 3 keys, visitors, film bite)

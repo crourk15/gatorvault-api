@@ -26,6 +26,8 @@ export type ScheduleGame = {
   predOpp: number;
   /** Verified Film Room opponent-prep lesson id (knowledge engine). */
   filmLessonId?: string;
+  /** GatorVault Film Review id (our weekly board). */
+  vaultReviewId?: string;
   /** True only after a real Hudl / film-desk watch. Box drafts stay false. */
   filmWatched?: boolean;
   /** Opponent offense tendencies (film / box). Fan-facing on live Game Week. */
@@ -107,6 +109,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     predUF: 38,
     predOpp: 10,
     filmLessonId: "frl00004-0000-4000-8000-000000000004",
+    vaultReviewId: "week-1-fau",
     opponentTendencies: [
       "Shotgun every snap we have. No under center.",
       "Pass first even when they win. Veltkamp is clean if you let him sit.",

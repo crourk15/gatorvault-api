@@ -183,7 +183,7 @@ export function GameWeekCommandCenter({
                 <section className="gv-gw-wow-panel fc-lab-panel-shell">
                   <h3 className="gv-gw-wow-panel__title">Film Notes</h3>
                   <div className="gv-gw-wow-panel__body">
-                    <FilmNotesPanel notes={bundle.filmNotes} />
+                    <FilmNotesPanel notes={bundle.filmNotes} reviewId={bundle.game.vaultReviewId} />
                   </div>
                 </section>
               </div>

@@ -878,6 +878,19 @@
   color: var(--color-text-muted);
 }
 
+.gv-gw-film-panel__review {
+  margin: 0.75rem 0 0;
+}
+
+.gv-gw-film-panel__review a {
+  color: var(--color-accent-orange, #fa4616);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
 /* Depth chart — official two-deep (Team hub board inside Game Week) */
 .gv-gw-depth-elite {
   display: flex;
