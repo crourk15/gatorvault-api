@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Chip, GridLayout, PageSection } from '@/components/brand';
+import { defaultGameWeekId } from '@/lib/game-week-data';
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 import { SITE_ROUTES } from '@/lib/site-routes';
 
@@ -59,7 +60,7 @@ type Props = {
 };
 
 export function FilmRoomGameWeekPanel({ initialGameId }: Props): React.ReactElement {
-  const [gameId, setGameId] = useState(initialGameId || 'fau');
+  const [gameId, setGameId] = useState(initialGameId || defaultGameWeekId());
 
   useEffect(() => {
     if (initialGameId) setGameId(initialGameId);

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { SCHEDULE_GAMES } from './schedule-data';
-import { buildFilmNotes, getGameWeekBundle } from './game-week-data';
+import { buildFilmNotes, defaultGameWeekId, getGameWeekBundle } from './game-week-data';
 
 describe('Game Week Film Notes', () => {
   it('FAU Film Notes stay fan-facing and skip the raw scout dump', () => {
@@ -16,6 +16,26 @@ describe('Game Week Film Notes', () => {
     assert.deepEqual(bundle.filmNotes, notes);
     assert.ok(bundle.scouting.offense.some((n) => /Veltkamp 24\/33/.test(n)));
     assert.ok(bundle.scouting.defense.some((n) => /Tied-130th|NOT confirmed/i.test(n)));
+  });
+
+  it('Campbell Film Notes stay fan-facing and skip the raw scout dump', () => {
+    const campbell = SCHEDULE_GAMES.find((g) => g.id === 'campbell');
+    assert.ok(campbell);
+    const notes = buildFilmNotes(campbell);
+    assert.equal(notes.length, 6);
+    assert.match(notes[0], /Sixkiller is the show/i);
+    assert.ok(!notes.some((n) => /NOT confirmed|Hudl watch|gocamels cumulative/i.test(n)));
+
+    const bundle = getGameWeekBundle('campbell');
+    assert.deepEqual(bundle.filmNotes, notes);
+    assert.ok(bundle.scouting.offense.some((n) => /29\/42/.test(n)));
+    assert.ok(bundle.scouting.defense.some((n) => /NOT confirmed|Brandon Butcher/i.test(n)));
+    assert.equal(bundle.keys[0].title, 'Crowd Sixkiller before the first read');
+  });
+
+  it('defaults Game Week to the next upcoming kickoff', () => {
+    assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-04T18:00:00-04:00')), 'fau');
+    assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-06T12:00:00-04:00')), 'campbell');
   });
 
   it('falls back to film when filmNotes is missing', () => {

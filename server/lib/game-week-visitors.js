@@ -151,13 +151,12 @@ function visitorsPanelForGameId(gameId) {
     seen.add(row.slug);
     visitors.push(row);
   }
-  if (!visitors.length) return null;
   return {
     gameId: String(game.gameId),
     opponent: String(game.opponent || '').trim() || null,
     dateLabel: String(game.dateLabel || '').trim() || null,
     chaseLabel: String(game.chaseLabel || '').trim() || null,
-    source: String(doc.source || '').trim() || null,
+    source: String(game.source || doc.source || '').trim() || null,
     visitors,
   };
 }

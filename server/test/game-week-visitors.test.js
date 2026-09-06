@@ -64,6 +64,15 @@ describe('game-week-visitors', () => {
     assert.ok(!panel.visitors.some((v) => v.slug === 'davin-davidson'));
   });
 
+  it('keeps Campbell Expected visitors empty until a beat look lands', () => {
+    const panel = visitorsPanelForGameId('campbell');
+    assert.ok(panel);
+    assert.equal(panel.gameId, 'campbell');
+    assert.equal(panel.visitors.length, 0);
+    assert.match(String(panel.source || ''), /no published/i);
+    assert.equal(expectedVisitLabelForSlug('zylen-little'), 'Expected FAU visit · Sep 5');
+  });
+
   it('includes Josiah Taylor on Ole Miss expected list', () => {
     const panel = visitorsPanelForGameId('olemiss');
     assert.ok(panel);
@@ -77,6 +86,8 @@ describe('game-week-visitors', () => {
       { id: 'campbell', opp: 'Campbell', date: 'September 12, 2026' },
     ]);
     assert.ok(games[0].expectedVisitors?.visitors?.length);
-    assert.equal(games[1].expectedVisitors, undefined);
+    assert.ok(games[1].expectedVisitors);
+    assert.equal(games[1].expectedVisitors.visitors.length, 0);
+    assert.match(String(games[1].expectedVisitors.source || ''), /no published/i);
   });
 });

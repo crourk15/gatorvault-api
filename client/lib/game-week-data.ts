@@ -1,5 +1,6 @@
 /** Game Week enriched bundles — merges SCHEDULE_GAMES with intel widgets. */
 import { SCHEDULE_GAMES, type ScheduleGame } from './schedule-data';
+import { getNextScheduleGame, toPremiumScheduleGame } from './schedule-premium';
 
 export { SCHEDULE_GAMES };
 
@@ -114,6 +115,15 @@ export function rosterHeadshotCandidates(slug: string): string[] {
 /** @deprecated Use rosterPhotoCandidates + SwingPlayerAvatar */
 export function headshotUrl(slug: string): string {
   return rosterPhotoCandidates(slug)[0];
+}
+
+/** Next upcoming kickoff, or the last game once the slate is done. */
+export function defaultGameWeekId(games: ScheduleGame[] = SCHEDULE_GAMES, now = new Date()): string {
+  const pool = games.length ? games : SCHEDULE_GAMES;
+  const next = getNextScheduleGame(pool.map(toPremiumScheduleGame), now);
+  if (next?.id) return next.id;
+  const last = [...pool].reverse().find((g) => g.kind !== 'bye');
+  return last?.id || 'campbell';
 }
 
 export function daysUntilKickoff(dateStr: string): number {
