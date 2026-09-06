@@ -966,6 +966,7 @@
   line-height: 1.2;
 }
 
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-depth-elite .gv-team-dc-tab.is-active,
 .gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-tab.is-active {
   background: linear-gradient(135deg, #0021a5 0%, #001a33 100%);
   border-color: rgba(250, 70, 22, 0.45);
@@ -973,6 +974,8 @@
   box-shadow: 0 6px 16px rgba(0, 33, 165, 0.22);
 }
 
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-depth-elite .gv-team-dc-tab.is-active,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-depth-elite .gv-team-dc-tab.is-active *,
 .gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-tab.is-active .gv-team-dc-tab__short,
 .gv-gw-wow-page .gv-gw-depth-elite .gv-team-dc-tab.is-active .gv-team-dc-tab__label {
   color: #fff !important;

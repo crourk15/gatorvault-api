@@ -39,7 +39,10 @@ export function GameWeekDepthPanel(): React.ReactElement {
   }, []);
 
   const positions = useMemo(() => positionsForTab(board, tab), [board, tab]);
-  const dek = board.subtitle || board.label || 'Official two-deep.';
+  const rawDek = String(board.subtitle || board.label || '').trim();
+  const dek = /not an official|camp board/i.test(rawDek)
+    ? 'Official Week 1 two-deep.'
+    : rawDek || 'Official Week 1 two-deep.';
 
   return (
     <div className="gv-gw-depth-elite" data-testid="gw-depth-chart">
