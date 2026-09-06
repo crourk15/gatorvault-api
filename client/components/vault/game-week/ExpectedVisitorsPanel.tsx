@@ -34,28 +34,34 @@ export function ExpectedVisitorsPanel({ panel }: Props): React.ReactElement {
         Early look for {opp}
         {when}. Plans can change.
       </p>
-      <ul className="gv-gw-visitors__list">
-        {visitors.map((v) => {
-          const href = playerProfilePath(v.slug, 'HIGH_SCHOOL', true, v.name, 'recruiting');
-          const meta = metaLine(v);
-          return (
-            <li key={v.slug} className="gv-gw-visitors__item">
-              <VaultNavLink href={href} className="gv-gw-visitors__link">
-                <span className="gv-gw-visitors__mark" aria-hidden>
-                  {(v.position || 'HS').slice(0, 3).toUpperCase()}
-                </span>
-                <span className="gv-gw-visitors__copy">
-                  <span className="gv-gw-visitors__name">{v.name}</span>
-                  {meta ? <span className="gv-gw-visitors__meta">{meta}</span> : null}
-                </span>
-                <span className="gv-gw-visitors__chevron" aria-hidden>
-                  →
-                </span>
-              </VaultNavLink>
-            </li>
-          );
-        })}
-      </ul>
+      {visitors.length ? (
+        <ul className="gv-gw-visitors__list">
+          {visitors.map((v) => {
+            const href = playerProfilePath(v.slug, 'HIGH_SCHOOL', true, v.name, 'recruiting');
+            const meta = metaLine(v);
+            return (
+              <li key={v.slug} className="gv-gw-visitors__item">
+                <VaultNavLink href={href} className="gv-gw-visitors__link">
+                  <span className="gv-gw-visitors__mark" aria-hidden>
+                    {(v.position || 'HS').slice(0, 3).toUpperCase()}
+                  </span>
+                  <span className="gv-gw-visitors__copy">
+                    <span className="gv-gw-visitors__name">{v.name}</span>
+                    {meta ? <span className="gv-gw-visitors__meta">{meta}</span> : null}
+                  </span>
+                  <span className="gv-gw-visitors__chevron" aria-hidden>
+                    →
+                  </span>
+                </VaultNavLink>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p className="gv-gw-visitors__empty">
+          No published visitor list yet. We will add names when a beat look lands.
+        </p>
+      )}
       {panel.source ? <p className="gv-gw-visitors__source">{panel.source}</p> : null}
     </div>
   );

@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-09-04T02:20:00.000Z",
+  "updatedAt": "2026-09-06T05:45:00.000Z",
   "label": "2026 Florida football schedule",
   "games": [
     {
@@ -103,24 +103,78 @@
       "ufPct": 96,
       "tv": "SECN+",
       "keys": [
-        "Control tempo and field position",
-        "Evaluate depth in second half",
-        "Clean special teams"
+        "Crowd Sixkiller before the first read",
+        "Do not let the vertical get behind you",
+        "Finish drives - do not turn this into 49"
       ],
       "swing": [
         {
-          "name": "Eric Singleton Jr.",
-          "role": "Vertical threat"
+          "name": "Aaron Philo",
+          "role": "Attack a secondary that allowed 27 pass TDs in 2025"
         },
         {
           "name": "Jaden Baugh",
-          "role": "Run-game rhythm"
+          "role": "Run-game rhythm vs 143 rush YPG allowed"
+        },
+        {
+          "name": "Jayden Woods",
+          "role": "Keep Sixkiller in the pocket"
         }
       ],
-      "film": "Campbell runs spread concepts. UF should win line of scrimmage.",
+      "filmWatched": true,
+      "film": "What the tape shows vs Campbell. No-huddle shotgun. Sixkiller throws it and runs it. Take the shot. Then throw it over a 27-TD secondary.",
       "pred": "UF 42 · Campbell 7",
       "predUF": 42,
       "predOpp": 7,
+      "opponentTendencies": [
+        "No-huddle shotgun every snap we have. No under center.",
+        "Sixkiller is the show. He can throw it and run it.",
+        "They will take the deep shot. Austin was wide open for 30. Keener walked in from 26.",
+        "He will keep it. Two rushing TDs at ETSU. Stay in your lane."
+      ],
+      "defenseTendencies": [
+        "Last year that defense gave up 37 a game and 27 pass TDs. Run it, then throw it over them.",
+        "New coordinator this year. Coverage calls not on the tape we have."
+      ],
+      "howUFWins": [
+        "Sixkiller sat in the gun at ETSU (29/42, 343, 0 sacks) and still ran for 95 and two scores. Pressure before the first read and keep contain on the keep.",
+        "Official 2025 cumulative: Campbell allowed 37.18 PPG and 430.3 YPG (143 rush / 287 pass) with 27 pass TDs allowed vs 5 INTs. Establish Baugh early and take calculated shots once the run is honest.",
+        "They scored on seven of 11 full possessions at ETSU and put up 49. Stay on schedule, finish red-zone trips, and keep special teams clean so this does not become a track meet."
+      ],
+      "scoutingReport": "CAMPBELL OFFENSE (ESPN+ ETSU broadcast + official PBP, Aug 29): no-huddle shotgun on every Campbell snap charted; no under-center. Sixkiller 29/42 for 343, 0 INT, 0 sacks, plus 10-95 rushing and two keep/scramble TDs. Confirmed verticals: Austin 30-yd TD (wide-open / busted coverage on the call) and 50-yd catch; Keener 26-yd TD walking in. Gullette used as a space back (26-yd run). RPO mesh not confirmed. CAMPBELL DEFENSE (that broadcast + 2025 boxes): allowed 528 yards / 37 at ETSU with 0 sacks; two forced fumbles (Garza, Bedada). 2025 cumulative 37.18 PPG / 430.3 YPG, 27 pass TDs vs 5 INTs. New DC Brandon Butcher. Coverage shells NOT confirmed on broadcast angles. WCU Sep 5 postponed. UF wins by crowding Sixkiller, running at last year's front, and finishing drives.",
+      "filmNotes": [
+        "No-huddle shotgun every snap we have. No under center.",
+        "Sixkiller is the show. He can throw it and run it.",
+        "They will take the deep shot. Austin was wide open for 30. Keener walked in from 26.",
+        "He will keep it. Two rushing TDs at ETSU. Stay in your lane.",
+        "Last year's front gave up 37 a game and 27 pass touchdowns. Run it, then throw it over them.",
+        "New coordinator this year. Coverage calls not on the tape we have."
+      ],
+      "offenseScout": [
+        "Film-confirmed (ESPN+ ETSU broadcast + official gocamels PBP, Aug 29): No Huddle-Shotgun on every Campbell snap charted — no under-center observed",
+        "Tempo confirmed: no-huddle on the PBP every snap; they will go quick after a chunk",
+        "Pass-first openers, then mix QB keep / Gullette / Lawrence — Sixkiller 29/42, 343, 2 pass TD, 0 INT, 0 sacks",
+        "Vertical shot confirmed: Austin 30-yd TD (booth: busted coverage, wide open) and 50-yd catch (long of the night)",
+        "Keener 26-yd TD confirmed: walking into the end zone late first half",
+        "QB run confirmed: Sixkiller 5-yd TD, 14-yd TD, long rush 42 — 10-95, 2 rush TD",
+        "Gullette space-back confirmed: 26-yd run plus checkdowns; Cowan quiet (6-16)",
+        "RPO mesh: NOT confirmed as a called RPO on these angles",
+        "Box-confirmed 2025 (gocamels cumulative, posted 2-10): 23.45 PPG, 346.1 YPG (119.4 rush / 226.7 pass)",
+        "Box-confirmed 2025 Sixkiller (official 10 GP): 220/351, 2102 yds, 12 TD, 5 INT — ESPN gamelog 21 sacks",
+        "Box-confirmed 2025 WR Randall King 59-689-5, long 77 vs Bryant (play result, not this broadcast)",
+        "WCU home opener postponed Sep 5 (weather/electrical) — no second 2026 box as of Sep 6"
+      ],
+      "defenseScout": [
+        "Film-confirmed (ESPN+ ETSU): Campbell D allowed 528 yards and 37 points; 0 sacks in the individual table",
+        "Takeaways that night: two fumbles (Garza FF/FR 29 yards; Bedada FR). Battaglia 12 tackles + FF",
+        "Coverage shells (Cover 2/3/man) + pressure packages: NOT confirmed on broadcast angles",
+        "Staff-public: 2025 DC Eric Daniels; 2026 DC Brandon Butcher (1st year) — do not treat as a film-confirmed front",
+        "Box-confirmed 2025 (gocamels cumulative): 37.18 PPG allowed (409 pts) and 430.3 YPG (143 rush / 287 pass)",
+        "Explosive-pass problem (season line): 27 pass TDs allowed, 5 INTs, 8.49 yards per attempt",
+        "Rush defense: 143 YPG, 4.4 per carry, 23 rush TDs allowed",
+        "Pressure volume modest: 15 sacks on the year",
+        "Red zone: opponents 42-49 scoring trips, 34 TDs"
+      ],
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27904",
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-campbell-fighting-camels-tickets-ben-hill-griffin-stadium-9-12-26-5pm/7622668/",

@@ -63,6 +63,26 @@ describe('schedule-board', () => {
     assert.equal(iosDump.length, 7);
   });
 
+  it('Campbell Film Notes are fan-facing and raw scout stays on file', () => {
+    const board = scheduleBoard.getScheduleBoard(2026);
+    const campbell = board.games.find((g) => g.id === 'campbell');
+    assert.ok(campbell.filmNotes?.length >= 6);
+    assert.match(campbell.filmNotes[0], /No-huddle shotgun/i);
+    assert.ok(!campbell.filmNotes.some((n) => /NOT confirmed|gocamels cumulative|29\/42/i.test(n)));
+    assert.match(campbell.film, /What the tape shows vs Campbell/i);
+    assert.ok(campbell.offenseScout?.some((n) => /29\/42/.test(n)));
+    assert.ok(campbell.offenseScout?.some((n) => /No Huddle-Shotgun/i.test(n)));
+    assert.ok(campbell.defenseScout?.some((n) => /NOT confirmed|Brandon Butcher/i.test(n)));
+    assert.ok(campbell.opponentTendencies.every((n) => !/NOT confirmed|Hudl/i.test(n)));
+    const iosDump = [campbell.film, ...(campbell.opponentTendencies || []), ...(campbell.defenseTendencies || [])];
+    assert.ok(!iosDump.some((n) => /NOT confirmed|gocamels cumulative/i.test(n)));
+    assert.equal(iosDump.length, 7);
+    assert.equal(campbell.keys[0], 'Crowd Sixkiller before the first read');
+    assert.equal(campbell.filmWatched, true);
+    assert.equal(campbell.filmLessonId, undefined);
+    assert.ok(campbell.offenseScout.some((n) => /Film-confirmed/i.test(n)));
+  });
+
   it('bundle path points at repo seed', () => {
     const p = scheduleBoard.resolveReadPath(2026);
     assert.ok(p.includes(path.join('data', 'schedule', '2026-season.json')));

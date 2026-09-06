@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { PageLayout } from '@/components/brand';
 import { GameWeekCommandCenter } from '@/components/vault/game-week/GameWeekCommandCenter';
 import { DYNAMIC_PATH_PATTERNS, segmentFromPath } from '@/lib/dynamic-path-parser';
+import { defaultGameWeekId } from '@/lib/game-week-data';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
 import { useUser } from '@/hooks/useUser';
 import { useInsiderUnlock } from '@/lib/useUser';
@@ -17,11 +18,14 @@ export function VaultGameWeekPage(): React.ReactElement {
     () => segmentFromPath(pathname, DYNAMIC_PATH_PATTERNS.gameWeekGame),
     [pathname]
   );
-  const [gameId, setGameId] = useState('fau');
+  const [gameId, setGameId] = useState(defaultGameWeekId());
 
   useEffect(() => {
-    if (urlGameId && SCHEDULE_GAMES.some((g) => g.id === urlGameId)) {
-      setGameId(urlGameId);
+    const fromQuery =
+      typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('game') : null;
+    const raw = urlGameId || fromQuery;
+    if (raw && SCHEDULE_GAMES.some((g) => g.id === raw)) {
+      setGameId(raw);
     }
   }, [urlGameId]);
 

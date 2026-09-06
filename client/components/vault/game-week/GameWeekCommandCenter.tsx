@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   bettingLineForScheduleGame,
+  defaultGameWeekId,
   getGameWeekBundle,
   type GameWeekBettingLine,
 } from '@/lib/game-week-data';
@@ -46,7 +47,7 @@ type Props = {
   onGameChange?: (gameId: string) => void;
 };
 
-export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: Props): React.ReactElement {
+export function GameWeekCommandCenter({ initialGameId = defaultGameWeekId(), onGameChange }: Props): React.ReactElement {
   const [gameId, setGameId] = useState(initialGameId);
   const [tab, setTab] = useState('intel');
   const [games, setGames] = useState<ScheduleGame[]>(SCHEDULE_GAMES);
@@ -154,7 +155,7 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
                     </div>
                   </section>
                 </div>
-                {bundle.game.expectedVisitors?.visitors?.length ? (
+                {bundle.game.expectedVisitors ? (
                   <section
                     className="gv-gw-wow-panel fc-lab-panel-shell gv-gw-wow-panel--visitors"
                     data-testid="gw-expected-visitors-panel"

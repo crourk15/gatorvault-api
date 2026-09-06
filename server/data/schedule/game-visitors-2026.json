@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-02T17:35:00.000Z",
+  "updatedAt": "2026-09-06T05:10:00.000Z",
   "source": "Gators Online / Blake Alderman early visitor look + public confirmations — plans can change",
   "visitorMeta": {
     "zylen-little": {
@@ -77,6 +77,14 @@
         "john-odwyer",
         "james-allen"
       ]
+    },
+    {
+      "gameId": "campbell",
+      "opponent": "Campbell",
+      "dateLabel": "Sep 12",
+      "chaseLabel": "Expected Campbell visit · Sep 12",
+      "slugs": [],
+      "source": "No published Campbell-week visitor list as of Sep 6. We will add names when a beat look lands. Plans can change."
     },
     {
       "gameId": "olemiss",
