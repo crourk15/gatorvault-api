@@ -285,6 +285,26 @@ export function VaultAlertsPage(): React.ReactElement {
               );
             })}
           </div>
+          {prefs.types.score ? (
+            <ol className="gv-alerts-score-beats" aria-label="Gators score beats">
+              <li>
+                <strong>Kickoff</strong>
+                <span>Game is underway</span>
+              </li>
+              <li>
+                <strong>Score</strong>
+                <span>Every Gators or opponent score — with the live line</span>
+              </li>
+              <li>
+                <strong>Halftime</strong>
+                <span>The board at the break</span>
+              </li>
+              <li>
+                <strong>Final</strong>
+                <span>Official result. Tap through to Gators Live</span>
+              </li>
+            </ol>
+          ) : null}
 
           <div className="gv-vault-alerts__field">
             <p className="gv-vault-alerts__field-label">Notification Method</p>

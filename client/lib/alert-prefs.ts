@@ -60,7 +60,7 @@ export const ALERT_CATEGORY_META: Record<
   score: {
     label: 'Scores',
     status: 'live',
-    hint: 'Gators kickoff + final — game window only',
+    hint: 'Kickoff, every score, halftime, and the final',
   },
   portal: {
     label: 'Portal',

@@ -2039,6 +2039,11 @@ function startPostBootRecruitingAndSchedulers() {
     startLiveDashboardScheduler();
     startBeatLateIngestScheduler();
     startPipelineMonitoringScheduler();
+    try {
+      require('./lib/gators-score-alerts').startScoreAlertWatch();
+    } catch (err) {
+      console.warn('[gators-score-alerts] watch failed to start', err.message);
+    }
   } catch (e) {
     console.warn('Live dashboard scheduler failed to start', e.message);
   }

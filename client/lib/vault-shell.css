@@ -1035,6 +1035,36 @@ body.gv-film-page-active .gv-vault-shell__main {
   margin-bottom: 1.25rem;
 }
 
+.gv-alerts-score-beats {
+  list-style: none;
+  margin: -0.35rem 0 1.35rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  background: rgba(8, 22, 48, 0.03);
+  display: grid;
+  gap: 0.55rem;
+}
+
+.gv-alerts-score-beats li {
+  display: grid;
+  grid-template-columns: 5.6rem 1fr;
+  gap: 0.65rem;
+  align-items: baseline;
+}
+
+.gv-alerts-score-beats strong {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fa4616;
+}
+
+.gv-alerts-score-beats span {
+  font-size: 0.82rem;
+  color: #334155;
+  line-height: 1.35;
+}
+
 .gv-alert-toggle {
   padding: 0.55rem 0.8rem;
   border-radius: 0.5rem;

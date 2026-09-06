@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Gators score pushes: kickoff + every score + halftime + final (API / 60s web watch + `*/2` cron — current binary already shows score lock-screen pushes)
 - [x] Community Staff open: game-day talk title/body (Florida vs FAU) from daily-open API — iOS card reads live thread
 - [x] Visit emails: skip instant “Verified UF OV” for players already committed to Florida (On3 still lists commits on team-visit weekends — API)
 - [x] Admin Hub member last-seen: login + `GET /api/session` stamp into member-activity store (existing binary already hits session on vault open — API; no Codemagic)
@@ -96,6 +97,8 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-06 | My Alerts: organized Gators score beats (kickoff / every score / halftime / final) | `VaultAlertsPage` + `alert-prefs` hint in binary; **in-game pushes already live via API** | pending |
+| 2026-09-06 | Game Zone: live score strip + last-whistle final + grade leftover tickets after advance | `VaultGameZonePage` in binary; **Campbell nextGame + FAU 66–21 already live via `/api/betting/lines`** | #630 |
 | 2026-09-06 | Game Week Depth Chart: official two-deep OFF/DEF/ST cards (drop placeholder column dump) | `GameWeekDepthPanel` in binary; **board data already live via `/api/roster/depth-chart`** | pending |
 | 2026-09-06 | Game Week + Home countdown: auto-open next kickoff (no more hardcoded FAU) | `defaultGameWeekId` + `buildGameDayView` / `getFeaturedUfGame` in binary; **weekly intel stays API** | #627 + auto-advance |
 | 2026-09-05 | Community: Game day chip + hero copy on Staff open (title/body already live via API) | `VaultCommunityPage` chip/hero in binary | #623 |

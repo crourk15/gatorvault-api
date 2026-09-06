@@ -132,10 +132,22 @@ describe("commit and score payloads", () => {
     assert.equal(payload.type, "commit");
   });
 
-  it("builds kickoff and final score payloads", () => {
+  it("builds kickoff, score, halftime, and final payloads", () => {
     const kick = buildScorePayload({ kind: "kickoff", opponent: "Georgia" });
     assert.equal(kick.type, "score_kickoff");
     assert.match(kick.url, /live-scores/);
+    const score = buildScorePayload({
+      kind: "score",
+      title: "Gators touchdown",
+      opponent: "Georgia",
+      ufScore: 14,
+      oppScore: 7,
+      detail: "Florida 14 · Georgia 7 · 2nd 8:32",
+    });
+    assert.equal(score.type, "score_update");
+    assert.match(score.title, /touchdown/i);
+    const half = buildScorePayload({ kind: "halftime", opponent: "Georgia", ufScore: 24, oppScore: 7 });
+    assert.equal(half.type, "score_halftime");
     const fin = buildScorePayload({ kind: "final", opponent: "Georgia", ufScore: 31, oppScore: 24 });
     assert.equal(fin.type, "score_final");
     assert.match(fin.body, /31/);

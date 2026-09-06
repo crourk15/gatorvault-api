@@ -1,6 +1,6 @@
 /**
  * Member push alerts — Web Push (VAPID) + native APNs device tokens.
- * Types: visit (OV), commit/flip, score (UF kickoff/final).
+ * Types: visit (OV), commit/flip, score (UF kickoff / score / halftime / final).
  */
 const fs = require('fs');
 const path = require('path');
@@ -194,7 +194,15 @@ function prefsWantsType(prefs, type) {
   const p = normalizePrefsCompat(prefs || {});
   if (type === 'visit' || type === 'visit_scheduled' || type === 'visit_cancelled') return p.visit;
   if (type === 'commit' || type === 'flip') return p.commit;
-  if (type === 'score' || type === 'score_kickoff' || type === 'score_final') return p.score;
+  if (
+    type === 'score' ||
+    type === 'score_kickoff' ||
+    type === 'score_update' ||
+    type === 'score_halftime' ||
+    type === 'score_final'
+  ) {
+    return p.score;
+  }
   return false;
 }
 
@@ -301,12 +309,14 @@ function buildCommitPayload({ eventType, player, skinny }) {
   };
 }
 
-function buildScorePayload({ kind, opponent, ufScore, oppScore, detail }) {
+function buildScorePayload({ kind, title, opponent, ufScore, oppScore, detail }) {
   const opp = opponent || 'Opponent';
+  const line =
+    ufScore != null && oppScore != null ? `Florida ${ufScore} · ${opp} ${oppScore}` : `Florida vs ${opp}`;
   if (kind === 'kickoff') {
     return {
-      title: 'Gators kickoff',
-      body: detail || `Florida vs ${opp} is underway.`,
+      title: title || 'Gators kickoff',
+      body: detail || `${line} is underway.`,
       url: `${SITE_URL}/vault/live-scores/`,
       tag: `score_kickoff|${opp}|${detail || ''}`,
       type: 'score_kickoff',
@@ -314,13 +324,31 @@ function buildScorePayload({ kind, opponent, ufScore, oppScore, detail }) {
       playerName: null,
     };
   }
+  if (kind === 'halftime') {
+    return {
+      title: title || 'Halftime',
+      body: detail || `Halftime · ${line}`,
+      url: `${SITE_URL}/vault/live-scores/`,
+      tag: `score_halftime|${opp}|${ufScore}-${oppScore}`,
+      type: 'score_halftime',
+      playerSlug: null,
+      playerName: null,
+    };
+  }
+  if (kind === 'score' || kind === 'update') {
+    return {
+      title: title || 'Gators score',
+      body: detail || line,
+      url: `${SITE_URL}/vault/live-scores/`,
+      tag: `score_update|${opp}|${ufScore}-${oppScore}`,
+      type: 'score_update',
+      playerSlug: null,
+      playerName: null,
+    };
+  }
   return {
-    title: 'Final',
-    body:
-      detail ||
-      (ufScore != null && oppScore != null
-        ? `Florida ${ufScore} – ${opp} ${oppScore}`
-        : `Florida vs ${opp} is final.`),
+    title: title || 'Final',
+    body: detail || (ufScore != null && oppScore != null ? `Final · ${line}` : `${line} is final.`),
     url: `${SITE_URL}/vault/live-scores/`,
     tag: `score_final|${opp}|${ufScore}-${oppScore}`,
     type: 'score_final',
@@ -560,7 +588,7 @@ function buildTestPayload(kind = 'confirm') {
   if (k === 'score') {
     return {
       title: 'Test score alert',
-      body: 'GatorVault push is working — Gators kickoff/final alerts will look like this.',
+      body: 'GatorVault push is working — kickoff, scores, halftime, and the final look like this.',
       url: `${SITE_URL}/vault/live-scores/`,
       tag: `test_score|${Date.now()}`,
       type: 'score_kickoff',
