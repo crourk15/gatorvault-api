@@ -33,6 +33,7 @@ function snapshotPathForApi(apiPath) {
     '/api/content/latest': `${PAGE_SNAPSHOT_ROOT}/home/content-latest.json`,
     '/api/content/published': `${PAGE_SNAPSHOT_ROOT}/articles/published.json`,
     '/api/film-room/catalog': `${PAGE_SNAPSHOT_ROOT}/film-room/catalog.json`,
+    '/api/film-room/reviews': `${PAGE_SNAPSHOT_ROOT}/film-room/reviews.json`,
     '/api/nil/dashboard': `${PAGE_SNAPSHOT_ROOT}/nil/dashboard.json`,
     '/api/staff/dashboard': `${PAGE_SNAPSHOT_ROOT}/home/staff-dashboard.json`,
     '/api/futurecast/heatmap': `${PAGE_SNAPSHOT_ROOT}/futurecast/movement-intel.json`,

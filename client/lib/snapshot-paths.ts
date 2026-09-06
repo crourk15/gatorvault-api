@@ -40,6 +40,7 @@ function pageSnapshotPath(path: string, params: URLSearchParams): string | null 
 
   if (path === '/api/content/published') return `${root}/articles/published.json`;
   if (path === '/api/film-room/catalog') return `${root}/film-room/catalog.json`;
+  if (path === '/api/film-room/reviews') return `${root}/film-room/reviews.json`;
   if (path === '/api/nil/dashboard') return `${root}/nil/dashboard.json`;
   if (path === '/api/staff/dashboard') return `${root}/home/staff-dashboard.json`;
   if (path === '/api/betting/lines') return `${root}/game-zone/betting-lines.json`;

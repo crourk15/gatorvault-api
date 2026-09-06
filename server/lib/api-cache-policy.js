@@ -49,6 +49,7 @@ const SHORT_TTL_ROUTES = [
   // (Asher OSU 1→100 poison stayed on TestFlight behind max-age=300).
   { prefix: '/api/recruits', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/film-room/catalog', maxAge: 60 },
+  { prefix: '/api/film-room/reviews', maxAge: 30 },
   { prefix: '/api/recruiting/board', maxAge: 45 },
   { prefix: '/api/content/latest', maxAge: 120, sMaxAge: 120 },
   { prefix: '/api/live/ticker', maxAge: 30, sMaxAge: 30 },

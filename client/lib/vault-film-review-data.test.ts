@@ -18,6 +18,37 @@ describe('GatorVault Film Review', () => {
     assert.deepEqual(liveVaultFilmReviews(), []);
     assert.equal(latestVaultFilmReview(), undefined);
     assert.equal(vaultFilmReview('week-1-fau'), undefined);
+    assert.equal(
+      liveVaultFilmReviews([
+        {
+          id: 'week-1-fau',
+          week: 1,
+          season: 2026,
+          gameId: 'fau',
+          opponent: 'FAU',
+          opponentShort: 'FAU',
+          dateLabel: 'x',
+          venue: 'x',
+          finalUF: 66,
+          finalOpp: 21,
+          title: 'x',
+          dek: 'x',
+          filmWatched: true,
+          watchStandard: 'broadcast',
+          watchNote: 'x',
+          sources: [],
+          headline: 'x',
+          offense: { kicker: 'x', body: 'x', bullets: [] },
+          defense: { kicker: 'x', body: 'x', bullets: [] },
+          specials: { kicker: 'x', body: 'x', bullets: [] },
+          keys: [],
+          schemeLessonIds: [],
+          nextWeek: { opponent: 'x', look: 'x' },
+          publishedAt: '2026-09-06T00:00:00Z',
+        },
+      ]).length,
+      1
+    );
     assert.equal(vaultReviewHref(), '/vault/film-room/review');
     assert.equal(
       isLiveVaultFilmReview({

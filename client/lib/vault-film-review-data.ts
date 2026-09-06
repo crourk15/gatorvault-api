@@ -55,29 +55,36 @@ export function isLiveVaultFilmReview(review: VaultFilmReview): boolean {
   return review.watchStandard === 'broadcast' || review.watchStandard === 'all22';
 }
 
-export function liveVaultFilmReviews(): VaultFilmReview[] {
-  return VAULT_FILM_REVIEWS.filter(isLiveVaultFilmReview);
+export function liveVaultFilmReviews(reviews: VaultFilmReview[] = VAULT_FILM_REVIEWS): VaultFilmReview[] {
+  return reviews.filter(isLiveVaultFilmReview);
 }
 
-export function vaultFilmReview(id: string): VaultFilmReview | undefined {
-  const match = liveVaultFilmReviews().find((review) => review.id === id);
-  return match;
+export function vaultFilmReview(
+  id: string,
+  reviews: VaultFilmReview[] = VAULT_FILM_REVIEWS
+): VaultFilmReview | undefined {
+  return liveVaultFilmReviews(reviews).find((review) => review.id === id);
 }
 
-export function latestVaultFilmReview(): VaultFilmReview | undefined {
-  return [...liveVaultFilmReviews()].sort((a, b) => {
+export function latestVaultFilmReview(
+  reviews: VaultFilmReview[] = VAULT_FILM_REVIEWS
+): VaultFilmReview | undefined {
+  return [...liveVaultFilmReviews(reviews)].sort((a, b) => {
     const ta = Date.parse(a.publishedAt) || 0;
     const tb = Date.parse(b.publishedAt) || 0;
     return tb - ta;
   })[0];
 }
 
-export function vaultFilmReviewForGame(gameId: string): VaultFilmReview | undefined {
-  return liveVaultFilmReviews().find((review) => review.gameId === gameId);
+export function vaultFilmReviewForGame(
+  gameId: string,
+  reviews: VaultFilmReview[] = VAULT_FILM_REVIEWS
+): VaultFilmReview | undefined {
+  return liveVaultFilmReviews(reviews).find((review) => review.gameId === gameId);
 }
 
-export function vaultReviewHref(reviewId?: string): string {
-  const id = reviewId || latestVaultFilmReview()?.id;
+export function vaultReviewHref(reviewId?: string, reviews: VaultFilmReview[] = VAULT_FILM_REVIEWS): string {
+  const id = reviewId || latestVaultFilmReview(reviews)?.id;
   const base = '/vault/film-room/review';
   return id ? `${base}?review=${encodeURIComponent(id)}` : base;
 }

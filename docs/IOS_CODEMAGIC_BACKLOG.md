@@ -98,7 +98,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-06 | Film Room: GatorVault Film Review rail + elite Scheme School (Breakdowns stay GNFP / Film Guy) | `VaultFilmRoomPage` + review/scheme panels in binary; Week 1 FAU **board waits on a real tape watch** (rail ships empty) | #632 |
+| 2026-09-06 | Film Room: GatorVault Film Review rail + elite Scheme School + live `/api/film-room/reviews` fetch | `VaultFilmRoomPage` + review/scheme panels in binary; **weekly boards stay API/data after this bake** (Week 1 FAU still waits on a real tape watch) | #632 |
 | 2026-09-06 | My Alerts: organized Gators score beats (kickoff / every score / halftime / final) | `VaultAlertsPage` + `alert-prefs` hint in binary; **in-game pushes already live via API** | #631 |
 | 2026-09-06 | Game Zone: live score strip + last-whistle final + grade leftover tickets after advance | `VaultGameZonePage` in binary; **Campbell nextGame + FAU 66–21 already live via `/api/betting/lines`** | #630 |
 | 2026-09-06 | Game Week Depth Chart: official two-deep OFF/DEF/ST cards (drop placeholder column dump) | `GameWeekDepthPanel` in binary; **board data already live via `/api/roster/depth-chart`** | pending |

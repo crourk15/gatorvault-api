@@ -2,6 +2,7 @@ import { loadSession } from './auth-api';
 import type { ApiFetchInit } from './api-fetch';
 import { snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
 import { fetchWithWarmPoll } from './api-warm-poll';
+import { liveVaultFilmReviews, type VaultFilmReview } from './vault-film-review-data';
 
 /** Film catalog/lessons are tier-gated on the API — send vault session when logged in. */
 function filmFetchInit(init?: ApiFetchInit): ApiFetchInit {
@@ -61,6 +62,20 @@ export async function fetchFilmRoomCatalog(): Promise<FilmRoomCatalog> {
   );
   const items = (data.items ?? []).filter((item) => isFilmBreakdownEligibleTitle(item.title));
   return { categories: data.categories, items };
+}
+
+export async function fetchVaultFilmReviews(): Promise<VaultFilmReview[]> {
+  try {
+    const data = await fetchWithWarmPoll(() =>
+      snapshotLiveFetch<{ ok?: boolean; reviews?: VaultFilmReview[] }>(
+        '/api/film-room/reviews',
+        filmFetchInit()
+      )
+    );
+    return liveVaultFilmReviews(Array.isArray(data.reviews) ? data.reviews : []);
+  } catch {
+    return [];
+  }
 }
 
 export async function fetchFilmRoomLesson(id: string): Promise<FilmRoomLessonDetail> {

@@ -18,16 +18,18 @@ const UNIT_TABS: { id: FilmReviewUnitId; label: string }[] = [
 ];
 
 export function VaultFilmReviewGrid({
+  reviews = [],
   insider,
   onOpen,
   onUnlock,
 }: {
+  reviews?: VaultFilmReview[];
   insider: boolean;
   onOpen: (review: VaultFilmReview) => void;
   onUnlock: () => void;
 }): React.ReactElement {
-  const live = liveVaultFilmReviews();
-  const featured = latestVaultFilmReview();
+  const live = liveVaultFilmReviews(reviews);
+  const featured = latestVaultFilmReview(reviews);
   const rest = live.filter((review) => review.id !== featured?.id);
 
   if (!featured) {

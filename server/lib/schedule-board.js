@@ -132,6 +132,7 @@ const BUNDLE_MODEL_KEYS = [
   'howUFWins',
   'scoutingReport',
   'filmWatched',
+  'vaultReviewId',
   'finalUF',
   'finalOpp',
   'finalSource',
@@ -285,6 +286,9 @@ function normalizeGame(row) {
       : {}),
     filmLessonId: row.filmLessonId != null ? String(row.filmLessonId).trim() : undefined,
     ...(typeof row.filmWatched === 'boolean' ? { filmWatched: row.filmWatched } : {}),
+    ...(row.vaultReviewId != null && String(row.vaultReviewId).trim()
+      ? { vaultReviewId: String(row.vaultReviewId).trim() }
+      : {}),
     opponentTendencies: Array.isArray(row.opponentTendencies)
       ? row.opponentTendencies.map((x) => String(x || '').trim()).filter(Boolean)
       : undefined,
