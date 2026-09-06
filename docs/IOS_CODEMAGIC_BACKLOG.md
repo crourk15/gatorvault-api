@@ -98,6 +98,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 |---|---|---|---|
 | 2026-09-05 | Community: Game day chip + hero copy on Staff open (title/body already live via API) | `VaultCommunityPage` chip/hero in binary | #623 |
 | 2026-09-05 | Member page trail: ping `/api/member-activity/ping` on vault navigation + `X-GV-Client` on `/api/session` | `VaultNavigationProvider` + `member-activity.ts` + session header in binary; **last-seen already live via login/session API** | #621 |
+| 2026-09-06 | Gators Live poll: 10s live / 15s idle + ticking countdown (was 30s) | `VaultLiveScoresPage` poll in binary | pending |
 | 2026-09-06 | Gators Live living room: stadium hero, logos, countdown, 3 keys, talk, visitors, film bite | `VaultLiveScoresPage` + `gators-live-elite.css` in binary; **score/clock/possession already live via API** | #624 |
 | 2026-09-04 | Game Week Film Notes: prefer `filmNotes`; Scouting reads `offenseScout` / `defenseScout` (stop concatenating raw tendencies into Film Notes) | `game-week-data` `buildFilmNotes` + scouting map in binary; **FAU fan copy already live via API** | pending |
 | 2026-09-02 | Game Week Prediction: Vegas from `/api/betting/lines` (no invented -14.5 / O/U from win% or score sum) | `GameWeekCommandCenter` + `game-week-data` in binary; **API static FAU line live without bake** | pending |

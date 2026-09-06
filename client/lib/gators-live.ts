@@ -203,10 +203,18 @@ export function periodClockLabel(opts: {
   return 'Game window';
 }
 
+export const GATORS_LIVE_POLL_MS = 10_000;
+export const GATORS_LIVE_IDLE_POLL_MS = 15_000;
+
+export function gatorsLivePollMs(phase: GatorsLivePhase): number {
+  if (phase === 'live' || phase === 'halftime') return GATORS_LIVE_POLL_MS;
+  return GATORS_LIVE_IDLE_POLL_MS;
+}
+
 export function kickCountdown(
   dateStr: string,
   now = new Date(),
-): { days: number; hours: number; minutes: number } | null {
+): { days: number; hours: number; minutes: number; seconds: number } | null {
   const kick = parseScheduleKickoff(dateStr);
   if (!kick) return null;
   const ms = kick.getTime() - now.getTime();
@@ -215,6 +223,7 @@ export function kickCountdown(
     days: Math.floor(ms / 86400000),
     hours: Math.floor((ms % 86400000) / 3600000),
     minutes: Math.floor((ms % 3600000) / 60000),
+    seconds: Math.floor((ms % 60000) / 1000),
   };
 }
 

@@ -33,6 +33,8 @@ const NO_CACHE_PREFIXES = [
   '/api/me',
   // Game Week / schedule intel must not stick on a stale SWR paint — live keys
   // (e.g. Expected visitors) never reached the UI when onFresh was unused.
+  '/api/gators-live',
+  '/api/betting/lines',
   '/api/schedule',
   // Chase Expected visit labels live on HP visitHistory — stale SWR hid them
   // after the API merge until a hard cache clear.
