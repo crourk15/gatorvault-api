@@ -23,9 +23,9 @@ import {
   type SchemeSchoolLesson,
 } from '@/lib/scheme-school-data';
 import {
-  VAULT_FILM_REVIEWS,
   VAULT_REVIEW_HUB,
   latestVaultFilmReview,
+  liveVaultFilmReviews,
   vaultFilmReview,
   type VaultFilmReview,
 } from '@/lib/vault-film-review-data';
@@ -59,7 +59,7 @@ const HUB_TABS = FILM_HUB_ORDER.map((name) => ({
 const HUB_COPY: Record<string, { desc: string; kicker: string }> = {
   [VAULT_REVIEW_HUB]: {
     kicker: 'Our board',
-    desc: 'GatorVault’s weekly Florida review — offense, defense, specials. Updated after each game.',
+    desc: 'Offense, defense, and specials — only after we watch the Florida tape. Week 1 vs FAU is waiting on that watch.',
   },
   'Film Breakdown': {
     kicker: 'Also on tape',
@@ -380,7 +380,9 @@ export function VaultFilmRoomPage(): React.ReactElement {
     const fromUrl = hubFromUrl();
     if (fromUrl) return fromUrl;
     const seg = parseFilmRoomSegmentFromPath();
-    return seg ? filmRoomHubFromSegment(seg) : FILM_HUB_ORDER[0];
+    if (seg) return filmRoomHubFromSegment(seg);
+    // Empty Review is not the landing page — that rail waits on real Florida tape.
+    return liveVaultFilmReviews().length > 0 ? VAULT_REVIEW_HUB : 'Film Breakdown';
   });
 
   useEffect(() => {
@@ -554,7 +556,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
 
   const hubCounts = useMemo(() => {
     const counts: Record<string, number> = {
-      [VAULT_REVIEW_HUB]: VAULT_FILM_REVIEWS.length,
+      [VAULT_REVIEW_HUB]: liveVaultFilmReviews().length,
       'Film Breakdown': 0,
       'Scheme School': SCHEME_SCHOOL_LESSONS.length,
       'UF Press Conferences': 0,
@@ -650,7 +652,9 @@ export function VaultFilmRoomPage(): React.ReactElement {
               </div>
               <p className="gv-fr-stage__count">
                 {hub === VAULT_REVIEW_HUB
-                  ? `${hubCounts[VAULT_REVIEW_HUB]} reviews`
+                  ? hubCounts[VAULT_REVIEW_HUB]
+                    ? `${hubCounts[VAULT_REVIEW_HUB]} reviews`
+                    : 'Waiting on tape'
                   : hub === 'Scheme School'
                     ? `${hubCounts['Scheme School']} installs`
                     : `${filtered.length} videos`}

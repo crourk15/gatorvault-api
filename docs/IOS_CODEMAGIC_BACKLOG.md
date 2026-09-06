@@ -96,7 +96,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-06 | Film Room: GatorVault Film Review rail + elite Scheme School (Breakdowns stay GNFP / Film Guy) | `VaultFilmRoomPage` + review/scheme panels in binary; Week 1 FAU board is client data | pending |
+| 2026-09-06 | Film Room: GatorVault Film Review rail + elite Scheme School (Breakdowns stay GNFP / Film Guy) | `VaultFilmRoomPage` + review/scheme panels in binary; Week 1 FAU **board waits on a real tape watch** (rail ships empty) | pending |
 | 2026-09-06 | Game Week Depth Chart: official two-deep OFF/DEF/ST cards (drop placeholder column dump) | `GameWeekDepthPanel` in binary; **board data already live via `/api/roster/depth-chart`** | pending |
 | 2026-09-06 | Game Week + Home countdown: auto-open next kickoff (no more hardcoded FAU) | `defaultGameWeekId` + `buildGameDayView` / `getFeaturedUfGame` in binary; **weekly intel stays API** | #627 + auto-advance |
 | 2026-09-05 | Community: Game day chip + hero copy on Staff open (title/body already live via API) | `VaultCommunityPage` chip/hero in binary | #623 |

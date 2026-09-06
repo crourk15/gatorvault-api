@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { PageSection } from '@/components/brand';
 import {
-  VAULT_FILM_REVIEWS,
+  liveVaultFilmReviews,
   latestVaultFilmReview,
   watchStandardLabel,
   type FilmReviewUnitId,
@@ -26,38 +26,54 @@ export function VaultFilmReviewGrid({
   onOpen: (review: VaultFilmReview) => void;
   onUnlock: () => void;
 }): React.ReactElement {
+  const live = liveVaultFilmReviews();
   const featured = latestVaultFilmReview();
-  const rest = VAULT_FILM_REVIEWS.filter((review) => review.id !== featured?.id);
+  const rest = live.filter((review) => review.id !== featured?.id);
+
+  if (!featured) {
+    return (
+      <div className="gv-fr-review" data-testid="gv-fr-review-grid">
+        <article className="gv-fr-review-hero" data-testid="gv-fr-review-waiting">
+          <div className="gv-fr-review-hero__top">
+            <span className="gv-fr-review-hero__badge">Our board</span>
+            <p className="gv-fr-review-hero__watch">Waiting on tape</p>
+          </div>
+          <h3 className="gv-fr-review-hero__title">Week 1 vs FAU</h3>
+          <p className="gv-fr-review-hero__dek">
+            The GatorVault review lands after we watch the Florida tape. Official score is on the board.
+            This rail stays empty until that watch.
+          </p>
+        </article>
+      </div>
+    );
+  }
 
   return (
     <div className="gv-fr-review" data-testid="gv-fr-review-grid">
-      {featured ? (
-        <article className="gv-fr-review-hero" data-testid="gv-fr-review-featured">
-          <div className="gv-fr-review-hero__top">
-            <span className="gv-fr-review-hero__badge">Our board</span>
-            <p className="gv-fr-review-hero__watch">{watchStandardLabel(featured.watchStandard)}</p>
-          </div>
-          <h3 className="gv-fr-review-hero__title">{featured.title}</h3>
-          <p className="gv-fr-review-hero__score">
-            Florida {featured.finalUF} <span>·</span> {featured.opponentShort} {featured.finalOpp}
-          </p>
-          <p className="gv-fr-review-hero__dek">{featured.dek}</p>
-          <button
-            type="button"
-            className="gv-fr-review-hero__cta"
-            onClick={() => {
-              if (!insider) {
-                onUnlock();
-                return;
-              }
-              onOpen(featured);
-            }}
-          >
-            {insider ? 'Open review' : 'Unlock'}
-          </button>
-        </article>
-      ) : null}
-
+      <article className="gv-fr-review-hero" data-testid="gv-fr-review-featured">
+        <div className="gv-fr-review-hero__top">
+          <span className="gv-fr-review-hero__badge">Our board</span>
+          <p className="gv-fr-review-hero__watch">{watchStandardLabel(featured.watchStandard)}</p>
+        </div>
+        <h3 className="gv-fr-review-hero__title">{featured.title}</h3>
+        <p className="gv-fr-review-hero__score">
+          Florida {featured.finalUF} <span>·</span> {featured.opponentShort} {featured.finalOpp}
+        </p>
+        <p className="gv-fr-review-hero__dek">{featured.dek}</p>
+        <button
+          type="button"
+          className="gv-fr-review-hero__cta"
+          onClick={() => {
+            if (!insider) {
+              onUnlock();
+              return;
+            }
+            onOpen(featured);
+          }}
+        >
+          {insider ? 'Open review' : 'Unlock'}
+        </button>
+      </article>
       {rest.length ? (
         <div className="gv-fr-review-list">
           {rest.map((review) => (
@@ -122,7 +138,6 @@ export function VaultFilmReviewViewer({
         </div>
         <p className="gv-film-lesson__dek">{review.headline}</p>
         <p className="gv-film-lesson__type">{review.watchNote}</p>
-
         <div className="gv-fr-review-tabs" role="tablist" aria-label="Review units">
           {UNIT_TABS.map((tab) => (
             <button
@@ -137,7 +152,6 @@ export function VaultFilmReviewViewer({
             </button>
           ))}
         </div>
-
         <section className="gv-fr-review-unit" aria-label={unit}>
           <p className="gv-fr-review-unit__kicker">{block.kicker}</p>
           {bodyParas.map((para) => (
@@ -149,7 +163,6 @@ export function VaultFilmReviewViewer({
             ))}
           </ul>
         </section>
-
         <section className="gv-fr-review-keys" aria-label="Keys">
           <p className="gv-fr-review-unit__kicker">The board</p>
           <ol>
@@ -158,7 +171,6 @@ export function VaultFilmReviewViewer({
             ))}
           </ol>
         </section>
-
         {review.schemeLessonIds.length ? (
           <section aria-label="How they ran it">
             <p className="gv-fr-review-unit__kicker">How they ran it</p>
@@ -180,12 +192,10 @@ export function VaultFilmReviewViewer({
             </div>
           </section>
         ) : null}
-
         <section className="gv-fr-review-next">
           <p className="gv-fr-review-unit__kicker">Next · {review.nextWeek.opponent}</p>
           <p>{review.nextWeek.look}</p>
         </section>
-
         <p className="gv-fr-review-source">
           {review.sources.map((source, index) => (
             <span key={source.label}>

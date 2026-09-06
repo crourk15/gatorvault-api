@@ -30,7 +30,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Buster Faulkner — OC',
     dek: 'Give or throw before the second level can choose.',
     body:
-      'Faulkner packages a run and a quick throw on the same snap. Philo reads one conflict defender — usually a linebacker or the overhang — and either gives to Baugh or gets the ball out on the glance, stick, or bubble before the rush arrives. Week 1 vs FAU lived here: no-huddle shotgun every snap, Baugh on first down, Brown and Stockton finishing drives when the box leaned in. It is how Florida stays on schedule without hunting a deep shot every play.',
+      'Faulkner packages a run and a quick throw on the same snap. Philo reads one conflict defender — usually a linebacker or the overhang — and either gives to Baugh or gets the ball out on the glance, stick, or bubble before the rush arrives. It is how Florida stays on schedule without hunting a deep shot every play.',
     watchFor: [
       'Is the ball out before the first rusher wins?',
       'Does the conflict defender lose both the run and the throw?',
@@ -68,7 +68,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Buster Faulkner — OC · OL (Phil Trautwein)',
     dek: 'Pullers, angles, and Baugh downhill.',
     body:
-      'Gap scheme gives each lineman a hole. A guard or tackle pulls and creates the extra gap. Baugh hits it or bounces when the end crashes. Week 1: 14 carries, 160 yards, three scores, plus the 61-yard 3rd-and-2. Trautwein’s front has to win the first hat. When they do, Faulkner can play-action the next series. When they do not, Florida is throwing from 2nd-and-long.',
+      'Gap scheme gives each lineman a hole. A guard or tackle pulls and creates the extra gap. Baugh hits it or bounces when the end crashes. Trautwein’s front has to win the first hat. When they do, Faulkner can play-action the next series. When they do not, Florida is throwing from 2nd-and-long.',
     watchFor: ['Puller timing and angle', 'Baugh’s cutback vs the crashing end', 'Pad level at the point'],
     usageNote: 'Identity run. Short yardage and early downs.',
     callSheet: 'Power / counter / duo. Puller or double, Baugh through the gap.',
@@ -85,7 +85,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Buster Faulkner — OC',
     dek: 'Sell the stretch. Take the top off.',
     body:
-      'Wide zone stretches the front. Play-action off that look freezes linebackers and the safety. Faulkner calls it after Baugh has already won — the Abrams 63-yarder vs FAU is the shape of the payoff, even if the official chart does not name the protection. The boot or the deep over is the throw. It only exists if the run is real.',
+      'Wide zone stretches the front. Play-action off that look freezes linebackers and the safety. Faulkner calls it after Baugh has already won. The boot or the deep over is the throw. It only exists if the run is real.',
     watchFor: ['Linebacker freeze', 'Safety depth on the fake', 'Whether the deep shot is earned'],
     usageNote: 'Called after the run has been established.',
     callSheet: 'PA boot / deep over off wide zone.',
@@ -102,7 +102,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Joe Craddock — Quarterbacks',
     dek: 'Where Philo looks, and in what order.',
     body:
-      'Craddock installs the order before the snap: primary, alert, checkdown. Philo’s Week 1 chart (16-of-21, three throw scores, one scramble score) looks like a quarterback who knew the answer. The interception before half is the other side — late into a closing window. Clean feet keep Florida out of negative plays when protection is stressed.',
+      'Craddock installs the order before the snap: primary, alert, checkdown. Clean feet keep Florida out of negative plays when protection is stressed. The late throw into a closing window is the other side of the same rule.',
     watchFor: ['Eyes through the order', 'Ball out on time vs the first rusher', 'Checkdown vs the blitz'],
     usageNote: 'Every dropback. No freelancing the first look.',
     callSheet: 'Progression: 1 to 2 to check. Throw it away before the sack.',
@@ -119,7 +119,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Marcus Davis + Trent McKnight — WR coaches',
     dek: 'Landmarks. No bunching. Someone is uncovered.',
     body:
-      'Davis and McKnight give each receiver a landmark so Brown, Wilson, Stockton, and Abrams do not occupy the same grass. Week 1: Brown 6-117 and the 49-yard opener, Wilson the chain-mover, Abrams the 63-yard shot. That is spacing working. Zone cannot cover every landmark. Man has to travel.',
+      'Davis and McKnight give each receiver a landmark so Brown, Wilson, Stockton, and Abrams do not occupy the same grass. Zone cannot cover every landmark. Man has to travel.',
     watchFor: ['Landmark discipline', 'Separation at the break', 'Stack vs spread alignment'],
     usageNote: 'Every 10- and 11-personnel snap.',
     callSheet: 'Landmarks by position. No two men in the same window.',
@@ -136,7 +136,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Evan McKissack — Tight Ends',
     dek: 'Seam, protect, or finish in the red zone.',
     body:
-      'McKissack’s room is the 12-personnel lever. Inline they keep the edge honest for Baugh. In the pass game they own the seam vs zone and the red-zone sit. Jones’ 6-yard score from Jones Jr. late vs FAU is the finish look. They also stay in to protect when Faulkner wants the full progression.',
+      'McKissack’s room is the 12-personnel lever. Inline they keep the edge honest for Baugh. In the pass game they own the seam vs zone and the red-zone sit. They also stay in to protect when Faulkner wants the full progression.',
     watchFor: ['Seam vs Cover 3', 'Red-zone target', 'Inline block on the edge run'],
     usageNote: '12 personnel and red zone.',
     callSheet: 'Seam / sit / inline. Protect when asked.',
@@ -153,7 +153,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Phil Trautwein — Offensive Line',
     dek: 'Hats on hats. The shot only exists if they hold.',
     body:
-      'Trautwein coaches pad level, hands, and the stunt call. Week 1 the line created 281 rush yards and gave Philo time for the Abrams shot. The wild snap that lost 20 is the other tape — protection and operation are the same room. If this front holds, Faulkner can run the full progression. If it does not, Florida is living in RPO quick and hoping Baugh wins.',
+      'Trautwein coaches pad level, hands, and the stunt call. If this front holds, Faulkner can run the full progression. If it does not, Florida is living in RPO quick and hoping Baugh wins. Protection and operation are the same room.',
     watchFor: ['Pressure vs the sim look', 'Combo blocks on gap', 'The twist call'],
     usageNote: 'Every snap. The rest of the offense is downstream.',
     callSheet: 'Zone / gap / max protect. Communicate the twist.',
@@ -170,7 +170,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Brad White — DC',
     dek: 'Three down. Five who can rush or cover.',
     body:
-      'White’s odd front puts three down linemen and hybrid JACK / STAR bodies who can rush, cover, or fit the run. It lets Florida stay in base vs spread and still bring pressure from more than one edge. Week 1 vs FAU the official chart does not name the front on every snap — do not invent it. What it does show: hurries from Clark, Bett, McCloud, and the two interceptions. The cost of being wrong is the 75-yard Owl drives.',
+      'White’s odd front puts three down linemen and hybrid JACK / STAR bodies who can rush, cover, or fit the run. It lets Florida stay in base vs spread and still bring pressure from more than one edge. The cost of being wrong is a long drive. Do not invent the front from a box score.',
     watchFor: ['Front declaration', 'JACK / STAR alignment', 'Run fit vs 11 personnel'],
     usageNote: 'Base vs modern spread. Sub only when they have to.',
     callSheet: 'Odd. Three down. JACK and STAR are the movers.',
@@ -187,7 +187,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Brad White — DC',
     dek: 'Show five. Bring four. Or the other way around.',
     body:
-      'Simulated pressure shows a blitz and drops a rusher — or shows coverage and brings the extra man late. White triggers it from JACK and STAR so the quarterback cannot ID the rush. Week 1 the official chart logs hurries (Clark, Bett, McCloud, Oyebadejo, Chiles) and does not name the package. Call the hurry. Do not call the coverage behind it until we have the broadcast.',
+      'Simulated pressure shows a blitz and drops a rusher — or shows coverage and brings the extra man late. White triggers it from JACK and STAR so the quarterback cannot ID the rush. Call the hurry when the tape shows it. Do not name the coverage behind it until the broadcast is watched.',
     watchFor: ['Who actually comes', 'The hole they left', 'Whether the throw is hurried'],
     usageNote: 'Third down and obvious pass.',
     callSheet: 'Sim. Show five, bring four — or show four, bring five.',
@@ -204,7 +204,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Bam Hardmon — Outside Linebackers',
     dek: 'Set the edge. Rush. Do not let the quarterback out.',
     body:
-      'JACK is the edge of White’s front — contain the run, rush the passer, keep the mobile quarterback inside. Woods showed up on the FAU chart in the run fit. Campbell’s Sixkiller will test this every series. If JACK loses contain, the scramble becomes the explosive.',
+      'JACK is the edge of White’s front — contain the run, rush the passer, keep the mobile quarterback inside. If JACK loses contain, the scramble becomes the explosive.',
     watchFor: ['Edge vs zone read', 'Pass-rush plan on third down', 'Contain vs the scramble'],
     usageNote: 'Every base snap. The edge is the job.',
     callSheet: 'Set. Rush. Collapse. Do not chase inside and give the edge.',
@@ -221,7 +221,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Chris Collins — Safeties',
     dek: 'Slot. Run fit. The first man tempo tests.',
     body:
-      'STAR covers the slot and fits the run from depth in the nickel. Tempo offenses go at this spot first. Week 1 FAU lived in no-huddle — communication between STAR, the linebackers, and the corners has to be clean or the dink game becomes 25 first downs.',
+      'STAR covers the slot and fits the run from depth in the nickel. Tempo offenses go at this spot first. Communication between STAR, the linebackers, and the corners has to be clean or the dink game becomes first downs.',
     watchFor: ['Slot matchup', 'Run fit from depth', 'Communication vs no-huddle'],
     usageNote: 'Nickel and any 11-personnel spread.',
     callSheet: 'Match the slot. Fit the alley. Talk before the next snap.',
@@ -238,7 +238,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Brandon Harris + Chris Collins — DB coaches',
     dek: 'Cover 3, quarters, man. Landmarks first.',
     body:
-      'Harris and Collins install the shell so corners and safeties know their landmark. White mixes them to take away the vertical without emptying the box. Week 1 vs FAU: we do not have broadcast angles that confirm Cover 3 vs quarters vs man. What we have are the results — Coleman’s INT, Johnson’s INT, McCloud’s 4th-and-2 breakup, and the Valsin 20-yard score. Call the play. Do not invent the shell.',
+      'Harris and Collins install the shell so corners and safeties know their landmark. White mixes them to take away the vertical without emptying the box. Name Cover 3 vs quarters vs man only after the broadcast is watched. Call the play. Do not invent the shell.',
     watchFor: ['Pre-snap rotation', 'Deep third', 'Man technique on the outside'],
     usageNote: 'Every pass snap. Named only when the tape shows it.',
     callSheet: '3 / quarters / man. Rotate late. Do not guess in print.',
@@ -255,7 +255,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Greg Gasparato — Linebackers',
     dek: 'Own your gap. Scrape. Stay square.',
     body:
-      'Gasparato teaches gap-and-scrape. Each linebacker owns a hole, runs to the ball, stays square. Week 1 the official chart shows Graham, Woods, and Robinson in the run alley — and it also shows Ervin and Farrow moving the chains on early downs. Missed fits become explosives. Campbell will keep it with Sixkiller. The fit has to travel.',
+      'Gasparato teaches gap-and-scrape. Each linebacker owns a hole, runs to the ball, stays square. Missed fits become explosives. The fit has to travel against a quarterback who keeps it.',
     watchFor: ['Gap on power', 'Scrape to the ball', 'Missed tackles at the second level'],
     usageNote: 'Every run snap. SEC weeks live or die here.',
     callSheet: 'Gap. Scrape. Square. Do not cross your teammate’s hole.',
@@ -272,7 +272,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Gerald Chatman — Assistant HC / Defensive Line',
     dek: 'Pad level. Two-gap at nose. Win third down.',
     body:
-      'Chatman wants the nose to occupy two gaps and the ends to win on passing downs. McCloud, Bett, and James showed up on the FAU chart — hurry, stuff, sack-fumble. If the front does not move, Graham and Woods can run. If the front gets reached, the 90-play night starts.',
+      'Chatman wants the nose to occupy two gaps and the ends to win on passing downs. If the front does not move, Graham and Woods can run. If the front gets reached, the long night starts.',
     watchFor: ['Nose on the double', 'Penetration on third down', 'Edge vs the RPO'],
     usageNote: 'The front sets the tone for every White pressure.',
     callSheet: 'Two-gap nose. One-gap on passing downs. Hands first.',
@@ -289,7 +289,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Rusty Whitt — Director of Football Performance',
     dek: 'Finish the fourth. That is the program.',
     body:
-      'Whitt builds the thing Sumrall actually coaches: finish. Week 1 Florida scored 14 in the fourth and kept the Owls at zero. That is the standard. Gap runs and White’s pressure volume only hold if the roster can still move in November. Conditioning is not a side program. It is how Faulkner and White still have a call in the fourth.',
+      'Whitt builds the thing Sumrall actually coaches: finish. Gap runs and White’s pressure volume only hold if the roster can still move in November. Conditioning is not a side program. It is how Faulkner and White still have a call in the fourth.',
     watchFor: ['Fourth-quarter run efficiency', 'Tackle rate late', 'Penalties when they are tired'],
     usageNote: 'The fourth quarter is the test.',
     callSheet: 'Finish the rep. Finish the series. Finish the night.',
@@ -306,7 +306,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Rusty Whitt · staff',
     dek: 'Practice pace that survives no-huddle.',
     body:
-      'Florida practices fast so the defense can talk under stress. FAU ran no-huddle shotgun for 90 plays. Campbell will do the same with Sixkiller. Substitution speed and the call from the sideline are the scheme. If they cannot get the call in, White’s front does not matter.',
+      'Florida practices fast so the defense can talk under stress. Substitution speed and the call from the sideline are the scheme. If they cannot get the call in, White’s front does not matter.',
     watchFor: ['Substitution speed', 'Communication errors vs no-huddle', 'Late-game execution'],
     usageNote: 'Every series against a tempo offense.',
     callSheet: 'Get the call in. Get the right 11. Do not burn a timeout to exist.',
@@ -323,7 +323,7 @@ export const SCHEME_SCHOOL_LESSONS: SchemeSchoolLesson[] = [
     staff: 'Rusty Whitt — Director of Football Performance',
     dek: 'Available. Explosive. Still there in November.',
     body:
-      'Whitt’s year-round cycle is built to peak in September and hold through rivalry week. Week 1 depth already mattered — Clark and Jones Jr. played real snaps with the game in hand. Availability is the hidden depth chart. Scheme that exists only in August is not a scheme.',
+      'Whitt’s year-round cycle is built to peak in September and hold through rivalry week. Availability is the hidden depth chart. Scheme that exists only in August is not a scheme.',
     watchFor: ['Who is still available', 'Explosive rate by quarter', 'Special teams effort late'],
     usageNote: 'Roster health is the call sheet nobody sees.',
     callSheet: 'Recover. Compete. Be out there in November.',

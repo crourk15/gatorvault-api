@@ -5,30 +5,49 @@ import { normalizeFilmHub } from './film-room-api';
 import { parseFilmRoomSegmentFromPath } from './vault-route-map';
 import {
   VAULT_FILM_REVIEWS,
+  isLiveVaultFilmReview,
   latestVaultFilmReview,
+  liveVaultFilmReviews,
   vaultFilmReview,
   vaultReviewHref,
-  watchStandardLabel,
 } from './vault-film-review-data';
 
 describe('GatorVault Film Review', () => {
-  it('ships Week 1 FAU from official PBP with last names', () => {
-    const review = vaultFilmReview('week-1-fau');
-    assert.ok(review);
-    assert.equal(review.finalUF, 66);
-    assert.equal(review.finalOpp, 21);
-    assert.equal(review.filmWatched, true);
-    assert.equal(review.watchStandard, 'official-pbp');
-    assert.match(review.watchNote, /All-22 were not this desk/i);
-    assert.match(review.offense.body, /Philo/);
-    assert.match(review.offense.body, /Baugh/);
-    assert.match(review.defense.body, /Coleman/);
-    assert.match(review.defense.body, /Veltkamp/);
-    assert.ok(review.schemeLessonIds.every((id) => schemeSchoolLesson(id)));
-    assert.equal(latestVaultFilmReview()?.id, 'week-1-fau');
-    assert.equal(vaultReviewHref('week-1-fau'), '/vault/film-room/review?review=week-1-fau');
-    assert.equal(watchStandardLabel('official-pbp'), 'Official PBP charted');
-    assert.equal(VAULT_FILM_REVIEWS.length, 1);
+  it('keeps the fan rail empty until a real Florida tape watch', () => {
+    assert.deepEqual(VAULT_FILM_REVIEWS, []);
+    assert.deepEqual(liveVaultFilmReviews(), []);
+    assert.equal(latestVaultFilmReview(), undefined);
+    assert.equal(vaultFilmReview('week-1-fau'), undefined);
+    assert.equal(vaultReviewHref(), '/vault/film-room/review');
+    assert.equal(
+      isLiveVaultFilmReview({
+        id: 'draft',
+        week: 1,
+        season: 2026,
+        gameId: 'fau',
+        opponent: 'FAU',
+        opponentShort: 'FAU',
+        dateLabel: 'x',
+        venue: 'x',
+        finalUF: 66,
+        finalOpp: 21,
+        title: 'x',
+        dek: 'x',
+        filmWatched: true,
+        watchStandard: 'official-pbp',
+        watchNote: 'x',
+        sources: [],
+        headline: 'x',
+        offense: { kicker: 'x', body: 'x', bullets: [] },
+        defense: { kicker: 'x', body: 'x', bullets: [] },
+        specials: { kicker: 'x', body: 'x', bullets: [] },
+        keys: [],
+        schemeLessonIds: [],
+        nextWeek: { opponent: 'x', look: 'x' },
+        publishedAt: '2026-09-06T00:00:00Z',
+      }),
+      false
+    );
   });
 
   it('does not dump GNFP film review into the Vault rail', () => {
@@ -36,7 +55,6 @@ describe('GatorVault Film Review', () => {
     assert.equal(normalizeFilmHub('Film Guy Network'), 'Film Breakdown');
     assert.equal(normalizeFilmHub('GatorVault Review'), 'GatorVault Review');
     assert.equal(normalizeFilmHub('GatorVault Film Review'), 'GatorVault Review');
-    assert.equal(normalizeFilmHub('Our Tape'), 'GatorVault Review');
   });
 
   it('parses /film-room/review as the Vault rail', () => {
