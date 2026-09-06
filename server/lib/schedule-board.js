@@ -132,6 +132,9 @@ const BUNDLE_MODEL_KEYS = [
   'howUFWins',
   'scoutingReport',
   'filmWatched',
+  'finalUF',
+  'finalOpp',
+  'finalSource',
 ];
 
 function parseTs(value) {
@@ -273,6 +276,13 @@ function normalizeGame(row) {
     pred: String(row.pred || '').trim(),
     predUF: Number.isFinite(Number(row.predUF)) ? Number(row.predUF) : 0,
     predOpp: Number.isFinite(Number(row.predOpp)) ? Number(row.predOpp) : 0,
+    ...(Number.isFinite(Number(row.finalUF)) && Number.isFinite(Number(row.finalOpp))
+      ? {
+          finalUF: Number(row.finalUF),
+          finalOpp: Number(row.finalOpp),
+          ...(row.finalSource ? { finalSource: String(row.finalSource).trim() } : {}),
+        }
+      : {}),
     filmLessonId: row.filmLessonId != null ? String(row.filmLessonId).trim() : undefined,
     ...(typeof row.filmWatched === 'boolean' ? { filmWatched: row.filmWatched } : {}),
     opponentTendencies: Array.isArray(row.opponentTendencies)

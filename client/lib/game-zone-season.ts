@@ -123,8 +123,9 @@ export function resolveFinalScore(
   const status = String(game?.status || '').toLowerCase();
   const home = game?.homeTeam || game?.home || '';
   const away = game?.awayTeam || game?.away || '';
+  const finished = Boolean(game?.completed) || status.includes('final') || status === 'f';
   if (
-    (status.includes('final') || status === 'f') &&
+    finished &&
     typeof game?.homeScore === 'number' &&
     typeof game?.awayScore === 'number'
   ) {
@@ -132,6 +133,8 @@ export function resolveFinalScore(
     const awayIsUf = /florida/i.test(away);
     if (homeIsUf) return { uf: game.homeScore, opp: game.awayScore, source: 'lines' };
     if (awayIsUf) return { uf: game.awayScore, opp: game.homeScore, source: 'lines' };
+    // Overlay always stores UF in homeScore.
+    return { uf: game.homeScore, opp: game.awayScore, source: 'lines' };
   }
 
   if (typeof schedule?.finalUF === 'number' && typeof schedule?.finalOpp === 'number') {
@@ -139,6 +142,68 @@ export function resolveFinalScore(
   }
 
   return null;
+}
+
+export type GzFinalRow = { uf: number; opp: number; source?: string };
+
+export function finalForTicket(
+  entry: Pick<GzSeasonEntry, 'gameKey' | 'scheduleId' | 'opponent'>,
+  opts: {
+    games?: Array<ScheduleGame & { finalUF?: number; finalOpp?: number }>;
+    finals?: Record<string, GzFinalRow | undefined>;
+    lastGame?: BettingGame | null;
+    nextGame?: BettingGame | null;
+  } = {},
+): { uf: number; opp: number; source: string } | null {
+  const fromApi = opts.finals?.[entry.gameKey];
+  if (fromApi && Number.isFinite(fromApi.uf) && Number.isFinite(fromApi.opp)) {
+    return { uf: fromApi.uf, opp: fromApi.opp, source: fromApi.source || 'lines' };
+  }
+
+  for (const game of [opts.lastGame, opts.nextGame]) {
+    if (!game) continue;
+    if (gzGameKey(game) !== entry.gameKey && game.id !== entry.gameKey) continue;
+    const resolved = resolveFinalScore(game, null, entry.gameKey);
+    if (resolved) return resolved;
+  }
+
+  const games = opts.games || [];
+  const byId = entry.scheduleId
+    ? games.find((g) => g.id === entry.scheduleId)
+    : null;
+  if (typeof byId?.finalUF === 'number' && typeof byId?.finalOpp === 'number') {
+    return { uf: byId.finalUF, opp: byId.finalOpp, source: 'schedule' };
+  }
+
+  const opp = String(entry.opponent || '').toLowerCase();
+  if (opp) {
+    const byOpp = games.find((g) => {
+      const blob = `${g.id} ${g.opp}`.toLowerCase();
+      return opp.split(/\s+/).filter((w) => w.length > 2).some((w) => blob.includes(w));
+    });
+    if (typeof byOpp?.finalUF === 'number' && typeof byOpp?.finalOpp === 'number') {
+      return { uf: byOpp.finalUF, opp: byOpp.finalOpp, source: 'schedule' };
+    }
+  }
+
+  return null;
+}
+
+/** Grade every open ticket that now has a real final. */
+export function gradeOpenTickets(opts: {
+  games?: Array<ScheduleGame & { finalUF?: number; finalOpp?: number }>;
+  finals?: Record<string, GzFinalRow | undefined>;
+  lastGame?: BettingGame | null;
+  nextGame?: BettingGame | null;
+} = {}): GzSeasonEntry[] {
+  const ledger = loadSeasonLedger();
+  for (const entry of ledger) {
+    if (entry.grade) continue;
+    const final = finalForTicket(entry, opts);
+    if (!final) continue;
+    ensureTicketGraded(entry.gameKey, final);
+  }
+  return loadSeasonLedger();
 }
 
 export function loadSeasonLedger(): GzSeasonEntry[] {

@@ -6,6 +6,10 @@ const path = require('path');
 const fetch = require('node-fetch');
 
 const LINES_PATH = path.join(__dirname, '..', 'data', 'betting', 'lines.json');
+const FINALS_PATH = path.join(__dirname, '..', 'data', 'betting', 'finals.json');
+
+/** Hold the just-played game through the Gators Live postgame window, then advance. */
+const POSTGAME_HOURS = 5;
 
 const FANDUEL_AFFILIATE = process.env.FANDUEL_AFFILIATE_URL || 'https://sportsbook.fanduel.com/navigation/ncaaf';
 const HARD_ROCK_BET_URL =
@@ -29,6 +33,26 @@ const STATIC_LINES = [
     spread: { line: 'UF -27.5', uf: -27.5 },
     total: 59.5,
     moneyline: { uf: -4500, opp: +1600 },
+    sportsbookUrl: FANDUEL_AFFILIATE,
+    sportsbookLinks: SPORTSBOOKS,
+    source: 'schedule',
+    completed: true,
+    homeScore: 66,
+    awayScore: 21,
+    status: 'Final',
+    live: false,
+    scoreSource: 'official'
+  },
+  {
+    id: 'uf-campbell-2026-w2',
+    week: 2,
+    game: 'Florida vs Campbell',
+    opponent: 'Campbell',
+    date: '2026-09-12T21:30:00.000Z',
+    venue: 'Ben Hill Griffin Stadium',
+    spread: null,
+    total: null,
+    moneyline: null,
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
     source: 'schedule'
@@ -114,21 +138,138 @@ function mapOddsApiGame(g) {
   };
 }
 
-async function getBettingLines() {
+function gameKickMs(g) {
+  const d = new Date(g?.date || g?.kickoff || '');
+  return Number.isFinite(d.getTime()) ? d.getTime() : NaN;
+}
+
+/** Current live/postgame game, else the next kickoff. Never stay on a finished opener. */
+function pickNextGame(games, now = new Date()) {
+  const t = now.getTime();
+  const holdMs = POSTGAME_HOURS * 3600 * 1000;
+  const sorted = (games || [])
+    .filter((g) => g && Number.isFinite(gameKickMs(g)))
+    .sort((a, b) => gameKickMs(a) - gameKickMs(b));
+  const current = sorted.find((g) => {
+    const kick = gameKickMs(g);
+    return t >= kick && t <= kick + holdMs;
+  });
+  if (current) return current;
+  const upcoming = sorted.find((g) => gameKickMs(g) > t);
+  return upcoming || sorted[sorted.length - 1] || null;
+}
+
+function pickLastCompleted(games, now = new Date()) {
+  const t = now.getTime();
+  const holdMs = POSTGAME_HOURS * 3600 * 1000;
+  const past = (games || [])
+    .filter((g) => g && Number.isFinite(gameKickMs(g)) && gameKickMs(g) + holdMs < t)
+    .sort((a, b) => gameKickMs(b) - gameKickMs(a));
+  return past[0] || null;
+}
+
+function loadPersistedFinals() {
+  try {
+    const raw = JSON.parse(fs.readFileSync(FINALS_PATH, 'utf8'));
+    return raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
+  } catch {
+    return {};
+  }
+}
+
+function persistFinal(game, overlay) {
+  if (!game?.id || !overlay?.completed) return;
+  const uf = Number(overlay.homeScore);
+  const opp = Number(overlay.awayScore);
+  if (!Number.isFinite(uf) || !Number.isFinite(opp)) return;
+  const finals = loadPersistedFinals();
+  const prev = finals[game.id];
+  if (prev && prev.uf === uf && prev.opp === opp) return;
+  finals[game.id] = {
+    gameKey: game.id,
+    opponent: game.opponent || null,
+    uf,
+    opp,
+    source: overlay.scoreSource || 'espn',
+    completedAt: new Date().toISOString(),
+  };
+  try {
+    fs.mkdirSync(path.dirname(FINALS_PATH), { recursive: true });
+    fs.writeFileSync(FINALS_PATH, JSON.stringify(finals, null, 2) + '\n');
+  } catch (e) {
+    console.warn('[betting-lines] persist final failed:', e.message);
+  }
+}
+
+function applyFinal(game, finals) {
+  if (!game) return null;
+  const row = finals?.[game.id];
+  if (!row || !Number.isFinite(Number(row.uf)) || !Number.isFinite(Number(row.opp))) {
+    return game;
+  }
+  return {
+    ...game,
+    homeScore: Number(row.uf),
+    awayScore: Number(row.opp),
+    status: 'Final',
+    completed: true,
+    live: false,
+    scoreSource: row.source || game.scoreSource || 'official',
+  };
+}
+
+function featuredMatches(bettingGame, board) {
+  if (!bettingGame || !board?.featured) return false;
+  const blob = `${bettingGame.id || ''} ${bettingGame.opponent || ''} ${bettingGame.game || ''}`.toLowerCase();
+  const feat = `${board.featured.id || ''} ${board.featured.opp || ''}`.toLowerCase();
+  return feat
+    .split(/[^a-z0-9]+/i)
+    .filter((w) => w.length > 2)
+    .some((w) => blob.includes(w));
+}
+
+function mergeLiveOdds(staticLines, liveGames) {
+  if (!Array.isArray(liveGames) || !liveGames.length) return staticLines.slice();
+  return staticLines.map((g) => {
+    const hit = liveGames.find((l) => {
+      const a = String(g.opponent || '').toLowerCase();
+      const b = String(l.opponent || '').toLowerCase();
+      return a && b && (b.includes(a) || a.includes(b.split(/\s+/)[0] || ''));
+    });
+    if (!hit) return g;
+    return {
+      ...g,
+      spread: hit.spread != null ? hit.spread : g.spread,
+      total: hit.total != null ? hit.total : g.total,
+      moneyline: hit.moneyline != null ? hit.moneyline : g.moneyline,
+      date: hit.date || g.date,
+      source: hit.source || g.source,
+      bookmaker: hit.bookmaker || g.bookmaker,
+    };
+  });
+}
+
+async function getBettingLines(now = new Date()) {
   const live = await fetchLiveOdds();
-  const next =
-    (live && live[0]) ||
-    STATIC_LINES.slice().sort((a, b) => new Date(a.date) - new Date(b.date))[0];
-  const schedule = live || STATIC_LINES;
+  const finals = loadPersistedFinals();
+  const schedule = mergeLiveOdds(STATIC_LINES, live).map((g) => applyFinal(g, finals));
+  const next = pickNextGame(schedule, now);
+  const last = pickLastCompleted(schedule, now);
   let overlay = null;
+  let board = null;
   try {
     const { getUfLiveBoard } = require('./uf-live-score');
-    const board = await getUfLiveBoard();
+    board = await getUfLiveBoard({ asOf: now });
     overlay = board?.overlay || null;
   } catch (e) {
     console.warn('[betting-lines] UF live score overlay failed:', e.message);
   }
-  const nextGame = overlay ? { ...next, ...overlay } : next;
+  if (overlay?.completed && next && featuredMatches(next, board)) {
+    persistFinal(next, overlay);
+  }
+  const nextGame =
+    overlay && featuredMatches(next, board) ? { ...next, ...overlay } : next;
+  const lastGame = last ? applyFinal(last, loadPersistedFinals()) : null;
   return {
     ok: true,
     liveOddsEnabled: !!ODDS_API_KEY,
@@ -136,9 +277,9 @@ async function getBettingLines() {
     hardRockBetUrl: HARD_ROCK_BET_URL,
     sportsbooks: SPORTSBOOKS,
     nextGame,
-    schedule: overlay
-      ? schedule.map((g) => (g.id === next.id ? { ...g, ...overlay } : g))
-      : schedule
+    lastGame,
+    finals: loadPersistedFinals(),
+    schedule: schedule.map((g) => (nextGame && g.id === nextGame.id ? { ...g, ...nextGame } : g)),
   };
 }
 
@@ -226,7 +367,12 @@ module.exports = {
   refreshLines,
   getLinesMeta,
   consumePendingTeamEvents,
+  pickNextGame,
+  pickLastCompleted,
+  applyFinal,
   LINES_PATH,
+  FINALS_PATH,
+  POSTGAME_HOURS,
   STATIC_LINES,
   FANDUEL_AFFILIATE,
   HARD_ROCK_BET_URL,

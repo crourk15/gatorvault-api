@@ -2,9 +2,10 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchBettingLines, type BettingGame } from '@/lib/betting-api';
-import { buildSeedNextGame } from '@/lib/game-zone-hub-seed';
+import { buildSeedLastGame, buildSeedNextGame, GAME_ZONE_HUB_SEED } from '@/lib/game-zone-hub-seed';
 import {
   ensureTicketGraded,
+  gradeOpenTickets,
   gzGameKey,
   loadSeasonLedger,
   parseUfSpread,
@@ -78,6 +79,8 @@ function formatKickoff(g?: BettingGame | null): string {
 }
 
 function countdownLabel(g?: BettingGame | null, nowMs = Date.now()): string {
+  if (g?.completed || /final/i.test(String(g?.status || ''))) return 'Final';
+  if (g?.live) return String(g.status || 'Live').trim() || 'Live';
   const d = kickDate(g);
   if (!d) return 'Kickoff countdown TBA';
   const ms = d.getTime() - nowMs;
@@ -118,11 +121,25 @@ function clampScore(n: number): number {
 }
 
 const SEED_NEXT_GAME = buildSeedNextGame();
+const SEED_LAST_GAME = buildSeedLastGame();
 const HAS_GAME_ZONE_SEED = Boolean(SEED_NEXT_GAME);
 const SEED_DEFAULT_SCORES = defaultScoresForGame(SEED_NEXT_GAME);
+const SEED_FINALS = GAME_ZONE_HUB_SEED.finals || {};
+
+function liveBoard(g?: BettingGame | null): { uf: number; opp: number; status: string } | null {
+  if (typeof g?.homeScore !== 'number' || typeof g?.awayScore !== 'number') return null;
+  if (!g.live && !g.completed && !/final/i.test(String(g.status || ''))) return null;
+  return {
+    uf: g.homeScore,
+    opp: g.awayScore,
+    status: String(g.status || (g.completed ? 'Final' : 'Live')).trim() || 'Live',
+  };
+}
 
 export function VaultGameZonePage(): React.ReactElement {
   const [nextGame, setNextGame] = useState<BettingGame | null>(SEED_NEXT_GAME);
+  const [lastGame, setLastGame] = useState<BettingGame | null>(SEED_LAST_GAME);
+  const [finals, setFinals] = useState<Record<string, { uf: number; opp: number }>>(SEED_FINALS);
   const [loading, setLoading] = useState(!HAS_GAME_ZONE_SEED);
   const [warming, setWarming] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -173,6 +190,16 @@ export function VaultGameZonePage(): React.ReactElement {
       } else if (!HAS_GAME_ZONE_SEED) {
         setNextGame(null);
       }
+      if (data.lastGame) setLastGame(data.lastGame);
+      if (data.finals) {
+        const nextFinals: Record<string, { uf: number; opp: number }> = {};
+        for (const [key, row] of Object.entries(data.finals)) {
+          if (row && Number.isFinite(row.uf) && Number.isFinite(row.opp)) {
+            nextFinals[key] = { uf: row.uf, opp: row.opp };
+          }
+        }
+        setFinals(nextFinals);
+      }
     } catch (err) {
       if (!HAS_GAME_ZONE_SEED) {
         setError(err instanceof Error ? err.message : 'Could not load the next game.');
@@ -202,13 +229,23 @@ export function VaultGameZonePage(): React.ReactElement {
   }, [refreshSeason]);
 
   useEffect(() => {
-    if (!finalScore || !ticket) return;
-    const graded = ensureTicketGraded(gKey, finalScore);
-    if (graded?.grade) {
-      setGradePointsAwarded(graded.grade.pointsEarned);
-      refreshSeason();
+    const nextLedger = gradeOpenTickets({
+      games: SCHEDULE_GAMES,
+      finals,
+      lastGame,
+      nextGame,
+    });
+    setSeason(nextLedger);
+    const current = nextLedger.find((e) => e.gameKey === gKey);
+    if (current?.grade) setGradePointsAwarded(current.grade.pointsEarned);
+    else if (finalScore && ticket) {
+      const graded = ensureTicketGraded(gKey, finalScore);
+      if (graded?.grade) {
+        setGradePointsAwarded(graded.grade.pointsEarned);
+        refreshSeason();
+      }
     }
-  }, [finalScore, ticket, gKey, refreshSeason]);
+  }, [finalScore, ticket, gKey, refreshSeason, finals, lastGame, nextGame]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -309,6 +346,16 @@ export function VaultGameZonePage(): React.ReactElement {
 
   const spreadN = spreadNumber(nextGame);
   const margin = (parseInt(ufScore, 10) || 0) - (parseInt(oppScore, 10) || 0);
+  const live = liveBoard(nextGame);
+  const lastFinal = liveBoard(lastGame);
+  const lastOpp = opponentName(lastGame);
+  
+  // Debug logging
+  if (typeof window !== 'undefined') {
+    console.log('[GameZone] lastGame:', lastGame);
+    console.log('[GameZone] lastFinal:', lastFinal);
+    console.log('[GameZone] lastOpp:', lastOpp);
+  }
   const coverHint =
     spreadN == null || !cover
       ? null
@@ -348,6 +395,14 @@ export function VaultGameZonePage(): React.ReactElement {
             <p className="gv-gz__brand">GatorVault</p>
             <p className="gv-gz__kicker">Swamp Eve</p>
             <p className="gv-gz__countdown">{countdownLabel(nextGame, nowMs)}</p>
+            {live ? (
+              <div className="gv-gz__liveboard" data-testid="gz-live-score">
+                <p className="gv-gz__liveboard-status">{live.status}</p>
+                <p className="gv-gz__liveboard-score">
+                  Florida {live.uf} <span aria-hidden="true">·</span> {opp} {live.opp}
+                </p>
+              </div>
+            ) : null}
             <h1 className="gv-gz__matchup">
               <span className="gv-gz__team">Florida</span>
               <span className="gv-gz__vs">vs</span>
@@ -376,6 +431,18 @@ export function VaultGameZonePage(): React.ReactElement {
             <p className="gv-gz__line-disclaimer">
               Third-party lines for information only — no wagering in GatorVault.
             </p>
+
+            {lastFinal ? (
+              <div className="gv-gz__last" data-testid="gz-last-whistle" aria-label="Last final">
+                <p className="gv-gz__panel-kicker">Last whistle</p>
+                <p className="gv-gz__last-score">
+                  Florida {lastFinal.uf} · {lastOpp} {lastFinal.opp}
+                </p>
+                <p className="gv-gz__result-final">
+                  Official final. Tickets from that game grade here — then lock the next one.
+                </p>
+              </div>
+            ) : null}
 
             <p className="gv-gz__headline">
               {locked ? 'Your Swamp Eve ticket is locked.' : 'Make your Swamp Eve call.'}

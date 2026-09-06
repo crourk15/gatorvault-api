@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-09-06T05:45:00.000Z",
+  "updatedAt": "2026-09-06T12:10:00.000Z",
   "label": "2026 Florida football schedule",
   "games": [
     {
@@ -34,6 +34,9 @@
       "pred": "UF 38 · FAU 10",
       "predUF": 38,
       "predOpp": 10,
+      "finalUF": 66,
+      "finalOpp": 21,
+      "finalSource": "official",
       "filmLessonId": "frl00004-0000-4000-8000-000000000004",
       "opponentTendencies": [
         "Shotgun every snap we have. No under center.",

@@ -10,6 +10,7 @@ const http = require('http');
 const ROOT = path.resolve(__dirname, '../..');
 const OUT = path.join(__dirname, '../lib/game-zone-hub-seed.json');
 const API = process.env.GAME_ZONE_SEED_API || 'https://gatorvault-api.onrender.com';
+const { pickNextGame, getBettingLines } = require(path.join(ROOT, 'server/lib/betting-lines'));
 
 function fetchJson(url, timeoutMs = 35000) {
   return new Promise((resolve, reject) => {
@@ -42,11 +43,17 @@ function localLines() {
 
 async function main() {
   let nextGame = null;
+  let lastGame = null;
+  let finals = {};
   let source = 'empty';
   for (let i = 0; i < 3; i += 1) {
     try {
       const data = await fetchJson(API + '/api/betting/lines');
-      nextGame = data.nextGame || null;
+      nextGame = pickNextGame(data.schedule || [], new Date()) || data.nextGame || null;
+      const kick = nextGame ? Date.parse(nextGame.date || nextGame.kickoff || '') : NaN;
+      if (Number.isFinite(kick) && kick + 5 * 3600 * 1000 < Date.now()) nextGame = null;
+      lastGame = data.lastGame || lastGame;
+      finals = data.finals || finals;
       if (nextGame) { source = 'prod-api'; break; }
     } catch (err) {
       console.warn('[generate-game-zone-hub-seed] fetch failed:', err.message);
@@ -54,18 +61,33 @@ async function main() {
     }
   }
   if (!nextGame) {
+    try {
+      const localLive = await getBettingLines(new Date());
+      nextGame = localLive.nextGame || null;
+      lastGame = localLive.lastGame || lastGame;
+      finals = localLive.finals || finals;
+      if (nextGame) source = 'local-picker';
+    } catch {
+      /* keep looking */
+    }
+  }
+  if (!nextGame) {
     const local = localLines();
-    nextGame = (local && local.nextGame) || null;
+    nextGame = pickNextGame((local && local.schedule) || [], new Date()) || (local && local.nextGame) || null;
+    lastGame = (local && local.lastGame) || lastGame;
+    finals = (local && local.finals) || finals;
     if (nextGame) source = 'local-lines';
   }
   const prev = retainPrevious();
   if (!nextGame && prev && prev.nextGame) {
     nextGame = prev.nextGame;
+    lastGame = lastGame || prev.lastGame || null;
+    finals = Object.keys(finals).length ? finals : (prev.finals || {});
     source = 'retained-previous';
   }
-  const seed = { generatedAt: new Date().toISOString(), source, nextGame };
+  const seed = { generatedAt: new Date().toISOString(), source, nextGame, lastGame, finals };
   fs.writeFileSync(OUT, JSON.stringify(seed, null, 2) + '\n');
-  console.log('[generate-game-zone-hub-seed] wrote', OUT, 'source=', source, 'nextGame=', Boolean(nextGame));
+  console.log('[generate-game-zone-hub-seed] wrote', OUT, 'source=', source, 'nextGame=', Boolean(nextGame), 'lastGame=', Boolean(lastGame));
 }
 
 main().catch((err) => { console.error('[generate-game-zone-hub-seed] FATAL', err); process.exit(1); });

@@ -24,6 +24,10 @@ export type ScheduleGame = {
   /** Explicit projected score — prefer over parsing `pred`. */
   predUF: number;
   predOpp: number;
+  /** Official final after the whistle — Game Zone grades tickets from this. */
+  finalUF?: number;
+  finalOpp?: number;
+  finalSource?: string;
   /** Verified Film Room opponent-prep lesson id (knowledge engine). */
   filmLessonId?: string;
   /** True only after a real Hudl / film-desk watch. Box drafts stay false. */
@@ -106,6 +110,9 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     pred: "UF 38 · FAU 10",
     predUF: 38,
     predOpp: 10,
+    finalUF: 66,
+    finalOpp: 21,
+    finalSource: "official",
     filmLessonId: "frl00004-0000-4000-8000-000000000004",
     opponentTendencies: [
       "Shotgun every snap we have. No under center.",
