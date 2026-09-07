@@ -67,6 +67,7 @@ describe('schedule-board', () => {
       fau.boxScoreUrl,
       'https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903',
     );
+    assert.equal(fau.vaultReviewId, 'fau-2026-w1');
   });
 
   it('Campbell Film Notes are fan-facing and raw scout stays on file', () => {
