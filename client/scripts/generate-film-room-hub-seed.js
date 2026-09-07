@@ -80,7 +80,9 @@ function fromLocalCache() {
           ? 'UF Press Conferences'
           : key === 'gnfp'
             ? 'GNFP Film Review'
-            : (item.category || 'Film Breakdown');
+            : key === 'highlights'
+              ? 'Highlights'
+              : (item.category || 'Film Breakdown');
       rows.push(slimItem({
         ...item,
         filmHub,

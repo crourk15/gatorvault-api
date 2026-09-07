@@ -39,6 +39,16 @@ test('shouldKeepEntry keeps football pressers and drops soccer', () => {
   assert.equal(shouldKeepEntry(drop, florida), false);
 });
 
+test('shouldKeepEntry keeps official game highlights on the football channel', () => {
+  const football = { kind: 'gators_football', bucket: 'pressers', label: 'Florida Gators Football' };
+  const keep = { title: 'Game Highlights | Week One | Florida vs. FAU' };
+  const trailer = { title: 'Only Gators Get Out Alive | 2026 Season Trailer' };
+  const micd = { title: "Mic'd Up with Florida Running Back Jadan Baugh" };
+  assert.equal(shouldKeepEntry(keep, football), true);
+  assert.equal(shouldKeepEntry(trailer, football), false);
+  assert.equal(shouldKeepEntry(micd, football), false);
+});
+
 test('mergeBucket adds new ids only once', () => {
   const source = { bucket: 'pressers', label: 'Florida Gators YouTube', kind: 'florida_official' };
   const row = toCacheRow({

@@ -15,6 +15,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Gators Live: ESPN score/clock overlay on `/api/betting/lines` + `/api/gators-live` during the UF window (current App Store card already reads `homeScore` / `awayScore` / `status` — API; no Codemagic)
 - [x] Game Week FAU Film Notes: fan-facing bullets via `/api/schedule` (`film` + tendency arrays). Raw scout stays in `offenseScout` / `defenseScout` / `scoutingReport` (API — no Codemagic; iOS dump uses the fan arrays)
 - [x] Film Room: Week 1 FAU GatorVault Review board live via `/api/film-room/reviews` (API — current App Store has no fetch; iOS sees it after the 1.0.23 Film Review bake below)
+- [x] Film Room Highlights: Week 1 FAU official cut + SEC condensed via `/api/film-room/catalog` (API — iOS Highlights hub after the 1.0.23 Film Review bake)
 - [x] War Room: Tyler Boyd 2028 CB film watch — Jaire Alexander comp + island off-man / wrap finish (API / FutureCast Vault Scouting)
 - [x] War Room: Jordon Gorham film re-watch — Justyn Ross comp + X projection (API / FutureCast Vault Scouting)
 - [x] Game Week expected visitors: FAU + Hines / Harris-Payne / O'Dwyer + 2029 James Allen (API — no Codemagic; 2027 commits stay off panel)
