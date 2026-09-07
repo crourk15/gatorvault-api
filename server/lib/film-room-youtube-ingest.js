@@ -116,6 +116,22 @@ async function fetchChannelFeed(channelId) {
   return parseRssEntries(xml);
 }
 
+/** Official game cuts — not trailers, mic'd-up, or pressers. */
+function isOfficialHighlightTitle(title) {
+  const t = String(title || '');
+  if (!t) return false;
+  if (/\b(trailer|mic['’]?d[\s-]?up|press conference|media availability|this is the swamp)\b/i.test(t)) {
+    return false;
+  }
+  return /\b(game highlights?|highlights?\s*[|:·]|condensed game)\b/i.test(t);
+}
+
+function classifySourceBucket(entry, source) {
+  if (source.kind === 'gnfp' || source.bucket === 'gnfp') return 'gnfp';
+  if (isOfficialHighlightTitle(entry?.title)) return 'highlights';
+  return 'pressers';
+}
+
 function shouldKeepEntry(entry, source) {
   const title = entry.title || '';
   if (source.kind === 'gnfp' || source.bucket === 'gnfp') {
@@ -123,6 +139,13 @@ function shouldKeepEntry(entry, source) {
   }
   // Florida official + custom presser sources
   if (NON_FOOTBALL.test(title) && !/football/i.test(title)) return false;
+  if (isOfficialHighlightTitle(title)) {
+    if (source.kind === 'gators_football' || source.bucket === 'highlights') return true;
+    if (source.kind === 'florida_official') {
+      return FOOTBALL_HINT.test(title) || /florida football|gators football|florida vs/i.test(title);
+    }
+    return false;
+  }
   if (!PRESSER_TITLE.test(title)) return false;
   // Official athletics channel posts every sport — require football hint OR explicit Gators Football pattern
   if (source.kind === 'florida_official') {
@@ -142,9 +165,17 @@ function toCacheRow(entry, source) {
     slug: slugify(entry.title),
     title: entry.title,
     dek: '',
-    gameLine: source.bucket === 'gnfp' ? 'GNFP Film Review' : 'Florida Gators Football',
+    gameLine: source.bucket === 'gnfp'
+      ? 'GNFP Film Review'
+      : source.bucket === 'highlights'
+        ? 'Highlights'
+        : 'Florida Gators Football',
     season: String(Number.isFinite(year) ? year : new Date().getUTCFullYear()),
-    category: source.bucket === 'gnfp' ? 'Film Breakdown' : 'Press Conferences',
+    category: source.bucket === 'gnfp'
+      ? 'Film Breakdown'
+      : source.bucket === 'highlights'
+        ? 'Highlights'
+        : 'Press Conferences',
     duration: 'YouTube',
     thumbUrl: entry.thumbUrl || `https://i.ytimg.com/vi/${entry.youtubeId}/hqdefault.jpg`,
     videoUrl: `https://www.youtube.com/watch?v=${entry.youtubeId}`,
@@ -463,24 +494,40 @@ async function syncFilmRoomYouTubeInner({ sources } = {}) {
   const details = [];
   let totalAdded = 0;
 
+  if (!cache.auto.highlights) cache.auto.highlights = [];
+
   for (const source of list) {
     try {
       const entries = await fetchChannelFeed(source.channelId);
-      const kept = entries.filter((e) => shouldKeepEntry(e, source)).map((e) => toCacheRow(e, source));
-      const bucket = source.bucket === 'gnfp' ? 'gnfp' : 'pressers';
-      const { rows, added, updated } = mergeBucket(cache.auto[bucket] || [], kept, {
-        pruneGnfpNonFilm: bucket === 'gnfp',
-      });
-      cache.auto[bucket] = rows;
-      totalAdded += added;
+      const keptByBucket = { pressers: [], gnfp: [], highlights: [] };
+      for (const entry of entries) {
+        if (!shouldKeepEntry(entry, source)) continue;
+        const bucket = classifySourceBucket(entry, source);
+        keptByBucket[bucket].push(toCacheRow(entry, { ...source, bucket }));
+      }
+      let sourceAdded = 0;
+      let sourceUpdated = 0;
+      let sourceMatched = 0;
+      for (const bucket of ['pressers', 'gnfp', 'highlights']) {
+        const kept = keptByBucket[bucket];
+        if (!kept.length) continue;
+        sourceMatched += kept.length;
+        const { rows, added, updated } = mergeBucket(cache.auto[bucket] || [], kept, {
+          pruneGnfpNonFilm: bucket === 'gnfp',
+        });
+        cache.auto[bucket] = rows;
+        sourceAdded += added;
+        sourceUpdated += updated;
+      }
+      totalAdded += sourceAdded;
       details.push({
         channelId: source.channelId,
         label: source.label,
-        bucket,
+        bucket: source.bucket,
         scanned: entries.length,
-        matched: kept.length,
-        added,
-        updated,
+        matched: sourceMatched,
+        added: sourceAdded,
+        updated: sourceUpdated,
       });
     } catch (err) {
       details.push({
@@ -535,6 +582,7 @@ async function syncFilmRoomYouTubeInner({ sources } = {}) {
     counts: {
       pressers: (cache.auto.pressers || []).length,
       gnfp: (cache.auto.gnfp || []).length,
+      highlights: (cache.auto.highlights || []).length,
     },
   };
 }
@@ -544,6 +592,8 @@ module.exports = {
   parseSourcesFromEnv,
   parseRssEntries,
   isGnfpFilmBreakdownTitle,
+  isOfficialHighlightTitle,
+  classifySourceBucket,
   shouldKeepEntry,
   shouldKeepSearchHit,
   toCacheRow,

@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-09-06T18:30:00.000Z",
+  "updatedAt": "2026-09-07T04:30:00.000Z",
   "label": "2026 Florida football schedule",
   "games": [
     {
@@ -38,6 +38,7 @@
       "finalOpp": 21,
       "finalSource": "official",
       "boxScoreUrl": "https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903",
+      "vaultReviewId": "fau-2026-w1",
       "filmLessonId": "frl00004-0000-4000-8000-000000000004",
       "opponentTendencies": [
         "Shotgun every snap we have. No under center.",
