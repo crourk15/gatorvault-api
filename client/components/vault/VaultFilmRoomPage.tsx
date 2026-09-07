@@ -60,7 +60,7 @@ const HUB_TABS = FILM_HUB_ORDER.map((name) => ({
 const HUB_COPY: Record<string, { desc: string; kicker: string }> = {
   [VAULT_REVIEW_HUB]: {
     kicker: 'Our board',
-    desc: 'Offense, defense, and specials — only after we watch the Florida tape. Week 1 vs FAU is waiting on that watch.',
+    desc: 'Offense, defense, and specials after we watch. Empty until a board is live.',
   },
   'Film Breakdown': {
     kicker: 'Also on tape',
@@ -658,7 +658,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
                 {hub === VAULT_REVIEW_HUB
                   ? hubCounts[VAULT_REVIEW_HUB]
                     ? `${hubCounts[VAULT_REVIEW_HUB]} reviews`
-                    : 'Waiting on tape'
+                    : 'Empty'
                   : hub === 'Scheme School'
                     ? `${hubCounts['Scheme School']} installs`
                     : `${filtered.length} videos`}

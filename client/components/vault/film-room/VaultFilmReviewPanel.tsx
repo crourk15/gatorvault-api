@@ -38,12 +38,10 @@ export function VaultFilmReviewGrid({
         <article className="gv-fr-review-hero" data-testid="gv-fr-review-waiting">
           <div className="gv-fr-review-hero__top">
             <span className="gv-fr-review-hero__badge">Our board</span>
-            <p className="gv-fr-review-hero__watch">Waiting on tape</p>
           </div>
-          <h3 className="gv-fr-review-hero__title">Week 1 vs FAU</h3>
+          <h3 className="gv-fr-review-hero__title">GatorVault Film Review</h3>
           <p className="gv-fr-review-hero__dek">
-            The GatorVault review lands after we watch the Florida tape. Official score is on the board.
-            This rail stays empty until that watch.
+            Offense, defense, and specials after we watch. This rail is empty until a board is live.
           </p>
         </article>
       </div>
