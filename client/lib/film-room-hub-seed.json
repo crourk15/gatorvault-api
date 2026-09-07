@@ -1,8 +1,52 @@
 {
-  "generatedAt": "2026-08-06T21:10:49.111Z",
-  "source": "local-cache",
-  "categories": [],
+  "generatedAt": "2026-09-07T11:40:00.000Z",
+  "source": "local-manual-fau-highlights",
+  "categories": [
+    "Highlights"
+  ],
   "items": [
+    {
+      "id": "manual-uf-fau-2026-highlights",
+      "slug": "florida-vs-fau-week-1-highlights-2026",
+      "title": "Game Highlights | Week One | Florida vs. FAU",
+      "dek": "Official Gators Football cut. Week 1. Baugh, Brown, Philo.",
+      "category": "Highlights",
+      "filmHub": "Highlights",
+      "source": "Florida Gators Football",
+      "sourceUrl": "https://www.youtube.com/watch?v=znsdoojhHQg",
+      "locked": false,
+      "season": "2026",
+      "duration": "YouTube",
+      "youtubeId": "znsdoojhHQg",
+      "embedUrl": "https://www.youtube.com/embed/znsdoojhHQg",
+      "videoUrl": "https://www.youtube.com/watch?v=znsdoojhHQg",
+      "knowledgeEngine": false,
+      "gameLine": "Florida 66 \u00b7 FAU 21",
+      "publishedAt": "2026-09-06T16:00:00.000Z",
+      "lastVerified": null,
+      "noVideo": false
+    },
+    {
+      "id": "manual-sec-fau-2026-condensed",
+      "slug": "florida-vs-fau-condensed-game-2026",
+      "title": "Florida vs. FAU | Condensed Game",
+      "dek": "SEC condensed. The snaps from Saturday night.",
+      "category": "Highlights",
+      "filmHub": "Highlights",
+      "source": "SEC",
+      "sourceUrl": "https://www.youtube.com/watch?v=3z4Uo0zkF9g",
+      "locked": false,
+      "season": "2026",
+      "duration": "YouTube",
+      "youtubeId": "3z4Uo0zkF9g",
+      "embedUrl": "https://www.youtube.com/embed/3z4Uo0zkF9g",
+      "videoUrl": "https://www.youtube.com/watch?v=3z4Uo0zkF9g",
+      "knowledgeEngine": false,
+      "gameLine": "Florida 66 \u00b7 FAU 21",
+      "publishedAt": "2026-09-06T12:00:00.000Z",
+      "lastVerified": null,
+      "noVideo": false
+    },
     {
       "id": "yt_ACmyasv28qs",
       "slug": "gnfp-film-review-2026-aaron-philo-analysis-part-2-florida-gators-offense",
@@ -38,7 +82,7 @@
       "embedUrl": "https://www.youtube.com/embed/-oPPDQ-BkqI",
       "videoUrl": "https://www.youtube.com/watch?v=-oPPDQ-BkqI",
       "knowledgeEngine": false,
-      "gameLine": "2026 · Buster Faulkner Offense",
+      "gameLine": "2026 \u00b7 Buster Faulkner Offense",
       "publishedAt": "2026-04-08T19:34:03.000Z",
       "lastVerified": null,
       "noVideo": false
@@ -78,7 +122,7 @@
       "embedUrl": "https://www.youtube.com/embed/MwdQSrcmPIg",
       "videoUrl": "https://www.youtube.com/watch?v=MwdQSrcmPIg",
       "knowledgeEngine": false,
-      "gameLine": "2026 · Buster Faulkner Offense",
+      "gameLine": "2026 \u00b7 Buster Faulkner Offense",
       "publishedAt": "2026-03-24T18:09:38.000Z",
       "lastVerified": null,
       "noVideo": false
@@ -447,7 +491,7 @@
     {
       "id": "yt_60NtGp4bTaY",
       "slug": "florida-football-sec-media-days-jadan-baugh",
-      "title": "Florida Football Press Conference | SEC Media Days — Jadan Baugh",
+      "title": "Florida Football Press Conference | SEC Media Days \u2014 Jadan Baugh",
       "dek": "Junior RB Jadan Baugh meets the media at 2026 SEC Media Days in Tampa.",
       "category": "Press Conferences",
       "filmHub": "UF Press Conferences",
@@ -468,7 +512,7 @@
     {
       "id": "yt_p7Lzgkb4SKc",
       "slug": "florida-football-sec-media-days-myles-graham",
-      "title": "Florida Football Press Conference | SEC Media Days — Myles Graham",
+      "title": "Florida Football Press Conference | SEC Media Days \u2014 Myles Graham",
       "dek": "Junior LB Myles Graham represents Florida at 2026 SEC Media Days.",
       "category": "Press Conferences",
       "filmHub": "UF Press Conferences",
@@ -489,7 +533,7 @@
     {
       "id": "yt_rMUz8NEXlVs",
       "slug": "florida-football-sec-media-days-vernell-brown-iii",
-      "title": "Florida Football Press Conference | SEC Media Days — Vernell Brown III",
+      "title": "Florida Football Press Conference | SEC Media Days \u2014 Vernell Brown III",
       "dek": "Sophomore WR Vernell Brown III at 2026 SEC Media Days in Tampa.",
       "category": "Press Conferences",
       "filmHub": "UF Press Conferences",
