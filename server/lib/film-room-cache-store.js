@@ -37,20 +37,30 @@ function readJson(filePath, fallback) {
   }
 }
 
+function normalizeAuto(auto) {
+  const a = auto && typeof auto === 'object' ? auto : {};
+  return {
+    gnfp: Array.isArray(a.gnfp) ? a.gnfp : [],
+    pressers: Array.isArray(a.pressers) ? a.pressers : [],
+    highlights: Array.isArray(a.highlights) ? a.highlights : [],
+  };
+}
+
 function emptyCache() {
-  return { auto: { gnfp: [], pressers: [] }, meta: { version: 1 } };
+  return { auto: normalizeAuto({}), meta: { version: 1 } };
 }
 
 function loadFilmRoomCache() {
   const target = resolveCachePath();
   if (target !== REPO_CACHE_PATH && fs.existsSync(target)) {
     const durable = readJson(target, null);
-    if (durable && durable.auto) return durable;
+    if (durable && durable.auto) {
+      durable.auto = normalizeAuto(durable.auto);
+      return durable;
+    }
   }
   const seeded = readJson(REPO_CACHE_PATH, emptyCache());
-  if (!seeded.auto) seeded.auto = { gnfp: [], pressers: [] };
-  if (!Array.isArray(seeded.auto.gnfp)) seeded.auto.gnfp = [];
-  if (!Array.isArray(seeded.auto.pressers)) seeded.auto.pressers = [];
+  seeded.auto = normalizeAuto(seeded.auto);
   return seeded;
 }
 
@@ -62,10 +72,7 @@ function saveFilmRoomCache(cache) {
   const payload = {
     ...cache,
     updatedAt,
-    auto: {
-      gnfp: Array.isArray(cache?.auto?.gnfp) ? cache.auto.gnfp : [],
-      pressers: Array.isArray(cache?.auto?.pressers) ? cache.auto.pressers : [],
-    },
+    auto: normalizeAuto(cache?.auto),
     meta: {
       ...(cache.meta || {}),
       version: 1,

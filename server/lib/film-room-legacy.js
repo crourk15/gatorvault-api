@@ -62,27 +62,43 @@ function legacyItemToCatalog(raw, category) {
   };
 }
 
+function youtubeKey(row) {
+  return String(row?.youtubeId || '').trim() || String(row?.id || '').trim();
+}
+
 function loadLegacyVideoCatalog() {
   const cache = loadFilmRoomCache();
   const manual = readJson(MANUAL_PATH, { items: [] });
   const items = [];
+  const seenYoutube = new Set();
+
+  function pushUnique(row, category) {
+    const key = youtubeKey(row);
+    if (key && seenYoutube.has(key)) return;
+    if (key) seenYoutube.add(key);
+    items.push(legacyItemToCatalog(row, category));
+  }
 
   (cache.auto?.gnfp || []).forEach((row) => {
     // Drop coach podcast / Talking Ball sit-downs — Film Breakdown is tape only.
     if (!isGnfpFilmBreakdownTitle(row?.title)) return;
-    items.push(legacyItemToCatalog(row, LEGACY_CATEGORIES.GNFP));
+    pushUnique(row, LEGACY_CATEGORIES.GNFP);
   });
 
   (manual.items || []).forEach((row) => {
     const cat = String(row.category || '').trim();
     const src = String(row.source || row.title || '');
     if (cat === 'Highlights' || /highlights/i.test(row.title || '')) {
-      items.push(legacyItemToCatalog(row, LEGACY_CATEGORIES.HIGHLIGHTS));
+      pushUnique(row, LEGACY_CATEGORIES.HIGHLIGHTS);
     } else if (cat === 'Film Breakdown' || /film guy/i.test(src)) {
-      items.push(legacyItemToCatalog(row, LEGACY_CATEGORIES.FILM_GUY));
+      pushUnique(row, LEGACY_CATEGORIES.FILM_GUY);
     } else if (/gators online/i.test(src) && /spring game/i.test(row.title || '')) {
-      items.push(legacyItemToCatalog(row, LEGACY_CATEGORIES.HIGHLIGHTS));
+      pushUnique(row, LEGACY_CATEGORIES.HIGHLIGHTS);
     }
+  });
+
+  (cache.auto?.highlights || []).forEach((row) => {
+    pushUnique(row, LEGACY_CATEGORIES.HIGHLIGHTS);
   });
 
   const pressers = dedupePressersByEvent(cache.auto?.pressers || [])
