@@ -8,6 +8,21 @@
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
+  max-width: 100%;
+}
+
+.gv-fr-review--empty,
+.gv-fr-review-empty {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.gv-fr-review-empty {
+  margin: 0;
+  padding: 0.15rem 0 0.1rem;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.58);
 }
 
 .gv-fr-review-hero {
@@ -460,7 +475,22 @@
 
 @media (max-width: 720px) {
   .gv-fr-rail {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    grid-template-columns: none;
+  }
+
+  .gv-fr-rail__tab {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .gv-fr-review-hero__title,
+  .gv-fr-review-card__title {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.15;
   }
 
   .gv-fr-review-card__btn {
