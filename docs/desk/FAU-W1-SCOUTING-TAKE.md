@@ -121,4 +121,6 @@ The wideouts are in the run. If you only watch the ball, you miss half their sna
 
 ---
 
-Do not publish this as a Review. Talk first.
+This file is leftover-hat notes. It is not the Film Review. The game write-out is `docs/desk/FAU-W1-FILM-REVIEW-DRAFT.md`.
+
+Do not publish either as a Review. Talk first.

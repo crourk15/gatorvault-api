@@ -4,7 +4,8 @@
 **Rule:** every snap from the broadcast. Operation only — what they are doing, what they are trying to do. Not the box. Not the score.  
 **Jerseys locked:** Philo 12, Baugh 13, Brown III 1, Wilson 6. Do not invent. Never Lagway.  
 **Status:** full file sat. All 50 chunks. Do not treat this as a live Review board.  
-**Scouting layer:** `docs/desk/FAU-W1-SCOUTING-TAKE.md` — leftover hats, same-call, why the crease. Talk first. Do not publish.
+**Scouting layer:** `docs/desk/FAU-W1-SCOUTING-TAKE.md` — leftover hats, same-call, why the crease.  
+**Film Review draft:** `docs/desk/FAU-W1-FILM-REVIEW-DRAFT.md` — the game. Talk first. Do not publish.
 
 ## The operation (whole night)
 
