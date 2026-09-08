@@ -3,11 +3,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { PageLayout, PageSection } from '@/components/brand';
 import {
-  FILM_HUB_ORDER,
   fetchFilmRoomCatalog,
   fetchFilmRoomLesson,
   fetchVaultFilmReviews,
+  landingFilmHub,
   normalizeFilmHub,
+  visibleFilmHubs,
   type FilmRoomCatalogItem,
   type FilmRoomLessonDetail,
 } from '@/lib/film-room-api';
@@ -35,27 +36,29 @@ import { VaultFilmReviewGrid, VaultFilmReviewViewer } from '@/components/vault/f
 import { UiEmpty, UiError, UiWarming } from '@/components/site/UiMessage';
 import '@/lib/film-room-elite.css';
 
-const HUB_TABS = FILM_HUB_ORDER.map((name) => ({
-  id: name,
-  label:
-    name === 'UF Press Conferences'
-      ? 'Press'
-      : name === 'Scheme School'
-        ? 'Scheme'
+function hubTabMeta(name: string): { id: string; label: string; fullLabel: string } {
+  return {
+    id: name,
+    label:
+      name === 'UF Press Conferences'
+        ? 'Press'
+        : name === 'Scheme School'
+          ? 'Scheme'
+          : name === 'Film Breakdown'
+            ? 'Breakdowns'
+            : name === VAULT_REVIEW_HUB
+              ? 'Review'
+              : name,
+    fullLabel:
+      name === 'UF Press Conferences'
+        ? 'Press Conferences'
         : name === 'Film Breakdown'
-          ? 'Breakdowns'
+          ? 'Film Breakdowns'
           : name === VAULT_REVIEW_HUB
-            ? 'Review'
+            ? 'GatorVault Film Review'
             : name,
-  fullLabel:
-    name === 'UF Press Conferences'
-      ? 'Press Conferences'
-      : name === 'Film Breakdown'
-        ? 'Film Breakdowns'
-        : name === VAULT_REVIEW_HUB
-          ? 'GatorVault Film Review'
-          : name,
-}));
+  };
+}
 
 const HUB_COPY: Record<string, { desc: string; kicker: string }> = {
   [VAULT_REVIEW_HUB]: {
@@ -63,8 +66,8 @@ const HUB_COPY: Record<string, { desc: string; kicker: string }> = {
     desc: 'Offense, defense, and specials after we watch. Empty until a board is live.',
   },
   'Film Breakdown': {
-    kicker: 'Also on tape',
-    desc: 'GNFP, Film Guy Network, and trusted film sources. Their Gators tape — not ours.',
+    kicker: 'On tape',
+    desc: 'GNFP and trusted film sources. Their Gators tape.',
   },
   'Scheme School': {
     kicker: 'Install board',
@@ -325,14 +328,16 @@ function FilmHubRail({
   active,
   counts,
   onChange,
+  tabs,
 }: {
   active: string;
   counts: Record<string, number>;
   onChange: (hub: string) => void;
+  tabs: { id: string; label: string; fullLabel: string }[];
 }): React.ReactElement {
   return (
     <div className="gv-fr-rail" role="tablist" aria-label="Film room sections">
-      {HUB_TABS.map((tab) => {
+      {tabs.map((tab) => {
         const count = counts[tab.id] ?? 0;
         const isActive = active === tab.id;
         return (
@@ -380,21 +385,21 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const [lessonLoading, setLessonLoading] = useState(false);
   const [hub, setHub] = useState<string>(() => {
     const fromUrl = hubFromUrl();
-    if (fromUrl) return fromUrl;
     const seg = parseFilmRoomSegmentFromPath();
-    if (seg) return filmRoomHubFromSegment(seg);
-    // Empty Review is not the landing page — that rail waits on real Florida tape.
-    return 'Film Breakdown';
+    const preferred = fromUrl || (seg ? filmRoomHubFromSegment(seg) : null);
+    return landingFilmHub(preferred, []);
   });
 
   useEffect(() => {
     const fromUrl = hubFromUrl();
-    if (fromUrl) setHub(fromUrl);
-    else {
-      const seg = parseFilmRoomSegmentFromPath();
-      if (seg) setHub(filmRoomHubFromSegment(seg));
-    }
+    const seg = parseFilmRoomSegmentFromPath();
+    const preferred = fromUrl || (seg ? filmRoomHubFromSegment(seg) : null);
+    if (preferred) setHub(landingFilmHub(preferred, reviews));
   }, []);
+
+  useEffect(() => {
+    setHub((current) => landingFilmHub(current, reviews));
+  }, [reviews]);
 
   const load = useCallback(async () => {
     if (!HAS_FILM_SEED) {
@@ -578,8 +583,12 @@ export function VaultFilmRoomPage(): React.ReactElement {
     return items.filter((i) => normalizeFilmHub(i.filmHub) === hub);
   }, [items, hub]);
 
+  const railTabs = useMemo(
+    () => visibleFilmHubs(reviews).map(hubTabMeta),
+    [reviews]
+  );
   const hubCopy = HUB_COPY[hub];
-  const hubTab = HUB_TABS.find((t) => t.id === hub);
+  const hubTab = hubTabMeta(hub);
   const viewingLesson = Boolean(selected || schemeLesson || review);
   const latestReview = latestVaultFilmReview(reviews);
   const schemeSeenVs =
@@ -595,7 +604,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
           <div className="gv-fr-hero__inner">
             <p className="gv-fr-hero__brand">GatorVault</p>
             <h1 className="gv-fr-hero__title">Film Room</h1>
-            <p className="gv-fr-hero__sub">Our board. Their tape. The install.</p>
+            <p className="gv-fr-hero__sub">Their tape. The install.</p>
           </div>
         </header>
 
@@ -607,7 +616,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
         {error ? <UiError message={error} retry={load} backHref="/vault" backLabel="← Vault" /> : null}
 
         {!viewingLesson ? (
-          <FilmHubRail active={hub} counts={hubCounts} onChange={selectHub} />
+          <FilmHubRail active={hub} counts={hubCounts} onChange={selectHub} tabs={railTabs} />
         ) : null}
 
         {!loading && !error && review ? (

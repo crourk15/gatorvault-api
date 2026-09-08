@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { SCHEME_SCHOOL_LESSONS, schemeSchoolLesson } from './scheme-school-data';
-import { normalizeFilmHub } from './film-room-api';
+import { FILM_HUB_ORDER, landingFilmHub, normalizeFilmHub, visibleFilmHubs } from './film-room-api';
 import { parseFilmRoomSegmentFromPath } from './vault-route-map';
 import {
   VAULT_FILM_REVIEWS,
@@ -49,7 +49,16 @@ describe('GatorVault Film Review', () => {
       ]).length,
       1
     );
-    assert.equal(vaultReviewHref(), '/vault/film-room/review');
+    assert.equal(vaultReviewHref(), null);
+    assert.equal(vaultReviewHref('fau-2026-w1'), null);
+    assert.deepEqual(visibleFilmHubs(), [
+      'Film Breakdown',
+      'Scheme School',
+      'UF Press Conferences',
+      'Highlights',
+    ]);
+    assert.equal(landingFilmHub('GatorVault Review'), 'Film Breakdown');
+    assert.equal(FILM_HUB_ORDER[0], 'Film Breakdown');
     assert.equal(
       isLiveVaultFilmReview({
         id: 'draft',

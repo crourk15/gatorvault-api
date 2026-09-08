@@ -2,7 +2,7 @@ import { loadSession } from './auth-api';
 import type { ApiFetchInit } from './api-fetch';
 import { snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
 import { fetchWithWarmPoll } from './api-warm-poll';
-import { liveVaultFilmReviews, type VaultFilmReview } from './vault-film-review-data';
+import { liveVaultFilmReviews, VAULT_REVIEW_HUB, type VaultFilmReview } from './vault-film-review-data';
 
 /** Film catalog/lessons are tier-gated on the API — send vault session when logged in. */
 function filmFetchInit(init?: ApiFetchInit): ApiFetchInit {
@@ -87,12 +87,30 @@ export async function fetchFilmRoomLesson(id: string): Promise<FilmRoomLessonDet
 }
 
 export const FILM_HUB_ORDER = [
-  'GatorVault Review',
   'Film Breakdown',
   'Scheme School',
   'UF Press Conferences',
   'Highlights',
+  'GatorVault Review',
 ];
+
+/** Review stays off the rail until a live GatorVault board exists. Breakdowns is the landing hub. */
+export function visibleFilmHubs(reviews: VaultFilmReview[] = []): string[] {
+  return FILM_HUB_ORDER.filter(
+    (hub) => hub !== VAULT_REVIEW_HUB || liveVaultFilmReviews(reviews).length > 0
+  );
+}
+
+export function landingFilmHub(
+  preferred?: string | null,
+  reviews: VaultFilmReview[] = []
+): string {
+  const hub = preferred ? normalizeFilmHub(preferred) : 'Film Breakdown';
+  if (hub === VAULT_REVIEW_HUB && liveVaultFilmReviews(reviews).length === 0) {
+    return 'Film Breakdown';
+  }
+  return hub;
+}
 
 /** Coach sit-downs / podcast eps — not tape. Keep "| The Gator Nation Football Podcast" film reviews. */
 export function isFilmBreakdownEligibleTitle(title?: string | null): boolean {
