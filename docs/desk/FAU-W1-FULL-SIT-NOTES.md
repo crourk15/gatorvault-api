@@ -3,7 +3,8 @@
 **Tape:** Florida vs FAU, Sept 5, 2026, Ben Hill Griffin. Local file `/tmp/fau-full/florida-fau-video.mp4` (7489s). 50 × 150s chunks.  
 **Rule:** every snap from the broadcast. Operation only — what they are doing, what they are trying to do. Not the box. Not the score.  
 **Jerseys locked:** Philo 12, Baugh 13, Brown III 1, Wilson 6. Do not invent. Never Lagway.  
-**Status:** full file sat. All 50 chunks. Do not treat this as a live Review board.
+**Status:** full file sat. All 50 chunks. Do not treat this as a live Review board.  
+**Scouting layer:** `docs/desk/FAU-W1-SCOUTING-TAKE.md` — leftover hats, same-call, why the crease. Talk first. Do not publish.
 
 ## The operation (whole night)
 
@@ -102,18 +103,17 @@ Backups kept the same jobs. Screen. Run fit. Front in the backfield.
 
 ## Notes by chunk
 
-### Chunk 00 — open / first Florida drive (0:00–2:30)
+### Chunk 00 — kickoff, FAU has it first (0:00–2:30)
 
-Pregame, then Florida has it. Shotgun the whole way.
+Pregame. Florida kicks. FAU receives. First live snaps are FAU, not Florida. Earlier sit had this backward — ignore it.
 
-1. Shotgun, back right, three out, TE attached right. Interior run. Line tries to wash the front and give the back a crease. Front crashes the middle. Philo 12 hands it.
-2. Shotgun, back left, three out, TE attached left. Ball out now — quick throw to the flat. Line quick-sets. Philo does not hold it.
-3. Shotgun, 2x2, no TE on the line. Instant throw to the outside — screen look. Slot tries to get a body on the DB. Philo is catch-and-throw.
-4. Shotgun, back left, three out, TE attached right. Deeper drop. Vertical to the boundary. Line builds a pocket. Receiver stacks and tracks it. Philo sets his feet.
+1. FAU gun, stretch / zone to the boundary. Florida interior swims the center, crosses his face, A-gap is gone. Play dies.
+2. FAU gun, inside zone the other way. Interior two-gaps the guard, sheds, tackle for loss.
+3. Third-and-10 at the Florida 5. Veltkamp stares the boundary. Hitch sits. Edge jumps and tips it. Coleman is already undercutting. INT at the 5. Leftover hat was the running back — protection picked up the rush.
 
-Next snap is lined up when the chunk dies.
+Florida’s first offensive snap is after this pick (Baugh middle from the 6). That snap is the next chunk.
 
-**Operation:** Same start (gun). First answers are the short throw and the perimeter. When they go vertical, the pocket is there.
+**Operation:** Front wins first step. Pick is eyes plus a hat in the lane, not a blitz story.
 
 ### Chunk 01 — Florida defense, first FAU series (2:30–5:00)
 
@@ -158,15 +158,17 @@ Next snap is lined up when the chunk dies.
 
 **Operation:** Same defense. Front dictates. Secondary is on the short throw. They are not giving the deep one.
 
-### Chunk 05 — Florida defense, the pick, then punt (12:30–15:00)
+### Chunk 05 — Florida defense, then FAU punt (12:30–15:00)
 
-1. Gun. Motion across. Dead before it lives — they jumped.
-2. Gun, trips. Dropback, throw to the sideline. Florida DB sits on it and takes it. (Broadcast read a 12 — that is not Philo. Do not hang a number until we lock the jersey.)
-3. Gun, trips. Inside handoff. Front is the same job.
-4. Gun, trips. Dropback. Interior is already in the backfield.
-5. Punt. Brown III 1 is the return.
+This is not the Coleman pick. Coleman is chunk 00. Re-sit: no interception in this slice.
 
-**Operation:** FAU is still gun, still the short throw / the inside run. Florida is still the front and the DB who will jump the easy one.
+1. Gun. Motion across. Dead — they jumped.
+2. Gun, trips. Roll / drop, deep to the sideline. Incomplete. Florida corner is on it. Do not hang a jersey.
+3. Gun. Interior gets home. Sack.
+4. Gun. Scramble, short of the sticks.
+5. Punt. Brown III 1 fair-catches it.
+
+**Operation:** FAU still the short throw / the inside run / the deep miss. Florida still the front. Do not write this slice as a pick.
 
 ### Chunk 06 — Florida offense (15:00–17:30)
 
@@ -323,7 +325,7 @@ Stoppage-heavy.
 ### Chunk 21 (52:30–55:00)
 
 1. Gun. Philo to Baugh in the flat.
-2. Under center. Sneak. That is a short-yardage look. It is not the offense.
+2. Under center. Sneak. Play-side linebacker and the crashing edge are leftover. It converts because the center and guard win pad level on the tackle immediately. Short-yardage look. It is not the offense.
 3. Gun. Baugh left.
 4. Gun. Baugh right. Same run, other side.
 
