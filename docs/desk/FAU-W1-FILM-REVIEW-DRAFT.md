@@ -14,7 +14,7 @@ Jerseys locked from tape: Philo 12, Baugh 13, Brown III 1, Wilson 6. Never Lagwa
 
 Florida kicked. FAU had the first live snaps. Coleman’s interception is on that opening series.
 
-What the tape is: shotgun, one run family, a now throw, a boundary ball when the pocket is clean. Four down on defense. The front is the pressure. Corners start off and come down on the short one. Safety depth changes by slice. Do not call the night two-high.
+What the tape is: shotgun, one run family, a now throw, a boundary ball when the pocket is clean. Defense is White’s odd front — three down, JACK and STAR the movers. The front is the pressure. Corners start off and come down on the short one. Safeties are not in one shell all night.
 
 ## Buster Faulkner — Offense
 
@@ -45,19 +45,19 @@ When the run dies on the tape: the play-side linebacker hits a puller in the hol
 
 ## Brad White — Defense
 
-**The front.** Four down. They do not need to send people to wreck a drop. What we sat: an interior swim across the center’s face that takes the A; a two-gap on the guard, shed, tackle for loss; tackles upfield caving the mesh; an edge under the tackle; interior twist; T-E (end crashes, tackle loops) that leaves a free rusher up the middle when the protection does not pass it off. Linebackers walk up and drop — that is the look, not the rush. They will send an extra on a passing snap. That is the exception. The base is four.
+**The front.** Odd. Three down. JACK (Woods) is the edge — set it, rush, do not let the quarterback out. STAR is the slot / alley. Graham is the WILL. That is the defense. A TV count of four rushers is three down plus JACK coming. That is not a four-down front.
+
+They do not need to send a fifth to wreck a drop. What we sat: an interior swim across the center’s face that takes the A; a two-gap on the guard, shed, tackle for loss; tackles upfield caving the mesh; an edge under the tackle; interior twist; T-E (end crashes, tackle loops) that leaves a free rusher up the middle when the protection does not pass it off. Linebackers walk up and drop — JACK or STAR can be the one who comes or the one who leaves. They will send an extra on a passing snap. That is the exception. The base is the odd front.
 
 **Opening series, FAU.** Stretch/zone to the boundary — swim, A is gone, play dies. Inside zone the other way — two-gap, shed, loss. Third-and-long: Veltkamp stares the boundary, the hitch sits, the edge jumps and tips it, Coleman is already undercutting. Protection picked up the rush. The running back had nobody to block. The pick is eyes plus a hat in the lane. It is not a blitz win.
 
-**Coverage.** Corners start off. Soft. They come down and wrap the out, the flat, the screen. That is a choice: take away the stack-and-go, live with the stop if you tackle it. On one snap the corner tightened, ran with the vertical, and found the ball. Safety depth is mixed. Some slices help is over the top. Some slices one walks down to fill. Do not lock two-high.
-
-Motion tells you the coverage. If they trail the walker, it is man. If they bump and pass him, it is zone. We sat the trail.
+**Coverage.** Harris / Collins mix the shell — Cover 3, quarters, man. Name the shell on the snap, not for the night. What we sat: corners start off, come down and wrap the out, the flat, the screen. That is a choice: take away the go, live with the stop if you tackle it. On one snap the corner tightened, ran with the vertical, and found the ball. Some snaps a safety is deep. Some snaps one walks down to fill. Motion tells you the call: trail the walker is man; bump and pass is zone. We sat the trail.
 
 **The keep.** The job is stay outside. When they win it, they string the keep and the edge stays square. When they lose it, the edge crashes the fake or gets sealed and nobody replaces him outside — the quarterback has the edge. We sat FAU’s boot: play-side edge bit the run fake, the scrape to replace him was late, the quarterback had a platform to the sideline. Late, backups, same rule: edge gets sealed, they chase him out. That is a fit, not a missed-tackle story.
 
 **FAU’s menu on the tape.** Gun. Inside run. Quick to the flat and the sideline. Screen. One empty change-up. They will try the boundary ball if you sit. Florida’s answer is the front in the backfield and the secondary coming down on the short one. The grass they give is the middle — a crosser/dig found a soft spot — and the late scramble throw.
 
-**Backups** did not change the call. Four down. Screen. Run fit. Front in the mesh. Same keep job.
+**Backups** did not change the call. Same odd front. Screen. Run fit. Front in the mesh. Same keep job.
 
 ## Special Teams
 
@@ -75,7 +75,7 @@ Florida kicked the game off. Extra points we sat were clean. Kickoff lanes staye
 
 **The front** — first step and the double. That is why they can play corners off.
 
-**The back end** — off coverage by choice. Mixed help. The throws that hurt are the short one they agreed to live with when they do not come down together, the middle window, and the keep when the edge leaves.
+**The back end** — off coverage by choice. Shells mixed. The throws that hurt are the short one they agreed to live with when they do not come down together, the middle window, and the keep when JACK leaves.
 
 ---
 
