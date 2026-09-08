@@ -100,8 +100,8 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
 | 2026-09-06 | Schedule: past cards show official final + box-score link (FAU 66–21) | `GameCard` + `PredictedScoreBlock` in binary; **later weekly finals/box URLs stay API via `/api/schedule` after this bake** | #637 |
-| 2026-09-08 | Our Board iOS leak: drop live-hero empty chrome + wrap Film Room rail | `VaultFilmReviewPanel` + `film-room-elite` / `gv-ui-cleanup` / `native-shell` in binary | pending |
-| 2026-09-07 | Film Room Review empty rail: no FAU / waiting-on-tape leak | `VaultFilmReviewPanel` + hub copy in binary | pending |
+| 2026-09-08 | **1.0.23** Our Board empty: drop live-hero chrome + wrap Film Room rail | Same 1.0.23 train — `VaultFilmReviewPanel` + film-room / native CSS in binary | #641 |
+| 2026-09-07 | **1.0.23** Film Room Review empty rail: no FAU / waiting-on-tape leak | Same 1.0.23 train — `VaultFilmReviewPanel` + hub copy in binary | #639 |
 | 2026-09-07 | Film Room Highlights: Week 1 FAU official cut + SEC condensed in hub seed | `film-room-hub-seed.json` first-paint; **live catalog stays API after Render** (Review board parked until more tape) | #638 |
 | 2026-09-06 | Film Room: GatorVault Film Review rail + elite Scheme School + live `/api/film-room/reviews` fetch | `VaultFilmRoomPage` + review/scheme panels in binary; **weekly boards stay API/data after this bake** | #632 |
 | 2026-09-06 | My Alerts: organized Gators score beats (kickoff / every score / halftime / final) | `VaultAlertsPage` + `alert-prefs` hint in binary; **in-game pushes already live via API** | #631 |
