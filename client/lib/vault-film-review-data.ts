@@ -83,10 +83,17 @@ export function vaultFilmReviewForGame(
   return liveVaultFilmReviews(reviews).find((review) => review.gameId === gameId);
 }
 
-export function vaultReviewHref(reviewId?: string, reviews: VaultFilmReview[] = VAULT_FILM_REVIEWS): string {
-  const id = reviewId || latestVaultFilmReview(reviews)?.id;
-  const base = '/vault/film-room/review';
-  return id ? `${base}?review=${encodeURIComponent(id)}` : base;
+export function vaultReviewHubVisible(reviews: VaultFilmReview[] = VAULT_FILM_REVIEWS): boolean {
+  return liveVaultFilmReviews(reviews).length > 0;
+}
+
+export function vaultReviewHref(
+  reviewId?: string,
+  reviews: VaultFilmReview[] = VAULT_FILM_REVIEWS
+): string | null {
+  const live = reviewId ? vaultFilmReview(reviewId, reviews) : latestVaultFilmReview(reviews);
+  if (!live) return null;
+  return `/vault/film-room/review?review=${encodeURIComponent(live.id)}`;
 }
 
 export function watchStandardLabel(standard: FilmReviewWatchStandard): string {

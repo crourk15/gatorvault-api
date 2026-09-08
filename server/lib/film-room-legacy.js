@@ -90,6 +90,8 @@ function loadLegacyVideoCatalog() {
     const src = String(row.source || row.title || '');
     if (cat === 'Highlights' || /highlights/i.test(row.title || '')) {
       pushUnique(row, LEGACY_CATEGORIES.HIGHLIGHTS);
+    } else if (/gnfp/i.test(src) || cat === 'GNFP Film Review') {
+      pushUnique(row, LEGACY_CATEGORIES.GNFP);
     } else if (cat === 'Film Breakdown' || /film guy/i.test(src)) {
       pushUnique(row, LEGACY_CATEGORIES.FILM_GUY);
     } else if (/gators online/i.test(src) && /spring game/i.test(row.title || '')) {

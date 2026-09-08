@@ -25,6 +25,16 @@ describe('GNFP Film Breakdown title filter', () => {
       ),
       true
     );
+    assert.equal(
+      isGnfpFilmBreakdownTitle('GNFP Film Review- 2026 Florida Gators Offense vs. FAU'),
+      true
+    );
+    assert.equal(
+      isGnfpFilmBreakdownTitle(
+        'GNFP Film Review- 2026 Florida Gators Defense vs. Florida Atlantic (FAU)'
+      ),
+      true
+    );
   });
 
   it('drops Talking Ball / Podcast Episode coach conversations', () => {

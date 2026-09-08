@@ -10,6 +10,7 @@ type Props = {
 };
 
 export function FilmNotesPanel({ notes, reviewId }: Props): React.ReactElement {
+  const reviewHref = vaultReviewHref(reviewId);
   return (
     <div className="gv-gw-film-panel" data-testid="gw-film-notes">
       <ul className="gv-gw-film-panel__list">
@@ -17,9 +18,9 @@ export function FilmNotesPanel({ notes, reviewId }: Props): React.ReactElement {
           <li key={n}>{n}</li>
         ))}
       </ul>
-      {reviewId ? (
+      {reviewHref ? (
         <p className="gv-gw-film-panel__review">
-          <VaultNavLink href={vaultReviewHref(reviewId)}>GatorVault Film Review →</VaultNavLink>
+          <VaultNavLink href={reviewHref}>GatorVault Film Review →</VaultNavLink>
         </p>
       ) : null}
     </div>

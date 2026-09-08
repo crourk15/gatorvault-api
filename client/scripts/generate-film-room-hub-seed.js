@@ -69,9 +69,32 @@ function slimItem(item) {
 
 function fromLocalCache() {
   const cachePath = path.join(ROOT, 'server/data/film-room/cache.json');
+  const manualPath = path.join(ROOT, 'server/data/film-room/manual.json');
   const cache = JSON.parse(fs.readFileSync(cachePath, 'utf8'));
+  const manual = JSON.parse(fs.readFileSync(manualPath, 'utf8'));
   const auto = cache.auto || {};
   const rows = [];
+  const seen = new Set();
+  function push(item, filmHub) {
+    const slim = slimItem({ ...item, filmHub });
+    if (!slim) return;
+    const key = String(slim.youtubeId || slim.id || '');
+    if (key && seen.has(key)) return;
+    if (key) seen.add(key);
+    rows.push(slim);
+  }
+  for (const item of manual.items || []) {
+    const cat = String(item.category || '');
+    const filmHub =
+      /gnfp/i.test(item.source || '') || cat === 'GNFP Film Review'
+        ? 'GNFP Film Review'
+        : cat === 'Highlights' || /highlight/i.test(item.title || '')
+          ? 'Highlights'
+          : cat === 'Film Breakdown' || /film guy/i.test(item.source || '')
+            ? 'Film Breakdown'
+            : (item.category || 'Film Breakdown');
+    push(item, filmHub);
+  }
   for (const key of Object.keys(auto)) {
     const list = Array.isArray(auto[key]) ? auto[key] : [];
     for (const item of list) {
@@ -83,13 +106,10 @@ function fromLocalCache() {
             : key === 'highlights'
               ? 'Highlights'
               : (item.category || 'Film Breakdown');
-      rows.push(slimItem({
-        ...item,
-        filmHub,
-      }));
+      push(item, filmHub);
     }
   }
-  return rows.filter(Boolean).slice(0, 40);
+  return rows.slice(0, 40);
 }
 
 function retainPrevious() {
