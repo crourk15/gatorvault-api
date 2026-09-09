@@ -24,39 +24,38 @@
       "url": "https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903"
     }
   ],
-  "headline": "Florida kicked off, Coleman ended the first drive, and the first Gator run was the night: shotgun, Baugh downhill from the 6. Spread them. Throw it now when they sit. White’s odd front is three down plus JACK. Name the shell on the snap.",
+  "headline": "Florida kicked off. Coleman ended the first drive. They stretched the field, ran Baugh, and threw it now when the defense sat.",
+  "recap": "Florida kicked off. FAU got the ball first. Third-and-10 at the Florida 35, DJ Coleman is already in the window. Drive over. From there they stretched the field, handed it to Jaden Baugh, and threw it now when the defense sat. Patrick Durkin from 53. FAU’s 18-yard punt starts the second Florida score. Florida never punts.",
   "offense": {
-    "kicker": "What they ran",
-    "body": "First Gator run of the night is the night. Shotgun. Jaden Baugh 13. Middle. Nine yards from their own 6. Spread the field. Give it downhill. When the corners sit, hitch. When they cheat the run, go. The line looks more technically sound than a year ago, and the run hits with real physicality. Pistol showed up as one look. The sneak is not the offense — the only official snap that was not shotgun was the fourth-and-1 sneak, Aaron Philo 12, plus four.",
-    "bullets": [
-      "Shotgun. Spread them. Baugh downhill.",
-      "Hitch when corners sit. Go when they cheat the run.",
-      "Pistol is one look. The sneak is not the offense."
-    ]
+    "kicker": "Offense",
+    "body": "Buster Faulkner’s idea is a count. Spread the field so they cannot load the box and still cover. Shotgun. Give it to Jaden Baugh 13, downhill. When the corners sit, throw the hitch. When they cheat the run, go. That is how this offense attacks. It is not a trick show. It is not under-center. Pistol showed up as one look. The sneak is not the offense.\n\nThe line already looks more technically sound than a year ago. The run hits with real physicality. Faulkner can keep calling Baugh until they sit because the front is moving people.\n\nFirst Gator run of the night is the proof. Shotgun. Baugh. Middle. Nine yards from their own 6. Same family after that. The only official snap that was not shotgun was the fourth-and-1 sneak — Aaron Philo 12, plus four. That is a conversion. It is not how they want to live.\n\nBrown III 1 and Wilson 6 are why you spread them. The hitch only exists if those guys are out there making the defense choose.",
+    "bullets": []
   },
   "defense": {
-    "kicker": "How it played",
-    "body": "Florida kicked off. FAU first. Third-and-10 at the Florida 35, DJ Coleman is already in the window. Drive over. Brad White’s odd front is three down, JACK (Jayden Woods), STAR, Graham at WILL. If the broadcast counts four rushers, JACK is coming. Coverage is Cover 3, quarters, or man — name the shell on that snap. Coleman’s pick is that front making him hold it. Areas of opportunity in the secondary were not a pile of missed tackles. They were not on the same call. The Sledge keep: the design was sound. They lost the play.",
-    "bullets": [
-      "Odd front: three down, JACK, STAR, Graham at WILL.",
-      "Coleman ends the opening drive at the Florida 35.",
-      "Secondary: same call. Not a pile of missed tackles."
-    ]
+    "kicker": "Defense",
+    "body": "Brad White’s idea is an odd front. Three down. JACK is Jayden Woods. STAR. Graham at WILL. If the broadcast counts four rushers, JACK is coming. Coverage mixes Cover 3, quarters, and man. Name the shell on that snap.\n\nThe proof is the first series. Florida kicked off. FAU first. Third-and-10 at the Florida 35. Coleman is already in the window because the front made the quarterback hold it. Drive over.\n\nAreas of opportunity in the secondary were not a pile of missed tackles. They were not on the same call.\n\nThe Sledge keep: the design was sound. They lost the play. The call was right. The play was not finished.",
+    "bullets": []
   },
   "specials": {
     "kicker": "Specials",
     "body": "Florida never punts. Patrick Durkin from 53. FAU’s 18-yard punt starts the second Florida score.",
-    "bullets": [
-      "Durkin from 53.",
-      "FAU’s 18-yard punt starts the second Florida score.",
-      "Florida never punts."
-    ]
+    "bullets": []
   },
+  "held": [
+    "The run hits with real physicality. The line looks more technically sound than a year ago.",
+    "Coleman ends the opening drive.",
+    "Florida never punts. Durkin from 53."
+  ],
+  "opportunity": [
+    "Secondary: get the same call.",
+    "Sledge keep: design was sound. Finish the play."
+  ],
   "keys": [
-    "Shotgun. Spread them. Baugh downhill. Hitch, then the go.",
-    "Odd front. Three down plus JACK. Name the shell on the snap.",
-    "Coleman on the opening drive. Durkin from 53. Florida never punts.",
-    "Campbell sees the same picture."
+    "The run hits with real physicality. The line looks more technically sound than a year ago.",
+    "Coleman ends the opening drive.",
+    "Florida never punts. Durkin from 53.",
+    "Secondary: get the same call.",
+    "Sledge keep: design was sound. Finish the play."
   ],
   "schemeLessonIds": [
     "ss-gap-run",
@@ -69,7 +68,7 @@
     "opponent": "Campbell",
     "look": "Same picture. Shotgun. Baugh until they sit. Hitch, then the go. Odd front. Name the shell."
   },
-  "publishedAt": "2026-09-09T20:58:00.000Z",
+  "publishedAt": "2026-09-09T21:50:00.000Z",
   "clipLabel": "Week 1 official highlights",
   "clipUrl": "https://www.youtube.com/watch?v=znsdoojhHQg"
 }

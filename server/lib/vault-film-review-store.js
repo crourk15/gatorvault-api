@@ -51,6 +51,11 @@ function asUnit(raw) {
   };
 }
 
+function asLines(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((row) => String(row || '').trim()).filter(Boolean);
+}
+
 function asSources(raw) {
   if (!Array.isArray(raw)) return [];
   return raw
@@ -88,10 +93,13 @@ function normalizeReview(raw) {
     watchNote: String(raw.watchNote || '').trim(),
     sources: asSources(raw.sources),
     headline: String(raw.headline || '').trim(),
+    recap: String(raw.recap || '').trim(),
     offense: asUnit(raw.offense),
     defense: asUnit(raw.defense),
     specials: asUnit(raw.specials),
-    keys: Array.isArray(raw.keys) ? raw.keys.map((k) => String(k || '').trim()).filter(Boolean) : [],
+    held: asLines(raw.held),
+    opportunity: asLines(raw.opportunity),
+    keys: asLines(raw.keys),
     schemeLessonIds: Array.isArray(raw.schemeLessonIds)
       ? raw.schemeLessonIds.map((k) => String(k || '').trim()).filter(Boolean)
       : [],
@@ -101,6 +109,9 @@ function normalizeReview(raw) {
     },
     publishedAt: String(raw.publishedAt || '').trim() || new Date().toISOString(),
   };
+  if (!review.keys.length && (review.held.length || review.opportunity.length)) {
+    review.keys = [...review.held, ...review.opportunity];
+  }
   if (raw.clipLabel != null && String(raw.clipLabel).trim()) {
     review.clipLabel = String(raw.clipLabel).trim();
   }

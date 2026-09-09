@@ -44,6 +44,10 @@ describe('Film Desk packet', () => {
     assert.match(brief.pasteText, /SPKKr6vhtZA/);
     assert.match(brief.pasteText, /filmWatched:false/);
     assert.doesNotMatch(brief.pasteText, /according to James/i);
+    assert.ok(brief.draftReview, 'FAU Review draft is on the brief');
+    assert.equal(brief.draftReview.filmWatched, false);
+    assert.match(String(brief.draftReview.recap || ''), /Coleman/);
+    assert.match(String(brief.draftReview.offense && brief.draftReview.offense.body), /Faulkner/);
   });
 
   it('Campbell brief stays unlocked so we do not invent a Review', () => {

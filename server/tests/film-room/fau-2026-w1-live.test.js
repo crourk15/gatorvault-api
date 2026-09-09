@@ -17,13 +17,17 @@ describe('fau-2026-w1 stays off the fan rail until more film', () => {
     assert.equal(raw.finalUF, 66);
     assert.equal(raw.finalOpp, 21);
     const blob = JSON.stringify(raw);
+    assert.match(String(raw.recap || ''), /Coleman/);
     assert.match(blob, /Philo/);
     assert.match(blob, /Baugh/);
     assert.match(blob, /Coleman/);
+    assert.match(blob, /Faulkner/);
     assert.match(blob, /odd front/i);
     assert.match(blob, /JACK/);
     assert.match(blob, /Florida never punts/);
     assert.match(blob, /areas of opportunity/i);
+    assert.ok(Array.isArray(raw.held) && raw.held.length >= 3);
+    assert.ok(Array.isArray(raw.opportunity) && raw.opportunity.length >= 2);
     assert.doesNotMatch(blob, /Lagway/i);
     assert.doesNotMatch(blob, /11 personnel/i);
     assert.doesNotMatch(blob, /four down/i);

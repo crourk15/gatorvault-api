@@ -40,6 +40,43 @@
     });
   }
 
+  function draftReviewHtml(review) {
+    if (!review) {
+      return '<div class="hub-card" style="margin-bottom:12px"><h3>Review draft</h3>'
+        + '<p class="hub-meta" style="margin:0">No Review JSON on file yet.</p></div>';
+    }
+    var live = review.filmWatched === true;
+    var units = ['offense', 'defense', 'specials'].map(function (id) {
+      var block = review[id] || {};
+      if (!block.body) return '';
+      return '<h4 style="margin:16px 0 8px;color:#fff">' + esc(block.kicker || id) + '</h4>'
+        + String(block.body || '').split(/\n\n+/).map(function (p) {
+          return '<p style="margin:0 0 10px;color:#e2e8f0;line-height:1.55">' + esc(p) + '</p>';
+        }).join('');
+    }).join('');
+    function bullets(title, rows) {
+      if (!rows || !rows.length) return '';
+      return '<h4 style="margin:16px 0 8px;color:#fff">' + esc(title) + '</h4>' + listHtml(rows);
+    }
+    return '<div class="hub-card" style="margin-bottom:12px" id="hub-fd-draft">'
+      + '<h3>Review draft <span class="hub-env-badge ' + (live ? 'hub-st-green' : 'hub-st-yellow') + '">'
+      + (live ? 'LIVE' : 'DESK ONLY') + '</span></h3>'
+      + '<p class="hub-dash-ts" style="margin:0 0 10px">Florida ' + esc(review.finalUF)
+      + ' · ' + esc(review.opponentShort) + ' ' + esc(review.finalOpp)
+      + (review.venue ? ' · ' + esc(review.venue) : '') + '</p>'
+      + (review.recap
+        ? '<p style="margin:0 0 10px;color:#e2e8f0;line-height:1.55">' + esc(review.recap) + '</p>'
+        : '')
+      + units
+      + bullets('What held', review.held)
+      + bullets('Areas of opportunity', review.opportunity)
+      + (review.nextWeek && review.nextWeek.look
+        ? '<h4 style="margin:16px 0 8px;color:#fff">Next · ' + esc(review.nextWeek.opponent || '') + '</h4>'
+        + '<p style="margin:0;color:#e2e8f0;line-height:1.55">' + esc(review.nextWeek.look) + '</p>'
+        : '')
+      + '</div>';
+  }
+
   function listHtml(items) {
     if (!items || !items.length) return '<p class="hub-meta" style="margin:0">—</p>';
     return '<ul style="margin:0;padding-left:18px;color:#e2e8f0;line-height:1.5">'
@@ -137,6 +174,7 @@
             + '</ul>'
           : '<p class="hub-meta" style="margin:0">No writer film seed yet. Add a YouTube/claim to the game card or Open after GNFP posts.</p>')
         + '</div>'
+        + draftReviewHtml(brief.draftReview)
         + '<div class="hub-card">'
         + '<h3>Paste brief (for Cursor)</h3>'
         + '<pre id="hub-fd-paste" style="margin:0;white-space:pre-wrap;font-size:12px;line-height:1.45;max-height:280px;overflow:auto;background:#0f172a;padding:12px;border-radius:8px;color:#e2e8f0">'

@@ -36,9 +36,12 @@ function sample(overrides = {}) {
     watchNote: 'Broadcast watched.',
     sources: [{ label: 'Broadcast' }],
     headline: 'Test headline',
+    recap: 'They kicked off and Coleman ended the first drive.',
     offense: { kicker: 'Offense', body: 'Body.', bullets: ['One'] },
     defense: { kicker: 'Defense', body: 'Body.', bullets: ['One'] },
     specials: { kicker: 'Specials', body: 'Body.', bullets: ['One'] },
+    held: ['Run physicality'],
+    opportunity: ['Same call'],
     keys: ['Key'],
     schemeLessonIds: ['ss-rpo'],
     nextWeek: { opponent: 'Next', look: 'Look' },
@@ -71,6 +74,9 @@ describe('vault-film-review-store', () => {
     assert.equal(store.getLiveReviewById('week-99-test').title, 'Test board');
     assert.equal(store.toApiPayload().count, 1);
     assert.equal(store.toApiPayload().ok, true);
+    assert.equal(live[0].recap, 'They kicked off and Coleman ended the first drive.');
+    assert.deepEqual(live[0].held, ['Run physicality']);
+    assert.deepEqual(live[0].opportunity, ['Same call']);
   });
 
   it('hides filmWatched:false even when labeled broadcast', () => {

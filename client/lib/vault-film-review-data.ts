@@ -34,9 +34,12 @@ export type VaultFilmReview = {
   watchNote: string;
   sources: { label: string; url?: string }[];
   headline: string;
+  recap: string;
   offense: FilmReviewUnit;
   defense: FilmReviewUnit;
   specials: FilmReviewUnit;
+  held: string[];
+  opportunity: string[];
   keys: string[];
   schemeLessonIds: string[];
   nextWeek: { opponent: string; look: string };

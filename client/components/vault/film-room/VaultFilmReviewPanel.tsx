@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { PageSection } from '@/components/brand';
 import {
   liveVaultFilmReviews,
@@ -11,11 +11,18 @@ import {
 } from '@/lib/vault-film-review-data';
 import { schemeSchoolLesson } from '@/lib/scheme-school-data';
 
-const UNIT_TABS: { id: FilmReviewUnitId; label: string }[] = [
+const UNITS: { id: FilmReviewUnitId; label: string }[] = [
   { id: 'offense', label: 'Offense' },
   { id: 'defense', label: 'Defense' },
   { id: 'specials', label: 'Specials' },
 ];
+
+function paragraphs(text: string): string[] {
+  return String(text || '')
+    .split(/\n\n+/)
+    .map((para) => para.trim())
+    .filter(Boolean);
+}
 
 export function VaultFilmReviewGrid({
   reviews = [],
@@ -109,6 +116,34 @@ export function VaultFilmReviewGrid({
   );
 }
 
+function ReviewUnit({
+  label,
+  body,
+  bullets = [],
+}: {
+  label: string;
+  body: string;
+  bullets?: string[];
+}): React.ReactElement | null {
+  const paras = paragraphs(body);
+  if (!paras.length && !bullets.length) return null;
+  return (
+    <section className="gv-fr-review-unit" aria-label={label}>
+      <p className="gv-fr-review-unit__kicker">{label}</p>
+      {paras.map((para) => (
+        <p key={para.slice(0, 48)}>{para}</p>
+      ))}
+      {bullets.length ? (
+        <ul>
+          {bullets.map((bullet) => (
+            <li key={bullet}>{bullet}</li>
+          ))}
+        </ul>
+      ) : null}
+    </section>
+  );
+}
+
 export function VaultFilmReviewViewer({
   review,
   onClose,
@@ -118,9 +153,9 @@ export function VaultFilmReviewViewer({
   onClose: () => void;
   onOpenScheme: (lessonId: string) => void;
 }): React.ReactElement {
-  const [unit, setUnit] = useState<FilmReviewUnitId>('offense');
-  const block = review[unit];
-  const bodyParas = block.body.split(/\n\n+/).filter((para) => para.trim());
+  const recap = paragraphs(review.recap);
+  const held = review.held.length ? review.held : [];
+  const opportunity = review.opportunity.length ? review.opportunity : [];
 
   return (
     <PageSection title={review.title} subtitle="GatorVault Film Review">
@@ -133,47 +168,55 @@ export function VaultFilmReviewViewer({
             Florida {review.finalUF} · {review.opponentShort} {review.finalOpp}
           </strong>
           <p className="gv-fr-review-viewer__meta">
-            {watchStandardLabel(review.watchStandard)} · {review.dateLabel}
+            {review.dateLabel}
+            {review.venue ? ` · ${review.venue}` : ''}
           </p>
         </div>
-        <p className="gv-film-lesson__dek">{review.headline}</p>
-        <p className="gv-film-lesson__type">{review.watchNote}</p>
-        <div className="gv-fr-review-tabs" role="tablist" aria-label="Review units">
-          {UNIT_TABS.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              role="tab"
-              aria-selected={unit === tab.id}
-              className={`gv-fr-review-tabs__btn${unit === tab.id ? ' is-active' : ''}`}
-              onClick={() => setUnit(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-        <section className="gv-fr-review-unit" aria-label={unit}>
-          <p className="gv-fr-review-unit__kicker">{block.kicker}</p>
-          {bodyParas.map((para) => (
-            <p key={para.slice(0, 48)}>{para}</p>
-          ))}
-          <ul>
-            {block.bullets.map((bullet) => (
-              <li key={bullet}>{bullet}</li>
+        {recap.length ? (
+          <section className="gv-fr-review-unit gv-fr-review-unit--lead" aria-label="Recap">
+            {recap.map((para) => (
+              <p key={para.slice(0, 48)}>{para}</p>
             ))}
-          </ul>
-        </section>
-        <section className="gv-fr-review-keys" aria-label="Keys">
-          <p className="gv-fr-review-unit__kicker">The board</p>
-          <ol>
-            {review.keys.map((key) => (
-              <li key={key}>{key}</li>
-            ))}
-          </ol>
-        </section>
+          </section>
+        ) : null}
+        {UNITS.map((unit) => {
+          const block = review[unit.id];
+          return (
+            <ReviewUnit
+              key={unit.id}
+              label={block.kicker || unit.label}
+              body={block.body}
+              bullets={block.bullets}
+            />
+          );
+        })}
+        {held.length || opportunity.length ? (
+          <div className="gv-fr-review-split">
+            {held.length ? (
+              <section className="gv-fr-review-keys" aria-label="What held">
+                <p className="gv-fr-review-unit__kicker">What held</p>
+                <ul>
+                  {held.map((row) => (
+                    <li key={row}>{row}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+            {opportunity.length ? (
+              <section className="gv-fr-review-keys" aria-label="Areas of opportunity">
+                <p className="gv-fr-review-unit__kicker">Areas of opportunity</p>
+                <ul>
+                  {opportunity.map((row) => (
+                    <li key={row}>{row}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+          </div>
+        ) : null}
         {review.schemeLessonIds.length ? (
-          <section aria-label="How they ran it">
-            <p className="gv-fr-review-unit__kicker">How they ran it</p>
+          <section aria-label="Scheme School">
+            <p className="gv-fr-review-unit__kicker">Scheme School</p>
             <div className="gv-fr-review-scheme">
               {review.schemeLessonIds.map((id) => {
                 const lesson = schemeSchoolLesson(id);
@@ -192,10 +235,12 @@ export function VaultFilmReviewViewer({
             </div>
           </section>
         ) : null}
-        <section className="gv-fr-review-next">
-          <p className="gv-fr-review-unit__kicker">Next · {review.nextWeek.opponent}</p>
-          <p>{review.nextWeek.look}</p>
-        </section>
+        {review.nextWeek.look ? (
+          <section className="gv-fr-review-next">
+            <p className="gv-fr-review-unit__kicker">Next · {review.nextWeek.opponent}</p>
+            <p>{review.nextWeek.look}</p>
+          </section>
+        ) : null}
         <p className="gv-fr-review-source">
           {review.sources.map((source, index) => (
             <span key={source.label}>
