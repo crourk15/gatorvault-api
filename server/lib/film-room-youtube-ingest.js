@@ -123,7 +123,8 @@ function isOfficialHighlightTitle(title) {
   if (/\b(trailer|mic['’]?d[\s-]?up|press conference|media availability|this is the swamp)\b/i.test(t)) {
     return false;
   }
-  return /\b(game highlights?|highlights?\s*[|:·]|condensed game)\b/i.test(t);
+  if (/\bcondensed\s+game\b/i.test(t)) return false;
+  return /\b(game highlights?|highlights?\s*[|:·])\b/i.test(t);
 }
 
 function classifySourceBucket(entry, source) {
