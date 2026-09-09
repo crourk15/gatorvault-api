@@ -31,7 +31,7 @@ function monthlyPitchScript(name) {
 function monthlyConfirmScript(name, price, date, time) {
   const when = PrimeStore.prettyDate(date);
   const t = time || '9:00';
-  return `Hey ${name || 'there'} — you're on PrimeShine monthly maintenance at $${price}/month. We come to you. First visit ${when} at ${t}. Reply if you need a different day. — Charles, 863-860-9238`;
+  return `Hey ${name || 'there'} — you're on PrimeShine monthly maintenance at $${price}/month. We come to you. Next visit ${when} at ${t}. Reply if you need a different day. — Charles, 863-860-9238`;
 }
 
 function monthlyScript(name) {
@@ -48,7 +48,7 @@ function monthlyHowToHtml(buttonId) {
         <li>They say <strong class="text-white">yes</strong> — in the driveway or by text.</li>
         <li>Tap the green button below.</li>
         <li>Type <strong class="text-white">what they pay each month</strong> (whatever you quoted — $50, $80, $120).</li>
-        <li>Pick the <strong class="text-white">first wash day</strong>.</li>
+        <li>Pick the <strong class="text-white">next</strong> wash day — not the one you already did.</li>
         <li>Tap <strong class="text-white">Lock plan + send text</strong>. Read it, then hit Send in Messages.</li>
       </ol>
       <p class="text-xs text-slate-500 mb-3">That locks the next 6 months on your calendar and texts them the amount + first visit.</p>
@@ -330,6 +330,14 @@ function renderToday() {
     </div>
 
     ${monthlyHowToHtml('today-enroll')}
+    ${PrimeStore.monthlyClients().length ? `<div class="glass-card p-4 mb-4">
+      <h3 class="font-bold text-white mb-2">On monthly now</h3>
+      ${PrimeStore.monthlyClients().map((c) => `
+        <div class="py-2 border-b border-white/5 flex flex-wrap items-center justify-between gap-2">
+          <p class="text-sm text-white">${esc(c.name)} · $${c.monthly.price}/mo · next ${esc(c.monthly.nextDate || c.monthly.startDate || '')}</p>
+          <button type="button" class="text-xs font-bold bg-navy-700 text-white px-3 py-2 rounded-lg min-h-[40px]" data-edit-monthly="${c.id}">Fix date / amount</button>
+        </div>`).join('')}
+    </div>` : ''}
 
     ${!reviewUrl ? `<div class="glass-card p-4 mb-4 border border-gold-500/30">
       <h3 class="font-bold text-white mb-1">Paste your Google review link once</h3>
@@ -454,6 +462,9 @@ function renderToday() {
   bindBookingForm('today', 0);
   document.getElementById('today-enroll')?.addEventListener('click', () => openMonthly());
   document.getElementById('today-enroll-top')?.addEventListener('click', () => openMonthly());
+  root.querySelectorAll('[data-edit-monthly]').forEach((btn) => {
+    btn.addEventListener('click', () => openMonthlyForClient(btn.getAttribute('data-edit-monthly')));
+  });
   root.querySelectorAll('[data-enroll-name]').forEach((btn) => {
     btn.addEventListener('click', () => openMonthly({
       name: btn.getAttribute('data-enroll-name') || '',
@@ -509,7 +520,9 @@ function renderBook() {
       <div class="flex flex-wrap gap-2 mt-3">
         ${c.phone ? `<a class="px-3 py-2 rounded-lg bg-navy-800 text-white text-xs font-semibold min-h-[40px]" href="${telHref(c.phone)}">Call</a>` : ''}
         ${last ? `<button type="button" class="px-3 py-2 rounded-lg bg-sky-500 text-navy-900 text-xs font-semibold min-h-[40px]" data-review="${last.id}">Send review text</button>` : ''}
-        <button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-enroll-name="${esc(c.name)}" data-enroll-phone="${esc(c.phone || '')}">Enroll monthly</button>
+        ${c.monthly && c.monthly.active
+          ? `<button type="button" class="px-3 py-2 rounded-lg bg-navy-700 text-white text-xs font-semibold min-h-[40px]" data-edit-monthly="${c.ghost ? '' : c.id}">Fix monthly</button>`
+          : `<button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-enroll-name="${esc(c.name)}" data-enroll-phone="${esc(c.phone || '')}">Enroll monthly</button>`}
         ${last && !last.reviewReceived ? `<button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-got-review="${last.id}">They left a review</button>` : ''}
       </div>
     </article>`;
@@ -558,7 +571,10 @@ function renderBook() {
     ${monthly.length ? `<div class="glass-card p-4 mb-4">
       <h3 class="font-bold text-white mb-2">On monthly now</h3>
       ${monthly.map((c) => `
-        <p class="text-sm text-white py-1">${esc(c.name)} · $${c.monthly.price}/mo · first visit ${esc(c.monthly.nextDate || c.monthly.startDate || '')}</p>
+        <div class="py-2 border-b border-white/5 flex flex-wrap items-center justify-between gap-2">
+          <p class="text-sm text-white">${esc(c.name)} · $${c.monthly.price}/mo · next ${esc(c.monthly.nextDate || c.monthly.startDate || '')}</p>
+          <button type="button" class="text-xs font-bold bg-navy-700 text-white px-3 py-2 rounded-lg min-h-[40px]" data-edit-monthly="${c.id}">Fix date / amount</button>
+        </div>
       `).join('')}
     </div>` : ''}
 
@@ -587,7 +603,9 @@ function renderBook() {
         <p class="text-xs text-slate-400 mt-1">Last: ${last ? last.date : '—'} · Next: ${next ? next.date : '—'}</p>
         <div class="flex flex-wrap gap-2 mt-3">
           ${c.phone ? `<a class="px-3 py-2 rounded-lg bg-navy-800 text-white text-xs font-semibold min-h-[40px]" href="${telHref(c.phone)}">Call</a>` : ''}
-          <button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-enroll-name="${esc(c.name)}" data-enroll-phone="${esc(c.phone || '')}">Enroll monthly</button>
+          ${c.monthly && c.monthly.active
+            ? `<button type="button" class="px-3 py-2 rounded-lg bg-navy-700 text-white text-xs font-semibold min-h-[40px]" data-edit-monthly="${c.ghost ? '' : c.id}">Fix monthly</button>`
+            : `<button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-enroll-name="${esc(c.name)}" data-enroll-phone="${esc(c.phone || '')}">Enroll monthly</button>`}
         </div>
       </article>`;
     }).join('') : '<p class="text-sm text-slate-500">No match.</p>';
@@ -596,6 +614,9 @@ function renderBook() {
         name: btn.getAttribute('data-enroll-name') || '',
         phone: btn.getAttribute('data-enroll-phone') || '',
       }));
+    });
+    box.querySelectorAll('[data-edit-monthly]').forEach((btn) => {
+      btn.addEventListener('click', () => openMonthlyForClient(btn.getAttribute('data-edit-monthly')));
     });
   });
   root.querySelectorAll('[data-goto]').forEach((btn) => {
@@ -627,6 +648,9 @@ function renderBook() {
       name: btn.getAttribute('data-enroll-name') || '',
       phone: btn.getAttribute('data-enroll-phone') || '',
     }));
+  });
+  root.querySelectorAll('[data-edit-monthly]').forEach((btn) => {
+    btn.addEventListener('click', () => openMonthlyForClient(btn.getAttribute('data-edit-monthly')));
   });
   root.querySelectorAll('[data-review]').forEach((btn) => {
     btn.addEventListener('click', () => openReview(btn.getAttribute('data-review')));
@@ -774,7 +798,9 @@ function closeReview() {
 }
 
 function monthlyDraft() {
+  const overlay = document.getElementById('monthly-overlay');
   return {
+    clientId: overlay?.dataset.clientId || '',
     name: (document.getElementById('monthly-name')?.value || '').trim(),
     phone: (document.getElementById('monthly-phone')?.value || '').trim(),
     price: Number(document.getElementById('monthly-price')?.value) || 0,
@@ -794,9 +820,51 @@ function syncMonthlyPreview() {
   });
 }
 
+function openMonthlyForClient(clientId) {
+  const client = PrimeStore.os.clients.find((c) => c.id === clientId);
+  if (!client) return openMonthly();
+  const plan = client.monthly || {};
+  openMonthly({
+    clientId: client.id,
+    name: client.name,
+    phone: client.phone,
+    price: plan.price || '',
+    startDate: plan.nextDate || plan.startDate,
+    time: plan.time || '09:00',
+    notes: plan.notes || '',
+  });
+}
+
+function openMonthlyFromJob(jobId) {
+  const job = PrimeStore.jobs.find((j) => j.id === jobId);
+  if (!job) return;
+  const client = PrimeStore.os.clients.find((c) => c.id === job.clientId)
+    || PrimeStore.os.clients.find((c) => c.name === job.name)
+    || PrimeStore.os.clients.find((c) => job.phone && c.phone === job.phone);
+  openMonthly({
+    clientId: client ? client.id : '',
+    name: job.name,
+    phone: job.phone,
+    price: (client && client.monthly && client.monthly.price) || job.price,
+    startDate: job.date,
+    time: job.time || '09:00',
+    notes: (client && client.monthly && client.monthly.notes) || '',
+  });
+}
+
 function openMonthly(draft) {
   const overlay = document.getElementById('monthly-overlay');
   if (!overlay) return;
+  const editing = !!(draft && draft.clientId);
+  overlay.dataset.clientId = (draft && draft.clientId) || '';
+  const title = document.getElementById('monthly-title');
+  const hint = document.getElementById('monthly-hint');
+  if (title) title.textContent = editing ? 'Fix their monthly plan' : 'Lock their monthly plan';
+  if (hint) {
+    hint.textContent = editing
+      ? 'Wrong date or amount? Change it here. This date is the next time you come back — not the wash you already did.'
+      : 'You already washed them (or will today). This date is the next monthly visit, not their first time with you.';
+  }
   const start = PrimeStore.shiftIso(PrimeStore.todayIso(), 7);
   document.getElementById('monthly-name').value = (draft && draft.name) || '';
   document.getElementById('monthly-phone').value = (draft && draft.phone) || '';
@@ -805,7 +873,15 @@ function openMonthly(draft) {
   document.getElementById('monthly-time').value = (draft && draft.time) || '09:00';
   document.getElementById('monthly-notes').value = (draft && draft.notes) || '';
   const warn = document.getElementById('monthly-warn');
-  if (warn) warn.textContent = 'Saves them on the calendar for 6 months, then opens Messages. You tap Send.';
+  if (warn) {
+    warn.textContent = editing
+      ? 'Saves the new next-visit date on the calendar, then you can text them the update.'
+      : 'Locks the next 6 months on your calendar, then opens Messages. You tap Send.';
+  }
+  const sms = document.getElementById('monthly-sms');
+  const save = document.getElementById('monthly-save');
+  if (sms) sms.textContent = editing ? 'Save new date + send text' : 'Lock plan + send text';
+  if (save) save.textContent = editing ? 'Save new date only' : 'Lock plan only — text later';
   syncMonthlyPreview();
   overlay.classList.remove('hidden');
 }
@@ -827,6 +903,7 @@ function saveMonthlyEnroll() {
     document.getElementById('monthly-price')?.focus();
     return null;
   }
+  if (d.clientId) return PrimeStore.updateMonthly(d.clientId, d);
   return PrimeStore.enrollMonthly(d);
 }
 

@@ -513,8 +513,8 @@ QUOTE LINE
 
   <div id="monthly-overlay" class="hidden fixed inset-0 bg-black/70 z-[73] flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-sm p-5 max-h-[92vh] overflow-y-auto">
-      <h3 class="text-white font-bold text-lg mb-1">Lock their monthly plan</h3>
-      <p class="text-sm text-slate-400 mb-3">Step by step. You set the monthly dollar amount — it is not a website price.</p>
+      <h3 id="monthly-title" class="text-white font-bold text-lg mb-1">Lock their monthly plan</h3>
+      <p id="monthly-hint" class="text-sm text-slate-400 mb-3">You already washed them (or will today). This date is the next monthly visit, not their first time with you.</p>
       <p class="text-xs font-bold text-gold-400 mb-1">1. Who</p>
       <label class="text-xs text-slate-400">Name</label>
       <input id="monthly-name" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
@@ -522,11 +522,13 @@ QUOTE LINE
       <input id="monthly-phone" type="tel" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
       <p class="text-xs font-bold text-gold-400 mb-1">2. What they pay you each month</p>
       <input id="monthly-price" type="number" min="0" step="1" placeholder="Type the number you quoted — 50, 80, 120…" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
-      <p class="text-xs font-bold text-gold-400 mb-1">3. First wash day</p>
+      <p class="text-xs font-bold text-gold-400 mb-1">3. Next time you come back</p>
+      <p class="text-xs text-slate-500 mb-2">Not the job you already did. This is the next monthly stop.</p>
       <div class="flex flex-wrap gap-2 mb-2">
         <button type="button" class="date-chip monthly-chip" data-days="0">Today</button>
         <button type="button" class="date-chip monthly-chip on" data-days="7">+7 days</button>
         <button type="button" class="date-chip monthly-chip" data-days="14">+14 days</button>
+        <button type="button" class="date-chip monthly-chip" data-days="28">+4 weeks</button>
       </div>
       <input id="monthly-date" type="date" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
       <input id="monthly-time" type="time" value="09:00" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>

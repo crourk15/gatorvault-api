@@ -187,6 +187,7 @@ function jobCard(job) {
       ${!job.done ? `<button type="button" class="job-done text-xs font-semibold px-3 py-2 rounded-lg bg-navy-700 text-white min-h-[40px]" data-job-id="${job.id}">Mark done</button>` : ''}
       ${job.done && !job.paid ? `<button type="button" class="job-collect text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900 min-h-[40px]" data-job-id="${job.id}">Collect</button>` : ''}
       ${job.done && !job.reviewReceived ? `<button type="button" class="job-review text-xs font-semibold px-3 py-2 rounded-lg bg-sky-500 text-navy-900 min-h-[40px]" data-job-id="${job.id}">Send review text</button>` : ''}
+      ${job.kind === 'monthly' ? `<button type="button" class="job-edit-monthly text-xs font-semibold px-3 py-2 rounded-lg bg-green-500 text-navy-900 min-h-[40px]" data-job-id="${job.id}">Fix date</button>` : ''}
       <button type="button" class="job-ics text-xs font-semibold px-3 py-2 rounded-lg bg-sky-500/20 text-sky-400 min-h-[40px]" data-job-id="${job.id}">Add to phone calendar</button>
       <button type="button" class="job-del text-xs font-semibold px-3 py-2 rounded-lg bg-red-900/30 text-red-400 min-h-[40px]" data-job-id="${job.id}">Delete</button>
     </div>
@@ -312,6 +313,11 @@ function bindJobButtons(root) {
   root.querySelectorAll('.job-review').forEach((btn) => {
     btn.addEventListener('click', () => {
       if (typeof openReview === 'function') openReview(btn.getAttribute('data-job-id'));
+    });
+  });
+  root.querySelectorAll('.job-edit-monthly').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (typeof openMonthlyFromJob === 'function') openMonthlyFromJob(btn.getAttribute('data-job-id'));
     });
   });
 }

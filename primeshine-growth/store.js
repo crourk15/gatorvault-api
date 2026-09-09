@@ -332,13 +332,22 @@ window.PrimeStore = {
   enrollMonthly(input) {
     const name = String(input.name || '').trim();
     const phone = String(input.phone || '').trim();
+    if (!name) return null;
+    const existing = os.clients.find((c) => {
+      if (input.clientId && c.id === input.clientId) return true;
+      const p = digits(phone);
+      if (p && digits(c.phone) === p) return true;
+      return name && c.name.toLowerCase() === name.toLowerCase() && c.monthly && c.monthly.active;
+    });
+    if (existing && existing.monthly && existing.monthly.active) {
+      return this.updateMonthly(existing.id, input);
+    }
     const price = Number(input.price) || 0;
     const startDate = input.startDate || todayIso();
     const time = input.time || '09:00';
     const notes = String(input.notes || '').trim();
     const service = input.service || 'monthly';
     const vehicle = input.vehicle || 'suv';
-    if (!name) return null;
     const client = upsertClient({ name, phone, source: 'monthly' });
     if (client) {
       client.monthly = {
@@ -360,6 +369,50 @@ window.PrimeStore = {
       kind: 'monthly',
       service,
       vehicle,
+      notes: notes ? `${notes} · monthly $${price}/mo` : `monthly $${price}/mo`,
+      source: 'monthly',
+    });
+    return { client, jobs: created };
+  },
+  updateMonthly(clientId, input) {
+    const client = os.clients.find((c) => c.id === clientId);
+    if (!client) return this.enrollMonthly(input);
+    const name = String(input.name || client.name || '').trim();
+    const phone = String(input.phone || client.phone || '').trim();
+    const price = Number(input.price) || (client.monthly && client.monthly.price) || 0;
+    const startDate = input.startDate || todayIso();
+    const time = input.time || (client.monthly && client.monthly.time) || '09:00';
+    const notes = String(input.notes || (client.monthly && client.monthly.notes) || '').trim();
+    const match = { id: client.id, name, phone };
+    for (let i = jobs.length - 1; i >= 0; i -= 1) {
+      const job = jobs[i];
+      if (job.kind !== 'monthly' || job.done) continue;
+      const sameId = job.clientId && job.clientId === match.id;
+      const samePhone = digits(phone) && digits(job.phone) === digits(phone);
+      const sameName = name && (job.name || '').toLowerCase() === name.toLowerCase();
+      if (sameId || samePhone || sameName) jobs.splice(i, 1);
+    }
+    client.name = name || client.name;
+    if (phone) client.phone = phone;
+    client.monthly = {
+      ...(client.monthly || {}),
+      active: true,
+      price,
+      startDate,
+      nextDate: startDate,
+      time,
+      notes,
+      updatedAt: new Date().toISOString(),
+    };
+    const created = this.addJob({
+      name: client.name,
+      phone: client.phone,
+      date: startDate,
+      time,
+      price,
+      kind: 'monthly',
+      service: input.service || 'monthly',
+      vehicle: input.vehicle || 'suv',
       notes: notes ? `${notes} · monthly $${price}/mo` : `monthly $${price}/mo`,
       source: 'monthly',
     });
