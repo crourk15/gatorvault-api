@@ -83,15 +83,16 @@ function monthlyHowToHtml(buttonId) {
     <div class="glass-card p-4 mb-4 border border-green-500/30">
       <p class="text-xs uppercase tracking-widest text-green-400 font-bold mb-1">Monthly plan</p>
       <h3 class="font-bold text-white mb-1">How to put someone on monthly</h3>
-      <p class="text-sm text-slate-400 mb-3">This is not a website package. You quote a monthly dollar amount after they say yes. Each car can be different.</p>
-      <ol class="text-sm text-slate-300 space-y-2 mb-4 list-decimal pl-5">
-        <li>They say <strong class="text-white">yes</strong> — even if the first wash is still days away. Do not wait.</li>
-        <li>Tap the green button below.</li>
-        <li>Type <strong class="text-white">what they pay each month</strong>.</li>
-        <li>Tap <strong class="text-white">First appointment</strong> if you have not washed them yet, or <strong class="text-white">Next visit</strong> if you already did.</li>
-        <li>Tap <strong class="text-white">Lock plan + send text</strong>. Read it, then hit Send in Messages.</li>
-      </ol>
-      <p class="text-xs text-slate-500 mb-3">That locks the next 6 months on your calendar and texts them the amount + first visit.</p>
+      <p class="text-sm text-slate-400 mb-3">First wash and monthly are two different things. Do not put Monday on the monthly form if Monday is only the first job.</p>
+      <div class="bg-navy-900/70 rounded-lg p-3 mb-3">
+        <p class="text-xs font-bold text-gold-400 mb-1">Like Sanquinitt — first job Monday, monthly after that</p>
+        <ol class="text-sm text-slate-300 space-y-2 list-decimal pl-5">
+          <li><strong class="text-white">Now:</strong> Book Monday on Today / Calendar (Save on calendar). That is the first job. Collect Monday.</li>
+          <li><strong class="text-white">After you wash her:</strong> tap the green button. Choose <strong class="text-white">Next visit — I already washed them</strong>.</li>
+          <li>Set the date about 4 weeks after Monday. Type $50 (or whatever she pays). Send the text.</li>
+        </ol>
+      </div>
+      <p class="text-xs text-slate-500 mb-3">If they already got a wash and only need monthly, skip step 1 and go straight to the green button.</p>
       <button type="button" id="${buttonId}" class="w-full bg-green-500 text-navy-900 font-bold rounded-lg py-3 min-h-[44px]">They said yes — lock them in</button>
     </div>
   `;
