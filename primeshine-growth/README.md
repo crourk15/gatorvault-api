@@ -2,7 +2,11 @@
 
 Private operator page for Charles. **Not the customer website.** Do not publish this folder with `primeshine/`.
 
-Rooms: **Today** · **30-day plan** · **Calendar** · **Client book** · **Books**.
+Rooms: **Today** · **30-day plan** · **Calendar** · **Book** · **Books**.
+
+**Book desk:** save a phone call (so they do not disappear) or lock them on a day with Today / Tomorrow / +3 / +7. Calendar and Book both show the next 14 days — who is booked, what time, and the dollar amount.
+
+**Monthly:** after they agree, Enroll monthly → put their amount (it can differ per car) → Save + open text. That text confirms the monthly price and the first visit. It also drops the next 6 months on the calendar.
 
 Prices and the first-10 50% offer must match [primeshinefl.com/pricing](https://primeshinefl.com/pricing). After Collect, send the review text from the review screen.
 
