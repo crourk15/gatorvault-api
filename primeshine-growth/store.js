@@ -279,8 +279,17 @@ window.PrimeStore = {
     const job = jobs.find((j) => j.id === id);
     if (!job) return null;
     Object.assign(job, patch);
-    if (patch.phone || patch.name || patch.notes) {
-      const client = upsertClient({ name: patch.name || job.name, phone: patch.phone || job.phone, address: patch.notes || job.notes });
+    if (patch.phone != null || patch.name != null || patch.notes != null) {
+      if (job.clientId && os.clients.some((c) => c.id === job.clientId)) {
+        this.updateClient(job.clientId, {
+          name: job.name,
+          phone: job.phone,
+          notes: job.notes,
+          address: job.notes,
+        });
+        return job;
+      }
+      const client = upsertClient({ name: job.name, phone: job.phone, address: job.notes });
       if (client) job.clientId = client.id;
     }
     emit();
