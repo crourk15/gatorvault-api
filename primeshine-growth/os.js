@@ -38,6 +38,25 @@ function monthlyScript(name) {
   return monthlyPitchScript(name);
 }
 
+function monthlyHowToHtml(buttonId) {
+  return `
+    <div class="glass-card p-4 mb-4 border border-green-500/30">
+      <p class="text-xs uppercase tracking-widest text-green-400 font-bold mb-1">Monthly plan</p>
+      <h3 class="font-bold text-white mb-1">How to put someone on monthly</h3>
+      <p class="text-sm text-slate-400 mb-3">This is not a website package. You quote a monthly dollar amount after they say yes. Each car can be different.</p>
+      <ol class="text-sm text-slate-300 space-y-2 mb-4 list-decimal pl-5">
+        <li>They say <strong class="text-white">yes</strong> — in the driveway or by text.</li>
+        <li>Tap the green button below.</li>
+        <li>Type <strong class="text-white">what they pay each month</strong> (whatever you quoted — $50, $80, $120).</li>
+        <li>Pick the <strong class="text-white">first wash day</strong>.</li>
+        <li>Tap <strong class="text-white">Lock plan + send text</strong>. Read it, then hit Send in Messages.</li>
+      </ol>
+      <p class="text-xs text-slate-500 mb-3">That locks the next 6 months on your calendar and texts them the amount + first visit.</p>
+      <button type="button" id="${buttonId}" class="w-full bg-green-500 text-navy-900 font-bold rounded-lg py-3 min-h-[44px]">They said yes — lock them in</button>
+    </div>
+  `;
+}
+
 function bookingFormHtml(prefix, title, hint) {
   const serviceOptions = window.PrimeMenu ? PrimeMenu.optionsHtml('full|suv') : '';
   return `
@@ -372,6 +391,8 @@ function renderToday() {
       ${bookingFormHtml('today', 'Someone called — book them', 'Today / Tomorrow / +3 / +7. If they have not picked a day, save as a call so you do not lose them.')}
     </div>
 
+    ${monthlyHowToHtml('today-enroll')}
+
     ${window.PrimeMenu ? PrimeMenu.cardHtml() : ''}
 
     <div class="glass-card p-4 mb-4">
@@ -428,6 +449,7 @@ function renderToday() {
     PrimeStore.persist();
   });
   bindBookingForm('today', 0);
+  document.getElementById('today-enroll')?.addEventListener('click', () => openMonthly());
   root.querySelectorAll('[data-book-lead]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const lead = PrimeStore.os.leads.find((l) => l.id === btn.getAttribute('data-book-lead'));
@@ -522,16 +544,13 @@ function renderBook() {
         </button>`).join('')}
     </div>
 
-    <div class="glass-card p-4 mb-4">
-      <div class="flex justify-between items-center mb-2">
-        <h3 class="font-bold text-white">Monthly maintenance</h3>
-        <button type="button" id="desk-enroll" class="text-xs font-bold bg-green-500/20 text-green-400 px-3 py-2 rounded-lg">Enroll someone</button>
-      </div>
-      <p class="text-xs text-slate-400 mb-3">After they agree, put their monthly amount and send the text. Price can be different for each car.</p>
-      ${monthly.length ? monthly.map((c) => `
-        <p class="text-sm text-white py-1">${esc(c.name)} · $${c.monthly.price}/mo · next ${esc(c.monthly.nextDate || c.monthly.startDate || '')}</p>
-      `).join('') : '<p class="text-sm text-slate-500">Nobody enrolled yet.</p>'}
-    </div>
+    ${monthlyHowToHtml('desk-enroll')}
+    ${monthly.length ? `<div class="glass-card p-4 mb-4">
+      <h3 class="font-bold text-white mb-2">On monthly now</h3>
+      ${monthly.map((c) => `
+        <p class="text-sm text-white py-1">${esc(c.name)} · $${c.monthly.price}/mo · first visit ${esc(c.monthly.nextDate || c.monthly.startDate || '')}</p>
+      `).join('')}
+    </div>` : ''}
 
     <div class="glass-card p-4 mb-4">
       <h3 class="font-bold text-white mb-1">People you have detailed</h3>
