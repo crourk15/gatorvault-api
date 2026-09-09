@@ -177,6 +177,7 @@ function bindBookingForm(prefix, defaultDays) {
   });
   document.getElementById(`${prefix}-save-call`)?.addEventListener('click', () => {
     const fields = readBookingFields(prefix);
+    console.log('[save-call] Fields:', fields);
     if (!fields.name && !fields.phone) {
       showBookMsg(prefix, 'Save a name or a phone so this call does not disappear.', false);
       return;
@@ -186,7 +187,7 @@ function bindBookingForm(prefix, defaultDays) {
       text: `Saved ${fields.name || fields.phone} as a call. Book them when they pick a day.`,
       ok: true,
     };
-    PrimeStore.addLead({
+    const lead = PrimeStore.addLead({
       name: fields.name || 'Phone lead',
       phone: fields.phone,
       source: 'phone',
@@ -194,6 +195,16 @@ function bindBookingForm(prefix, defaultDays) {
       notes: fields.notes,
       status: 'lead',
     });
+    console.log('[save-call] Lead added:', lead);
+    console.log('[save-call] openLeads count:', PrimeStore.openLeads().length);
+    if (prefix === 'today' && typeof renderToday === 'function') {
+      console.log('[save-call] Re-rendering Today view');
+      renderToday();
+    }
+    if (prefix === 'book' && typeof renderBook === 'function') {
+      console.log('[save-call] Re-rendering Book view');
+      renderBook();
+    }
   });
   if (window._bookFlash && window._bookFlash.prefix === prefix) {
     const flash = window._bookFlash;
