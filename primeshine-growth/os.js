@@ -54,9 +54,11 @@ function setMonthlyVisitKind(kind) {
   const overlay = document.getElementById('monthly-overlay');
   const next = kind === 'next' ? 'next' : 'first';
   if (overlay) overlay.dataset.visitKind = next;
-  document.querySelectorAll('#monthly-visit-kind [data-visit-kind]').forEach((row) => {
-    const on = row.getAttribute('data-visit-kind') === next;
-    row.classList.toggle('on', on);
+  ['first', 'next'].forEach((id) => {
+    const row = document.getElementById(`visit-kind-${id}`);
+    if (!row) return;
+    const on = id === next;
+    row.className = on ? 'choice-row on' : 'choice-row';
     const radio = row.querySelector('input[type="radio"]');
     if (radio) radio.checked = on;
   });
@@ -1073,14 +1075,13 @@ function bindOsChrome() {
       syncMonthlyPreview();
     });
   });
-  document.getElementById('monthly-overlay')?.addEventListener('click', (e) => {
-    const row = e.target.closest('#monthly-visit-kind [data-visit-kind]');
-    if (!row) return;
+  document.getElementById('visit-kind-first')?.addEventListener('click', (e) => {
     e.preventDefault();
-    setMonthlyVisitKind(row.getAttribute('data-visit-kind'));
+    setMonthlyVisitKind('first');
   });
-  document.querySelectorAll('input[name="monthly-visit-kind"]').forEach((input) => {
-    input.addEventListener('change', () => setMonthlyVisitKind(input.value));
+  document.getElementById('visit-kind-next')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    setMonthlyVisitKind('next');
   });
   document.getElementById('monthly-cancel')?.addEventListener('click', closeMonthly);
   document.getElementById('monthly-save')?.addEventListener('click', () => {

@@ -81,7 +81,7 @@
     .date-chip { flex: 1; min-width: 64px; text-align: center; font-size: 11px; font-weight: 800; border-radius: 10px; padding: 10px 8px; min-height: 40px; border: 0; background: #334155; color: #f8fafc; cursor: pointer; }
     .date-chip.on { background: #0ea5e9; color: #0f172a; }
     .choice-row { display: flex; align-items: flex-start; gap: 12px; width: 100%; text-align: left; background: #1e293b; border: 2px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 14px 12px; min-height: 56px; color: #f8fafc; font-size: 14px; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: rgba(14,165,233,0.35); }
-    .choice-row input { width: 20px; height: 20px; min-width: 20px; margin-top: 2px; accent-color: #0ea5e9; pointer-events: none; }
+    .choice-row input { width: 22px; height: 22px; min-width: 22px; margin-top: 1px; accent-color: #0ea5e9; }
     .choice-row.on { border-color: #0ea5e9; background: rgba(14,165,233,0.16); color: #e0f2fe; }
     .modal-solid { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; }
     .agenda-day { border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 12px; background: rgba(30,41,59,0.7); text-align: left; width: 100%; }
@@ -528,11 +528,11 @@ QUOTE LINE
       <input id="monthly-price" type="number" min="0" step="1" placeholder="Type the number you quoted — 50, 80, 120…" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
       <p class="text-xs font-bold text-gold-400 mb-1">3. What is this date? Tap one</p>
       <div id="monthly-visit-kind" class="grid grid-cols-1 gap-2 mb-3">
-        <label class="choice-row" data-visit-kind="first">
+        <label id="visit-kind-first" class="choice-row" data-visit-kind="first">
           <input type="radio" name="monthly-visit-kind" value="first"/>
           <span>First appointment — I have not washed them yet</span>
         </label>
-        <label class="choice-row" data-visit-kind="next">
+        <label id="visit-kind-next" class="choice-row" data-visit-kind="next">
           <input type="radio" name="monthly-visit-kind" value="next"/>
           <span>Next visit — I already washed them</span>
         </label>
@@ -583,11 +583,11 @@ QUOTE LINE
   </footer>
 
   </div>
-  <script src="menu.js"></script>
-  <script src="plan-data.js"></script>
-  <script src="store.js"></script>
-  <script src="app.js"></script>
-  <script src="calendar.js"></script>
-  <script src="os.js"></script>
+  <script src="menu.js?v=os-monthly-4"></script>
+  <script src="plan-data.js?v=os-monthly-4"></script>
+  <script src="store.js?v=os-monthly-4"></script>
+  <script src="app.js?v=os-monthly-4"></script>
+  <script src="calendar.js?v=os-monthly-4"></script>
+  <script src="os.js?v=os-monthly-4"></script>
 </body>
 </html>
