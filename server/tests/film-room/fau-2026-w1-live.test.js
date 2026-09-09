@@ -20,7 +20,16 @@ describe('fau-2026-w1 stays off the fan rail until more film', () => {
     assert.match(blob, /Philo/);
     assert.match(blob, /Baugh/);
     assert.match(blob, /Coleman/);
+    assert.match(blob, /odd front/i);
+    assert.match(blob, /JACK/);
+    assert.match(blob, /Florida never punts/);
+    assert.match(blob, /areas of opportunity/i);
     assert.doesNotMatch(blob, /Lagway/i);
+    assert.doesNotMatch(blob, /11 personnel/i);
+    assert.doesNotMatch(blob, /four down/i);
+    assert.doesNotMatch(blob, /two-high/i);
+    assert.doesNotMatch(blob, /\bleak\b/i);
+    assert.doesNotMatch(blob, /GNFP|Patreon|Tengwall/i);
     const review = store.normalizeReview(raw);
     assert.ok(review);
     assert.equal(store.isLiveReview(review), false);
