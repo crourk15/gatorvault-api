@@ -211,6 +211,7 @@ function renderDayPanel() {
     label.textContent = pretty;
   }
   if (dateInput) dateInput.value = selectedIso;
+  syncCalDateChips(selectedIso);
   if (!list) return;
   const dayJobs = jobsOn(selectedIso);
   list.innerHTML = dayJobs.length
@@ -221,21 +222,61 @@ function renderDayPanel() {
   renderCalStats();
 }
 
-function renderLists() {
-  const up = document.getElementById('cal-upcoming');
-  const over = document.getElementById('cal-overdue');
-  if (up) {
-    const rows = upcomingJobs(21);
-    up.innerHTML = rows.length
-      ? rows.map((j) => `<li class="text-sm text-slate-300 py-1.5 border-b border-white/5"><span class="text-gold-400 font-semibold">${j.date.slice(5)}</span> · ${escapeHtml(j.name)} · ${escapeHtml(serviceLabel(j.service, j.vehicle))} · ${kindLabel(j.kind)}</li>`).join('')
-      : '<li class="text-sm text-slate-500">Nothing on the books in the next 3 weeks.</li>';
+function renderAgenda() {
+  const root = document.getElementById('cal-agenda');
+  if (!root) return;
+  const days = (window.PrimeStore && typeof PrimeStore.daysAgenda === 'function')
+    ? PrimeStore.daysAgenda(14)
+    : [];
+  if (!days.length) {
+    const rows = upcomingJobs(14);
+    root.innerHTML = rows.length
+      ? rows.map((j) => `<p class="text-sm text-slate-300">${escapeHtml(j.date)} · ${escapeHtml(j.name)} · $${Number(j.price) || 0}</p>`).join('')
+      : '<p class="text-sm text-slate-500">Nothing booked in the next 14 days.</p>';
+    return;
   }
+  root.innerHTML = days.map((day) => {
+    const people = day.jobs.length
+      ? day.jobs.map((j) => {
+        const done = j.done ? ' line-through opacity-60' : '';
+        return `<p class="text-sm text-white${done}">${escapeHtml(j.time || '')} ${escapeHtml(j.name)} · $${Number(j.price) || 0}${j.kind === 'monthly' ? ' · monthly' : ''}</p>`;
+      }).join('')
+      : '<p class="text-xs text-slate-500">Open</p>';
+    const cls = `agenda-day ${day.jobs.length ? '' : 'open'} ${day.isToday ? 'is-today' : ''} ${day.iso === selectedIso ? 'cal-day-selected' : ''}`;
+    return `<button type="button" class="${cls}" data-agenda-date="${day.iso}">
+      <p class="text-xs font-bold text-gold-400 mb-1">${escapeHtml(day.label)}${day.isToday ? ' · today' : ''}</p>
+      ${people}
+    </button>`;
+  }).join('');
+  root.querySelectorAll('[data-agenda-date]').forEach((btn) => {
+    btn.addEventListener('click', () => setJobDate(btn.getAttribute('data-agenda-date')));
+  });
+}
+
+function renderLists() {
+  renderAgenda();
+  const over = document.getElementById('cal-overdue');
   if (over) {
     const rows = overdueJobs();
     over.innerHTML = rows.length
       ? rows.map((j) => `<li class="text-sm text-red-300 py-1.5 border-b border-white/5">${j.date} · ${escapeHtml(j.name)} · ${kindLabel(j.kind)}</li>`).join('')
       : '<li class="text-sm text-slate-500">No overdue jobs.</li>';
   }
+}
+
+function syncCalDateChips(iso) {
+  const today = todayIso();
+  const map = {
+    'job-date-today': today,
+    'job-date-tomorrow': shiftIso(today, 1),
+    'job-date-plus3': shiftIso(today, 3),
+    'job-date-plus7': shiftIso(today, 7),
+  };
+  Object.keys(map).forEach((id) => {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    btn.classList.toggle('on', iso === map[id]);
+  });
 }
 
 function renderCalStats() {
@@ -449,6 +490,8 @@ function bindCalendar() {
   });
   document.getElementById('job-date-today')?.addEventListener('click', () => setJobDate(todayIso()));
   document.getElementById('job-date-tomorrow')?.addEventListener('click', () => setJobDate(shiftIso(todayIso(), 1)));
+  document.getElementById('job-date-plus3')?.addEventListener('click', () => setJobDate(shiftIso(todayIso(), 3)));
+  document.getElementById('job-date-plus7')?.addEventListener('click', () => setJobDate(shiftIso(todayIso(), 7)));
   document.getElementById('job-form')?.addEventListener('submit', addJobFromForm);
 }
 
@@ -464,6 +507,7 @@ function setJobDate(iso) {
   if (dateInput) dateInput.value = iso;
   const { y, m } = parseIso(iso);
   calCursor = new Date(y, m - 1, 1);
+  syncCalDateChips(iso);
   renderCalHeader();
   renderCalGrid();
   renderDayPanel();
@@ -490,6 +534,7 @@ function initCalendar() {
 window.renderCalGrid = renderCalGrid;
 window.renderCalHeader = renderCalHeader;
 window.renderDayPanel = renderDayPanel;
+window.renderCalAgenda = renderAgenda;
 Object.defineProperty(window, 'selectedIso', {
   get() { return selectedIso; },
   set(v) { selectedIso = v; },

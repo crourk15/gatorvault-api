@@ -78,6 +78,11 @@
     .checkbox-custom:checked::after { content: '✓'; color: white; font-size: 13px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
     input[type="number"] { -moz-appearance: textfield; }
+    .date-chip { flex: 1; min-width: 64px; text-align: center; font-size: 11px; font-weight: 800; border-radius: 10px; padding: 10px 8px; min-height: 40px; border: 0; background: #334155; color: #f8fafc; }
+    .date-chip.on { background: #0ea5e9; color: #0f172a; }
+    .agenda-day { border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 12px; background: rgba(30,41,59,0.7); text-align: left; width: 100%; }
+    .agenda-day.open { opacity: 0.72; }
+    .agenda-day.is-today { border-color: rgba(56,189,248,0.45); background: rgba(56,189,248,0.08); }
 
     .dock { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: rgba(15,23,42,0.96); border-top: 1px solid rgba(255,255,255,0.08); display: flex; }
     .dock button { flex: 1; padding: 10px 4px 14px; color: #94a3b8; font-size: 10px; font-weight: 700; background: none; border: 0; }
@@ -106,7 +111,7 @@
       <button type="button" data-room-btn="today" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Today</button>
       <button type="button" data-room-btn="plan" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">30-Day Plan</button>
       <button type="button" data-room-btn="calendar" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Calendar</button>
-      <button type="button" data-room-btn="book" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Client book</button>
+      <button type="button" data-room-btn="book" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Book</button>
       <button type="button" data-room-btn="money" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Books</button>
       <a href="https://primeshinefl.com" class="text-slate-400 text-lg py-3 px-4 rounded-lg hover:bg-navy-800">Public site</a>
     </div>
@@ -286,8 +291,8 @@ QUOTE LINE
     <section id="calendar-sec" class="glass-card p-4 md:p-6 mb-6">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
         <div>
-          <h2 class="text-lg md:text-xl font-bold text-white">Job calendar</h2>
-          <p class="text-sm text-slate-400">Book jobs at live website prices. They save on this phone.</p>
+          <h2 class="text-lg md:text-xl font-bold text-white">Who is booked</h2>
+          <p class="text-sm text-slate-400">Next 14 days first. Tap a day to see names, times, and dollars.</p>
         </div>
         <div class="flex gap-2">
           <button type="button" id="cal-prev" class="px-3 py-2 rounded-lg bg-navy-800 text-white min-h-[44px] min-w-[44px]" aria-label="Previous month">‹</button>
@@ -296,6 +301,11 @@ QUOTE LINE
         </div>
       </div>
       <p id="cal-month-label" class="text-gold-400 font-bold mb-3"></p>
+      <div class="mb-5">
+        <h3 class="text-sm font-bold text-white mb-1">Next 14 days</h3>
+        <p class="text-xs text-slate-500 mb-3">This is the list you check before you say yes on the phone.</p>
+        <div id="cal-agenda" class="space-y-2"></div>
+      </div>
       <div class="grid grid-cols-4 gap-2 mb-4">
         <div class="bg-navy-800/70 rounded-lg p-2 text-center"><div id="cal-stat-booked" class="text-lg font-black text-white">0</div><div class="text-[10px] text-slate-500">On the books</div></div>
         <div class="bg-navy-800/70 rounded-lg p-2 text-center"><div id="cal-stat-new" class="text-lg font-black text-gold-400">0</div><div class="text-[10px] text-slate-500">New clients</div></div>
@@ -314,12 +324,14 @@ QUOTE LINE
           <h3 class="text-sm font-bold text-white mb-2">Jobs on <span id="cal-day-label">today</span></h3>
           <div id="cal-day-jobs" class="space-y-2 mb-4"></div>
           <form id="job-form" class="space-y-2 bg-navy-800/50 rounded-lg p-3">
-            <p class="text-sm font-bold text-gold-400">Schedule a job</p>
+            <p class="text-sm font-bold text-gold-400">Book someone on this day</p>
             <input id="job-name" required placeholder="Client name" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
-            <input id="job-phone" type="tel" placeholder="Phone — needed for the review text" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
-            <div class="flex gap-2">
-              <button type="button" id="job-date-today" class="flex-1 text-xs font-bold bg-navy-700 text-white rounded-lg py-2 min-h-[40px]">Today</button>
-              <button type="button" id="job-date-tomorrow" class="flex-1 text-xs font-bold bg-sky-500 text-navy-900 rounded-lg py-2 min-h-[40px]">Tomorrow</button>
+            <input id="job-phone" type="tel" placeholder="Phone — needed for texts" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="job-date-today" class="date-chip">Today</button>
+              <button type="button" id="job-date-tomorrow" class="date-chip on">Tomorrow</button>
+              <button type="button" id="job-date-plus3" class="date-chip">+3 days</button>
+              <button type="button" id="job-date-plus7" class="date-chip">+7 days</button>
             </div>
             <div class="grid grid-cols-2 gap-2">
               <input id="job-date" type="date" required class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
@@ -338,11 +350,9 @@ QUOTE LINE
           </form>
         </div>
         <div>
-          <h3 class="text-sm font-bold text-white mb-2">Coming up (21 days)</h3>
-          <ul id="cal-upcoming" class="mb-4"></ul>
           <h3 class="text-sm font-bold text-white mb-2">Overdue</h3>
           <ul id="cal-overdue"></ul>
-          <p class="text-xs text-slate-500 mt-4">After you save, the job shows on that day. Same phone / same bookmark keeps the list.</p>
+          <p class="text-xs text-slate-500 mt-4">The 14-day list at the top is the source of truth. Same phone / same bookmark keeps it.</p>
         </div>
       </div>
     </section>
@@ -400,12 +410,7 @@ QUOTE LINE
     </section>
 
     <section id="room-book" class="hidden" data-room="book">
-      <div class="glass-card p-4 md:p-6 mb-4">
-        <h2 class="text-xl font-black text-white mb-1">Client book</h2>
-        <p class="text-sm text-slate-400 mb-3">Every person you have detailed. Call them, send the review text, or pitch a monthly wash.</p>
-        <input id="book-search" placeholder="Search name or phone" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-3 text-white min-h-[44px] mb-4"/>
-        <div id="book-root"></div>
-      </div>
+      <div id="book-desk"></div>
     </section>
 
     <section id="room-money" class="hidden" data-room="money">
@@ -424,6 +429,7 @@ QUOTE LINE
           <input id="lead-name" placeholder="Name" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px]"/>
           <input id="lead-phone" type="tel" placeholder="Phone" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px]"/>
           <select id="lead-source" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px]">
+            <option value="phone">Phone call</option>
             <option value="google">Google</option>
             <option value="facebook">Facebook</option>
             <option value="flyer">Flyer</option>
@@ -498,6 +504,36 @@ QUOTE LINE
         <button type="button" id="review-copy" class="w-full bg-navy-700 text-white font-semibold rounded-lg py-3">Copy text</button>
         <button type="button" id="review-got" class="w-full bg-green-500/20 text-green-400 font-semibold rounded-lg py-3">They already left a review</button>
         <button type="button" id="review-cancel" class="w-full text-slate-400 py-2">Not yet</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="monthly-overlay" class="hidden fixed inset-0 bg-black/70 z-[73] flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm p-5 max-h-[92vh] overflow-y-auto">
+      <h3 class="text-white font-bold text-lg mb-1">Enroll monthly</h3>
+      <p class="text-sm text-slate-400 mb-3">They agreed. Put their monthly amount, lock the first visit, then send the text.</p>
+      <label class="text-xs text-slate-400">Name</label>
+      <input id="monthly-name" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+      <label class="text-xs text-slate-400">Phone</label>
+      <input id="monthly-phone" type="tel" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+      <label class="text-xs text-slate-400">Monthly amount they pay</label>
+      <input id="monthly-price" type="number" min="0" step="1" placeholder="e.g. 55 or 80" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+      <label class="text-xs text-slate-400">First visit</label>
+      <div class="flex flex-wrap gap-2 mb-2">
+        <button type="button" class="date-chip monthly-chip" data-days="0">Today</button>
+        <button type="button" class="date-chip monthly-chip on" data-days="7">+7 days</button>
+        <button type="button" class="date-chip monthly-chip" data-days="14">+14 days</button>
+      </div>
+      <input id="monthly-date" type="date" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+      <input id="monthly-time" type="time" value="09:00" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+      <input id="monthly-notes" placeholder="Address / notes (optional)" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+      <label class="text-xs text-slate-400">Text they will get</label>
+      <textarea id="monthly-preview" rows="5" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm mb-2"></textarea>
+      <p id="monthly-warn" class="text-xs text-slate-500 mb-3">Saves them on the calendar for 6 months, then opens Messages. You tap Send.</p>
+      <div class="flex flex-col gap-2">
+        <button type="button" id="monthly-sms" class="w-full bg-sky-500 text-navy-900 font-bold rounded-lg py-3">Save + open text</button>
+        <button type="button" id="monthly-save" class="w-full bg-gold-500 text-navy-900 font-bold rounded-lg py-3">Save only</button>
+        <button type="button" id="monthly-cancel" class="w-full text-slate-400 py-2">Cancel</button>
       </div>
     </div>
   </div>

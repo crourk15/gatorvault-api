@@ -34,6 +34,34 @@ function addMonthsIso(iso, count) {
   return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }
 
+function todayIso() {
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`;
+}
+
+function shiftIso(iso, days) {
+  const [y, m, d] = String(iso || '').split('-').map(Number);
+  if (!y || !m || !d) return iso;
+  const dt = new Date(y, m - 1, d + Number(days || 0));
+  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+}
+
+function prettyDate(iso) {
+  const [y, m, d] = String(iso || '').split('-').map(Number);
+  if (!y || !m || !d) return iso || '';
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+}
+
+function prettyShort(iso) {
+  const [y, m, d] = String(iso || '').split('-').map(Number);
+  if (!y || !m || !d) return iso || '';
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function digits(phone) {
+  return String(phone || '').replace(/\D/g, '');
+}
+
 function normalizeJob(job) {
   return {
     paid: false,
@@ -45,6 +73,7 @@ function normalizeJob(job) {
     clientId: null,
     source: '',
     vehicle: 'suv',
+    asked: '',
     ...job,
   };
 }
@@ -137,7 +166,7 @@ function upsertClient({ name, phone, address, source }) {
     return cleanName && c.name.toLowerCase() === cleanName.toLowerCase();
   });
   if (!client) {
-    client = { id: osId('cli'), name: cleanName || 'Client', phone: phone || '', address: address || '', source: source || '', notes: '', createdAt: new Date().toISOString() };
+    client = { id: osId('cli'), name: cleanName || 'Client', phone: phone || '', address: address || '', source: source || '', notes: '', monthly: null, createdAt: new Date().toISOString() };
     os.clients.push(client);
   } else {
     if (cleanName) client.name = cleanName;
@@ -172,6 +201,17 @@ function csvEscape(value) {
 
 function toCsv(rows) {
   return rows.map((r) => r.map(csvEscape).join(',')).join('\n');
+}
+
+function markLeadBookedByPhone(phone, jobId) {
+  const p = digits(phone);
+  if (!p) return;
+  os.leads.forEach((lead) => {
+    if (lead.status !== 'lead' && lead.status !== 'open') return;
+    if (digits(lead.phone) !== p) return;
+    lead.status = 'booked';
+    lead.bookedJobId = jobId;
+  });
 }
 
 window.PrimeStore = {
@@ -231,6 +271,7 @@ window.PrimeStore = {
       row.clientId = client ? client.id : null;
       jobs.push(row);
     });
+    if (job.phone) markLeadBookedByPhone(job.phone, created[0].id);
     emit();
     return created;
   },
@@ -252,9 +293,80 @@ window.PrimeStore = {
   expenseTotal,
   hashPin,
   weekBounds,
-  todayIso() {
-    const n = new Date();
-    return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`;
+  todayIso,
+  shiftIso,
+  prettyDate,
+  prettyShort,
+  upcomingJobs(days) {
+    const start = todayIso();
+    const end = shiftIso(start, Number(days || 14));
+    return jobs
+      .filter((j) => !j.done && j.date >= start && j.date <= end)
+      .sort((a, b) => a.date.localeCompare(b.date) || (a.time || '').localeCompare(b.time || ''));
+  },
+  jobsOn(iso) {
+    return jobs
+      .filter((j) => j.date === iso)
+      .sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+  },
+  daysAgenda(days) {
+    const start = todayIso();
+    const out = [];
+    for (let i = 0; i < Number(days || 14); i += 1) {
+      const iso = shiftIso(start, i);
+      out.push({
+        iso,
+        label: prettyShort(iso),
+        longLabel: prettyDate(iso),
+        isToday: i === 0,
+        jobs: this.jobsOn(iso),
+      });
+    }
+    return out;
+  },
+  openLeads() {
+    return os.leads
+      .filter((l) => l.status === 'lead' || l.status === 'open')
+      .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+  },
+  enrollMonthly(input) {
+    const name = String(input.name || '').trim();
+    const phone = String(input.phone || '').trim();
+    const price = Number(input.price) || 0;
+    const startDate = input.startDate || todayIso();
+    const time = input.time || '09:00';
+    const notes = String(input.notes || '').trim();
+    const service = input.service || 'monthly';
+    const vehicle = input.vehicle || 'suv';
+    if (!name) return null;
+    const client = upsertClient({ name, phone, source: 'monthly' });
+    if (client) {
+      client.monthly = {
+        active: true,
+        price,
+        startDate,
+        nextDate: startDate,
+        time,
+        notes,
+        enrolledAt: new Date().toISOString(),
+      };
+    }
+    const created = this.addJob({
+      name,
+      phone,
+      date: startDate,
+      time,
+      price,
+      kind: 'monthly',
+      service,
+      vehicle,
+      notes: notes ? `${notes} · monthly $${price}/mo` : `monthly $${price}/mo`,
+      source: 'monthly',
+    });
+    return { client, jobs: created };
+  },
+  monthlyClients() {
+    return os.clients.filter((c) => c.monthly && c.monthly.active);
   },
   addExpense(expense) {
     os.expenses.push({ id: osId('exp'), date: this.todayIso(), category: 'other', amount: 0, notes: '', ...expense });
@@ -265,9 +377,21 @@ window.PrimeStore = {
     emit();
   },
   addLead(lead) {
-    os.leads.push({ id: osId('lead'), name: '', phone: '', source: 'other', status: 'lead', notes: '', createdAt: new Date().toISOString(), ...lead });
+    const row = {
+      id: osId('lead'),
+      name: '',
+      phone: '',
+      source: 'phone',
+      status: 'lead',
+      notes: '',
+      asked: '',
+      createdAt: new Date().toISOString(),
+      ...lead,
+    };
+    os.leads.push(row);
+    if (row.name || row.phone) upsertClient({ name: row.name, phone: row.phone, source: row.source || 'phone' });
     emit();
-    return os.leads[os.leads.length - 1];
+    return row;
   },
   updateLead(id, patch) {
     const lead = os.leads.find((l) => l.id === id);
@@ -298,7 +422,7 @@ window.PrimeStore = {
   pipeline() {
     const today = this.todayIso();
     return {
-      leads: os.leads.filter((l) => l.status === 'lead'),
+      leads: os.leads.filter((l) => l.status === 'lead' || l.status === 'open'),
       booked: jobs.filter((j) => !j.done && j.date >= today),
       overdue: jobs.filter((j) => !j.done && j.date < today),
       unpaid: jobs.filter((j) => j.done && !j.paid),
@@ -334,8 +458,16 @@ window.PrimeStore = {
   exportCsv() {
     const jobRows = [['Date', 'Name', 'Phone', 'Service', 'Kind', 'Price', 'Done', 'Paid', 'Paid amount', 'Method', 'Review']];
     jobs.forEach((j) => jobRows.push([j.date, j.name, j.phone, j.service, j.kind, j.price, j.done, j.paid, j.paidAmount || '', j.paidMethod || '', j.reviewReceived]));
-    const clientRows = [['Name', 'Phone', 'Address', 'Source', 'Notes']];
-    os.clients.forEach((c) => clientRows.push([c.name, c.phone, c.address || '', c.source || '', c.notes || '']));
+    const clientRows = [['Name', 'Phone', 'Address', 'Source', 'Notes', 'Monthly', 'Monthly $']];
+    os.clients.forEach((c) => clientRows.push([
+      c.name,
+      c.phone,
+      c.address || '',
+      c.source || '',
+      c.notes || '',
+      c.monthly && c.monthly.active ? 'yes' : '',
+      c.monthly && c.monthly.active ? c.monthly.price : '',
+    ]));
     const moneyRows = [['Type', 'Date', 'Label', 'Amount', 'Notes']];
     jobs.filter((j) => j.paid).forEach((j) => moneyRows.push(['income', j.date, j.name, j.paidAmount || j.price, j.paidMethod]));
     os.expenses.forEach((e) => moneyRows.push(['expense', e.date, e.category, e.amount, e.notes]));
