@@ -278,6 +278,7 @@ function jobActionButtons(j) {
   if (j.done && !j.paid) bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900 min-h-[40px]" data-collect="${j.id}">Collect</button>`);
   if (j.done && !j.reviewReceived) bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-sky-500 text-navy-900 min-h-[40px]" data-review="${j.id}">Send review text</button>`);
   if (j.reviewAsked && !j.reviewReceived) bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-green-500/20 text-green-400 min-h-[40px]" data-got-review="${j.id}">They left a review</button>`);
+  bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-green-500 text-navy-900 min-h-[40px]" data-enroll-name="${esc(j.name)}" data-enroll-phone="${esc(j.phone || '')}">Put on monthly</button>`);
   return bits.join('');
 }
 
@@ -320,11 +321,15 @@ function renderToday() {
       </div>
       <div class="w-full bg-navy-800 rounded-full h-2 mb-2 overflow-hidden"><div class="h-2 bg-gradient-to-r from-gold-600 to-gold-400" style="width:${pace}%"></div></div>
       <p class="text-xs text-slate-500 mb-4">${pace}% of $3,000 from paid jobs — not a guess.</p>
-      <div class="tipbox p-3 rounded-lg">
+      <div class="tipbox p-3 rounded-lg mb-3">
         <p class="text-xs font-bold text-gold-400 mb-1">Do this next</p>
         <p class="text-sm text-white">${esc(move)}</p>
       </div>
+      <button type="button" id="today-enroll-top" class="w-full bg-green-500 text-navy-900 font-bold rounded-lg py-3 min-h-[44px]">Put someone on monthly</button>
+      <p class="text-[11px] text-slate-500 mt-2 text-center">Not the Plan tab. Plan is the 30-day checklist.</p>
     </div>
+
+    ${monthlyHowToHtml('today-enroll')}
 
     ${!reviewUrl ? `<div class="glass-card p-4 mb-4 border border-gold-500/30">
       <h3 class="font-bold text-white mb-1">Paste your Google review link once</h3>
@@ -391,8 +396,6 @@ function renderToday() {
       ${bookingFormHtml('today', 'Someone called — book them', 'Today / Tomorrow / +3 / +7. If they have not picked a day, save as a call so you do not lose them.')}
     </div>
 
-    ${monthlyHowToHtml('today-enroll')}
-
     ${window.PrimeMenu ? PrimeMenu.cardHtml() : ''}
 
     <div class="glass-card p-4 mb-4">
@@ -450,6 +453,13 @@ function renderToday() {
   });
   bindBookingForm('today', 0);
   document.getElementById('today-enroll')?.addEventListener('click', () => openMonthly());
+  document.getElementById('today-enroll-top')?.addEventListener('click', () => openMonthly());
+  root.querySelectorAll('[data-enroll-name]').forEach((btn) => {
+    btn.addEventListener('click', () => openMonthly({
+      name: btn.getAttribute('data-enroll-name') || '',
+      phone: btn.getAttribute('data-enroll-phone') || '',
+    }));
+  });
   root.querySelectorAll('[data-book-lead]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const lead = PrimeStore.os.leads.find((l) => l.id === btn.getAttribute('data-book-lead'));
@@ -851,6 +861,9 @@ function refreshOs() {
 function bindOsChrome() {
   document.querySelectorAll('[data-room-btn]').forEach((btn) => {
     btn.addEventListener('click', () => showRoom(btn.getAttribute('data-room-btn')));
+  });
+  ['nav-monthly', 'menu-monthly', 'dock-monthly'].forEach((id) => {
+    document.getElementById(id)?.addEventListener('click', () => openMonthly());
   });
   document.getElementById('collect-cancel')?.addEventListener('click', closeCollect);
   document.getElementById('collect-save')?.addEventListener('click', () => {

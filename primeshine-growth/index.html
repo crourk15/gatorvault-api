@@ -109,7 +109,8 @@
     </div>
     <div class="flex flex-col gap-4">
       <button type="button" data-room-btn="today" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Today</button>
-      <button type="button" data-room-btn="plan" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">30-Day Plan</button>
+      <button type="button" data-room-btn="plan" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">30-day checklist</button>
+      <button type="button" id="menu-monthly" class="text-left text-green-400 text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Monthly plan</button>
       <button type="button" data-room-btn="calendar" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Calendar</button>
       <button type="button" data-room-btn="book" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Book</button>
       <button type="button" data-room-btn="money" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Books</button>
@@ -125,7 +126,8 @@
       </div>
       <div class="hidden md:flex items-center gap-4">
         <button type="button" data-room-btn="today" class="text-sm text-slate-300 hover:text-gold-400">Today</button>
-        <button type="button" data-room-btn="plan" class="text-sm text-slate-300 hover:text-gold-400">Plan</button>
+        <button type="button" data-room-btn="plan" class="text-sm text-slate-300 hover:text-gold-400">30-day</button>
+        <button type="button" id="nav-monthly" class="text-sm text-green-400 hover:text-green-300 font-semibold">Monthly</button>
         <button type="button" data-room-btn="calendar" class="text-sm text-slate-300 hover:text-gold-400">Calendar</button>
         <button type="button" data-room-btn="book" class="text-sm text-slate-300 hover:text-gold-400">Book</button>
         <button type="button" data-room-btn="money" class="text-sm text-slate-300 hover:text-gold-400">Books</button>
@@ -462,7 +464,8 @@ QUOTE LINE
 
   <nav id="dock" class="dock" aria-label="Owner rooms">
     <button type="button" data-room-btn="today" class="dock-active">Today</button>
-    <button type="button" data-room-btn="plan">Plan</button>
+    <button type="button" data-room-btn="plan">30-day</button>
+    <button type="button" id="dock-monthly">Monthly</button>
     <button type="button" data-room-btn="calendar">Calendar</button>
     <button type="button" data-room-btn="book">Book</button>
     <button type="button" data-room-btn="money">Books</button>
