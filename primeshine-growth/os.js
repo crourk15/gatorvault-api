@@ -177,7 +177,6 @@ function bindBookingForm(prefix, defaultDays) {
   });
   document.getElementById(`${prefix}-save-call`)?.addEventListener('click', () => {
     const fields = readBookingFields(prefix);
-    console.log('[save-call] Fields:', fields);
     if (!fields.name && !fields.phone) {
       showBookMsg(prefix, 'Save a name or a phone so this call does not disappear.', false);
       return;
@@ -187,7 +186,7 @@ function bindBookingForm(prefix, defaultDays) {
       text: `Saved ${fields.name || fields.phone} as a call. Book them when they pick a day.`,
       ok: true,
     };
-    const lead = PrimeStore.addLead({
+    PrimeStore.addLead({
       name: fields.name || 'Phone lead',
       phone: fields.phone,
       source: 'phone',
@@ -195,16 +194,6 @@ function bindBookingForm(prefix, defaultDays) {
       notes: fields.notes,
       status: 'lead',
     });
-    console.log('[save-call] Lead added:', lead);
-    console.log('[save-call] openLeads count:', PrimeStore.openLeads().length);
-    if (prefix === 'today' && typeof renderToday === 'function') {
-      console.log('[save-call] Re-rendering Today view');
-      renderToday();
-    }
-    if (prefix === 'book' && typeof renderBook === 'function') {
-      console.log('[save-call] Re-rendering Book view');
-      renderBook();
-    }
   });
   if (window._bookFlash && window._bookFlash.prefix === prefix) {
     const flash = window._bookFlash;
@@ -298,7 +287,7 @@ function renderToday() {
   const move = moneyMove();
   const reviewUrl = (PrimeStore.os.settings.reviewUrl || '').trim();
   const openCalls = PrimeStore.openLeads();
-  const weekAhead = PrimeStore.daysAgenda(7);
+  const weekAhead = PrimeStore.daysAgenda(8);
 
   root.innerHTML = `
     <div class="glass-card gold-glow p-4 md:p-6 mb-4">
@@ -342,7 +331,7 @@ function renderToday() {
 
     <div class="glass-card p-4 mb-4">
       <div class="flex justify-between items-center mb-3">
-        <h3 class="font-bold text-white">Next 7 days</h3>
+        <h3 class="font-bold text-white">This week + next</h3>
         <button type="button" class="text-xs text-sky-400 font-semibold" data-goto="calendar">Full calendar</button>
       </div>
       ${weekAhead.map((day) => `
@@ -375,7 +364,7 @@ function renderToday() {
           <p class="text-white font-semibold">${esc(j.time || '')} ${esc(j.name)} · $${j.price}</p>
           <p class="text-xs text-slate-500 mb-2">${jobStatus(j)}${j.phone ? '' : ' · add a phone to text them'}</p>
           <div class="flex flex-wrap gap-2">${jobActionButtons(j)}</div>
-        </div>`).join('') : '<p class="text-sm text-slate-500">No jobs on today yet. Schedule one below — Tomorrow is a button, not a guess.</p>'}
+        </div>`).join('') : '<p class="text-sm text-slate-500">No jobs on today yet. Use the form below — Today, Tomorrow, +3, or +7.</p>'}
       ${unpaid.length ? `<p class="text-xs text-red-300 mt-3">${unpaid.length} job(s) finished and not collected.</p>` : ''}
     </div>
 
@@ -474,7 +463,7 @@ function renderBook() {
   const all = [...clients, ...fromJobs.filter((g) => !q || g.name.toLowerCase().includes(q))];
   const peopleHtml = all.length ? all.map((c) => {
     const hist = PrimeStore.clientJobs(c.ghost ? null : c.id, c.name, c.phone);
-    const next = hist.find((j) => !j.done && j.date >= PrimeStore.todayIso());
+    const next = hist.filter((j) => !j.done && j.date >= PrimeStore.todayIso()).sort((a, b) => a.date.localeCompare(b.date))[0];
     const last = hist.find((j) => j.done);
     const plan = c.monthly && c.monthly.active ? ` · monthly $${c.monthly.price}` : '';
     return `<article class="glass-card-light p-4 mb-3">
@@ -560,7 +549,7 @@ function renderBook() {
     const filtered = all.filter((c) => !query || c.name.toLowerCase().includes(query) || (c.phone || '').includes(query));
     box.innerHTML = filtered.length ? filtered.map((c) => {
       const hist = PrimeStore.clientJobs(c.ghost ? null : c.id, c.name, c.phone);
-      const next = hist.find((j) => !j.done && j.date >= PrimeStore.todayIso());
+      const next = hist.filter((j) => !j.done && j.date >= PrimeStore.todayIso()).sort((a, b) => a.date.localeCompare(b.date))[0];
       const last = hist.find((j) => j.done);
       const plan = c.monthly && c.monthly.active ? ` · monthly $${c.monthly.price}` : '';
       return `<article class="glass-card-light p-4 mb-3">
