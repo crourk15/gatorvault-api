@@ -26,15 +26,24 @@
   }
 
   /**
-   * @param {'desk'|'command'} variant
+   * @param {'desk'|'command'|'film'} variant
    * @param {{ onNavigate?: Function }} [opts]
    */
   function html(variant, opts) {
     opts = opts || {};
     var collapsed = isCollapsed();
     var deskFocus = variant === 'desk';
+    var filmFocus = variant === 'film';
 
-    var todaySteps = deskFocus
+    var todaySteps = filmFocus
+      ? [
+          'Open <strong>FAU</strong> (locked) or the next game on the list.',
+          'Read <strong>What they ran</strong> / <strong>How it played</strong> — that lock is the brief.',
+          'Open writer tape (GNFP, Tengwall) as a <strong>seed</strong> — steal a fact, never name them in the Review.',
+          'Press <strong>Copy Brief</strong>, paste into Cursor, draft the Review from the lock + snaps you sat.',
+          'Do <strong>not</strong> publish live Review until you say go. Fan rail stays empty.'
+        ]
+      : deskFocus
       ? [
           'Look at today’s beats in the list below.',
           'Press <strong>Open</strong> on the one you want to post about.',
@@ -49,7 +58,14 @@
           'Ignore <strong>Legacy consoles</strong> unless support or content asks for them.'
         ];
 
-    var buttons = deskFocus
+    var buttons = filmFocus
+      ? [
+          ['Open', 'Builds the game packet (Charles lock + writer intel seed + tape links).'],
+          ['Copy Brief', 'Puts the Film Desk packet on your clipboard for Cursor — lock first, writers as seed only.'],
+          ['Writer seed', 'GNFP / Tengwall / DiRocco claims to absorb. Never dump their wording onto the Review.'],
+          ['Refresh', 'Reloads the 2026 game list + catalog matches.']
+        ]
+      : deskFocus
       ? [
           ['Open', 'Builds the full player packet (research + board + draft angle).'],
           ['Copy Brief', 'Puts the packet on your clipboard for Cursor / Copilot — HEADER + film + projection/comp are always required in the draft.'],
@@ -67,7 +83,16 @@
           ['Members', 'Who signed up recently (trial / paid / expired), plus Activity (last-seen and pages).']
         ];
 
-    var ifRedYellow = deskFocus
+    var ifRedYellow = filmFocus
+      ? [
+          ['<span class="hub-nc-dot hub-nc-dot--green"></span><strong>CHARLES LOCKED</strong>',
+           'The card is the brief. Do not invent past What they ran / How it played / Do not say.'],
+          ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>UNLOCKED / PREGAME</strong>',
+           'Sit the tape first. Empty locks mean do not draft a live Review.'],
+          ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Writer contradicts the lock</strong>',
+           'Your tape wins. Steal a fact if it matches the sit. Never paste GNFP/Patreon wording.']
+        ]
+      : deskFocus
       ? [
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>STALE</strong> (red/yellow on a beat row)',
            'That beat is older than 24 hours — not broken. You can still press <strong>Open</strong> for a catch-up post. Prefer a LIVE row when you have one.'],
@@ -135,7 +160,7 @@
       + '<div class="hub-notecards__head">'
       + '<div>'
       + '<p class="hub-notecards__eyebrow">Operator notecards</p>'
-      + '<h3 class="hub-notecards__title">' + (deskFocus ? 'Your daily posting playbook' : 'How to run this hub') + '</h3>'
+      + '<h3 class="hub-notecards__title">' + (filmFocus ? 'Your weekly film playbook' : deskFocus ? 'Your daily posting playbook' : 'How to run this hub') + '</h3>'
       + '<p class="hub-notecards__sub">Plain English. Do the numbered steps. If something is red or yellow, use the card below — don’t guess.</p>'
       + '</div>'
       + '<button type="button" class="hub-btn secondary" id="hub-nc-toggle" aria-expanded="' + (collapsed ? 'false' : 'true') + '">'

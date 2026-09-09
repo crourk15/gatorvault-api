@@ -16,6 +16,7 @@ const memberAnnounce = require('./member-announce-email');
 
 const MODULE_IDS = [
   'beat-desk',
+  'film-desk',
   'dashboard',
   'members',
   'futurecast',
@@ -231,6 +232,7 @@ function buildModuleHealthMap({ ops, qa, productIntel, selfRunner, feedbackOpen,
   }
   // Daily desks: stop Film Room / wake-lag from painting BD + FC red together.
   map['beat-desk'] = beatDeskModuleHealth(ops);
+  map['film-desk'] = beatDeskModuleHealth(ops);
   map.futurecast = futurecastModuleHealth(ops);
 
   const identity = tileById(ops, 'identity-patterns');
@@ -1311,6 +1313,30 @@ function mountAdminHubRoutes(app) {
       }
       const results = slugs.map((slug) => ({ slug, ...stampStore.deleteStamp(slug) }));
       return res.status(200).json({ ok: true, results });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Film Desk — weekly game packet (Charles lock + writer intel seed). */
+  app.get('/api/admin/hub/film-desk/inbox', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const desk = require('./film-desk-packet');
+      return res.status(200).json(desk.buildInbox({ year: Number(req.query.year) || 2026 }));
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/admin/hub/film-desk/brief/:gameId', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const desk = require('./film-desk-packet');
+      const out = desk.buildFilmDeskBrief(req.params.gameId, {
+        year: Number(req.query.year) || 2026,
+      });
+      return res.status(out.ok ? 200 : 400).json(out);
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

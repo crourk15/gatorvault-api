@@ -1,0 +1,77 @@
+{
+  "gameId": "fau",
+  "locked": true,
+  "lockedAt": "2026-09-09",
+  "lockedBy": "Charles",
+  "whatTheyRan": [
+    "Offense: shotgun, spread the field, Baugh downhill, hitch when corners sit, go when they cheat the run. Pistol is one look. Sneak / under-center is not the offense.",
+    "Defense: Brad White’s odd front — three down, JACK (Jayden Woods), STAR, Graham at WILL. A TV count of four rushers is three down + JACK coming. Coverage mixes Cover 3 / quarters / man — name the shell on that snap.",
+    "Specials: Florida never punts. Durkin from 53. FAU’s 18-yard punt starts the second Florida score."
+  ],
+  "howItPlayed": [
+    "They stretched the field, ran Baugh, and threw it now when the defense sat.",
+    "Coleman INT on FAU’s opening drive (3rd-and-10 at FLA 35).",
+    "Secondary issues were miscommunication / not getting the same call — not a pile of missed tackles.",
+    "Sledge keep: design was sound; they lost the play."
+  ],
+  "doNotSay": [
+    "personnel codes (10/11/12/GT)",
+    "every snap / every single time",
+    "DJ Lagway",
+    "four down as the Florida front",
+    "the night was two-high",
+    "leak (use areas of opportunity)",
+    "The Plan / The Night",
+    "Dek / Headline labels",
+    "leftover hats we did not sit",
+    "GNFP / Patreon wording on the Review",
+    "writer names in fan copy",
+    "box-score walk",
+    "Florida punts"
+  ],
+  "jerseys": {
+    "Philo": "12",
+    "Baugh": "13",
+    "Brown III": "1",
+    "Wilson": "6"
+  },
+  "snapLocks": [
+    "Florida kicked off; FAU first. Coleman INT ends FAU’s opening drive.",
+    "First UF run: shotgun Baugh middle 9 from the 6.",
+    "Only official UF snap not shotgun: Q2 5:28 4th-and-1 Philo sneak +4.",
+    "Durkin 53. FAU 18-yard punt starts the second Florida score."
+  ],
+  "intelSeeds": [
+    {
+      "sourceId": "tengwall",
+      "title": "FILM STUDY: Florida’s Run Game Looked Dominant In Week 1",
+      "url": "https://www.youtube.com/watch?v=UXOweKkBadI",
+      "claim": "OL already looks more technically sound than last year; the physicality of the run game stood out.",
+      "postedAt": "2026-09-07T16:34:00.000Z"
+    },
+    {
+      "sourceId": "gnfp",
+      "title": "GNFP Film Review — Offense vs FAU",
+      "url": "https://www.youtube.com/watch?v=SPKKr6vhtZA",
+      "claim": "Week 1 offensive tape. Steal a fact. Do not paste their wording."
+    },
+    {
+      "sourceId": "gnfp",
+      "title": "GNFP Film Review — Defense vs FAU",
+      "url": "https://www.youtube.com/watch?v=-JTwuz-iJ_Q",
+      "claim": "Week 1 defensive tape. Steal a fact. Do not paste their wording."
+    }
+  ],
+  "tapeLinks": [
+    {
+      "label": "Official Week 1 highlights",
+      "url": "https://www.youtube.com/watch?v=znsdoojhHQg"
+    },
+    {
+      "label": "Official box",
+      "url": "https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903"
+    }
+  ],
+  "reviewStatus": "desk-only",
+  "notes": "Charles tape wins when GNFP contradicts. Review stays off the fan rail until he says go."
+}

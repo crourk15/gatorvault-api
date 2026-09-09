@@ -102,6 +102,7 @@ Set `OPS_ADMIN_PIN` in Render for production.
 | Panel | Route | Role |
 |---|---|---|
 | **Beat Desk** | `#beat-desk/desk` | Daily loop — Open → packet → Copy Brief → X (+ FutureCast feed card) |
+| **Film Desk** | `#film-desk/desk` | Weekly tape — Open game → Charles lock + writer seed → Copy Brief → Review draft (stays off fan rail until he says go) |
 | **Command Center** | `#dashboard/overview` | Health, top issues, pipelines |
 | **Runbooks** | `#dashboard/runbooks` | Preset ops flows (also replaces old GM re-run tab) |
 | **Ops Summary** | `#dashboard/ops-summary` | Tiles, cron freshness, safe re-runs |
@@ -185,6 +186,25 @@ Generator voice: multi-factor insider nugget (room need · staff · in-state · 
 
 **Rank language (members first):** never write ambiguous `Top-20 EDGE` / `Top-50 DL`. Say what the number is — overall vs position — e.g. `No. 17 overall and a top-5 EDGE`, `No. 22 overall and the No. 1 IOL`. Fans should not have to guess.
 
+
+## Film Desk (weekly tape packet)
+
+Admin Hub **`#film-desk/desk`**. Same loop as Beat Desk, for games:
+
+1. **Open** a 2026 game.
+2. Charles lock is the brief: **What they ran / How it played / Do not say / snap locks**.
+3. Writer film (GNFP, Landon Tengwall, James DiRocco) is an **INTERNAL intel seed** — absorb a fact, never name writers, never dump GNFP/Patreon wording onto the Review.
+4. **Copy Brief** → paste into Cursor → draft Review.
+5. Fan Review stays **off** until Charles says go (`filmWatched: false` + `PROVISIONAL`).
+
+Packet files: `server/data/film-room/desk/sources.json` + `server/data/film-room/desk/games/<id>.json`.
+
+```bash
+node -e "const d=require('./server/lib/film-desk-packet'); console.log(d.buildInbox().items.map(i=>i.gameId+':'+i.locked));"
+node -e "const d=require('./server/lib/film-desk-packet'); console.log(d.buildFilmDeskBrief('fau').pasteText.slice(0,400));"
+```
+
+Do **not** auto-write a live Review from the writer pile. Your tape wins when a seed contradicts the lock.
 
 ## GatorVault Film Review (weekly Florida board)
 

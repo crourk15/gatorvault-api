@@ -66,6 +66,7 @@ test('Beat Desk stays green when Film Room red + API wake lag only', () => {
   assert.equal(map.dashboard, 'red', 'Dashboard keeps full kitchen red');
   assert.equal(map.content, 'red', 'Content follows Film Room');
   assert.equal(map['beat-desk'], 'green', 'Beat Desk ignores Film Room + wake lag');
+  assert.equal(map['film-desk'], 'green', 'Film Desk follows Beat Desk API health');
   assert.equal(map.futurecast, 'green', 'FutureCast follows recruiting board');
 });
 
