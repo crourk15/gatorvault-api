@@ -78,8 +78,12 @@
     .checkbox-custom:checked::after { content: '✓'; color: white; font-size: 13px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
     input[type="number"] { -moz-appearance: textfield; }
-    .date-chip { flex: 1; min-width: 64px; text-align: center; font-size: 11px; font-weight: 800; border-radius: 10px; padding: 10px 8px; min-height: 40px; border: 0; background: #334155; color: #f8fafc; }
+    .date-chip { flex: 1; min-width: 64px; text-align: center; font-size: 11px; font-weight: 800; border-radius: 10px; padding: 10px 8px; min-height: 40px; border: 0; background: #334155; color: #f8fafc; cursor: pointer; }
     .date-chip.on { background: #0ea5e9; color: #0f172a; }
+    .choice-row { display: flex; align-items: flex-start; gap: 12px; width: 100%; text-align: left; background: #1e293b; border: 2px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 14px 12px; min-height: 56px; color: #f8fafc; font-size: 14px; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: rgba(14,165,233,0.35); }
+    .choice-row input { width: 20px; height: 20px; min-width: 20px; margin-top: 2px; accent-color: #0ea5e9; pointer-events: none; }
+    .choice-row.on { border-color: #0ea5e9; background: rgba(14,165,233,0.16); color: #e0f2fe; }
+    .modal-solid { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; }
     .agenda-day { border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 12px; background: rgba(30,41,59,0.7); text-align: left; width: 100%; }
     .agenda-day.open { opacity: 0.72; }
     .agenda-day.is-today { border-color: rgba(56,189,248,0.45); background: rgba(56,189,248,0.08); }
@@ -511,8 +515,8 @@ QUOTE LINE
     </div>
   </div>
 
-  <div id="monthly-overlay" class="hidden fixed inset-0 bg-black/70 z-[73] flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-sm p-5 max-h-[92vh] overflow-y-auto">
+  <div id="monthly-overlay" class="hidden fixed inset-0 bg-black/80 z-[90] flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="modal-solid w-full max-w-sm p-5 max-h-[92vh] overflow-y-auto">
       <h3 id="monthly-title" class="text-white font-bold text-lg mb-1">Lock their monthly plan</h3>
       <p id="monthly-hint" class="text-sm text-slate-400 mb-3">You already washed them (or will today). This date is the next monthly visit, not their first time with you.</p>
       <p class="text-xs font-bold text-gold-400 mb-1">1. Who</p>
@@ -522,10 +526,16 @@ QUOTE LINE
       <input id="monthly-phone" type="tel" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
       <p class="text-xs font-bold text-gold-400 mb-1">2. What they pay you each month</p>
       <input id="monthly-price" type="number" min="0" step="1" placeholder="Type the number you quoted — 50, 80, 120…" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
-      <p class="text-xs font-bold text-gold-400 mb-1">3. What is this date?</p>
-      <div class="grid grid-cols-1 gap-2 mb-3">
-        <button type="button" data-visit-kind="first" class="date-chip text-left px-3">First appointment — I have not washed them yet</button>
-        <button type="button" data-visit-kind="next" class="date-chip text-left px-3">Next visit — I already washed them</button>
+      <p class="text-xs font-bold text-gold-400 mb-1">3. What is this date? Tap one</p>
+      <div id="monthly-visit-kind" class="grid grid-cols-1 gap-2 mb-3">
+        <label class="choice-row" data-visit-kind="first">
+          <input type="radio" name="monthly-visit-kind" value="first"/>
+          <span>First appointment — I have not washed them yet</span>
+        </label>
+        <label class="choice-row" data-visit-kind="next">
+          <input type="radio" name="monthly-visit-kind" value="next"/>
+          <span>Next visit — I already washed them</span>
+        </label>
       </div>
       <p id="monthly-date-label" class="text-xs font-bold text-gold-400 mb-1">First appointment</p>
       <p id="monthly-date-help" class="text-xs text-slate-500 mb-2">They have not been washed yet. This date is their first time — and the start of monthly.</p>

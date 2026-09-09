@@ -52,17 +52,21 @@ function guessMonthlyVisitKind(draft) {
 
 function setMonthlyVisitKind(kind) {
   const overlay = document.getElementById('monthly-overlay');
-  if (overlay) overlay.dataset.visitKind = kind === 'next' ? 'next' : 'first';
-  document.querySelectorAll('[data-visit-kind]').forEach((btn) => {
-    btn.classList.toggle('on', btn.getAttribute('data-visit-kind') === overlay?.dataset.visitKind);
+  const next = kind === 'next' ? 'next' : 'first';
+  if (overlay) overlay.dataset.visitKind = next;
+  document.querySelectorAll('#monthly-visit-kind [data-visit-kind]').forEach((row) => {
+    const on = row.getAttribute('data-visit-kind') === next;
+    row.classList.toggle('on', on);
+    const radio = row.querySelector('input[type="radio"]');
+    if (radio) radio.checked = on;
   });
   const label = document.getElementById('monthly-date-label');
   const help = document.getElementById('monthly-date-help');
-  if (overlay?.dataset.visitKind === 'first') {
-    if (label) label.textContent = '3. First appointment';
+  if (next === 'first') {
+    if (label) label.textContent = 'First appointment date';
     if (help) help.textContent = 'They have not been washed yet. This date is their first time — and the start of monthly.';
   } else {
-    if (label) label.textContent = '3. Next time you come back';
+    if (label) label.textContent = 'Next visit date';
     if (help) help.textContent = 'You already washed them. This date is the next monthly stop, not the job they already paid for.';
   }
   syncMonthlyPreview();
@@ -1069,8 +1073,14 @@ function bindOsChrome() {
       syncMonthlyPreview();
     });
   });
-  document.querySelectorAll('[data-visit-kind]').forEach((btn) => {
-    btn.addEventListener('click', () => setMonthlyVisitKind(btn.getAttribute('data-visit-kind')));
+  document.getElementById('monthly-overlay')?.addEventListener('click', (e) => {
+    const row = e.target.closest('#monthly-visit-kind [data-visit-kind]');
+    if (!row) return;
+    e.preventDefault();
+    setMonthlyVisitKind(row.getAttribute('data-visit-kind'));
+  });
+  document.querySelectorAll('input[name="monthly-visit-kind"]').forEach((input) => {
+    input.addEventListener('change', () => setMonthlyVisitKind(input.value));
   });
   document.getElementById('monthly-cancel')?.addEventListener('click', closeMonthly);
   document.getElementById('monthly-save')?.addEventListener('click', () => {
