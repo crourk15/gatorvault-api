@@ -73,6 +73,14 @@
       panels: [{ id: 'desk', label: 'Brief Desk', inline: true }]
     },
     {
+      id: 'film-desk',
+      label: 'Film Desk',
+      mark: 'FD',
+      group: 'primary',
+      desc: 'Weekly tape — Charles lock + writer seed → Copy Brief → Review draft',
+      panels: [{ id: 'desk', label: 'Game Desk', inline: true }]
+    },
+    {
       id: 'dashboard',
       label: 'Dashboard',
       mark: 'CC',
@@ -821,6 +829,7 @@
     var section = parts[0] || 'beat-desk';
     var panel = parts[1] || null;
     if (section === 'beat-desk' && !panel) panel = 'desk';
+    if (section === 'film-desk' && !panel) panel = 'desk';
     if (section === 'dashboard' && !panel) panel = 'overview';
     if (section === 'members' && !panel) panel = 'recent';
     return { section: section, panel: panel };
@@ -1398,6 +1407,15 @@
         }
         else if (panelId === 'desk' && section.id === 'beat-desk' && global.GVAdminBeatDesk) {
           GVAdminBeatDesk.render(panelEl, {
+            apiGet: apiGet,
+            apiBase: API,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash,
+            pushActivity: pushActivity
+          });
+        }
+        else if (panelId === 'desk' && section.id === 'film-desk' && global.GVAdminFilmDesk) {
+          GVAdminFilmDesk.render(panelEl, {
             apiGet: apiGet,
             apiBase: API,
             apiPost: apiPost,

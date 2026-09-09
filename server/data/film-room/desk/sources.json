@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "notes": "Film Desk writer/channel registry. Intel is an INTERNAL seed — fan Review never names writers or dumps their wording.",
+  "sources": [
+    {
+      "id": "gnfp",
+      "name": "GNFP",
+      "kind": "youtube-film",
+      "role": "scheme breakdown",
+      "publicHub": true,
+      "notes": "Already on Film Room Breakdowns. Desk steals facts; Review never pastes GNFP/Patreon copy."
+    },
+    {
+      "id": "tengwall",
+      "name": "Landon Tengwall",
+      "kind": "youtube-film",
+      "role": "OL / run-game film study",
+      "handle": "@LandonTengwall",
+      "publicHub": false,
+      "notes": "OL technique + run physicality. Absorb claims. Never name in fan copy."
+    },
+    {
+      "id": "dirocco",
+      "name": "James DiRocco",
+      "kind": "beat-film",
+      "role": "On3 Florida beat — film/scheme when he posts it",
+      "match": ["dirocco", "james dirocco"],
+      "publicHub": false,
+      "notes": "Recruiting-leaning. Pull film/scheme rows only. Absorb, never name."
+    }
+  ]
+}

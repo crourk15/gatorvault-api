@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Admin Hub Film Desk (`#film-desk/desk`) — Charles lock + GNFP/Tengwall/DiRocco seed → Copy Brief (web PIN only; Review stays off the fan rail)
 - [x] Game Zone: `/api/betting/lines` nextGame is Campbell after FAU; lastGame / finals carry official FAU 66–21 (API — current binary already reads nextGame; leftover-ticket grading + live strip need the bake below)
 - [x] Gators score pushes: kickoff + every score + halftime + final (API / 60s web watch + `*/2` cron — current binary already shows score lock-screen pushes)
 - [x] Community Staff open: game-day talk title/body (Florida vs FAU) from daily-open API — iOS card reads live thread

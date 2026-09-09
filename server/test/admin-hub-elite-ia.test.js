@@ -17,6 +17,7 @@ describe('Admin Hub elite IA', () => {
   it('defaults to Beat Desk and includes FutureCast primary section', () => {
     assert.match(core, /location\.hash \|\| '#beat-desk\/desk'/);
     assert.match(core, /id: 'futurecast'/);
+    assert.match(core, /id: 'film-desk'/);
     assert.match(core, /group: 'primary'/);
     assert.match(core, /group: 'legacy'/);
     assert.match(core, /Legacy consoles/);
@@ -46,9 +47,10 @@ describe('Admin Hub elite IA', () => {
 
   it('wires FutureCast script + cache-busted core/desk', () => {
     assert.match(html, /admin-hub-futurecast\.js\?v=hub-fc-v8/);
-    assert.match(html, /admin-hub-core\.js\?v=hub-core-v12/);
+    assert.match(html, /admin-hub-core\.js\?v=hub-core-v13/);
     assert.match(html, /admin-hub-members-activity\.js\?v=hub-mem-act-v1/);
     assert.match(html, /admin-hub-beat-desk\.js\?v=hub-bd-v18/);
+    assert.match(html, /admin-hub-film-desk\.js\?v=hub-fd-v1/);
     assert.match(html, /#futurecast\/control/);
   });
 
@@ -73,6 +75,7 @@ describe('Admin Hub elite IA', () => {
 
   it('docs list Beat Desk default + FutureCast control', () => {
     assert.match(docs, /#beat-desk\/desk/);
+    assert.match(docs, /#film-desk\/desk/);
     assert.match(docs, /#futurecast\/control/);
     assert.match(docs, /#members\/activity/);
     assert.match(docs, /Legacy consoles/);

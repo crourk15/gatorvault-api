@@ -24,6 +24,8 @@ describe('Operator Notecards', () => {
     assert.match(nc, /Don't touch|Don\u2019t touch|Don\\'t touch/);
     assert.match(nc, /variant === 'desk'/);
     assert.match(nc, /variant === 'command'|command/);
+    assert.match(nc, /variant === 'film'/);
+    assert.match(nc, /weekly film playbook/);
   });
 
   it('mounts on Beat Desk and Command Center', () => {
