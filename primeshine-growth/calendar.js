@@ -184,6 +184,8 @@ function jobCard(job) {
       <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${kindCls} shrink-0">${kindLabel(job.kind)}</span>
     </div>
     <div class="flex flex-wrap gap-2 mt-3">
+      <button type="button" class="job-edit text-xs font-semibold px-3 py-2 rounded-lg bg-navy-700 text-white min-h-[40px]" data-job-id="${job.id}">Edit</button>
+      ${!job.done ? `<button type="button" class="job-confirm text-xs font-semibold px-3 py-2 rounded-lg bg-sky-500 text-navy-900 min-h-[40px]" data-job-id="${job.id}">Confirm text</button>` : ''}
       ${!job.done ? `<button type="button" class="job-done text-xs font-semibold px-3 py-2 rounded-lg bg-navy-700 text-white min-h-[40px]" data-job-id="${job.id}">Mark done</button>` : ''}
       ${job.done && !job.paid ? `<button type="button" class="job-collect text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900 min-h-[40px]" data-job-id="${job.id}">Collect</button>` : ''}
       ${job.done && !job.reviewReceived ? `<button type="button" class="job-review text-xs font-semibold px-3 py-2 rounded-lg bg-sky-500 text-navy-900 min-h-[40px]" data-job-id="${job.id}">Send review text</button>` : ''}
@@ -320,6 +322,16 @@ function bindJobButtons(root) {
       if (typeof openMonthlyFromJob === 'function') openMonthlyFromJob(btn.getAttribute('data-job-id'));
     });
   });
+  root.querySelectorAll('.job-edit').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (typeof openEditJob === 'function') openEditJob(btn.getAttribute('data-job-id'));
+    });
+  });
+  root.querySelectorAll('.job-confirm').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (typeof openConfirm === 'function') openConfirm(btn.getAttribute('data-job-id'));
+    });
+  });
 }
 
 function toggleDone(id) {
@@ -439,7 +451,10 @@ function addJobFromForm(event) {
     notes,
   };
   if (window.PrimeStore && typeof PrimeStore.addJob === 'function') {
-    PrimeStore.addJob(payload);
+    const created = PrimeStore.addJob(payload);
+    if (created && created[0] && typeof openConfirm === 'function') {
+      openConfirm(created[0].id);
+    }
   } else {
     allJobs().push({ id: newId(), ...payload, done: false, paid: false, reviewAsked: false, reviewReceived: false });
     saveJobs();

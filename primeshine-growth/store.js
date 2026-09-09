@@ -279,11 +279,30 @@ window.PrimeStore = {
     const job = jobs.find((j) => j.id === id);
     if (!job) return null;
     Object.assign(job, patch);
-    if (patch.phone || patch.name) {
-      upsertClient({ name: patch.name || job.name, phone: patch.phone || job.phone, address: job.notes });
+    if (patch.phone || patch.name || patch.notes) {
+      const client = upsertClient({ name: patch.name || job.name, phone: patch.phone || job.phone, address: patch.notes || job.notes });
+      if (client) job.clientId = client.id;
     }
     emit();
     return job;
+  },
+  updateClient(id, patch) {
+    const client = os.clients.find((c) => c.id === id);
+    if (!client) return null;
+    const oldName = client.name;
+    const oldPhone = client.phone;
+    if (patch.name != null && String(patch.name).trim()) client.name = String(patch.name).trim();
+    if (patch.phone != null) client.phone = String(patch.phone).trim();
+    if (patch.notes != null) client.notes = String(patch.notes).trim();
+    if (patch.address != null) client.address = String(patch.address).trim();
+    jobs.forEach((j) => {
+      const same = j.clientId === id || j.name === oldName || (oldPhone && j.phone === oldPhone);
+      if (!same) return;
+      j.name = client.name;
+      j.phone = client.phone;
+    });
+    emit();
+    return client;
   },
   upsertClient,
   clientJobs,
@@ -452,6 +471,14 @@ window.PrimeStore = {
     const lead = os.leads.find((l) => l.id === id);
     if (!lead) return;
     Object.assign(lead, patch);
+    if (patch.name || patch.phone) {
+      upsertClient({
+        name: patch.name || lead.name,
+        phone: patch.phone || lead.phone,
+        address: patch.notes || lead.notes,
+        source: lead.source || 'phone',
+      });
+    }
     emit();
   },
   deleteLead(id) {

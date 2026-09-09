@@ -213,7 +213,7 @@ function bindBookingForm(prefix, defaultDays) {
       text: `Booked ${fields.name} on ${PrimeStore.prettyDate(fields.date)} at ${fields.time} · $${fields.price}.`,
       ok: true,
     };
-    PrimeStore.addJob({
+    const created = PrimeStore.addJob({
       name: fields.name,
       phone: fields.phone,
       date: fields.date,
@@ -231,9 +231,11 @@ function bindBookingForm(prefix, defaultDays) {
       const [yy, mm] = fields.date.split('-').map(Number);
       if (typeof calCursor !== 'undefined') calCursor = new Date(yy, mm - 1, 1);
     }
+    if (created && created[0]) window._pendingConfirm = created[0].id;
     if (fields.date !== today && typeof showRoom === 'function' && prefix === 'today') {
       showRoom('calendar');
     }
+    if (window._pendingConfirm) openConfirm(window._pendingConfirm);
   });
   document.getElementById(`${prefix}-save-call`)?.addEventListener('click', () => {
     const fields = readBookingFields(prefix);
@@ -315,6 +317,8 @@ function jobStatus(j) {
 function jobActionButtons(j) {
   const bits = [];
   if (j.phone) bits.push(`<a class="text-xs font-semibold px-3 py-2 rounded-lg bg-navy-800 text-white min-h-[40px]" href="${telHref(j.phone)}">Call</a>`);
+  bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-navy-700 text-white min-h-[40px]" data-edit-job="${j.id}">Edit</button>`);
+  if (!j.done) bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-sky-500 text-navy-900 min-h-[40px]" data-confirm="${j.id}">Confirm text</button>`);
   if (!j.done) bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900 min-h-[40px]" data-finish="${j.id}">Mark done</button>`);
   if (j.done && !j.paid) bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900 min-h-[40px]" data-collect="${j.id}">Collect</button>`);
   if (j.done && !j.reviewReceived) bits.push(`<button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-sky-500 text-navy-900 min-h-[40px]" data-review="${j.id}">Send review text</button>`);
@@ -390,16 +394,7 @@ function renderToday() {
     ${openCalls.length ? `<div class="glass-card p-4 mb-4 border border-gold-500/30">
       <h3 class="font-bold text-white mb-1">Calls to book</h3>
       <p class="text-xs text-slate-400 mb-3">They called. They are not on the calendar yet. Do not lose them.</p>
-      ${openCalls.map((l) => `
-        <div class="py-3 border-b border-white/5">
-          <p class="text-white font-semibold">${esc(l.name || 'No name')} · ${esc(l.phone || 'No phone')}</p>
-          <p class="text-xs text-slate-500 mb-2">${esc(l.asked || l.notes || 'No note yet')}</p>
-          <div class="flex flex-wrap gap-2">
-            ${l.phone ? `<a class="text-xs font-semibold px-3 py-2 rounded-lg bg-navy-800 text-white min-h-[40px]" href="${telHref(l.phone)}">Call back</a>` : ''}
-            <button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900 min-h-[40px]" data-book-lead="${l.id}">Book this call</button>
-            <button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-navy-700 text-slate-300 min-h-[40px]" data-lost-lead="${l.id}">Lost them</button>
-          </div>
-        </div>`).join('')}
+      ${openCalls.map(callRowHtml).join('')}
     </div>` : ''}
 
     <div class="glass-card p-4 mb-4">
@@ -477,6 +472,7 @@ function renderToday() {
   root.querySelectorAll('[data-goto]').forEach((btn) => {
     btn.addEventListener('click', () => showRoom(btn.getAttribute('data-goto')));
   });
+  bindPersonActions(root);
   root.querySelectorAll('[data-finish]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const job = PrimeStore.jobs.find((j) => j.id === btn.getAttribute('data-finish'));
@@ -545,29 +541,7 @@ function renderBook() {
     }
   });
   const all = [...clients, ...fromJobs.filter((g) => !q || g.name.toLowerCase().includes(q))];
-  const peopleHtml = all.length ? all.map((c) => {
-    const hist = PrimeStore.clientJobs(c.ghost ? null : c.id, c.name, c.phone);
-    const next = hist.filter((j) => !j.done && j.date >= PrimeStore.todayIso()).sort((a, b) => a.date.localeCompare(b.date))[0];
-    const last = hist.find((j) => j.done);
-    const plan = c.monthly && c.monthly.active ? ` · monthly $${c.monthly.price}` : '';
-    return `<article class="glass-card-light p-4 mb-3">
-      <div class="flex justify-between gap-2">
-        <div>
-          <p class="text-white font-bold">${esc(c.name)}</p>
-          <p class="text-xs text-slate-500">${esc(c.phone || 'No phone')} ${c.source ? '· ' + esc(c.source) : ''}${plan}</p>
-          <p class="text-xs text-slate-400 mt-1">Last: ${last ? last.date + ' · $' + (last.paidAmount || last.price) : '—'} · Next: ${next ? next.date : '—'}</p>
-        </div>
-      </div>
-      <div class="flex flex-wrap gap-2 mt-3">
-        ${c.phone ? `<a class="px-3 py-2 rounded-lg bg-navy-800 text-white text-xs font-semibold min-h-[40px]" href="${telHref(c.phone)}">Call</a>` : ''}
-        ${last ? `<button type="button" class="px-3 py-2 rounded-lg bg-sky-500 text-navy-900 text-xs font-semibold min-h-[40px]" data-review="${last.id}">Send review text</button>` : ''}
-        ${c.monthly && c.monthly.active
-          ? `<button type="button" class="px-3 py-2 rounded-lg bg-navy-700 text-white text-xs font-semibold min-h-[40px]" data-edit-monthly="${c.ghost ? '' : c.id}">Fix monthly</button>`
-          : `<button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-enroll-name="${esc(c.name)}" data-enroll-phone="${esc(c.phone || '')}">Enroll monthly</button>`}
-        ${last && !last.reviewReceived ? `<button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-got-review="${last.id}">They left a review</button>` : ''}
-      </div>
-    </article>`;
-  }).join('') : '<p class="text-sm text-slate-500">No clients yet. Book a job or save a call.</p>';
+  const peopleHtml = all.length ? all.map(peopleCardHtml).join('') : '<p class="text-sm text-slate-500">No clients yet. Book a job or save a call.</p>';
 
   root.innerHTML = `
     <div class="glass-card gold-glow p-4 md:p-6 mb-4">
@@ -578,16 +552,7 @@ function renderBook() {
     ${openCalls.length ? `<div class="glass-card p-4 mb-4 border border-gold-500/30">
       <h3 class="font-bold text-white mb-1">Calls waiting</h3>
       <p class="text-xs text-slate-400 mb-3">${openCalls.length} people not on the calendar yet.</p>
-      ${openCalls.map((l) => `
-        <div class="py-3 border-b border-white/5">
-          <p class="text-white font-semibold">${esc(l.name || 'No name')} · ${esc(l.phone || 'No phone')}</p>
-          <p class="text-xs text-slate-500 mb-2">${esc(l.asked || l.notes || 'No note yet')}</p>
-          <div class="flex flex-wrap gap-2">
-            ${l.phone ? `<a class="text-xs font-semibold px-3 py-2 rounded-lg bg-navy-800 text-white min-h-[40px]" href="${telHref(l.phone)}">Call back</a>` : ''}
-            <button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900 min-h-[40px]" data-book-lead="${l.id}">Book this call</button>
-            <button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-navy-700 text-slate-300 min-h-[40px]" data-lost-lead="${l.id}">Lost them</button>
-          </div>
-        </div>`).join('')}
+      ${openCalls.map(callRowHtml).join('')}
     </div>` : ''}
 
     <div class="glass-card p-4 mb-4">
@@ -633,23 +598,8 @@ function renderBook() {
     const box = document.getElementById('book-root');
     if (!box) return;
     const filtered = all.filter((c) => !query || c.name.toLowerCase().includes(query) || (c.phone || '').includes(query));
-    box.innerHTML = filtered.length ? filtered.map((c) => {
-      const hist = PrimeStore.clientJobs(c.ghost ? null : c.id, c.name, c.phone);
-      const next = hist.filter((j) => !j.done && j.date >= PrimeStore.todayIso()).sort((a, b) => a.date.localeCompare(b.date))[0];
-      const last = hist.find((j) => j.done);
-      const plan = c.monthly && c.monthly.active ? ` · monthly $${c.monthly.price}` : '';
-      return `<article class="glass-card-light p-4 mb-3">
-        <p class="text-white font-bold">${esc(c.name)}</p>
-        <p class="text-xs text-slate-500">${esc(c.phone || 'No phone')}${plan}</p>
-        <p class="text-xs text-slate-400 mt-1">Last: ${last ? last.date : '—'} · Next: ${next ? next.date : '—'}</p>
-        <div class="flex flex-wrap gap-2 mt-3">
-          ${c.phone ? `<a class="px-3 py-2 rounded-lg bg-navy-800 text-white text-xs font-semibold min-h-[40px]" href="${telHref(c.phone)}">Call</a>` : ''}
-          ${c.monthly && c.monthly.active
-            ? `<button type="button" class="px-3 py-2 rounded-lg bg-navy-700 text-white text-xs font-semibold min-h-[40px]" data-edit-monthly="${c.ghost ? '' : c.id}">Fix monthly</button>`
-            : `<button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-enroll-name="${esc(c.name)}" data-enroll-phone="${esc(c.phone || '')}">Enroll monthly</button>`}
-        </div>
-      </article>`;
-    }).join('') : '<p class="text-sm text-slate-500">No match.</p>';
+    box.innerHTML = filtered.length ? filtered.map(peopleCardHtml).join('') : '<p class="text-sm text-slate-500">No match.</p>';
+    bindPersonActions(box);
     box.querySelectorAll('[data-enroll-name]').forEach((btn) => {
       btn.addEventListener('click', () => openMonthly({
         name: btn.getAttribute('data-enroll-name') || '',
@@ -658,6 +608,12 @@ function renderBook() {
     });
     box.querySelectorAll('[data-edit-monthly]').forEach((btn) => {
       btn.addEventListener('click', () => openMonthlyForClient(btn.getAttribute('data-edit-monthly')));
+    });
+    box.querySelectorAll('[data-review]').forEach((btn) => {
+      btn.addEventListener('click', () => openReview(btn.getAttribute('data-review')));
+    });
+    box.querySelectorAll('[data-got-review]').forEach((btn) => {
+      btn.addEventListener('click', () => PrimeStore.markReview(btn.getAttribute('data-got-review'), true));
     });
   });
   root.querySelectorAll('[data-goto]').forEach((btn) => {
@@ -683,6 +639,7 @@ function renderBook() {
   root.querySelectorAll('[data-lost-lead]').forEach((btn) => {
     btn.addEventListener('click', () => PrimeStore.updateLead(btn.getAttribute('data-lost-lead'), { status: 'lost' }));
   });
+  bindPersonActions(root);
   document.getElementById('desk-enroll')?.addEventListener('click', () => openMonthly());
   root.querySelectorAll('[data-enroll-name]').forEach((btn) => {
     btn.addEventListener('click', () => openMonthly({
@@ -836,6 +793,211 @@ function openReview(id) {
 
 function closeReview() {
   document.getElementById('review-overlay')?.classList.add('hidden');
+}
+
+function confirmScript(job) {
+  const when = PrimeStore.prettyDate(job.date);
+  const time = job.time || '9:00';
+  const service = window.PrimeMenu ? PrimeMenu.label(job.service, job.vehicle) : (job.service || 'detail');
+  return `Hey ${job.name || 'there'} — this is Charles with PrimeShine. You're booked ${when} at ${time} for a ${service}. I'll be there. Reply YES to confirm, or tell me if you need a different day. — 863-860-9238`;
+}
+
+function findUpcomingJob(clientId, name, phone) {
+  const hist = PrimeStore.clientJobs(clientId || null, name, phone);
+  const upcoming = hist
+    .filter((j) => !j.done)
+    .sort((a, b) => a.date.localeCompare(b.date) || (a.time || '').localeCompare(b.time || ''));
+  const future = upcoming.filter((j) => j.date >= PrimeStore.todayIso());
+  return future[0] || upcoming[0] || null;
+}
+
+function peopleCardHtml(c) {
+  const hist = PrimeStore.clientJobs(c.ghost ? null : c.id, c.name, c.phone);
+  const next = findUpcomingJob(c.ghost ? '' : c.id, c.name, c.phone);
+  const last = hist.find((j) => j.done);
+  const plan = c.monthly && c.monthly.active ? ` · monthly $${c.monthly.price}` : '';
+  return `<article class="glass-card-light p-4 mb-3">
+      <div class="flex justify-between gap-2">
+        <div>
+          <p class="text-white font-bold">${esc(c.name)}</p>
+          <p class="text-xs text-slate-500">${esc(c.phone || 'No phone')} ${c.source ? '· ' + esc(c.source) : ''}${plan}</p>
+          <p class="text-xs text-slate-400 mt-1">Last: ${last ? last.date + ' · $' + (last.paidAmount || last.price) : '—'} · Next: ${next ? next.date : '—'}</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2 mt-3">
+        <button type="button" class="px-3 py-2 rounded-lg bg-navy-700 text-white text-xs font-semibold min-h-[40px]" data-edit-client="${c.ghost ? '' : c.id}" data-edit-name="${esc(c.name)}" data-edit-phone="${esc(c.phone || '')}">Edit info</button>
+        ${next ? `<button type="button" class="px-3 py-2 rounded-lg bg-sky-500 text-navy-900 text-xs font-semibold min-h-[40px]" data-confirm="${next.id}">Confirm text</button>` : ''}
+        ${c.phone ? `<a class="px-3 py-2 rounded-lg bg-navy-800 text-white text-xs font-semibold min-h-[40px]" href="${telHref(c.phone)}">Call</a>` : ''}
+        ${last ? `<button type="button" class="px-3 py-2 rounded-lg bg-sky-500/80 text-navy-900 text-xs font-semibold min-h-[40px]" data-review="${last.id}">Send review text</button>` : ''}
+        ${c.monthly && c.monthly.active
+          ? `<button type="button" class="px-3 py-2 rounded-lg bg-navy-700 text-white text-xs font-semibold min-h-[40px]" data-edit-monthly="${c.ghost ? '' : c.id}">Fix monthly</button>`
+          : `<button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-enroll-name="${esc(c.name)}" data-enroll-phone="${esc(c.phone || '')}">Enroll monthly</button>`}
+        ${last && !last.reviewReceived ? `<button type="button" class="px-3 py-2 rounded-lg bg-green-500/20 text-green-400 text-xs font-semibold min-h-[40px]" data-got-review="${last.id}">They left a review</button>` : ''}
+      </div>
+    </article>`;
+}
+
+function callRowHtml(l) {
+  return `
+        <div class="py-3 border-b border-white/5">
+          <p class="text-white font-semibold">${esc(l.name || 'No name')} · ${esc(l.phone || 'No phone')}</p>
+          <p class="text-xs text-slate-500 mb-2">${esc(l.asked || l.notes || 'No note yet')}</p>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-navy-700 text-white min-h-[40px]" data-edit-lead="${l.id}">Edit info</button>
+            ${l.phone ? `<a class="text-xs font-semibold px-3 py-2 rounded-lg bg-navy-800 text-white min-h-[40px]" href="${telHref(l.phone)}">Call back</a>` : ''}
+            <button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-gold-500 text-navy-900 min-h-[40px]" data-book-lead="${l.id}">Book this call</button>
+            <button type="button" class="text-xs font-semibold px-3 py-2 rounded-lg bg-navy-700 text-slate-300 min-h-[40px]" data-lost-lead="${l.id}">Lost them</button>
+          </div>
+        </div>`;
+}
+
+function bindPersonActions(root) {
+  if (!root) return;
+  root.querySelectorAll('[data-edit-job]').forEach((btn) => {
+    btn.addEventListener('click', () => openEditJob(btn.getAttribute('data-edit-job')));
+  });
+  root.querySelectorAll('[data-confirm]').forEach((btn) => {
+    btn.addEventListener('click', () => openConfirm(btn.getAttribute('data-confirm')));
+  });
+  root.querySelectorAll('[data-edit-client]').forEach((btn) => {
+    btn.addEventListener('click', () => openEditClient({
+      id: btn.getAttribute('data-edit-client') || '',
+      name: btn.getAttribute('data-edit-name') || '',
+      phone: btn.getAttribute('data-edit-phone') || '',
+    }));
+  });
+  root.querySelectorAll('[data-edit-lead]').forEach((btn) => {
+    btn.addEventListener('click', () => openEditLead(btn.getAttribute('data-edit-lead')));
+  });
+}
+
+function setEditConfirmVisible(show) {
+  const btn = document.getElementById('edit-save-confirm');
+  if (btn) btn.classList.toggle('hidden', !show);
+}
+
+function openEditJob(id) {
+  const job = PrimeStore.jobs.find((j) => j.id === id);
+  if (!job) return;
+  const overlay = document.getElementById('edit-overlay');
+  if (!overlay) return;
+  overlay.dataset.jobId = id;
+  overlay.dataset.clientId = job.clientId || '';
+  overlay.dataset.leadId = '';
+  document.getElementById('edit-title').textContent = 'Fix their info';
+  document.getElementById('edit-hint').textContent = 'Wrong name, phone, or day? Change it here. Then send a new confirm text if you already texted the old one.';
+  document.getElementById('edit-name').value = job.name || '';
+  document.getElementById('edit-phone').value = job.phone || '';
+  document.getElementById('edit-date').value = job.date || PrimeStore.todayIso();
+  document.getElementById('edit-time').value = job.time || '09:00';
+  document.getElementById('edit-price').value = job.price || '';
+  document.getElementById('edit-notes').value = job.notes || '';
+  document.getElementById('edit-date-wrap').classList.remove('hidden');
+  document.getElementById('edit-price-wrap').classList.remove('hidden');
+  setEditConfirmVisible(true);
+  overlay.classList.remove('hidden');
+}
+
+function openEditClient(draft) {
+  const overlay = document.getElementById('edit-overlay');
+  if (!overlay) return;
+  overlay.dataset.jobId = '';
+  overlay.dataset.clientId = draft.id || '';
+  overlay.dataset.leadId = '';
+  document.getElementById('edit-title').textContent = 'Fix their info';
+  document.getElementById('edit-hint').textContent = 'This updates their name and phone everywhere they are booked.';
+  document.getElementById('edit-name').value = draft.name || '';
+  document.getElementById('edit-phone').value = draft.phone || '';
+  document.getElementById('edit-notes').value = '';
+  document.getElementById('edit-date-wrap').classList.add('hidden');
+  document.getElementById('edit-price-wrap').classList.add('hidden');
+  setEditConfirmVisible(!!findUpcomingJob(draft.id, draft.name, draft.phone));
+  overlay.classList.remove('hidden');
+}
+
+function openEditLead(id) {
+  const lead = PrimeStore.os.leads.find((l) => l.id === id);
+  if (!lead) return;
+  const overlay = document.getElementById('edit-overlay');
+  if (!overlay) return;
+  overlay.dataset.jobId = '';
+  overlay.dataset.clientId = '';
+  overlay.dataset.leadId = id;
+  document.getElementById('edit-title').textContent = 'Fix their info';
+  document.getElementById('edit-hint').textContent = 'Wrong name or phone on this call? Change it here.';
+  document.getElementById('edit-name').value = lead.name || '';
+  document.getElementById('edit-phone').value = lead.phone || '';
+  document.getElementById('edit-notes').value = lead.asked || lead.notes || '';
+  document.getElementById('edit-date-wrap').classList.add('hidden');
+  document.getElementById('edit-price-wrap').classList.add('hidden');
+  setEditConfirmVisible(false);
+  overlay.classList.remove('hidden');
+}
+
+function closeEdit() {
+  document.getElementById('edit-overlay')?.classList.add('hidden');
+}
+
+function saveEdit() {
+  const overlay = document.getElementById('edit-overlay');
+  const jobId = overlay?.dataset.jobId;
+  const clientId = overlay?.dataset.clientId;
+  const leadId = overlay?.dataset.leadId;
+  const name = (document.getElementById('edit-name')?.value || '').trim();
+  const phone = (document.getElementById('edit-phone')?.value || '').trim();
+  const notes = (document.getElementById('edit-notes')?.value || '').trim();
+  if (!name) return;
+  if (jobId) {
+    PrimeStore.updateJob(jobId, {
+      name,
+      phone,
+      date: document.getElementById('edit-date').value || PrimeStore.todayIso(),
+      time: document.getElementById('edit-time').value || '09:00',
+      price: Number(document.getElementById('edit-price').value) || 0,
+      notes,
+    });
+  } else if (leadId) {
+    PrimeStore.updateLead(leadId, { name, phone, notes, asked: notes });
+  } else if (clientId) {
+    PrimeStore.updateClient(clientId, { name, phone, notes });
+  } else {
+    PrimeStore.upsertClient({ name, phone, address: notes });
+    PrimeStore.persist();
+  }
+  closeEdit();
+}
+
+function openConfirm(id) {
+  const job = PrimeStore.jobs.find((j) => j.id === id);
+  if (!job) return;
+  window._pendingConfirm = null;
+  const overlay = document.getElementById('confirm-overlay');
+  if (!overlay) return;
+  overlay.dataset.jobId = id;
+  document.getElementById('confirm-name').textContent = `${job.name} · ${PrimeStore.prettyDate(job.date)} at ${job.time || ''}`;
+  document.getElementById('confirm-phone').value = job.phone || '';
+  document.getElementById('confirm-preview').value = confirmScript(job);
+  const warn = document.getElementById('confirm-warn');
+  if (warn) {
+    warn.textContent = job.phone
+      ? 'First-time or regular — send this so they know the day and that you will be there. Opens Messages. You tap Send.'
+      : 'Add their phone, then tap Open Messages.';
+  }
+  overlay.classList.remove('hidden');
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-overlay')?.classList.add('hidden');
+}
+
+function syncConfirmDraft() {
+  const overlay = document.getElementById('confirm-overlay');
+  const id = overlay?.dataset.jobId;
+  const job = PrimeStore.jobs.find((j) => j.id === id);
+  if (!job) return null;
+  const phone = document.getElementById('confirm-phone').value.trim();
+  if (phone !== (job.phone || '')) PrimeStore.updateJob(id, { phone });
+  return PrimeStore.jobs.find((j) => j.id === id);
 }
 
 function monthlyDraft() {
@@ -1083,6 +1245,46 @@ function bindOsChrome() {
   document.getElementById('visit-kind-next')?.addEventListener('click', (e) => {
     e.preventDefault();
     setMonthlyVisitKind('next');
+  });
+  document.getElementById('edit-cancel')?.addEventListener('click', closeEdit);
+  document.getElementById('edit-save')?.addEventListener('click', saveEdit);
+  document.getElementById('edit-save-confirm')?.addEventListener('click', () => {
+    const overlay = document.getElementById('edit-overlay');
+    const jobId = overlay?.dataset.jobId;
+    const clientId = overlay?.dataset.clientId;
+    const name = (document.getElementById('edit-name')?.value || '').trim();
+    const phone = (document.getElementById('edit-phone')?.value || '').trim();
+    saveEdit();
+    const next = jobId
+      ? PrimeStore.jobs.find((j) => j.id === jobId)
+      : findUpcomingJob(clientId, name, phone);
+    if (next) openConfirm(next.id);
+  });
+  document.getElementById('confirm-cancel')?.addEventListener('click', closeConfirm);
+  document.getElementById('confirm-copy')?.addEventListener('click', async () => {
+    const job = syncConfirmDraft();
+    const text = document.getElementById('confirm-preview').value;
+    try { await navigator.clipboard.writeText(text); } catch (e) {
+      document.getElementById('confirm-preview').select();
+      document.execCommand('copy');
+    }
+    const btn = document.getElementById('confirm-copy');
+    const prev = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(() => { btn.textContent = prev; }, 1400);
+    if (job) PrimeStore.updateJob(job.id, { confirmAsked: true });
+  });
+  document.getElementById('confirm-sms')?.addEventListener('click', () => {
+    const job = syncConfirmDraft();
+    if (!job) return;
+    const phone = document.getElementById('confirm-phone').value.trim();
+    if (!phone) {
+      document.getElementById('confirm-warn').textContent = 'Add their phone first.';
+      document.getElementById('confirm-phone').focus();
+      return;
+    }
+    PrimeStore.updateJob(job.id, { confirmAsked: true, phone });
+    window.location.href = smsHref(phone, document.getElementById('confirm-preview').value);
   });
   document.getElementById('monthly-cancel')?.addEventListener('click', closeMonthly);
   document.getElementById('monthly-save')?.addEventListener('click', () => {
