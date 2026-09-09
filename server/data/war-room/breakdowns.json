@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-03T01:48:06.220Z",
+  "updatedAt": "2026-09-09T20:16:28.522Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -18652,6 +18652,40 @@
       "nflProjection": null,
       "featured": false,
       "updatedAt": "2026-09-01T15:00:50.518Z",
+      "filmWatched": true,
+      "provisional": false
+    },
+    "nick-carroll": {
+      "playerSlug": "nick-carroll",
+      "playerName": "Nick Carroll",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22448024/68c71a78a517800e3f2270df",
+          "publishedAt": "2026-09-09"
+        }
+      ],
+      "strengths": [
+        "Carroll triggers downhill from a deep safety look and wraps in space — alley fills and open-field form tackles, not just a hit.",
+        "Carroll tracks the deep ball from a high / two-high alignment and finishes with it — eyes and range from the compact 5-10 frame.",
+        "Carroll shows the same burst on kickoff coverage: sprint, break down, and finish the tackle on the returner."
+      ],
+      "weaknesses": [
+        "Carroll (5-10 / 170) still needs mass before every SEC box collision is a win — fill-out is the next step. Sophomore highlight reel, not All-22 volume."
+      ],
+      "comparison": "Carroll comps to Alohi Gilman — 5-10 compact safety who wins with instincts, downhill trigger, and wrap tackles more than length (size-matched within ~1\" of Carroll’s 5-10 / 170 frame; same build family as he fills).",
+      "schemeFit": "Carroll fits Chris Collins’ safety room as a compact deep-to-box hybrid who can trigger downhill, wrap in space, and grow into nickel and split-safety snaps as the frame fills.",
+      "staffNotes": "Vault film desk verified 2026-09-09 from Hudl embed 68c71a78a517800e3f2270df (Sophomore Season, 5:39, #2). Comp size-matched within ~1–2\" — not a Florida-alum default. Not provisional.",
+      "projection": "Carroll projects as special-teams and nickel/package early, then compete for a starting safety job — starter ceiling as a compact every-down S once the 170-pound frame fills.",
+      "insiderNotes": "Carroll is a compact 5-10 / 170 Toombs County safety who plays #2 as a deep safety: triggers downhill and wraps in space, tracks the deep ball from a high look and finishes with it, and shows the same burst on kickoff coverage. Florida leads RPM near 45% with three unofficials, latest Sept. 5 for the opener. Chris Collins holds the offer. Uncommitted.",
+      "recruitingStory": "Nick Carroll is a 4-star S · listed 5-10 / 170 · Toombs County (Lyons, GA) · Natl #62 · Pos #5 · State #10 (GA) · Florida offered · 3 UOV · latest 2026-09-05 · UF RPM ~45%.",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-09-09T20:16:28.511Z",
       "filmWatched": true,
       "provisional": false
     }
