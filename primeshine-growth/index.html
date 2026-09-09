@@ -522,8 +522,13 @@ QUOTE LINE
       <input id="monthly-phone" type="tel" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
       <p class="text-xs font-bold text-gold-400 mb-1">2. What they pay you each month</p>
       <input id="monthly-price" type="number" min="0" step="1" placeholder="Type the number you quoted — 50, 80, 120…" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
-      <p class="text-xs font-bold text-gold-400 mb-1">3. Next time you come back</p>
-      <p class="text-xs text-slate-500 mb-2">Not the job you already did. This is the next monthly stop.</p>
+      <p class="text-xs font-bold text-gold-400 mb-1">3. What is this date?</p>
+      <div class="grid grid-cols-1 gap-2 mb-3">
+        <button type="button" data-visit-kind="first" class="date-chip text-left px-3">First appointment — I have not washed them yet</button>
+        <button type="button" data-visit-kind="next" class="date-chip text-left px-3">Next visit — I already washed them</button>
+      </div>
+      <p id="monthly-date-label" class="text-xs font-bold text-gold-400 mb-1">First appointment</p>
+      <p id="monthly-date-help" class="text-xs text-slate-500 mb-2">They have not been washed yet. This date is their first time — and the start of monthly.</p>
       <div class="flex flex-wrap gap-2 mb-2">
         <button type="button" class="date-chip monthly-chip" data-days="0">Today</button>
         <button type="button" class="date-chip monthly-chip on" data-days="7">+7 days</button>

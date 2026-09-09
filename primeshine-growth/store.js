@@ -357,6 +357,7 @@ window.PrimeStore = {
         nextDate: startDate,
         time,
         notes,
+        visitKind: input.visitKind === 'next' ? 'next' : 'first',
         enrolledAt: new Date().toISOString(),
       };
     }
@@ -402,6 +403,7 @@ window.PrimeStore = {
       nextDate: startDate,
       time,
       notes,
+      visitKind: input.visitKind === 'next' ? 'next' : (input.visitKind === 'first' ? 'first' : (client.monthly && client.monthly.visitKind) || 'first'),
       updatedAt: new Date().toISOString(),
     };
     const created = this.addJob({

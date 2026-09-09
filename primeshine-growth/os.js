@@ -28,10 +28,44 @@ function monthlyPitchScript(name) {
   return `Hey ${name || 'there'} — want me on a monthly maintenance plan? I come to you, same week each month. Price depends on the car — I'll lock your amount when you say yes. Reply YES and I'll get you on the calendar.`;
 }
 
-function monthlyConfirmScript(name, price, date, time) {
+function monthlyConfirmScript(name, price, date, time, visitKind) {
   const when = PrimeStore.prettyDate(date);
   const t = time || '9:00';
+  if (visitKind === 'first') {
+    return `Hey ${name || 'there'} — you're on PrimeShine monthly maintenance at $${price}/month. We come to you. Your first appointment is ${when} at ${t}. I'll collect then. Reply if you need a different day. — Charles, 863-860-9238`;
+  }
   return `Hey ${name || 'there'} — you're on PrimeShine monthly maintenance at $${price}/month. We come to you. Next visit ${when} at ${t}. Reply if you need a different day. — Charles, 863-860-9238`;
+}
+
+function guessMonthlyVisitKind(draft) {
+  if (draft && draft.visitKind) return draft.visitKind;
+  const name = ((draft && draft.name) || '').trim().toLowerCase();
+  const phone = String((draft && draft.phone) || '').replace(/\D/g, '');
+  const done = PrimeStore.jobs.some((j) => {
+    if (!j.done && !j.paid) return false;
+    const sameName = name && (j.name || '').toLowerCase() === name;
+    const samePhone = phone && String(j.phone || '').replace(/\D/g, '') === phone;
+    return sameName || samePhone;
+  });
+  return done ? 'next' : 'first';
+}
+
+function setMonthlyVisitKind(kind) {
+  const overlay = document.getElementById('monthly-overlay');
+  if (overlay) overlay.dataset.visitKind = kind === 'next' ? 'next' : 'first';
+  document.querySelectorAll('[data-visit-kind]').forEach((btn) => {
+    btn.classList.toggle('on', btn.getAttribute('data-visit-kind') === overlay?.dataset.visitKind);
+  });
+  const label = document.getElementById('monthly-date-label');
+  const help = document.getElementById('monthly-date-help');
+  if (overlay?.dataset.visitKind === 'first') {
+    if (label) label.textContent = '3. First appointment';
+    if (help) help.textContent = 'They have not been washed yet. This date is their first time — and the start of monthly.';
+  } else {
+    if (label) label.textContent = '3. Next time you come back';
+    if (help) help.textContent = 'You already washed them. This date is the next monthly stop, not the job they already paid for.';
+  }
+  syncMonthlyPreview();
 }
 
 function monthlyScript(name) {
@@ -45,10 +79,10 @@ function monthlyHowToHtml(buttonId) {
       <h3 class="font-bold text-white mb-1">How to put someone on monthly</h3>
       <p class="text-sm text-slate-400 mb-3">This is not a website package. You quote a monthly dollar amount after they say yes. Each car can be different.</p>
       <ol class="text-sm text-slate-300 space-y-2 mb-4 list-decimal pl-5">
-        <li>They say <strong class="text-white">yes</strong> — in the driveway or by text.</li>
+        <li>They say <strong class="text-white">yes</strong> — even if the first wash is still days away. Do not wait.</li>
         <li>Tap the green button below.</li>
-        <li>Type <strong class="text-white">what they pay each month</strong> (whatever you quoted — $50, $80, $120).</li>
-        <li>Pick the <strong class="text-white">next</strong> wash day — not the one you already did.</li>
+        <li>Type <strong class="text-white">what they pay each month</strong>.</li>
+        <li>Tap <strong class="text-white">First appointment</strong> if you have not washed them yet, or <strong class="text-white">Next visit</strong> if you already did.</li>
         <li>Tap <strong class="text-white">Lock plan + send text</strong>. Read it, then hit Send in Messages.</li>
       </ol>
       <p class="text-xs text-slate-500 mb-3">That locks the next 6 months on your calendar and texts them the amount + first visit.</p>
@@ -807,13 +841,14 @@ function monthlyDraft() {
     startDate: document.getElementById('monthly-date')?.value || PrimeStore.todayIso(),
     time: document.getElementById('monthly-time')?.value || '09:00',
     notes: (document.getElementById('monthly-notes')?.value || '').trim(),
+    visitKind: overlay?.dataset.visitKind || 'first',
   };
 }
 
 function syncMonthlyPreview() {
   const d = monthlyDraft();
   const preview = document.getElementById('monthly-preview');
-  if (preview) preview.value = monthlyConfirmScript(d.name, d.price || '___', d.startDate, d.time);
+  if (preview) preview.value = monthlyConfirmScript(d.name, d.price || '___', d.startDate, d.time, d.visitKind);
   document.querySelectorAll('.monthly-chip').forEach((btn) => {
     const iso = PrimeStore.shiftIso(PrimeStore.todayIso(), Number(btn.getAttribute('data-days') || 0));
     btn.classList.toggle('on', iso === d.startDate);
@@ -832,6 +867,7 @@ function openMonthlyForClient(clientId) {
     startDate: plan.nextDate || plan.startDate,
     time: plan.time || '09:00',
     notes: plan.notes || '',
+    visitKind: plan.visitKind,
   });
 }
 
@@ -849,6 +885,7 @@ function openMonthlyFromJob(jobId) {
     startDate: job.date,
     time: job.time || '09:00',
     notes: (client && client.monthly && client.monthly.notes) || '',
+    visitKind: job.done || job.paid ? 'next' : 'first',
   });
 }
 
@@ -862,8 +899,8 @@ function openMonthly(draft) {
   if (title) title.textContent = editing ? 'Fix their monthly plan' : 'Lock their monthly plan';
   if (hint) {
     hint.textContent = editing
-      ? 'Wrong date or amount? Change it here. This date is the next time you come back — not the wash you already did.'
-      : 'You already washed them (or will today). This date is the next monthly visit, not their first time with you.';
+      ? 'Wrong date, amount, or wording? Fix it here, then send the updated text.'
+      : 'Enroll them now even if the first wash is still coming. Pick whether Monday (or that date) is their first appointment or a return visit.';
   }
   const start = PrimeStore.shiftIso(PrimeStore.todayIso(), 7);
   document.getElementById('monthly-name').value = (draft && draft.name) || '';
@@ -882,7 +919,7 @@ function openMonthly(draft) {
   const save = document.getElementById('monthly-save');
   if (sms) sms.textContent = editing ? 'Save new date + send text' : 'Lock plan + send text';
   if (save) save.textContent = editing ? 'Save new date only' : 'Lock plan only — text later';
-  syncMonthlyPreview();
+  setMonthlyVisitKind(guessMonthlyVisitKind(draft || {}));
   overlay.classList.remove('hidden');
 }
 
@@ -1031,6 +1068,9 @@ function bindOsChrome() {
       document.getElementById('monthly-date').value = iso;
       syncMonthlyPreview();
     });
+  });
+  document.querySelectorAll('[data-visit-kind]').forEach((btn) => {
+    btn.addEventListener('click', () => setMonthlyVisitKind(btn.getAttribute('data-visit-kind')));
   });
   document.getElementById('monthly-cancel')?.addEventListener('click', closeMonthly);
   document.getElementById('monthly-save')?.addEventListener('click', () => {
