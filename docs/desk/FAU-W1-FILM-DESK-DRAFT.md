@@ -13,7 +13,7 @@ Buster Faulkner opens a season with a count. Spread the field. Live in the shotg
 
 Then they sit on Baugh. First-and-10 at the FAU 49, corners off. Aaron Philo 12 throws it now. Vernell Brown III 1 catches it at the 50. The first man misses. Forty-nine yards.
 
-When they come down for the run, he takes the lid off. Second-and-6 from their own 29, TJ Abrams down the right. Sixty-three yards. The shot only exists because Baugh was real.
+They come down for the next one. Second-and-6 from their own 29. The safeties are at 10 yards. Isolated to the right, TJ Abrams. The corner is off. Philo takes the lid off. Abrams is past him before the safety turns. Catch at the FAU 30. Sixty-three yards to the 8.
 
 Pistol showed once. The sneak is a conversion, not who they are.
 
@@ -23,11 +23,11 @@ Defense
 
 Brad White’s Florida is an odd front on purpose. Three down. JACK is Jayden Woods. STAR. Graham at WILL. When the broadcast counts four rushers, JACK is coming.
 
-The front is why that first throw died. It made the quarterback hold it. The window was already there. Later the same window pays again — Dijon Johnson goes up and gets it.
+The front is why that first throw died. It made the quarterback hold it. The window was already there.
 
-FAU’s scores are jobs. First-and-goal, the box is packed, Ethan Ervin still walks in. The front was right. They lost the pile. Third-and-goal, Caden Veltkamp keeps it and the edge leaves. Contain is the job. First-and-10 at the Florida 20, corners off, Kelby Valsin wins the fade on the back line. If you sit off, you have to win that throw.
+First-and-10 at the FAU 25, corners off. The throw is late. Coleman gets a hand on it. Dijon Johnson comes down with it.
 
-The areas of opportunity start in the secondary. They were not on the same call.
+First-and-goal, the box is packed, Ethan Ervin still walks in. The front was right. They lost the pile. Third-and-goal, Caden Veltkamp keeps it and the edge leaves. Contain is the job. First-and-10 at the Florida 20, corners off. Kelby Valsin takes the fade. The corner is trailing. The help stays in the middle. The back line is empty. They were not on the same call.
 
 Specials
 
@@ -39,8 +39,8 @@ What held
 - They take the points and keep the football.
 
 Areas of opportunity
-- The secondary has to get the same call.
-- The pile, the edge, and the fade. Those are the jobs.
+- The fade. Corner off, help in the middle. They were not on the same call.
+- The pile and the edge. Those are the jobs.
 - The keep was drawn up right. Sledge was there first.
 
 Next · Campbell
