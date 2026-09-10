@@ -395,9 +395,60 @@ function getScheduleBoard(season = 2026) {
   return doc;
 }
 
+/** Public fan GET must send empty scout arrays — not omit them.
+ *  Current App Store schedule-api refills omitted offenseScout/defenseScout from
+ *  Capacitor seed, then the old mapper prefers those desk lines. Empty length
+ *  falls through to opponentTendencies / defenseTendencies. Omit scoutingReport
+ *  (do not send "") so `scoutingReport ?? film` still uses film.
+ */
+function toFanGame(game) {
+  if (!game || typeof game !== 'object') return game;
+  const { scoutingReport: _deskReport, ...rest } = game;
+  return {
+    ...rest,
+    offenseScout: [],
+    defenseScout: [],
+  };
+}
+
+function hasScoutLines(value) {
+  return Array.isArray(value) && value.some((n) => String(n || '').trim());
+}
+
+function loadExistingGamesById(season) {
+  try {
+    const raw = readJson(resolveReadPath(season));
+    const games = Array.isArray(raw?.games) ? raw.games : [];
+    return new Map(games.map((g) => [String(g?.id || '').trim(), g]));
+  } catch {
+    return new Map();
+  }
+}
+
+/** Keep desk scout on disk when a fan/public payload is PUTed back empty. */
+function preserveDeskScout(games, season) {
+  const existing = loadExistingGamesById(season);
+  if (!existing.size) return games;
+  return games.map((g) => {
+    const prev = existing.get(String(g?.id || '').trim());
+    if (!prev) return g;
+    const next = { ...g };
+    if (!hasScoutLines(next.offenseScout) && hasScoutLines(prev.offenseScout)) {
+      next.offenseScout = prev.offenseScout;
+    }
+    if (!hasScoutLines(next.defenseScout) && hasScoutLines(prev.defenseScout)) {
+      next.defenseScout = prev.defenseScout;
+    }
+    const nextReport = next.scoutingReport != null ? String(next.scoutingReport).trim() : '';
+    const prevReport = prev.scoutingReport != null ? String(prev.scoutingReport).trim() : '';
+    if (!nextReport && prevReport) next.scoutingReport = prev.scoutingReport;
+    return next;
+  });
+}
+
 function saveScheduleBoard(raw, season = 2026) {
   const year = String(season || raw?.season || 2026);
-  const incoming = Array.isArray(raw?.games) ? raw.games : [];
+  const incoming = preserveDeskScout(Array.isArray(raw?.games) ? raw.games : [], year);
   const filled = backfillUniforms(incoming, year);
   const doc = normalizeDoc(
     {
@@ -414,15 +465,17 @@ function saveScheduleBoard(raw, season = 2026) {
   return { ...doc, path: filePath };
 }
 
-function toApiPayload(doc) {
+function toApiPayload(doc, opts) {
   const board = doc || getScheduleBoard(2026);
+  const includeDeskScout = Boolean(opts && opts.includeDeskScout);
+  const games = includeDeskScout ? board.games : (board.games || []).map(toFanGame);
   return {
     ok: true,
     season: board.season,
     updatedAt: board.updatedAt,
     label: board.label,
     source: board.source,
-    games: board.games,
+    games,
     count: board.games.length,
   };
 }
@@ -435,6 +488,7 @@ module.exports = {
   getScheduleBoard,
   saveScheduleBoard,
   toApiPayload,
+  toFanGame,
   normalizeDoc,
   normalizeUniform,
   backfillUniforms,

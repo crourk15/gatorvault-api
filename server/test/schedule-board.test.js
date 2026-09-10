@@ -28,6 +28,56 @@ describe('schedule-board', () => {
     assert.ok(payload.updatedAt);
   });
 
+  function oldIosBuildScouting(game) {
+    return {
+      offense: game.offenseScout?.length ? game.offenseScout : game.opponentTendencies,
+      defense: game.defenseScout?.length ? game.defenseScout : game.defenseTendencies,
+      matchupSummary: game.scoutingReport ?? game.film,
+    };
+  }
+
+  it('public toApiPayload empties desk scout so current iOS falls back to fan copy', () => {
+    const board = scheduleBoard.getScheduleBoard(2026);
+    const payload = scheduleBoard.toApiPayload(board);
+    const campbell = payload.games.find((g) => g.id === 'campbell');
+    const file = board.games.find((g) => g.id === 'campbell');
+    assert.ok(file.offenseScout?.some((n) => /Film-confirmed/i.test(n)));
+    assert.deepEqual(campbell.offenseScout, []);
+    assert.deepEqual(campbell.defenseScout, []);
+    assert.equal(campbell.scoutingReport, undefined);
+    assert.ok(campbell.opponentTendencies?.some((n) => /No-huddle shotgun/i.test(n)));
+    assert.match(String(campbell.film), /What the tape shows vs Campbell/i);
+    const dump = [
+      campbell.film,
+      ...(campbell.offenseScout || []),
+      ...(campbell.defenseScout || []),
+      campbell.scoutingReport,
+      ...(campbell.opponentTendencies || []),
+      ...(campbell.defenseTendencies || []),
+    ].filter(Boolean);
+    assert.ok(!dump.some((n) => /Film-confirmed|NOT confirmed|box-confirmed/i.test(n)));
+    const ios = oldIosBuildScouting(campbell);
+    assert.ok(ios.offense.some((n) => /No-huddle shotgun/i.test(n)));
+    assert.ok(!ios.offense.some((n) => /Film-confirmed/i.test(n)));
+    assert.match(String(ios.matchupSummary), /What the tape shows vs Campbell/i);
+    assert.ok(!/NOT confirmed/i.test(String(ios.matchupSummary)));
+  });
+
+  it('desk toApiPayload keeps raw scout for Admin Hub', () => {
+    const payload = scheduleBoard.toApiPayload(undefined, { includeDeskScout: true });
+    const campbell = payload.games.find((g) => g.id === 'campbell');
+    assert.ok(campbell.offenseScout?.some((n) => /Film-confirmed/i.test(n)));
+    assert.ok(campbell.scoutingReport);
+  });
+
+  it('game-week meta games also hide desk scout', () => {
+    const feed = require('../lib/game-week-feed');
+    const payload = feed.buildGameWeekPayload();
+    const campbell = payload.games.find((g) => g.id === 'campbell');
+    assert.deepEqual(campbell.offenseScout, []);
+    assert.equal(campbell.scoutingReport, undefined);
+  });
+
 
   it('aligns 2026 slate to official windows + Atlanta UGA + bye', () => {
     const board = scheduleBoard.getScheduleBoard(2026);

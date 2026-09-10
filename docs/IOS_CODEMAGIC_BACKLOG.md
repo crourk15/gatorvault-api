@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Scouting Report: public `/api/schedule` empties desk `offenseScout` / `defenseScout` and omits `scoutingReport` so the current App Store mapper falls back to fan tendencies + `film` (API — no Codemagic)
 - [x] Game Week how-we-win copy: drop “confirmed vertical shot” desk wording on FAU keys (API `howUFWins`)
 - [x] FutureCast weekend board: played home-game visitor lists persist into visit_logs + 2028 allowlist; beat UF predictions / 90%+ RPM score on Chase (API — no Codemagic)
 - [x] Josiah Taylor Closest: June UF offer + Alderman 09/08 “Florida is #1” sit-down + GV board lead (API — no Codemagic)
@@ -105,7 +106,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-10 | Game Week Scouting Report: fan tendencies + `film` only — no film-confirmed / box-confirmed desk tags | `buildScouting` + Film Room matchup card in binary; **raw scout stays API for Admin Hub** | #652 |
+| 2026-09-10 | Game Week Scouting Report: bundled mapper prefers fan tendencies + `film` | `buildScouting` in binary — **current App Store copy is already API-fixed** (public schedule empties desk scout); bake only drops the leftover mapper | #652 |
 | 2026-09-08 | Film Room: hide empty Review tab; land on Breakdowns; GNFP FAU cuts in hub seed | `VaultFilmRoomPage` rail + `film-room-hub-seed.json` first-paint; **live catalog stays API after Render** | #643 |
 | 2026-09-06 | Schedule: past cards show official final + box-score link (FAU 66–21) | `GameCard` + `PredictedScoreBlock` in binary; **later weekly finals/box URLs stay API via `/api/schedule` after this bake** | #637 |
 | 2026-09-07 | Film Room Review empty rail: no FAU / waiting-on-tape leak | `VaultFilmReviewPanel` + hub copy in binary | pending |

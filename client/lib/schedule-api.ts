@@ -1,6 +1,7 @@
 /**
  * Live schedule fetch — API is source of truth after client bake.
  * Seed fallback: SCHEDULE_GAMES (bundled) so cold/offline still renders.
+ * Do not refill desk scout (offenseScout / defenseScout / scoutingReport) from seed.
  */
 import { snapshotLiveFetch } from './snapshot-fetch';
 import { SCHEDULE_GAMES, type ScheduleGame } from './schedule-data';
@@ -67,12 +68,18 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
         filmNotes: Array.isArray(g.filmNotes)
           ? g.filmNotes.map((n) => String(n || '').trim()).filter(Boolean)
           : seed?.filmNotes,
+        // Never refill desk scout from Capacitor seed — public API empties these
+        // so current iOS falls through to fan tendencies + film.
         offenseScout: Array.isArray(g.offenseScout)
           ? g.offenseScout.map((n) => String(n || '').trim()).filter(Boolean)
-          : seed?.offenseScout,
+          : undefined,
         defenseScout: Array.isArray(g.defenseScout)
           ? g.defenseScout.map((n) => String(n || '').trim()).filter(Boolean)
-          : seed?.defenseScout,
+          : undefined,
+        scoutingReport:
+          g.scoutingReport != null && String(g.scoutingReport).trim()
+            ? String(g.scoutingReport).trim()
+            : undefined,
         pred: String(g.pred || ''),
         predUF: Number.isFinite(Number(g.predUF)) ? Number(g.predUF) : 0,
         predOpp: Number.isFinite(Number(g.predOpp)) ? Number(g.predOpp) : 0,

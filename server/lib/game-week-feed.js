@@ -22,7 +22,7 @@ function buildGameWeekPayload() {
   try {
     const scheduleBoard = require('./schedule-board');
     const board = scheduleBoard.getScheduleBoard(meta.season || 2026);
-    games = board.games || [];
+    games = (board.games || []).map(scheduleBoard.toFanGame);
     scheduleUpdatedAt = board.updatedAt || null;
   } catch {
     /* schedule board optional for meta pointer */

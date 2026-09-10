@@ -174,12 +174,20 @@ function mountPlatformRoutes(app) {
     }
   });
 
-  /** Live schedule slate — edit server/data/schedule/<year>-season.json (or /var/data) without Codemagic. */
+  /** Live schedule slate — edit server/data/schedule/<year>-season.json (or /var/data) without Codemagic.
+   *  Public GET empties desk scout so current iOS falls back to fan tendencies + film.
+   *  Raw offenseScout / defenseScout / scoutingReport: GET ?desk=1 + admin PIN, or PUT response.
+   */
   app.get('/api/schedule', (req, res) => {
     try {
       const scheduleBoard = require('./schedule-board');
       const season = Number(req.query.year || req.query.season || 2026) || 2026;
-      return res.json(scheduleBoard.toApiPayload(scheduleBoard.getScheduleBoard(season)));
+      const pin = String(req.get('X-Recruiting-Pin') || req.query.pin || '');
+      const wantDesk = /^(1|true|yes|desk)$/i.test(String(req.query.desk || ''));
+      const includeDeskScout = wantDesk && verifyAdminPin(pin);
+      return res.json(
+        scheduleBoard.toApiPayload(scheduleBoard.getScheduleBoard(season), { includeDeskScout })
+      );
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -194,7 +202,11 @@ function mountPlatformRoutes(app) {
       const scheduleBoard = require('./schedule-board');
       const season = Number(req.body?.season || req.query.year || 2026) || 2026;
       const saved = scheduleBoard.saveScheduleBoard(req.body || {}, season);
-      return res.json({ ok: true, ...scheduleBoard.toApiPayload(saved), path: saved.path });
+      return res.json({
+        ok: true,
+        ...scheduleBoard.toApiPayload(saved, { includeDeskScout: true }),
+        path: saved.path,
+      });
     } catch (err) {
       return res.status(400).json({ ok: false, error: err.message });
     }
