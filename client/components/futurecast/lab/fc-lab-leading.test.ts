@@ -229,6 +229,30 @@ test('next commit pick scores strong lead + momentum higher than soft lead', () 
   assert.equal(isNextCommitPick(soft), false);
 });
 
+test('NR in-state DL with GV lead + UF offer + gameday process is Closest-eligible', () => {
+  const taylor = target({
+    slug: 'josiah-taylor',
+    name: 'Josiah Taylor',
+    position: 'DL',
+    school: 'Vero Beach (FL)',
+    ufProbability: 72,
+    ufRpmPct: null,
+    competingSchools: [],
+    stars: 3,
+    hasUFOffer: true,
+    closestCommitEligible: true,
+    processEvidence: warmProcess({
+      floridaVisits: 2,
+      recentVisit: true,
+      reasons: ['uf_offer', 'florida_visit', 'recent_visit', 'intel'],
+    }),
+  });
+  assert.equal(isFloridaLeadingOnBoard(taylor), true);
+  assert.equal(hasCredibleBoardLead(taylor), true);
+  assert.equal(hasClosestCommitProcessEvidence(taylor), true);
+  assert.equal(isNextCommitPick(taylor), true);
+});
+
 test('odds-only board lead without process evidence is not Closest to commit', () => {
   const oddsOnly = target({
     slug: 'hamilton-leserra',

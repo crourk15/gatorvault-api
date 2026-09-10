@@ -1,7 +1,19 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-13T13:42:15.983Z",
+  "updatedAt": "2026-09-10T17:04:28.574Z",
   "items": [
+    {
+      "id": "olog_josiah-taylor_2026-06-19_florida",
+      "playerSlug": "josiah-taylor",
+      "playerId": "josiah-taylor",
+      "school": "Florida",
+      "offerType": "Offered",
+      "date": "2026-06-19",
+      "source": "beat:alderman",
+      "fingerprint": "offer|josiah-taylor|florida|offered|2026-06-19",
+      "reportedAt": "2026-09-10T17:04:28.559Z",
+      "detail": "Josiah Taylor — Florida offer during first Swamp visit (June)."
+    },
     {
       "id": "olog_derrell-hines-jr_undated_florida",
       "playerSlug": "derrell-hines-jr",

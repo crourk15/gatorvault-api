@@ -63,8 +63,9 @@
     {
       "gameId": "fau",
       "opponent": "FAU",
+      "date": "2026-09-05",
       "dateLabel": "Sep 5",
-      "chaseLabel": "Expected FAU visit · Sep 5",
+      "chaseLabel": "FAU visit · Sep 5",
       "slugs": [
         "asher-ghioto",
         "zaiden-jernigan",

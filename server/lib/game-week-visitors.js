@@ -9,6 +9,16 @@ const fs = require('fs');
 const path = require('path');
 
 const DOC_PATH = path.join(__dirname, '..', 'data', 'schedule', 'game-visitors-2026.json');
+const { gameHasBeenPlayed } = require('./game-visitors-visit-sync');
+
+function fanChaseLabel(game) {
+  const raw = String(game?.chaseLabel || '').trim();
+  if (!raw) return '';
+  if (gameHasBeenPlayed(game) && /^expected\s+/i.test(raw)) {
+    return raw.replace(/^expected\s+/i, '');
+  }
+  return raw;
+}
 
 let _cache = null;
 let _mtime = 0;
@@ -31,7 +41,7 @@ function buildSlugLabelMap(doc = loadDoc()) {
   const map = new Map();
   const games = Array.isArray(doc?.games) ? doc.games : [];
   for (const game of games) {
-    const label = String(game?.chaseLabel || '').trim();
+    const label = fanChaseLabel(game);
     if (!label) continue;
     const slugs = Array.isArray(game?.slugs) ? game.slugs : [];
     for (const raw of slugs) {
@@ -155,7 +165,7 @@ function visitorsPanelForGameId(gameId) {
     gameId: String(game.gameId),
     opponent: String(game.opponent || '').trim() || null,
     dateLabel: String(game.dateLabel || '').trim() || null,
-    chaseLabel: String(game.chaseLabel || '').trim() || null,
+    chaseLabel: fanChaseLabel(game) || null,
     source: String(game.source || doc.source || '').trim() || null,
     visitors,
   };
@@ -179,6 +189,7 @@ function attachExpectedVisitorsToGames(games) {
 module.exports = {
   DOC_PATH,
   loadDoc,
+  fanChaseLabel,
   buildSlugLabelMap,
   expectedVisitLabelForSlug,
   mergeExpectedVisitHistory,

@@ -13,7 +13,7 @@ const {
 
 describe('game-week-visitors', () => {
   it('maps FAU and Ole Miss visitors to chase labels', () => {
-    assert.equal(expectedVisitLabelForSlug('asher-ghioto'), 'Expected FAU visit · Sep 5');
+    assert.equal(expectedVisitLabelForSlug('asher-ghioto'), 'FAU visit · Sep 5');
     assert.equal(expectedVisitLabelForSlug('brysen-wright'), 'Expected Ole Miss visit · Sep 26');
     assert.equal(expectedVisitLabelForSlug('hudson-west'), 'Expected Ole Miss visit · Sep 26');
     assert.equal(expectedVisitLabelForSlug('not-a-real-slug'), null);
@@ -29,7 +29,7 @@ describe('game-week-visitors', () => {
   it('slug map has unique first-game wins', () => {
     const map = buildSlugLabelMap();
     assert.ok(map.size >= 20);
-    assert.equal(map.get('asher-ghioto'), 'Expected FAU visit · Sep 5');
+    assert.equal(map.get('asher-ghioto'), 'FAU visit · Sep 5');
   });
 
   it('builds Game Week panel rows for FAU', () => {
@@ -55,7 +55,7 @@ describe('game-week-visitors', () => {
         panel.visitors.some((v) => v.slug === slug),
         `missing FAU visitor ${slug}`
       );
-      assert.equal(expectedVisitLabelForSlug(slug), 'Expected FAU visit · Sep 5');
+      assert.equal(expectedVisitLabelForSlug(slug), 'FAU visit · Sep 5');
     }
     assert.equal(
       panel.visitors.find((v) => v.slug === 'james-allen')?.classYear,
@@ -70,14 +70,14 @@ describe('game-week-visitors', () => {
     assert.equal(panel.gameId, 'campbell');
     assert.equal(panel.visitors.length, 0);
     assert.match(String(panel.source || ''), /no published/i);
-    assert.equal(expectedVisitLabelForSlug('zylen-little'), 'Expected FAU visit · Sep 5');
+    assert.equal(expectedVisitLabelForSlug('zylen-little'), 'FAU visit · Sep 5');
   });
 
   it('includes Josiah Taylor on Ole Miss expected list', () => {
     const panel = visitorsPanelForGameId('olemiss');
     assert.ok(panel);
     assert.ok(panel.visitors.some((v) => v.slug === 'josiah-taylor'));
-    assert.equal(expectedVisitLabelForSlug('josiah-taylor'), 'Expected FAU visit · Sep 5');
+    assert.equal(expectedVisitLabelForSlug('josiah-taylor'), 'FAU visit · Sep 5');
   });
 
   it('attaches expectedVisitors onto schedule games', () => {
