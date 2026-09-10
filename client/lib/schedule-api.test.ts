@@ -112,6 +112,54 @@ describe('schedule-api uniforms', () => {
     assert.match(String(live[0]?.boxScoreUrl), /boxscore\/27903/);
   });
 
+  it('normalizeGames does not refill desk scout from seed when API sends empty arrays', () => {
+    const seed = SCHEDULE_GAMES.find((g) => g.id === 'campbell');
+    assert.ok(seed?.offenseScout?.some((n) => /Film-confirmed/i.test(n)));
+    const live = normalizeGames([
+      {
+        id: 'campbell',
+        label: 'Sep 12 vs Campbell',
+        opp: 'Campbell Fighting Camels',
+        date: 'September 12, 2026 · 7:00 PM ET',
+        venue: 'Ben Hill Griffin Stadium, Gainesville FL',
+        ufPct: 90,
+        keys: [],
+        swing: [],
+        film: 'What the tape shows vs Campbell.',
+        pred: '',
+        predUF: 45,
+        predOpp: 10,
+        offenseScout: [],
+        defenseScout: [],
+      },
+    ]);
+    assert.deepEqual(live[0]?.offenseScout, []);
+    assert.deepEqual(live[0]?.defenseScout, []);
+    assert.equal(live[0]?.scoutingReport, undefined);
+  });
+
+  it('normalizeGames does not refill desk scout when API omits the fields', () => {
+    const live = normalizeGames([
+      {
+        id: 'campbell',
+        label: 'Sep 12 vs Campbell',
+        opp: 'Campbell Fighting Camels',
+        date: 'September 12, 2026 · 7:00 PM ET',
+        venue: 'Ben Hill Griffin Stadium, Gainesville FL',
+        ufPct: 90,
+        keys: [],
+        swing: [],
+        film: 'What the tape shows vs Campbell.',
+        pred: '',
+        predUF: 45,
+        predOpp: 10,
+      },
+    ]);
+    assert.equal(live[0]?.offenseScout, undefined);
+    assert.equal(live[0]?.defenseScout, undefined);
+    assert.equal(live[0]?.scoutingReport, undefined);
+  });
+
   it('mergeUniform prefers live over seed', () => {
     const merged = mergeUniform(
       { helmet: 'Blue', jersey: 'Blue', pants: 'Blue', label: 'All-Blue' },

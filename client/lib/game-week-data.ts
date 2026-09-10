@@ -294,7 +294,7 @@ function fanScoutLines(lines: string[] | undefined, fallback: string[]): string[
 
 function buildScouting(game: ScheduleGame): ScoutingReportIntel {
   return {
-    // Fan rail only — raw offenseScout / defenseScout / scoutingReport stay desk/API.
+    // Fan rail only — raw offenseScout / defenseScout / scoutingReport stay on disk / admin GET.
     offense: fanScoutLines(game.opponentTendencies, [
       'Establish run game early',
       'Protect the football',
