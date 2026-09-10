@@ -785,7 +785,7 @@
       "stateRank": null,
       "inState": true,
       "committedTo": null,
-      "ufProbability": null
+      "ufProbability": 0.72
     },
     {
       "slug": "john-odwyer",

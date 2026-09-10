@@ -325569,7 +325569,7 @@
     "pos": "DL",
     "classYear": 2028,
     "school": "Vero Beach (FL)",
-    "htWt": "",
+    "htWt": "6-4 / 313",
     "stars": 3,
     "rating": null,
     "ratingOverride": null,
@@ -325585,7 +325585,7 @@
     "fromSchool": null,
     "commitDate": null,
     "skinny": "",
-    "profileNote": "",
+    "profileNote": "Taylor told Alderman after the FAU gameday that Florida is without a doubt his number one. June offer, first Swamp gameday, Ole Miss return still on the calendar.",
     "on3Id": null,
     "on3Slug": null,
     "on3ProfileUrl": null,
@@ -325599,27 +325599,46 @@
     "rivalsArticleUrl": null,
     "ufOvStatus": null,
     "ufOvCancelledAt": null,
-    "nextVisitSchool": null,
+    "nextVisitSchool": "Florida",
     "visitStart": null,
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": null,
-    "fitScore": null,
+    "ufProbability": 72,
+    "fitScore": 55,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
-    "hometownCity": null,
-    "hometownState": null,
-    "stateFips": null,
-    "pinLat": null,
-    "pinLng": null,
+    "hometownCity": "Vero Beach",
+    "hometownState": "FL",
+    "stateFips": "12",
+    "pinLat": 27.766279,
+    "pinLng": -81.686783,
     "nilValue": null,
     "nilEstimate": null,
     "nilSource": null,
     "competitors": [],
     "ufRpmPct": null,
-    "updatedAt": "2026-09-10T03:42:55.433Z",
+    "updatedAt": "2026-09-10T17:04:28.825Z",
     "displayRating": null,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "date": "2026-06-19",
+        "offerType": "Offered",
+        "source": "beat:alderman"
+      }
+    ],
+    "offerList": [
+      {
+        "school": "Florida",
+        "date": "2026-06-19",
+        "offerType": "Offered",
+        "source": "beat:alderman"
+      }
+    ],
+    "height": "6-4",
+    "weight": 313,
+    "state": "FL"
   }
 ]

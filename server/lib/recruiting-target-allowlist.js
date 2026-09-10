@@ -101,6 +101,8 @@ const ALLOWLIST_2028 = [
   'jamarcus-johnson',
   // Beat Desk / film desk — Great Mills MD S (identity hardened vs Collins collision)
   'denairo-girton-jr',
+  // Alderman 09/08/26 — in-state DL, FAU gameday, Florida #1 without a doubt
+  'josiah-taylor',
 ];
 
 /** Charles' display names — used for On3/Rivals/247 identity lookup (never synthetic cards). */
@@ -169,6 +171,7 @@ const CANONICAL_TARGET_NAMES = {
   'derrell-hines-jr': 'Derrell Hines Jr.',
   'jamarcus-johnson': 'Jamarcus Johnson',
   'denairo-girton-jr': 'DeNairo Girton Jr.',
+  'josiah-taylor': 'Josiah Taylor',
 };
 
 /** Display name → canonical slug (handles typos / aliases) */
