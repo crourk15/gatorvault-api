@@ -5,39 +5,39 @@ Desk only. `filmWatched: false`. Fan Review stays off.
 Florida 66 · FAU 21
 September 5, 2026 · Ben Hill Griffin Stadium, Gainesville FL
 
-FAU got the first look at Ben Hill Griffin. It ended at the Florida 35, DJ Coleman already in the throwing lane, the drive dead before the Owls ever found a rhythm. After that the building belonged to Florida. They spread the field, ran Jaden Baugh until the defense sat, and kept the football.
+FAU got the first look at Ben Hill Griffin. Third-and-10 at the Florida 35, White is in quarters — two deep, corners off. The throw is late. DJ Coleman is already in the window at the 5. After that Florida made them choose. They ran Jaden Baugh until the defense sat, then they took the hitch and kept the football.
 
 Offense
 
-Buster Faulkner opens a season with a count, not a gadget. Spread the field until they cannot load the box and still cover. Live in the shotgun. Give Jaden Baugh 13 the downhill look and make them declare. Sit on the run and the hitch is there. Come down for Baugh and they go. Pistol showed once. The sneak is a conversion, not who they are.
+Buster Faulkner opens a season with a count, not a gadget. Spread the field. Live in the shotgun. Give Jaden Baugh 13 the downhill look and make them declare. The first run is the idea. Shotgun, middle, nine yards from their own 6. The line already looks more technically sound than a year ago. The run is physical. That is why Faulkner can keep giving it to him.
 
-The line already looks more technically sound than a year ago. The run is physical. That is why Faulkner can keep giving it to Baugh. The front is moving people.
+Then they sit on Baugh. First-and-10 at the FAU 49, corners off. Aaron Philo 12 throws it now. Vernell Brown III 1 catches it at the 50. The first man misses. Forty-nine yards. That is not a bomb. That is the hitch.
 
-The first Gator run is the idea. Shotgun, Baugh, middle, nine yards from their own 6. They live there. The only official snap that left the gun was fourth-and-1, Aaron Philo 12, plus four. They needed a yard. They took four. Then they went back to work.
+Pistol showed once. The sneak is a conversion, not who they are. Dallas Wilson 6 is why the box empties. The hitch only lives if he and Brown are out there making somebody choose.
 
-Brown III 1 and Wilson 6 are why the box empties. The hitch only lives if those two make somebody choose.
+The keep to the left is drawn up. Enyce Sledge is in the backfield. Minus two. The design was sound. They lost the play.
 
 Defense
 
-Brad White’s Florida is an odd front on purpose. Three down. JACK is Jayden Woods. STAR. Graham at WILL. When the broadcast counts four rushers, JACK is coming. Cover 3, quarters, man — name the shell on that snap. He mixes them.
+Brad White’s Florida is an odd front on purpose. Three down. JACK is Jayden Woods. STAR. Graham at WILL. When the broadcast counts four rushers, JACK is coming.
 
-Coleman’s window was already there. The front made the quarterback hold it. The throw just confirmed it.
+Coleman’s snap is quarters. Two deep on that snap — not as a night, as that call. Corners off. The front makes the quarterback hold it. Coleman is in the deep window at the 5. The throw just confirms it.
 
-The areas of opportunity are a secondary that did not get the same call, and a Sledge keep they did not finish. The design was sound. They lost the play.
+The areas of opportunity start in the secondary. They were not on the same call. Missed tackles were not the pile.
 
 Specials
 
 Florida never punts. Patrick Durkin from 53. FAU’s 18-yard punt starts the second Florida score. They take the points and they keep the football.
 
 What held
-- The line already looks more technically sound than a year ago, and the run is physical.
-- The first drive dies with Coleman in the lane.
+- The line is more technically sound than a year ago, and Baugh is downhill.
+- Quarters on third-and-10. Coleman is in the window.
 - They take the points and keep the football.
 
 Areas of opportunity
 - The secondary has to get the same call.
-- The keep was drawn up right. Finish it.
+- The keep was drawn up right. Sledge was there first.
 
 Next · Campbell
 
-Campbell gets the same Florida. Shotgun. Baugh until they sit. Hitch, then the go. Odd front. Name the shell.
+Campbell gets the same choice. Shotgun. Baugh until they sit. Hitch when they do. Odd front. Name the shell.

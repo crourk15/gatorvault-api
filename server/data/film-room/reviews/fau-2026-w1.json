@@ -10,10 +10,10 @@
   "finalUF": 66,
   "finalOpp": 21,
   "title": "Week 1 vs FAU",
-  "dek": "Shotgun. Baugh downhill. Hitch when they sit. Odd front. Name the shell.",
+  "dek": "Florida made them choose. Then they took the choice.",
   "filmWatched": false,
   "watchStandard": "broadcast",
-  "watchNote": "PROVISIONAL — Film Desk lock draft 2026-09-09. Charles tape wins. Fan rail stays empty until he says go.",
+  "watchNote": "PROVISIONAL — sat Coleman INT, Brown hitch, Sledge keep on the broadcast. Fan rail stays empty until Charles says go.",
   "sources": [
     {
       "label": "Official Week 1 highlights",
@@ -24,16 +24,16 @@
       "url": "https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903"
     }
   ],
-  "headline": "FAU got the first look. Coleman took it. Florida never gave the building back.",
-  "recap": "FAU got the first look at Ben Hill Griffin. It ended at the Florida 35, DJ Coleman already in the throwing lane, the drive dead before the Owls ever found a rhythm. After that the building belonged to Florida. They spread the field, ran Jaden Baugh until the defense sat, and kept the football.",
+  "headline": "Florida made FAU choose, then took the choice.",
+  "recap": "FAU got the first look at Ben Hill Griffin. Third-and-10 at the Florida 35, White is in quarters — two deep, corners off. The throw is late. DJ Coleman is already in the window at the 5. After that Florida made them choose. They ran Jaden Baugh until the defense sat, then they took the hitch and kept the football.",
   "offense": {
     "kicker": "Offense",
-    "body": "Buster Faulkner opens a season with a count, not a gadget. Spread the field until they cannot load the box and still cover. Live in the shotgun. Give Jaden Baugh 13 the downhill look and make them declare. Sit on the run and the hitch is there. Come down for Baugh and they go. Pistol showed once. The sneak is a conversion, not who they are.\n\nThe line already looks more technically sound than a year ago. The run is physical. That is why Faulkner can keep giving it to Baugh. The front is moving people.\n\nThe first Gator run is the idea. Shotgun, Baugh, middle, nine yards from their own 6. They live there. The only official snap that left the gun was fourth-and-1, Aaron Philo 12, plus four. They needed a yard. They took four. Then they went back to work.\n\nBrown III 1 and Wilson 6 are why the box empties. The hitch only lives if those two make somebody choose.",
+    "body": "Buster Faulkner opens a season with a count, not a gadget. Spread the field. Live in the shotgun. Give Jaden Baugh 13 the downhill look and make them declare. The first run is the idea. Shotgun, middle, nine yards from their own 6. The line already looks more technically sound than a year ago. The run is physical. That is why Faulkner can keep giving it to him.\n\nThen they sit on Baugh. First-and-10 at the FAU 49, corners off. Aaron Philo 12 throws it now. Vernell Brown III 1 catches it at the 50. The first man misses. Forty-nine yards. That is not a bomb. That is the hitch.\n\nPistol showed once. The sneak is a conversion, not who they are. Dallas Wilson 6 is why the box empties. The hitch only lives if he and Brown are out there making somebody choose.\n\nThe keep to the left is drawn up. Enyce Sledge is in the backfield. Minus two. The design was sound. They lost the play.",
     "bullets": []
   },
   "defense": {
     "kicker": "Defense",
-    "body": "Brad White’s Florida is an odd front on purpose. Three down. JACK is Jayden Woods. STAR. Graham at WILL. When the broadcast counts four rushers, JACK is coming. Cover 3, quarters, man — name the shell on that snap. He mixes them.\n\nColeman’s window was already there. The front made the quarterback hold it. The throw just confirmed it.\n\nThe areas of opportunity are a secondary that did not get the same call, and a Sledge keep they did not finish. The design was sound. They lost the play.",
+    "body": "Brad White’s Florida is an odd front on purpose. Three down. JACK is Jayden Woods. STAR. Graham at WILL. When the broadcast counts four rushers, JACK is coming.\n\nColeman’s snap is quarters. Two deep on that snap — not as a night, as that call. Corners off. The front makes the quarterback hold it. Coleman is in the deep window at the 5. The throw just confirms it.\n\nThe areas of opportunity start in the secondary. They were not on the same call. Missed tackles were not the pile.",
     "bullets": []
   },
   "specials": {
@@ -42,20 +42,20 @@
     "bullets": []
   },
   "held": [
-    "The line already looks more technically sound than a year ago, and the run is physical.",
-    "The first drive dies with Coleman in the lane.",
+    "The line is more technically sound than a year ago, and Baugh is downhill.",
+    "Quarters on third-and-10. Coleman is in the window.",
     "They take the points and keep the football."
   ],
   "opportunity": [
     "The secondary has to get the same call.",
-    "The keep was drawn up right. Finish it."
+    "The keep was drawn up right. Sledge was there first."
   ],
   "keys": [
-    "The line already looks more technically sound than a year ago, and the run is physical.",
-    "The first drive dies with Coleman in the lane.",
+    "The line is more technically sound than a year ago, and Baugh is downhill.",
+    "Quarters on third-and-10. Coleman is in the window.",
     "They take the points and keep the football.",
     "The secondary has to get the same call.",
-    "The keep was drawn up right. Finish it."
+    "The keep was drawn up right. Sledge was there first."
   ],
   "schemeLessonIds": [
     "ss-gap-run",
@@ -66,9 +66,9 @@
   ],
   "nextWeek": {
     "opponent": "Campbell",
-    "look": "Campbell gets the same Florida. Shotgun. Baugh until they sit. Hitch, then the go. Odd front. Name the shell."
+    "look": "Campbell gets the same choice. Shotgun. Baugh until they sit. Hitch when they do. Odd front. Name the shell."
   },
-  "publishedAt": "2026-09-10T02:10:00.000Z",
+  "publishedAt": "2026-09-10T02:20:00.000Z",
   "clipLabel": "Week 1 official highlights",
   "clipUrl": "https://www.youtube.com/watch?v=znsdoojhHQg"
 }
