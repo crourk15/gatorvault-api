@@ -102,6 +102,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-09 | Film Review: one-scroll spine (card → recap → O/D/ST → what held / areas of opportunity → next). Tabs off. | `VaultFilmReviewPanel` + `film-room-elite.css` in binary; **weekly copy stays API after this bake**. Review still off the fan rail until Charles says go. | #650 |
 | 2026-09-08 | Film Room: hide empty Review tab; land on Breakdowns; GNFP FAU cuts in hub seed | `VaultFilmRoomPage` rail + `film-room-hub-seed.json` first-paint; **live catalog stays API after Render** | #643 |
 | 2026-09-06 | Schedule: past cards show official final + box-score link (FAU 66–21) | `GameCard` + `PredictedScoreBlock` in binary; **later weekly finals/box URLs stay API via `/api/schedule` after this bake** | #637 |
 | 2026-09-07 | Film Room Review empty rail: no FAU / waiting-on-tape leak | `VaultFilmReviewPanel` + hub copy in binary | pending |

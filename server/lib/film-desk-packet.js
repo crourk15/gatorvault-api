@@ -244,11 +244,14 @@ function formatPaste(packet) {
   lines.push('INSTRUCTIONS FOR AI');
   lines.push('-------------------');
   lines.push(
-    'Write one GatorVault Film Review draft from the LOCK + tape you actually sit. Target a tight board (offense / defense / specials), not a 50-chunk dump.'
+    'Write one GatorVault Film Review from the LOCK + tape you actually sit. One scroll. Not a 50-chunk dump. Not a telegram.'
+  );
+  lines.push(
+    'Spine: (1) card — who / venue / score (2) recap — what happened, ~100 words, no box-score walk (3) Offense — how they attack (coordinator idea, OL, 2–3 proof snaps), ~220 words (4) Defense — how they attack, ~220 words (5) Specials — short (6) What held / Areas of opportunity — 3 + 2–3 bullets (7) Next.'
   );
   lines.push('Charles tape wins when a writer seed contradicts the lock.');
   lines.push('Absorb intel-seed FACTS in Vault voice. Forbidden in fan copy: writer names; GNFP/Patreon wording; "according to"; box-score walk; leftover hats you did not sit.');
-  lines.push('Use What they ran / How it played. Areas of opportunity — never "leak." Never personnel codes. Never "every snap."');
+  lines.push('Lock facts stay the ceiling. Areas of opportunity — never "leak." Never personnel codes. Never "every snap."');
   lines.push('Do NOT publish live Review (filmWatched true) unless Charles confirms. Persist drafts with filmWatched:false + watchNote containing PROVISIONAL.');
   lines.push(
     'PERSIST (when Charles says go): node server/scripts/upsert-vault-film-review.js --file=server/data/film-room/reviews/<id>.json'
@@ -314,6 +317,15 @@ function buildFilmDeskBrief(gameId, { year = 2026 } = {}) {
   const sources = loadSources();
   const intelSeeds = mergeSeeds(card, game);
   const catalog = catalogForGame(game);
+  let draftReview = null;
+  try {
+    const reviewStore = require('./vault-film-review-store');
+    draftReview =
+      reviewStore.listAllReviews().find((row) => String(row.gameId || '').toLowerCase() === id) ||
+      null;
+  } catch {
+    draftReview = null;
+  }
   const packet = {
     ok: true,
     gameId: id,
@@ -322,6 +334,7 @@ function buildFilmDeskBrief(gameId, { year = 2026 } = {}) {
     sources,
     intelSeeds,
     catalog,
+    draftReview,
   };
   packet.pasteText = formatPaste(packet);
   return packet;

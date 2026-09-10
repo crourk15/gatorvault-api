@@ -210,30 +210,28 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
-.gv-fr-review-tabs {
+.gv-fr-review-unit--lead {
+  padding: 0.15rem 0 0.35rem;
+  border: none;
+  background: transparent;
+}
+
+.gv-fr-review-unit--lead p {
+  font-size: 1.02rem;
+  line-height: 1.62;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.gv-fr-review-split {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.45rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-.gv-fr-review-tabs__btn {
-  min-height: 44px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.7);
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.gv-fr-review-tabs__btn.is-active {
-  color: #fff;
-  background: linear-gradient(180deg, rgba(250, 70, 22, 0.3), rgba(250, 70, 22, 0.14));
-  border-color: rgba(250, 70, 22, 0.5);
+@media (max-width: 700px) {
+  .gv-fr-review-split {
+    grid-template-columns: 1fr;
+  }
 }
 
 .gv-fr-review-unit,
@@ -266,6 +264,7 @@
 }
 
 .gv-fr-review-unit ul,
+.gv-fr-review-keys ul,
 .gv-fr-review-keys ol,
 .gv-fr-scheme-viewer__panel ul {
   margin: 0;
