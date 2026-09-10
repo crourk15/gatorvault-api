@@ -138,6 +138,32 @@ describe('UF chase score (Top Targets traction)', () => {
     assert.equal(priority.chase.scheduledOv, true);
   });
 
+  it('scores beat UF predictions on chase — FSU never counts', () => {
+    const { computeChaseScore, ufPredictionChasePoints, isUfPredictionSchool } = require('../../lib/uf-chase-score');
+    assert.equal(isUfPredictionSchool('Florida'), true);
+    assert.equal(isUfPredictionSchool('Florida State'), false);
+    assert.equal(isUfPredictionSchool('FSU'), false);
+    assert.equal(ufPredictionChasePoints({ prediction: 'Florida' }), 12);
+    assert.equal(ufPredictionChasePoints({ ufRpmPct: 96 }), 8);
+    assert.equal(ufPredictionChasePoints({ ufRpmPct: 80 }), 5);
+    assert.equal(ufPredictionChasePoints({ prediction: 'Florida State', ufRpmPct: 99 }), 0);
+    const empty = {
+      bySlug: new Map([['kid', { ov: 0, uv: 0, home: 0, flOffers: 0, latestVisitAt: 0 }]]),
+      allowlisted: new Set(),
+      staffMap: {},
+      headliners: new Set(),
+      intelCounts: new Map(),
+      intelFamilies: new Map(),
+      pursuitCounts: new Map(),
+      scheduledOvSlugs: new Set(),
+      days: 180,
+    };
+    const bare = computeChaseScore({ slug: 'kid' }, empty);
+    const pred = computeChaseScore({ slug: 'kid', rivalsLastPrediction: 'Florida' }, empty);
+    assert.equal(pred.chase.predPts, 12);
+    assert.equal(pred.chaseScore, bare.chaseScore + 12);
+  });
+
   it('treats in-home visits as scarce staff chase — beats stacked campus UVs', () => {
     const { computeChaseScore, isHomeVisit, homeVisitChasePoints } = require('../../lib/uf-chase-score');
     assert.equal(isHomeVisit('home_visit'), true);

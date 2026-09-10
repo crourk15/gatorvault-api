@@ -15,6 +15,7 @@ const intelStore = require('./recruiting-intel-store');
 const { getAllowlistSet, CANONICAL_TARGET_NAMES } = require('./recruiting-target-allowlist');
 const { isFloridaSchool } = require('./recruiting-target-filters');
 const { getLiveBoardTargets } = require('./live-board-targets');
+const { syncPlayedGameVisitors } = require('./game-visitors-visit-sync');
 const store = require('./recruiting-store');
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -273,6 +274,20 @@ async function runAllowlistIntelSweepInner({
         results.errors.push({ slug, kind: 'visit_log_sync', error: err.message });
       }
     }
+  }
+
+  // Played home-game visitor lists → visit_logs (Chase / Closest / allowlist).
+  // Must run before the visit-intel loop so the same sweep writes source-day rows.
+  try {
+    const gameVisitorSync = await syncPlayedGameVisitors({ dryRun });
+    if (gameVisitorSync.createdCount || gameVisitorSync.promotedCount) {
+      results.created.push({ kind: 'game_visitor_sync', ...gameVisitorSync });
+    }
+  } catch (err) {
+    results.errors.push({
+      kind: 'game_visitor_sync',
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 
   const visits = visitLogStore.listVisitLogs({ limit: 8000 });

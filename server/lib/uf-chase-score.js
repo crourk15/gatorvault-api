@@ -94,6 +94,28 @@ function recentVisitPoints(latestVisitAt, nowMs = Date.now()) {
   return 0;
 }
 
+/**
+ * Beat / Rivals PM "predicted to Florida" must move Chase — a 96% UF pick
+ * with a campus visit should not sit behind louder staff-heat names.
+ * Explicit UF prediction outranks a raw RPM lead. Not FSU.
+ */
+function isUfPredictionSchool(value) {
+  const t = String(value || '').toLowerCase();
+  if (!t) return false;
+  if (/florida state|\bfsu\b/.test(t)) return false;
+  return /\bflorida\b|\bgators\b/.test(t);
+}
+
+function ufPredictionChasePoints({ prediction = '', ufRpmPct = null } = {}) {
+  const pred = String(prediction || '');
+  if (/florida state|\bfsu\b/i.test(pred)) return 0;
+  if (isUfPredictionSchool(pred)) return 12;
+  const rpm = Number(ufRpmPct);
+  if (Number.isFinite(rpm) && rpm >= 90) return 8;
+  if (Number.isFinite(rpm) && rpm >= 75) return 5;
+  return 0;
+}
+
 function loadLocalPlayersSync() {
   try {
     const store = require('./recruiting-store');
@@ -204,10 +226,17 @@ function buildChaseFeatureIndex(opts = {}) {
     /* optional */
   }
 
+  /** @type {Map<string, { prediction: string, ufRpmPct: number|null }>} */
+  const predBySlug = new Map();
+
   // Sync local JSON — getAllPlayers() is async and was silently skipped here.
   for (const p of loadLocalPlayersSync()) {
     const key = slugKey(p?.slug);
     if (!key) continue;
+    predBySlug.set(key, {
+      prediction: p.rivalsLastPrediction || p.predictionSchool || '',
+      ufRpmPct: p.ufRpmPct ?? p.ufProbability ?? null,
+    });
     if (p.headliner) headliners.add(key);
     const ovStatus = String(p.ufOvStatus || p.uf_ov_status || '').toLowerCase();
     if (ovStatus === 'scheduled' || ovStatus === 'pending') {
@@ -279,6 +308,7 @@ function buildChaseFeatureIndex(opts = {}) {
     intelFamilies,
     pursuitCounts,
     scheduledOvSlugs,
+    predBySlug,
     days,
   };
 }
@@ -331,6 +361,11 @@ function computeChaseScore(player, index) {
     index.scheduledOvSlugs?.has(slug) ||
     playerOvStatus === 'scheduled' ||
     playerOvStatus === 'pending';
+  const predRow = index.predBySlug?.get(slug) || {};
+  const predPts = ufPredictionChasePoints({
+    prediction: player.rivalsLastPrediction || player.predictionSchool || predRow.prediction,
+    ufRpmPct: player.ufRpmPct ?? player.ufProbability ?? predRow.ufRpmPct,
+  });
 
   let score = 0;
   // Campus presence = light process checkmark. Trip count is ignored (locals stack).
@@ -362,6 +397,9 @@ function computeChaseScore(player, index) {
   score += Math.min(14, intel90 * 2);
   score += Math.min(6, Math.max(0, intelFamilyCount - 1) * 2);
 
+  // Beat / Rivals PM pick — fans see this as the board moving.
+  score += predPts;
+
   // Editorial chase gate (hunt list / headliner) — boost, not the whole board.
   if (allowlisted || headliner) score += 10;
 
@@ -387,6 +425,7 @@ function computeChaseScore(player, index) {
       hasStaffLead,
       hasSecondaryRecruiter,
       ufStatus: ufStatus || null,
+      predPts,
     },
   };
 }
@@ -408,6 +447,8 @@ module.exports = {
   visitChasePoints,
   homeVisitChasePoints,
   recentVisitPoints,
+  isUfPredictionSchool,
+  ufPredictionChasePoints,
   PURSUIT_TEXT_RE,
   HOME_VISIT_TEXT_RE,
 };

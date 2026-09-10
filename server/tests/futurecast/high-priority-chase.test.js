@@ -66,13 +66,17 @@ describe('Lab High Priority uses staff-chase ranking', () => {
       payload.players.some((p) => p.slug === 'hudson-west'),
       'Hudson West must stay in HP so Closest to commit updates from API without a client cut'
     );
+    assert.ok(
+      payload.players.some((p) => p.slug === 'tyree-mannings-jr'),
+      'Mannings (beat UF pick) must stay on the full HP board'
+    );
     const byChase = [...payload.players].sort(
       (a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0)
     );
-    const hudsonChaseRank = byChase.findIndex((p) => p.slug === 'hudson-west') + 1;
+    const manningsChaseRank = byChase.findIndex((p) => p.slug === 'tyree-mannings-jr') + 1;
     assert.ok(
-      hudsonChaseRank === 0 || hudsonChaseRank > HIGH_PRIORITY_UNDERCLASSMEN_CHASE_LIMIT,
-      'Hudson is outside chase-hot top-N — proving the old slice would have dropped him'
+      manningsChaseRank > HIGH_PRIORITY_UNDERCLASSMEN_CHASE_LIMIT,
+      `Mannings chase-hot rank ${manningsChaseRank} must sit outside top-${HIGH_PRIORITY_UNDERCLASSMEN_CHASE_LIMIT} so a chase-only slice cannot hide a predicted commit`
     );
   });
 
