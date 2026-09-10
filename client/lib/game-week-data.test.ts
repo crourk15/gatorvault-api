@@ -3,7 +3,12 @@ import { describe, it } from 'node:test';
 import { fallbackDepthChartBoard } from './depth-chart-api';
 import { SCHEDULE_GAMES } from './schedule-data';
 import { getFeaturedUfGame } from './gators-live';
-import { buildFilmNotes, defaultGameWeekId, getGameWeekBundle } from './game-week-data';
+import {
+  buildFilmNotes,
+  defaultGameWeekId,
+  DESK_SCOUT_TALK_RE,
+  getGameWeekBundle,
+} from './game-week-data';
 
 describe('Game Week Film Notes', () => {
   it('FAU Film Notes stay fan-facing and skip the raw scout dump', () => {
@@ -16,8 +21,11 @@ describe('Game Week Film Notes', () => {
 
     const bundle = getGameWeekBundle('fau');
     assert.deepEqual(bundle.filmNotes, notes);
-    assert.ok(bundle.scouting.offense.some((n) => /Veltkamp 24\/33/.test(n)));
-    assert.ok(bundle.scouting.defense.some((n) => /Tied-130th|NOT confirmed/i.test(n)));
+    assert.ok(bundle.scouting.offense.some((n) => /Shotgun every snap/i.test(n)));
+    assert.ok(bundle.scouting.defense.some((n) => /200 rush yards/i.test(n)));
+    assert.ok(!bundle.scouting.offense.some((n) => DESK_SCOUT_TALK_RE.test(n)));
+    assert.ok(!bundle.scouting.defense.some((n) => DESK_SCOUT_TALK_RE.test(n)));
+    assert.ok(!DESK_SCOUT_TALK_RE.test(bundle.scouting.matchupSummary));
   });
 
   it('Campbell Film Notes stay fan-facing and skip the raw scout dump', () => {
@@ -30,12 +38,14 @@ describe('Game Week Film Notes', () => {
 
     const bundle = getGameWeekBundle('campbell');
     assert.deepEqual(bundle.filmNotes, notes);
-    assert.ok(bundle.scouting.offense.some((n) => /29\/42/.test(n)));
-    assert.ok(bundle.scouting.defense.some((n) => /NOT confirmed|Brandon Butcher/i.test(n)));
+    assert.ok(bundle.scouting.offense.some((n) => /No-huddle shotgun/i.test(n)));
+    assert.ok(bundle.scouting.defense.some((n) => /37 a game/i.test(n)));
+    assert.ok(!bundle.scouting.offense.some((n) => DESK_SCOUT_TALK_RE.test(n) || /29\/42/.test(n)));
+    assert.ok(!bundle.scouting.defense.some((n) => DESK_SCOUT_TALK_RE.test(n)));
+    assert.ok(!DESK_SCOUT_TALK_RE.test(bundle.scouting.matchupSummary));
     assert.equal(bundle.keys[0].title, 'Crowd Sixkiller before the first read');
     assert.equal(campbell.filmWatched, true);
     assert.equal(campbell.filmLessonId, undefined);
-    assert.ok(bundle.scouting.offense.some((n) => /Film-confirmed/i.test(n)));
     assert.equal(bundle.prediction.spread, 'Line pending');
   });
 
