@@ -105,7 +105,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-10 | Game Week Scouting Report: fan tendencies + `film` only — no film-confirmed / box-confirmed desk tags | `buildScouting` + Film Room matchup card in binary; **raw scout stays API for Admin Hub** | pending |
+| 2026-09-10 | Game Week Scouting Report: fan tendencies + `film` only — no film-confirmed / box-confirmed desk tags | `buildScouting` + Film Room matchup card in binary; **raw scout stays API for Admin Hub** | #652 |
 | 2026-09-08 | Film Room: hide empty Review tab; land on Breakdowns; GNFP FAU cuts in hub seed | `VaultFilmRoomPage` rail + `film-room-hub-seed.json` first-paint; **live catalog stays API after Render** | #643 |
 | 2026-09-06 | Schedule: past cards show official final + box-score link (FAU 66–21) | `GameCard` + `PredictedScoreBlock` in binary; **later weekly finals/box URLs stay API via `/api/schedule` after this bake** | #637 |
 | 2026-09-07 | Film Room Review empty rail: no FAU / waiting-on-tape leak | `VaultFilmReviewPanel` + hub copy in binary | pending |
