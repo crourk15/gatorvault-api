@@ -47,6 +47,10 @@ test('shouldKeepEntry keeps official game highlights on the football channel', (
   assert.equal(shouldKeepEntry(keep, football), true);
   assert.equal(shouldKeepEntry(trailer, football), false);
   assert.equal(shouldKeepEntry(micd, football), false);
+  assert.equal(
+    shouldKeepEntry({ title: 'Florida vs. FAU | Condensed Game' }, football),
+    false
+  );
 });
 
 test('mergeBucket adds new ids only once', () => {
