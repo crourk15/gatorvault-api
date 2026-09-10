@@ -27,8 +27,11 @@ describe('fau-2026-w1 stays off the fan rail until more film', () => {
     assert.match(blob, /Florida never punts/);
     assert.match(String(raw.offense.body), /safeties are at 10/);
     assert.match(String(raw.offense.body), /Abrams/);
+    assert.match(String(raw.offense.body), /Sledge crashes the mesh/);
+    assert.match(String(raw.defense.body), /JACK is up/);
     assert.match(String(raw.defense.body), /Coleman gets a hand/);
     assert.match(String(raw.defense.body), /back line is empty/);
+    assert.match(String(raw.defense.body), /sits off like he has help/);
     assert.doesNotMatch(blob, /FAU.s scores are jobs/);
     assert.doesNotMatch(blob, /areas of opportunity start/i);
     assert.ok(Array.isArray(raw.held) && raw.held.length >= 3);

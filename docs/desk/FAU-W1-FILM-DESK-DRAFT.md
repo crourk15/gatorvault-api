@@ -17,17 +17,21 @@ They come down for the next one. Second-and-6 from their own 29. The safeties ar
 
 Pistol showed once. The sneak is a conversion, not who they are.
 
-The keep to the left is drawn up. Enyce Sledge is in the backfield. Minus two. The design was sound. They lost the play.
+The keep to the left is drawn up. Sledge crashes the mesh. He is in the backfield before Philo can get outside. Minus two. The design was sound. They lost the play.
 
 Defense
 
 Brad White’s Florida is an odd front on purpose. Three down. JACK is Jayden Woods. STAR. Graham at WILL. When the broadcast counts four rushers, JACK is coming.
 
-The front is why that first throw died. It made the quarterback hold it. The window was already there.
+Third-and-10 at the Florida 35, JACK is up. He comes. That is why the quarterback holds it. Quarters, corners off. The throw is late. The window is already there.
 
-First-and-10 at the FAU 25, corners off. The throw is late. Coleman gets a hand on it. Dijon Johnson comes down with it.
+First-and-10 at the FAU 25, same picture. Corners off. The throw is late. Coleman gets a hand on it. Dijon Johnson comes down with it.
 
-First-and-goal, the box is packed, Ethan Ervin still walks in. The front was right. They lost the pile. Third-and-goal, Caden Veltkamp keeps it and the edge leaves. Contain is the job. First-and-10 at the Florida 20, corners off. Kelby Valsin takes the fade. The corner is trailing. The help stays in the middle. The back line is empty. They were not on the same call.
+First-and-goal, the box is packed. They get washed. Ethan Ervin still walks in. The front was right. They lost the first step.
+
+Third-and-goal, the edge widens for the pass. Caden Veltkamp keeps it inside. Contain is the job.
+
+First-and-10 at the Florida 20, corners off. Kelby Valsin takes the fade. The corner sits off like he has help. The help stays in the middle. The back line is empty. They were not on the same call.
 
 Specials
 
@@ -39,9 +43,9 @@ What held
 - They take the points and keep the football.
 
 Areas of opportunity
-- The fade. Corner off, help in the middle. They were not on the same call.
-- The pile and the edge. Those are the jobs.
-- The keep was drawn up right. Sledge was there first.
+- The fade. Corner off like he has help. Help stays in the middle.
+- The first step and the edge. Those are the jobs.
+- Sledge crashed the mesh. He was there first.
 
 Next · Campbell
 
