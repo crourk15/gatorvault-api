@@ -159,7 +159,7 @@ export function FilmRoomGameWeekPanel({ initialGameId }: Props): React.ReactElem
       <GridLayout cols={2}>
         <PageSection title="Scouting report">
           <Card className="gv-fr-gw-card">
-            <p className="gv-fr-gw-card__body">{game.scoutingReport || game.film}</p>
+            <p className="gv-fr-gw-card__body">{game.film || 'Matchup notes posting this week.'}</p>
           </Card>
         </PageSection>
         <PageSection title="Prediction panel">

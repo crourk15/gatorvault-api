@@ -150,7 +150,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Staff/public (not film fronts): DC Brett Dewhurst sells aggressive/havoc, multiple fronts, DB-heavy packages — do not treat as confirmed coverage calls",
     ],
     howUFWins: [
-      "Veltkamp was efficient in rhythm when protected (24/33 for 290 vs Rice; 22/29 for 272 vs Tulsa) — pressure before the first read; help over the top on the confirmed vertical shot.",
+      "Veltkamp was efficient in rhythm when protected (24/33 for 290 vs Rice; 22/29 for 272 vs Tulsa) — pressure before the first read; help over the top on the vertical shot.",
       "FAU's 2025 defense allowed 200 rush YPG and got gashed for chunk runs (Memphis 90, Rice 68, Navy 397) — establish Baugh early and force them to load the box.",
       "Secondary forced only 3 INTs all year and surrendered chunk shots even in wins — take calculated verticals once the run is honest; do not fear the takeaway.",
     ],

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week how-we-win copy: drop “confirmed vertical shot” desk wording on FAU keys (API `howUFWins`)
 - [x] FutureCast weekend board: played home-game visitor lists persist into visit_logs + 2028 allowlist; beat UF predictions / 90%+ RPM score on Chase (API — no Codemagic)
 - [x] Josiah Taylor Closest: June UF offer + Alderman 09/08 “Florida is #1” sit-down + GV board lead (API — no Codemagic)
 - [x] Admin Hub Film Desk (`#film-desk/desk`) — Charles lock + GNFP/Tengwall/DiRocco seed → Copy Brief (web PIN only; Review stays off the fan rail)
@@ -104,6 +105,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-10 | Game Week Scouting Report: fan tendencies + `film` only — no film-confirmed / box-confirmed desk tags | `buildScouting` + Film Room matchup card in binary; **raw scout stays API for Admin Hub** | pending |
 | 2026-09-08 | Film Room: hide empty Review tab; land on Breakdowns; GNFP FAU cuts in hub seed | `VaultFilmRoomPage` rail + `film-room-hub-seed.json` first-paint; **live catalog stays API after Render** | #643 |
 | 2026-09-06 | Schedule: past cards show official final + box-score link (FAU 66–21) | `GameCard` + `PredictedScoreBlock` in binary; **later weekly finals/box URLs stay API via `/api/schedule` after this bake** | #637 |
 | 2026-09-07 | Film Room Review empty rail: no FAU / waiting-on-tape leak | `VaultFilmReviewPanel` + hub copy in binary | pending |
@@ -117,7 +119,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-09-05 | Member page trail: ping `/api/member-activity/ping` on vault navigation + `X-GV-Client` on `/api/session` | `VaultNavigationProvider` + `member-activity.ts` + session header in binary; **last-seen already live via login/session API** | #621 |
 | 2026-09-06 | Gators Live poll: 10s live / 15s idle + ticking countdown (was 30s) | `VaultLiveScoresPage` poll in binary | #625 |
 | 2026-09-06 | Gators Live living room: stadium hero, logos, countdown, 3 keys, talk, visitors, film bite | `VaultLiveScoresPage` + `gators-live-elite.css` in binary; **score/clock/possession already live via API** | #624 |
-| 2026-09-04 | Game Week Film Notes: prefer `filmNotes`; Scouting reads `offenseScout` / `defenseScout` (stop concatenating raw tendencies into Film Notes) | `game-week-data` `buildFilmNotes` + scouting map in binary; **FAU fan copy already live via API** | pending |
+| 2026-09-04 | Game Week Film Notes: prefer `filmNotes` (stop concatenating raw tendencies into Film Notes) | `game-week-data` `buildFilmNotes` in binary; **FAU fan copy already live via API** | pending |
 | 2026-09-02 | Game Week Prediction: Vegas from `/api/betting/lines` (no invented -14.5 / O/U from win% or score sum) | `GameWeekCommandCenter` + `game-week-data` in binary; **API static FAU line live without bake** | pending |
 | 2026-08-28 | Auth `authPost` client retries + friendly wake-up copy (belt under edge retry) | `auth-api.ts` in binary | pending |
 | 2026-08-26 | Community: Edit + Delete on own threads/replies (author-only) | `VaultCommunityPage` + `CommunityPostActions` + community-api in binary; **API routes live without bake** | pending |

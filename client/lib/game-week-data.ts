@@ -280,21 +280,33 @@ export function buildFilmNotes(game: ScheduleGame): string[] {
   return film ? [film] : [];
 }
 
+/** Desk source tags — never show on Game Week / Film Room fan rails. */
+export const DESK_SCOUT_TALK_RE =
+  /film-confirmed|box-confirmed|\bnot confirmed\b|confirmed on (?:broadcast|available|highlight)|do not treat as a film-confirmed/i;
+
+function fanScoutLines(lines: string[] | undefined, fallback: string[]): string[] {
+  const out = (lines || [])
+    .map((n) => String(n || '').trim())
+    .filter(Boolean)
+    .filter((n) => !DESK_SCOUT_TALK_RE.test(n));
+  return out.length ? out : fallback;
+}
+
 function buildScouting(game: ScheduleGame): ScoutingReportIntel {
   return {
-    // UI: "Opponent offense" / "Opponent defense" — raw scout when present.
-    offense: game.offenseScout?.length
-      ? game.offenseScout
-      : game.opponentTendencies?.length
-        ? game.opponentTendencies
-        : ['Establish run game early', 'Protect the football', 'Win early downs'],
-    defense: game.defenseScout?.length
-      ? game.defenseScout
-      : game.defenseTendencies?.length
-        ? game.defenseTendencies
-        : ['Set the edge vs run', 'Communicate in tempo', 'Limit explosives'],
+    // Fan rail only — raw offenseScout / defenseScout / scoutingReport stay desk/API.
+    offense: fanScoutLines(game.opponentTendencies, [
+      'Establish run game early',
+      'Protect the football',
+      'Win early downs',
+    ]),
+    defense: fanScoutLines(game.defenseTendencies, [
+      'Set the edge vs run',
+      'Communicate in tempo',
+      'Limit explosives',
+    ]),
     specialTeams: ['Win field position', 'Clean punt coverage', 'No missed kicks'],
-    matchupSummary: game.scoutingReport ?? game.film,
+    matchupSummary: String(game.film || '').trim() || 'Matchup notes posting this week.',
   };
 }
 
