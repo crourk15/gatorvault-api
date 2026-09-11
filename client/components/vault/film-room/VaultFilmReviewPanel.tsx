@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { PageSection } from '@/components/brand';
 import {
+  EMPTY_REVIEW_RAIL_COPY,
   liveVaultFilmReviews,
   latestVaultFilmReview,
   watchStandardLabel,
@@ -34,16 +35,10 @@ export function VaultFilmReviewGrid({
 
   if (!featured) {
     return (
-      <div className="gv-fr-review" data-testid="gv-fr-review-grid">
-        <article className="gv-fr-review-hero" data-testid="gv-fr-review-waiting">
-          <div className="gv-fr-review-hero__top">
-            <span className="gv-fr-review-hero__badge">Our board</span>
-          </div>
-          <h3 className="gv-fr-review-hero__title">GatorVault Film Review</h3>
-          <p className="gv-fr-review-hero__dek">
-            Offense, defense, and specials after we watch. This rail is empty until a board is live.
-          </p>
-        </article>
+      <div className="gv-fr-review gv-fr-review--empty" data-testid="gv-fr-review-grid">
+        <p className="gv-fr-review-empty" data-testid="gv-fr-review-waiting">
+          {EMPTY_REVIEW_RAIL_COPY}
+        </p>
       </div>
     );
   }
@@ -137,7 +132,9 @@ export function VaultFilmReviewViewer({
           </p>
         </div>
         <p className="gv-film-lesson__dek">{review.headline}</p>
-        <p className="gv-film-lesson__type">{review.watchNote}</p>
+        {review.watchNote && !/\bPROVISIONAL\b/i.test(review.watchNote) ? (
+          <p className="gv-film-lesson__type">{review.watchNote}</p>
+        ) : null}
         <div className="gv-fr-review-tabs" role="tablist" aria-label="Review units">
           {UNIT_TABS.map((tab) => (
             <button

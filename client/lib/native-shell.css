@@ -32,6 +32,14 @@ html.gv-native-app .gv-marketing-legal-footer {
   padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
 }
 
+/* Our Board cards stay inside the WKWebView plate — not the stage (x-clip coerces a Y scroller). */
+html.gv-native-app .gv-fr-review,
+html.gv-native-app .gv-fr-review-hero,
+html.gv-native-app .gv-fr-review--empty {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 .gv-native-offline-banner {
   position: sticky;
   top: 0;

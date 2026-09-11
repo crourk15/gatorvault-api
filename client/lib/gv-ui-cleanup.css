@@ -1342,7 +1342,20 @@ body {
   }
 
   .gv-fr-rail {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    grid-template-columns: none;
+  }
+
+  .gv-fr-rail__tab {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .gv-fr-rail__label {
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .gv-fr-stage__head {
@@ -1410,6 +1423,28 @@ body {
     touch-action: manipulation !important;
     overscroll-behavior: auto !important;
     -webkit-overflow-scrolling: auto;
+  }
+
+  /* iOS Our Board: wrap the 5-up rail so nowrap labels cannot leak sideways. */
+  html.gv-native-app .gv-fr-rail,
+  html.gv-native-app .gv-film-room-page .gv-fr-rail {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    max-width: 100%;
+  }
+
+  html.gv-native-app .gv-fr-rail__tab {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  html.gv-native-app .gv-fr-review,
+  html.gv-native-app .gv-fr-review-hero,
+  html.gv-native-app .gv-fr-review--empty,
+  html.gv-native-app .gv-fr-review-empty {
+    max-width: 100%;
+    overflow: hidden;
   }
 
   body.gv-film-page-active .gv-tab-bar {

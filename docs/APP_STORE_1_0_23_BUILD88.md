@@ -18,7 +18,7 @@
 
 Client/UI backlog, including:
 
-- GatorVault Film Review rail + elite Scheme School (Breakdowns stay GNFP / Film Guy). Week 1 vs FAU board stays off the platform until we watch the Florida tape. After this bake, weekly boards publish via `/api/film-room/reviews` (no extra Codemagic).
+- GatorVault Film Review rail + elite Scheme School (Breakdowns stay GNFP / Film Guy). **Our Board empty is part of this train** — no FAU name, no “waiting on tape,” no live-hero chrome on an empty rail. Week 1 vs FAU stays off `/api/film-room/reviews` until Charles publishes. After this bake, weekly boards publish via that API (no extra Codemagic).
 - Game Week + Home countdown: auto-open the next kickoff (Campbell this week; Auburn after that — no FAU hardcode)
 - Game Week Depth Chart: official two-deep with Offense / Defense / Special Teams cards
 - Game Zone: Campbell next ticket + FAU 66–21 last whistle + leftover ticket grading

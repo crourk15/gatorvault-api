@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { describe, it } from 'node:test';
+import { fileURLToPath } from 'node:url';
 import { SCHEME_SCHOOL_LESSONS, schemeSchoolLesson } from './scheme-school-data';
 import { FILM_HUB_ORDER, landingFilmHub, normalizeFilmHub, visibleFilmHubs } from './film-room-api';
 import { parseFilmRoomSegmentFromPath } from './vault-route-map';
 import {
+  EMPTY_REVIEW_RAIL_COPY,
   VAULT_FILM_REVIEWS,
   isLiveVaultFilmReview,
   latestVaultFilmReview,
@@ -11,6 +15,7 @@ import {
   vaultFilmReview,
   vaultReviewHref,
 } from './vault-film-review-data';
+import { shouldSkipSwrCache } from './stale-while-revalidate';
 
 describe('GatorVault Film Review', () => {
   it('keeps the fan rail empty until a real Florida tape watch', () => {
@@ -85,6 +90,54 @@ describe('GatorVault Film Review', () => {
         schemeLessonIds: [],
         nextWeek: { opponent: 'x', look: 'x' },
         publishedAt: '2026-09-06T00:00:00Z',
+      }),
+      false
+    );
+  });
+
+  it('keeps the empty Our Board copy generic — no FAU / waiting / score tease', () => {
+    assert.equal(EMPTY_REVIEW_RAIL_COPY, 'Empty until a board is live.');
+    assert.doesNotMatch(EMPTY_REVIEW_RAIL_COPY, /FAU|waiting on tape|66|21/i);
+    assert.equal(shouldSkipSwrCache('/api/film-room/reviews'), true);
+    const panel = readFileSync(
+      join(dirname(fileURLToPath(import.meta.url)), '../components/vault/film-room/VaultFilmReviewPanel.tsx'),
+      'utf8'
+    );
+    const waiting = panel.split('data-testid="gv-fr-review-waiting"')[0] || '';
+    assert.match(panel, /gv-fr-review--empty/);
+    assert.match(panel, /gv-fr-review-empty/);
+    assert.match(waiting, /gv-fr-review--empty/);
+    assert.doesNotMatch(waiting, /gv-fr-review-hero/);
+    assert.doesNotMatch(panel, /Waiting on tape|Week 1 vs FAU/i);
+  });
+
+  it('hides a broadcast watch that is still marked PROVISIONAL', () => {
+    assert.equal(
+      isLiveVaultFilmReview({
+        id: 'fau-2026-w1',
+        week: 1,
+        season: 2026,
+        gameId: 'fau',
+        opponent: 'FAU',
+        opponentShort: 'FAU',
+        dateLabel: 'x',
+        venue: 'x',
+        finalUF: 66,
+        finalOpp: 21,
+        title: 'Week 1 vs FAU',
+        dek: 'x',
+        filmWatched: true,
+        watchStandard: 'broadcast',
+        watchNote: 'PROVISIONAL — fan rail stays empty.',
+        sources: [],
+        headline: 'x',
+        offense: { kicker: 'x', body: 'x', bullets: [] },
+        defense: { kicker: 'x', body: 'x', bullets: [] },
+        specials: { kicker: 'x', body: 'x', bullets: [] },
+        keys: [],
+        schemeLessonIds: [],
+        nextWeek: { opponent: 'x', look: 'x' },
+        publishedAt: '2026-09-07T00:00:00Z',
       }),
       false
     );
