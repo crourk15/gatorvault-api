@@ -110,7 +110,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-11 | FutureCast Lab: paint Closest to commit as soon as HP lands (don’t wait on underclassmen / roster / staff) | `useFutureCastLabData` + `futurecast-lab-data` in binary; **HP rebuild cache is already API** | pending |
+| 2026-09-11 | FutureCast Lab: paint Closest to commit as soon as HP lands (don’t wait on underclassmen / roster / staff) | `useFutureCastLabData` + `futurecast-lab-data` in binary; **HP rebuild cache is already API** | #658 |
 | 2026-09-10 | Game Week Scouting Report: bundled mapper prefers fan tendencies + `film` | `buildScouting` in binary — **current App Store copy is already API-fixed** (public schedule empties desk scout); bake only drops the leftover mapper | #652 |
 | 2026-09-08 | Film Room: hide empty Review tab; land on Breakdowns; GNFP FAU cuts in hub seed | `VaultFilmRoomPage` rail + `film-room-hub-seed.json` first-paint; **live catalog stays API after Render** | #643 |
 | 2026-09-06 | Schedule: past cards show official final + box-score link (FAU 66–21) | `GameCard` + `PredictedScoreBlock` in binary; **later weekly finals/box URLs stay API via `/api/schedule` after this bake** | #637 |
