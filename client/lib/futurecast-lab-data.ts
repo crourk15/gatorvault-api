@@ -203,7 +203,37 @@ export async function loadFutureCastLabSecondary(
   };
 }
 
-async function loadFutureCastLabSecondaryRaw(): Promise<
+export type FutureCastLabHpLoads = {
+  discovery: Promise<HighPriorityResponse>;
+  closing: Promise<HighPriorityResponse>;
+};
+
+/** Shared HP promises so Closest can paint before the rest of Lab secondary. */
+export function startFutureCastLabHighPriorityLoads(): FutureCastLabHpLoads {
+  const discoveryYear = primaryRecruitingClassYear();
+  return {
+    discovery: warmFetchHighPriority(discoveryYear),
+    closing: warmFetchHighPriority(HIGH_PRIORITY_YEAR),
+  };
+}
+
+export async function loadFutureCastLabHighPriority(
+  loads: FutureCastLabHpLoads = startFutureCastLabHighPriorityLoads()
+): Promise<{ highPriority: HighPriorityPlayer[]; highPriorityClosing: HighPriorityPlayer[] }> {
+  const discoveryYear = primaryRecruitingClassYear();
+  const [discovery, closing] = await Promise.all([
+    loads.discovery.catch(() => ({ ...EMPTY_HIGH_PRIORITY, classYear: discoveryYear })),
+    loads.closing.catch(() => ({ ...EMPTY_HIGH_PRIORITY, classYear: HIGH_PRIORITY_YEAR })),
+  ]);
+  return {
+    highPriority: discovery.players ?? [],
+    highPriorityClosing: closing.players ?? [],
+  };
+}
+
+async function loadFutureCastLabSecondaryRaw(
+  hpLoads: FutureCastLabHpLoads = startFutureCastLabHighPriorityLoads()
+): Promise<
   Omit<FutureCastLabDataMap, 'masterBoard' | 'summary' | 'metrics' | 'heatLevel' | 'lastUpdated'>
 > {
   const discoveryYear = primaryRecruitingClassYear();
@@ -229,8 +259,8 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
       ),
       warmFetch<FutureCastHomeResponse>('/api/futurecast/home'),
       fetchStockBoard().catch(() => EMPTY_STOCK),
-      warmFetchHighPriority(discoveryYear),
-      warmFetchHighPriority(closingYear),
+      hpLoads.discovery,
+      hpLoads.closing,
       warmFetch<Awaited<ReturnType<typeof fetchFutureCastUnderclassmen>>>(
         '/api/futurecast/underclassmen?years=2028,2029,2030'
       ).catch(() => ({

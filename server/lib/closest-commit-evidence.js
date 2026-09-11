@@ -8,6 +8,21 @@ const { buildChaseFeatureIndex } = require('./uf-chase-score');
 const { isFloridaSchool } = require('./recruiting-target-filters');
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+const EVIDENCE_TTL_MS = 45_000;
+
+/** @type {{ key: string, at: number, index: object | null }} */
+let evidenceCache = { key: '', at: 0, index: null };
+
+function evidenceCacheKey(opts = {}) {
+  const classYear = Number(opts.classYear) || 2028;
+  const days = Number(opts.days) || 180;
+  const warmDays = Number(opts.warmDays) || 120;
+  return `${classYear}:${days}:${warmDays}`;
+}
+
+function clearClosestCommitEvidenceCache() {
+  evidenceCache = { key: '', at: 0, index: null };
+}
 
 function slugKey(value) {
   return String(value || '').trim().toLowerCase();
@@ -29,8 +44,18 @@ function playerHasUfOfferFlag(player) {
 function buildClosestCommitEvidenceIndex(opts = {}) {
   const classYear = Number(opts.classYear) || 2028;
   const days = Number(opts.days) || 180;
-  const chase = buildChaseFeatureIndex({ classYear, days });
   const warmDays = Number(opts.warmDays) || 120;
+  const cacheKey = evidenceCacheKey({ classYear, days, warmDays });
+  if (
+    !opts.fresh &&
+    evidenceCache.index &&
+    evidenceCache.key === cacheKey &&
+    Date.now() - evidenceCache.at < EVIDENCE_TTL_MS
+  ) {
+    return evidenceCache.index;
+  }
+
+  const chase = buildChaseFeatureIndex({ classYear, days, fresh: opts.fresh });
   const warmCutoff = Date.now() - warmDays * DAY_MS;
 
   /** @type {Map<string, object>} */
@@ -42,20 +67,8 @@ function buildClosestCommitEvidenceIndex(opts = {}) {
     ...chase.allowlisted,
   ]);
 
-  let playersBySlug = new Map();
-  try {
-    const store = require('./recruiting-store');
-    const fs = require('fs');
-    const path = require('path');
-    const file = path.join(store.DATA_DIR, 'players.json');
-    const rows = JSON.parse(fs.readFileSync(file, 'utf8'));
-    for (const p of Array.isArray(rows) ? rows : []) {
-      const key = slugKey(p?.slug);
-      if (key) playersBySlug.set(key, p);
-    }
-  } catch {
-    playersBySlug = new Map();
-  }
+  // Offer/visit/intel already live on the chase index. Do not sync-parse
+  // players.json here — that ~9MB read stalled Lab Closest on every HP rebuild.
 
   for (const slug of slugs) {
     const key = slugKey(slug);
@@ -69,10 +82,8 @@ function buildClosestCommitEvidenceIndex(opts = {}) {
       pursuitHits: 0,
       scheduledOv: false,
     };
-    const player = playersBySlug.get(key);
-    const offerFlag = playerHasUfOfferFlag(player);
     const flOffers = Number(feat.flOffers) || 0;
-    const hasOffer = flOffers > 0 || offerFlag;
+    const hasOffer = flOffers > 0;
     const ov = Number(feat.ov) || 0;
     const uv = Number(feat.uv) || 0;
     const home = Number(feat.home) || 0;
@@ -127,7 +138,9 @@ function buildClosestCommitEvidenceIndex(opts = {}) {
     });
   }
 
-  return { bySlug, classYear, days, warmDays };
+  const index = { bySlug, classYear, days, warmDays };
+  evidenceCache = { key: cacheKey, at: Date.now(), index };
+  return index;
 }
 
 function getClosestCommitEvidence(index, slug) {
@@ -172,4 +185,5 @@ module.exports = {
   getClosestCommitEvidence,
   attachClosestCommitEvidence,
   playerHasUfOfferFlag,
+  clearClosestCommitEvidenceCache,
 };
