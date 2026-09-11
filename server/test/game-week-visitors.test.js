@@ -64,17 +64,26 @@ describe('game-week-visitors', () => {
     assert.ok(!panel.visitors.some((v) => v.slug === 'davin-davidson'));
   });
 
-  it('lists Alderman Campbell names as expected, not confirmed', () => {
+  it('lists Simmons + Alderman Campbell names as expected, not confirmed', () => {
     const panel = visitorsPanelForGameId('campbell');
     assert.ok(panel);
     assert.equal(panel.gameId, 'campbell');
     assert.deepEqual(
       panel.visitors.map((v) => v.slug),
-      ['timi-aliu', 'judah-gumbs', 'dully-littleton']
+      ['cyion-smith', 'man-robinson', 'timi-aliu', 'judah-gumbs', 'dully-littleton']
     );
     assert.match(String(panel.source || ''), /expected \/ planning, not confirmed on campus/i);
+    assert.match(String(panel.source || ''), /Chad Simmons/i);
     assert.equal(expectedVisitLabelForSlug('dully-littleton'), 'Expected Campbell visit · Sep 12');
+    assert.equal(expectedVisitLabelForSlug('cyion-smith'), 'Expected Campbell visit · Sep 12');
+    assert.equal(expectedVisitLabelForSlug('man-robinson'), 'Expected Campbell visit · Sep 12');
     assert.equal(expectedVisitLabelForSlug('zylen-little'), 'FAU visit · Sep 5');
+    const smith = panel.visitors.find((v) => v.slug === 'cyion-smith');
+    assert.equal(smith.position, 'S');
+    assert.equal(smith.classYear, 2028);
+    const robinson = panel.visitors.find((v) => v.slug === 'man-robinson');
+    assert.equal(robinson.position, 'CB');
+    assert.equal(robinson.classYear, 2028);
     const aliu = panel.visitors.find((v) => v.slug === 'timi-aliu');
     assert.equal(aliu.position, 'OT');
     assert.equal(aliu.classYear, 2027);
@@ -97,7 +106,7 @@ describe('game-week-visitors', () => {
     ]);
     assert.ok(games[0].expectedVisitors?.visitors?.length);
     assert.ok(games[1].expectedVisitors);
-    assert.equal(games[1].expectedVisitors.visitors.length, 3);
+    assert.equal(games[1].expectedVisitors.visitors.length, 5);
     assert.match(String(games[1].expectedVisitors.source || ''), /expected \/ planning/i);
   });
 });

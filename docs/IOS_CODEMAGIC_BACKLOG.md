@@ -10,6 +10,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] FutureCast Closest load: chase-index cache + no players.json parse on HP rebuild — current binary already reads `/api/futurecast/high-priority` (API — no Codemagic)
 - [x] Campbell Scouting Report bottom line: Campbell is Sixkiller — crowd him or he takes the shot over the top, then go score (API `film` — no Codemagic)
 - [x] Bender close-to-RPM notes on Hines + Flowers — beat intel / Why we chase, no invented crystal ball (API — no Codemagic)
+- [x] Game Week Campbell visitors: Chad Simmons Cyion Smith + Man Robinson + Alderman Aliu / Gumbs / Littleton — expected, not confirmed on campus (API `/api/schedule` + `game-visitors-2026.json` — no Codemagic)
 - [x] Game Week Campbell visitors: Alderman expected look (Aliu / Gumbs / Littleton) — not confirmed on campus (API `/api/schedule` — no Codemagic)
 - [x] Game Week Scouting Report: public `/api/schedule` empties desk `offenseScout` / `defenseScout` and omits `scoutingReport` so the current App Store mapper falls back to fan tendencies + `film` (API — no Codemagic)
 - [x] Game Week how-we-win copy: drop “confirmed vertical shot” desk wording on FAU keys (API `howUFWins`)
