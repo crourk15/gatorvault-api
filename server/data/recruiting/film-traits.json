@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-03T01:48:06.239Z",
+  "updatedAt": "2026-09-11T13:51:52.569Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -3129,6 +3129,59 @@
       "on3RecruitSlug": null,
       "on3ProfileUrl": null,
       "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "jaxon-flowers": {
+      "playerName": "Jaxon Flowers",
+      "position": "S",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Jaxon Flowers - The Bolles - 2025 Sophomore Season Highlights",
+          "url": "https://www.hudl.com/embed/video/3/22173193/6940a3df540685f13c786fa3",
+          "category": "Highlights",
+          "thumbnail": "https://vj.hudl.com/p-highlights/User/22173193/6940a3df540685f13c786fa2/f024f6f7_720.jpg?v=DFA379FA3D3CDE08",
+          "on3VideoKey": 637005,
+          "publishedAt": "2026-04-08T13:17:48.000Z",
+          "ingestedAt": "2026-09-11",
+          "reviewedAt": null,
+          "reviewedBy": "on3-ingest"
+        },
+        {
+          "type": "hudl",
+          "url": "https://www.hudl.com/embed/video/3/22173193/68ec2e5bf230c99993961f8e",
+          "label": "Mid-season sophomore year",
+          "category": null,
+          "thumbnail": "https://vj.hudl.com/p-highlights/User/22173193/68ec40d27251f64946d00ab3/5c8da690_720.jpg?v=C1DD3F67EB09DE08",
+          "on3VideoKey": 533773,
+          "publishedAt": "2025-10-22T20:51:41.000Z",
+          "ingestedAt": "2026-09-11",
+          "reviewedAt": null,
+          "reviewedBy": "on3-ingest"
+        }
+      ],
+      "traits": [
+        "close-speed",
+        "long-stride",
+        "dual-threat",
+        "off-platform-arm",
+        "open-field-vision",
+        "conversion-athlete"
+      ],
+      "vaultFilmAngle": "Lead with Florida at No. 1 plus the QB reel close speed that explains the safety chase. Honest: no DB snaps on the Hudl.",
+      "doNotClaim": [
+        "Do not invent safety coverage, backpedal, or INT totals from this QB reel",
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — sophomore QB Hudl watched 2026-09-11. No DB snaps.",
+      "ingestStatus": "traits_ready",
+      "on3RecruitSlug": "jaxon-flowers-281921",
+      "on3ProfileUrl": "https://www.on3.com/rivals/jaxon-flowers-281921/",
+      "lastIngestAt": "2026-09-11T13:51:52.568Z",
       "evaluatedBy": null,
       "evalMode": null,
       "evaluatedAt": null

@@ -1,33 +1,19 @@
 # X draft — Jaxon Flowers (2028 S)
 
-Beat Desk inbox #1 (ready to compose, 20h, no prior draft). Board-process post only. No Hudl on file. Do not invent tape, size, ranks, or an RPM pick.
+Film watched: Hudl sophomore season reel (8:00, Dual Threat QB) + mid-season cut. This is QB tape. He moved to safety before junior year. Do not invent coverage.
 
-**Do not name writers. Do not say Bender is close to a crystal ball. He has not posted one.**
+**Do not name writers. Do not say anyone is close to a crystal ball.**
 
 Paste-ready (spacing included).
 
 HEADER: Flowers already put Florida at the top
 
-Jaxon Flowers already has Florida at No. 1.
+Jaxon Flowers already has Florida at No. 1, and the sophomore reel shows why they want him at safety.
 
-The 2028 Bolles safety is a 4-star Jacksonville board piece. Flowers said the Gators are pushing the hardest, and the first real Swamp gameday is already in. Florida is the only school with multiple fall visits set.
+Flowers, a 2028 Bolles ATH listed 6-3 / 185, is still the dual-threat QB on Hudl as No. 7. Shotgun. He takes the shot: deep sideline, receiver in stride, gone. Then he keeps it. One draw cuts inside and the secondary never closes. He will throw it on the run too, flush left, ball over the top. His reel stamps 31 TDs (14 pass, 17 rush). No safety snaps on this cut. Florida is buying the frame and the close speed.
 
-June unofficial is on the card. Ole Miss gets Flowers back September 26. That is the next checkpoint, not a reset.
+Projection: develop at safety, then compete for FS/nickel, starter-upside range if the DB skill catches the play speed. Comp: lighter Grant Delpit mold (6-3 / 185 vs about 6-3 / 208). Same height, leaner, not the finished coverage product.
 
-Keep stacking this Jacksonville safety. The process is already Florida's.
+Florida offered in June. First Swamp gameday is in. Flowers said the Gators are pushing the hardest. Ole Miss gets him back September 26. Keep stacking this Jacksonville safety.
 
-https://gatorvaultinsider.com/vault/recruiting/player/jaxon-flowers
-
----
-
-## Desk ranking (Fri Sep 11)
-
-| Rank | Story | Why it lost |
-|---|---|---|
-| **1. Flowers** | Player said UF is No. 1, pushing hardest, only school with multiple fall visits, Ole Miss return 9/26 | **POST THIS** |
-| 2. Derrell Hines Jr. | Same cycle, FAU visit moved UF higher. Auburn / Nebraska next. Film is on file. | Softer quote. Same article. Save for a tape post. |
-| 3. Josiah Taylor | "Florida is without a doubt No. 1" after FAU. Film + War Room eval on file. GV ~72%. | 3 days old. Already used on Closest. |
-| — Campbell Sixkiller | Tomorrow's game. Locked film line. | Film Desk / game week, not this inbox. Saturday if you want football. |
-| — Expected Campbell visitors | Aliu (Nebraska commit), Gumbs (Arkansas commit, no UF offer), Littleton (2029 TE, first UF visit expected) | Expected, not confirmed. Do not post as on campus. |
-
-Live beat cache is empty in this environment (no X token). Desk is the three unqueued beat rows above.
+gatorvaultinsider.com/vault/recruiting/player/jaxon-flowers
