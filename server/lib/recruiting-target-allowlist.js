@@ -103,6 +103,8 @@ const ALLOWLIST_2028 = [
   'denairo-girton-jr',
   // Alderman 09/08/26 — in-state DL, FAU gameday, Florida #1 without a doubt
   'josiah-taylor',
+  // Corey Bender 09/10/26 — close to UF RPM picks, not posted yet
+  'jaxon-flowers',
 ];
 
 /** Charles' display names — used for On3/Rivals/247 identity lookup (never synthetic cards). */
@@ -172,6 +174,7 @@ const CANONICAL_TARGET_NAMES = {
   'jamarcus-johnson': 'Jamarcus Johnson',
   'denairo-girton-jr': 'DeNairo Girton Jr.',
   'josiah-taylor': 'Josiah Taylor',
+  'jaxon-flowers': 'Jaxon Flowers',
 };
 
 /** Display name → canonical slug (handles typos / aliases) */
