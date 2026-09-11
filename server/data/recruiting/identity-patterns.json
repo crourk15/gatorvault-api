@@ -5209,13 +5209,13 @@
     },
     "derrell-hines-jr": {
       "slug": "derrell-hines-jr",
-      "name": "Derrell Hines Jr.",
+      "name": "Derrell Hines Jr",
       "stars": 4,
       "position": "WR",
       "school": "Carrollwood Day (Tampa, FL)",
       "commitSchool": null,
       "class": 2028,
-      "natlRank": null,
+      "natlRank": 97,
       "patterns": [
         "4 star WR Derrell",
         "4-star WR Derrell",
@@ -5224,17 +5224,55 @@
         "Carrollwood Day (Tampa, FL) 4 star",
         "Carrollwood Day (Tampa, FL) four star",
         "Carrollwood Day (Tampa, FL) WR",
-        "Derrell Hines Jr.",
+        "Derrell Hines Jr",
         "WR Derrell",
         "4 star Carrollwood Day (Tampa, FL) commit",
         "four star Carrollwood Day (Tampa, FL) commit",
         "2028 WR Derrell",
         "2028 4-star WR Derrell",
         "2028 four-star WR Derrell",
-        "2028 Derrell Hines Jr."
+        "2028 Derrell Hines Jr",
+        "#97 Derrell",
+        "top 97 WR Derrell",
+        "97 4 star WR Derrell",
+        "97 four star WR Derrell"
       ],
-      "updatedAt": "2026-08-10T17:20:46.016Z"
+      "updatedAt": "2026-09-11T02:58:54.694Z"
+    },
+    "jaxon-flowers": {
+      "slug": "jaxon-flowers",
+      "name": "Jaxon Flowers",
+      "stars": 4,
+      "position": "S",
+      "school": "Bolles (Jacksonville, FL)",
+      "commitSchool": null,
+      "class": 2028,
+      "natlRank": null,
+      "patterns": [
+        "4 star S Jaxon",
+        "4-star S Jaxon",
+        "four star S Jaxon",
+        "four-star S Jaxon",
+        "4 star S Flowers",
+        "4-star S Flowers",
+        "four star S Flowers",
+        "four-star S Flowers",
+        "Bolles (Jacksonville, FL) 4 star",
+        "Bolles (Jacksonville, FL) four star",
+        "Bolles (Jacksonville, FL) S",
+        "Jaxon Flowers",
+        "Flowers",
+        "S Jaxon",
+        "S Flowers",
+        "4 star Bolles (Jacksonville, FL) commit",
+        "four star Bolles (Jacksonville, FL) commit",
+        "2028 S Jaxon",
+        "2028 4-star S Jaxon",
+        "2028 four-star S Jaxon",
+        "2028 Jaxon Flowers"
+      ],
+      "updatedAt": "2026-09-11T02:58:54.912Z"
     }
   },
-  "updatedAt": "2026-08-10T17:20:46.016Z"
+  "updatedAt": "2026-09-11T02:58:54.912Z"
 }

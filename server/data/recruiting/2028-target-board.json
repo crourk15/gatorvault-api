@@ -788,6 +788,22 @@
       "ufProbability": 0.72
     },
     {
+      "slug": "jaxon-flowers",
+      "name": "Jaxon Flowers",
+      "pos": "S",
+      "school": "Bolles (Jacksonville, FL)",
+      "state": "FL",
+      "stars": 4,
+      "rating": null,
+      "natlRank": null,
+      "posRank": null,
+      "stateRank": null,
+      "inState": true,
+      "committedTo": null,
+      "ufProbability": null,
+      "notes": "Bender 09/10 — Florida is his number one, pushing hardest, Ole Miss return. Close to a UF RPM pick, not posted."
+    },
+    {
       "slug": "john-odwyer",
       "name": "John O'Dwyer",
       "pos": "OT",
