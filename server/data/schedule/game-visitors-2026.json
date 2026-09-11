@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-09-11T02:50:00.000Z",
-  "source": "Gators Online / Blake Alderman early visitor look + public confirmations — plans can change",
+  "updatedAt": "2026-09-11T23:10:00.000Z",
+  "source": "Public Campbell visitor look — plans can change",
   "visitorMeta": {
     "zylen-little": {
       "name": "Zylen Little",
@@ -85,6 +85,20 @@
       "school": "Bolles (Jacksonville, FL)",
       "stars": 4,
       "classYear": 2028
+    },
+    "cyion-smith": {
+      "name": "Cyion Smith",
+      "position": "S",
+      "school": "Blountstown (Blountstown, FL)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "man-robinson": {
+      "name": "Man Robinson",
+      "position": "CB",
+      "school": "IMG Academy (Bradenton, FL)",
+      "stars": 3,
+      "classYear": 2028
     }
   },
   "games": [
@@ -114,11 +128,13 @@
       "dateLabel": "Sep 12",
       "chaseLabel": "Expected Campbell visit · Sep 12",
       "slugs": [
+        "cyion-smith",
+        "man-robinson",
         "timi-aliu",
         "judah-gumbs",
         "dully-littleton"
       ],
-      "source": "Gators Online / Blake Alderman Campbell look — expected / planning, not confirmed on campus. Plans can change. Aliu is a Nebraska commit. Gumbs is an Arkansas commit and has no Florida offer."
+      "source": "Expected / planning, not confirmed on campus. Plans can change. Smith is on his fifth Gainesville trip (Campbell gameday). Robinson’s second visit and first Swamp game. Aliu is a Nebraska commit. Gumbs is an Arkansas commit and has no Florida offer."
     },
     {
       "gameId": "olemiss",
