@@ -43,6 +43,8 @@ describe('Game Week Film Notes', () => {
     assert.ok(!bundle.scouting.offense.some((n) => DESK_SCOUT_TALK_RE.test(n) || /29\/42/.test(n)));
     assert.ok(!bundle.scouting.defense.some((n) => DESK_SCOUT_TALK_RE.test(n)));
     assert.ok(!DESK_SCOUT_TALK_RE.test(bundle.scouting.matchupSummary));
+    assert.match(bundle.scouting.matchupSummary, /Sixkiller is the show/i);
+    assert.match(bundle.scouting.matchupSummary, /37 a game last year/i);
     assert.equal(bundle.keys[0].title, 'Crowd Sixkiller before the first read');
     assert.equal(campbell.filmWatched, true);
     assert.equal(campbell.filmLessonId, undefined);

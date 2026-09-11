@@ -190,7 +190,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Jayden Woods", role: "Keep Sixkiller in the pocket" },
     ],
     filmWatched: true,
-    film: "What the tape shows vs Campbell. No-huddle shotgun. Sixkiller throws it and runs it. Take the shot. Then throw it over a 27-TD secondary.",
+    film: "Sixkiller is the show. He throws it and he keeps it, and they will take the deep shot if you get behind them. Crowd him before the first read and stay in your lane on the keep. Then run it and throw it over a defense that gave up 37 a game last year.",
     pred: "UF 42 · Campbell 7",
     predUF: 42,
     predOpp: 7,

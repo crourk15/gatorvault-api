@@ -46,7 +46,7 @@ describe('schedule-board', () => {
     assert.deepEqual(campbell.defenseScout, []);
     assert.equal(campbell.scoutingReport, undefined);
     assert.ok(campbell.opponentTendencies?.some((n) => /No-huddle shotgun/i.test(n)));
-    assert.match(String(campbell.film), /What the tape shows vs Campbell/i);
+    assert.match(String(campbell.film), /Sixkiller is the show/i);
     const dump = [
       campbell.film,
       ...(campbell.offenseScout || []),
@@ -59,7 +59,7 @@ describe('schedule-board', () => {
     const ios = oldIosBuildScouting(campbell);
     assert.ok(ios.offense.some((n) => /No-huddle shotgun/i.test(n)));
     assert.ok(!ios.offense.some((n) => /Film-confirmed/i.test(n)));
-    assert.match(String(ios.matchupSummary), /What the tape shows vs Campbell/i);
+    assert.match(String(ios.matchupSummary), /Sixkiller is the show/i);
     assert.ok(!/NOT confirmed/i.test(String(ios.matchupSummary)));
   });
 
@@ -126,7 +126,8 @@ describe('schedule-board', () => {
     assert.ok(campbell.filmNotes?.length >= 6);
     assert.match(campbell.filmNotes[0], /No-huddle shotgun/i);
     assert.ok(!campbell.filmNotes.some((n) => /NOT confirmed|gocamels cumulative|29\/42/i.test(n)));
-    assert.match(campbell.film, /What the tape shows vs Campbell/i);
+    assert.match(campbell.film, /Sixkiller is the show/i);
+    assert.match(campbell.film, /37 a game last year/i);
     assert.ok(campbell.offenseScout?.some((n) => /29\/42/.test(n)));
     assert.ok(campbell.offenseScout?.some((n) => /No Huddle-Shotgun/i.test(n)));
     assert.ok(campbell.defenseScout?.some((n) => /NOT confirmed|Brandon Butcher/i.test(n)));
