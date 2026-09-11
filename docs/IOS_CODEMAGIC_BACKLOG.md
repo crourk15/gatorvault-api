@@ -7,7 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
-- [x] FutureCast Closest evidence: memoized chase index + no players.json parse on HP rebuild (API — disk HP still serves; rebuilds stay off the 9MB sync read)
+- [x] FutureCast Closest load: chase-index cache + no players.json parse on HP rebuild — current binary already reads `/api/futurecast/high-priority` (API — no Codemagic)
 - [x] Campbell Scouting Report bottom line: Campbell is Sixkiller — crowd him or he takes the shot over the top, then go score (API `film` — no Codemagic)
 - [x] Bender close-to-RPM notes on Hines + Flowers — beat intel / Why we chase, no invented crystal ball (API — no Codemagic)
 - [x] Game Week Campbell visitors: Alderman expected look (Aliu / Gumbs / Littleton) — not confirmed on campus (API `/api/schedule` — no Codemagic)
@@ -110,7 +110,6 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-11 | FutureCast Lab: paint Closest to commit as soon as HP lands (don’t wait on underclassmen / roster / staff) | `useFutureCastLabData` + `futurecast-lab-data` in binary; **HP rebuild cache is already API** | #658 |
 | 2026-09-10 | Game Week Scouting Report: bundled mapper prefers fan tendencies + `film` | `buildScouting` in binary — **current App Store copy is already API-fixed** (public schedule empties desk scout); bake only drops the leftover mapper | #652 |
 | 2026-09-08 | Film Room: hide empty Review tab; land on Breakdowns; GNFP FAU cuts in hub seed | `VaultFilmRoomPage` rail + `film-room-hub-seed.json` first-paint; **live catalog stays API after Render** | #643 |
 | 2026-09-06 | Schedule: past cards show official final + box-score link (FAU 66–21) | `GameCard` + `PredictedScoreBlock` in binary; **later weekly finals/box URLs stay API via `/api/schedule` after this bake** | #637 |
