@@ -46,6 +46,11 @@ describe('Game Week Film Notes', () => {
     assert.match(bundle.scouting.matchupSummary, /Campbell is Sixkiller/i);
     assert.match(bundle.scouting.matchupSummary, /37 a game/i);
     assert.equal(bundle.keys[0].title, 'Crowd Sixkiller before the first read');
+    assert.equal(bundle.keys[1].title, "Attack last year's run defense");
+    assert.equal(bundle.keys[2].title, 'Chunk shots vs a 5-INT secondary');
+    assert.match(bundle.keys[0].body, /help over the top/i);
+    assert.match(bundle.keys[1].body, /Establish Baugh/i);
+    assert.match(bundle.keys[2].body, /27 pass TDs vs 5 INTs/i);
     assert.equal(campbell.filmWatched, true);
     assert.equal(campbell.filmLessonId, undefined);
     assert.equal(bundle.prediction.spread, 'Line pending');
