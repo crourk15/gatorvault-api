@@ -136,6 +136,12 @@ describe('schedule-board', () => {
     assert.ok(!iosDump.some((n) => /NOT confirmed|gocamels cumulative/i.test(n)));
     assert.equal(iosDump.length, 7);
     assert.equal(campbell.keys[0], 'Crowd Sixkiller before the first read');
+    assert.equal(campbell.keys[1], "Attack last year's run defense");
+    assert.equal(campbell.keys[2], 'Chunk shots vs a 5-INT secondary');
+    assert.match(campbell.howUFWins[0], /help over the top/i);
+    assert.match(campbell.howUFWins[1], /Establish Baugh/i);
+    assert.match(campbell.howUFWins[2], /27 pass TDs vs 5 INTs/i);
+    assert.ok(!campbell.keys.some((k) => /turn this into 49|vertical get behind you/i.test(k)));
     assert.equal(campbell.filmWatched, true);
     assert.equal(campbell.filmLessonId, undefined);
     assert.ok(campbell.offenseScout.some((n) => /Film-confirmed/i.test(n)));
