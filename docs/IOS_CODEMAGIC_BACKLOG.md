@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Campbell Scouting Report bottom line: Campbell is Sixkiller — crowd him or he takes the shot over the top, then go score (API `film` — no Codemagic)
 - [x] Bender close-to-RPM notes on Hines + Flowers — beat intel / Why we chase, no invented crystal ball (API — no Codemagic)
 - [x] Game Week Campbell visitors: Alderman expected look (Aliu / Gumbs / Littleton) — not confirmed on campus (API `/api/schedule` — no Codemagic)
 - [x] Game Week Scouting Report: public `/api/schedule` empties desk `offenseScout` / `defenseScout` and omits `scoutingReport` so the current App Store mapper falls back to fan tendencies + `film` (API — no Codemagic)
