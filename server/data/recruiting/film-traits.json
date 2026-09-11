@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-11T13:51:52.569Z",
+  "updatedAt": "2026-09-11T14:00:21.052Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -3171,17 +3171,18 @@
         "open-field-vision",
         "conversion-athlete"
       ],
-      "vaultFilmAngle": "Lead with Florida at No. 1 plus the QB reel close speed that explains the safety chase. Honest: no DB snaps on the Hudl.",
+      "vaultFilmAngle": "Lead with Florida at No. 1 plus the QB-tape close speed that explains the safety chase. Honest: no DB snaps. Do not name the film source in fan copy.",
       "doNotClaim": [
-        "Do not invent safety coverage, backpedal, or INT totals from this QB reel",
+        "Do not invent safety coverage, backpedal, or INT totals from this QB tape",
+        "Do not name the film host in fan copy or X",
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"
       ],
-      "clipNotes": "Vault film desk — sophomore QB Hudl watched 2026-09-11. No DB snaps.",
+      "clipNotes": "Vault film desk — sophomore QB tape watched 2026-09-11. No DB snaps. Do not name the host in fan copy.",
       "ingestStatus": "traits_ready",
       "on3RecruitSlug": "jaxon-flowers-281921",
       "on3ProfileUrl": "https://www.on3.com/rivals/jaxon-flowers-281921/",
-      "lastIngestAt": "2026-09-11T13:51:52.568Z",
+      "lastIngestAt": "2026-09-11T14:00:21.048Z",
       "evaluatedBy": null,
       "evalMode": null,
       "evaluatedAt": null
