@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-06T05:10:00.000Z",
+  "updatedAt": "2026-09-11T02:50:00.000Z",
   "source": "Gators Online / Blake Alderman early visitor look + public confirmations — plans can change",
   "visitorMeta": {
     "zylen-little": {
@@ -57,6 +57,27 @@
       "school": "Carrollwood Day (Tampa, FL)",
       "stars": 4,
       "classYear": 2029
+    },
+    "timi-aliu": {
+      "name": "Timi Aliu",
+      "position": "OT",
+      "school": "Locust Grove (Locust Grove, GA)",
+      "stars": 4,
+      "classYear": 2027
+    },
+    "judah-gumbs": {
+      "name": "Judah Gumbs",
+      "position": "OT",
+      "school": "Armwood (Seffner, FL)",
+      "stars": 3,
+      "classYear": 2027
+    },
+    "dully-littleton": {
+      "name": "Dully Littleton",
+      "position": "TE",
+      "school": "Coffee (Douglas, GA)",
+      "stars": 4,
+      "classYear": 2029
     }
   },
   "games": [
@@ -82,10 +103,15 @@
     {
       "gameId": "campbell",
       "opponent": "Campbell",
+      "date": "2026-09-12",
       "dateLabel": "Sep 12",
       "chaseLabel": "Expected Campbell visit · Sep 12",
-      "slugs": [],
-      "source": "No published Campbell-week visitor list as of Sep 6. We will add names when a beat look lands. Plans can change."
+      "slugs": [
+        "timi-aliu",
+        "judah-gumbs",
+        "dully-littleton"
+      ],
+      "source": "Gators Online / Blake Alderman Campbell look — expected / planning, not confirmed on campus. Plans can change. Aliu is a Nebraska commit. Gumbs is an Arkansas commit and has no Florida offer."
     },
     {
       "gameId": "olemiss",

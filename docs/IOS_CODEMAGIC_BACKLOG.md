@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Campbell visitors: Alderman expected look (Aliu / Gumbs / Littleton) — not confirmed on campus (API `/api/schedule` — no Codemagic)
 - [x] Game Week Scouting Report: public `/api/schedule` empties desk `offenseScout` / `defenseScout` and omits `scoutingReport` so the current App Store mapper falls back to fan tendencies + `film` (API — no Codemagic)
 - [x] Game Week how-we-win copy: drop “confirmed vertical shot” desk wording on FAU keys (API `howUFWins`)
 - [x] FutureCast weekend board: played home-game visitor lists persist into visit_logs + 2028 allowlist; beat UF predictions / 90%+ RPM score on Chase (API — no Codemagic)

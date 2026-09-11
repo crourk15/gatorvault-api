@@ -19,6 +19,8 @@ const DOC_PATH = path.join(__dirname, '..', 'data', 'schedule', 'game-visitors-2
 const SKIP_SLUGS = new Set([
   'chayse-brown', // FSU commit (Alderman / GatorCountry)
   'anthony-blalock-jr', // Alabama commit
+  'timi-aliu', // Nebraska commit (Alderman Campbell look)
+  'judah-gumbs', // Arkansas commit (Alderman Campbell look)
 ]);
 
 function loadDoc() {

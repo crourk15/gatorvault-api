@@ -22,6 +22,8 @@ describe('game visitor visit sync', () => {
 
   it('skips FSU commits and does not invent Campbell trips before kickoff', async () => {
     assert.equal(SKIP_SLUGS.has('chayse-brown'), true);
+    assert.equal(SKIP_SLUGS.has('timi-aliu'), true);
+    assert.equal(SKIP_SLUGS.has('judah-gumbs'), true);
     const now = Date.parse('2026-09-10T12:00:00-04:00');
     const out = await syncPlayedGameVisitors({ dryRun: true, nowMs: now, seasonYear: 2026 });
     const fsu = out.skipped.filter((s) => s.slug === 'chayse-brown');

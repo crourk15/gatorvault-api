@@ -64,13 +64,23 @@ describe('game-week-visitors', () => {
     assert.ok(!panel.visitors.some((v) => v.slug === 'davin-davidson'));
   });
 
-  it('keeps Campbell Expected visitors empty until a beat look lands', () => {
+  it('lists Alderman Campbell names as expected, not confirmed', () => {
     const panel = visitorsPanelForGameId('campbell');
     assert.ok(panel);
     assert.equal(panel.gameId, 'campbell');
-    assert.equal(panel.visitors.length, 0);
-    assert.match(String(panel.source || ''), /no published/i);
+    assert.deepEqual(
+      panel.visitors.map((v) => v.slug),
+      ['timi-aliu', 'judah-gumbs', 'dully-littleton']
+    );
+    assert.match(String(panel.source || ''), /expected \/ planning, not confirmed on campus/i);
+    assert.equal(expectedVisitLabelForSlug('dully-littleton'), 'Expected Campbell visit · Sep 12');
     assert.equal(expectedVisitLabelForSlug('zylen-little'), 'FAU visit · Sep 5');
+    const aliu = panel.visitors.find((v) => v.slug === 'timi-aliu');
+    assert.equal(aliu.position, 'OT');
+    assert.equal(aliu.classYear, 2027);
+    const littleton = panel.visitors.find((v) => v.slug === 'dully-littleton');
+    assert.equal(littleton.classYear, 2029);
+    assert.equal(littleton.position, 'TE');
   });
 
   it('includes Josiah Taylor on Ole Miss expected list', () => {
@@ -87,7 +97,7 @@ describe('game-week-visitors', () => {
     ]);
     assert.ok(games[0].expectedVisitors?.visitors?.length);
     assert.ok(games[1].expectedVisitors);
-    assert.equal(games[1].expectedVisitors.visitors.length, 0);
-    assert.match(String(games[1].expectedVisitors.source || ''), /no published/i);
+    assert.equal(games[1].expectedVisitors.visitors.length, 3);
+    assert.match(String(games[1].expectedVisitors.source || ''), /expected \/ planning/i);
   });
 });
