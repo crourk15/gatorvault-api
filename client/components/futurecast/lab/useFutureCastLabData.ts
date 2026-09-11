@@ -5,6 +5,8 @@ import {
   loadFutureCastLabData,
   loadFutureCastLabPrimary,
   loadFutureCastLabSecondaryRaw,
+  loadFutureCastLabHighPriority,
+  startFutureCastLabHighPriorityLoads,
   applyDiscoverySeasonOverlay,
   type FutureCastLabDataMap,
 } from '@/lib/futurecast-lab-data';
@@ -147,8 +149,28 @@ export function useFutureCastLabData(): FutureCastLabData {
       if (isInitial) {
         // Elite: fire primary + secondary together — do not wait on master-board
         // before kicking off trending / high-priority / movement.
+        // Closest to commit only needs HP (full allowlist). Paint it as soon as
+        // those two calls land — do not wait on underclassmen / roster / staff.
+        const hpLoads = startFutureCastLabHighPriorityLoads();
         const primaryPromise = loadFutureCastLabPrimary();
-        const secondaryPromise = loadFutureCastLabSecondaryRaw();
+        const secondaryPromise = loadFutureCastLabSecondaryRaw(hpLoads);
+        void loadFutureCastLabHighPriority(hpLoads)
+          .then((hp) => {
+            const liveHp = hasUsableUfProbability(hp.highPriority);
+            const liveHpc = hasUsableUfProbability(hp.highPriorityClosing);
+            if (!liveHp && !liveHpc) return;
+            setData((prev) => {
+              const base = prev ?? (hasSeedPaint ? SEED_LAB_DATA : EMPTY_LAB_DATA);
+              return {
+                ...base,
+                highPriority: liveHp ? hp.highPriority : base.highPriority,
+                highPriorityClosing: liveHpc ? hp.highPriorityClosing : base.highPriorityClosing,
+              };
+            });
+          })
+          .catch(() => {
+            /* full secondary still lands Closest */
+          });
 
         const primary = await primaryPromise;
         if (!primary.masterBoard.players.length && hasSeedPaint) {

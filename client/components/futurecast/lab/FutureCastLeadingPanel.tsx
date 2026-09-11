@@ -161,8 +161,9 @@ export function FutureCastLeadingPanel({
   const focusYear = discoveryView ? 2028 : 2027;
 
   const pool = useMemo(() => {
-    // Discovery: full allowlist year (underclassmen + HP overlay). Chase-hot HP
-    // top-18 alone drops board leaders like Hudson West from Closest to commit.
+    // Discovery: full allowlist year (underclassmen + HP overlay). Live HP is
+    // already the full board — Closest can paint as soon as HP lands, before
+    // underclassmen / the rest of Lab secondary.
     if (discoveryView) {
       const discoveryPool = buildDiscoveryLeadingPool(
         highPriority,

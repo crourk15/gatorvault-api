@@ -116,12 +116,30 @@ function ufPredictionChasePoints({ prediction = '', ufRpmPct = null } = {}) {
   return 0;
 }
 
+const LOCAL_PLAYERS_TTL_MS = 60_000;
+const CHASE_INDEX_TTL_MS = 45_000;
+
+/** @type {{ at: number, rows: object[] | null }} */
+let localPlayersCache = { at: 0, rows: null };
+/** @type {{ key: string, at: number, index: object | null }} */
+let chaseIndexCache = { key: '', at: 0, index: null };
+
+function clearChaseFeatureIndexCache() {
+  localPlayersCache = { at: 0, rows: null };
+  chaseIndexCache = { key: '', at: 0, index: null };
+}
+
 function loadLocalPlayersSync() {
+  if (localPlayersCache.rows && Date.now() - localPlayersCache.at < LOCAL_PLAYERS_TTL_MS) {
+    return localPlayersCache.rows;
+  }
   try {
     const store = require('./recruiting-store');
     const file = path.join(store.DATA_DIR, 'players.json');
     const rows = JSON.parse(fs.readFileSync(file, 'utf8'));
-    return Array.isArray(rows) ? rows : [];
+    const list = Array.isArray(rows) ? rows : [];
+    localPlayersCache = { at: Date.now(), rows: list };
+    return list;
   } catch {
     return [];
   }
@@ -130,6 +148,16 @@ function loadLocalPlayersSync() {
 function buildChaseFeatureIndex(opts = {}) {
   // Recruiting chase windows are seasonal — keep spring visits relevant into summer.
   const days = Number(opts.days) || 180;
+  const classYearKey = Number(opts.classYear) || 0;
+  const cacheKey = `${classYearKey}:${days}`;
+  if (
+    !opts.fresh &&
+    chaseIndexCache.index &&
+    chaseIndexCache.key === cacheKey &&
+    Date.now() - chaseIndexCache.at < CHASE_INDEX_TTL_MS
+  ) {
+    return chaseIndexCache.index;
+  }
   const cutoffMs = Date.now() - days * DAY_MS;
   // Load broad, then filter on visit/offer DATE (not ingest reportedAt).
   const visits = visitLogStore.listVisitLogs({ limit: 8000 });
@@ -299,7 +327,7 @@ function buildChaseFeatureIndex(opts = {}) {
     /* optional */
   }
 
-  return {
+  const index = {
     bySlug,
     allowlisted,
     staffMap,
@@ -311,6 +339,8 @@ function buildChaseFeatureIndex(opts = {}) {
     predBySlug,
     days,
   };
+  chaseIndexCache = { key: cacheKey, at: Date.now(), index };
+  return index;
 }
 
 /** Broad intel families — rewards real multi-channel coverage, not one spammy source. */
@@ -438,6 +468,7 @@ function hasChaseTraction(result) {
 
 module.exports = {
   buildChaseFeatureIndex,
+  clearChaseFeatureIndexCache,
   computeChaseScore,
   hasChaseTraction,
   isOfficialVisit,

@@ -8,7 +8,9 @@ describe('Closest-to-commit process evidence', () => {
     const {
       buildClosestCommitEvidenceIndex,
       getClosestCommitEvidence,
+      clearClosestCommitEvidenceCache,
     } = require('../../lib/closest-commit-evidence');
+    clearClosestCommitEvidenceCache();
     const index = buildClosestCommitEvidenceIndex({ classYear: 2028, days: 180 });
 
     const hudson = getClosestCommitEvidence(index, 'hudson-west');
@@ -54,5 +56,19 @@ describe('Closest-to-commit process evidence', () => {
     if (leserra) {
       assert.equal(leserra.closestCommitEligible, false);
     }
+  });
+
+  it('reuses the Closest evidence index so Lab HP rebuilds skip a second players.json parse', () => {
+    const {
+      buildClosestCommitEvidenceIndex,
+      clearClosestCommitEvidenceCache,
+    } = require('../../lib/closest-commit-evidence');
+    clearClosestCommitEvidenceCache();
+    const first = buildClosestCommitEvidenceIndex({ classYear: 2028, days: 180 });
+    const second = buildClosestCommitEvidenceIndex({ classYear: 2028, days: 180 });
+    assert.equal(second, first, 'TTL cache must return the same index object');
+    const fresh = buildClosestCommitEvidenceIndex({ classYear: 2028, days: 180, fresh: true });
+    assert.notEqual(fresh, first, 'fresh:true must rebuild');
+    assert.equal(fresh.bySlug.get('hudson-west')?.closestEligible, true);
   });
 });
