@@ -22,8 +22,11 @@
     "opponent": "Campbell",
     "date": "2026-09-12T21:30:00.000Z",
     "venue": "Ben Hill Griffin Stadium",
-    "spread": null,
-    "total": null,
+    "spread": {
+      "line": "UF -49.5",
+      "uf": -49.5
+    },
+    "total": 66.5,
     "moneyline": null,
     "sportsbookUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
     "sportsbookLinks": [
@@ -123,8 +126,11 @@
       "opponent": "Campbell",
       "date": "2026-09-12T21:30:00.000Z",
       "venue": "Ben Hill Griffin Stadium",
-      "spread": null,
-      "total": null,
+      "spread": {
+        "line": "UF -49.5",
+        "uf": -49.5
+      },
+      "total": 66.5,
       "moneyline": null,
       "sportsbookUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
       "sportsbookLinks": [

@@ -44,5 +44,8 @@ describe('betting-lines next game', () => {
     assert.equal(payload.lastGame.awayScore, 21);
     assert.equal(payload.finals['uf-fau-2026-w1'].uf, 66);
     assert.equal(payload.finals['uf-fau-2026-w1'].opp, 21);
+    assert.equal(payload.nextGame.spread.line, 'UF -49.5');
+    assert.equal(payload.nextGame.spread.uf, -49.5);
+    assert.equal(payload.nextGame.total, 66.5);
   });
 });

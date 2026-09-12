@@ -8,6 +8,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 
 ## Already live on iOS (no build needed)
 - [x] FutureCast Closest load: chase-index cache + no players.json parse on HP rebuild — current binary already reads `/api/futurecast/high-priority` (API — no Codemagic)
+- [x] Game Week Campbell Vegas: stamp consensus UF -49.5 / O/U 66.5 on `/api/betting/lines` so Prediction is not Line pending (API — no Codemagic)
 - [x] Game Week Campbell 3 keys: Sixkiller + last year's run D + chunk shots vs 5-INT secondary (API `keys` / `howUFWins` — no Codemagic)
 - [x] Campbell Scouting Report bottom line: Campbell is Sixkiller — crowd him or he takes the shot over the top, then go score (API `film` — no Codemagic)
 - [x] Bender close-to-RPM notes on Hines + Flowers — beat intel / Why we chase, no invented crystal ball (API — no Codemagic)

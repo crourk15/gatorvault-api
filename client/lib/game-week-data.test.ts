@@ -54,6 +54,12 @@ describe('Game Week Film Notes', () => {
     assert.equal(campbell.filmWatched, true);
     assert.equal(campbell.filmLessonId, undefined);
     assert.equal(bundle.prediction.spread, 'Line pending');
+    const withVegas = getGameWeekBundle('campbell', SCHEDULE_GAMES, {
+      spreadLine: 'UF -49.5',
+      total: 66.5,
+    });
+    assert.equal(withVegas.prediction.spread, 'UF -49.5');
+    assert.equal(withVegas.prediction.total, 'O/U 66.5');
   });
 
   it('defaults Game Week to the next upcoming kickoff', () => {
