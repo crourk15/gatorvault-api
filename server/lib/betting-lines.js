@@ -62,8 +62,9 @@ const STATIC_LINES = [
     opponent: 'Campbell',
     date: '2026-09-12T21:30:00.000Z',
     venue: 'Ben Hill Griffin Stadium',
-    spread: null,
-    total: null,
+    // Market consensus ~Sep 12 2026 (Covers -49.5 / 66.5; DraftKings -49.5 / 65.5; FanDuel Sep 10 -50.5 / 66.5)
+    spread: { line: 'UF -49.5', uf: -49.5 },
+    total: 66.5,
     moneyline: null,
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
