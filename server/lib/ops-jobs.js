@@ -7,6 +7,8 @@ const opsMonitor = require('./ops-monitor');
 const JOB_ALIASES = {
   depth_chart_refresh: 'depth-chart-refresh',
   roster_stats_sync: 'roster-stats-sync',
+  roster_official_box_sync: 'roster-official-box-sync',
+  'roster-official-box': 'roster-official-box-sync',
   game_zone_lines: 'game-zone-refresh',
   'article-engine:weekly-draft': 'article-engine-weekly-draft'
 };
@@ -204,6 +206,15 @@ const JOBS = {
     async run(opts = {}) {
       const { syncRosterProductionStats } = require('./roster-production-stats-sync');
       return syncRosterProductionStats(opts);
+    }
+  },
+  'roster-official-box-sync': {
+    label: 'Roster official box stats sync',
+    subsystem: 'cron:roster-official-box',
+    schedule: 'Every 3h after kickoff (ROSTER_OFFICIAL_BOX_SYNC_ENABLED)',
+    async run(opts = {}) {
+      const { syncRosterOfficialBoxes } = require('./roster-official-box-sync');
+      return syncRosterOfficialBoxes(opts);
     }
   },
   'game-zone-refresh': {

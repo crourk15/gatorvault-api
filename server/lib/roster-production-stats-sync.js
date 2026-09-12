@@ -24,31 +24,7 @@ function isOfficialProductionStats(raw) {
   return seasons.length > 0 || games.length > 0;
 }
 
-/**
- * Keep official-box seasons/games CFBD has not ingested yet (e.g. Week 1
- * stamped from the UF box before the next CFBD pull).
- */
-function mergeOfficialForward(existing, cfbd) {
-  if (!isOfficialProductionStats(existing) || !cfbd) return cfbd;
-  const cfbdSeasonKeys = new Set(
-    (cfbd.seasons || []).map((s) => `${s.season}|${s.category}`)
-  );
-  const extraSeasons = (existing.seasons || []).filter(
-    (s) => !cfbdSeasonKeys.has(`${s.season}|${s.category}`)
-  );
-  const cfbdGameKeys = new Set(
-    (cfbd.recentGames || []).map((g) => `${g.season}|${g.week}|${g.opponent}|${g.category || ''}`)
-  );
-  const extraGames = (existing.recentGames || []).filter(
-    (g) => !cfbdGameKeys.has(`${g.season}|${g.week}|${g.opponent}|${g.category || ''}`)
-  );
-  if (!extraSeasons.length && !extraGames.length) return cfbd;
-  return {
-    ...cfbd,
-    seasons: [...extraSeasons, ...(cfbd.seasons || [])],
-    recentGames: [...extraGames, ...(cfbd.recentGames || [])].slice(0, 8),
-  };
-}
+const { mergeExistingForward } = require('./roster-production-merge');
 
 async function syncRosterProductionStats(opts = {}) {
   if (!hasCfbdApiKey()) {
@@ -122,10 +98,6 @@ async function syncRosterProductionStats(opts = {}) {
     };
     const match = matchRosterToCfbd(rosterPlayer, cfbdIndex);
     if (!match) {
-      if (raw.productionStats && !isOfficialProductionStats(raw.productionStats)) {
-        updates[slug] = null;
-        cleared += 1;
-      }
       unmatched += 1;
       continue;
     }
@@ -139,15 +111,11 @@ async function syncRosterProductionStats(opts = {}) {
     });
 
     if (!productionStats) {
-      if (raw.productionStats && !isOfficialProductionStats(raw.productionStats)) {
-        updates[slug] = null;
-        cleared += 1;
-      }
       unmatched += 1;
       continue;
     }
 
-    updates[slug] = mergeOfficialForward(raw.productionStats, productionStats);
+    updates[slug] = mergeExistingForward(raw.productionStats, productionStats);
     matched += 1;
   }
 
@@ -171,5 +139,6 @@ async function syncRosterProductionStats(opts = {}) {
 module.exports = {
   syncRosterProductionStats,
   isOfficialProductionStats,
-  mergeOfficialForward,
+  mergeOfficialForward: mergeExistingForward,
+  mergeExistingForward,
 };

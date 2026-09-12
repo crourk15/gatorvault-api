@@ -325,7 +325,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-12T04:08:46.814Z",
       "cfbdPlayerId": 5295811,
       "matchConfidence": "exact",
       "seasons": [
@@ -410,6 +410,21 @@
           "date": "2026-09-05T23:55:00.000Z",
           "opponent": "Florida Atlantic",
           "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": 14,
+            "td": 0,
+            "lng": 14,
+            "avg": 14
+          }
+        },
+        {
+          "season": 2026,
+          "week": 1,
+          "date": "2026-09-05T23:55:00.000Z",
+          "opponent": "Florida Atlantic",
+          "homeAway": "home",
           "category": "receiving",
           "stats": {
             "rec": 6,
@@ -437,7 +452,7 @@
       ]
     },
     "cfbdPlayerId": 5295811,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-12T04:08:46.816Z",
     "nilSource": "on3",
     "nilSourceLabel": "On3 value"
   },
@@ -1757,7 +1772,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-12T04:08:46.814Z",
       "cfbdPlayerId": 5295814,
       "matchConfidence": "exact",
       "seasons": [
@@ -1820,6 +1835,21 @@
           "date": "2026-09-05T23:55:00.000Z",
           "opponent": "Florida Atlantic",
           "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 2,
+            "yds": 3,
+            "td": 0,
+            "lng": 4,
+            "avg": 1.5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 1,
+          "date": "2026-09-05T23:55:00.000Z",
+          "opponent": "Florida Atlantic",
+          "homeAway": "home",
           "category": "passing",
           "stats": {
             "cmp": 4,
@@ -1848,7 +1878,7 @@
       ]
     },
     "cfbdPlayerId": 5295814,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-12T04:08:46.816Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -2147,7 +2177,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-12T04:08:46.814Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -2185,6 +2215,21 @@
           "date": "2026-09-05T23:55:00.000Z",
           "opponent": "Florida Atlantic",
           "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 6,
+            "yds": 20,
+            "td": 1,
+            "lng": 9,
+            "avg": 3.3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 1,
+          "date": "2026-09-05T23:55:00.000Z",
+          "opponent": "Florida Atlantic",
+          "homeAway": "home",
           "category": "passing",
           "stats": {
             "cmp": 16,
@@ -2198,7 +2243,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-09-12T04:08:46.816Z"
   },
   {
     "slug": "ben-hanks-iii",
@@ -3230,10 +3275,19 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-12T04:08:46.814Z",
       "cfbdPlayerId": 5295815,
       "matchConfidence": "exact",
       "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "team": "Florida",
@@ -3290,6 +3344,18 @@
           "date": "2026-09-05T23:55:00.000Z",
           "opponent": "Florida Atlantic",
           "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 1,
+          "date": "2026-09-05T23:55:00.000Z",
+          "opponent": "Florida Atlantic",
+          "homeAway": "home",
           "category": "rushing",
           "stats": {
             "car": 8,
@@ -3332,7 +3398,7 @@
       ]
     },
     "cfbdPlayerId": 5295815,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-12T04:08:46.816Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },

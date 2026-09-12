@@ -52,6 +52,17 @@ function startPlatformMaintenanceSchedulers() {
   );
 
   scheduleJob(
+    'roster-official-box',
+    'ROSTER_OFFICIAL_BOX_SYNC_ENABLED',
+    10800000,
+    parseInt(process.env.ROSTER_OFFICIAL_BOX_BOOT_DELAY_MS || '240000', 10),
+    () => {
+      const { syncRosterOfficialBoxes } = require('./roster-official-box-sync');
+      return syncRosterOfficialBoxes();
+    }
+  );
+
+  scheduleJob(
     'game-zone',
     'GAME_ZONE_ENABLED',
     21600000,
