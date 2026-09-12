@@ -4,7 +4,7 @@ alwaysApply: true
 ---
 # Apple App Store review freeze — LIFTED
 
-**Status: LIFTED** (user cleared Jul 11, 2026; App Store **1.0.17** accepted Aug 17, 2026 — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`). Next client bake train: **1.0.18** / build 83+ (`docs/APP_STORE_1_0_18_BUILD83.md`).
+**Status: LIFTED** (user cleared Jul 11, 2026; App Store **1.0.17** accepted Aug 17, 2026 — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`). Next client bake train: **1.0.25** / build 90+ (`docs/APP_STORE_1_0_25_BUILD90.md`).
 
 Normal push / Render auto-deploy / production API deploys are allowed again.
 
