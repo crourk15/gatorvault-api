@@ -6,78 +6,349 @@
   "homeAway": "home",
   "final": "66-21",
   "box": "https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903",
-  "note": "Official UF box. Stamp Week 1 until CFBD roster-stats-sync ingests 2026.",
+  "note": "Official UF individual box. Stamp every player with a Week 1 line so roster Stats tabs stay in accordance until CFBD ingests 2026.",
   "players": {
     "aaron-philo": {
-      "source": "official",
       "seasons": [
-        {
-          "category": "passing",
-          "stats": { "cmp": 16, "att": 21, "yds": 275, "td": 3, "int": 1, "lng": 63, "avg": 13.1 }
-        },
-        {
-          "category": "rushing",
-          "stats": { "car": 6, "yds": 20, "td": 1, "lng": 9, "avg": 3.3 }
-        }
+        { "category": "passing", "stats": { "cmp": 16, "att": 21, "yds": 275, "td": 3, "int": 1, "lng": 63, "avg": 13.1 } },
+        { "category": "rushing", "stats": { "car": 6, "yds": 20, "td": 1, "lng": 9, "avg": 3.3 } }
       ],
       "recentGames": [
-        {
-          "category": "passing",
-          "stats": { "cmp": 16, "att": 21, "yds": 275, "td": 3, "int": 1, "lng": 63, "avg": 13.1 }
-        }
+        { "category": "passing", "stats": { "cmp": 16, "att": 21, "yds": 275, "td": 3, "int": 1, "lng": 63, "avg": 13.1 } }
       ]
     },
     "tramell-jones-jr": {
-      "source": "cfbd",
       "seasons": [
-        {
-          "category": "passing",
-          "stats": { "cmp": 4, "att": 5, "yds": 68, "td": 1, "int": 0, "lng": 32, "avg": 13.6 }
-        },
-        {
-          "category": "rushing",
-          "stats": { "car": 2, "yds": 3, "td": 0, "lng": 4, "avg": 1.5 }
-        }
+        { "category": "passing", "stats": { "cmp": 4, "att": 5, "yds": 68, "td": 1, "int": 0, "lng": 32, "avg": 13.6 } },
+        { "category": "rushing", "stats": { "car": 2, "yds": 3, "td": 0, "lng": 4, "avg": 1.5 } }
       ],
       "recentGames": [
-        {
-          "category": "passing",
-          "stats": { "cmp": 4, "att": 5, "yds": 68, "td": 1, "int": 0, "lng": 32, "avg": 13.6 }
-        }
+        { "category": "passing", "stats": { "cmp": 4, "att": 5, "yds": 68, "td": 1, "int": 0, "lng": 32, "avg": 13.6 } }
       ]
     },
     "jadan-baugh": {
-      "source": "cfbd",
       "seasons": [
-        {
-          "category": "rushing",
-          "stats": { "car": 14, "yds": 160, "td": 3, "lng": 61, "avg": 11.4 }
-        }
+        { "category": "rushing", "stats": { "car": 14, "yds": 160, "td": 3, "lng": 61, "avg": 11.4 } }
       ],
       "recentGames": [
-        {
-          "category": "rushing",
-          "stats": { "car": 14, "yds": 160, "td": 3, "lng": 61, "avg": 11.4 }
-        }
+        { "category": "rushing", "stats": { "car": 14, "yds": 160, "td": 3, "lng": 61, "avg": 11.4 } }
       ]
     },
     "vernell-brown-iii": {
-      "source": "cfbd",
       "seasons": [
-        {
-          "category": "receiving",
-          "stats": { "rec": 6, "yds": 117, "td": 1, "lng": 49, "avg": 19.5 }
-        },
-        {
-          "category": "rushing",
-          "stats": { "car": 1, "yds": 14, "td": 0, "lng": 14, "avg": 14 }
-        }
+        { "category": "receiving", "stats": { "rec": 6, "yds": 117, "td": 1, "lng": 49, "avg": 19.5 } },
+        { "category": "rushing", "stats": { "car": 1, "yds": 14, "td": 0, "lng": 14, "avg": 14 } }
       ],
       "recentGames": [
-        {
-          "category": "receiving",
-          "stats": { "rec": 6, "yds": 117, "td": 1, "lng": 49, "avg": 19.5 }
-        }
+        { "category": "receiving", "stats": { "rec": 6, "yds": 117, "td": 1, "lng": 49, "avg": 19.5 } }
+      ]
+    },
+    "dallas-wilson": {
+      "seasons": [
+        { "category": "receiving", "stats": { "rec": 3, "yds": 47, "td": 0, "lng": 19, "avg": 15.7 } }
+      ],
+      "recentGames": [
+        { "category": "receiving", "stats": { "rec": 3, "yds": 47, "td": 0, "lng": 19, "avg": 15.7 } }
+      ]
+    },
+    "tj-abrams": {
+      "seasons": [
+        { "category": "receiving", "stats": { "rec": 1, "yds": 63, "td": 0, "lng": 63, "avg": 63 } }
+      ],
+      "recentGames": [
+        { "category": "receiving", "stats": { "rec": 1, "yds": 63, "td": 0, "lng": 63, "avg": 63 } }
+      ]
+    },
+    "bailey-stockton": {
+      "seasons": [
+        { "category": "receiving", "stats": { "rec": 3, "yds": 20, "td": 1, "lng": 12, "avg": 6.7 } }
+      ],
+      "recentGames": [
+        { "category": "receiving", "stats": { "rec": 3, "yds": 20, "td": 1, "lng": 12, "avg": 6.7 } }
+      ]
+    },
+    "duke-clark": {
+      "seasons": [
+        { "category": "rushing", "stats": { "car": 8, "yds": 65, "td": 1, "lng": 28, "avg": 8.1 } },
+        { "category": "receiving", "stats": { "rec": 1, "yds": 10, "td": 1, "lng": 10, "avg": 10 } }
+      ],
+      "recentGames": [
+        { "category": "rushing", "stats": { "car": 8, "yds": 65, "td": 1, "lng": 28, "avg": 8.1 } },
+        { "category": "receiving", "stats": { "rec": 1, "yds": 10, "td": 1, "lng": 10, "avg": 10 } }
+      ]
+    },
+    "byron-louis": {
+      "seasons": [
+        { "category": "rushing", "stats": { "car": 4, "yds": 16, "td": 0, "lng": 8, "avg": 4 } },
+        { "category": "receiving", "stats": { "rec": 1, "yds": 32, "td": 0, "lng": 32, "avg": 32 } }
+      ],
+      "recentGames": [
+        { "category": "rushing", "stats": { "car": 4, "yds": 16, "td": 0, "lng": 8, "avg": 4 } },
+        { "category": "receiving", "stats": { "rec": 1, "yds": 32, "td": 0, "lng": 32, "avg": 32 } }
+      ]
+    },
+    "luke-harpring": {
+      "seasons": [
+        { "category": "receiving", "stats": { "rec": 1, "yds": 19, "td": 0, "lng": 19, "avg": 19 } }
+      ],
+      "recentGames": [
+        { "category": "receiving", "stats": { "rec": 1, "yds": 19, "td": 0, "lng": 19, "avg": 19 } }
+      ]
+    },
+    "micah-mays-jr": {
+      "seasons": [
+        { "category": "receiving", "stats": { "rec": 2, "yds": 15, "td": 0, "lng": 16, "avg": 7.5 } }
+      ],
+      "recentGames": [
+        { "category": "receiving", "stats": { "rec": 2, "yds": 15, "td": 0, "lng": 16, "avg": 7.5 } }
+      ]
+    },
+    "amir-jackson": {
+      "seasons": [
+        { "category": "receiving", "stats": { "rec": 1, "yds": 14, "td": 0, "lng": 14, "avg": 14 } }
+      ],
+      "recentGames": [
+        { "category": "receiving", "stats": { "rec": 1, "yds": 14, "td": 0, "lng": 14, "avg": 14 } }
+      ]
+    },
+    "micah-jones": {
+      "seasons": [
+        { "category": "receiving", "stats": { "rec": 1, "yds": 6, "td": 1, "lng": 6, "avg": 6 } }
+      ],
+      "recentGames": [
+        { "category": "receiving", "stats": { "rec": 1, "yds": 6, "td": 1, "lng": 6, "avg": 6 } }
+      ]
+    },
+    "london-montgomery": {
+      "seasons": [
+        { "category": "rushing", "stats": { "car": 3, "yds": 12, "td": 0, "lng": 5, "avg": 4 } }
+      ],
+      "recentGames": [
+        { "category": "rushing", "stats": { "car": 3, "yds": 12, "td": 0, "lng": 5, "avg": 4 } }
+      ]
+    },
+    "anthony-rubio": {
+      "seasons": [
+        { "category": "rushing", "stats": { "car": 2, "yds": 11, "td": 0, "lng": 8, "avg": 5.5 } }
+      ],
+      "recentGames": [
+        { "category": "rushing", "stats": { "car": 2, "yds": 11, "td": 0, "lng": 8, "avg": 5.5 } }
+      ]
+    },
+    "patrick-durkin": {
+      "seasons": [
+        { "category": "kicking", "stats": { "fgm": 1, "fga": 1, "xpm": 8, "xpa": 8, "pts": 11, "lng": 53 } }
+      ],
+      "recentGames": [
+        { "category": "kicking", "stats": { "fgm": 1, "fga": 1, "xpm": 8, "xpa": 8, "pts": 11, "lng": 53 } }
+      ]
+    },
+    "liam-padron": {
+      "seasons": [
+        { "category": "kicking", "stats": { "xpm": 1, "xpa": 1, "pts": 1 } }
+      ],
+      "recentGames": [
+        { "category": "kicking", "stats": { "xpm": 1, "xpa": 1, "pts": 1 } }
+      ]
+    },
+    "myles-graham": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 4, "ast": 6, "tot": 10, "tfl": 0.5, "sack": 0.5 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 4, "ast": 6, "tot": 10, "tfl": 0.5, "sack": 0.5 } }
+      ]
+    },
+    "jeramiah-mccloud": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 6, "tot": 8, "pd": 1, "qh": 2 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 6, "tot": 8, "pd": 1, "qh": 2 } }
+      ]
+    },
+    "kanye-clark": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 5, "tot": 7, "pd": 1, "qh": 2 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 5, "tot": 7, "pd": 1, "qh": 2 } }
+      ]
+    },
+    "jvari-flowers": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 4, "tot": 6, "tfl": 0.5 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 4, "tot": 6, "tfl": 0.5 } }
+      ]
+    },
+    "kofi-asare": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 3, "ast": 2, "tot": 5 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 3, "ast": 2, "tot": 5 } }
+      ]
+    },
+    "jayden-woods": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 3, "ast": 1, "tot": 4 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 3, "ast": 1, "tot": 4 } }
+      ]
+    },
+    "ben-hanks-iii": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 4, "tot": 4, "pd": 1 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 4, "tot": 4, "pd": 1 } }
+      ]
+    },
+    "kamran-james": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 3, "ast": 1, "tot": 4, "tfl": 2, "sack": 1, "ff": 1, "qh": 1 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 3, "ast": 1, "tot": 4, "tfl": 2, "sack": 1, "ff": 1, "qh": 1 } }
+      ]
+    },
+    "cormani-mcclain": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 3, "ast": 1, "tot": 4 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 3, "ast": 1, "tot": 4 } }
+      ]
+    },
+    "dijon-johnson": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 1, "ast": 3, "tot": 4, "int": 1 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 1, "ast": 3, "tot": 4, "int": 1 } }
+      ]
+    },
+    "jaden-robinson": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 2, "tot": 4 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 2, "tot": 4 } }
+      ]
+    },
+    "brendan-bett": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 2, "tot": 4, "tfl": 1, "ff": 1, "qh": 2 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 2, "tot": 4, "tfl": 1, "ff": 1, "qh": 2 } }
+      ]
+    },
+    "bryce-thornton": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 1, "tot": 3, "pd": 1 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 2, "ast": 1, "tot": 3, "pd": 1 } }
+      ]
+    },
+    "aaron-chiles": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 1, "ast": 2, "tot": 3, "pd": 2, "qh": 1 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 1, "ast": 2, "tot": 3, "pd": 2, "qh": 1 } }
+      ]
+    },
+    "alfonzo-allen-jr": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 1, "ast": 2, "tot": 3 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 1, "ast": 2, "tot": 3 } }
+      ]
+    },
+    "lagonza-hayward": {
+      "seasons": [
+        { "category": "defense", "stats": { "ast": 2, "tot": 2 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "ast": 2, "tot": 2 } }
+      ]
+    },
+    "cam-dooley": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 2, "tot": 2 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 2, "tot": 2 } }
+      ]
+    },
+    "lj-mccray": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 2, "tot": 2, "pd": 1 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 2, "tot": 2, "pd": 1 } }
+      ]
+    },
+    "jordy-lowery": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 2, "tot": 2 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 2, "tot": 2 } }
+      ]
+    },
+    "dj-coleman": {
+      "seasons": [
+        { "category": "defense", "stats": { "ast": 2, "tot": 2, "int": 1, "pd": 1 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "ast": 2, "tot": 2, "int": 1, "pd": 1 } }
+      ]
+    },
+    "myles-johnson": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 2, "tot": 2, "tfl": 1, "fr": 1 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 2, "tot": 2, "tfl": 1, "fr": 1 } }
+      ]
+    },
+    "dk-kalu": {
+      "seasons": [
+        { "category": "defense", "stats": { "ast": 2, "tot": 2 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "ast": 2, "tot": 2 } }
+      ]
+    },
+    "jamari-lyons": {
+      "seasons": [
+        { "category": "defense", "stats": { "ast": 2, "tot": 2, "tfl": 1, "sack": 0.5 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "ast": 2, "tot": 2, "tfl": 1, "sack": 0.5 } }
+      ]
+    },
+    "emmanuel-oyebadejo": {
+      "seasons": [
+        { "category": "defense", "stats": { "solo": 1, "ast": 1, "tot": 2, "pd": 1, "qh": 2 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "solo": 1, "ast": 1, "tot": 2, "pd": 1, "qh": 2 } }
+      ]
+    },
+    "joseph-mbatchou": {
+      "seasons": [
+        { "category": "defense", "stats": { "ast": 1, "tot": 1 } }
+      ],
+      "recentGames": [
+        { "category": "defense", "stats": { "ast": 1, "tot": 1 } }
       ]
     }
   }

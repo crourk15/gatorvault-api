@@ -7,7 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
-- [x] Roster Week 1 FAU box on Baugh / Brown III / Jones Jr. — 2026 lines merged onto existing `source: cfbd` so current App Store Stats tab reads them from `/api/roster/players/:slug` (API — no Codemagic)
+- [x] Roster Week 1 FAU box on every player with an official line (Wilson / Graham / Durkin / …) — 2026 merged onto existing `source: cfbd` so current App Store Stats tabs read Game 1 from `/api/roster/players/:slug` (API — no Codemagic). New official-only names (Stockton, Durkin, …) wait for the `hasProductionStats` bake below.
 - [x] FutureCast Closest load: chase-index cache + no players.json parse on HP rebuild — current binary already reads `/api/futurecast/high-priority` (API — no Codemagic)
 - [x] Gators Live Film Bite: Campbell first filmNote is the Sixkiller tape line so the card is not a one-line empty (API `filmNotes[0]` — no Codemagic)
 - [x] Antonio Thomas Jr. Forecast Friday: Florida RPM pick on the board (no invented %), FAU trip 3 logged, Ole Miss return Sep 26, leaning 2028 (API — no Codemagic)

@@ -231,6 +231,20 @@ test('hasCfbdApiKey reflects env without throwing', () => {
   assert.strictEqual(typeof hasCfbdApiKey(), 'boolean');
 });
 
+test('official Week 1 FAU box covers the skill and defense board', () => {
+  const box = require('../data/roster/official-week1-fau-2026.json');
+  const slugs = Object.keys(box.players);
+  assert.ok(slugs.includes('dallas-wilson'));
+  assert.ok(slugs.includes('aaron-philo'));
+  assert.ok(slugs.includes('myles-graham'));
+  assert.ok(slugs.includes('patrick-durkin'));
+  assert.ok(slugs.length >= 40);
+  const wilson = box.players['dallas-wilson'];
+  assert.strictEqual(wilson.seasons[0].stats.rec, 3);
+  assert.strictEqual(wilson.seasons[0].stats.yds, 47);
+  assert.strictEqual(wilson.recentGames[0].stats.yds, 47);
+});
+
 console.log('all roster production stats tests passed');
 
 test('aggregateGameStats resolves opponent from homeTeam/awayTeam when only Florida box is present', () => {
