@@ -66,15 +66,18 @@ function resolveHeadshotUrl(player) {
   return findLocalHeadshot(player.slug);
 }
 
+const TRUSTED_PRODUCTION_SOURCES = new Set(['cfbd', 'official']);
+
 function normalizeProductionStats(raw) {
   if (!raw || typeof raw !== 'object') return null;
-  if (raw.source !== 'cfbd') return null;
+  const source = TRUSTED_PRODUCTION_SOURCES.has(raw.source) ? raw.source : null;
+  if (!source) return null;
   if (!Array.isArray(raw.seasons) && !Array.isArray(raw.recentGames)) return null;
   const seasons = Array.isArray(raw.seasons) ? raw.seasons : [];
   const recentGames = Array.isArray(raw.recentGames) ? raw.recentGames : [];
   if (!seasons.length && !recentGames.length) return null;
   return {
-    source: 'cfbd',
+    source,
     syncedAt: raw.syncedAt || null,
     cfbdPlayerId:
       raw.cfbdPlayerId != null && Number.isFinite(Number(raw.cfbdPlayerId))
@@ -243,6 +246,7 @@ module.exports = {
   loadPlayersRaw,
   applyProductionStatsUpdates,
   normalizeProductionStats,
+  TRUSTED_PRODUCTION_SOURCES,
   getHeadshotMap,
   updateHeadshotMapping
 };

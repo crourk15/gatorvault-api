@@ -27,7 +27,7 @@ export interface ProductionGameLine {
 }
 
 export interface ProductionStats {
-  source: 'cfbd';
+  source: 'cfbd' | 'official';
   syncedAt: string | null;
   cfbdPlayerId: number | null;
   matchConfidence: 'exact' | 'high' | null;
