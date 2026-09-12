@@ -223,6 +223,23 @@ node server/scripts/upsert-vault-film-review.js --file=server/data/film-room/rev
 
 Do **not** ship a live Review from box score / play-by-play alone.
 
+## Roster production stats (no weekly Codemagic)
+
+Team profile Stats tabs read `productionStats` on `roster/players.json` via `/api/roster/players/:slug`. After the **one-time 1.0.25** bake (Stats tab accepts `source: official`), weekly numbers are **API-only**.
+
+1. **Official UF box cron** (`roster-official-box-sync`) — every ~3h after kickoff. Finds the floridagators.com box from the game-center link already on the schedule (`tickets.gameCenter`), parses every individual line, and upserts whoever recorded one. OL / P / LS / DNP still get no traditional box line (we do not invent zeros).
+2. **CFBD nightly** (`roster-stats-sync`) — career backfill. Official in-season weeks are merged forward so a late/empty CFBD pull cannot wipe Game 1+.
+3. Manual / dry-run:
+
+```bash
+node server/scripts/sync-roster-official-boxes.js --dry-run
+node server/scripts/sync-roster-official-boxes.js --game=fau
+```
+
+Job Queue: `roster-official-box-sync`. Env: `ROSTER_OFFICIAL_BOX_SYNC_ENABLED` (default on), `ROSTER_OFFICIAL_BOX_INTERVAL_MS`.
+
+Do **not** start Codemagic to refresh weekly stats. The 1.0.25 bake is the last Stats-tab client change.
+
 ## Player projection / comp in Copy Brief
 
 Recruit briefs embed a **PLAYER PROJECTION / COMP** block from War Room breakdowns (`comparison`, `projection`, optional `schemeFit` / `nflProjection` in `server/data/war-room/breakdowns.json`). Beat Desk shows the same card on **Open**.

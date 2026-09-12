@@ -26,6 +26,7 @@ const DEFAULT_JOBS = [
   'portal-ingest',
   'depth-chart-refresh',
   'roster-stats-sync',
+  'roster-official-box-sync',
   'game-zone-refresh',
   'nil-refresh',
 ];
