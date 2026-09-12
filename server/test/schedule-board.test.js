@@ -123,8 +123,9 @@ describe('schedule-board', () => {
   it('Campbell Film Notes are fan-facing and raw scout stays on file', () => {
     const board = scheduleBoard.getScheduleBoard(2026);
     const campbell = board.games.find((g) => g.id === 'campbell');
-    assert.ok(campbell.filmNotes?.length >= 6);
-    assert.match(campbell.filmNotes[0], /No-huddle shotgun/i);
+    assert.ok(campbell.filmNotes?.length >= 7);
+    assert.match(campbell.filmNotes[0], /Campbell is Sixkiller/i);
+    assert.ok(campbell.filmNotes.some((n) => /No-huddle shotgun/i.test(n)));
     assert.ok(!campbell.filmNotes.some((n) => /NOT confirmed|gocamels cumulative|29\/42/i.test(n)));
     assert.match(campbell.film, /Campbell is Sixkiller/i);
     assert.match(campbell.film, /37 a game/i);
