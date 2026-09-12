@@ -97,6 +97,8 @@ describe('game-week-visitors', () => {
     assert.ok(panel);
     assert.ok(panel.visitors.some((v) => v.slug === 'josiah-taylor'));
     assert.equal(expectedVisitLabelForSlug('josiah-taylor'), 'FAU visit · Sep 5');
+    assert.ok(panel.visitors.some((v) => v.slug === 'antonio-thomas-jr'));
+    assert.equal(expectedVisitLabelForSlug('antonio-thomas-jr'), 'Expected Ole Miss visit · Sep 26');
   });
 
   it('attaches expectedVisitors onto schedule games', () => {
