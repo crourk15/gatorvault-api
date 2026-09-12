@@ -1,7 +1,20 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-10T03:42:56.092Z",
+  "updatedAt": "2026-09-12T02:08:34.791Z",
   "items": [
+    {
+      "id": "vlog_antonio-thomas-jr_unofficial_visit_2026-09-05",
+      "playerSlug": "antonio-thomas-jr",
+      "playerId": "251059",
+      "playerName": "Antonio Thomas Jr.",
+      "school": "Florida",
+      "visitType": "unofficial_visit",
+      "date": "2026-09-05",
+      "source": "game-visitors",
+      "fingerprint": "visit|antonio-thomas-jr|florida|unofficial_visit|2026-09-05",
+      "reportedAt": "2026-09-12T02:10:00.000Z",
+      "detail": "Antonio Thomas Jr. — Florida unofficial visit (game day vs FAU, 2026-09-05). Third Gainesville trip this year."
+    },
     {
       "id": "vlog_james-allen_unofficial_visit_2026-09-05",
       "playerSlug": "james-allen",
