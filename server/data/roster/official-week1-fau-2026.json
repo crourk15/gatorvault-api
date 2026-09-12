@@ -1,0 +1,84 @@
+{
+  "season": 2026,
+  "week": 1,
+  "date": "2026-09-05T23:55:00.000Z",
+  "opponent": "Florida Atlantic",
+  "homeAway": "home",
+  "final": "66-21",
+  "box": "https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903",
+  "note": "Official UF box. Stamp Week 1 until CFBD roster-stats-sync ingests 2026.",
+  "players": {
+    "aaron-philo": {
+      "source": "official",
+      "seasons": [
+        {
+          "category": "passing",
+          "stats": { "cmp": 16, "att": 21, "yds": 275, "td": 3, "int": 1, "lng": 63, "avg": 13.1 }
+        },
+        {
+          "category": "rushing",
+          "stats": { "car": 6, "yds": 20, "td": 1, "lng": 9, "avg": 3.3 }
+        }
+      ],
+      "recentGames": [
+        {
+          "category": "passing",
+          "stats": { "cmp": 16, "att": 21, "yds": 275, "td": 3, "int": 1, "lng": 63, "avg": 13.1 }
+        }
+      ]
+    },
+    "tramell-jones-jr": {
+      "source": "cfbd",
+      "seasons": [
+        {
+          "category": "passing",
+          "stats": { "cmp": 4, "att": 5, "yds": 68, "td": 1, "int": 0, "lng": 32, "avg": 13.6 }
+        },
+        {
+          "category": "rushing",
+          "stats": { "car": 2, "yds": 3, "td": 0, "lng": 4, "avg": 1.5 }
+        }
+      ],
+      "recentGames": [
+        {
+          "category": "passing",
+          "stats": { "cmp": 4, "att": 5, "yds": 68, "td": 1, "int": 0, "lng": 32, "avg": 13.6 }
+        }
+      ]
+    },
+    "jadan-baugh": {
+      "source": "cfbd",
+      "seasons": [
+        {
+          "category": "rushing",
+          "stats": { "car": 14, "yds": 160, "td": 3, "lng": 61, "avg": 11.4 }
+        }
+      ],
+      "recentGames": [
+        {
+          "category": "rushing",
+          "stats": { "car": 14, "yds": 160, "td": 3, "lng": 61, "avg": 11.4 }
+        }
+      ]
+    },
+    "vernell-brown-iii": {
+      "source": "cfbd",
+      "seasons": [
+        {
+          "category": "receiving",
+          "stats": { "rec": 6, "yds": 117, "td": 1, "lng": 49, "avg": 19.5 }
+        },
+        {
+          "category": "rushing",
+          "stats": { "car": 1, "yds": 14, "td": 0, "lng": 14, "avg": 14 }
+        }
+      ],
+      "recentGames": [
+        {
+          "category": "receiving",
+          "stats": { "rec": 6, "yds": 117, "td": 1, "lng": 49, "avg": 19.5 }
+        }
+      ]
+    }
+  }
+}

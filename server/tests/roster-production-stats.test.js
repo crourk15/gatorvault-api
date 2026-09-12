@@ -162,6 +162,58 @@ test('normalizeProductionStats rejects filler / wrong source', () => {
   assert.strictEqual(ok.seasons[0].stats.rec, 1);
 });
 
+test('normalizeProductionStats accepts official box source', () => {
+  const ok = normalizeProductionStats({
+    source: 'official',
+    syncedAt: '2026-09-12T00:00:00.000Z',
+    seasons: [{ season: 2026, team: 'Florida', category: 'passing', stats: { cmp: 16, att: 21, yds: 275, td: 3 } }],
+    recentGames: [
+      {
+        season: 2026,
+        week: 1,
+        date: '2026-09-05T23:55:00.000Z',
+        opponent: 'Florida Atlantic',
+        homeAway: 'home',
+        category: 'passing',
+        stats: { cmp: 16, att: 21, yds: 275, td: 3 },
+      },
+    ],
+  });
+  assert.ok(ok);
+  assert.strictEqual(ok.source, 'official');
+  assert.strictEqual(ok.seasons[0].stats.yds, 275);
+  assert.strictEqual(ok.recentGames[0].week, 1);
+});
+
+test('CFBD sync keeps official box when unmatched and merges missing seasons', () => {
+  const { isOfficialProductionStats, mergeOfficialForward } = require('../lib/roster-production-stats-sync');
+  const official = {
+    source: 'official',
+    seasons: [{ season: 2026, team: 'Florida', category: 'passing', stats: { yds: 275 } }],
+    recentGames: [{ season: 2026, week: 1, opponent: 'Florida Atlantic', category: 'passing', stats: { yds: 275 } }],
+  };
+  assert.strictEqual(isOfficialProductionStats(official), true);
+  assert.strictEqual(isOfficialProductionStats({ source: 'cfbd', seasons: [{ season: 2025 }] }), false);
+
+  const merged = mergeOfficialForward(official, {
+    source: 'cfbd',
+    seasons: [{ season: 2025, team: 'Florida', category: 'passing', stats: { yds: 191 } }],
+    recentGames: [{ season: 2025, week: 12, opponent: 'Opponent', category: 'passing', stats: { yds: 60 } }],
+  });
+  assert.strictEqual(merged.source, 'cfbd');
+  assert.strictEqual(merged.seasons[0].season, 2026);
+  assert.strictEqual(merged.seasons[1].season, 2025);
+  assert.strictEqual(merged.recentGames[0].week, 1);
+
+  const replaced = mergeOfficialForward(official, {
+    source: 'cfbd',
+    seasons: [{ season: 2026, team: 'Florida', category: 'passing', stats: { yds: 275 } }],
+    recentGames: [{ season: 2026, week: 1, opponent: 'Florida Atlantic', category: 'passing', stats: { yds: 275 } }],
+  });
+  assert.strictEqual(replaced.seasons.length, 1);
+  assert.strictEqual(replaced.source, 'cfbd');
+});
+
 test('primaryCategoryForPos and normalizeCategory helpers', () => {
   assert.strictEqual(primaryCategoryForPos('WR'), 'receiving');
   assert.strictEqual(normalizeCategory('defensive'), 'defense');

@@ -12,6 +12,7 @@ import {
   formatRecentGameHeadline,
   formatSyncedAt,
   hasProductionStats,
+  productionSourceLabel,
   pickPrimarySeason,
   seasonStripItems,
 } from '@/lib/roster-production-stats';
@@ -152,7 +153,11 @@ function ProductionStatsOverview({ player }: { player: RosterPlayer }): React.Re
           </ul>
         </div>
       ) : null}
-      {synced ? <p className="gv-roster-prod__synced">Updated {synced}</p> : null}
+      {synced ? (
+        <p className="gv-roster-prod__synced">
+          {productionSourceLabel(player.productionStats.source)} · Updated {synced}
+        </p>
+      ) : null}
     </section>
   );
 }
@@ -214,7 +219,7 @@ function ProductionStatsTab({ player }: { player: RosterPlayer }): React.ReactEl
       ) : null}
       {synced ? (
         <p className="gv-roster-prod__synced">
-          Source: CollegeFootballData · Updated {synced}
+          Source: {productionSourceLabel(stats.source)} · Updated {synced}
         </p>
       ) : null}
     </div>

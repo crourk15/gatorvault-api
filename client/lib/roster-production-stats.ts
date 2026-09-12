@@ -152,10 +152,17 @@ export function formatRecentGameHeadline(game: ProductionGameLine): string {
 }
 
 
+const TRUSTED_PRODUCTION_SOURCES = new Set(['cfbd', 'official']);
+
 export function hasProductionStats(player: RosterPlayer): boolean {
   const s = player.productionStats;
-  if (!s || s.source !== 'cfbd') return false;
+  if (!s || !TRUSTED_PRODUCTION_SOURCES.has(s.source)) return false;
   return Boolean(s.seasons?.length || s.recentGames?.length);
+}
+
+export function productionSourceLabel(source?: string | null): string {
+  if (source === 'official') return 'Official box';
+  return 'CollegeFootballData';
 }
 
 export function careerSeasonsForPos(

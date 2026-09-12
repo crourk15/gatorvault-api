@@ -17,6 +17,39 @@ const {
   buildProductionStats,
 } = require('./roster-production-stats-transform');
 
+function isOfficialProductionStats(raw) {
+  if (!raw || raw.source !== 'official') return false;
+  const seasons = Array.isArray(raw.seasons) ? raw.seasons : [];
+  const games = Array.isArray(raw.recentGames) ? raw.recentGames : [];
+  return seasons.length > 0 || games.length > 0;
+}
+
+/**
+ * Keep official-box seasons/games CFBD has not ingested yet (e.g. Week 1
+ * stamped from the UF box before the next CFBD pull).
+ */
+function mergeOfficialForward(existing, cfbd) {
+  if (!isOfficialProductionStats(existing) || !cfbd) return cfbd;
+  const cfbdSeasonKeys = new Set(
+    (cfbd.seasons || []).map((s) => `${s.season}|${s.category}`)
+  );
+  const extraSeasons = (existing.seasons || []).filter(
+    (s) => !cfbdSeasonKeys.has(`${s.season}|${s.category}`)
+  );
+  const cfbdGameKeys = new Set(
+    (cfbd.recentGames || []).map((g) => `${g.season}|${g.week}|${g.opponent}|${g.category || ''}`)
+  );
+  const extraGames = (existing.recentGames || []).filter(
+    (g) => !cfbdGameKeys.has(`${g.season}|${g.week}|${g.opponent}|${g.category || ''}`)
+  );
+  if (!extraSeasons.length && !extraGames.length) return cfbd;
+  return {
+    ...cfbd,
+    seasons: [...extraSeasons, ...(cfbd.seasons || [])],
+    recentGames: [...extraGames, ...(cfbd.recentGames || [])].slice(0, 8),
+  };
+}
+
 async function syncRosterProductionStats(opts = {}) {
   if (!hasCfbdApiKey()) {
     return {
@@ -89,7 +122,7 @@ async function syncRosterProductionStats(opts = {}) {
     };
     const match = matchRosterToCfbd(rosterPlayer, cfbdIndex);
     if (!match) {
-      if (raw.productionStats) {
+      if (raw.productionStats && !isOfficialProductionStats(raw.productionStats)) {
         updates[slug] = null;
         cleared += 1;
       }
@@ -106,7 +139,7 @@ async function syncRosterProductionStats(opts = {}) {
     });
 
     if (!productionStats) {
-      if (raw.productionStats) {
+      if (raw.productionStats && !isOfficialProductionStats(raw.productionStats)) {
         updates[slug] = null;
         cleared += 1;
       }
@@ -114,7 +147,7 @@ async function syncRosterProductionStats(opts = {}) {
       continue;
     }
 
-    updates[slug] = productionStats;
+    updates[slug] = mergeOfficialForward(raw.productionStats, productionStats);
     matched += 1;
   }
 
@@ -137,4 +170,6 @@ async function syncRosterProductionStats(opts = {}) {
 
 module.exports = {
   syncRosterProductionStats,
+  isOfficialProductionStats,
+  mergeOfficialForward,
 };
