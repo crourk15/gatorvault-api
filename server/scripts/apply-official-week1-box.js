@@ -2,7 +2,8 @@
 /**
  * Merge an official UF box (Week 1 FAU) onto roster productionStats.
  *
- * Philo had no CFBD row (GT transfer; last Florida-only sync was July).
+ * Every official individual line from the UF box — not just the four
+ * headliners — so Dallas Wilson and the rest of the board match Philo.
  * Existing CFBD careers keep source: cfbd so current iOS Stats tabs stay live.
  *
  * Usage:
@@ -61,7 +62,10 @@ function mergeStamp(existing, slice, box, syncedAt) {
     ? existing.recentGames.filter((g) => !stampedGameKeys.has(gameKey(g)))
     : [];
   return {
-    source: slice.source === 'official' ? 'official' : existing?.source === 'cfbd' ? 'cfbd' : slice.source || 'official',
+    source:
+      existing?.source === 'cfbd' || existing?.source === 'official'
+        ? existing.source
+        : 'official',
     syncedAt,
     cfbdPlayerId:
       existing?.cfbdPlayerId != null && Number.isFinite(Number(existing.cfbdPlayerId))
