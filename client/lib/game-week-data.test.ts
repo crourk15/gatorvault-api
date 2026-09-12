@@ -32,8 +32,9 @@ describe('Game Week Film Notes', () => {
     const campbell = SCHEDULE_GAMES.find((g) => g.id === 'campbell');
     assert.ok(campbell);
     const notes = buildFilmNotes(campbell);
-    assert.equal(notes.length, 6);
-    assert.match(notes[0], /No-huddle shotgun/i);
+    assert.equal(notes.length, 7);
+    assert.match(notes[0], /Campbell is Sixkiller/i);
+    assert.ok(notes.some((n) => /No-huddle shotgun/i.test(n)));
     assert.ok(!notes.some((n) => /NOT confirmed|gocamels cumulative|29\/42/i.test(n)));
 
     const bundle = getGameWeekBundle('campbell');
