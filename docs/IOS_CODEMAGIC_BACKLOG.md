@@ -57,7 +57,8 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Why we chase generator + Admin/script overrides on HP API (`whyWeChase`) — live after Render; **client prefer-field needs Codemagic bake below**
 - [x] 2028 HP chase cards: visit lines + Why we chase notes from live visit/intel stores + soft priority nudge (API — no Codemagic; Rising still snapshot `delta7d` only)
 - [x] Home NOW / class-overview 2027 commit count lockstep with commit cards (26) — kill protected-only phantom inflate + shared `loadHubHsClassCommits` (API)
-- [x] App Store **1.0.25** / build 90+ is the next Codemagic train — Team official-box Stats tab (Philo) + queued client UI (`docs/APP_STORE_1_0_25_BUILD90.md`)
+- [x] App Store **1.0.26** / build 91+ is the next Codemagic train — 1.0.25 train closed (`90062` / `90186`); Rivalry Week badge + queued 1.0.25 client UI (`docs/APP_STORE_1_0_26.md`)
+- [x] App Store **1.0.25** / build 90+ train **closed** — already approved; Codemagic cannot upload another 1.0.25 IPA
 - [x] App Store **1.0.24** / build 89 was the prior pbxproj train (Film Room Review-off)
 - [x] App Store **1.0.23** train closed for new builds (`iris-code` 90186) — 1.0.23 / build 88+ already used
 - [x] App Store **1.0.21** approved — pre-release train closed
@@ -118,9 +119,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 ## Waiting for next Codemagic build
 
-**Next bake target: App Store `1.0.25` / build `90+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_25_BUILD90.md`. Merge the version bump, then Charles starts Codemagic **ios-release** on `main`.
-
-**Rivalry badge train: App Store `1.0.26`** — Home countdown **RIVALRY WEEK** is bundled (`RIVAL_OPPONENT_IDS` = FSU + UGA only). Do **not** start that bake until Charles says start. Predictions stay API.
+**Next bake target: App Store `1.0.26` / build `91+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_26.md`. 1.0.25 is approved and closed. Merge this bump, create **1.0.26** in App Store Connect, then Charles starts Codemagic **ios-release** on `main`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
