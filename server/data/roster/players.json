@@ -45,7 +45,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5141766,
       "matchConfidence": "high",
       "seasons": [
@@ -54,9 +54,11 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 3,
-            "ast": 1,
-            "tot": 4
+            "solo": 5,
+            "ast": 4,
+            "tot": 9,
+            "tfl": 0.5,
+            "sack": 0.5
           }
         },
         {
@@ -74,6 +76,21 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 3,
+            "tot": 5,
+            "tfl": 0.5,
+            "sack": 0.5
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -106,7 +123,7 @@
       ]
     },
     "cfbdPlayerId": 5141766,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -155,7 +172,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 4870995,
       "matchConfidence": "exact",
       "seasons": [
@@ -164,10 +181,10 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 2,
+            "solo": 3,
             "ast": 1,
-            "tot": 3,
-            "pd": 1
+            "tot": 4,
+            "pd": 2
           }
         },
         {
@@ -211,6 +228,19 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1,
+            "pd": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -276,7 +306,7 @@
       ]
     },
     "cfbdPlayerId": 4870995,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -325,20 +355,31 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T04:08:46.814Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5295811,
       "matchConfidence": "exact",
       "seasons": [
         {
           "season": 2026,
           "team": "Florida",
+          "category": "returning",
+          "stats": {
+            "pr": 4,
+            "prYds": 173,
+            "kr": 0,
+            "krYds": 0
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 6,
-            "yds": 117,
-            "td": 1,
+            "rec": 9,
+            "yds": 160,
+            "td": 2,
             "lng": 49,
-            "avg": 19.5
+            "avg": 17.8
           }
         },
         {
@@ -406,6 +447,35 @@
       "recentGames": [
         {
           "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "returning",
+          "stats": {
+            "pr": 4,
+            "prYds": 173,
+            "kr": 0,
+            "krYds": 0
+          }
+        },
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 3,
+            "yds": 43,
+            "td": 1,
+            "lng": 24,
+            "avg": 14.3
+          }
+        },
+        {
+          "season": 2026,
           "week": 1,
           "date": "2026-09-05T23:55:00.000Z",
           "opponent": "Florida Atlantic",
@@ -452,7 +522,7 @@
       ]
     },
     "cfbdPlayerId": 5295811,
-    "updatedAt": "2026-09-12T04:08:46.816Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "on3",
     "nilSourceLabel": "On3 value"
   },
@@ -546,7 +616,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5195292,
       "matchConfidence": "exact",
       "seasons": [
@@ -555,8 +625,11 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "ast": 2,
-            "tot": 2
+            "ast": 3,
+            "tot": 6,
+            "solo": 3,
+            "tfl": 2,
+            "pd": 2
           }
         },
         {
@@ -574,6 +647,21 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 1,
+            "tot": 4,
+            "tfl": 2,
+            "pd": 2
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -605,7 +693,7 @@
       ]
     },
     "cfbdPlayerId": 5195292,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -656,7 +744,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -665,15 +753,30 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 3,
-            "yds": 20,
+            "rec": 7,
+            "yds": 61,
             "td": 1,
-            "lng": 12,
-            "avg": 6.7
+            "lng": 24,
+            "avg": 8.7
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 4,
+            "yds": 41,
+            "td": 0,
+            "lng": 24,
+            "avg": 10.3
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -691,7 +794,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "onis-konanbanny",
@@ -786,7 +889,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -795,15 +898,30 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 1,
-            "yds": 63,
+            "rec": 4,
+            "yds": 96,
             "td": 0,
             "lng": 63,
-            "avg": 63
+            "avg": 24
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 3,
+            "yds": 33,
+            "td": 0,
+            "lng": 20,
+            "avg": 11
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -821,7 +939,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "micah-mays-jr",
@@ -870,7 +988,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -879,15 +997,30 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 2,
-            "yds": 15,
+            "rec": 3,
+            "yds": 16,
             "td": 0,
             "lng": 16,
-            "avg": 7.5
+            "avg": 5.3
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 1,
+            "td": 0,
+            "lng": 1,
+            "avg": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -905,7 +1038,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "myles-graham",
@@ -952,7 +1085,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5079480,
       "matchConfidence": "exact",
       "seasons": [
@@ -961,11 +1094,12 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 4,
-            "ast": 6,
-            "tot": 10,
-            "tfl": 0.5,
-            "sack": 0.5
+            "solo": 9,
+            "ast": 8,
+            "tot": 17,
+            "tfl": 1.5,
+            "sack": 0.5,
+            "ff": 1
           }
         },
         {
@@ -996,6 +1130,21 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 5,
+            "ast": 2,
+            "tot": 7,
+            "tfl": 1,
+            "ff": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -1046,7 +1195,7 @@
       ]
     },
     "cfbdPlayerId": 5079480,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -1095,7 +1244,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5141723,
       "matchConfidence": "exact",
       "seasons": [
@@ -1104,11 +1253,11 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 3,
-            "yds": 47,
-            "td": 0,
-            "lng": 19,
-            "avg": 15.7
+            "rec": 8,
+            "yds": 151,
+            "td": 1,
+            "lng": 40,
+            "avg": 18.9
           }
         },
         {
@@ -1125,6 +1274,21 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 5,
+            "yds": 104,
+            "td": 1,
+            "lng": 40,
+            "avg": 20.8
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -1158,7 +1322,7 @@
       ]
     },
     "cfbdPlayerId": 5141723,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -1319,7 +1483,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5139093,
       "matchConfidence": "exact",
       "seasons": [
@@ -1377,6 +1541,20 @@
       "recentGames": [
         {
           "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 0,
+            "yds": 0,
+            "td": 0,
+            "lng": 0
+          }
+        },
+        {
+          "season": 2026,
           "week": 1,
           "date": "2026-09-05T23:55:00.000Z",
           "opponent": "Florida Atlantic",
@@ -1408,7 +1586,7 @@
       ]
     },
     "cfbdPlayerId": 5139093,
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "ty-jackson",
@@ -1455,10 +1633,20 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5167180,
       "matchConfidence": "exact",
       "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 1,
+            "tot": 3
+          }
+        },
         {
           "season": 2025,
           "team": "Florida",
@@ -1474,6 +1662,19 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 1,
+            "tot": 3
+          }
+        },
         {
           "season": 2025,
           "week": null,
@@ -1493,7 +1694,7 @@
       ]
     },
     "cfbdPlayerId": 5167180,
-    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -1542,7 +1743,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5079340,
       "matchConfidence": "exact",
       "seasons": [
@@ -1551,11 +1752,12 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 1,
-            "ast": 2,
-            "tot": 3,
+            "solo": 3,
+            "ast": 3,
+            "tot": 6,
             "pd": 2,
-            "qh": 1
+            "qh": 1,
+            "fr": 1
           }
         },
         {
@@ -1586,6 +1788,20 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 1,
+            "tot": 3,
+            "fr": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -1636,7 +1852,7 @@
       ]
     },
     "cfbdPlayerId": 5079340,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -1685,10 +1901,21 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5295812,
       "matchConfidence": "exact",
       "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 1,
+            "tot": 3,
+            "ff": 1
+          }
+        },
         {
           "season": 2025,
           "team": "Florida",
@@ -1704,6 +1931,20 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 1,
+            "tot": 3,
+            "ff": 1
+          }
+        },
         {
           "season": 2025,
           "week": null,
@@ -1723,7 +1964,7 @@
       ]
     },
     "cfbdPlayerId": 5295812,
-    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -1772,7 +2013,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T04:08:46.814Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5295814,
       "matchConfidence": "exact",
       "seasons": [
@@ -1781,13 +2022,13 @@
           "team": "Florida",
           "category": "passing",
           "stats": {
-            "cmp": 4,
-            "att": 5,
-            "yds": 68,
+            "cmp": 12,
+            "att": 16,
+            "yds": 126,
             "td": 1,
-            "int": 0,
+            "int": 1,
             "lng": 32,
-            "avg": 13.6
+            "avg": 7.9
           }
         },
         {
@@ -1829,6 +2070,23 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "passing",
+          "stats": {
+            "cmp": 8,
+            "att": 11,
+            "yds": 58,
+            "td": 0,
+            "int": 1,
+            "lng": 20,
+            "avg": 5.3
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -1878,7 +2136,7 @@
       ]
     },
     "cfbdPlayerId": 5295814,
-    "updatedAt": "2026-09-12T04:08:46.816Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -2053,7 +2311,7 @@
     "nilSourceLabel": "On3 value",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -2062,13 +2320,31 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 2,
-            "tot": 2,
-            "pd": 1
+            "solo": 4,
+            "tot": 4,
+            "pd": 1,
+            "tfl": 2,
+            "sack": 1,
+            "qh": 1
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "tot": 2,
+            "tfl": 2,
+            "sack": 1,
+            "qh": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -2084,7 +2360,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "will-griffin",
@@ -2177,7 +2453,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T04:08:46.814Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -2186,13 +2462,13 @@
           "team": "Florida",
           "category": "passing",
           "stats": {
-            "cmp": 16,
-            "att": 21,
-            "yds": 275,
-            "td": 3,
+            "cmp": 32,
+            "att": 42,
+            "yds": 517,
+            "td": 5,
             "int": 1,
             "lng": 63,
-            "avg": 13.1
+            "avg": 12.3
           }
         },
         {
@@ -2200,15 +2476,47 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 6,
-            "yds": 20,
-            "td": 1,
+            "car": 9,
+            "yds": 33,
+            "td": 2,
             "lng": 9,
-            "avg": 3.3
+            "avg": 3.7
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 3,
+            "yds": 13,
+            "td": 1,
+            "lng": 5,
+            "avg": 4.3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "passing",
+          "stats": {
+            "cmp": 16,
+            "att": 21,
+            "yds": 242,
+            "td": 2,
+            "int": 0,
+            "lng": 40,
+            "avg": 11.5
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -2243,7 +2551,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T04:08:46.816Z"
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "ben-hanks-iii",
@@ -2290,7 +2598,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5295813,
       "matchConfidence": "exact",
       "seasons": [
@@ -2299,8 +2607,8 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 4,
-            "tot": 4,
+            "solo": 7,
+            "tot": 7,
             "pd": 1
           }
         },
@@ -2319,6 +2627,18 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "tot": 3
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -2351,7 +2671,7 @@
       ]
     },
     "cfbdPlayerId": 5295813,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -2399,7 +2719,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5079322,
       "matchConfidence": "exact",
       "seasons": [
@@ -2408,11 +2728,11 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 14,
-            "yds": 160,
-            "td": 3,
-            "lng": 61,
-            "avg": 11.4
+            "car": 28,
+            "yds": 296,
+            "td": 5,
+            "lng": 75,
+            "avg": 10.6
           }
         },
         {
@@ -2504,6 +2824,21 @@
       "recentGames": [
         {
           "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 14,
+            "yds": 136,
+            "td": 2,
+            "lng": 75,
+            "avg": 9.7
+          }
+        },
+        {
+          "season": 2026,
           "week": 1,
           "date": "2026-09-05T23:55:00.000Z",
           "opponent": "Florida Atlantic",
@@ -2550,7 +2885,7 @@
       ]
     },
     "cfbdPlayerId": 5079322,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "on3",
     "nilSourceLabel": "On3 value"
   },
@@ -2814,7 +3149,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -2823,15 +3158,30 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 1,
-            "yds": 19,
+            "rec": 4,
+            "yds": 52,
             "td": 0,
-            "lng": 19,
-            "avg": 19
+            "lng": 22,
+            "avg": 13
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 3,
+            "yds": 33,
+            "td": 0,
+            "lng": 22,
+            "avg": 11
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -2849,7 +3199,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "aidan-warner",
@@ -3051,7 +3401,43 @@
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "nilSource": "sideline",
-    "nilSourceLabel": "Sideline model"
+    "nilSourceLabel": "Sideline model",
+    "productionStats": {
+      "source": "official",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "cfbdPlayerId": null,
+      "matchConfidence": null,
+      "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "returning",
+          "stats": {
+            "pr": 0,
+            "prYds": 0,
+            "kr": 2,
+            "krYds": 30
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "returning",
+          "stats": {
+            "pr": 0,
+            "prYds": 0,
+            "kr": 2,
+            "krYds": 30
+          }
+        }
+      ]
+    },
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "titus-bullard",
@@ -3275,7 +3661,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T04:08:46.814Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5295815,
       "matchConfidence": "exact",
       "seasons": [
@@ -3293,11 +3679,11 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 8,
-            "yds": 65,
+            "car": 13,
+            "yds": 83,
             "td": 1,
             "lng": 28,
-            "avg": 8.1
+            "avg": 6.4
           }
         },
         {
@@ -3338,6 +3724,21 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 5,
+            "yds": 18,
+            "td": 0,
+            "lng": 10,
+            "avg": 3.6
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -3398,7 +3799,7 @@
       ]
     },
     "cfbdPlayerId": 5295815,
-    "updatedAt": "2026-09-12T04:08:46.816Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -3574,7 +3975,72 @@
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "nilSource": "sideline",
-    "nilSourceLabel": "Sideline model"
+    "nilSourceLabel": "Sideline model",
+    "productionStats": {
+      "source": "official",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "cfbdPlayerId": null,
+      "matchConfidence": null,
+      "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 5,
+            "td": 0,
+            "lng": 5,
+            "avg": 5
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": 4,
+            "td": 0,
+            "lng": 4,
+            "avg": 4
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 5,
+            "td": 0,
+            "lng": 5,
+            "avg": 5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": 4,
+            "td": 0,
+            "lng": 4,
+            "avg": 4
+          }
+        }
+      ]
+    },
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "kahleil-jackson",
@@ -3621,10 +4087,22 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 4693740,
       "matchConfidence": "exact",
       "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 19,
+            "td": 0,
+            "lng": 10,
+            "avg": 9.5
+          }
+        },
         {
           "season": 2025,
           "team": "Florida",
@@ -3703,6 +4181,21 @@
       ],
       "recentGames": [
         {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 19,
+            "td": 0,
+            "lng": 10,
+            "avg": 9.5
+          }
+        },
+        {
           "season": 2024,
           "week": null,
           "date": null,
@@ -3750,7 +4243,7 @@
       ]
     },
     "cfbdPlayerId": 4693740,
-    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -3938,7 +4431,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5083314,
       "matchConfidence": "exact",
       "seasons": [
@@ -3947,9 +4440,9 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 3,
+            "solo": 4,
             "ast": 1,
-            "tot": 4,
+            "tot": 5,
             "tfl": 2,
             "sack": 1,
             "ff": 1,
@@ -3997,6 +4490,18 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -4065,7 +4570,7 @@
       ]
     },
     "cfbdPlayerId": 5083314,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -4116,7 +4621,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -4125,15 +4630,30 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 3,
-            "yds": 12,
+            "car": 6,
+            "yds": 19,
             "td": 0,
             "lng": 5,
-            "avg": 4
+            "avg": 3.2
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 3,
+            "yds": 7,
+            "td": 0,
+            "lng": 4,
+            "avg": 2.3
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -4151,7 +4671,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "anthony-rubio",
@@ -4198,7 +4718,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5151893,
       "matchConfidence": "exact",
       "seasons": [
@@ -4207,11 +4727,11 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 2,
-            "yds": 11,
+            "car": 3,
+            "yds": 16,
             "td": 0,
             "lng": 8,
-            "avg": 5.5
+            "avg": 5.3
           }
         },
         {
@@ -4240,6 +4760,21 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": 5,
+            "td": 0,
+            "lng": 5,
+            "avg": 5
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -4288,7 +4823,7 @@
       ]
     },
     "cfbdPlayerId": 5151893,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -4336,7 +4871,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 4870920,
       "matchConfidence": "exact",
       "seasons": [
@@ -4345,9 +4880,9 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 3,
+            "solo": 4,
             "ast": 1,
-            "tot": 4
+            "tot": 5
           }
         },
         {
@@ -4378,6 +4913,18 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -4426,7 +4973,7 @@
       ]
     },
     "cfbdPlayerId": 4870920,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "on3",
     "nilSourceLabel": "On3 value"
   },
@@ -4475,7 +5022,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5141565,
       "matchConfidence": "exact",
       "seasons": [
@@ -4484,11 +5031,11 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 4,
-            "yds": 16,
+            "car": 6,
+            "yds": 34,
             "td": 0,
-            "lng": 8,
-            "avg": 4
+            "lng": 15,
+            "avg": 5.7
           }
         },
         {
@@ -4517,6 +5064,21 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 2,
+            "yds": 18,
+            "td": 0,
+            "lng": 15,
+            "avg": 9
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -4565,7 +5127,7 @@
       ]
     },
     "cfbdPlayerId": 5141565,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -4614,7 +5176,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 4899671,
       "matchConfidence": "exact",
       "seasons": [
@@ -4624,9 +5186,10 @@
           "category": "defense",
           "stats": {
             "solo": 1,
-            "ast": 3,
-            "tot": 4,
-            "int": 1
+            "ast": 4,
+            "tot": 5,
+            "int": 1,
+            "pd": 1
           }
         },
         {
@@ -4670,6 +5233,19 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1,
+            "pd": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -4735,7 +5311,7 @@
       ]
     },
     "cfbdPlayerId": 4899671,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -4828,7 +5404,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 4870978,
       "matchConfidence": "exact",
       "seasons": [
@@ -4837,9 +5413,10 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 2,
-            "ast": 2,
-            "tot": 4
+            "solo": 4,
+            "ast": 3,
+            "tot": 7,
+            "tfl": 1
           }
         },
         {
@@ -4883,6 +5460,20 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 1,
+            "tot": 3,
+            "tfl": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -4947,7 +5538,7 @@
       ]
     },
     "cfbdPlayerId": 4870978,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -5610,7 +6201,74 @@
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "nilSource": "sideline",
-    "nilSourceLabel": "Sideline model"
+    "nilSourceLabel": "Sideline model",
+    "productionStats": {
+      "source": "official",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "cfbdPlayerId": null,
+      "matchConfidence": null,
+      "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "punting",
+          "stats": {
+            "punts": 2,
+            "yds": 104,
+            "avg": 52,
+            "lng": 55,
+            "in20": 1,
+            "tb": 0
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": 13,
+            "td": 0,
+            "lng": 13,
+            "avg": 13
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "punting",
+          "stats": {
+            "punts": 2,
+            "yds": 104,
+            "avg": 52,
+            "lng": 55,
+            "in20": 1,
+            "tb": 0
+          }
+        },
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": 13,
+            "td": 0,
+            "lng": 13,
+            "avg": 13
+          }
+        }
+      ]
+    },
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "carter-milliron",
@@ -5901,7 +6559,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 4685238,
       "matchConfidence": "exact",
       "seasons": [
@@ -5910,9 +6568,9 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 1,
-            "ast": 2,
-            "tot": 3
+            "solo": 2,
+            "ast": 3,
+            "tot": 5
           }
         },
         {
@@ -5943,6 +6601,19 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 1,
+            "tot": 2
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -5991,7 +6662,7 @@
       ]
     },
     "cfbdPlayerId": 4685238,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -6040,7 +6711,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5149469,
       "matchConfidence": "exact",
       "seasons": [
@@ -6049,10 +6720,11 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 2,
-            "tot": 2,
+            "solo": 5,
+            "tot": 6,
             "tfl": 1,
-            "fr": 1
+            "fr": 2,
+            "ast": 1
           }
         },
         {
@@ -6070,6 +6742,20 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 1,
+            "tot": 4,
+            "fr": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -6103,7 +6789,7 @@
       ]
     },
     "cfbdPlayerId": 5149469,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -6288,10 +6974,19 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5141747,
       "matchConfidence": "exact",
       "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2025,
           "team": "Florida",
@@ -6307,6 +7002,18 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2025,
           "week": null,
@@ -6326,7 +7033,7 @@
       ]
     },
     "cfbdPlayerId": 5141747,
-    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -7664,7 +8371,70 @@
     "nilValuation": 15000,
     "recruitingBackground": "Gainesville, Fla. Buchholz",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "official",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "cfbdPlayerId": null,
+      "matchConfidence": null,
+      "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "returning",
+          "stats": {
+            "pr": 1,
+            "prYds": 0,
+            "kr": 0,
+            "krYds": 0
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 21,
+            "td": 0,
+            "lng": 14,
+            "avg": 10.5
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "returning",
+          "stats": {
+            "pr": 1,
+            "prYds": 0,
+            "kr": 0,
+            "krYds": 0
+          }
+        },
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 21,
+            "td": 0,
+            "lng": 14,
+            "avg": 10.5
+          }
+        }
+      ]
+    },
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "micah-jones",
@@ -7973,7 +8743,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5086808,
       "matchConfidence": "exact",
       "seasons": [
@@ -7982,10 +8752,10 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 2,
+            "solo": 3,
             "ast": 2,
-            "tot": 4,
-            "tfl": 1,
+            "tot": 5,
+            "tfl": 2,
             "ff": 1,
             "qh": 2
           }
@@ -8005,6 +8775,19 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1,
+            "tfl": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -8040,7 +8823,7 @@
       ]
     },
     "cfbdPlayerId": 5086808,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -8089,7 +8872,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5195951,
       "matchConfidence": "exact",
       "seasons": [
@@ -8098,11 +8881,13 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 2,
-            "ast": 6,
-            "tot": 8,
-            "pd": 1,
-            "qh": 2
+            "solo": 4,
+            "ast": 8,
+            "tot": 12,
+            "pd": 2,
+            "qh": 2,
+            "tfl": 0.5,
+            "sack": 0.5
           }
         },
         {
@@ -8120,6 +8905,22 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 2,
+            "tot": 4,
+            "tfl": 0.5,
+            "sack": 0.5,
+            "pd": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -8154,7 +8955,7 @@
       ]
     },
     "cfbdPlayerId": 5195951,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -8205,7 +9006,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -8214,16 +9015,32 @@
           "team": "Florida",
           "category": "kicking",
           "stats": {
-            "fgm": 1,
-            "fga": 1,
-            "xpm": 8,
-            "xpa": 8,
-            "pts": 11,
+            "fgm": 2,
+            "fga": 2,
+            "xpm": 15,
+            "xpa": 15,
+            "pts": 21,
             "lng": 53
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "kicking",
+          "stats": {
+            "fgm": 1,
+            "fga": 1,
+            "lng": 28,
+            "pts": 10,
+            "xpm": 7,
+            "xpa": 7
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -8242,7 +9059,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-09-13T04:27:22.810Z"
   },
   {
     "slug": "sebastian-scott",
@@ -8457,7 +9274,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 4685452,
       "matchConfidence": "exact",
       "seasons": [
@@ -8467,9 +9284,10 @@
           "category": "defense",
           "stats": {
             "ast": 2,
-            "tot": 2,
+            "tot": 3,
             "tfl": 1,
-            "sack": 0.5
+            "sack": 0.5,
+            "solo": 1
           }
         },
         {
@@ -8513,6 +9331,18 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -8578,7 +9408,7 @@
       ]
     },
     "cfbdPlayerId": 4685452,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -8671,7 +9501,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-09-13T04:27:22.807Z",
       "cfbdPlayerId": 5221980,
       "matchConfidence": "exact",
       "seasons": [
@@ -8681,7 +9511,8 @@
           "category": "defense",
           "stats": {
             "ast": 1,
-            "tot": 1
+            "tot": 2,
+            "solo": 1
           }
         },
         {
@@ -8699,6 +9530,18 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -8730,7 +9573,7 @@
       ]
     },
     "cfbdPlayerId": 5221980,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-09-13T04:27:22.810Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },

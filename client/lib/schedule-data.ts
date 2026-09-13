@@ -201,6 +201,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     finalUF: 52,
     finalOpp: 3,
     finalSource: "official",
+    boxScoreUrl: "https://floridagators.com/sports/football/stats/2026/campbell/boxscore/27904",
     opponentTendencies: [
       "No-huddle shotgun every snap we have. No under center.",
       "Sixkiller is the show. He can throw it and run it.",
