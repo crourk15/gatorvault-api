@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Schedule remaining-season predictions: weekly `ufPct` / `pred` restamp via `/api/schedule` after how teams looked (API — no Codemagic). Week 2 board is live after merge. Home **RIVALRY WEEK** badge (FSU / UGA only) waits for the **1.0.26** bake.
 - [x] Game Week Auburn week: pointer + Campbell 52–3 + Auburn card on `/api/schedule` (API — no Codemagic). Current App Store already live-fetches the board and opens the next kickoff after the 5-hour postgame window — do **not** bake for a new opponent.
 - [x] Game Week Auburn Vegas: stamp consensus UF -2.5 / O/U 51.5 on `/api/betting/lines` so Prediction is not Line pending (API — no Codemagic)
 - [x] Game Week Auburn visitors: Jalanie George expected at Jordan-Hare — not confirmed on campus (API `/api/schedule` — no Codemagic)
@@ -119,10 +120,13 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 **Next bake target: App Store `1.0.25` / build `90+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_25_BUILD90.md`. Merge the version bump, then Charles starts Codemagic **ios-release** on `main`.
 
+**Rivalry badge train: App Store `1.0.26`** — Home countdown **RIVALRY WEEK** is bundled (`RIVAL_OPPONENT_IDS` = FSU + UGA only). Do **not** start that bake until Charles says start. Predictions stay API.
+
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-13 | Home countdown: **RIVALRY WEEK** only for FSU + UGA (Auburn is Game Week) | `RIVAL_OPPONENT_IDS` + `gameDayBadge` in binary — **1.0.26**; web already correct after #673 | #673 · bake 1.0.26 |
 | 2026-09-12 | Roster Stats tab: accept `source: official` (Philo Week 1 box) + Official box footer | `hasProductionStats` in 1.0.23 still requires `cfbd` — **this is the 1.0.25 reason**; web + API already show | #668 · bake 1.0.25 |
 | 2026-09-10 | Game Week Scouting Report: bundled mapper prefers fan tendencies + `film` | `buildScouting` in binary — **current App Store copy is already API-fixed** (public schedule empties desk scout); bake only drops the leftover mapper | #652 |
 | 2026-09-08 | Film Room: hide empty Review tab; land on Breakdowns; GNFP FAU cuts in hub seed | `VaultFilmRoomPage` rail + `film-room-hub-seed.json` first-paint; **live catalog stays API after Render** | #643 |

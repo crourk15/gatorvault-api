@@ -29,6 +29,8 @@ Client/UI backlog, including:
 - Gators Live living room + faster poll
 - Remaining Waiting-for-Codemagic rows in `docs/IOS_CODEMAGIC_BACKLOG.md`
 
+**Not this bake:** Home **RIVALRY WEEK** badge (FSU / UGA only). Charles moved that to **1.0.26**.
+
 API/data already live without this bake: Week 1 box on CFBD careers (Wilson, Baugh, Brown, Jones, Graham, …).
 
 ## Whats New (paste)
