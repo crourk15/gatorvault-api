@@ -11,7 +11,8 @@ import { movementDelta7d } from '@/lib/movement-intel-types';
 import { getFeaturedUfGame, parseScheduleKickoff } from '@/lib/gators-live';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
 
-const RIVAL_OPPONENT_IDS = new Set(['fsu', 'uga', 'auburn', 'miami']);
+/** Same as the schedule board — Cocktail Party + Doak. Not every SEC road game. */
+const RIVAL_OPPONENT_IDS = new Set(['fsu', 'uga']);
 
 function nextHomeGame(now = new Date()) {
   return getFeaturedUfGame(now) || SCHEDULE_GAMES.find((g) => g.kind !== 'bye') || SCHEDULE_GAMES[0];

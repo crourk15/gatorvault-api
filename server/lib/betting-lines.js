@@ -86,20 +86,6 @@ const STATIC_LINES = [
     source: 'schedule'
   },
   {
-    id: 'uf-lsu-2026',
-    week: null,
-    game: 'Florida vs LSU',
-    opponent: 'LSU',
-    date: '2026-10-10T23:30:00.000Z',
-    venue: 'Ben Hill Griffin Stadium',
-    spread: { line: 'UF -2.5', uf: -2.5 },
-    total: 51.5,
-    moneyline: { uf: -135, opp: +115 },
-    sportsbookUrl: FANDUEL_AFFILIATE,
-    sportsbookLinks: SPORTSBOOKS,
-    source: 'schedule'
-  },
-  {
     id: 'uf-fsu-2026',
     week: null,
     game: 'Florida vs Florida State',

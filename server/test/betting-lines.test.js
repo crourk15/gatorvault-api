@@ -66,4 +66,9 @@ describe('betting-lines next game', () => {
     assert.equal(payload.lastGame.homeScore, 52);
     assert.equal(payload.lastGame.awayScore, 3);
   });
+
+  it('does not invent an LSU line Florida does not play in 2026', () => {
+    assert.ok(STATIC_LINES.some((g) => g.id === 'uf-auburn-2026-w3'));
+    assert.ok(!STATIC_LINES.some((g) => /lsu/i.test(String(g.id || ''))));
+  });
 });
