@@ -148,6 +148,29 @@ describe('schedule-board', () => {
     assert.ok(campbell.offenseScout.some((n) => /Film-confirmed/i.test(n)));
   });
 
+  it('Auburn Film Notes are fan-facing and raw scout stays on file', () => {
+    const board = scheduleBoard.getScheduleBoard(2026);
+    const auburn = board.games.find((g) => g.id === 'auburn');
+    assert.ok(auburn.filmNotes?.length >= 8);
+    assert.match(auburn.filmNotes[0], /no-huddle shotgun and Byrum Brown/i);
+    assert.ok(!auburn.filmNotes.some((n) => /NOT confirmed|Freeze downhill|401856636/i.test(n)));
+    assert.match(auburn.film, /no-huddle shotgun and Byrum Brown/i);
+    assert.ok(!/downhill ball/i.test(auburn.film));
+    assert.equal(auburn.keys[0], 'Crowd Brown');
+    assert.equal(auburn.keys[1], 'Stay in the lane on the keep');
+    assert.equal(auburn.keys[2], 'Don’t let the short throw run');
+    assert.equal(auburn.pred, 'UF 27 · Auburn 23');
+    assert.equal(auburn.filmWatched, false);
+    assert.equal(auburn.filmLessonId, undefined);
+    assert.ok(auburn.offenseScout?.some((n) => /No Huddle-Shotgun/i.test(n)));
+    assert.ok(auburn.defenseScout?.some((n) => /NOT confirmed|Durkin/i.test(n)));
+    const payload = scheduleBoard.toApiPayload(board);
+    const fan = payload.games.find((g) => g.id === 'auburn');
+    assert.deepEqual(fan.offenseScout, []);
+    assert.equal(fan.scoutingReport, undefined);
+    assert.match(fan.film, /Byrum Brown/i);
+  });
+
   it('bundle path points at repo seed', () => {
     const p = scheduleBoard.resolveReadPath(2026);
     assert.ok(p.includes(path.join('data', 'schedule', '2026-season.json')));

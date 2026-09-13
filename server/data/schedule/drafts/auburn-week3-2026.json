@@ -1,0 +1,124 @@
+{
+  "status": "SHIPPED",
+  "doNotPublish": false,
+  "gameId": "auburn",
+  "updatedAt": "2026-09-13T01:50:00.000Z",
+  "filmWatched": false,
+  "staffNotes": "PROVISIONAL — Charles review before live Game Week. Official Baylor PBP sit (78 snaps) — not a broadcast sit. Southern Miss Week 2 box was not posted at draft. Do not invent visitors or a Vegas number.",
+  "sources": {
+    "week1": "Official Baylor PBP / box 28641 + ESPN 401856636 — Auburn 17, Baylor 16 (Sep 5, Mercedes-Benz / Aflac Kickoff). 78 Auburn snaps charted.",
+    "week1Tape": "SEC condensed https://www.youtube.com/watch?v=0Rnjy4CDqBM is up; this environment could not play it (bot wall). watchStandard: official-pbp. filmWatched: false.",
+    "week2": "NOT POSTED — Auburn vs Southern Miss Sep 12, Jordan-Hare 6:45 p.m. CDT. Fold in before ship.",
+    "defense2025": "Official Durkin bio + cfbstats 2025: 20.7 PPG, 99.3 rush YPG (12th), 2.86 YPC, ~329 YPG (30th)",
+    "staff": "Staff-public: HC Alex Golesh, OC Joel Gordon (calls it), DC DJ Durkin stays, QB Byrum Brown followed from USF"
+  },
+  "liveHold": {
+    "doNotAdvanceGameWeek": false,
+    "doNotWriteScheduleJson": false,
+    "campbellFinalNote": "Florida 52-3 Campbell (SI recap / 2-0). Stamp Campbell final separately when Charles says. Not part of this draft."
+  },
+  "game": {
+    "id": "auburn",
+    "label": "Sep 19 @ Auburn",
+    "opp": "Auburn Tigers",
+    "date": "September 19, 2026 · 7:00 PM ET",
+    "venue": "Jordan-Hare Stadium, Auburn AL",
+    "tv": "ESPN",
+    "ufPct": 51,
+    "filmWatched": false,
+    "filmWatchStandard": "official-pbp",
+    "film": "Auburn is no-huddle shotgun and Byrum Brown. Crowd him or he throws it short and keeps it. Three turnovers in Atlanta; they won it with a keep left. Then go score — they sit on the run and you throw it over them.",
+    "pred": "UF 27 · Auburn 23",
+    "predUF": 27,
+    "predOpp": 23,
+    "keys": [
+      "Crowd Brown",
+      "Stay in the lane on the keep",
+      "Don’t let the short throw run"
+    ],
+    "swing": [
+      {
+        "name": "Jayden Woods",
+        "role": "Keep Byrum Brown in the pocket — keep left 11 won Atlanta"
+      },
+      {
+        "name": "Jadan Baugh",
+        "role": "Early-down rhythm vs a front that held Baylor to 103 rush"
+      },
+      {
+        "name": "Aaron Philo",
+        "role": "They sit on the run — Baylor still threw 333"
+      }
+    ],
+    "opponentTendencies": [
+      "They do not huddle up. Almost every snap vs Baylor was no-huddle shotgun.",
+      "They will keep it. The winning score was keep left 11. Stay in your lane.",
+      "Cain then Cobb is the bounce they will run if you sit inside.",
+      "The chunk throws were short and ran — Koger 30, Nimrod 26. Crowd the catch.",
+      "Keshaun Singleton is the volume guy — 7 for 89 when they need a chain.",
+      "Three picks when he was off schedule. Crowd him and make him live as a thrower.",
+      "They will go on 4th-and-medium. Do not treat it as a punt."
+    ],
+    "defenseTendencies": [
+      "Last year that front sat on the run — 99 rush yards a game, 2.9 a carry.",
+      "Baylor got 103 on the ground and still threw for 333. If they load it, throw it over them.",
+      "Coverage calls not on the tape we have."
+    ],
+    "howUFWins": [
+      "Five sacks when they got him off schedule. Three INTs when he forced it — deep left to the 4, 3rd-and-18 after the sack, first play of the fourth. Crowd him before the first read.",
+      "Winning score was keep left 11 on 3rd-and-3. Earlier: Cain bounce 25 then Cobb 15. Sit inside and they bounce it.",
+      "Koger 30, Nimrod 26, Singleton 20 and 18 — those were short throws that ran after the catch. Crowd the catch, then throw it over a loaded box."
+    ],
+    "filmNotes": [
+      "Auburn is no-huddle shotgun and Byrum Brown. Crowd him or he throws it short and keeps it. Three turnovers in Atlanta; they won it with a keep left. Then go score — they sit on the run and you throw it over them.",
+      "They do not huddle up. Almost every snap vs Baylor was no-huddle shotgun.",
+      "They will keep it. The winning score was keep left 11. Stay in your lane.",
+      "Cain then Cobb is the bounce they will run if you sit inside.",
+      "The chunk throws were short and ran — Koger 30, Nimrod 26. Crowd the catch.",
+      "Keshaun Singleton is the volume guy — 7 for 89 when they need a chain.",
+      "Three picks when he was off schedule. Crowd him and make him live as a thrower.",
+      "Last year that front sat on the run — 99 rush yards a game, 2.9 a carry.",
+      "Baylor got 103 on the ground and still threw for 333. If they load it, throw it over them.",
+      "They will go on 4th-and-medium. Do not treat it as a punt.",
+      "Coverage calls not on the tape we have."
+    ],
+    "offenseScout": [
+      "Staff-public 2026: Alex Golesh HC, Joel Gordon OC (calls it), Byrum Brown QB — Year 4 together from USF. This is not the 2025 Freeze downhill card.",
+      "Official PBP sit Week 1 (Baylor box 28641 / ESPN 401856636): 78 Auburn snaps. 72 No Huddle-Shotgun, 4 Shotgun, 1 No Huddle (4th-and-5 Mabson), 0 under-center. 25 of 26 completions tagged short. 10/18 on 3rd, 0-1 on 4th.",
+      "Box-confirmed Week 1: Auburn 17, Baylor 16. Brown 26/35, 259, 0 TD, 3 INT. Rushing 21-27-1 TD, long 21 (16 designed/keep + 5 sacks in the PBP).",
+      "Keep is the close-game plan. Winning score: 3rd-and-3 keep left 11. Previous snap keep left 5. Earlier: Cain bounce right 25 then Cobb right 15 TD.",
+      "Chunks were short throws that ran: Koger 30 (caught at the 40), Nimrod 26 (caught at the 37), Singleton 20 and 18. One true deep: Koger 21, then INT to Bush at the 4.",
+      "Three INTs all off-schedule: deep-left after the 21, 3rd-and-18 after the sack, first play of Q4 (Gifford).",
+      "They will go on 4th-and-medium: 4th-and-5 Mabson middle +2, downs. Not a fake punt in the PBP.",
+      "Box-confirmed Week 1 run game: Jeremiah Cobb 12-53-1 TD; Bryce Cain 1-25; Omar Mabson II 5-19; team 41-130, 3.2 YPC, 2 TD.",
+      "Box-confirmed Week 1 receivers: Keshaun Singleton 7-89-0, long 20; Jeremiah Koger 5-66-0, long 30; Chas Nimrod 4-41; Jake Johnson 3-20.",
+      "Box-confirmed 2025 USF Brown (staff bio / prior season): 3158 pass, 28 TD; 1008 rush, 14 TD. Use as who he is, not as the Atlanta night.",
+      "Week 2 Southern Miss (Sep 12, Jordan-Hare): official box NOT POSTED at draft — fold in before ship."
+    ],
+    "defenseScout": [
+      "Staff-public: DJ Durkin stays as DC (3rd year). Tim Banks safeties / co-DC. Coverage shells NOT confirmed.",
+      "Box-confirmed 2025: 20.7 PPG, 99.3 rush YPG (12th), 2.86 YPC, ~329 YPG (30th). Best rush marks since 2003 per official bio.",
+      "Box-confirmed Week 1: allowed 333 pass / 103 rush (2.3 YPC) / 16 points. 1 sack (Xavier Atkins), 8 TFL, 9 PD, 1 INT (Jared Smith).",
+      "Box-confirmed Week 1 tackle volume: Elijah Melendez 12, Eric Winters 11, Kaleb Harris 6, Bryce Deas 6, Atkins 5-1 sack.",
+      "PBP: Winters strips Baylor QB keep (Harris recovers). Winters is the closer on the 2-pt (pass attempt failed, review upheld).",
+      "They can sit on the run and still get hit over the top. Do not write a four-down or two-high.",
+      "Week 2 Southern Miss: NOT POSTED — fold in before ship."
+    ],
+    "scoutingReport": "AUBURN OFFENSE (official Baylor PBP sit, 78 snaps): This is no-huddle shotgun and Byrum Brown, not Freeze downhill. 72 No Huddle-Shotgun, 0 under-center. 26/35, 259, 0 pass TD, 3 INT, plus 21-27-1 rushing. 25 of 26 completions were short. Winning score was keep left 11. Cain bounce 25 then Cobb 15. Chunks were short throws that ran — Koger 30, Nimrod 26. Three picks when he was off schedule. They will go on 4th-and-medium (0-1). AUBURN DEFENSE (2025 Durkin boxes + Baylor): 12th rush D last year (99.3 YPG, 2.86). Week 1 they stuffed Baylor on the ground (103) and gave up 333 passing with 1 sack. Coverage shells NOT confirmed. UF wins by crowding Brown, staying in the lane on the keep, crowding the short catch, then throwing it over a loaded box. Jordan-Hare night is the environment — not the picture. PROVISIONAL until Charles sits the SEC condensed and Week 2 box lands. filmWatched: false."
+  },
+  "predictionNote": "Draft score only. No Vegas consensus stamped. Leave Line pending unless Charles wants a number.",
+  "visitorsNote": "No Auburn expected-visitor list on file. Do not invent a Jordan-Hare visitor panel.",
+  "doNotSay": [
+    "DJ Lagway",
+    "personnel codes",
+    "every snap / every single time",
+    "Florida punts",
+    "writer names",
+    "GNFP / Patreon",
+    "leak",
+    "four-down as the Florida front",
+    "Freeze downhill as the 2026 identity",
+    "Eric Singleton when you mean Keshaun Singleton",
+    "filmWatched true — broadcast not sat"
+  ]
+}

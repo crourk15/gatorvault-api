@@ -63,6 +63,31 @@ describe('Game Week Film Notes', () => {
     assert.equal(withVegas.prediction.total, 'O/U 66.5');
   });
 
+  it('Auburn Film Notes stay fan-facing and skip the Freeze downhill card', () => {
+    const auburn = SCHEDULE_GAMES.find((g) => g.id === 'auburn');
+    assert.ok(auburn);
+    const notes = buildFilmNotes(auburn);
+    assert.ok(notes.length >= 8);
+    assert.match(notes[0], /no-huddle shotgun and Byrum Brown/i);
+    assert.ok(!notes.some((n) => /downhill|Control LOS|NOT confirmed/i.test(n)));
+
+    const bundle = getGameWeekBundle('auburn');
+    assert.deepEqual(bundle.filmNotes, notes);
+    assert.ok(bundle.scouting.offense.some((n) => /no-huddle shotgun/i.test(n)));
+    assert.ok(bundle.scouting.defense.some((n) => /99 rush yards/i.test(n)));
+    assert.ok(!bundle.scouting.offense.some((n) => DESK_SCOUT_TALK_RE.test(n)));
+    assert.ok(!bundle.scouting.defense.some((n) => DESK_SCOUT_TALK_RE.test(n)));
+    assert.ok(!DESK_SCOUT_TALK_RE.test(bundle.scouting.matchupSummary));
+    assert.match(bundle.scouting.matchupSummary, /Byrum Brown/i);
+    assert.equal(bundle.keys[0].title, 'Crowd Brown');
+    assert.equal(bundle.keys[1].title, 'Stay in the lane on the keep');
+    assert.equal(bundle.keys[2].title, 'Don’t let the short throw run');
+    assert.equal(auburn.filmWatched, false);
+    assert.equal(auburn.filmLessonId, undefined);
+    assert.equal(bundle.prediction.scoreLine, 'UF 27 · Auburn 23');
+    assert.equal(bundle.prediction.spread, 'Line pending');
+  });
+
   it('defaults Game Week to the next upcoming kickoff', () => {
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-04T18:00:00-04:00')), 'fau');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-06T12:00:00-04:00')), 'campbell');

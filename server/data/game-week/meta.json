@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "currentGameId": "campbell",
-  "updatedAt": "2026-09-06T05:10:00.000Z",
-  "source": "schedule-data + futurecast-game-week-model"
+  "currentGameId": "auburn",
+  "updatedAt": "2026-09-13T02:10:00.000Z",
+  "source": "schedule-data + official-pbp sit"
 }
