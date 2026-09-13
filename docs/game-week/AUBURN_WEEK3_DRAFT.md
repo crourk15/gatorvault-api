@@ -90,4 +90,4 @@ Chart: 78 snaps · 72 No Huddle-Shotgun · 4 Shotgun · 1 No Huddle (4th-and-5 M
 
 Stamped onto `2026-season.json` and `game-week/meta.json` (`currentGameId: auburn`). Old Freeze card is gone.
 
-Still fold later: Southern Miss box, broadcast sit (`filmWatched` stays false), visitors, Vegas.
+Still fold later: Auburn’s Southern Miss box (their Week 2, not ours — official box still not posted), broadcast sit (`filmWatched` stays false). Vegas + visitors stamped separately.

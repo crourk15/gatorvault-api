@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-11T23:10:00.000Z",
+  "updatedAt": "2026-09-13T02:20:00.000Z",
   "source": "Public Campbell visitor look — plans can change",
   "visitorMeta": {
     "zylen-little": {
@@ -99,6 +99,13 @@
       "school": "IMG Academy (Bradenton, FL)",
       "stars": 3,
       "classYear": 2028
+    },
+    "jalanie-george": {
+      "name": "Jalanie George",
+      "position": "EDGE",
+      "school": "Desert Edge (Goodyear, AZ)",
+      "stars": 5,
+      "classYear": 2028
     }
   },
   "games": [
@@ -135,6 +142,17 @@
         "dully-littleton"
       ],
       "source": "Expected / planning, not confirmed on campus. Plans can change. Smith is on his fifth Gainesville trip (Campbell gameday). Robinson’s second visit and first Swamp game. Aliu is a Nebraska commit. Gumbs is an Arkansas commit and has no Florida offer."
+    },
+    {
+      "gameId": "auburn",
+      "opponent": "Auburn",
+      "date": "2026-09-19",
+      "dateLabel": "Sep 19",
+      "chaseLabel": "Expected Auburn visit · Sep 19",
+      "slugs": [
+        "jalanie-george"
+      ],
+      "source": "Expected / planning, not confirmed on campus. Plans can change. George is scheduled at Jordan-Hare for the Florida game."
     },
     {
       "gameId": "olemiss",

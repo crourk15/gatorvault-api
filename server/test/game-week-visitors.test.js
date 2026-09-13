@@ -92,6 +92,23 @@ describe('game-week-visitors', () => {
     assert.equal(littleton.position, 'TE');
   });
 
+  it('lists Jalanie George as expected Auburn, not confirmed', () => {
+    const panel = visitorsPanelForGameId('auburn');
+    assert.ok(panel);
+    assert.equal(panel.gameId, 'auburn');
+    assert.deepEqual(
+      panel.visitors.map((v) => v.slug),
+      ['jalanie-george']
+    );
+    assert.match(String(panel.source || ''), /expected \/ planning, not confirmed on campus/i);
+    assert.equal(expectedVisitLabelForSlug('jalanie-george'), 'Expected Auburn visit · Sep 19');
+    assert.doesNotMatch(String(panel.source || ''), /Rivals|AuburnWire|Gators Online/i);
+    const george = panel.visitors.find((v) => v.slug === 'jalanie-george');
+    assert.equal(george.position, 'EDGE');
+    assert.equal(george.classYear, 2028);
+    assert.match(String(george.school || ''), /Desert Edge/i);
+  });
+
   it('includes Josiah Taylor on Ole Miss expected list', () => {
     const panel = visitorsPanelForGameId('olemiss');
     assert.ok(panel);

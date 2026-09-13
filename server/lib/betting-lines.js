@@ -71,6 +71,21 @@ const STATIC_LINES = [
     source: 'schedule'
   },
   {
+    id: 'uf-auburn-2026-w3',
+    week: 3,
+    game: 'Florida at Auburn',
+    opponent: 'Auburn',
+    date: '2026-09-19T23:00:00.000Z',
+    venue: 'Jordan-Hare Stadium',
+    // Market ~Sep 13 2026: DraftKings via ESPN FLA -2.5 / 51.5 (opened pick'em / 53.5); FOX same -2.5 / 51.5, ML -135 / +114
+    spread: { line: 'UF -2.5', uf: -2.5 },
+    total: 51.5,
+    moneyline: { uf: -135, opp: +114 },
+    sportsbookUrl: FANDUEL_AFFILIATE,
+    sportsbookLinks: SPORTSBOOKS,
+    source: 'schedule'
+  },
+  {
     id: 'uf-lsu-2026',
     week: null,
     game: 'Florida vs LSU',

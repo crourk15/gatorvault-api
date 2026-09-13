@@ -86,6 +86,12 @@ describe('Game Week Film Notes', () => {
     assert.equal(auburn.filmLessonId, undefined);
     assert.equal(bundle.prediction.scoreLine, 'UF 27 · Auburn 23');
     assert.equal(bundle.prediction.spread, 'Line pending');
+    const withVegas = getGameWeekBundle('auburn', SCHEDULE_GAMES, {
+      spreadLine: 'UF -2.5',
+      total: 51.5,
+    });
+    assert.equal(withVegas.prediction.spread, 'UF -2.5');
+    assert.equal(withVegas.prediction.total, 'O/U 51.5');
   });
 
   it('defaults Game Week to the next upcoming kickoff', () => {
