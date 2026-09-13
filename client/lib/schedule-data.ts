@@ -306,8 +306,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Coverage calls not on the tape we have.",
     ],
     howUFWins: [
-      "That front sits on the run. When they load the box, throw it over them and finish the drive.",
-      "Get him off the first look. If he is late, he forces it. Stay home when he keeps it.",
+      "That's how you score on this front. They sit on the run — Baylor got 103 on the ground and still threw for 333. If they load it, throw it over them.",
+      "That's how you get him off schedule. When he's late, he forces it — three picks. Crowd Byrum Brown and stay home on the keep.",
       "That's how they got their chunks. Keshaun Singleton, Koger, Nimrod caught it short and ran. Get there and wrap them up.",
     ],
     scoutingReport:
