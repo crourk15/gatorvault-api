@@ -82,10 +82,11 @@ describe('Game Week Film Notes', () => {
     assert.match(bundle.scouting.matchupSummary, /Byrum Brown/i);
     assert.equal(bundle.keys[0].title, 'Throw it over the loaded box');
     assert.equal(bundle.keys[1].title, 'Crowd Byrum Brown before the first read');
-    assert.equal(bundle.keys[2].title, "Don't let a short catch turn into a long run");
+    assert.equal(bundle.keys[2].title, "Don't let the short throw become a long run");
     assert.match(bundle.keys[0].body, /throw it over them/i);
     assert.match(bundle.keys[1].body, /Stay home when he keeps it/i);
-    assert.match(bundle.keys[2].body, /wrap him up/i);
+    assert.match(bundle.keys[2].body, /Keshaun Singleton, Koger, Nimrod/i);
+    assert.match(bundle.keys[2].body, /wrap them up/i);
     assert.ok(!bundle.keys.some((k) => /keep left 11|Koger 30|3rd-and-3/i.test(`${k.title} ${k.body}`)));
     assert.equal(auburn.filmWatched, false);
     assert.equal(auburn.filmLessonId, undefined);

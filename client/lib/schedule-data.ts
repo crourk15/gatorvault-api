@@ -279,7 +279,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     keys: [
       "Throw it over the loaded box",
       "Crowd Byrum Brown before the first read",
-      "Don't let a short catch turn into a long run",
+      "Don't let the short throw become a long run",
     ],
     swing: [
       { name: "Jayden Woods", role: "Keep Byrum Brown in the pocket" },
@@ -308,7 +308,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     howUFWins: [
       "That front sits on the run. When they load the box, throw it over them and finish the drive.",
       "Get him off the first look. If he is late, he forces it. Stay home when he keeps it.",
-      "They throw it short so the guy can run after it. Get there and wrap him up.",
+      "That's how they got their chunks. Keshaun Singleton, Koger, Nimrod caught it short and ran. Get there and wrap them up.",
     ],
     scoutingReport:
       "AUBURN OFFENSE (official Baylor PBP sit, 78 snaps): This is no-huddle shotgun and Byrum Brown, not Freeze downhill. 72 No Huddle-Shotgun, 0 under-center. 26/35, 259, 0 pass TD, 3 INT, plus 21-27-1 rushing. 25 of 26 completions were short. Winning score was keep left 11. Cain bounce 25 then Cobb 15. Chunks were short throws that ran — Koger 30, Nimrod 26. Three picks when he was off schedule. They will go on 4th-and-medium (0-1). AUBURN DEFENSE (2025 Durkin boxes + Baylor): 12th rush D last year (99.3 YPG, 2.86). Week 1 they stuffed Baylor on the ground (103) and gave up 333 passing with 1 sack. Coverage shells NOT confirmed. UF wins by crowding Brown, staying in the lane on the keep, crowding the short catch, then throwing it over a loaded box. Jordan-Hare night is the environment — not the picture. filmWatched: false.",
