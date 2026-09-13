@@ -23,8 +23,8 @@ Auburn is no-huddle shotgun and Byrum Brown. Crowd him or he throws it short and
 2. **Crowd Byrum Brown before the first read** (defense)  
    Get him off the first look. If he is late, he forces it. Stay home when he keeps it.
 
-3. **Tackle the short throw — do not let it run** (defense)  
-   The throw is short on purpose. Crowd the catch and finish the tackle in space.
+3. **Don't let a short catch turn into a long run** (defense)  
+   They throw it short so the guy can run after it. Get there and wrap him up.
 
 ## Swing
 

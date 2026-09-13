@@ -164,10 +164,10 @@ describe('schedule-board', () => {
     assert.ok(!/downhill ball/i.test(auburn.film));
     assert.equal(auburn.keys[0], 'Throw it over the loaded box');
     assert.equal(auburn.keys[1], 'Crowd Byrum Brown before the first read');
-    assert.equal(auburn.keys[2], 'Tackle the short throw — do not let it run');
+    assert.equal(auburn.keys[2], "Don't let a short catch turn into a long run");
     assert.match(auburn.howUFWins[0], /throw it over them/i);
     assert.match(auburn.howUFWins[1], /Stay home when he keeps it/i);
-    assert.match(auburn.howUFWins[2], /short on purpose/i);
+    assert.match(auburn.howUFWins[2], /wrap him up/i);
     assert.ok(!auburn.howUFWins.some((n) => /keep left 11|Koger 30|3rd-and-3/i.test(n)));
     assert.equal(auburn.pred, 'UF 27 · Auburn 23');
     assert.equal(auburn.filmWatched, false);
