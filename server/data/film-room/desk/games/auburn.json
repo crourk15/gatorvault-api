@@ -1,0 +1,83 @@
+{
+  "gameId": "auburn",
+  "locked": false,
+  "whatTheyRan": [
+    "Offense: no-huddle shotgun. Official Baylor PBP (Sep 5): 72 No Huddle-Shotgun, 4 Shotgun, 1 No Huddle (4th-and-5 Mabson), 0 under-center. Byrum Brown is the show — throw it short, keep it, bounce Cain.",
+    "Defense: Durkin front that sits on the run. Coverage shells NOT confirmed. Winters is the closer — strip on the keep, stuff the last play.",
+    "Specials: they will go for it (4th-and-5 Mabson, failed). Kaak 4 punts. Do not write Florida punts."
+  ],
+  "howItPlayed": [
+    "Atlanta was 17-16 because Brown turned it over three times and Durkin's front still stuffed the run (103 rush).",
+    "Winning score: 3rd-and-3 at the 11, no-huddle shotgun, Brown rush left 11. Previous snap was a keep left for 5.",
+    "First TD drive: Cain bounce right 25, Cobb right 15 the next snap.",
+    "Chunks were short throws that ran: Koger 30 (caught at the 40), Nimrod 26 (caught at the 37), Singleton 20 and 18. 25 of 26 completions were tagged short.",
+    "One true deep: Koger 21 deep left. Next snap they picked him off (Bush at the 4, Nimrod the intended).",
+    "Five sacks when they got him off schedule. Third INT was 3rd-and-18 after an 8-yard sack to close the half."
+  ],
+  "doNotSay": [
+    "personnel codes (10/11/12/GT)",
+    "every snap / every single time",
+    "DJ Lagway",
+    "four down as the Florida front",
+    "the night was two-high",
+    "leak (use areas of opportunity)",
+    "writer names in fan copy",
+    "GNFP / Patreon wording",
+    "Florida punts",
+    "Freeze downhill as the 2026 identity",
+    "Eric Singleton when you mean Keshaun Singleton",
+    "filmWatched true — broadcast not sat"
+  ],
+  "jerseys": {
+    "Brown": "17",
+    "Cobb": "23",
+    "Singleton": "11",
+    "Koger": "4",
+    "Nimrod": "5",
+    "Winters": "5",
+    "Atkins": "17"
+  },
+  "snapLocks": [
+    "Official PBP sit — Baylor box 28641 / ESPN 401856636. SEC condensed https://www.youtube.com/watch?v=0Rnjy4CDqBM is up; this environment could not play it (bot wall). watchStandard: official-pbp. filmWatched: false.",
+    "Q1 13:32 3rd-and-5: Brown incomplete middle to Johnson, PBU. Opening drive punts.",
+    "Q1 10:12: Winters strips Baylor QB keep; Harris recovers at the 30.",
+    "Q1 09:26 3rd-and-1: Brown short left to Koger, caught at the 40, 30 yards.",
+    "Q1 08:13: McPherson 43 FG after the Koger chunk. 3-0.",
+    "Q1 05:22: Jared Smith INT at the 40.",
+    "Q2 07:20 2nd-and-7 at BAY 48: Brown INT to Bush at the 4 (Nimrod). They had just hit Koger deep left 21.",
+    "Q2 04:37–03:51: Cain right 25, Cobb right 15 TD. 10-0.",
+    "Q2 01:29: Brown rush right 21, out of bounds.",
+    "Q2 00:17–00:13: sack -8, then 3rd-and-18 INT (Jordan; Tezino PBU — official Baylor PBP down-and-distance). Half 10-7.",
+    "Q3 00:08: 4th-and-5 at BAY 36, no huddle, Mabson middle +2, turnover on downs. Not a fake punt in the PBP.",
+    "Q4 11:53: first-play INT, Gifford at BAY 45. Baylor ties 10-10 on the 22 FG.",
+    "Q4 04:36 3rd-and-5: Brown short left Nimrod, caught at the 37, 26 yards.",
+    "Q4 03:57–03:21: keep left 5, then 3rd-and-3 keep left 11 TD. 17-10.",
+    "Q4 02:16: 4th-and-10, Baylor hits Freeman 28 over the middle. Then Porter 27 to the 4. They will get hit late if they grab (PI Winters / Pleasant earlier).",
+    "Q4 00:09: 2-point pass attempt failed (review upheld). Winters is the closer on that night."
+  ],
+  "intelSeeds": [],
+  "tapeLinks": [
+    {
+      "label": "SEC condensed (could not play in this environment)",
+      "url": "https://www.youtube.com/watch?v=0Rnjy4CDqBM"
+    },
+    {
+      "label": "Official Baylor PBP / box",
+      "url": "https://baylorbears.com/sports/football/stats/2026/auburn/boxscore/28641"
+    },
+    {
+      "label": "ESPN box / PBP",
+      "url": "https://www.espn.com/college-football/boxscore/_/gameId/401856636"
+    },
+    {
+      "label": "ESPN highlights (unwatched — paywall/auth)",
+      "url": "https://www.espn.com/video/clip/_/id/49841782"
+    },
+    {
+      "label": "Southern Miss official box page — no score posted",
+      "url": "https://auburntigers.com/boxscore/30649"
+    }
+  ],
+  "reviewStatus": "official-pbp",
+  "notes": "PROVISIONAL. Charles lock after he sits the SEC condensed. Southern Miss box/tape not posted. Do not ship live Game Week until he says go."
+}

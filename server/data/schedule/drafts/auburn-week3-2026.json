@@ -2,11 +2,12 @@
   "status": "REVIEW_ONLY",
   "doNotPublish": true,
   "gameId": "auburn",
-  "updatedAt": "2026-09-13T01:30:00.000Z",
+  "updatedAt": "2026-09-13T01:50:00.000Z",
   "filmWatched": false,
-  "staffNotes": "PROVISIONAL — Charles review before live Game Week. Week 1 Baylor box is official. Southern Miss Week 2 box was not posted at draft. Do not invent visitors or a Vegas number.",
+  "staffNotes": "PROVISIONAL — Charles review before live Game Week. Official Baylor PBP sit (78 snaps) — not a broadcast sit. Southern Miss Week 2 box was not posted at draft. Do not invent visitors or a Vegas number.",
   "sources": {
-    "week1": "ESPN box 401856636 — Auburn 17, Baylor 16 (Sep 5, Mercedes-Benz / Aflac Kickoff)",
+    "week1": "Official Baylor PBP / box 28641 + ESPN 401856636 — Auburn 17, Baylor 16 (Sep 5, Mercedes-Benz / Aflac Kickoff). 78 Auburn snaps charted.",
+    "week1Tape": "SEC condensed https://www.youtube.com/watch?v=0Rnjy4CDqBM is up; this environment could not play it (bot wall). watchStandard: official-pbp. filmWatched: false.",
     "week2": "NOT POSTED — Auburn vs Southern Miss Sep 12, Jordan-Hare 6:45 p.m. CDT. Fold in before ship.",
     "defense2025": "Official Durkin bio + cfbstats 2025: 20.7 PPG, 99.3 rush YPG (12th), 2.86 YPC, ~329 YPG (30th)",
     "staff": "Staff-public: HC Alex Golesh, OC Joel Gordon (calls it), DC DJ Durkin stays, QB Byrum Brown followed from USF"
@@ -25,19 +26,20 @@
     "tv": "ESPN",
     "ufPct": 51,
     "filmWatched": false,
-    "film": "Auburn is Byrum Brown. Crowd him or he throws it and keeps it. They barely got out of Atlanta because he turned it over three times. Then go score — last year's front sits on the run and you have to throw it over them.",
+    "filmWatchStandard": "official-pbp",
+    "film": "Auburn is no-huddle shotgun and Byrum Brown. Crowd him or he throws it short and keeps it. Three turnovers in Atlanta; they won it with a keep left. Then go score — they sit on the run and you throw it over them.",
     "pred": "UF 27 · Auburn 23",
     "predUF": 27,
     "predOpp": 23,
     "keys": [
-      "Crowd Brown before the first read",
-      "Stay in your lane on the keep",
-      "Run it honest, then throw it over them"
+      "Crowd Brown",
+      "Stay in the lane on the keep",
+      "Don’t let the short throw run"
     ],
     "swing": [
       {
         "name": "Jayden Woods",
-        "role": "Keep Byrum Brown in the pocket — 21 keeps vs Baylor"
+        "role": "Keep Byrum Brown in the pocket — keep left 11 won Atlanta"
       },
       {
         "name": "Jadan Baugh",
@@ -45,14 +47,17 @@
       },
       {
         "name": "Aaron Philo",
-        "role": "They will sit on the run — Baylor still threw for 333"
+        "role": "They sit on the run — Baylor still threw 333"
       }
     ],
     "opponentTendencies": [
-      "Byrum Brown is the show. He can throw it and run it.",
-      "They will keep it. Twenty-one carries in Atlanta. Stay in your lane.",
-      "They will take the shot. Koger's 30 was the chunk. Help over the top.",
-      "Keshaun Singleton is the volume guy — 7 for 89 when they need a chain."
+      "They do not huddle up. Almost every snap vs Baylor was no-huddle shotgun.",
+      "They will keep it. The winning score was keep left 11. Stay in your lane.",
+      "Cain then Cobb is the bounce they will run if you sit inside.",
+      "The chunk throws were short and ran — Koger 30, Nimrod 26. Crowd the catch.",
+      "Keshaun Singleton is the volume guy — 7 for 89 when they need a chain.",
+      "Three picks when he was off schedule. Crowd him and make him live as a thrower.",
+      "They will go on 4th-and-medium. Do not treat it as a punt."
     ],
     "defenseTendencies": [
       "Last year that front sat on the run — 99 rush yards a game, 2.9 a carry.",
@@ -60,27 +65,33 @@
       "Coverage calls not on the tape we have."
     ],
     "howUFWins": [
-      "Brown went 26/35 for 259 with 0 pass TDs and 3 INTs in Atlanta and still ran it 21 times for 27 yards and a score. Pressure before the first read, keep contain on the keep, and make him live as a thrower.",
-      "Official 2025 Durkin: 20.7 PPG and 99.3 rush YPG (12th). Week 1 they held Baylor to 103 rush / 2.3 a carry. Establish Baugh early — then take the shot when they load the box.",
-      "That same Baylor night they allowed 333 passing and only 1 sack. Help over the top on Keshaun Singleton and Jeremiah Koger (long 30), then finish the drive. Jordan-Hare at night does not change the picture."
+      "Five sacks when they got him off schedule. Three INTs when he forced it — deep left to the 4, 3rd-and-18 after the sack, first play of the fourth. Crowd him before the first read.",
+      "Winning score was keep left 11 on 3rd-and-3. Earlier: Cain bounce 25 then Cobb 15. Sit inside and they bounce it.",
+      "Koger 30, Nimrod 26, Singleton 20 and 18 — those were short throws that ran after the catch. Crowd the catch, then throw it over a loaded box."
     ],
     "filmNotes": [
-      "Auburn is Byrum Brown. Crowd him or he throws it and keeps it. They barely got out of Atlanta because he turned it over three times. Then go score — last year's front sits on the run and you have to throw it over them.",
-      "Byrum Brown is the show. He can throw it and run it.",
-      "They will keep it. Twenty-one carries in Atlanta. Stay in your lane.",
-      "They will take the shot. Koger's 30 was the chunk. Help over the top.",
+      "Auburn is no-huddle shotgun and Byrum Brown. Crowd him or he throws it short and keeps it. Three turnovers in Atlanta; they won it with a keep left. Then go score — they sit on the run and you throw it over them.",
+      "They do not huddle up. Almost every snap vs Baylor was no-huddle shotgun.",
+      "They will keep it. The winning score was keep left 11. Stay in your lane.",
+      "Cain then Cobb is the bounce they will run if you sit inside.",
+      "The chunk throws were short and ran — Koger 30, Nimrod 26. Crowd the catch.",
       "Keshaun Singleton is the volume guy — 7 for 89 when they need a chain.",
+      "Three picks when he was off schedule. Crowd him and make him live as a thrower.",
       "Last year that front sat on the run — 99 rush yards a game, 2.9 a carry.",
       "Baylor got 103 on the ground and still threw for 333. If they load it, throw it over them.",
+      "They will go on 4th-and-medium. Do not treat it as a punt.",
       "Coverage calls not on the tape we have."
     ],
     "offenseScout": [
       "Staff-public 2026: Alex Golesh HC, Joel Gordon OC (calls it), Byrum Brown QB — Year 4 together from USF. This is not the 2025 Freeze downhill card.",
-      "Box-confirmed Week 1 (ESPN 401856636, Atlanta): Auburn 17, Baylor 16. Brown 26/35, 259, 0 TD, 3 INT. Rushing 21-27-1 TD, long 21.",
+      "Official PBP sit Week 1 (Baylor box 28641 / ESPN 401856636): 78 Auburn snaps. 72 No Huddle-Shotgun, 4 Shotgun, 1 No Huddle (4th-and-5 Mabson), 0 under-center. 25 of 26 completions tagged short. 10/18 on 3rd, 0-1 on 4th.",
+      "Box-confirmed Week 1: Auburn 17, Baylor 16. Brown 26/35, 259, 0 TD, 3 INT. Rushing 21-27-1 TD, long 21 (16 designed/keep + 5 sacks in the PBP).",
+      "Keep is the close-game plan. Winning score: 3rd-and-3 keep left 11. Previous snap keep left 5. Earlier: Cain bounce right 25 then Cobb right 15 TD.",
+      "Chunks were short throws that ran: Koger 30 (caught at the 40), Nimrod 26 (caught at the 37), Singleton 20 and 18. One true deep: Koger 21, then INT to Bush at the 4.",
+      "Three INTs all off-schedule: deep-left after the 21, 3rd-and-18 after the sack, first play of Q4 (Gifford).",
+      "They will go on 4th-and-medium: 4th-and-5 Mabson middle +2, downs. Not a fake punt in the PBP.",
       "Box-confirmed Week 1 run game: Jeremiah Cobb 12-53-1 TD; Bryce Cain 1-25; Omar Mabson II 5-19; team 41-130, 3.2 YPC, 2 TD.",
       "Box-confirmed Week 1 receivers: Keshaun Singleton 7-89-0, long 20; Jeremiah Koger 5-66-0, long 30; Chas Nimrod 4-41; Jake Johnson 3-20.",
-      "Tempo / no-huddle / under-center: NOT confirmed on a Florida sit. Prior USF identity is staff-public only — do not write every-snap tempo until Week 2 box + tape.",
-      "RPO mesh: NOT confirmed.",
       "Box-confirmed 2025 USF Brown (staff bio / prior season): 3158 pass, 28 TD; 1008 rush, 14 TD. Use as who he is, not as the Atlanta night.",
       "Week 2 Southern Miss (Sep 12, Jordan-Hare): official box NOT POSTED at draft — fold in before ship."
     ],
@@ -89,10 +100,11 @@
       "Box-confirmed 2025: 20.7 PPG, 99.3 rush YPG (12th), 2.86 YPC, ~329 YPG (30th). Best rush marks since 2003 per official bio.",
       "Box-confirmed Week 1: allowed 333 pass / 103 rush (2.3 YPC) / 16 points. 1 sack (Xavier Atkins), 8 TFL, 9 PD, 1 INT (Jared Smith).",
       "Box-confirmed Week 1 tackle volume: Elijah Melendez 12, Eric Winters 11, Kaleb Harris 6, Bryce Deas 6, Atkins 5-1 sack.",
+      "PBP: Winters strips Baylor QB keep (Harris recovers). Winters is the closer on the 2-pt (pass attempt failed, review upheld).",
       "They can sit on the run and still get hit over the top. Do not write a four-down or two-high.",
       "Week 2 Southern Miss: NOT POSTED — fold in before ship."
     ],
-    "scoutingReport": "AUBURN OFFENSE (official ESPN Baylor box Sep 5 + staff-public Golesh/Gordon/Brown): This is Byrum Brown, not Freeze downhill. 26/35, 259, 0 pass TD, 3 INT, plus 21-27-1 rushing. Cobb is the back (12-53-1). Chunks: Koger 30, Singleton volume 7-89. Tempo/RPO not confirmed on a Florida sit. AUBURN DEFENSE (2025 Durkin boxes + Baylor): 12th rush D last year (99.3 YPG, 2.86). Week 1 they stuffed Baylor on the ground (103) and gave up 333 passing with 1 sack. Coverage shells NOT confirmed. UF wins by crowding Brown, staying in the lane on the keep, running it honest, then throwing it over a loaded box. Jordan-Hare night is the environment — not the picture. PROVISIONAL until Charles sits tape and Week 2 box lands."
+    "scoutingReport": "AUBURN OFFENSE (official Baylor PBP sit, 78 snaps): This is no-huddle shotgun and Byrum Brown, not Freeze downhill. 72 No Huddle-Shotgun, 0 under-center. 26/35, 259, 0 pass TD, 3 INT, plus 21-27-1 rushing. 25 of 26 completions were short. Winning score was keep left 11. Cain bounce 25 then Cobb 15. Chunks were short throws that ran — Koger 30, Nimrod 26. Three picks when he was off schedule. They will go on 4th-and-medium (0-1). AUBURN DEFENSE (2025 Durkin boxes + Baylor): 12th rush D last year (99.3 YPG, 2.86). Week 1 they stuffed Baylor on the ground (103) and gave up 333 passing with 1 sack. Coverage shells NOT confirmed. UF wins by crowding Brown, staying in the lane on the keep, crowding the short catch, then throwing it over a loaded box. Jordan-Hare night is the environment — not the picture. PROVISIONAL until Charles sits the SEC condensed and Week 2 box lands. filmWatched: false."
   },
   "predictionNote": "Draft score only. No Vegas consensus stamped. Leave Line pending unless Charles wants a number.",
   "visitorsNote": "No Auburn expected-visitor list on file. Do not invent a Jordan-Hare visitor panel.",
@@ -106,6 +118,7 @@
     "leak",
     "four-down as the Florida front",
     "Freeze downhill as the 2026 identity",
-    "Eric Singleton when you mean Keshaun Singleton"
+    "Eric Singleton when you mean Keshaun Singleton",
+    "filmWatched true — broadcast not sat"
   ]
 }
