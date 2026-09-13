@@ -26,6 +26,7 @@ describe('schedule-board', () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
+    assert.equal(payload.predThrough, '2026-W2');
     assert.equal(payload.currentGameId, 'auburn');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);

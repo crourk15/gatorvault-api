@@ -1,6 +1,7 @@
 {
   "season": 2026,
-  "updatedAt": "2026-09-13T02:25:00.000Z",
+  "updatedAt": "2026-09-13T04:10:00.000Z",
+  "predThrough": "2026-W2",
   "label": "2026 Florida football schedule",
   "games": [
     {
@@ -304,7 +305,7 @@
       "opp": "Ole Miss Rebels",
       "date": "September 26, 2026 · 3:30–8:00 PM ET",
       "venue": "Ben Hill Griffin Stadium, Gainesville FL",
-      "ufPct": 50,
+      "ufPct": 47,
       "keys": [
         "Match their tempo without mistakes",
         "Pressure their QB",
@@ -321,8 +322,8 @@
         }
       ],
       "film": "Ole Miss tempo offense stresses communication.",
-      "pred": "UF 27 · Ole Miss 28",
-      "predUF": 27,
+      "pred": "UF 24 · Ole Miss 28",
+      "predUF": 24,
       "predOpp": 28,
       "howUFWins": [
         "Ole Miss tempo stresses communication — match pace without negative plays or coverage busts.",
@@ -350,7 +351,7 @@
       "opp": "Missouri Tigers",
       "date": "October 3, 2026 · 3:30–8:00 PM ET",
       "venue": "Faurot Field, Columbia MO",
-      "ufPct": 47,
+      "ufPct": 46,
       "keys": [
         "Establish run on road",
         "Win turnover battle",
@@ -367,9 +368,9 @@
         }
       ],
       "film": "Missouri uses RPO and play-action.",
-      "pred": "UF 23 · Missouri 27",
+      "pred": "UF 23 · Missouri 28",
       "predUF": 23,
-      "predOpp": 27,
+      "predOpp": 28,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27907",
         "tickpick": "https://www.tickpick.com/buy-missouri-tigers-vs-florida-gators-tickets-faurot-field-at-memorial-stadium-10-3-26-3am/7620964/",
@@ -391,7 +392,7 @@
       "opp": "South Carolina Gamecocks",
       "date": "October 10, 2026 · 12:00–1:00 PM ET",
       "venue": "Ben Hill Griffin Stadium, Gainesville FL",
-      "ufPct": 64,
+      "ufPct": 66,
       "keys": [
         "Win rivalry week",
         "Control clock",
@@ -408,9 +409,9 @@
         }
       ],
       "film": "Homecoming vs South Carolina. RPO-heavy.",
-      "pred": "UF 27 · South Carolina 20",
-      "predUF": 27,
-      "predOpp": 20,
+      "pred": "UF 28 · South Carolina 17",
+      "predUF": 28,
+      "predOpp": 17,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27908",
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-south-carolina-gamecocks-tickets-ben-hill-griffin-stadium-10-10-26-3am/7620865/",
@@ -433,7 +434,7 @@
       "opp": "Texas Longhorns",
       "date": "October 17, 2026 · 12:00–1:00 PM ET",
       "venue": "DKR-Texas Memorial Stadium, Austin TX",
-      "ufPct": 37,
+      "ufPct": 34,
       "keys": [
         "Protect the football",
         "Win early downs",
@@ -450,8 +451,8 @@
         }
       ],
       "film": "Texas balanced attack with elite skill.",
-      "pred": "UF 20 · Texas 31",
-      "predUF": 20,
+      "pred": "UF 17 · Texas 31",
+      "predUF": 17,
       "predOpp": 31,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27909",
@@ -489,7 +490,7 @@
       "opp": "Georgia Bulldogs",
       "date": "October 31, 2026 · 3:30 PM ET",
       "venue": "Mercedes-Benz Stadium, Atlanta GA",
-      "ufPct": 40,
+      "ufPct": 36,
       "tv": "ABC",
       "keys": [
         "Control time of possession",
@@ -507,9 +508,9 @@
         }
       ],
       "film": "Neutral-site Cocktail Party at Mercedes-Benz Stadium in Atlanta for 2026.",
-      "pred": "UF 20 · Georgia 27",
-      "predUF": 20,
-      "predOpp": 27,
+      "pred": "UF 17 · Georgia 28",
+      "predUF": 17,
+      "predOpp": 28,
       "scoutingReport": "Georgia series moves to Atlanta in 2026 (Mercedes-Benz). UF path is controlling the ball and limiting explosives in a neutral-site environment.",
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27910",
@@ -532,7 +533,7 @@
       "opp": "Oklahoma Sooners",
       "date": "November 7, 2026 · 3:30–8:00 PM ET",
       "venue": "Ben Hill Griffin Stadium, Gainesville FL",
-      "ufPct": 48,
+      "ufPct": 54,
       "keys": [
         "Win early downs",
         "Protect the football",
@@ -549,9 +550,9 @@
         }
       ],
       "film": "Oklahoma brings tempo and skill. Swamp night energy matters.",
-      "pred": "UF 24 · Oklahoma 27",
-      "predUF": 24,
-      "predOpp": 27,
+      "pred": "UF 27 · Oklahoma 24",
+      "predUF": 27,
+      "predOpp": 24,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27911",
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-oklahoma-sooners-tickets-ben-hill-griffin-stadium-11-7-26-3am/7620868/",
@@ -574,7 +575,7 @@
       "opp": "Kentucky Wildcats",
       "date": "November 14, 2026 · 6:00–8:00 PM ET",
       "venue": "Kroger Field, Lexington KY",
-      "ufPct": 55,
+      "ufPct": 58,
       "keys": [
         "Physical run fits",
         "Win the trenches",
@@ -591,8 +592,8 @@
         }
       ],
       "film": "Kentucky power run and play-action on the road.",
-      "pred": "UF 24 · Kentucky 21",
-      "predUF": 24,
+      "pred": "UF 27 · Kentucky 21",
+      "predUF": 27,
       "predOpp": 21,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27912",
@@ -615,7 +616,7 @@
       "opp": "Vanderbilt Commodores",
       "date": "November 21, 2026 · 12:00–1:00 PM ET",
       "venue": "Ben Hill Griffin Stadium, Gainesville FL",
-      "ufPct": 72,
+      "ufPct": 69,
       "keys": [
         "Execute early",
         "Avoid complacency",
@@ -632,9 +633,9 @@
         }
       ],
       "film": "Vanderbilt improving — treat as SEC test.",
-      "pred": "UF 31 · Vanderbilt 17",
-      "predUF": 31,
-      "predOpp": 17,
+      "pred": "UF 28 · Vanderbilt 21",
+      "predUF": 28,
+      "predOpp": 21,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27913",
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-vanderbilt-commodores-tickets-ben-hill-griffin-stadium-11-21-26-3am/7620867/",
@@ -656,7 +657,7 @@
       "opp": "Florida State Seminoles",
       "date": "November 27, 2026 · 3:30 PM ET",
       "venue": "Doak Campbell Stadium, Tallahassee FL",
-      "ufPct": 56,
+      "ufPct": 60,
       "tv": "ABC",
       "keys": [
         "Win field position battle",
@@ -674,8 +675,8 @@
         }
       ],
       "film": "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
-      "pred": "UF 27 · FSU 24",
-      "predUF": 27,
+      "pred": "UF 28 · FSU 24",
+      "predUF": 28,
       "predOpp": 24,
       "filmLessonId": "frl00010-0000-4000-8000-00000000000a",
       "opponentTendencies": [

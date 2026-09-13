@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Schedule remaining-season predictions: weekly `ufPct` / `pred` restamp via `/api/schedule` after how teams looked (API — no Codemagic). Week 2 board is live after merge; rivalry-badge bake is separate.
 - [x] Game Week Auburn week: pointer + Campbell 52–3 + Auburn card on `/api/schedule` (API — no Codemagic). Current App Store already live-fetches the board and opens the next kickoff after the 5-hour postgame window — do **not** bake for a new opponent.
 - [x] Game Week Auburn Vegas: stamp consensus UF -2.5 / O/U 51.5 on `/api/betting/lines` so Prediction is not Line pending (API — no Codemagic)
 - [x] Game Week Auburn visitors: Jalanie George expected at Jordan-Hare — not confirmed on campus (API `/api/schedule` — no Codemagic)

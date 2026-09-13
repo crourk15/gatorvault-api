@@ -188,7 +188,11 @@ function overlayBundleModelFields(doc, season) {
   });
   if (!healed) {
     return {
-      doc: { ...doc, updatedAt: bundle.updatedAt },
+      doc: {
+        ...doc,
+        updatedAt: bundle.updatedAt,
+        ...(bundle.predThrough ? { predThrough: bundle.predThrough } : {}),
+      },
       healed: 0,
     };
   }
@@ -196,6 +200,7 @@ function overlayBundleModelFields(doc, season) {
     doc: {
       ...doc,
       updatedAt: bundle.updatedAt,
+      ...(bundle.predThrough ? { predThrough: bundle.predThrough } : {}),
       games,
     },
     healed,
@@ -329,11 +334,13 @@ function normalizeDoc(raw, season) {
   if (!games.length) {
     throw new Error(`schedule ${season} requires at least one game`);
   }
+  const predThrough = String(raw?.predThrough || '').trim();
   return {
     season: Number(raw?.season) || Number(season) || 2026,
     updatedAt: String(raw?.updatedAt || '').trim() || new Date().toISOString(),
     label: String(raw?.label || '').trim() || `${season} Florida football schedule`,
     source: String(raw?.source || 'vault-schedule-board').trim() || 'vault-schedule-board',
+    ...(predThrough ? { predThrough } : {}),
     games,
   };
 }
@@ -370,6 +377,7 @@ function getScheduleBoard(season = 2026) {
             updatedAt: doc.updatedAt,
             label: doc.label,
             source: doc.source,
+            ...(doc.predThrough ? { predThrough: doc.predThrough } : {}),
             games: doc.games.map((g) => {
               const { expectedVisitors: _ev, ...rest } = g || {};
               return rest;
@@ -486,6 +494,7 @@ function toApiPayload(doc, opts) {
     updatedAt: board.updatedAt,
     label: board.label,
     source: board.source,
+    ...(board.predThrough ? { predThrough: board.predThrough } : {}),
     ...(currentGameId ? { currentGameId } : {}),
     games,
     count: board.games.length,

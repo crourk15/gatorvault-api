@@ -12,6 +12,8 @@ export type ScheduleBoardResponse = {
   updatedAt?: string;
   label?: string;
   source?: string;
+  /** Remaining-season predictions last restamped through this week (e.g. 2026-W2). */
+  predThrough?: string;
   currentGameId?: string;
   games?: ScheduleGame[];
   count?: number;

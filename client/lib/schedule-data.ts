@@ -3,6 +3,8 @@
  * Live source of truth: `GET /api/schedule` → server/data/schedule/2026-season.json
  * (durable override `/var/data/schedule/2026-season.json`). Edit the JSON for slate
  * fixes without Codemagic after the live-fetch client bake ships.
+ * Remaining-season `ufPct` / `pred` restamp after each Saturday from how Florida
+ * and those opponents actually looked (`predThrough` on the API board).
  */
 
 export type ScheduleGame = {
@@ -24,6 +26,8 @@ export type ScheduleGame = {
   /** Explicit projected score — prefer over parsing `pred`. */
   predUF: number;
   predOpp: number;
+  /** Season week the remaining-game prediction last restamped (e.g. 2026-W2). */
+  predThrough?: string;
   /** Official final after the whistle — Game Zone grades tickets from this. */
   finalUF?: number;
   finalOpp?: number;
@@ -339,7 +343,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Ole Miss Rebels",
     date: "September 26, 2026 · 3:30–8:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 50,
+    ufPct: 47,
     tv: "TBD",
     keys: [
       "Match their tempo without mistakes",
@@ -351,8 +355,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "QB1", role: "Avoid negative plays" },
     ],
     film: "Ole Miss tempo offense stresses communication.",
-    pred: "UF 27 · Ole Miss 28",
-    predUF: 27,
+    pred: "UF 24 · Ole Miss 28",
+    predUF: 24,
     predOpp: 28,
     howUFWins: [
       "Ole Miss tempo stresses communication — match pace without negative plays or coverage busts.",
@@ -379,7 +383,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Missouri Tigers",
     date: "October 3, 2026 · 3:30–8:00 PM ET",
     venue: "Faurot Field, Columbia MO",
-    ufPct: 47,
+    ufPct: 46,
     tv: "TBD",
     keys: ["Establish run on road", "Win turnover battle", "Execute red zone"],
     swing: [
@@ -387,9 +391,9 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Secondary", role: "Limit deep shots" },
     ],
     film: "Missouri uses RPO and play-action.",
-    pred: "UF 23 · Missouri 27",
+    pred: "UF 23 · Missouri 28",
     predUF: 23,
-    predOpp: 27,
+    predOpp: 28,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27907",
       official: "https://www.ticketmaster.com/2026-mizzou-football-v-florida-columbia-missouri-10-03-2026/event/060064A9DD1A37BC",
@@ -410,7 +414,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "South Carolina Gamecocks",
     date: "October 10, 2026 · 12:00–1:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 64,
+    ufPct: 66,
     tv: "TBD",
     keys: ["Win rivalry week", "Control clock", "Limit their QB run game"],
     swing: [
@@ -418,9 +422,9 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Singleton Jr.", role: "Win one-on-ones" },
     ],
     film: "Homecoming vs South Carolina. RPO-heavy.",
-    pred: "UF 27 · South Carolina 20",
-    predUF: 27,
-    predOpp: 20,
+    pred: "UF 28 · South Carolina 17",
+    predUF: 28,
+    predOpp: 17,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27908",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-univ-of-gainesville-florida-10-10-2026/event/2200645C21920948",
@@ -442,7 +446,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Texas Longhorns",
     date: "October 17, 2026 · 12:00–1:00 PM ET",
     venue: "DKR-Texas Memorial Stadium, Austin TX",
-    ufPct: 37,
+    ufPct: 34,
     tv: "TBD",
     keys: ["Protect the football", "Win early downs", "Limit explosives"],
     swing: [
@@ -450,8 +454,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "OL", role: "Road pass protection" },
     ],
     film: "Texas balanced attack with elite skill.",
-    pred: "UF 20 · Texas 31",
-    predUF: 20,
+    pred: "UF 17 · Texas 31",
+    predUF: 17,
     predOpp: 31,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27909",
@@ -489,7 +493,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Georgia Bulldogs",
     date: "October 31, 2026 · 3:30 PM ET",
     venue: "Mercedes-Benz Stadium, Atlanta GA",
-    ufPct: 40,
+    ufPct: 36,
     tv: "ABC",
     keys: ["Control time of possession", "Get pressure on their QB", "Establish run before going downfield"],
     swing: [
@@ -497,9 +501,9 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Jayden Woods", role: "Must generate pressure" },
     ],
     film: "Neutral-site Cocktail Party at Mercedes-Benz Stadium in Atlanta for 2026.",
-    pred: "UF 20 · Georgia 27",
-    predUF: 20,
-    predOpp: 27,
+    pred: "UF 17 · Georgia 28",
+    predUF: 17,
+    predOpp: 28,
     scoutingReport:
       "Georgia series moves to Atlanta in 2026 (Mercedes-Benz). UF path is controlling the ball and limiting explosives in a neutral-site environment.",
     tickets: {
@@ -523,7 +527,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Oklahoma Sooners",
     date: "November 7, 2026 · 3:30–8:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 48,
+    ufPct: 54,
     tv: "TBD",
     keys: ["Win early downs", "Protect the football", "Limit explosives"],
     swing: [
@@ -531,9 +535,9 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Secondary", role: "Match skill in space" },
     ],
     film: "Oklahoma brings tempo and skill. Swamp night energy matters.",
-    pred: "UF 24 · Oklahoma 27",
-    predUF: 24,
-    predOpp: 27,
+    pred: "UF 27 · Oklahoma 24",
+    predUF: 27,
+    predOpp: 24,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27911",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-oklahoma-sooners-gainesville-florida-11-07-2026/event/2200645C2197098A",
@@ -555,7 +559,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Kentucky Wildcats",
     date: "November 14, 2026 · 6:00–8:00 PM ET",
     venue: "Kroger Field, Lexington KY",
-    ufPct: 55,
+    ufPct: 58,
     tv: "TBD",
     keys: ["Physical run fits", "Win the trenches", "Finish in red zone"],
     swing: [
@@ -563,8 +567,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "WR room", role: "Explosive plays" },
     ],
     film: "Kentucky power run and play-action on the road.",
-    pred: "UF 24 · Kentucky 21",
-    predUF: 24,
+    pred: "UF 27 · Kentucky 21",
+    predUF: 27,
     predOpp: 21,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27912",
@@ -586,7 +590,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Vanderbilt Commodores",
     date: "November 21, 2026 · 12:00–1:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 72,
+    ufPct: 69,
     tv: "TBD",
     keys: ["Execute early", "Avoid complacency", "Develop depth"],
     swing: [
@@ -594,9 +598,9 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "QB1", role: "Efficient scoring drives" },
     ],
     film: "Vanderbilt improving — treat as SEC test.",
-    pred: "UF 31 · Vanderbilt 17",
-    predUF: 31,
-    predOpp: 17,
+    pred: "UF 28 · Vanderbilt 21",
+    predUF: 28,
+    predOpp: 21,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27913",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-vanderbilt-commodores-gainesville-florida-11-21-2026/event/2200645C219C0A2B",
@@ -617,7 +621,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Florida State Seminoles",
     date: "November 27, 2026 · 3:30 PM ET",
     venue: "Doak Campbell Stadium, Tallahassee FL",
-    ufPct: 56,
+    ufPct: 60,
     tv: "ABC",
     keys: ["Win field position battle", "Avoid penalties", "Win turnover margin"],
     swing: [
@@ -625,8 +629,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Myles Graham", role: "Contain their TE weapon" },
     ],
     film: "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
-    pred: "UF 27 · FSU 24",
-    predUF: 27,
+    pred: "UF 28 · FSU 24",
+    predUF: 28,
     predOpp: 24,
     filmLessonId: "frl00010-0000-4000-8000-00000000000a",
     opponentTendencies: ["RPO and quick game in rivalry setting", "TE usage in red zone", "Tempo spikes in critical moments"],
