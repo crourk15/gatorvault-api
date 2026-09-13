@@ -48,4 +48,27 @@ describe('betting-lines next game', () => {
     assert.equal(payload.nextGame.spread.uf, -49.5);
     assert.equal(payload.nextGame.total, 66.5);
   });
+
+  it('advances to Auburn after the Campbell postgame window', () => {
+    const next = pickNextGame(STATIC_LINES, new Date('2026-09-13T12:00:00.000Z'));
+    assert.equal(next.id, 'uf-auburn-2026-w3');
+    const last = pickLastCompleted(STATIC_LINES, new Date('2026-09-13T12:00:00.000Z'));
+    assert.equal(last.id, 'uf-campbell-2026-w2');
+  });
+
+  it('serves Auburn as nextGame with UF -2.5 / 51.5 on Sep 13', async () => {
+    const payload = await getBettingLines(new Date('2026-09-13T16:00:00.000Z'));
+    assert.equal(payload.nextGame.id, 'uf-auburn-2026-w3');
+    assert.equal(payload.nextGame.spread.line, 'UF -2.5');
+    assert.equal(payload.nextGame.spread.uf, -2.5);
+    assert.equal(payload.nextGame.total, 51.5);
+    assert.equal(payload.lastGame.id, 'uf-campbell-2026-w2');
+    assert.equal(payload.lastGame.homeScore, 52);
+    assert.equal(payload.lastGame.awayScore, 3);
+  });
+
+  it('does not invent an LSU line Florida does not play in 2026', () => {
+    assert.ok(STATIC_LINES.some((g) => g.id === 'uf-auburn-2026-w3'));
+    assert.ok(!STATIC_LINES.some((g) => /lsu/i.test(String(g.id || ''))));
+  });
 });

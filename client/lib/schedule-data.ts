@@ -194,6 +194,9 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     pred: "UF 42 · Campbell 7",
     predUF: 42,
     predOpp: 7,
+    finalUF: 52,
+    finalOpp: 3,
+    finalSource: "official",
     opponentTendencies: [
       "No-huddle shotgun every snap we have. No under center.",
       "Sixkiller is the show. He can throw it and run it.",

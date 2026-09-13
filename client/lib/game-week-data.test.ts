@@ -6,6 +6,7 @@ import { getFeaturedUfGame } from './gators-live';
 import {
   buildFilmNotes,
   defaultGameWeekId,
+  resolveGameWeekId,
   DESK_SCOUT_TALK_RE,
   getGameWeekBundle,
 } from './game-week-data';
@@ -86,12 +87,20 @@ describe('Game Week Film Notes', () => {
     assert.equal(auburn.filmLessonId, undefined);
     assert.equal(bundle.prediction.scoreLine, 'UF 27 · Auburn 23');
     assert.equal(bundle.prediction.spread, 'Line pending');
+    const withVegas = getGameWeekBundle('auburn', SCHEDULE_GAMES, {
+      spreadLine: 'UF -2.5',
+      total: 51.5,
+    });
+    assert.equal(withVegas.prediction.spread, 'UF -2.5');
+    assert.equal(withVegas.prediction.total, 'O/U 51.5');
   });
 
   it('defaults Game Week to the next upcoming kickoff', () => {
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-04T18:00:00-04:00')), 'fau');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-06T12:00:00-04:00')), 'campbell');
+    assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-12T22:18:00-04:00')), 'auburn');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-13T12:00:00-04:00')), 'auburn');
+    assert.equal(resolveGameWeekId(SCHEDULE_GAMES, new Date('2026-09-06T12:00:00-04:00'), 'auburn'), 'auburn');
     assert.equal(getFeaturedUfGame(new Date('2026-09-04T18:00:00-04:00'))?.id, 'fau');
     assert.equal(getFeaturedUfGame(new Date('2026-09-06T12:00:00-04:00'))?.id, 'campbell');
     assert.equal(getFeaturedUfGame(new Date('2026-09-13T12:00:00-04:00'))?.id, 'auburn');

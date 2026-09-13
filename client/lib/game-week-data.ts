@@ -123,7 +123,18 @@ export function defaultGameWeekId(games: ScheduleGame[] = SCHEDULE_GAMES, now = 
   const next = getNextScheduleGame(pool.map(toPremiumScheduleGame), now);
   if (next?.id) return next.id;
   const last = [...pool].reverse().find((g) => g.kind !== 'bye');
-  return last?.id || 'campbell';
+  return last?.id || 'auburn';
+}
+
+/** Live meta pointer wins when the board still holds last week's kick. */
+export function resolveGameWeekId(
+  games: ScheduleGame[] = SCHEDULE_GAMES,
+  now = new Date(),
+  preferredId?: string,
+): string {
+  const preferred = String(preferredId || '').trim();
+  if (preferred && games.some((g) => g.id === preferred)) return preferred;
+  return defaultGameWeekId(games, now);
 }
 
 export function daysUntilKickoff(dateStr: string): number {

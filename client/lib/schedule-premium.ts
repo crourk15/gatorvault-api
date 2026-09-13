@@ -269,6 +269,9 @@ export function getNextScheduleGame(
     if (game.isBye) continue;
     const kick = parseScheduleKickoff(game.kickoffRaw);
     if (!kick) continue;
+    // Final on the row means the whistle already blew — do not hold Game Week
+    // on last week's opponent through the postgame window.
+    if (hasPostedFinal(game) && t > kick.getTime()) continue;
     const end = kick.getTime() + POSTGAME_MS;
     if (t > end) continue;
     const ts = kick.getTime();
@@ -289,6 +292,7 @@ export function getScheduleGameStatus(
   if (nextId && game.id === nextId) return 'next';
   const kick = parseScheduleKickoff(game.kickoffRaw);
   if (!kick) return 'upcoming';
+  if (hasPostedFinal(game) && now.getTime() > kick.getTime()) return 'past';
   if (now.getTime() > kick.getTime() + POSTGAME_MS) return 'past';
   return 'upcoming';
 }
