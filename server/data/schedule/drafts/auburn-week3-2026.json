@@ -1,6 +1,6 @@
 {
-  "status": "REVIEW_ONLY",
-  "doNotPublish": true,
+  "status": "SHIPPED",
+  "doNotPublish": false,
   "gameId": "auburn",
   "updatedAt": "2026-09-13T01:50:00.000Z",
   "filmWatched": false,
@@ -13,8 +13,8 @@
     "staff": "Staff-public: HC Alex Golesh, OC Joel Gordon (calls it), DC DJ Durkin stays, QB Byrum Brown followed from USF"
   },
   "liveHold": {
-    "doNotAdvanceGameWeek": true,
-    "doNotWriteScheduleJson": true,
+    "doNotAdvanceGameWeek": false,
+    "doNotWriteScheduleJson": false,
     "campbellFinalNote": "Florida 52-3 Campbell (SI recap / 2-0). Stamp Campbell final separately when Charles says. Not part of this draft."
   },
   "game": {

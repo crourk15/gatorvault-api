@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Auburn: no-huddle Byrum Brown card (keys / film / Film Notes / scout) — API `/api/schedule` after Render (no Codemagic). `filmWatched: false` until a broadcast sit.
 - [x] Roster official-box cron (`roster-official-box-sync`) discovers each UF box from the game-center link and stamps whoever recorded a line — weekly stats stay API after the one-time 1.0.25 Stats-tab bake. OL/P/LS still will not get a traditional box line.
 - [x] Roster Week 1 FAU box on every player with an official line (Wilson / Graham / Durkin / …) — 2026 merged onto existing `source: cfbd` so current App Store Stats tabs read Game 1 from `/api/roster/players/:slug` (API — no Codemagic). New official-only names (Stockton, Durkin, …) wait for the `hasProductionStats` bake below.
 - [x] FutureCast Closest load: chase-index cache + no players.json parse on HP rebuild — current binary already reads `/api/futurecast/high-priority` (API — no Codemagic)

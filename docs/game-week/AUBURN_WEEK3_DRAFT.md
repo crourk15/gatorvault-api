@@ -1,7 +1,6 @@
-# Auburn Game Week — REVIEW ONLY (official PBP sit)
+# Auburn Game Week — SHIPPED (official PBP sit)
 
-**Do not put this on the platform until Charles says go.**  
-Live Game Week stays on Campbell. `2026-season.json` is unchanged.
+Charles said move forward after review. Live Game Week is Auburn. `2026-season.json` + `game-week/meta.json` stamped.
 
 Sep 19 · 7:00 PM ET · ESPN · @ Jordan-Hare  
 Florida 2–0 (66–21 FAU, 52–3 Campbell). Auburn 1–0 after 17–16 vs Baylor. Southern Miss box not posted.
@@ -87,12 +86,8 @@ Chart: 78 snaps · 72 No Huddle-Shotgun · 4 Shotgun · 1 No Huddle (4th-and-5 M
 - Vegas — no consensus on disk. Leave pending.
 - Broadcast sit — SEC condensed exists (`https://www.youtube.com/watch?v=0Rnjy4CDqBM`) but would not play here. Sit it before calling `filmWatched: true`.
 
-## What is live right now (do not keep)
+## Shipped
 
-The Auburn slate still says “Control LOS / Limit explosive plays / Win 3rd down” and “Auburn runs physical downhill ball.” That is the old Freeze card. It is wrong for 2026.
+Stamped onto `2026-season.json` and `game-week/meta.json` (`currentGameId: auburn`). Old Freeze card is gone.
 
-## Say the word
-
-1. **Ship Game Week** — stamp this onto `2026-season.json` and advance the board to Auburn.  
-2. **Hold** — keep Campbell up; we add Southern Miss when the box posts and sit the condensed when YouTube plays.  
-3. **Change** — keys, score, swing, or the picture.
+Still fold later: Southern Miss box, broadcast sit (`filmWatched` stays false), visitors, Vegas.
