@@ -206,10 +206,25 @@ test('schedule helpers find the FAU official box as a candidate', () => {
   const board = require('../lib/schedule-board').getScheduleBoard(2026);
   const boxes = completedBoxes(board);
   assert.ok(boxes.some((g) => g.id === 'fau'));
+  assert.ok(boxes.some((g) => g.id === 'campbell'));
   const candidates = candidateGames(board, new Date('2026-09-12T16:00:00.000Z'));
   assert.ok(candidates.some((g) => g.id === 'fau'));
   assert.ok(candidates.some((g) => g.id === 'campbell'));
   assert.ok(!candidates.some((g) => g.id === 'auburn'));
+});
+
+test('Campbell Week 2 official box is on Philo / Baugh / Wilson', () => {
+  const roster = require('../data/roster/players.json');
+  const bySlug = new Map(roster.map((p) => [p.slug, p]));
+  const week2 = (slug, category) =>
+    (bySlug.get(slug)?.productionStats?.recentGames || []).find(
+      (g) => g.week === 2 && g.opponent === 'Campbell' && g.category === category
+    );
+  assert.equal(week2('aaron-philo', 'passing')?.stats?.yds, 242);
+  assert.equal(week2('aaron-philo', 'passing')?.stats?.td, 2);
+  assert.equal(week2('jadan-baugh', 'rushing')?.stats?.yds, 136);
+  assert.equal(week2('jadan-baugh', 'rushing')?.stats?.td, 2);
+  assert.equal(week2('dallas-wilson', 'receiving')?.stats?.yds, 104);
 });
 
 console.log('all official box roster stats tests passed');
