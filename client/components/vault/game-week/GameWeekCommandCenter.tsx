@@ -5,10 +5,11 @@ import {
   bettingLineForScheduleGame,
   defaultGameWeekId,
   getGameWeekBundle,
+  resolveGameWeekId,
   type GameWeekBettingLine,
 } from '@/lib/game-week-data';
 import { fetchBettingLines } from '@/lib/betting-api';
-import { fetchScheduleGames } from '@/lib/schedule-api';
+import { fetchScheduleBoard } from '@/lib/schedule-api';
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 import { InsiderPaywall } from '@/components/futurecast/InsiderPaywall';
 import { MatchupHeroWidget } from './MatchupHeroWidget';
@@ -68,12 +69,12 @@ export function GameWeekCommandCenter({
   // After kickoff, land on the next game unless the fan picked one.
   useEffect(() => {
     let cancelled = false;
-    fetchScheduleGames(2026)
+    fetchScheduleBoard(2026)
       .then((live) => {
-        if (cancelled || !live.length) return;
-        setGames(live);
+        if (cancelled || !live.games.length) return;
+        setGames(live.games);
         if (lockToInitial || userPicked) return;
-        const nextId = defaultGameWeekId(live);
+        const nextId = resolveGameWeekId(live.games, new Date(), live.currentGameId);
         setGameId(nextId);
         onGameChange?.(nextId);
       })

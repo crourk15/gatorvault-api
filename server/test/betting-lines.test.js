@@ -62,5 +62,8 @@ describe('betting-lines next game', () => {
     assert.equal(payload.nextGame.spread.line, 'UF -2.5');
     assert.equal(payload.nextGame.spread.uf, -2.5);
     assert.equal(payload.nextGame.total, 51.5);
+    assert.equal(payload.lastGame.id, 'uf-campbell-2026-w2');
+    assert.equal(payload.lastGame.homeScore, 52);
+    assert.equal(payload.lastGame.awayScore, 3);
   });
 });

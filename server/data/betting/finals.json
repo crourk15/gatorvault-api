@@ -7,5 +7,14 @@
     "opp": 21,
     "source": "official",
     "completedAt": "2026-09-06T03:15:00.000Z"
+  },
+  "uf-campbell-2026-w2": {
+    "gameKey": "uf-campbell-2026-w2",
+    "scheduleId": "campbell",
+    "opponent": "Campbell",
+    "uf": 52,
+    "opp": 3,
+    "source": "official",
+    "completedAt": "2026-09-13T00:30:00.000Z"
   }
 }

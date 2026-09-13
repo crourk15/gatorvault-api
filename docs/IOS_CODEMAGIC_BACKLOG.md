@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week pointer + Campbell 52–3 final: `meta.currentGameId=auburn` and official final on `/api/schedule` (API — no Codemagic). Current App Store still holds last kick 5 hours unless the bake below is in the binary.
 - [x] Game Week Auburn Vegas: stamp consensus UF -2.5 / O/U 51.5 on `/api/betting/lines` so Prediction is not Line pending (API — no Codemagic)
 - [x] Game Week Auburn visitors: Jalanie George expected at Jordan-Hare — not confirmed on campus (API `/api/schedule` — no Codemagic)
 - [x] Game Week Auburn: no-huddle Byrum Brown card (keys / film / Film Notes / scout) — API `/api/schedule` after Render (no Codemagic). `filmWatched: false` until a broadcast sit.
@@ -122,6 +123,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-13 | Game Week opens Auburn when Campbell has a posted final (skip 5h hold) + honor `/api/schedule` `currentGameId` | `defaultGameWeekId` / `GameWeekCommandCenter` in binary — **web + API already flip**; iOS stays on last kick until this bake | #673 |
 | 2026-09-12 | Roster Stats tab: accept `source: official` (Philo Week 1 box) + Official box footer | `hasProductionStats` in 1.0.23 still requires `cfbd` — **this is the 1.0.25 reason**; web + API already show | #668 · bake 1.0.25 |
 | 2026-09-10 | Game Week Scouting Report: bundled mapper prefers fan tendencies + `film` | `buildScouting` in binary — **current App Store copy is already API-fixed** (public schedule empties desk scout); bake only drops the leftover mapper | #652 |
 | 2026-09-08 | Film Room: hide empty Review tab; land on Breakdowns; GNFP FAU cuts in hub seed | `VaultFilmRoomPage` rail + `film-room-hub-seed.json` first-paint; **live catalog stays API after Render** | #643 |

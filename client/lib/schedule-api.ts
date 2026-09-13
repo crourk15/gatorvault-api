@@ -12,8 +12,14 @@ export type ScheduleBoardResponse = {
   updatedAt?: string;
   label?: string;
   source?: string;
+  currentGameId?: string;
   games?: ScheduleGame[];
   count?: number;
+};
+
+export type ScheduleBoardLive = {
+  games: ScheduleGame[];
+  currentGameId?: string;
 };
 
 function normalizeUniform(raw: ScheduleGame['uniform'] | null | undefined): ScheduleGame['uniform'] | undefined {
@@ -117,7 +123,7 @@ export function fallbackScheduleGames(): ScheduleGame[] {
   return SCHEDULE_GAMES.slice();
 }
 
-export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]> {
+export async function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLive> {
   try {
     // Always await live schedule — do not return a stale SWR cache hit. Game Week
     // keys (Expected visitors, film notes) update via API without Codemagic; a
@@ -126,11 +132,17 @@ export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]>
       `/api/schedule?year=${season}`
     );
     const live = normalizeGames(data?.games);
-    if (live.length) return live;
+    const currentGameId = String(data?.currentGameId || '').trim() || undefined;
+    if (live.length) return { games: live, currentGameId };
   } catch {
     /* fall through */
   }
-  return fallbackScheduleGames();
+  return { games: fallbackScheduleGames() };
+}
+
+export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]> {
+  const board = await fetchScheduleBoard(season);
+  return board.games;
 }
 
 /** Test helpers */

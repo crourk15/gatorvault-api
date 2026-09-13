@@ -465,16 +465,28 @@ function saveScheduleBoard(raw, season = 2026) {
   return { ...doc, path: filePath };
 }
 
+function readCurrentGameId() {
+  try {
+    const metaPath = path.join(__dirname, '..', 'data', 'game-week', 'meta.json');
+    const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+    return String(meta.currentGameId || '').trim() || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function toApiPayload(doc, opts) {
   const board = doc || getScheduleBoard(2026);
   const includeDeskScout = Boolean(opts && opts.includeDeskScout);
   const games = includeDeskScout ? board.games : (board.games || []).map(toFanGame);
+  const currentGameId = readCurrentGameId();
   return {
     ok: true,
     season: board.season,
     updatedAt: board.updatedAt,
     label: board.label,
     source: board.source,
+    ...(currentGameId ? { currentGameId } : {}),
     games,
     count: board.games.length,
   };
