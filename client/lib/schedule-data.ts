@@ -277,12 +277,12 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ufPct: 51,
     tv: "ESPN",
     keys: [
-      "Crowd Brown",
-      "Stay in the lane on the keep",
-      "Don’t let the short throw run",
+      "Throw it over the loaded box",
+      "Crowd Byrum Brown before the first read",
+      "Don't let the short throw become a long run",
     ],
     swing: [
-      { name: "Jayden Woods", role: "Keep Byrum Brown in the pocket — keep left 11 won Atlanta" },
+      { name: "Jayden Woods", role: "Keep Byrum Brown in the pocket" },
       { name: "Jadan Baugh", role: "Early-down rhythm vs a front that held Baylor to 103 rush" },
       { name: "Aaron Philo", role: "They sit on the run — Baylor still threw 333" },
     ],
@@ -306,9 +306,9 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Coverage calls not on the tape we have.",
     ],
     howUFWins: [
-      "Five sacks when they got him off schedule. Three INTs when he forced it — deep left to the 4, 3rd-and-18 after the sack, first play of the fourth. Crowd him before the first read.",
-      "Winning score was keep left 11 on 3rd-and-3. Earlier: Cain bounce 25 then Cobb 15. Sit inside and they bounce it.",
-      "Koger 30, Nimrod 26, Singleton 20 and 18 — those were short throws that ran after the catch. Crowd the catch, then throw it over a loaded box.",
+      "That's how you score on this front. They sit on the run — Baylor got 103 on the ground and still threw for 333. If they load it, throw it over them.",
+      "That's how you get him off schedule. When he's late, he forces it — three picks. Crowd Byrum Brown and stay home on the keep.",
+      "That's how they got their chunks. Keshaun Singleton, Koger, Nimrod caught it short and ran. Get there and wrap them up.",
     ],
     scoutingReport:
       "AUBURN OFFENSE (official Baylor PBP sit, 78 snaps): This is no-huddle shotgun and Byrum Brown, not Freeze downhill. 72 No Huddle-Shotgun, 0 under-center. 26/35, 259, 0 pass TD, 3 INT, plus 21-27-1 rushing. 25 of 26 completions were short. Winning score was keep left 11. Cain bounce 25 then Cobb 15. Chunks were short throws that ran — Koger 30, Nimrod 26. Three picks when he was off schedule. They will go on 4th-and-medium (0-1). AUBURN DEFENSE (2025 Durkin boxes + Baylor): 12th rush D last year (99.3 YPG, 2.86). Week 1 they stuffed Baylor on the ground (103) and gave up 333 passing with 1 sack. Coverage shells NOT confirmed. UF wins by crowding Brown, staying in the lane on the keep, crowding the short catch, then throwing it over a loaded box. Jordan-Hare night is the environment — not the picture. filmWatched: false.",

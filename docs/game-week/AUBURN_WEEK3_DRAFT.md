@@ -17,20 +17,20 @@ Auburn is no-huddle shotgun and Byrum Brown. Crowd him or he throws it short and
 
 ## 3 keys
 
-1. **Crowd Brown**  
-   Five sacks when they got him off schedule. Three INTs when he forced it (deep left to the 4, 3rd-and-18, first play of the fourth). Crowd him before the first read.
+1. **Throw it over the loaded box** (offense)  
+   That's how you score on this front. They sit on the run — Baylor got 103 on the ground and still threw for 333. If they load it, throw it over them.
 
-2. **Stay in the lane on the keep**  
-   Winning score was keep left 11 on 3rd-and-3. Earlier: Cain bounce 25 then Cobb 15. Sit inside and they bounce it.
+2. **Crowd Byrum Brown before the first read** (defense)  
+   That's how you get him off schedule. When he's late, he forces it — three picks. Crowd Byrum Brown and stay home on the keep.
 
-3. **Don’t let the short throw run**  
-   Koger 30, Nimrod 26, Singleton 20 and 18 — those were short throws that ran after the catch. Crowd the catch, then throw it over a loaded box.
+3. **Don't let the short throw become a long run** (defense)  
+   That's how they got their chunks. Keshaun Singleton, Koger, Nimrod caught it short and ran. Get there and wrap them up.
 
 ## Swing
 
 | Name | Role |
 |---|---|
-| Jayden Woods | Keep Byrum Brown in the pocket — keep left 11 won Atlanta |
+| Jayden Woods | Keep Byrum Brown in the pocket |
 | Jadan Baugh | Early-down rhythm vs a front that held Baylor to 103 rush |
 | Aaron Philo | They sit on the run — Baylor still threw 333 |
 
