@@ -1,10 +1,10 @@
-# DRAFT v12 — Home Was the Easy Part (awaiting Charles approval)
+# DRAFT v13 — Home Was the Easy Part (awaiting Charles approval)
 
 **Status:** NOT published. Review only.
 **Proposed live id:** `art-two-games-in-2026`
 **Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 14, 2026 · **Read:** 7 min
 
-v12: Cut leftover style lines. Opening is Sumrall walking to the locker room unhappy. Win graf is "Do not take the flags."
+v13: Cut "empty-bench snaps." When Sumrall put the backups in, some of those plays showed why they are not playing.
 
 Reply **approve** (with any edits) to publish. Do not assume approval.
 
@@ -20,11 +20,11 @@ The Swamp had 52-3 on the board and a 2-0 start for the first time in five years
 
 For thirty minutes they looked like the team people came to see. Florida went to the locker room up 45-3. Vernell Brown III had already scored twice on punt returns and once as a receiver. Dallas Wilson had the 40-yard touchdown. Jadan Baugh was running through a defense that could not stay in front of him. Aaron Philo was talking at the line and taking the snaps. The offense scored, the defense got off the field, and Vernell scored on returns. The building sounded like it was over. Against Campbell, it was.
 
-Then the second half started, and the game was already decided. Sumrall emptied the bench. They stayed up by 40. The flags and the sloppy snaps are what he does not want in Auburn.
+Then the second half started, and the game was already decided. Sumrall put the backups in. They stayed up by 40. The flags and the sloppy snaps are what he does not want in Auburn.
 
 Every time they hit a big play after the break, another flag came out. The offensive line took them. T.J. Shanahan Jr. got called on back-to-back snaps, a hold that wiped a Baugh run that was already gone, then a personal foul. Roderick Kearney picked up another. A hold or a personal foul can shove you into 1st-and-25. That is first down with 25 yards still to go, and the drive is dead. In this league, Sumrall said, you might as well get ready to give the ball back. The Gators cannot beat the Gators. Seven flags after halftime. One in the first half. Three in the whole opener against Florida Atlantic. Up 45-3, those flags do not change the score. If they show up when the game is still close, they are how you lose.
 
-Some of the empty-bench snaps told on people. Second-team and third-team guys got a chance to prove people right or wrong. Some of them, he said, proved why they are not playing. The standard is a Florida Gator standard, first team or third, and it is not negotiable. Freshmen have been here since January. Readiness is whether you can take the snap when your name is called. A few guys found out Saturday they are not there yet. That matters this week only if the starters do the same thing Saturday.
+When those backups got in, second-team and third-team guys got a chance to prove people right or wrong. Some of them, he said, proved why they are not playing. The standard is a Florida Gator standard, first team or third, and it is not negotiable. Freshmen have been here since January. Readiness is whether you can take the snap when your name is called. A few guys found out Saturday they are not there yet. That matters this week only if the starters do the same thing Saturday.
 
 Defense is a different problem, and it has been there from the first play of both games. They do not start. After Florida Atlantic, Sumrall watched the tape and said the issue was football IQ. Knowing what the play is asking you to do. Know the down and distance. Know when the other team is speeding the game up. Know when to crowd a receiver and when to give him space. On 3rd-and-short, a corner was sitting nine yards off the ball. That is too far. They kept FAU from hitting the long ones. They let FAU speed the game up. After Campbell he said the same thing. The first drive got them, a couple of completions down the field, a field goal, then they settled in and held Campbell to those three points the rest of the night. He told the defensive backs not to get scared after a catch. At corner you are going to get beat. Next play. That was better. It was still not a three-and-out to open. They have not had one yet. Campbell kicked a field goal and went away. Byrum Brown will not.
 
