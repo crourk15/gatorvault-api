@@ -4,6 +4,7 @@
  * not the editorial Game Week label.
  *
  * Expected lists stay labels until the game date. Do not invent trips.
+ * Away games never sync — a recruit at Jordan-Hare is not a Florida campus visit.
  * Skip commits to other schools. 2027 is never auto-promoted.
  */
 'use strict';
@@ -125,7 +126,12 @@ async function syncPlayedGameVisitors({ dryRun = false, nowMs = Date.now(), seas
   const skipped = [];
   const promoted = [];
 
+  const { isHomeVisitorGame } = require('./game-week-visitors');
   for (const game of Array.isArray(doc.games) ? doc.games : []) {
+    if (!isHomeVisitorGame(game)) {
+      skipped.push({ gameId: game.gameId, reason: 'away_game' });
+      continue;
+    }
     if (!gameHasBeenPlayed(game, nowMs, seasonYear)) {
       skipped.push({ gameId: game.gameId, reason: 'not_played' });
       continue;
