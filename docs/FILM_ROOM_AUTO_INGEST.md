@@ -7,7 +7,7 @@
 | **UF Press Conferences** | YouTube RSS: Florida Gators athletics channel (football pressers only) + YouTube search for Florida football press / Media Days |
 | **GNFP Film Review** | YouTube RSS: GNFP channel |
 | **Scheme School** | Curated lessons in code (`scheme-school-data.ts`) — not YouTube auto |
-| **Highlights / Film Guy** | Manual `server/data/film-room/manual.json` when needed |
+| **Highlights / Film Guy** | Manual `server/data/film-room/manual.json` when needed. Film Guy is **not** on the 3-hour RSS cron (they cover every team; Florida tapes scroll off the 15-item feed). Add Florida Film Guy studies here or they never land. |
 
 Catalog API: `GET /api/film-room/catalog`  
 Cache: repo seed `server/data/film-room/cache.json` + durable overlay `/var/data/film-room/cache.json` on Render.

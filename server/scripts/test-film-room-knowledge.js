@@ -22,6 +22,10 @@ assert('catalog has knowledge lessons', catalog.counts.knowledgeLessons >= 8);
 assert('catalog has legacy videos', catalog.counts.legacyVideos >= 3);
 assert('GNFP videos present', catalog.items.some((i) => i.category === 'GNFP Film Review' && i.youtubeId));
 assert('Film Guy Network present', catalog.items.some((i) => i.category === 'Film Guy Network' && i.youtubeId));
+assert(
+  'Faulkner Film Guy tape present',
+  catalog.items.some((i) => i.youtubeId === 'Y1FxeyDmPmk')
+);
 assert('press conferences capped at 5', catalog.items.filter((i) => i.category === 'UF Press Conferences').length <= 5);
 assert('knowledge lessons have no youtube', catalog.items.filter((i) => i.knowledgeEngine).every((i) => !i.youtubeId));
 assert('legacy videos marked noVideo false', catalog.items.filter((i) => !i.knowledgeEngine).every((i) => i.noVideo === false));

@@ -8,6 +8,7 @@ const {
   shouldKeepEntry,
   mergeBucket,
 } = require('../lib/film-room-youtube-ingest');
+const { loadLegacyVideoCatalog } = require('../lib/film-room-legacy');
 
 const GNFP_SOURCE = { kind: 'gnfp', bucket: 'gnfp', label: 'GNFP' };
 
@@ -63,5 +64,15 @@ describe('GNFP Film Breakdown title filter', () => {
     const { rows } = mergeBucket(existing, [], { pruneGnfpNonFilm: true });
     assert.equal(rows.length, 1);
     assert.equal(rows[0].id, 'yt_keep');
+  });
+});
+
+describe('Film Guy manual Florida tapes', () => {
+  it('includes the Faulkner Week 1 Film Guy study', () => {
+    const items = loadLegacyVideoCatalog();
+    const row = items.find((i) => i.youtubeId === 'Y1FxeyDmPmk');
+    assert.ok(row, 'Y1FxeyDmPmk missing from Film Room catalog');
+    assert.match(String(row.source || ''), /Film Guy/i);
+    assert.match(String(row.title || ''), /Buster Faulkner/i);
   });
 });

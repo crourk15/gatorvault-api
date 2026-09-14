@@ -3,6 +3,23 @@
   "notes": "Manual-only Film Room entries — never auto-updated or removed by sync.",
   "items": [
     {
+      "id": "manual-film-guy-faulkner-offense-2026",
+      "slug": "film-guy-buster-faulkner-florida-offense-2026",
+      "title": "FILM: I Can't Stop Studying Buster Faulkner Florida Offense",
+      "dek": "Film Guy Network tape study of Buster Faulkner's Florida offense after Week 1.",
+      "gameLine": "Film Guy Network · Week 1",
+      "season": "2026",
+      "category": "Film Breakdown",
+      "duration": "YouTube",
+      "youtubeId": "Y1FxeyDmPmk",
+      "videoUrl": "https://www.youtube.com/watch?v=Y1FxeyDmPmk",
+      "embedUrl": "https://www.youtube.com/embed/Y1FxeyDmPmk",
+      "thumbUrl": "https://i.ytimg.com/vi/Y1FxeyDmPmk/hqdefault.jpg",
+      "source": "Film Guy Network",
+      "featured": true,
+      "publishedAt": "2026-09-07T16:00:00.000Z"
+    },
+    {
       "id": "manual-gnfp-fau-2026-offense",
       "slug": "gnfp-film-review-2026-florida-gators-offense-vs-fau",
       "title": "GNFP Film Review- 2026 Florida Gators Offense vs. FAU",

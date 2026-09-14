@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Film Room: Film Guy “I Can't Stop Studying Buster Faulkner Florida Offense” (`Y1FxeyDmPmk`) on Breakdowns via `/api/film-room/catalog` (API — no Codemagic)
 - [x] Locker article “Home Was the Easy Part” (`art-two-games-in-2026`) taken down — remove from `articles.json` / `/api/content/published` after merge (no Codemagic)
 - [x] Roster Week 2 Campbell official box on Stats tabs (Philo 16/21 242 2 TD, Baugh 136 2 TD, Wilson 104) — API `/api/roster/players/:slug` after merge (no Codemagic)
 - [x] Schedule remaining-season predictions: weekly `ufPct` / `pred` restamp via `/api/schedule` after how teams looked (API — no Codemagic). Week 2 board is live after merge. Home **RIVALRY WEEK** badge (FSU / UGA only) waits for the **1.0.26** bake.
