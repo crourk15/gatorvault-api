@@ -5,7 +5,11 @@
 const fs = require('fs');
 const path = require('path');
 const { loadFilmRoomCache, resolveCachePath } = require('./film-room-cache-store');
-const { isGnfpFilmBreakdownTitle, dedupePressersByEvent } = require('./film-room-youtube-ingest');
+const {
+  isGnfpFilmBreakdownTitle,
+  isFilmGuyFloridaBreakdownTitle,
+  dedupePressersByEvent,
+} = require('./film-room-youtube-ingest');
 
 const MANUAL_PATH = path.join(__dirname, '..', 'data', 'film-room', 'manual.json');
 
@@ -97,6 +101,11 @@ function loadLegacyVideoCatalog() {
     } else if (/gators online/i.test(src) && /spring game/i.test(row.title || '')) {
       pushUnique(row, LEGACY_CATEGORIES.HIGHLIGHTS);
     }
+  });
+
+  (cache.auto?.filmGuy || []).forEach((row) => {
+    if (!isFilmGuyFloridaBreakdownTitle(row?.title)) return;
+    pushUnique(row, LEGACY_CATEGORIES.FILM_GUY);
   });
 
   (cache.auto?.highlights || []).forEach((row) => {

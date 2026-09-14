@@ -43,6 +43,7 @@ function normalizeAuto(auto) {
     gnfp: Array.isArray(a.gnfp) ? a.gnfp : [],
     pressers: Array.isArray(a.pressers) ? a.pressers : [],
     highlights: Array.isArray(a.highlights) ? a.highlights : [],
+    filmGuy: Array.isArray(a.filmGuy) ? a.filmGuy : [],
   };
 }
 

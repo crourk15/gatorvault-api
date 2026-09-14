@@ -105,7 +105,9 @@ function fromLocalCache() {
             ? 'GNFP Film Review'
             : key === 'highlights'
               ? 'Highlights'
-              : (item.category || 'Film Breakdown');
+              : key === 'filmGuy'
+                ? 'Film Breakdown'
+                : (item.category || 'Film Breakdown');
       push(item, filmHub);
     }
   }
