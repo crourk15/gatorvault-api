@@ -1,10 +1,10 @@
-# DRAFT v11 — Home Was the Easy Part (awaiting Charles approval)
+# DRAFT v12 — Home Was the Easy Part (awaiting Charles approval)
 
 **Status:** NOT published. Review only.
 **Proposed live id:** `art-two-games-in-2026`
 **Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 14, 2026 · **Read:** 7 min
 
-v11: Honest logic. Campbell's second half did not cost them because the game was over. Those same problems can cost them at Auburn. Not "Auburn will play the second-half team."
+v12: Cut leftover style lines. Opening is Sumrall walking to the locker room unhappy. Win graf is "Do not take the flags."
 
 Reply **approve** (with any edits) to publish. Do not assume approval.
 
@@ -16,7 +16,7 @@ By GatorVault Staff · Sep 14, 2026 · 7 min read
 
 Florida is 2-0 after two home games that never got close. The second half against Campbell did not cost them a thing. Saturday it can.
 
-The Swamp had 52-3 on the board, a 2-0 start for the first time in five years, and Jon Sumrall walking off like the work had not started. He said he was happy his guys got the win. Then he said the rest. A lot he was not pleased with. Play that second half in conference, he said, and they are about to have a real rude awakening. Walk in like that, and they will get absolutely embarrassed. The flags, the guys who were not ready, and the slow start are still here. Auburn can make them count.
+The Swamp had 52-3 on the board and a 2-0 start for the first time in five years. Jon Sumrall walked to the locker room unhappy. He said he was happy his guys got the win. Then he said a lot he was not pleased with. Play that second half in conference, he said, and they are about to have a real rude awakening. Walk in like that, and they will get absolutely embarrassed. The flags, the guys who were not ready, and the slow start are still here. Auburn can make them count.
 
 For thirty minutes they looked like the team people came to see. Florida went to the locker room up 45-3. Vernell Brown III had already scored twice on punt returns and once as a receiver. Dallas Wilson had the 40-yard touchdown. Jadan Baugh was running through a defense that could not stay in front of him. Aaron Philo was talking at the line and taking the snaps. The offense scored, the defense got off the field, and Vernell scored on returns. The building sounded like it was over. Against Campbell, it was.
 
@@ -38,7 +38,7 @@ Auburn is not the downhill run team people still picture. Their offense is no-hu
 
 Auburn's defensive line and the linebackers behind it came downhill to stop the run. Baylor got 103 yards on the ground. That is the trade. Extra bodies near the line take the run away and leave space behind them. Baylor threw for 333 yards into that space. If Auburn does that to Baugh, Philo has to throw over those extra bodies and finish the drive. If the flags come out after a big run the way they did after halftime Saturday, the drive dies at 1st-and-25 and that throw never happens. Against Campbell that was a wasted possession in a blowout. Against Auburn it is a missed chance while the game is still close.
 
-Florida wins there if they start the game, stay clean, and throw it when Auburn loads up to stop Baugh. Get to Byrum Brown before he finds that first option, and do not chase the fake and leave him a running lane. Tackle Singleton, Koger, and Nimrod after the catch. Keep the flags in the bag. Philo at the line, Baugh on the long one, Vernell taking over a night, only hold up if the mistakes that did not matter last Saturday do not decide this one.
+Florida wins there if they start the game, stay clean, and throw it when Auburn loads up to stop Baugh. Get to Byrum Brown before he finds that first option, and do not chase the fake and leave him a running lane. Tackle Singleton, Koger, and Nimrod after the catch. Do not take the flags. Philo at the line, Baugh on the long one, Vernell taking over a night, only hold up if the mistakes that did not matter last Saturday do not decide this one.
 
 Sumrall said he is a little uneasy with where they are. You can win games the way they have won these two. If they are not urgent and detailed this week, he said, Saturday will not be what they desire.
 
