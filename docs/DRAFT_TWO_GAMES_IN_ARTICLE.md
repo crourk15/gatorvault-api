@@ -1,16 +1,16 @@
-# DRAFT v2 — Five Days Out (awaiting Charles approval)
+# DRAFT v3 — Home Was the Easy Part (awaiting Charles approval)
 
 **Status:** NOT published. Review only.
 **Proposed live id:** `art-two-games-in-2026`
 **Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 14, 2026 · **Read:** 7 min
 
-Rewrite note: same *structure* as Eight Days Out (scene → QB → Baugh → skill → line → defense → slate → opponent → closer → five takeaways). Different voice on purpose — new title, no recycled August metaphors.
+Rewrite note: same *quality* as Eight Days Out (detailed, informative, full rooms). Different title and look on purpose — no "Days Out" countdown, no colon-subtitle.
 
 Reply **approve** (with any edits) to publish. Do not assume approval.
 
 ---
 
-# Five Days Out: The First Road That Counts
+# Home Was the Easy Part
 
 By GatorVault Staff · Sep 14, 2026 · 7 min read
 
@@ -30,11 +30,11 @@ Defense is where 2–0 needs a footnote. Twenty-four points allowed will get rep
 
 Zoom out and the slate is the same slate it was in August. After Auburn comes Ole Miss, Missouri, South Carolina, Texas in Austin, Georgia in Atlanta on Halloween. Two blowouts do not move those games. They do not rewrite Texas. They do not rewrite Georgia. The honest neighborhood for this roster is still bowl territory — 7–5 or 8–4 if the road weeks look like football. 2–0 is what you are supposed to be after FAU and Campbell. The live question is whether the same roster can be 3–0 after Auburn.
 
-So what is Saturday, actually? Not the downhill card people still reach for. This Auburn is no-huddle shotgun and Byrum Brown — the quarterback who followed the staff, who wants the first look and the keep, who threw it short against Baylor and let Keshaun Singleton, Jeremiah Koger, and Chas Nimrod run after the catch. Three interceptions when they got him late. Five sacks when they knocked him off the first read. A front that sat on the run (103 yards) and still gave up 333 through the air. We have the official picture. We have not sat the broadcast. The picture is enough to know what the night is about.
+Auburn is not the downhill card people still reach for. This one is no-huddle shotgun and Byrum Brown — the quarterback who followed the staff, who wants the first look and the keep, who threw it short against Baylor and let Keshaun Singleton, Jeremiah Koger, and Chas Nimrod run after the catch. Three interceptions when they got him late. Five sacks when they knocked him off the first read. A front that sat on the run (103 yards) and still gave up 333 through the air. We have the official picture. We have not sat the broadcast. The picture is enough to know what the night is about.
 
 Florida wins in Jordan-Hare by doing the thing the last two weeks made look easy, on a night that will not be. If they load the box for Baugh, Philo has to throw it over them and finish the drive. If Brown has time, he will take the short throw and the keep — crowd him before the first read, stay home when he pulls it. Singleton, Koger, and Nimrod already turned catch-and-run into a Baylor problem; get there and wrap them up. Baugh still has to travel. Graham still has to play when the crowd is the other way. Woods still has to keep Brown in the pocket. None of that is a new identity. It is the first one that has to leave home.
 
-Five days out, Florida is 2–0 and still unexamined. The Swamp asked two questions and liked both answers. Jordan-Hare will ask a third, louder, and it will keep whatever it hears.
+Florida is 2–0 and still unexamined. The Swamp asked two questions and liked both answers. Jordan-Hare will ask a third, louder, and it will keep whatever it hears.
 
 ## Key takeaways
 
