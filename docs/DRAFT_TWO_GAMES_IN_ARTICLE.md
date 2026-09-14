@@ -1,10 +1,10 @@
-# DRAFT v17 — Home Was the Easy Part (awaiting Charles approval)
+# DRAFT v18 — Home Was the Easy Part (awaiting Charles approval)
 
 **Status:** NOT published. Review only.
 **Proposed live id:** `art-two-games-in-2026`
 **Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 14, 2026 · **Read:** 7 min
 
-v17: Audit pass. Loose "up by 40," three-and-out said twice, and "followed the staff" cut.
+v18: Cut "When those backups got in." The graf above already said Sumrall put them in.
 
 Reply **approve** (with any edits) to publish. Do not assume approval.
 
@@ -24,7 +24,7 @@ Then the second half started, and the game was already decided. Sumrall put the 
 
 Every time they hit a big play after halftime, another flag came out. The flags were on the offensive line. T.J. Shanahan Jr. got called on back-to-back plays, a hold that wiped a Baugh run that was already a big gain, then a personal foul. Roderick Kearney picked up another. A hold or a personal foul can shove you into 1st-and-25. That is first down with 25 yards still to go, and the drive is dead. In this league, Sumrall said, you might as well get ready to give the ball back. The Gators cannot beat the Gators. Seven flags after halftime. One in the first half. Three in the whole opener against Florida Atlantic. Up 45-3, those flags do not change the score. If they show up when the game is still close, they are how you lose.
 
-When those backups got in, second-team and third-team guys got a chance to prove people right or wrong. Some of them, he said, proved why they are not playing. The standard is a Florida Gator standard, first team or third, and it is not negotiable. Freshmen have been here since January. Readiness is whether you can play when your name is called. That matters this week only if the starters do the same thing Saturday.
+Second-team and third-team guys got a chance to prove people right or wrong. Some of them, he said, proved why they are not playing. The standard is a Florida Gator standard, first team or third, and it is not negotiable. Freshmen have been here since January. Readiness is whether you can play when your name is called. That matters this week only if the starters do the same thing Saturday.
 
 Defense is a different problem, and it has been there from the first play of both games. They have not started either game well. After Florida Atlantic, Sumrall watched the tape and said the issue was football IQ. Knowing what the play is asking you to do. Know the down and distance. Know when the other team is speeding the game up. Know when to crowd a receiver and when to give him space. On 3rd-and-short, a corner was sitting nine yards off the ball. That is too far. They kept FAU from hitting the long passes. They let FAU speed the game up. After Campbell he said the same thing. The first drive beat them: a couple of completions down the field, a field goal, then they held Campbell to those three points the rest of the night. He told the defensive backs not to get scared after a catch. At corner you are going to get beat. Next play. That was better. It was still not a three-and-out to open. Byrum Brown will keep coming.
 
