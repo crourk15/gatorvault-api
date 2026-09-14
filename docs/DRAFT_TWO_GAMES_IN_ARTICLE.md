@@ -1,10 +1,10 @@
-# DRAFT v22 — Home Was the Easy Part (awaiting Charles approval)
+# DRAFT v23 — Home Was the Easy Part (awaiting Charles approval)
 
 **Status:** NOT published. Review only.
 **Proposed live id:** `art-two-games-in-2026`
 **Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 14, 2026 · **Read:** 7 min
 
-v22: Philo has been steady and shown good command of the offense.
+v23: Cut "Byrum Brown will keep coming." Punch line, not a fact.
 
 Reply **approve** (with any edits) to publish. Do not assume approval.
 
@@ -26,7 +26,7 @@ Every time they hit a big play after halftime, another flag came out. T.J. Shana
 
 Second-team and third-team guys got a chance to prove people right or wrong. Some of them, he said, proved why they are not playing. The standard is a Florida Gator standard, first team or third, and it is not negotiable. Freshmen have been here since January. Readiness is whether you can play when your name is called. That matters this week only if the starters do the same thing Saturday.
 
-Defense has not started either game well. After Florida Atlantic, Sumrall watched the tape and said the issue was football IQ. Knowing what the play is asking you to do. Know the down and distance. Know when the other team is speeding the game up. Know when to crowd a receiver and when to give him space. On 3rd-and-short, a corner was sitting nine yards off the ball. That is too far. They kept FAU from hitting the long passes. They let FAU speed the game up. Against Campbell, the first drive got a field goal: a couple of completions down the field, then Florida held them to those three points the rest of the night. Sumrall told the defensive backs not to get scared after a catch. At corner you are going to get beat. Next play. The opening drive was still not a three-and-out. Byrum Brown will keep coming.
+Defense has not started either game well. After Florida Atlantic, Sumrall watched the tape and said the issue was football IQ. Knowing what the play is asking you to do. Know the down and distance. Know when the other team is speeding the game up. Know when to crowd a receiver and when to give him space. On 3rd-and-short, a corner was sitting nine yards off the ball. That is too far. They kept FAU from hitting the long passes. They let FAU speed the game up. Against Campbell, the first drive got a field goal: a couple of completions down the field, then Florida held them to those three points the rest of the night. Sumrall told the defensive backs not to get scared after a catch. At corner you are going to get beat. Next play. The opening drive was still not a three-and-out.
 
 Aaron Philo started both games. He has been steady and shown good command of the offense. After FAU, Sumrall said the interception was not on him. It was a catchable ball that should have been a completion. Philo changed the play at the line when he needed to, and led. After Campbell he said they are playing good football with him in the game. He went 16-of-21 against FAU and 16-of-21 again against Campbell. Combined, that is 517 yards, five touchdowns, and one interception. Tramell Jones Jr. is still competing for the job.
 
@@ -46,7 +46,7 @@ Sumrall said he is a little uneasy with where they are. You can win games the wa
 
 - Florida is 2-0 because two home games never got close. The Campbell second half did not cost them. The same flags and slow start can cost them at Auburn.
 - Seven flags after halftime shoved drives into 1st-and-25. Shanahan and Kearney got the flags. Up 45-3 those flags do not change the score. If they show up when the game is still close, they are how you lose.
-- Defense has not opened a game with a three-and-out. Campbell kicked a field goal and did not score again. Byrum Brown will keep coming.
+- Defense has not opened a game with a three-and-out. Campbell kicked a field goal and did not score again.
 - Philo went 16-of-21 in each game (517 yards, five touchdowns, one interception combined). Baugh has the long run. After halftime the other backs were sloppy and the line did not open enough lanes.
 - At Auburn: start the game, do not take flags, throw over extra bodies if they put them near the line to stop Baugh, get to Byrum Brown early, tackle Singleton, Koger, and Nimrod after the catch.
 
