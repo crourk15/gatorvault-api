@@ -9,12 +9,12 @@ See also: `docs/APP_WEB_DRIFT.md`
 ## Already live on iOS (no build needed)
 - [x] Film Room Highlights: drop SEC condensed games — official cuts only on `/api/film-room/catalog` (API — no Codemagic)
 - [x] Film Room: Film Guy UF-football breakdowns auto-ingest + Faulkner Week 1 tape (`Y1FxeyDmPmk`) on `/api/film-room/catalog` (API — no Codemagic)
+- [x] Game Week Auburn: drop Jalanie George expected-visitor — road games do not get a Swamp visitor panel (API `/api/schedule` — no Codemagic)
 - [x] Locker article “Home Was the Easy Part” (`art-two-games-in-2026`) taken down — remove from `articles.json` / `/api/content/published` after merge (no Codemagic)
 - [x] Roster Week 2 Campbell official box on Stats tabs (Philo 16/21 242 2 TD, Baugh 136 2 TD, Wilson 104) — API `/api/roster/players/:slug` after merge (no Codemagic)
 - [x] Schedule remaining-season predictions: weekly `ufPct` / `pred` restamp via `/api/schedule` after how teams looked (API — no Codemagic). Week 2 board is live after merge. Home **RIVALRY WEEK** badge (FSU / UGA only) waits for the **1.0.26** bake.
 - [x] Game Week Auburn week: pointer + Campbell 52–3 + Auburn card on `/api/schedule` (API — no Codemagic). Current App Store already live-fetches the board and opens the next kickoff after the 5-hour postgame window — do **not** bake for a new opponent.
 - [x] Game Week Auburn Vegas: stamp consensus UF -2.5 / O/U 51.5 on `/api/betting/lines` so Prediction is not Line pending (API — no Codemagic)
-- [x] Game Week Auburn visitors: Jalanie George expected at Jordan-Hare — not confirmed on campus (API `/api/schedule` — no Codemagic)
 - [x] Game Week Auburn 3 keys: 1 offense + 2 defense as clear win statements (no play-by-play cites) — API `keys` / `howUFWins` (no Codemagic)
 - [x] Game Week Auburn: no-huddle Byrum Brown card (keys / film / Film Notes / scout) — API `/api/schedule` after Render (no Codemagic). `filmWatched: false` until a broadcast sit.
 - [x] Roster official-box cron (`roster-official-box-sync`) discovers each UF box from the game-center link and stamps whoever recorded a line — weekly stats stay API after the one-time 1.0.25 Stats-tab bake. OL/P/LS still will not get a traditional box line.
