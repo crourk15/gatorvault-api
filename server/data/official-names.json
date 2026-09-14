@@ -206,6 +206,10 @@
     { "slug": "hunter-solwold", "name": "Hunter Solwold", "pos": "LS" },
     { "slug": "davian-groce", "name": "Davian Groce", "pos": "WR" },
     { "slug": "maxwell-hiller", "name": "Maxwell Hiller", "pos": "IOL" },
-    { "slug": "kennedee-jackson", "name": "Kennedee Jackson", "pos": "OT" }
+    { "slug": "kennedee-jackson", "name": "Kennedee Jackson", "pos": "OT" },
+    { "slug": "byrum-brown", "name": "Byrum Brown", "pos": "QB" },
+    { "slug": "keshaun-singleton", "name": "Keshaun Singleton", "pos": "WR" },
+    { "slug": "jeremiah-koger", "name": "Jeremiah Koger", "pos": "WR" },
+    { "slug": "chas-nimrod", "name": "Chas Nimrod", "pos": "WR" }
   ]
 }

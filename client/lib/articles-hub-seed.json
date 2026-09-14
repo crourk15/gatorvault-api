@@ -1,7 +1,17 @@
 {
-  "generatedAt": "2026-08-28T14:01:13.177Z",
+  "generatedAt": "2026-09-14T21:00:25.294Z",
   "source": "local-articles",
   "articles": [
+    {
+      "id": "art-two-games-in-2026",
+      "category": "WEEK 3",
+      "title": "Home Was the Easy Part",
+      "preview": "Florida is 2-0 after two home games that never got close. The second half against Campbell did not cost them a thing. Saturday it can.",
+      "author": "GatorVault Staff",
+      "date": "Sep 14, 2026",
+      "readTime": 7,
+      "trending": true
+    },
     {
       "id": "art-season-preview-2026-eight-days",
       "category": "SEASON PREVIEW",
@@ -10,7 +20,7 @@
       "author": "GatorVault Staff",
       "date": "Aug 28, 2026",
       "readTime": 7,
-      "trending": true
+      "trending": false
     },
     {
       "id": "insider_1782917403035_2pmphs",
@@ -84,12 +94,12 @@
     }
   ],
   "featured": {
-    "id": "art-season-preview-2026-eight-days",
-    "category": "SEASON PREVIEW",
-    "title": "Eight Days Out: What This Florida Season Actually Is",
-    "preview": "Eight days from FAU, Florida finally has a Week 1 shape — Philo under center, Baugh as the engine, Graham as the heartbeat, and an odd-front defense finding its hybrid language. A season preview for members, not a game plan.",
+    "id": "art-two-games-in-2026",
+    "category": "WEEK 3",
+    "title": "Home Was the Easy Part",
+    "preview": "Florida is 2-0 after two home games that never got close. The second half against Campbell did not cost them a thing. Saturday it can.",
     "author": "GatorVault Staff",
-    "date": "Aug 28, 2026",
+    "date": "Sep 14, 2026",
     "readTime": 7,
     "trending": true
   },

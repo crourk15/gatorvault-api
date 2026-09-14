@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Locker article “Home Was the Easy Part” (`art-two-games-in-2026`) — API `/api/articles` after merge (no Codemagic). Pull the same way; do not bake.
 - [x] Roster Week 2 Campbell official box on Stats tabs (Philo 16/21 242 2 TD, Baugh 136 2 TD, Wilson 104) — API `/api/roster/players/:slug` after merge (no Codemagic)
 - [x] Schedule remaining-season predictions: weekly `ufPct` / `pred` restamp via `/api/schedule` after how teams looked (API — no Codemagic). Week 2 board is live after merge. Home **RIVALRY WEEK** badge (FSU / UGA only) waits for the **1.0.26** bake.
 - [x] Game Week Auburn week: pointer + Campbell 52–3 + Auburn card on `/api/schedule` (API — no Codemagic). Current App Store already live-fetches the board and opens the next kickoff after the 5-hour postgame window — do **not** bake for a new opponent.

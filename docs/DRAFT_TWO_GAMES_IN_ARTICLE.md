@@ -1,12 +1,10 @@
-# DRAFT v27 — Home Was the Easy Part (awaiting Charles approval)
+# LIVE — Home Was the Easy Part
 
-**Status:** NOT published. Review only.
-**Proposed live id:** `art-two-games-in-2026`
+**Status:** Published. Charles approved Sep 14, 2026.
+**Live id:** `art-two-games-in-2026`
 **Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 14, 2026 · **Read:** 7 min
 
-v27: One piece. Same facts. No slang back.
-
-Reply **approve** (with any edits) to publish. Do not assume approval.
+To take it down: remove from `server/data/content/articles.json` and refresh the articles hub seed. API/data only. No Codemagic.
 
 ---
 
@@ -57,4 +55,4 @@ Sumrall said he is a little uneasy with where they are. You can win games the wa
 
 ---
 
-Reply **approve** to put this on the locker rail. It is not live.
+Live on the locker rail after merge. No Codemagic.
