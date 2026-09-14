@@ -30,6 +30,15 @@ describe('game visitor visit sync', () => {
     assert.ok(fsu.some((s) => s.reason === 'committed_elsewhere'));
     assert.ok(out.skipped.some((s) => s.gameId === 'campbell' && s.reason === 'not_played'));
     assert.ok(out.skipped.some((s) => s.gameId === 'olemiss' && s.reason === 'not_played'));
+    assert.equal(
+      out.skipped.some((s) => s.gameId === 'auburn'),
+      false,
+      'Auburn is away — it should not be on the visitor list at all'
+    );
+    assert.equal(
+      out.created.some((r) => r.slug === 'jalanie-george'),
+      false
+    );
     const created = new Set(out.created.map((r) => r.slug));
     assert.equal(created.has('chayse-brown'), false);
     assert.ok(created.has('dominick-harris-payne'));

@@ -9,6 +9,7 @@ const {
   buildSlugLabelMap,
   visitorsPanelForGameId,
   attachExpectedVisitorsToGames,
+  isHomeVisitorGame,
 } = require('../lib/game-week-visitors');
 
 describe('game-week-visitors', () => {
@@ -73,9 +74,9 @@ describe('game-week-visitors', () => {
       ['cyion-smith', 'man-robinson', 'timi-aliu', 'judah-gumbs', 'dully-littleton']
     );
     assert.match(String(panel.source || ''), /expected \/ planning, not confirmed on campus/i);
-    assert.equal(expectedVisitLabelForSlug('dully-littleton'), 'Expected Campbell visit · Sep 12');
-    assert.equal(expectedVisitLabelForSlug('cyion-smith'), 'Expected Campbell visit · Sep 12');
-    assert.equal(expectedVisitLabelForSlug('man-robinson'), 'Expected Campbell visit · Sep 12');
+    assert.equal(expectedVisitLabelForSlug('dully-littleton'), 'Campbell visit · Sep 12');
+    assert.equal(expectedVisitLabelForSlug('cyion-smith'), 'Campbell visit · Sep 12');
+    assert.equal(expectedVisitLabelForSlug('man-robinson'), 'Campbell visit · Sep 12');
     assert.equal(expectedVisitLabelForSlug('zylen-little'), 'FAU visit · Sep 5');
     assert.doesNotMatch(String(panel.source || ''), /Simmons|Alderman|Rivals|Gators Online/i);
     const smith = panel.visitors.find((v) => v.slug === 'cyion-smith');
@@ -92,21 +93,15 @@ describe('game-week-visitors', () => {
     assert.equal(littleton.position, 'TE');
   });
 
-  it('lists Jalanie George as expected Auburn, not confirmed', () => {
-    const panel = visitorsPanelForGameId('auburn');
-    assert.ok(panel);
-    assert.equal(panel.gameId, 'auburn');
-    assert.deepEqual(
-      panel.visitors.map((v) => v.slug),
-      ['jalanie-george']
-    );
-    assert.match(String(panel.source || ''), /expected \/ planning, not confirmed on campus/i);
-    assert.equal(expectedVisitLabelForSlug('jalanie-george'), 'Expected Auburn visit · Sep 19');
-    assert.doesNotMatch(String(panel.source || ''), /Rivals|AuburnWire|Gators Online/i);
-    const george = panel.visitors.find((v) => v.slug === 'jalanie-george');
-    assert.equal(george.position, 'EDGE');
-    assert.equal(george.classYear, 2028);
-    assert.match(String(george.school || ''), /Desert Edge/i);
+  it('does not list visitors on the Auburn road game', () => {
+    assert.equal(isHomeVisitorGame({ gameId: 'fau', home: true }), true);
+    assert.equal(isHomeVisitorGame({ gameId: 'auburn', home: true }), false);
+    assert.equal(visitorsPanelForGameId('auburn'), null);
+    assert.equal(expectedVisitLabelForSlug('jalanie-george'), null);
+    const games = attachExpectedVisitorsToGames([
+      { id: 'auburn', opp: 'Auburn Tigers', date: 'September 19, 2026' },
+    ]);
+    assert.equal(games[0].expectedVisitors, undefined);
   });
 
   it('includes Josiah Taylor on Ole Miss expected list', () => {
