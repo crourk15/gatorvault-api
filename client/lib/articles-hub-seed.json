@@ -1,32 +1,22 @@
 {
-  "generatedAt": "2026-09-14T21:00:25.294Z",
+  "generatedAt": "2026-09-14T22:40:00.000Z",
   "source": "local-articles",
   "articles": [
-    {
-      "id": "art-two-games-in-2026",
-      "category": "WEEK 3",
-      "title": "Home Was the Easy Part",
-      "preview": "Florida is 2-0 after two home games that never got close. The second half against Campbell did not cost them a thing. Saturday it can.",
-      "author": "GatorVault Staff",
-      "date": "Sep 14, 2026",
-      "readTime": 7,
-      "trending": true
-    },
     {
       "id": "art-season-preview-2026-eight-days",
       "category": "SEASON PREVIEW",
       "title": "Eight Days Out: What This Florida Season Actually Is",
-      "preview": "Eight days from FAU, Florida finally has a Week 1 shape — Philo under center, Baugh as the engine, Graham as the heartbeat, and an odd-front defense finding its hybrid language. A season preview for members, not a game plan.",
+      "preview": "Eight days from FAU, Florida finally has a Week 1 shape \u2014 Philo under center, Baugh as the engine, Graham as the heartbeat, and an odd-front defense finding its hybrid language. A season preview for members, not a game plan.",
       "author": "GatorVault Staff",
       "date": "Aug 28, 2026",
       "readTime": 7,
-      "trending": false
+      "trending": true
     },
     {
       "id": "insider_1782917403035_2pmphs",
       "category": "Insider",
       "title": "Insider: Defensive scheme install ahead of schedule",
-      "preview": "Florida's 2026 floor turns on 3-3-5 install pace — JACK/STAR and the trenches — not a laundry list of portal and board stats.",
+      "preview": "Florida's 2026 floor turns on 3-3-5 install pace \u2014 JACK/STAR and the trenches \u2014 not a laundry list of portal and board stats.",
       "author": "GatorVault Staff",
       "date": "Jul 14, 2026",
       "readTime": 4,
@@ -36,7 +26,7 @@
       "id": "art-portal-class-2026",
       "category": "PORTAL RADAR",
       "title": "2026 Portal Class Recap: 23 In, 29 Out",
-      "preview": "UF's 2026 transfer cycle in one clean read — who arrived, who left, where exits landed, and which returning defenders anchor the new scheme.",
+      "preview": "UF's 2026 transfer cycle in one clean read \u2014 who arrived, who left, where exits landed, and which returning defenders anchor the new scheme.",
       "author": "GatorVault Staff",
       "date": "Jul 13, 2026",
       "readTime": 9,
@@ -46,7 +36,7 @@
       "id": "art-335-revolution",
       "category": "FILM ROOM",
       "title": "The 3-3-5 Revolution: Why {{ coach.DC }}'s Scheme Changes Everything",
-      "preview": "{{ coach.DC }}'s 3-3-5 isn't a gimmick — it's a personnel-driven answer to modern spread offenses. Here's how it works, who benefits, and why Jayden Woods makes it dangerous.",
+      "preview": "{{ coach.DC }}'s 3-3-5 isn't a gimmick \u2014 it's a personnel-driven answer to modern spread offenses. Here's how it works, who benefits, and why Jayden Woods makes it dangerous.",
       "author": "GatorVault Film Desk",
       "date": "Jul 12, 2026",
       "readTime": 8,
@@ -76,7 +66,7 @@
       "id": "art-win-model",
       "category": "WAR ROOM",
       "title": "War Room: 2026 Schedule Win Probability Model",
-      "preview": "Florida's 2026 model projects ~7.6 expected wins. The season turns on Auburn, Ole Miss, Oklahoma, FSU, and Missouri — with Georgia (Atlanta) and Texas as the stretch games.",
+      "preview": "Florida's 2026 model projects ~7.6 expected wins. The season turns on Auburn, Ole Miss, Oklahoma, FSU, and Missouri \u2014 with Georgia (Atlanta) and Texas as the stretch games.",
       "author": "GatorVault Analytics",
       "date": "Jul 14, 2026",
       "readTime": 9,
@@ -94,12 +84,12 @@
     }
   ],
   "featured": {
-    "id": "art-two-games-in-2026",
-    "category": "WEEK 3",
-    "title": "Home Was the Easy Part",
-    "preview": "Florida is 2-0 after two home games that never got close. The second half against Campbell did not cost them a thing. Saturday it can.",
+    "id": "art-season-preview-2026-eight-days",
+    "category": "SEASON PREVIEW",
+    "title": "Eight Days Out: What This Florida Season Actually Is",
+    "preview": "Eight days from FAU, Florida finally has a Week 1 shape \u2014 Philo under center, Baugh as the engine, Graham as the heartbeat, and an odd-front defense finding its hybrid language. A season preview for members, not a game plan.",
     "author": "GatorVault Staff",
-    "date": "Sep 14, 2026",
+    "date": "Aug 28, 2026",
     "readTime": 7,
     "trending": true
   },
