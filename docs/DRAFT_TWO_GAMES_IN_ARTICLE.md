@@ -1,10 +1,10 @@
-# DRAFT v14 — Home Was the Easy Part (awaiting Charles approval)
+# DRAFT v15 — Home Was the Easy Part (awaiting Charles approval)
 
 **Status:** NOT published. Review only.
 **Proposed live id:** `art-two-games-in-2026`
 **Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 14, 2026 · **Read:** 7 min
 
-v14: Replace leftover writer slang with the football fact.
+v15: First-half graf says the scores once. Cut the recap and the building line.
 
 Reply **approve** (with any edits) to publish. Do not assume approval.
 
@@ -18,7 +18,7 @@ Florida is 2-0 after two home games that never got close. The second half agains
 
 The Swamp had 52-3 on the board and a 2-0 start for the first time in five years. Jon Sumrall walked to the locker room unhappy. He said he was happy his guys got the win. Then he said a lot he was not pleased with. Play that second half in conference, he said, and they are about to have a real rude awakening. Walk in like that, and they will get absolutely embarrassed. The flags, the guys who were not ready, and the slow start are still here. Auburn can make them count.
 
-Florida went to the locker room up 45-3. Vernell Brown III had already scored twice on punt returns and once as a receiver. Dallas Wilson had the 40-yard touchdown. Jadan Baugh was running through a defense that could not stay in front of him. Aaron Philo was changing the play at the line when he needed to. The offense scored, the defense got off the field, and Vernell scored on returns. The building sounded like it was over. Against Campbell, it was.
+Florida went to the locker room up 45-3. Vernell Brown III had already scored twice on punt returns and once as a receiver. Dallas Wilson had the 40-yard touchdown. Jadan Baugh had the 75-yard run.
 
 Then the second half started, and the game was already decided. Sumrall put the backups in. They stayed up by 40. The flags and the sloppy plays are what he does not want in Auburn.
 
