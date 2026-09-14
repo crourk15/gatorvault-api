@@ -1,10 +1,10 @@
-# DRAFT v24 — Home Was the Easy Part (awaiting Charles approval)
+# DRAFT v25 — Home Was the Easy Part (awaiting Charles approval)
 
 **Status:** NOT published. Review only.
 **Proposed live id:** `art-two-games-in-2026`
 **Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 14, 2026 · **Read:** 7 min
 
-v24: Cut Tramell Jones Jr. The QB job is not the story this week.
+v25: Baugh graf matches Sumrall: depth subpar, missed a protection call, lanes all night, not after halftime.
 
 Reply **approve** (with any edits) to publish. Do not assume approval.
 
@@ -30,7 +30,7 @@ Defense has not started either game well. After Florida Atlantic, Sumrall watche
 
 Aaron Philo started both games. He has been steady and shown good command of the offense. After FAU, Sumrall said the interception was not on him. It was a catchable ball that should have been a completion. Philo changed the play at the line when he needed to, and led. After Campbell he said they are playing good football with him in the game. He went 16-of-21 against FAU and 16-of-21 again against Campbell. Combined, that is 517 yards, five touchdowns, and one interception.
 
-Last year Baugh's longest run was 23 yards. He has now hit a long run in back-to-back weeks. In two games he has 296 yards and five scores on 14 carries each Saturday. Sumrall likes the physical run between the tackles and the long run that breaks. What he did not like came after halftime against Campbell. The other running backs were sloppy. A guy went the wrong way. Somebody missed a block in protection. The first offensive line was not awful and is not where it needs to be. They did not open as many lanes for Baugh as they should have.
+Last year Baugh's longest run was 23 yards. He has now hit a long run in back-to-back weeks. In two games he has 296 yards and five scores on 14 carries each Saturday. Sumrall likes the physical run between the tackles and the long run that breaks. What he did not like was the depth behind Baugh. He called it subpar. A guy went the wrong way on one run. Somebody missed a protection call. The first offensive line, he said, was not awful and is not where it needs to be. They did not give Baugh as many rushing lanes as they should have.
 
 Auburn does not care that Florida scored 118 and allowed 24 at home. This is the first conference game of Year One, on the road, in Jordan-Hare. Ole Miss, Missouri, South Carolina, Texas in Austin, and Georgia in Atlanta on Halloween are still waiting. Two home blowouts do not rewrite those games. The honest range for this roster is still 7-5 or 8-4. 2-0 is what you are supposed to be after FAU and Campbell.
 
@@ -47,7 +47,7 @@ Sumrall said he is a little uneasy with where they are. You can win games the wa
 - Florida is 2-0 because two home games never got close. The Campbell second half did not cost them. The same flags and slow start can cost them at Auburn.
 - Seven flags after halftime shoved drives into 1st-and-25. Shanahan and Kearney got the flags. Up 45-3 those flags do not change the score. If they show up when the game is still close, they are how you lose.
 - Defense has not opened a game with a three-and-out. Campbell kicked a field goal and did not score again.
-- Philo went 16-of-21 in each game (517 yards, five touchdowns, one interception combined). Baugh has the long run. After halftime the other backs were sloppy and the line did not open enough lanes.
+- Philo went 16-of-21 in each game (517 yards, five touchdowns, one interception combined). Baugh has the long run. The depth behind him was subpar. The first line did not give him enough lanes.
 - At Auburn: start the game, do not take flags, throw over extra bodies if they put them near the line to stop Baugh, get to Byrum Brown early, tackle Singleton, Koger, and Nimrod after the catch.
 
 ## Sources
