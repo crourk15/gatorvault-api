@@ -1,10 +1,10 @@
-# DRAFT v3 — Home Was the Easy Part (awaiting Charles approval)
+# DRAFT v4 — Home Was the Easy Part (awaiting Charles approval)
 
 **Status:** NOT published. Review only.
 **Proposed live id:** `art-two-games-in-2026`
 **Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 14, 2026 · **Read:** 7 min
 
-Rewrite note: same *quality* as Eight Days Out (detailed, informative, full rooms). Different title and look on purpose — no "Days Out" countdown, no colon-subtitle.
+v4: plain sentences. No "left 66–21." No "make a conference team." Same job — detailed, informative, different title from Eight Days Out.
 
 Reply **approve** (with any edits) to publish. Do not assume approval.
 
@@ -14,35 +14,35 @@ Reply **approve** (with any edits) to publish. Do not assume approval.
 
 By GatorVault Staff · Sep 14, 2026 · 7 min read
 
-Two home blowouts made Florida 2–0. They did not make a conference team. Auburn is the first night that can take the record back.
+Florida is 2–0 after beating FAU 66–21 and Campbell 52–3. Saturday at Auburn is the first game that can make them 2–1.
 
-The scoreboard in the Swamp has been generous. Two Saturday nights, two opponents who could not keep a game in the second half, 118 points scored and 24 allowed, and a record that looks finished before September is. Florida Atlantic left 66–21. Campbell left 52–3. If you only read the numbers, Year One already has a grin. If you read the calendar, the grin is early. Saturday the buses point toward Jordan-Hare, and that stadium does not care what Campbell looked like on the way out of Gainesville.
+Florida is 2–0, and those two games were never close. The Gators beat Florida Atlantic 66–21 in the opener and Campbell 52–3 last Saturday — 118 points scored, 24 allowed, both nights in the Swamp. That is a real start. It is also two home games against teams that could not keep up. The next one is different. Saturday Florida plays at Auburn, in Jordan-Hare, the first conference game of Jon Sumrall's first season.
 
-Aaron Philo has run two clean nights. Sixteen of twenty-one against FAU for 275 yards and three scores, plus the one interception that belongs in a meeting and not in a panic. Sixteen of twenty-one again against Campbell — 242 yards, two more scores, nothing thrown back. Thirty-two of forty-two, 517 yards, five touchdowns, one pick. Camp was never an argument about whether Philo could throw it. It was whether he could operate: kill a bad look, stay on schedule, take the snap that matters. Two boxes say he can, against fronts that let him. Tramell Jones Jr. is still in the room. Jon Sumrall still has both names. Philo just has the snaps.
+Aaron Philo has started both games and played them clean. Against FAU he went 16 of 21 for 275 yards and three touchdowns, with one interception. Against Campbell he went 16 of 21 again — 242 yards, two touchdowns, no interceptions. That is 32 of 42, 517 yards, five touchdowns, and one pick. The camp question was not whether Philo could throw. It was whether he could operate — kill a bad play at the line, stay on schedule, take the snaps that matter. Two box scores say he can, against defenses that did not punish him for it. Tramell Jones Jr. is still on the roster. Sumrall has not closed the quarterback room. Philo has the starts.
 
-Jadan Baugh did not wait for anyone to vote. Fourteen carries against FAU, 160 yards, three scores. Fourteen against Campbell, 136, two more, one of them a 75-yard cut that turned a drive into a highlight and a defense into a rumor. Two hundred ninety-six yards. Five touchdowns. Same carry count both weeks — the kind of number a staff posts when it trusts the back, and the kind a back posts when he does not need twenty-five touches to wreck a night. When Baugh is this clean, Buster Faulkner's offense stops looking like a menu. It looks like a decision.
+Jadan Baugh is the best player on offense, and the two games read like it. He carried 14 times for 160 yards and three touchdowns against FAU, then 14 times for 136 yards and two touchdowns against Campbell, including a 75-yard run. That is 296 yards and five scores in two weeks, on the same number of carries each Saturday. When Baugh runs like that, Buster Faulkner's offense has an answer on first down.
 
-The skill room that was supposed to be the most talented group on the roster has started to prove the billing. Dallas Wilson's Campbell night is the one people will clip — five catches, 104 yards, a 40-yard finish — after a quieter 47 against FAU. Vernell Brown III has already done more than a two-game sample is supposed to hold: six catches, 117 yards and a score in week one, then two punt-return touchdowns and another score as a receiver in week two, 173 return yards on four chances. That is special teams turning into a second offense. The tight ends have not been asked to save a third-and-long yet. They will be. Just not this week, and not against the last two.
+The skill group has started to show why people talked about it in August. Dallas Wilson caught three passes for 47 yards against FAU, then five for 104 yards and a 40-yard touchdown against Campbell. Vernell Brown III had six catches for 117 yards and a touchdown in week one. In week two he scored twice on punt returns, added a receiving touchdown, and piled up 173 return yards on four chances. The tight ends have not had to win a third-and-long yet. Later in the season they will.
 
-The offensive line was the August argument. It has been the least-discussed part of either Saturday, which is the nicest thing you can say about a line after camp. Philo stayed on schedule. Baugh found the cutback. Nobody spent Sunday inventing a new five. Bryce Lovett, Knijeah Harris, Harrison Moore, T.J. Shanahan Jr., and Emeka Ugorji still own the names Sumrall said out loud before Week 1. Continuity was the ask in August. Two home games did not break it. Auburn will try.
+The offensive line was the loudest question in camp. It has not been the story of either game, and that is the good version of that sentence. Philo stayed on schedule. Baugh found running lanes. The five Sumrall named before Week 1 — Bryce Lovett, Knijeah Harris, Harrison Moore, T.J. Shanahan Jr., and Emeka Ugorji — still own those spots. Two home games did not break that group. Auburn will be the first front that tries.
 
-Defense is where 2–0 needs a footnote. Twenty-four points allowed will get repeated this week. It should come with the opponents attached. Myles Graham posted ten tackles against FAU and seven against Campbell with a forced fumble — still the best player on that side of the ball, still the Gainesville kid who treats a series like a race. Jayden Woods is in both boxes at JACK, the hybrid edge Brad White built the odd front to free. Patrick Durkin has not missed: eight extra points, then seven, plus a 53-yarder when a drive died. That is a good two weeks. It is also two weeks against teams that could not keep the ball. White's front has not lived in a ten-play SEC series. Saturday it will.
+Defense needs an honest footnote. Florida has allowed 24 points in two games. Myles Graham had 10 tackles against FAU and seven against Campbell, plus a forced fumble. Jayden Woods is in both boxes at JACK, the hybrid edge Brad White built the odd front around. Patrick Durkin has not missed — eight extra points in week one, seven in week two, and a 53-yard field goal. All of that is real. All of that is also FAU and Campbell. White's defense has not played a long SEC series yet. Saturday it will.
 
-Zoom out and the slate is the same slate it was in August. After Auburn comes Ole Miss, Missouri, South Carolina, Texas in Austin, Georgia in Atlanta on Halloween. Two blowouts do not move those games. They do not rewrite Texas. They do not rewrite Georgia. The honest neighborhood for this roster is still bowl territory — 7–5 or 8–4 if the road weeks look like football. 2–0 is what you are supposed to be after FAU and Campbell. The live question is whether the same roster can be 3–0 after Auburn.
+The rest of the schedule has not gotten easier. After Auburn it is Ole Miss, Missouri, South Carolina, Texas in Austin, and Georgia in Atlanta on Halloween. Beating FAU and Campbell does not change those games. The honest range for this roster is still 7–5 or 8–4 if the road weeks hold. 2–0 is what Florida is supposed to be after these two. The question now is whether they can be 3–0 after Auburn.
 
-Auburn is not the downhill card people still reach for. This one is no-huddle shotgun and Byrum Brown — the quarterback who followed the staff, who wants the first look and the keep, who threw it short against Baylor and let Keshaun Singleton, Jeremiah Koger, and Chas Nimrod run after the catch. Three interceptions when they got him late. Five sacks when they knocked him off the first read. A front that sat on the run (103 yards) and still gave up 333 through the air. We have the official picture. We have not sat the broadcast. The picture is enough to know what the night is about.
+Auburn is not the downhill team people still picture. This is a no-huddle shotgun offense with Byrum Brown at quarterback, the transfer who followed the staff. He wants the first read and the keep. Against Baylor he threw short and let Keshaun Singleton, Jeremiah Koger, and Chas Nimrod run after the catch. When they got to him late, he threw three interceptions. When they knocked him off his first read, they sacked him five times. Auburn's defense sat on the run — 103 yards — and still gave up 333 through the air. That is the official picture. We have not sat the broadcast. The picture is enough to know what Saturday is about.
 
-Florida wins in Jordan-Hare by doing the thing the last two weeks made look easy, on a night that will not be. If they load the box for Baugh, Philo has to throw it over them and finish the drive. If Brown has time, he will take the short throw and the keep — crowd him before the first read, stay home when he pulls it. Singleton, Koger, and Nimrod already turned catch-and-run into a Baylor problem; get there and wrap them up. Baugh still has to travel. Graham still has to play when the crowd is the other way. Woods still has to keep Brown in the pocket. None of that is a new identity. It is the first one that has to leave home.
+To win in Jordan-Hare, Florida has to do the same things against a team that will not hand them the game. If Auburn loads the box for Baugh, Philo has to throw over it and finish the drive. If Brown has time, he will take the short throw and the keep — get to him before the first read, and stay home when he pulls the ball. Singleton, Koger, and Nimrod already turned short catches into long runs against Baylor. Get there and tackle them. Baugh has to run on the road. Graham has to play when the crowd is the other way. Woods has to keep Brown in the pocket.
 
-Florida is 2–0 and still unexamined. The Swamp asked two questions and liked both answers. Jordan-Hare will ask a third, louder, and it will keep whatever it hears.
+Florida is 2–0 because the first two games were at home and never close. Saturday is the first one that can go the other way.
 
 ## Key takeaways
 
-- Two home wins, 118–24. Philo is 32/42, 517 yards, five scores, one pick — clean nights against teams that let him operate.
-- Baugh: 296 yards, five scores, fourteen carries each week. Same back, same trust.
-- Vernell Brown III already has 117 and a score in week one, plus two punt-return touchdowns and a receiving score in week two.
-- Twenty-four points allowed is FAU and Campbell. Auburn is the first SEC series.
-- Jordan-Hare: throw it over the loaded box, crowd Byrum Brown, wrap Singleton, Koger, and Nimrod.
+- Florida is 2–0 after beating FAU 66–21 and Campbell 52–3 (118–24). Philo is 32 of 42, 517 yards, five touchdowns, one interception.
+- Baugh has 296 yards and five touchdowns in two weeks, on 14 carries each game.
+- Vernell Brown III had 117 yards and a score in week one, then two punt-return touchdowns and a receiving score in week two.
+- Florida has allowed 24 points. Those games were FAU and Campbell. Auburn is the first SEC test.
+- To win at Auburn: throw over a loaded box, get to Byrum Brown early, and tackle Singleton, Koger, and Nimrod after the catch.
 
 ## Sources
 - Official UF box vs FAU — https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903
