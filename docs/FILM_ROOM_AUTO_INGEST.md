@@ -8,7 +8,7 @@
 | **GNFP Film Review** | YouTube RSS: GNFP channel |
 | **Scheme School** | Curated lessons in code (`scheme-school-data.ts`) — not YouTube auto |
 | **Film Guy Network** | YouTube RSS: UF football breakdowns only (`FILM:` / film study + Florida/Gators). Drops Georgia, Texas, FGN Live, reactions, score predictions. Tapes already off the 15-item RSS still need `manual.json`. |
-| **Highlights** | Official Gators Football highlights via RSS + manual `server/data/film-room/manual.json` when needed |
+| **Highlights** | Official Gators Football highlights via RSS + manual `server/data/film-room/manual.json`. Condensed games stay off this hub. |
 
 Catalog API: `GET /api/film-room/catalog`  
 Cache: repo seed `server/data/film-room/cache.json` + durable overlay `/var/data/film-room/cache.json` on Render.

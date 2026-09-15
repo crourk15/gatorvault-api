@@ -6,6 +6,8 @@ const assert = require('node:assert/strict');
 const {
   isGnfpFilmBreakdownTitle,
   isFilmGuyFloridaBreakdownTitle,
+  isOfficialHighlightTitle,
+  isCondensedGameTitle,
   shouldKeepEntry,
   mergeBucket,
   DEFAULT_SOURCES,
@@ -149,5 +151,14 @@ describe('Film Guy UF football breakdowns only', () => {
     assert.ok(row, 'Y1FxeyDmPmk missing from Film Room catalog');
     assert.match(String(row.source || ''), /Film Guy/i);
     assert.match(String(row.title || ''), /Buster Faulkner/i);
+  });
+});
+
+describe('Highlights drop condensed games', () => {
+  it('keeps official cuts and rejects condensed titles', () => {
+    assert.equal(isOfficialHighlightTitle('Game Highlights | Week One | Florida vs. FAU'), true);
+    assert.equal(isCondensedGameTitle('Florida vs. FAU | Condensed Game'), true);
+    assert.equal(isOfficialHighlightTitle('Florida vs. FAU | Condensed Game'), false);
+    assert.equal(isOfficialHighlightTitle('Florida vs Campbell Condensed Game'), false);
   });
 });

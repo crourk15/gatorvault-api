@@ -8,6 +8,7 @@ const { loadFilmRoomCache, resolveCachePath } = require('./film-room-cache-store
 const {
   isGnfpFilmBreakdownTitle,
   isFilmGuyFloridaBreakdownTitle,
+  isCondensedGameTitle,
   dedupePressersByEvent,
 } = require('./film-room-youtube-ingest');
 
@@ -93,6 +94,7 @@ function loadLegacyVideoCatalog() {
     const cat = String(row.category || '').trim();
     const src = String(row.source || row.title || '');
     if (cat === 'Highlights' || /highlights/i.test(row.title || '')) {
+      if (isCondensedGameTitle(row.title)) return;
       pushUnique(row, LEGACY_CATEGORIES.HIGHLIGHTS);
     } else if (/gnfp/i.test(src) || cat === 'GNFP Film Review') {
       pushUnique(row, LEGACY_CATEGORIES.GNFP);
@@ -109,6 +111,7 @@ function loadLegacyVideoCatalog() {
   });
 
   (cache.auto?.highlights || []).forEach((row) => {
+    if (isCondensedGameTitle(row?.title)) return;
     pushUnique(row, LEGACY_CATEGORIES.HIGHLIGHTS);
   });
 
