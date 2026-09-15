@@ -1,6 +1,7 @@
 /**
  * Auto-ingest Film Room videos from YouTube channel RSS (no API key required).
- * Official Florida Gators football pressers + GNFP film reviews by default.
+ * Official Florida Gators football pressers + GNFP film reviews + Film Guy
+ * UF-football breakdowns only (they cover every team).
  */
 const fetch = require('node-fetch');
 const { loadFilmRoomCache, saveFilmRoomCache } = require('./film-room-cache-store');
@@ -24,6 +25,13 @@ const DEFAULT_SOURCES = [
     bucket: 'gnfp',
     label: 'GNFP',
     kind: 'gnfp',
+  },
+  // Brooks / Film Guy Network — UF football tape only. Never Georgia/Texas/live.
+  {
+    channelId: 'UCqipe2JOIQZke4AN3-K9DJA',
+    bucket: 'filmGuy',
+    label: 'Film Guy Network',
+    kind: 'film_guy',
   },
 ];
 
@@ -51,6 +59,42 @@ function isGnfpFilmBreakdownTitle(title) {
   return GNFP_FILM_SIGNAL.test(t);
 }
 
+/** Live shows, reactions, and pick 'em — not tape. */
+const FILM_GUY_NOT_BREAKDOWN =
+  /\b(fgn\s*live|reaction|score predictions?|\bpicks\b|preview hour)\b/i;
+
+const FILM_GUY_FILM_SIGNAL =
+  /^(film\s*:)|\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i;
+
+/** Florida / Gators as the team — not "Florida Atlantic" alone. */
+function titleHasUfFootball(title) {
+  const t = String(title || '');
+  if (!t) return false;
+  if (/\bflorida\s+gators\b/i.test(t) || /\bgators\b/i.test(t)) return true;
+  const stripped = t.replace(/\bflorida\s+atlantic\b/gi, 'FAU');
+  return /\bflorida\b/i.test(stripped);
+}
+
+/** Film Guy UF football breakdowns only. Drops other teams, live, reactions. */
+function isFilmGuyFloridaBreakdownTitle(title) {
+  const t = String(title || '');
+  if (!t) return false;
+  if (FILM_GUY_NOT_BREAKDOWN.test(t)) return false;
+  if (!FILM_GUY_FILM_SIGNAL.test(t)) return false;
+  return titleHasUfFootball(t);
+}
+
+function normalizeSourceBucket(raw) {
+  const b = String(raw || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[-_]/g, '');
+  if (b === 'gnfp') return 'gnfp';
+  if (b === 'filmguy') return 'filmGuy';
+  if (b === 'highlights') return 'highlights';
+  return 'pressers';
+}
+
 function slugify(title) {
   return String(title || 'video')
     .toLowerCase()
@@ -64,12 +108,15 @@ function parseSourcesFromEnv() {
   if (!raw) return DEFAULT_SOURCES.slice();
   // channelId:bucket:label,channelId:bucket:label
   return raw.split(',').map((part) => {
-    const [channelId, bucket, label] = part.split(':').map((s) => String(s || '').trim());
+    const [channelId, bucketRaw, label] = part.split(':').map((s) => String(s || '').trim());
+    const bucket = normalizeSourceBucket(bucketRaw);
+    const kind =
+      bucket === 'gnfp' ? 'gnfp' : bucket === 'filmGuy' ? 'film_guy' : bucket === 'highlights' ? 'highlights' : 'custom';
     return {
       channelId,
-      bucket: bucket === 'gnfp' ? 'gnfp' : 'pressers',
+      bucket,
       label: label || channelId,
-      kind: bucket === 'gnfp' ? 'gnfp' : 'custom',
+      kind,
     };
   }).filter((s) => s.channelId);
 }
@@ -128,6 +175,7 @@ function isOfficialHighlightTitle(title) {
 
 function classifySourceBucket(entry, source) {
   if (source.kind === 'gnfp' || source.bucket === 'gnfp') return 'gnfp';
+  if (source.kind === 'film_guy' || source.bucket === 'filmGuy') return 'filmGuy';
   if (isOfficialHighlightTitle(entry?.title)) return 'highlights';
   return 'pressers';
 }
@@ -136,6 +184,9 @@ function shouldKeepEntry(entry, source) {
   const title = entry.title || '';
   if (source.kind === 'gnfp' || source.bucket === 'gnfp') {
     return isGnfpFilmBreakdownTitle(title);
+  }
+  if (source.kind === 'film_guy' || source.bucket === 'filmGuy') {
+    return isFilmGuyFloridaBreakdownTitle(title);
   }
   // Florida official + custom presser sources
   if (NON_FOOTBALL.test(title) && !/football/i.test(title)) return false;
@@ -167,11 +218,13 @@ function toCacheRow(entry, source) {
     dek: '',
     gameLine: source.bucket === 'gnfp'
       ? 'GNFP Film Review'
-      : source.bucket === 'highlights'
-        ? 'Highlights'
-        : 'Florida Gators Football',
+      : source.bucket === 'filmGuy'
+        ? 'Film Guy Network'
+        : source.bucket === 'highlights'
+          ? 'Highlights'
+          : 'Florida Gators Football',
     season: String(Number.isFinite(year) ? year : new Date().getUTCFullYear()),
-    category: source.bucket === 'gnfp'
+    category: source.bucket === 'gnfp' || source.bucket === 'filmGuy'
       ? 'Film Breakdown'
       : source.bucket === 'highlights'
         ? 'Highlights'
@@ -190,7 +243,7 @@ function toCacheRow(entry, source) {
   };
 }
 
-function mergeBucket(existing, incoming, { pruneGnfpNonFilm } = {}) {
+function mergeBucket(existing, incoming, { pruneGnfpNonFilm, pruneFilmGuyNonFlorida } = {}) {
   const byId = new Map();
   for (const row of existing || []) {
     if (row?.id) byId.set(row.id, row);
@@ -221,6 +274,9 @@ function mergeBucket(existing, incoming, { pruneGnfpNonFilm } = {}) {
   let merged = Array.from(byId.values());
   if (pruneGnfpNonFilm) {
     merged = merged.filter((row) => isGnfpFilmBreakdownTitle(row?.title));
+  }
+  if (pruneFilmGuyNonFlorida) {
+    merged = merged.filter((row) => isFilmGuyFloridaBreakdownTitle(row?.title));
   }
   merged.sort((a, b) => {
     const ta = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
@@ -495,25 +551,28 @@ async function syncFilmRoomYouTubeInner({ sources } = {}) {
   let totalAdded = 0;
 
   if (!cache.auto.highlights) cache.auto.highlights = [];
+  if (!cache.auto.filmGuy) cache.auto.filmGuy = [];
 
   for (const source of list) {
     try {
       const entries = await fetchChannelFeed(source.channelId);
-      const keptByBucket = { pressers: [], gnfp: [], highlights: [] };
+      const keptByBucket = { pressers: [], gnfp: [], highlights: [], filmGuy: [] };
       for (const entry of entries) {
         if (!shouldKeepEntry(entry, source)) continue;
         const bucket = classifySourceBucket(entry, source);
+        if (!keptByBucket[bucket]) keptByBucket[bucket] = [];
         keptByBucket[bucket].push(toCacheRow(entry, { ...source, bucket }));
       }
       let sourceAdded = 0;
       let sourceUpdated = 0;
       let sourceMatched = 0;
-      for (const bucket of ['pressers', 'gnfp', 'highlights']) {
+      for (const bucket of ['pressers', 'gnfp', 'highlights', 'filmGuy']) {
         const kept = keptByBucket[bucket];
         if (!kept.length) continue;
         sourceMatched += kept.length;
         const { rows, added, updated } = mergeBucket(cache.auto[bucket] || [], kept, {
           pruneGnfpNonFilm: bucket === 'gnfp',
+          pruneFilmGuyNonFlorida: bucket === 'filmGuy',
         });
         cache.auto[bucket] = rows;
         sourceAdded += added;
@@ -583,6 +642,7 @@ async function syncFilmRoomYouTubeInner({ sources } = {}) {
       pressers: (cache.auto.pressers || []).length,
       gnfp: (cache.auto.gnfp || []).length,
       highlights: (cache.auto.highlights || []).length,
+      filmGuy: (cache.auto.filmGuy || []).length,
     },
   };
 }
@@ -592,6 +652,8 @@ module.exports = {
   parseSourcesFromEnv,
   parseRssEntries,
   isGnfpFilmBreakdownTitle,
+  isFilmGuyFloridaBreakdownTitle,
+  titleHasUfFootball,
   isOfficialHighlightTitle,
   classifySourceBucket,
   shouldKeepEntry,
