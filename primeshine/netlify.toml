@@ -1,0 +1,16 @@
+# Standalone Primeshine site — deploy this folder as its own Netlify site.
+# Do not publish from the GatorVault repo root; that site serves server/.
+
+[build]
+  publish = "."
+  command = "true"
+
+[build.processing]
+  skip_processing = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
