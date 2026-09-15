@@ -1,6 +1,6 @@
 # DRAFT — Home Was the Easy Part (rewrite)
 
-**Status:** NOT live. Precision pass. Await Charles approve.
+**Status:** NOT live. Nine-point pass. Await Charles approve.
 **Id:** `art-two-games-in-2026`
 **Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 15, 2026 · **Read:** 7 min
 
@@ -12,31 +12,31 @@ Taken down Sep 14 for flow. Still off `articles.json`. No Codemagic.
 
 By GatorVault Staff · Sep 15, 2026 · 7 min read
 
-Florida is 2-0 because two Saturdays never got close. That is the whole of it, and the limit of it. Saturday at Auburn is the first night somebody can.
+Florida is 2-0 because two Saturdays never got close. That is the whole of it, and the limit of it. Saturday at Auburn is the first night the score can stay close long enough for the start and the flags to cost them.
 
-They put 66 on Florida Atlantic with Aaron Philo 16-of-21 for 275 yards, three touchdowns, and one interception, Jadan Baugh 14 for 160 and three, Vernell Brown III six for 117, and Eric Singleton Jr. gone on an ankle, and Jon Sumrall still spent the next Monday on a corner sitting nine yards off the ball on 3rd-and-short, on a defense that took the deep ball away and let FAU speed it up, on a catchable interception that was not on Philo. Sixty-six points, and the coach went back to football IQ.
+Florida Atlantic was 66-21, Aaron Philo 16-of-21 for 275 and three, Jadan Baugh 14 for 160 and three, and Jon Sumrall still spent Monday on a corner nine yards off the ball on 3rd-and-short, on a defense that took the deep ball and let FAU speed it up, on a catchable interception that was not on Philo. The tape did not celebrate the number. It went looking for the snaps that die when the other side can punch back.
 
-Campbell was supposed to close that gap. The first series opened it instead, completions down the field and a field goal, the start Sumrall told the defensive backs not to get scared of because at corner you are going to get beat and the snap that matters is the one after. Then Vernell Brown III took over, Dallas Wilson hit the 40, Baugh scored from the 2, and it was 45-3 with Philo at 242 yards and two scores. The opening never had to live past the first quarter.
+Campbell's first series put those snaps on the field, completions down the field and a field goal, the start Sumrall told the defensive backs not to get scared of because at corner you get beat and the snap that matters is the one after. Then Vernell Brown III took the half so completely, the 40 to Dallas Wilson and Baugh from the 2 folded into 45-3, that the opening never had to answer for itself. Philo was 242 and two. The start lived, and then the night hid it.
 
-Because it was 45-3, the second half could get sloppy and still feel like a win. Sumrall put the backups in and T.J. Shanahan Jr. wiped a Baugh run that was already a big gain, then a personal foul, then Roderick Kearney, 1st-and-25, the drive already dead, seven flags after halftime against one in the first half and three in the opener. Byrum Brown and Jeremiah Cobb do not play from 45-3. If those flags show up while the score is still a score, they are how you lose, and Sumrall was already walking that toward Jordan-Hare when Baugh went 75 late in the third, leftover, last year's long 26, 296 yards and five scores in two weeks on 14 carries each Saturday.
+Forty-five to three will forgive a sloppy second half. Sumrall put the backups in and T.J. Shanahan Jr. wiped a Baugh run that was already a big gain, then a personal foul, then Roderick Kearney, 1st-and-25, seven flags after halftime against one in the first half and three in the opener, and Byrum Brown and Jeremiah Cobb will not spot you that lead. Sumrall was already carrying that into Jordan-Hare when Baugh broke 75 late in the third on a night that could absorb it, 296 yards and five scores in two weeks, last year's long a 26.
 
-They posted 52-3 and the first 2-0 start in five years, and Sumrall walked to the locker room unhappy with that number in his pocket, happy they won and not pleased with the rest of it, because the depth behind Baugh was subpar, a guy went the wrong way, somebody missed a protection, and the starting line was not awful and is not where it needs to be. Year One in this building is a coach deciding 52-3 is not the point. Play that second half in conference and they will get embarrassed by a backfield that will not wait for them to get clean, Cobb and Omar Mabson II over 5.5 yards a carry and 265 combined, Byrum Brown a thousand yards and 14 scores last year, physical, time in the system, the run that kills you if you do not stop it.
+They are 2-0 for the first time in five years on 52-3, and Sumrall walked off unhappy because the depth behind Baugh was subpar, a guy went the wrong way, the line did not give him lanes, and the backfield waiting in Alabama will run it if they play like that, Cobb and Omar Mabson II over 5.5 a carry and 265 combined, Byrum a thousand and 14 last year, physical, time in the system. Play that second half in conference and they get embarrassed. Year One in this building is a coach deciding 52-3 is not the point.
 
-Monday, that walk-off was still in the rooms. It had cooled, and it had not left. These games count twice, Sumrall said, overall and conference, and the last two weeks counted once. If he has to get anybody ready for SEC football, they have the wrong people here. He wants sacks and a finish on the quarterback. Singleton and Oyebadejo came out of the boot for a limited Monday and are questionable, which is as far as Sumrall would go. Philo has been the clean part, confident, not easily rattled, a chance to win every week if he is who he has been, and he has only done it with this crowd behind him. Saturday it has to hold in a building that will not help him.
+Monday the rooms still had that walk in them. These games count twice, Sumrall said, overall and conference, and the last two counted once. If he has to get anybody ready, they have the wrong people. He wants sacks and a finish on the quarterback. Eric Singleton Jr. and Emmanuel Oyebadejo came out of the boot for a limited Monday and are questionable, which is as far as he would go. Philo has been clean here, a chance to win every week if he stays who he has been, and he has not had to do it with a crowd that wants him rattled.
 
-If that close game is real, Tuesday belonged to the men who have to call it. Buster Faulkner has to keep a quarterback who has only started here clean when DJ Durkin's defense is playing with its hair on fire, fast and confident, eleven defenders plus a crowd. He said Philo is cool, calm, and collected, and they will coach him through it. Brad White has to take a defense that just spent two weeks in Gainesville and put it in Alex Golesh's offense, pace and tempo and a nasty line, the fist fight he told them to be ready for.
+If that close game is real, Tuesday belonged to the men who have to call it. Buster Faulkner takes a quarterback who has only started here into DJ Durkin's hair-on-fire front plus the crowd, and said Philo is cool, calm, and collected, and they will coach him through it. Brad White takes a defense that just lived in Gainesville and puts it in Alex Golesh's pace, a nasty line, the fist fight he told them to be ready for.
 
-Florida scored 118 and allowed 24 when nobody could stay close. Auburn does not owe them a third. They have not won in that building since 1999, and Ole Miss, Missouri, South Carolina, Texas in Austin, and Georgia in Atlanta on Halloween are still sitting out there, which is why the year still lives around 7-5 or 8-4 and why 3-0 since 2019 is only what Saturday would be if the night stays easy.
+They have not won in that building since 1999. The rest of the card, from Ole Miss through Texas and Georgia in Atlanta, does not care that the first two never asked them a question, which is why a year that looks like 7-5 or 8-4 is still the honest one, and why 3-0 would only be Saturday if the night stays the way the first two stayed.
 
-Home was the easy part. If this one gets close, 2-0 was just two games.
+Home was the easy part. Saturday is the first night that can take 2-0 away, and the card after it will not give easy back.
 
 ## Takeaways
 
-- Florida is 2-0 because two Saturdays never got close. Saturday is the first night somebody can.
-- The Campbell flags did not cost them at 45-3. The same flags can cost them at Auburn if the game is still close.
-- Sumrall walked off 52-3 already carrying the run game that can embarrass them.
-- Philo has been enough here. Saturday is the first time the crowd is not his.
-- The year still lives around 7-5 or 8-4. Saturday would be the first 3-0 since 2019. Florida has not won at Auburn since 1999.
+- Florida is 2-0 because two Saturdays never got close. Saturday is the first night the score can stay close long enough for the start and the flags to cost them.
+- The Campbell flags did not cost them at 45-3. Byrum Brown and Jeremiah Cobb will not spot them that lead.
+- Sumrall walked off 52-3 already carrying the run that can embarrass them.
+- Philo has been clean here. Saturday is the first crowd that wants him rattled.
+- A year that looks like 7-5 or 8-4 is still the honest one. Saturday would be the first 3-0 since 2019 only if the night stays easy.
 
 ## Sources
 
