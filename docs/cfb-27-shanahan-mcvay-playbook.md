@@ -1,0 +1,7 @@
+# CFB 27 Shanahan / McVay Playbook
+
+**Playsheet (use this):** [`docs/cfb-27-shanahan-mcvay-playsheet.txt`](./cfb-27-shanahan-mcvay-playsheet.txt)
+
+Kyle Shanahan + Sean McVay identity in College Football 27: wide zone / stretch as the run, condensed 11/12/21, jet and cheat motion, play-action boot as the constraint (not RPO). Build from Ohio State (Wing X Off Close, Deuce Close, Tight Y Off, Tight Doubles, Bunch X Nasty, I Form Y Off Close) plus Notre Dame (Pistol Y Off Trips, Pistol Wing, Gun Normal Y Off). Verified CFB 27 names only.
+
+The previous Bunch/Doubles coordinator book is still at [`docs/cfb-27-playsheet.txt`](./cfb-27-playsheet.txt).
