@@ -163,14 +163,19 @@ async function fetchChannelFeed(channelId) {
   return parseRssEntries(xml);
 }
 
-/** Official game cuts — not trailers, mic'd-up, or pressers. */
+function isCondensedGameTitle(title) {
+  return /\bcondensed(?:\s+game)?\b/i.test(String(title || ''));
+}
+
+/** Official game cuts — not trailers, mic'd-up, pressers, or condensed games. */
 function isOfficialHighlightTitle(title) {
   const t = String(title || '');
   if (!t) return false;
+  if (isCondensedGameTitle(t)) return false;
   if (/\b(trailer|mic['’]?d[\s-]?up|press conference|media availability|this is the swamp)\b/i.test(t)) {
     return false;
   }
-  return /\b(game highlights?|highlights?\s*[|:·]|condensed game)\b/i.test(t);
+  return /\b(game highlights?|highlights?\s*[|:·])\b/i.test(t);
 }
 
 function classifySourceBucket(entry, source) {
@@ -654,6 +659,7 @@ module.exports = {
   isGnfpFilmBreakdownTitle,
   isFilmGuyFloridaBreakdownTitle,
   titleHasUfFootball,
+  isCondensedGameTitle,
   isOfficialHighlightTitle,
   classifySourceBucket,
   shouldKeepEntry,

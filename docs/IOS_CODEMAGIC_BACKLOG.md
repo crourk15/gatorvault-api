@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Film Room Highlights: drop SEC condensed games — official cuts only on `/api/film-room/catalog` (API — no Codemagic)
 - [x] Film Room: Film Guy UF-football breakdowns auto-ingest + Faulkner Week 1 tape (`Y1FxeyDmPmk`) on `/api/film-room/catalog` (API — no Codemagic)
 - [x] Locker article “Home Was the Easy Part” (`art-two-games-in-2026`) taken down — remove from `articles.json` / `/api/content/published` after merge (no Codemagic)
 - [x] Roster Week 2 Campbell official box on Stats tabs (Philo 16/21 242 2 TD, Baugh 136 2 TD, Wilson 104) — API `/api/roster/players/:slug` after merge (no Codemagic)

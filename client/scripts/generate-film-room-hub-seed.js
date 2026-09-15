@@ -43,6 +43,7 @@ function isFilmBreakdownEligibleTitle(title) {
 
 function slimItem(item) {
   if (!item || !(item.id || item.title)) return null;
+  if (/\bcondensed(?:\s+game)?\b/i.test(String(item.title || ''))) return null;
   if (!isFilmBreakdownEligibleTitle(item.title)) return null;
   return {
     id: item.id || item.slug || item.youtubeId,
