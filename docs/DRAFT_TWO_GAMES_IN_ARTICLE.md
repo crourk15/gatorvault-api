@@ -12,11 +12,11 @@ Taken down Sep 14 for flow. Still off `articles.json`. No Codemagic.
 
 By GatorVault Staff · Sep 15, 2026 · 7 min read
 
-Florida is 2-0 because two Saturdays never got close. Saturday at Auburn is the first night 2-0 can become 1-1.
+Florida is 2-0 because two Saturdays never got close. Saturday at Auburn is the first night 2-0 has to travel.
 
 Florida Atlantic put 66 on the board, the kind of home opener that fills a building and still leaves a coach on one snap. Eric Singleton Jr. left and did not come back. Monday still belonged to a corner sitting nine yards off the ball on 3rd-and-short, the snap Sumrall would not let die after a night that big.
 
-Campbell put that same corner on the field. That is the start that can lose them Saturday, and Vernell Brown III still took the half to 45-3 before anyone had to live with it.
+Campbell put that same corner on the field. That is the start Saturday will ask them to clean up, and Vernell Brown III still took the half to 45-3 before anyone had to live with it.
 
 Seven flags after halftime. T.J. Shanahan Jr. wiped a Baugh run and then added the personal foul that made it 1st-and-25. Byrum Brown and Jeremiah Cobb will play those flags. They will play them while the score is still a score.
 
@@ -26,19 +26,19 @@ Monday, the rooms still had that walk, and these games count twice, Sumrall said
 
 White can call the fist fight. He cannot call the two who are still in the boot. Singleton and Emmanuel Oyebadejo came out limited, and Sumrall will call both questionable and will not go further than that.
 
-Jordan-Hare is the first place a close game will not forgive them, and they have not left that building with a win since 1999. That is why this week does not stay Week 3.
+Jordan-Hare is the first place a close game has to be won, and they have not left that building with a win since 1999. That is why this week does not stay Week 3.
 
 A close loss this week is how the year starts 7-5 or 8-4. Ole Miss will not wait. Georgia will not wait.
 
-Home was the easy part. Lose Saturday and 2-0 is the last thing this year gives them.
+Home was the easy part. Win Saturday and 3-0 is the first one that counts twice.
 
 ## Takeaways
 
-- Florida is 2-0 because two Saturdays never got close. Saturday at Auburn is the first night 2-0 can become 1-1.
+- Florida is 2-0 because two Saturdays never got close. Saturday at Auburn is the first night 2-0 has to travel.
 - Seven flags after 45-3 did not cost them. Byrum Brown and Jeremiah Cobb will play those flags while the score is still a score.
 - Sumrall walked off 52-3 already sick of the depth behind Baugh and a line that did not give him lanes.
 - Philo has been clean in this building. Saturday he has to keep it against Durkin's front.
-- Lose Saturday and 2-0 is the last thing this year gives them.
+- Win Saturday and 3-0 is the first one that counts twice.
 
 ## Sources
 
