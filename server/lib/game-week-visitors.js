@@ -1,6 +1,7 @@
 /**
  * Expected home-game visitors — Chase labels + Game Week panel.
  * Data: server/data/schedule/game-visitors-2026.json
+ * Away games never get a visitor panel (recruits visit the Swamp, not Jordan-Hare).
  * API-only list edits — no Codemagic after the panel UI is baked.
  */
 'use strict';
@@ -10,6 +11,36 @@ const path = require('path');
 
 const DOC_PATH = path.join(__dirname, '..', 'data', 'schedule', 'game-visitors-2026.json');
 const { gameHasBeenPlayed } = require('./game-visitors-visit-sync');
+
+function scheduleGameIsHome(gameId) {
+  const id = String(gameId || '')
+    .trim()
+    .toLowerCase();
+  if (!id) return null;
+  try {
+    const season = require('../data/schedule/2026-season.json');
+    const g = (Array.isArray(season?.games) ? season.games : []).find(
+      (x) => String(x?.id || '').trim().toLowerCase() === id
+    );
+    if (!g) return null;
+    const label = String(g.label || '');
+    if (/@/.test(label) || /\bat\b/i.test(label)) return false;
+    if (/\bvs\b/i.test(label)) return true;
+    return /gainesville|ben hill|swamp/i.test(String(g.venue || ''));
+  } catch {
+    return null;
+  }
+}
+
+/** Visitor lists are Swamp home games only. Schedule @ / away wins over a bad home flag. */
+function isHomeVisitorGame(game) {
+  if (!game || typeof game !== 'object') return false;
+  if (game.home === false) return false;
+  const sched = scheduleGameIsHome(game.gameId || game.id);
+  if (sched === false) return false;
+  if (game.home === true) return true;
+  return sched === true;
+}
 
 function fanChaseLabel(game) {
   const raw = String(game?.chaseLabel || '').trim();
@@ -41,6 +72,7 @@ function buildSlugLabelMap(doc = loadDoc()) {
   const map = new Map();
   const games = Array.isArray(doc?.games) ? doc.games : [];
   for (const game of games) {
+    if (!isHomeVisitorGame(game)) continue;
     const label = fanChaseLabel(game);
     if (!label) continue;
     const slugs = Array.isArray(game?.slugs) ? game.slugs : [];
@@ -150,7 +182,7 @@ function visitorsPanelForGameId(gameId) {
   const doc = loadDoc();
   const games = Array.isArray(doc?.games) ? doc.games : [];
   const game = games.find((g) => String(g?.gameId || '').trim().toLowerCase() === id);
-  if (!game) return null;
+  if (!game || !isHomeVisitorGame(game)) return null;
   const seen = new Set();
   const visitors = [];
   for (const raw of Array.isArray(game.slugs) ? game.slugs : []) {
@@ -189,6 +221,8 @@ function attachExpectedVisitorsToGames(games) {
 module.exports = {
   DOC_PATH,
   loadDoc,
+  scheduleGameIsHome,
+  isHomeVisitorGame,
   fanChaseLabel,
   buildSlugLabelMap,
   expectedVisitLabelForSlug,
