@@ -1,33 +1,3 @@
-# DRAFT — Three Days Out (HOLD)
+# SCRATCHED — Three Days Out
 
-**Status:** NOT live. Do not add to `articles.json` until Charles says approve.
-**Id:** `art-three-days-out-2026`
-**Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 16, 2026 · **Read:** 7 min
-
-Scratches **Home Was the Easy Part** and **Saturday Starts the Road**.
-
-Storyline: sequel to Eight Days Out. Wednesday, three days from the first SEC road game. Two nights named the August shape. Saturday is the first Saturday that matches the season they already pointed at.
-
----
-
-# Three Days Out
-
-By GatorVault Staff · Sep 16, 2026 · 7 min read
-
-Eight days out, Florida had a shape you could hold. Two Swamp nights put names on it. Saturday at Auburn is the first game on the slate that actually matches the season.
-
-There's a particular quiet that comes back to Gainesville on a Wednesday in September, three days from a night game on the road, when the first two Saturdays are already scored and the questions have names. Eight days out, this roster finally had a shape you could hold. Philo had the keys, not the crown. Baugh was the engine. Graham was the heartbeat. The line had a starting five Sumrall could say out loud. The schedule was not going to apologize. Two Swamp nights later, 66-21 and 52-3, that is still the season. Saturday at 7 in Jordan-Hare is the first Saturday that matches it.
-
-The shape still starts under center. Aaron Philo has started two games and gone 16-of-21 in both of them, 517 yards, five touchdowns, and one interception Sumrall put on a catchable ball, not on the quarterback. He changed the play at the line when the call was dead. That is the operation Sumrall said separated him in August. Faulkner's offense is a language, and Philo has now spoken it when the lights were on. Tuesday, Faulkner called him cool, calm, and collected, and said they would coach him through DJ Durkin's front and the first crowd that will try to take that away. He still does not have the crown. He has two nights that look like he can keep the keys.
-
-The receivers have made those calls look right. Vernell Brown III took the Campbell half to 45-3 with the ball in his hands the way a playmaker does, two punt returns and a catch, 64 and 70 on the returns. Dallas Wilson hit the 40. Eric Singleton Jr. was a problem in the opener, the Auburn transfer with senior mileage at the Z, until he left and did not come back. Sumrall had him limited Monday and will not go further than questionable. The room can still win you a Saturday if the ball arrives on time. The Z they counted on in August might not make the trip.
-
-If you want the best player on offense, you still do not need a committee vote. Jadan Baugh has been the best running back in the country for two weeks, and the honest part is he has done it without the line dominating for him. Fourteen carries each Saturday. 296 yards. Five scores. A 75-yard run late in the third against a long of 26 a year ago. Faulkner's offense still wants to be multiple. Baugh still makes multiple look like violence. Sumrall walked off Campbell already sick of the depth behind him.
-
-The line is the sentence that changed. In August it walked out of the second scrimmage with Sumrall using the word jacked, a starting five he could say out loud: Bryce Lovett, Knijeah Harris, Harrison Moore, T.J. Shanahan Jr., Emeka Ugorji. After 52-3 he said that starting five was not awful and is not where it needs to be. They did not give Baugh the lanes a back like him should have. A guy went the wrong way. Somebody missed a protection. After the half was already 45-3, Shanahan wiped a Baugh run that was already a big gain and then added the personal foul that made it 1st-and-25. Roderick Kearney picked up another. That is why those flags matter. Not because they changed 52-3. Because a hold or a personal foul in Jordan-Hare, while the score is still a score, is first down with 25 yards still to go, and the drive is dead. If that line does not get Baugh the lanes there, Philo has to throw over the extra bodies, and a flag after the run means that throw never happens.
-
-Defense is still where the identity might live, and two nights did not let it start. Myles Graham is still the best player on that side of the ball. Brad White's front is still built to be fast. The secondary is the room that was still settling in August, and it is the room Sumrall spent Monday on after both games. After Florida Atlantic the issue was football IQ: down and distance, when they are speeding you up, when to crowd a receiver and when to give him space. On 3rd-and-short a corner sat nine yards off the ball. That is too far. They took the deep ball away and still let FAU speed the night up. Campbell put the same start on the field, completions down the field and a field goal, and Florida held them to those three points the rest of the night. Sumrall told the defensive backs not to get scared of it. At corner you get beat. The snap that matters is the one after. They have not opened either game with a three-and-out. Saturday they play a quarterback, Byrum Brown, who will throw it short, and a receiver, Keshaun Singleton, who will run it if they sit off the way they sat off in the Swamp. White called Saturday a fist fight. That is the version of this defense the first two nights never asked them to be.
-
-Monday, Sumrall said these games count twice, overall and conference, and the last two counted once. If he has to get anybody ready, they have the wrong people. He wants sacks and a finish on the quarterback. Emmanuel Oyebadejo came out of Monday limited with Eric Singleton Jr., both questionable. They have not won in that building since 1999. The rest of the card is still the card: Ole Miss, Missouri, South Carolina, Texas in Austin, Georgia in Atlanta on Halloween. The honest range for this roster is still 7-5 or 8-4. Two home blowouts do not change that. They make Saturday the first night the range can start to be earned.
-
-So where do we stand, three days out? Philo has the keys and two nights that look like he can keep them. Baugh is still the engine, louder than August. Graham is still the heartbeat. The line has a starting five and a standard it has not met. The corners have a test they have not passed. Year One under Sumrall is not a coronation. It never was. Win Saturday and 3-0 is 1-0 in the SEC, the first one that matches the season they have been pointed at since August.
+Sequel-title gimmick. Replaced by `docs/DRAFT_UNEASY_2_0_ARTICLE.md`.
