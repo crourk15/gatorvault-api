@@ -18,9 +18,9 @@ Philo went 16-of-21 in both games. Vernell Brown III took Campbell's half to 45-
 
 The corners have been the concern both weeks. After Florida Atlantic, Sumrall spent Monday on a corner sitting nine yards off the ball on 3rd-and-short. Campbell put that same start on the field. Saturday they have to step up, because Byrum Brown will throw it short and Keshaun Singleton will run it if they sit off. Seven flags after 45-3 did not cost them. Byrum and Jeremiah Cobb will play those flags while the score is still a score.
 
-Monday, these games count twice. If Sumrall has to get anybody ready, they have the wrong people. He wants sacks and a finish. Eric Singleton Jr. and Emmanuel Oyebadejo came out of the boot limited. Tuesday, Faulkner said they will coach Philo through DJ Durkin's front and the noise. Brad White called it a fist fight.
+Monday, Sumrall said the last two counted once and this one counts in the league too. If he has to get anybody ready, they have the wrong people. He wants sacks and a finish. Eric Singleton Jr. and Emmanuel Oyebadejo came out of the boot limited. Tuesday, Faulkner said they will coach Philo through DJ Durkin's front and the noise. Brad White called it a fist fight.
 
-They have not won in that building since 1999. Win Saturday and 3-0 is the first one that counts twice.
+They have not won in that building since 1999. Win Saturday and they are 3-0, and 1-0 in the SEC.
 
 ## Takeaways
 
@@ -28,7 +28,7 @@ They have not won in that building since 1999. Win Saturday and 3-0 is the first
 - The offensive line has not dominated. Baugh has been the best running back in the country anyway.
 - The corners have been the concern both weeks. Saturday they have to step up on the road.
 - Seven flags after 45-3 did not cost them. Byrum and Cobb will play those flags while the score is still a score.
-- Win Saturday and 3-0 is the first one that counts twice.
+- Win Saturday and they are 3-0, and 1-0 in the SEC.
 
 ## Sources
 
