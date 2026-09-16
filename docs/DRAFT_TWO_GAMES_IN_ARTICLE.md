@@ -1,43 +1,33 @@
-# DRAFT — Home Was the Easy Part (rewrite)
+# DRAFT — Saturday Starts the Road
 
-**Status:** NOT live. Ten surgical corrections. Await Charles approve.
+**Status:** NOT live. New title. Built on Charles's three points. Await approve.
 **Id:** `art-two-games-in-2026`
-**Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 15, 2026 · **Read:** 7 min
+**Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 16, 2026 · **Read:** 5 min
 
 Taken down Sep 14 for flow. Still off `articles.json`. No Codemagic.
 
 ---
 
-# Home Was the Easy Part
+# Saturday Starts the Road
 
-By GatorVault Staff · Sep 15, 2026 · 7 min read
+By GatorVault Staff · Sep 16, 2026 · 5 min read
 
-Florida is 2-0 because two Saturdays never got close. Saturday at Auburn is the first night 2-0 has to travel.
+Florida is 2-0 because two home Saturdays never got close. Buster Faulkner's play calling has looked sharp, Aaron Philo has been clean, and the receivers have made the easy nights look easy. Saturday at Auburn is the first night that has to hold on the road.
 
-Florida Atlantic put 66 on the board, the kind of home opener that fills a building and still leaves a coach on one snap. Eric Singleton Jr. left and did not come back. Monday still belonged to a corner sitting nine yards off the ball on 3rd-and-short, the snap Sumrall would not let die after a night that big.
+Philo went 16-of-21 in both games. Vernell Brown III took Campbell's half to 45-3. The playmakers have been ahead of the night. The offensive line has not dominated. Jadan Baugh has been the best running back in the country anyway, 75 late in the third against a long of 26 a year ago, 296 yards and five scores in two weeks, and Sumrall still walked off 52-3 already sick of the depth behind him and a line that did not give him lanes.
 
-Campbell put that same corner on the field. That is the start Saturday will ask them to clean up, and Vernell Brown III still took the half to 45-3 before anyone had to live with it.
+The corners have been the concern both weeks. After Florida Atlantic, Sumrall spent Monday on a corner sitting nine yards off the ball on 3rd-and-short. Campbell put that same start on the field. Saturday they have to step up, because Byrum Brown will throw it short and Keshaun Singleton will run it if they sit off. Seven flags after 45-3 did not cost them. Byrum and Jeremiah Cobb will play those flags while the score is still a score.
 
-Seven flags after halftime. T.J. Shanahan Jr. wiped a Baugh run and then added the personal foul that made it 1st-and-25. Byrum Brown and Jeremiah Cobb will play those flags. They will play them while the score is still a score.
+Monday, these games count twice. If Sumrall has to get anybody ready, they have the wrong people. He wants sacks and a finish. Eric Singleton Jr. and Emmanuel Oyebadejo came out of the boot limited. Tuesday, Faulkner said they will coach Philo through DJ Durkin's front and the noise. Brad White called it a fist fight.
 
-Sumrall was already taking that to Jordan-Hare when Jadan Baugh went 75 late in the third, a run that last year never got past 26. He still walked off 52-3 already sick of the depth behind Baugh and a line that did not give him lanes. The next backfield is Cobb and Omar Mabson II over 5.5 a carry, Byrum a thousand and 14 last year. Play that second half in conference and they get embarrassed.
-
-Monday, the rooms still had that walk, and these games count twice, Sumrall said, overall and conference, the last two counted once. If Sumrall has to get anybody ready, they have the wrong people. He wants sacks and a finish on the quarterback because Byrum will make you pay if you do not get there. Aaron Philo has been clean in this building, two home Saturdays without a night that rattled him. Saturday he has to keep it against DJ Durkin's hair-on-fire front. Buster Faulkner said they will coach him through the noise, and Brad White is putting that same defense into Alex Golesh's pace and the fist fight he told them to be ready for.
-
-White can call the fist fight. He cannot call the two who are still in the boot. Singleton and Emmanuel Oyebadejo came out limited, and Sumrall will call both questionable and will not go further than that.
-
-Jordan-Hare is the first place a close game has to be won, and they have not left that building with a win since 1999. That is why this week does not stay Week 3.
-
-A close loss this week is how the year starts 7-5 or 8-4. Ole Miss will not wait. Georgia will not wait.
-
-Home was the easy part. Win Saturday and 3-0 is the first one that counts twice.
+They have not won in that building since 1999. Win Saturday and 3-0 is the first one that counts twice.
 
 ## Takeaways
 
-- Florida is 2-0 because two Saturdays never got close. Saturday at Auburn is the first night 2-0 has to travel.
-- Seven flags after 45-3 did not cost them. Byrum Brown and Jeremiah Cobb will play those flags while the score is still a score.
-- Sumrall walked off 52-3 already sick of the depth behind Baugh and a line that did not give him lanes.
-- Philo has been clean in this building. Saturday he has to keep it against Durkin's front.
+- Faulkner's play calling has looked sharp. Philo has been clean. The receivers have made the easy nights look easy.
+- The offensive line has not dominated. Baugh has been the best running back in the country anyway.
+- The corners have been the concern both weeks. Saturday they have to step up on the road.
+- Seven flags after 45-3 did not cost them. Byrum and Cobb will play those flags while the score is still a score.
 - Win Saturday and 3-0 is the first one that counts twice.
 
 ## Sources
