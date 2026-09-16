@@ -28,7 +28,7 @@ describe('HP DISK serve rebuild policy', () => {
     assert.match(src, /export function isHpPlateFresh/);
     assert.match(src, /needRebuild = force \|\| existing == null \|\| !isHpPlateFresh\(existing\)/);
     assert.match(src, /cache\.remove\(key\)/);
-    assert.match(src, /FUTURECAST_API_CACHE_VERSION = 40/);
+    assert.match(src, /FUTURECAST_API_CACHE_VERSION = 41/);
     // Freshness uses updatedAt or lastUpdated.
     assert.match(src, /updatedAt \|\| doc\.lastUpdated/);
   });

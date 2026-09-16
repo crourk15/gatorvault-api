@@ -10,6 +10,7 @@ import {
   applyDiscoverySeasonOverlay,
   type FutureCastLabDataMap,
 } from '@/lib/futurecast-lab-data';
+import { resolveLabLastUpdated } from '@/lib/futurecast-lab-updated';
 import { buildSeedFutureCastLabData } from '@/lib/futurecast-lab-seed';
 import { deriveHeatLevel } from '@/lib/api/futurecast';
 import { userFacingLoadError } from '@/lib/api-warm-poll';
@@ -212,7 +213,10 @@ export function useFutureCastLabData(): FutureCastLabData {
             highPriority: keepHp,
             highPriorityClosing: keepHpc,
             heatLevel: 'warm',
-            lastUpdated: primary.lastUpdated,
+            lastUpdated: resolveLabLastUpdated({
+              masterUpdatedAt: primary.masterBoard.updatedAt ?? primary.lastUpdated,
+              highPriorityUpdatedAt: prev?.highPriorityUpdatedAt ?? null,
+            }),
           };
         });
         setLoading(false);
@@ -226,7 +230,11 @@ export function useFutureCastLabData(): FutureCastLabData {
           ...secondaryRaw,
           ...discoveryOverlay,
           heatLevel: deriveHeatLevel(secondaryRaw.home, secondaryRaw.stock),
-          lastUpdated: primary.lastUpdated ?? secondaryRaw.movementIntel.updatedAt ?? null,
+          lastUpdated: resolveLabLastUpdated({
+            masterUpdatedAt: primary.masterBoard.updatedAt,
+            movementUpdatedAt: secondaryRaw.movementIntel.updatedAt,
+            highPriorityUpdatedAt: secondaryRaw.highPriorityUpdatedAt,
+          }),
         });
         setError(null);
       } else {

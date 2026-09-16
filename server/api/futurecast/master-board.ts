@@ -14,6 +14,9 @@ import {
   primeFuturecastCache,
   softMasterBoardFromHighPriority,
   writeMasterBoardRuntime,
+  isHpPlateFresh,
+  scheduleMasterBoardDiskRebuild,
+  stampMasterBoardForFans,
 } from './response-cache';
 
 export const handleGetFutureCastMasterBoard = asyncHandler(async (_req: Request, res: Response) => {
@@ -21,8 +24,20 @@ export const handleGetFutureCastMasterBoard = asyncHandler(async (_req: Request,
     const primed = loadMasterBoardCached();
     if (primed != null) {
       primeFuturecastCache(masterBoardCacheKey(), primed);
-      res.setHeader('X-GatorVault-Cache', 'DISK');
-      res.json(primed);
+      const fresh = isHpPlateFresh(primed);
+      // Do not let iOS URLCache keep an Aug-stale Lab stamp.
+      res.setHeader('Cache-Control', 'no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      if (fresh) {
+        res.setHeader('X-GatorVault-Cache', 'DISK');
+        res.json(primed);
+      } else {
+        // Stale Aug-seed disk: serve immediately, restamp from live HP for the
+        // Lab hero, and rebuild so the plate itself does not stay frozen.
+        scheduleMasterBoardDiskRebuild(() => buildMasterBoardPayload());
+        res.setHeader('X-GatorVault-Cache', 'DISK-STALE');
+        res.json(stampMasterBoardForFans(primed));
+      }
       return;
     }
 

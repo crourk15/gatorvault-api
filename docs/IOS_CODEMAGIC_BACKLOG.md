@@ -58,6 +58,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Tranard Auburn UV: Netlify edge scrub on `/api/recruiting/hub/*` + Clear-Site-Data cache bust — App Store binary picks up wipe without Codemagic
 - [x] Tranard Auburn UV: hub serve scrub + ticker cacheRev t9 + durable players heal — Home NOW/movement cannot replay stone from disk/CDN (API; no Codemagic)
 - [x] Tranard Roberts: hard-scrub false Auburn unofficial visit from players.json + store normalize/merge + intel buildVisits + visit-log ingest (On3 cannot reintroduce) — API
+- [x] FutureCast Lab "Updated" stamp: stale master-board GET restamps from live HP + rebuilds Aug-seed disk (`DISK-STALE` / cache v41) — current binary already reads `master.updatedAt` (API — no Codemagic)
 - [x] HP stale-DISK rebuild + warm force bypass (`DISK-STALE` / cache v40) — FutureCast chase/delta7d unfreeze after Render (API)
 - [x] Why we chase generator + Admin/script overrides on HP API (`whyWeChase`) — live after Render; **client prefer-field needs Codemagic bake below**
 - [x] 2028 HP chase cards: visit lines + Why we chase notes from live visit/intel stores + soft priority nudge (API — no Codemagic; Rising still snapshot `delta7d` only)
@@ -130,6 +131,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-16 | FutureCast Lab seed first-paint: drop Aug-stale "Updated Aug 7" until live HP lands | `futurecast-lab-updated` + Lab hook in binary; **live master-board stamp already API after Render** | #684 · bake 1.0.26 |
 | 2026-09-13 | Home countdown: **RIVALRY WEEK** only for FSU + UGA (Auburn is Game Week) | `RIVAL_OPPONENT_IDS` + `gameDayBadge` in binary — **1.0.26**; web already correct after #673 | #673 · bake 1.0.26 |
 | 2026-09-12 | Roster Stats tab: accept `source: official` (Philo Week 1 box) + Official box footer | `hasProductionStats` in 1.0.23 still requires `cfbd` — **this is the 1.0.25 reason**; web + API already show | #668 · bake 1.0.25 |
 | 2026-09-10 | Game Week Scouting Report: bundled mapper prefers fan tendencies + `film` | `buildScouting` in binary — **current App Store copy is already API-fixed** (public schedule empties desk scout); bake only drops the leftover mapper | #652 |
