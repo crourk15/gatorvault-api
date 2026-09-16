@@ -291,7 +291,7 @@ function writePayload(pack) {
       activePredictions: masterBoard.players.length,
     },
     heatLevel: 'warm',
-    lastUpdated: masterBoard.updatedAt,
+    lastUpdated: null,
     highPriority,
     highPriorityClosing,
     visitIntel: pack.hp28?.visitIntel || pack.hp27?.visitIntel || [],

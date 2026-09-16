@@ -33,6 +33,7 @@ import { overlayDiscoverySeasonLabState } from '@/components/futurecast/lab/fc-l
 import { fetchRosterPlayers, type RosterPlayer } from './roster-api';
 import { fetchRecruitingBoard, type RecruitingBoardPlayer } from './recruiting-board-api';
 import { isFloridaSchool } from './recruiting-target-filters';
+import { newestIsoTimestamp, resolveLabLastUpdated } from './futurecast-lab-updated';
 
 const EMPTY_STOCK: StockBoardResponse = { stockUp: [], stockDown: [], windowDays: 7 };
 const EMPTY_HIGH_PRIORITY: HighPriorityResponse = {
@@ -147,6 +148,8 @@ export type FutureCastLabDataMap = {
   roster: RosterPlayer[];
   /** Locked 2027 UF commits — used for Board-by-need ranking. */
   commits2027: RecruitingBoardPlayer[];
+  /** Freshest HP plate stamp — Lab hero prefers this over Aug-stale master-board. */
+  highPriorityUpdatedAt?: string | null;
 };
 
 function buildSummary(master: MasterBoardResponse): FutureCastPageSummary {
@@ -199,7 +202,11 @@ export async function loadFutureCastLabSecondary(
   return {
     ...secondary,
     heatLevel: deriveHeatLevel(secondary.home, secondary.stock),
-    lastUpdated: master.updatedAt ?? secondary.movementIntel.updatedAt ?? null,
+    lastUpdated: resolveLabLastUpdated({
+      masterUpdatedAt: master.updatedAt,
+      movementUpdatedAt: secondary.movementIntel.updatedAt,
+      highPriorityUpdatedAt: secondary.highPriorityUpdatedAt,
+    }),
   };
 }
 
@@ -360,6 +367,12 @@ async function loadFutureCastLabSecondaryRaw(
     underclassmen: underclassmenPayload.players ?? [],
     roster,
     commits2027,
+    highPriorityUpdatedAt: newestIsoTimestamp(
+      discoveryHighPriority.updatedAt,
+      discoveryHighPriority.lastUpdated,
+      closingHighPriority.updatedAt,
+      closingHighPriority.lastUpdated
+    ),
   };
 }
 
@@ -371,7 +384,7 @@ export async function loadFutureCastLabPrimary(): Promise<
     masterBoard: master,
     summary: buildSummary(master),
     metrics: buildMetrics(master),
-    lastUpdated: master.updatedAt ?? null,
+    lastUpdated: resolveLabLastUpdated({ masterUpdatedAt: master.updatedAt }),
   };
 }
 
@@ -405,6 +418,10 @@ export async function loadFutureCastLabData(): Promise<FutureCastLabDataMap> {
     ...secondaryRaw,
     ...discoveryOverlay,
     heatLevel: deriveHeatLevel(secondaryRaw.home, secondaryRaw.stock),
-    lastUpdated: primary.lastUpdated ?? secondaryRaw.movementIntel.updatedAt ?? null,
+    lastUpdated: resolveLabLastUpdated({
+      masterUpdatedAt: primary.masterBoard.updatedAt,
+      movementUpdatedAt: secondaryRaw.movementIntel.updatedAt,
+      highPriorityUpdatedAt: secondaryRaw.highPriorityUpdatedAt,
+    }),
   };
 }

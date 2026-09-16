@@ -1,6 +1,7 @@
 import seedJson from './futurecast-lab-seed.json';
 import type { FutureCastLabDataMap } from './futurecast-lab-data';
 import type { HighPriorityPlayer } from './futurecast-high-priority-api';
+import { resolveLabLastUpdated } from './futurecast-lab-updated';
 
 export type FutureCastLabSeed = FutureCastLabDataMap & {
   generatedAt: string;
@@ -93,6 +94,11 @@ export function buildSeedFutureCastLabData(): FutureCastLabDataMap {
     ...lab,
     highPriority,
     highPriorityClosing,
+    lastUpdated: resolveLabLastUpdated({
+      masterUpdatedAt: lab.masterBoard?.updatedAt,
+      movementUpdatedAt: lab.movementIntel?.updatedAt,
+      highPriorityUpdatedAt: lab.lastUpdated,
+    }),
     metrics: {
       ...lab.metrics,
       avgUFProbability,

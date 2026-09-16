@@ -22,7 +22,8 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** v38: 2029 early-target On3/Rivals enrich + chase-style Names to know cards. */
 /** v39: Chase UV/OV soft filter — drop plates older than Board Intel window (~21d). */
 /** v40: stale DISK GET schedules rebuild; warm bypasses wrap-hit on stale/force plates. */
-export const FUTURECAST_API_CACHE_VERSION = 40;
+/** v41: stale master-board GET/warm same as HP — Lab hero no longer freezes on Aug 7 seed. */
+export const FUTURECAST_API_CACHE_VERSION = 41;
 
 /** Disk/memory plate older than this is stale — GET still serves it, warm/GET schedule rebuild. */
 export const HP_DISK_MAX_AGE_MS = 36 * 60 * 60 * 1000; // 36h
@@ -257,9 +258,24 @@ export async function warmFuturecastLabCaches(
   ];
 
   // Master-board first (shared allowlist), then fan out the rest concurrently.
+  // Never treat a wrap memory-hit on an Aug-stale plate as "warmed" — that froze
+  // the Lab hero at Aug 7 while lab-warm / keepalive kept succeeding.
   const [masterJob, ...restJobs] = jobs;
   try {
-    await cache.wrap(masterJob.key, masterJob.build, CACHE_TTL_MS);
+    const existing = loadMasterBoardCached();
+    const needRebuild = opts?.force === true || existing == null || !isHpPlateFresh(existing);
+    if (needRebuild) {
+      try {
+        cache.remove(masterJob.key);
+      } catch {
+        /* ignore */
+      }
+      const value = await masterJob.build();
+      if (value != null) {
+        primeFuturecastCache(masterJob.key, value);
+        writeMasterBoardRuntime(value);
+      }
+    }
     warmed.push(masterJob.label);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -329,6 +345,66 @@ export function scheduleHighPriorityDiskRebuild(
       hpDiskRebuildInFlight.delete(classYear);
     });
   hpDiskRebuildInFlight.set(classYear, run.then(() => undefined));
+}
+
+/** One in-flight + cooldown so DISK hits do not OOM Starter with parallel master rebuilds. */
+let masterBoardRebuildInFlight: Promise<void> | null = null;
+let masterBoardRebuildAt = 0;
+const MASTER_DISK_REBUILD_COOLDOWN_MS = 10 * 60_000;
+
+export function scheduleMasterBoardDiskRebuild(build: () => Promise<unknown>): void {
+  const now = Date.now();
+  if (masterBoardRebuildInFlight) return;
+  if (now - masterBoardRebuildAt < MASTER_DISK_REBUILD_COOLDOWN_MS) return;
+
+  masterBoardRebuildAt = now;
+
+  const run = Promise.resolve()
+    .then(() => build())
+    .then((fresh) => {
+      if (fresh == null) return;
+      primeFuturecastCache(masterBoardCacheKey(), fresh);
+      writeMasterBoardRuntime(fresh);
+      masterBoardRebuildAt = Date.now();
+    })
+    .catch((err) => {
+      const message = err instanceof Error ? err.message : String(err);
+      console.warn('[futurecast-cache] background master-board rebuild after DISK serve failed:', message);
+    })
+    .finally(() => {
+      masterBoardRebuildInFlight = null;
+    });
+  masterBoardRebuildInFlight = run.then(() => undefined);
+}
+
+/** Freshest HP plate stamp — Lab hero uses this when master-board disk is Aug-stale. */
+export function newestHpUpdatedAt(): string | null {
+  let best: string | null = null;
+  let bestTs = Number.NaN;
+  for (const year of [2028, 2027]) {
+    const hp = loadHighPriorityCached(year) as { updatedAt?: string; lastUpdated?: string } | null;
+    const stamp = String(hp?.updatedAt || hp?.lastUpdated || '');
+    const ts = Date.parse(stamp);
+    if (!Number.isFinite(ts)) continue;
+    if (!Number.isFinite(bestTs) || ts > bestTs) {
+      bestTs = ts;
+      best = stamp;
+    }
+  }
+  return best;
+}
+
+/**
+ * Fan-facing master-board stamp. Do not persist this overlay — cache/disk keep the
+ * real plate age so stale GET still schedules a rebuild.
+ */
+export function stampMasterBoardForFans(payload: unknown): unknown {
+  if (!payload || typeof payload !== 'object') return payload;
+  if (isHpPlateFresh(payload)) return payload;
+  const hpStamp = newestHpUpdatedAt();
+  const stamp =
+    hpStamp && isHpPlateFresh({ updatedAt: hpStamp }) ? hpStamp : new Date().toISOString();
+  return { ...(payload as Record<string, unknown>), updatedAt: stamp };
 }
 
 function highPriorityRuntimeCandidates(year: number | string): string[] {
@@ -1263,8 +1339,19 @@ export function softTrendingBoardFromMaster(): {
 export async function warmFuturecastMasterBoard(): Promise<{ ok: true; key: string }> {
   const { buildMasterBoardPayload } = require('./allowlist-board');
   const key = masterBoardCacheKey();
-  const { value } = await cache.wrap(key, () => buildMasterBoardPayload(), CACHE_TTL_MS);
-  if (value != null) writeMasterBoardRuntime(value);
+  const existing = loadMasterBoardCached();
+  const needRebuild = existing == null || !isHpPlateFresh(existing);
+  if (!needRebuild) return { ok: true, key };
+  try {
+    cache.remove(key);
+  } catch {
+    /* ignore */
+  }
+  const value = await buildMasterBoardPayload();
+  if (value != null) {
+    primeFuturecastCache(key, value);
+    writeMasterBoardRuntime(value);
+  }
   return { ok: true, key };
 }
 

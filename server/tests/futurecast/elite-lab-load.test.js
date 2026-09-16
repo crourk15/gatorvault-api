@@ -65,7 +65,7 @@ describe('FutureCast elite Lab load path', () => {
       'utf8'
     );
     assert.match(src, /const primaryPromise = loadFutureCastLabPrimary\(\)/);
-    assert.match(src, /const secondaryPromise = loadFutureCastLabSecondaryRaw\(\)/);
+    assert.match(src, /const secondaryPromise = loadFutureCastLabSecondaryRaw\(hpLoads\)/);
     assert.match(src, /await secondaryPromise/);
     assert.match(src, /hasUsableUfProbability/);
     assert.match(src, /keepHp/);

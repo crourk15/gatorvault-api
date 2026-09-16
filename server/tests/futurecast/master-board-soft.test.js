@@ -15,6 +15,8 @@ describe('master-board soft serve for iOS Lab', () => {
     assert.match(src, /loadMasterBoardCached/);
     assert.match(src, /softMasterBoardFromHighPriority/);
     assert.match(src, /softOnDeferred/);
+    assert.match(src, /DISK-STALE/);
+    assert.match(src, /stampMasterBoardForFans/);
   });
 
   it('response-cache exposes master-board runtime + HP soft seed', () => {
