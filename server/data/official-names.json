@@ -114,6 +114,7 @@
     "Fall Camp", "Spring Game", "Spring Practice", "Spring Camp", "Monte Carlo",
     "Citrus Bowl", "EverBank Stadium", "Jordan-Hare", "Jordan Hare", "Doak Campbell", "Rocky Top",
     "FAU", "USF", "LSU", "FSU", "UGA", "Owls", "Bulldogs", "Tigers", "Seminoles", "Wildcats",
+    "Southern Miss", "Florida Atlantic", "Defensive Backs University", "Game Week",
     "Right Guard", "Left Guard", "Free Safety", "Strong Safety", "New Year", "Year Six",
     "Monte Carlo", "Prep Prospect", "Prospect Report", "Key Takeaways", "Summer Camp",
     "West Coast", "RPO", "June", "May", "August", "September", "October", "November",
@@ -210,6 +211,9 @@
     { "slug": "byrum-brown", "name": "Byrum Brown", "pos": "QB" },
     { "slug": "keshaun-singleton", "name": "Keshaun Singleton", "pos": "WR" },
     { "slug": "jeremiah-koger", "name": "Jeremiah Koger", "pos": "WR" },
-    { "slug": "chas-nimrod", "name": "Chas Nimrod", "pos": "WR" }
+    { "slug": "chas-nimrod", "name": "Chas Nimrod", "pos": "WR" },
+    { "slug": "dj-durkin", "name": "DJ Durkin", "pos": "DC" },
+    { "slug": "bryce-cain", "name": "Bryce Cain", "pos": "RB" },
+    { "slug": "jeremiah-cobb", "name": "Jeremiah Cobb", "pos": "RB" }
   ]
 }
