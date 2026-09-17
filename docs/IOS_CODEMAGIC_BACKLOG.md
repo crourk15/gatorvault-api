@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Locker article “The Questions Saturday Night Will Answer” (`art-auburn-questions-2026`) on `/api/content/published` after Render (API — no Codemagic)
 - [x] Expired locker win-back: +30 days on `trialEnd` + come-back email (`POST /api/admin/members/extend-trial`). Same login unlocks iOS after Render — no Codemagic.
 - [x] Film Room: drop Napier-era 2025 GNFP film reviews — catalog is 2026 Sumrall/Faulkner tape only (`/api/film-room/catalog` after Render). Hub-seed first-paint waits for the bake row below.
 - [x] Film Room Highlights: drop SEC condensed games — official cuts only on `/api/film-room/catalog` (API — no Codemagic)
