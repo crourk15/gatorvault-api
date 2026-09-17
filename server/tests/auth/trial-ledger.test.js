@@ -12,6 +12,7 @@ const {
   markTrialDeleted,
   resolveRegistrationTrial,
   getTrialRecord,
+  extendTrial,
 } = require('../../lib/trial-ledger');
 
 describe('trial-ledger', () => {
@@ -35,5 +36,19 @@ describe('trial-ledger', () => {
     assert.equal(plan.priorDeleted, true);
     assert.equal(plan.trialEnd.toISOString(), end);
     assert.equal(getTrialRecord('fan@example.com').trialEnd, end);
+  });
+
+  it('extendTrial writes a new 30-day window for an expired email', () => {
+    rememberTrial('mekeener50@gmail.com', {
+      trialEnd: '2026-09-15T12:18:07.559Z',
+      trialStart: '2026-08-16T12:18:07.559Z',
+    });
+    const now = new Date('2026-09-17T13:00:00.000Z');
+    const row = extendTrial('mekeener50@gmail.com', { days: 30, now });
+    assert.equal(row.days, 30);
+    assert.equal(row.fromActiveWindow, false);
+    assert.equal(row.trialEnd, '2026-10-17T13:00:00.000Z');
+    assert.equal(getTrialRecord('mekeener50@gmail.com').trialEnd, '2026-10-17T13:00:00.000Z');
+    assert.equal(getTrialRecord('mekeener50@gmail.com').trialStart, '2026-08-16T12:18:07.559Z');
   });
 });

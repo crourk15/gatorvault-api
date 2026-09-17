@@ -1006,6 +1006,50 @@ function mountAdminHubRoutes(app) {
   });
 
   /**
+   * Courtesy 30-day trial extend for expired locker accounts + win-back email.
+   * Does not grant paid/manual. Skips test/demo/paid.
+   * Body: { emails: string[], days?: 30, sendEmail?: true, dryRun?, force? }
+   */
+  app.post('/api/admin/members/extend-trial', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const body = req.body || {};
+      const emails = Array.isArray(body.emails)
+        ? body.emails
+        : body.email
+          ? [body.email]
+          : [];
+      if (!emails.length) {
+        return res.status(400).json({ ok: false, error: 'emails required' });
+      }
+      const dryRun = body.dryRun === true || body.dryRun === 'true' || body.dry_run === true;
+      const force = body.force === true || body.force === 'true';
+      const sendEmail = body.sendEmail !== false && body.sendEmail !== 'false';
+      const days = body.days != null ? body.days : 30;
+
+      const mail =
+        (global.__GV_SUBSCRIPTION_MAIL__ && global.__GV_SUBSCRIPTION_MAIL__.deliverEmail) ||
+        null;
+      if (sendEmail && !mail && !dryRun) {
+        return res.status(503).json({ ok: false, error: 'Email deliverer not ready' });
+      }
+
+      const { runLockerWinback } = require('./locker-winback');
+      const result = await runLockerWinback({
+        emails,
+        days,
+        sendEmail,
+        dryRun,
+        force,
+        deliverEmail: mail || (async () => ({ sent: false, provider: 'dry' })),
+      });
+      return res.status(200).json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /**
    * Email members about an App Store update (default 1.0.15).
    * Body: { version?, dryRun?, force?, limit?, requireActiveAccess? }
    * Skips App Review / test / Charles-Rourk / operator accounts.
