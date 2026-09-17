@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-03T01:48:06.220Z",
+  "updatedAt": "2026-09-17T01:35:20.637Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -14637,26 +14637,32 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/jackson-stecher-242575/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": null,
+          "publishedAt": "2026-09-17"
         }
       ],
       "strengths": [
-        "The Rivals Camp Series made its stop in Miami over the weekend, and Florida State commitments and priority targets were well represented."
+        "Stecher is a compact 6-0.5 / 195 pocket QB on the 2028 board — Lake Brantley (FL) 3-star, not a tall-pocket mold.",
+        "Stecher's Florida file is still live: offer on the board, 4 UOVs (latest 2026-04-04), Ryan O'Hara on the UF ladder.",
+        "Stecher pledged Buffalo on 2026-06-22. FSU still leads leftover RPM (~37%, 10 UOVs) — this is a flip-watch, not a Gator commit story."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "The Rivals Camp Series made its stop in Miami over the weekend, and Florida State commitments and priority targets were well represented. The",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Stecher — no Hudl/On3 highlight link on file. Board-only draft. Do not invent platform, release, or window traits."
+      ],
+      "comparison": "Stecher comps to Jake Haener — 6-1 / 200 compact pocket QB who wins with timing and processing more than height (size-matched within ~1 inch of Stecher's 6-0.5 / 195 frame).",
+      "schemeFit": "Stecher fits a timing/rhythm dropback room that can develop a compact pocket QB rather than a 6-5 power-arm mold.",
+      "staffNotes": "PROVISIONAL board-only draft 2026-09-17 — no Hudl/On3 highlight link on file. filmWatched: false. Do not ship as live Vault Scouting. Comp size-matched (Jake Haener 6-1/200) — not a Florida-alum default. Stecher is a Buffalo commit with a live Florida offer.",
+      "projection": "Stecher projects as sit and develop in the QB room, then compete for the job — starter upside as a compact, timing-first pocket QB if the processing holds in a Power conference room.",
+      "insiderNotes": "Stecher is a 6-0.5 / 195 2028 QB from Lake Brantley. Board-only: Buffalo commit (2026-06-22) with a live Florida offer and 4 UOVs. No tape claims until Hudl is watched.",
+      "recruitingStory": "Jackson Stecher is a 3-star 2028 QB | listed 6-0.5 / 195 | Lake Brantley (Oviedo / Springs, FL) | committed to Buffalo (2026-06-22) | Florida offer still on file.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:13:09.060Z"
+      "updatedAt": "2026-09-17T01:35:20.626Z",
+      "filmWatched": false,
+      "provisional": true
     },
     "braylen-bedford": {
       "playerSlug": "braylen-bedford",

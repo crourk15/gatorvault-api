@@ -11,8 +11,13 @@ const {
 const {
   buildWhyFlorida,
   buildVaultAngle,
-  isCommittedPlayer
+  isCommittedPlayer,
+  committedElsewhere,
+  committedToFlorida,
+  ufStaffSummary
 } = require('../lib/beat-brief-packet');
+const on3 = require('../lib/on3-recruit-client');
+const hydrate = require('../lib/on3-board-hydrate');
 const { resolvePlayerFromTextSync } = require('../lib/beat-recruiting-ingest-gate');
 const teaser = require('../lib/beat-teaser-resolve');
 
@@ -80,6 +85,87 @@ function main() {
   });
   assert.ok(!/UF board read: committed/i.test(whyOpen), whyOpen);
   assert.ok(!/commit locked/i.test(whyOpen), whyOpen);
+
+  const buffalo = {
+    name: 'Jackson Stecher',
+    classYear: 2028,
+    pos: 'QB',
+    status: 'committed',
+    ufStatus: 'offered',
+    committedTo: 'Buffalo Bulls',
+    ufRpmPct: 11,
+    stars: 3,
+    school: 'Lake Brantley, FL'
+  };
+  assert.equal(
+    isCommittedPlayer(buffalo, { eventType: 'target_update', ufPosition: 'tracking' }),
+    false
+  );
+  assert.equal(
+    isCommittedPlayer(buffalo, { eventType: 'commit_culture', ufPosition: 'committed' }),
+    false
+  );
+  const whyBuffalo = buildWhyFlorida({
+    player: buffalo,
+    research: { ufPosition: 'committed', eventType: 'commit_culture' },
+    intelligence: null,
+    beatRows: [{ detail: 'Jackson Stecher — Florida offer.' }],
+    rivals: ['Florida State', 'USF']
+  });
+  assert.ok(!/UF board read: committed/i.test(whyBuffalo), whyBuffalo);
+  assert.ok(!/commit locked/i.test(whyBuffalo), whyBuffalo);
+  const angleBuffalo = buildVaultAngle({
+    playerName: 'Jackson Stecher',
+    research: { ufPosition: 'committed', eventType: 'commit_culture' },
+    intelligence: null,
+    beatRows: [{ detail: 'Jackson Stecher — Florida offer.' }],
+    rivals: ['Florida State'],
+    whyFlorida: whyBuffalo,
+    player: buffalo
+  });
+  assert.ok(!/is a Florida COMMIT/i.test(angleBuffalo), angleBuffalo);
+  assert.ok(/committed to Buffalo/i.test(angleBuffalo), angleBuffalo);
+  assert.ok(/Committed to: Buffalo Bulls/i.test(whyBuffalo), whyBuffalo);
+  assert.ok(!/commit culture/i.test(whyBuffalo), whyBuffalo);
+
+  assert.equal(committedToFlorida({ committedTo: 'Florida State' }), false);
+  assert.equal(committedToFlorida({ committedTo: 'South Florida' }), false);
+  assert.equal(committedToFlorida({ committedTo: 'Florida' }), true);
+  assert.equal(committedElsewhere({ committedTo: 'Florida State' }), true);
+  assert.equal(
+    isCommittedPlayer(
+      { name: 'FSU Kid', status: 'committed', committedTo: 'Florida State', ufStatus: 'offered' },
+      { eventType: 'commit_culture', ufPosition: 'committed' }
+    ),
+    false
+  );
+
+  const stecherTeams = [
+    { team: { name: 'Florida State' }, status: 'Offered', prediction: 37, year: 2028, coaches: [{ name: 'Mike Norvell' }] },
+    { team: { name: 'USF' }, status: 'Offered', prediction: 19, year: 2028, coaches: [{ name: 'Michael Hartline' }] },
+    { team: { name: 'Florida' }, status: 'Offered', prediction: 11, year: 2028, coaches: [{ name: "Ryan O'Hara" }] },
+    { team: { name: 'Buffalo' }, status: 'Committed', prediction: 7, year: 2028, coaches: [{ name: 'Pete Lembo' }] }
+  ];
+  assert.equal(on3.isFloridaGatorsName('Florida State'), false);
+  assert.equal(on3.isFloridaGatorsName('Florida'), true);
+  assert.equal(on3.getFloridaTeam(stecherTeams, 2028).team.name, 'Florida');
+  assert.equal(hydrate.ufRpmFromTopTeams(stecherTeams, 2028), 11);
+  const ufStaff = hydrate.ufStaffFromTopTeams(stecherTeams, 2028);
+  assert.ok(ufStaff && /O'Hara|O’Hara/i.test(ufStaff.label), JSON.stringify(ufStaff));
+  assert.ok(!/Norvell/i.test(ufStaff.label), JSON.stringify(ufStaff));
+  assert.ok(!/Norvell/i.test(String(ufStaffSummary({ on3TopTeams: stecherTeams, classYear: 2028 }) || '')));
+
+  const whyFsuFirst = buildWhyFlorida({
+    player: { ...buffalo, ufRpmPct: 37, on3TopTeams: stecherTeams },
+    research: { ufPosition: 'committed', eventType: 'commit_culture' },
+    intelligence: null,
+    beatRows: [],
+    rivals: ['Florida State']
+  });
+  assert.ok(!/Florida On3 RPM ~37%/i.test(whyFsuFirst), whyFsuFirst);
+  assert.ok(!/Florida staff: Mike Norvell/i.test(whyFsuFirst), whyFsuFirst);
+  assert.ok(!/UF board read: committed/i.test(whyFsuFirst), whyFsuFirst);
+  assert.ok(!/leads involved schools/i.test(whyFsuFirst), whyFsuFirst);
 
   const why = buildWhyFlorida({
     player,
