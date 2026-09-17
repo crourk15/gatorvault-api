@@ -16,12 +16,76 @@ function statusLooksCommitted(raw) {
   return /\b(committed|signed|enrolled)\b/i.test(s);
 }
 
+function committedToFlorida(player) {
+  const to = String(player?.committedTo || '').trim();
+  if (!to) return false;
+  try {
+    return require('./on3-recruit-client').isFloridaGatorsName(to);
+  } catch {
+    if (/florida\s*state|south\s*florida|florida\s*atlantic|florida\s*international|central\s*florida/i.test(to)) {
+      return false;
+    }
+    return /^(florida|gators|uf)\b/i.test(to);
+  }
+}
+
+function committedElsewhere(player) {
+  const to = String(player?.committedTo || '').trim();
+  return !!(to && !committedToFlorida(player));
+}
+
+function boardReadForBrief(player, research) {
+  if (committedElsewhere(player)) {
+    if (statusLooksCommitted(research?.ufPosition)) {
+      return player?.ufStatus && !statusLooksCommitted(player.ufStatus)
+        ? player.ufStatus
+        : 'offered';
+    }
+    return research?.ufPosition || player?.ufStatus || 'tracking';
+  }
+  if (isCommittedPlayer(player, research)) return 'committed';
+  return research?.ufPosition || null;
+}
+
+function eventTypeForBrief(player, research) {
+  const ev = research?.eventType;
+  if (committedElsewhere(player) && (ev === 'commit' || ev === 'commit_culture' || ev === 'flip')) {
+    return 'target_update';
+  }
+  if (
+    isCommittedPlayer(player, research) &&
+    (!ev || ev === 'target_update' || ev === 'update' || ev === 'trending')
+  ) {
+    return 'commit_culture';
+  }
+  return ev || null;
+}
+
+function trackedUfStatusLine(player, research) {
+  if (committedElsewhere(player)) {
+    if (player?.ufStatus && !statusLooksCommitted(player.ufStatus)) return player.ufStatus;
+    return 'offered';
+  }
+  if (player?.ufStatus) return player.ufStatus;
+  if (isCommittedPlayer(player, research)) return player?.status || 'committed';
+  return player?.status || null;
+}
+
+/** Florida commit only — On3 status "committed" to Buffalo/FSU/etc is not a Gator commit story. */
 function isCommittedPlayer(player, research) {
   if (!player && !research) return false;
+  if (committedElsewhere(player)) return false;
+  if (committedToFlorida(player)) return true;
   if (research?.eventType === 'commit' || research?.eventType === 'flip') return true;
   if (statusLooksCommitted(research?.ufPosition)) return true;
-  if (statusLooksCommitted(player?.ufStatus || player?.status)) return true;
-  if (player?.committedTo && /florida|gators/i.test(String(player.committedTo))) return true;
+  // ufStatus can say "Florida Committed". Bare player.status is On3 committed-anywhere — do not use it.
+  if (statusLooksCommitted(player?.ufStatus)) {
+    const ufSt = String(player.ufStatus);
+    if (!/florida\s*state|south\s*florida|florida\s*atlantic|florida\s*international|central\s*florida/i.test(ufSt)
+      && /florida|gators|\buf\b/i.test(ufSt)) {
+      return true;
+    }
+  }
   const teams = player?.on3TopTeams || player?.topTeams || [];
   try {
     const on3 = require('./on3-recruit-client');
@@ -354,23 +418,36 @@ function researchArchiveSummary(research) {
   return bits.length ? bits.slice(0, 8) : [];
 }
 
+function resolvedUfRpmPct(player, research) {
+  try {
+    const hydrate = require('./on3-board-hydrate');
+    const teams = player?.on3TopTeams || player?.topTeams || research?.on3TopTeams || [];
+    const year = player?.classYear || research?.player?.classYear || 2028;
+    if (teams.length) {
+      const fromBoard = hydrate.ufRpmFromTopTeams(teams, year);
+      if (fromBoard != null) return fromBoard;
+    }
+  } catch {
+    /* optional */
+  }
+  return player?.ufRpmPct ?? player?.ufProbability ?? player?.ufConfidence ?? player?.floridaOdds ?? null;
+}
+
 function rpmSummary(intelligence, research, player) {
   const rpm = intelligence?.rpm || {};
   const preds = research?.predictions || [];
   const bits = [];
-  let ufPct = rpm.ufPct ?? rpm.floridaPct ?? player?.ufRpmPct ?? player?.ufProbability ?? player?.ufConfidence;
+  let ufPct = resolvedUfRpmPct(player, research);
+  if (ufPct == null) ufPct = rpm.ufPct ?? rpm.floridaPct;
   let leader = rpm.leader || rpm.leaderSchool || null;
 
-  if ((ufPct == null || !leader) && (player?.on3TopTeams || player?.topTeams || research?.on3TopTeams)) {
+  if (!leader && (player?.on3TopTeams || player?.topTeams || research?.on3TopTeams)) {
     try {
       const hydrate = require('./on3-board-hydrate');
       const teams = player?.on3TopTeams || player?.topTeams || research?.on3TopTeams || [];
       const year = player?.classYear || research?.player?.classYear || 2028;
-      if (ufPct == null) ufPct = hydrate.ufRpmFromTopTeams(teams, year);
-      if (!leader) {
-        const schools = hydrate.interestedSchoolsFromTopTeams(teams, year, 1);
-        if (schools[0]) leader = schools[0].school;
-      }
+      const schools = hydrate.interestedSchoolsFromTopTeams(teams, year, 1);
+      if (schools[0]) leader = schools[0].school;
     } catch {
       /* optional */
     }
@@ -457,27 +534,36 @@ function buildWhyFlorida({ player, research, intelligence, beatRows, rivals }) {
 
   const interested = interestedSchoolsSummary(player, rivals);
   const ladder = schoolLadderSummary(player, 5);
-  const ufRpm = pct(player?.ufRpmPct ?? player?.ufProbability ?? player?.ufConfidence ?? player?.floridaOdds);
+  const ufRpm = pct(resolvedUfRpmPct(player, research));
   if (ufRpm) {
+    let leadsBoard = false;
+    if (!committed) {
+      try {
+        const hydrate = require('./on3-board-hydrate');
+        const teams = player?.on3TopTeams || player?.topTeams || [];
+        const top = hydrate.interestedSchoolsFromTopTeams(teams, player?.classYear || 2028, 1)[0];
+        leadsBoard = !!(top && require('./on3-recruit-client').isFloridaGatorsName(top.school));
+      } catch {
+        leadsBoard = false;
+      }
+    }
     bits.push(
       committed
         ? `Florida On3 RPM ~${ufRpm} (commit locked).`
-        : `Florida On3 RPM ~${ufRpm}${interested && /florida/i.test(interested) ? ' (leads involved schools)' : ''}.`
+        : `Florida On3 RPM ~${ufRpm}${leadsBoard ? ' (leads involved schools)' : ''}.`
     );
   }
   const staff = ufStaffSummary(player);
   if (staff) bits.push(`${staff}.`);
 
-  const ufPos = committed ? 'committed' : research?.ufPosition;
-  const eventType = committed && (!research?.eventType || research.eventType === 'target_update' || research.eventType === 'update' || research.eventType === 'trending')
-    ? 'commit_culture'
-    : research?.eventType;
+  const ufPos = boardReadForBrief(player, research);
+  const eventType = eventTypeForBrief(player, research);
   if (ufPos) bits.push(`UF board read: ${ufPos}.`);
   if (eventType && eventType !== 'update') bits.push(`Latest signal type: ${eventType.replace(/_/g, ' ')}.`);
 
-  const ufStatus = player?.ufStatus || player?.status;
+  const ufStatus = trackedUfStatusLine(player, research);
   if (ufStatus) bits.push(`Tracked UF status: ${ufStatus}.`);
-  if (committed && player?.committedTo) bits.push(`Committed to: ${player.committedTo}.`);
+  if (player?.committedTo) bits.push(`Committed to: ${player.committedTo}.`);
 
   const visits = visitSummary(intelligence, player);
   if (visits) bits.push(`Visit / OV trail: ${visits}.`);
@@ -552,14 +638,21 @@ function buildVaultAngle({
   const gaps = intelligence?.gaps || research?.gaps || [];
 
   const committed = isCommittedPlayer(player, research);
-  const stake = committed ? 'committed' : ufPos;
+  const elsewhere = committedElsewhere(player);
+  const stake = committed ? 'committed' : elsewhere ? 'offered' : (boardReadForBrief(player, research) || ufPos);
   const signal = committed && (eventType === 'update' || eventType === 'target update' || eventType === 'trending')
     ? 'commit culture'
-    : eventType;
+    : elsewhere
+      ? 'target update'
+      : eventType;
   const lines = [];
   if (committed) {
     lines.push(
       `Angle: ${name} is a Florida COMMIT — do not frame as an open board chase. Own the culture/ownership story in Vault voice (program member energy, fall plans, class leadership) without citing writers. Lead with commit stake + one board credential (${concrete || 'ranks/size/staff'}).`
+    );
+  } else if (elsewhere) {
+    lines.push(
+      `Angle: ${name} is committed to ${player.committedTo} — Florida still has an offer on the file. Do NOT frame as a Florida COMMIT or culture/ownership story. Write a flip-watch / offer-still-on post: identity + board + Florida process (visits/staff). Current school is one calm mid-post fact. Never invent a decommit.`
     );
   } else if (filmHook) {
     lines.push(
@@ -582,6 +675,10 @@ function buildVaultAngle({
   if (committed) {
     lines.push(
       'Pressure angle: none — commitment is locked. If rivals appear on the ladder they are former board noise; use them only as contrast to how locked UF already is.'
+    );
+  } else if (elsewhere) {
+    lines.push(
+      `Pressure angle: commitment is elsewhere (${player.committedTo}). Ladder/RPM are leftover board context only. Close on Florida process — live offer, visits, staff — not a fake Gator commit and not a dunk on the pledge school.`
     );
   } else if (rivalHook.length) {
     lines.push(
@@ -624,7 +721,9 @@ function buildVaultAngle({
     lines.push(
       committed
         ? `Vault edge (verified long-form COMMIT): stack ${parts.join(' | ')} under the ownership/culture hook — elite Vault voice — ownership story, not a chase recap.`
-        : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. State board + film as Vault fact; never announce that you’re different or ahead of anyone.`
+        : elsewhere
+          ? `Vault edge (verified long-form — committed elsewhere): stack ${parts.join(' | ')} under the flip-watch / offer-still-on hook. Florida process, not a chase recap and not a Gator commit story.`
+          : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. State board + film as Vault fact; never announce that you’re different or ahead of anyone.`
     );
   } else if (gaps.length) {
     lines.push(`Vault edge (fill the board gaps): ${gaps.slice(0, 4).join(', ')}.`);
@@ -761,11 +860,11 @@ function formatBriefText({
   lines.push(line('Size / measurables', measurementsSummary(player)));
   lines.push(line('Composite / rating', player?.composite || player?.rating || player?.compositeScore));
   lines.push(line('NIL value (On3)', player?.nilValue));
-  lines.push(line('UF likelihood', pct(player?.ufRpmPct ?? player?.ufProbability ?? player?.ufConfidence ?? player?.floridaOdds)));
-  lines.push(line('UF status', player?.ufStatus || player?.status));
+  lines.push(line('UF likelihood', pct(resolvedUfRpmPct(player, research))));
+  lines.push(line('UF status', trackedUfStatusLine(player, research)));
   lines.push(line('UF staff', ufStaffSummary(player)));
-  lines.push(line('UF board read', research?.ufPosition));
-  lines.push(line('Signal type', research?.eventType));
+  lines.push(line('UF board read', boardReadForBrief(player, research)));
+  lines.push(line('Signal type', eventTypeForBrief(player, research)));
   lines.push(line('Committed to', player?.committedTo));
   lines.push(line('Interested schools', interestedSchoolsSummary(player, rivals)));
   lines.push(line('School ladder', schoolLadderSummary(player, 8)));
@@ -1361,6 +1460,13 @@ async function buildBeatBrief(slug, opts = {}) {
     if (!research.eventType || research.eventType === 'target_update' || research.eventType === 'update' || research.eventType === 'trending') {
       research.eventType = 'commit_culture';
     }
+  } else if (research && committedElsewhere(player)) {
+    if (statusLooksCommitted(research.ufPosition)) {
+      research.ufPosition = trackedUfStatusLine(player, research);
+    }
+    if (research.eventType === 'commit' || research.eventType === 'commit_culture' || research.eventType === 'flip') {
+      research.eventType = 'target_update';
+    }
   }
 
   const rivals = rivalList(player || {}, research, intelligence);
@@ -1654,6 +1760,8 @@ module.exports = {
   buildWhyFlorida,
   buildVaultAngle,
   isCommittedPlayer,
+  committedElsewhere,
+  committedToFlorida,
   statusLooksCommitted,
   currentRosterCollision,
   buildBoardFacts,

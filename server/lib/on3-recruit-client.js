@@ -6,7 +6,35 @@ const ORG = process.env.ON3_ORG_SLUG || 'florida-gators';
 const SPORT = process.env.ON3_SPORT || 'football';
 
 const COMMIT_STATUSES = new Set(['Committed', 'Enrolled', 'Signed']);
+/** Leaky historic regex — matches Florida State / USF / FAU. Prefer isFloridaGatorsName. */
 const UF_MATCH = /florida|\bgators\b|\buf\b/i;
+
+/** Gators only — never Florida State, USF, FAU, FIU, UCF, FAMU. */
+function isFloridaGatorsName(name) {
+  const s = String(name || '').trim().toLowerCase();
+  if (!s) return false;
+  if (
+    /florida\s*state|seminoles|\bfsu\b/.test(s) ||
+    /south\s*florida|\busf\b/.test(s) ||
+    /florida\s*atlantic|\bfau\b/.test(s) ||
+    /florida\s*international|\bfiu\b/.test(s) ||
+    /central\s*florida|\bucf\b/.test(s) ||
+    /florida\s*a\s*&\s*m|\bfamu\b/.test(s)
+  ) {
+    return false;
+  }
+  if (
+    s === 'florida' ||
+    s === 'florida gators' ||
+    s === 'the gators' ||
+    s === 'uf' ||
+    s === 'gators' ||
+    s === 'university of florida'
+  ) {
+    return true;
+  }
+  return /^(the\s+)?(university\s+of\s+)?florida(\s+gators)?$/.test(s);
+}
 
 function nameFromSlug(recruitSlug) {
   const base = String(recruitSlug || '').replace(/-\d+$/, '');
@@ -294,11 +322,15 @@ function getCollegeCommit(topTeams, classYear) {
 }
 
 function getFloridaTeam(topTeams, classYear) {
-  return getYearTopTeams(topTeams, classYear).find((t) => UF_MATCH.test(t.team?.name || t.team?.fullName || ''));
+  return getYearTopTeams(topTeams, classYear).find((t) =>
+    isFloridaGatorsName(t.team?.name || t.team?.fullName || t.name || t.school || '')
+  );
 }
 
 function isFloridaTeam(team) {
-  return UF_MATCH.test(team?.team?.name || team?.team?.fullName || '');
+  return isFloridaGatorsName(
+    team?.team?.name || team?.team?.fullName || team?.name || team?.school || ''
+  );
 }
 
 async function mapPool(items, limit, fn) {
@@ -328,6 +360,7 @@ module.exports = {
   SPORT,
   COMMIT_STATUSES,
   UF_MATCH,
+  isFloridaGatorsName,
   fetchTeamVisits,
   fetchRecruitProfile,
   fetchNextPageProps,
