@@ -28,7 +28,7 @@
     "eric-singleton-jr": {
       "depthChartTier": "starter",
       "pos": "WR",
-      "injury": "green",
+      "injury": "yellow",
       "jersey": 2,
       "unit": "offense",
       "name": "Eric Singleton Jr."
@@ -220,7 +220,7 @@
     "emmanuel-oyebadejo": {
       "depthChartTier": "rotation",
       "pos": "DL",
-      "injury": "green",
+      "injury": "yellow",
       "jersey": 99,
       "unit": "defense",
       "name": "Emmanuel Oyebadejo"
@@ -890,5 +890,5 @@
       "name": "Byron Louis"
     }
   },
-  "updatedAt": "2026-07-07T12:49:21.334Z"
+  "updatedAt": "2026-09-17T01:40:00.000Z"
 }
