@@ -25,6 +25,12 @@ describe('depth-chart-board', () => {
     assert.equal(teH.status, 'battle');
     const rg = doc.offense.find((r) => r.pos === 'RG');
     assert.equal(rg.b, 'TJ Dice Jr.');
+    const wrZ = doc.offense.find((r) => r.pos === 'WR (Z)');
+    assert.equal(wrZ.s, 'Eric Singleton Jr.');
+    assert.match(wrZ.analysis, /questionable vs auburn/i);
+    const end = doc.defense.find((r) => r.pos === 'END');
+    assert.match(end.s, /Emmanuel Oyebadejo/);
+    assert.match(end.analysis, /questionable vs auburn/i);
     const payload = board.toApiPayload(doc);
     assert.equal(payload.ok, true);
     assert.deepEqual(payload.byPhase.off, doc.offense);
