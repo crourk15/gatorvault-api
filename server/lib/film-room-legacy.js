@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { loadFilmRoomCache, resolveCachePath } = require('./film-room-cache-store');
 const {
-  isGnfpFilmBreakdownTitle,
+  isCurrentStaffGnfpReview,
   isFilmGuyFloridaBreakdownTitle,
   isCondensedGameTitle,
   dedupePressersByEvent,
@@ -86,7 +86,8 @@ function loadLegacyVideoCatalog() {
 
   (cache.auto?.gnfp || []).forEach((row) => {
     // Drop coach podcast / Talking Ball sit-downs — Film Breakdown is tape only.
-    if (!isGnfpFilmBreakdownTitle(row?.title)) return;
+    // Current staff only — Napier-era 2025 GNFP reviews stay off the hub.
+    if (!isCurrentStaffGnfpReview(row)) return;
     pushUnique(row, LEGACY_CATEGORIES.GNFP);
   });
 
@@ -97,6 +98,7 @@ function loadLegacyVideoCatalog() {
       if (isCondensedGameTitle(row.title)) return;
       pushUnique(row, LEGACY_CATEGORIES.HIGHLIGHTS);
     } else if (/gnfp/i.test(src) || cat === 'GNFP Film Review') {
+      if (!isCurrentStaffGnfpReview(row)) return;
       pushUnique(row, LEGACY_CATEGORIES.GNFP);
     } else if (cat === 'Film Breakdown' || /film guy/i.test(src)) {
       pushUnique(row, LEGACY_CATEGORIES.FILM_GUY);
