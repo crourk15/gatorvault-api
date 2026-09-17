@@ -10,6 +10,7 @@ const http = require('http');
 const ROOT = path.resolve(__dirname, '../..');
 const OUT = path.join(__dirname, '../lib/film-room-hub-seed.json');
 const API = process.env.FILM_SEED_API || 'https://gatorvault-api.onrender.com';
+const { isCurrentStaffGnfpReview } = require('../../server/lib/film-room-youtube-ingest');
 
 function fetchJson(url, timeoutMs = 35000) {
   return new Promise((resolve, reject) => {
@@ -45,6 +46,10 @@ function slimItem(item) {
   if (!item || !(item.id || item.title)) return null;
   if (/\bcondensed(?:\s+game)?\b/i.test(String(item.title || ''))) return null;
   if (!isFilmBreakdownEligibleTitle(item.title)) return null;
+  const gnfp =
+    /gnfp/i.test(String(item.source || '')) ||
+    /gnfp/i.test(String(item.filmHub || item.category || ''));
+  if (gnfp && !isCurrentStaffGnfpReview(item)) return null;
   return {
     id: item.id || item.slug || item.youtubeId,
     slug: item.slug,

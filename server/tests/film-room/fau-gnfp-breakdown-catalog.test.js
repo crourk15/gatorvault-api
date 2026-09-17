@@ -18,6 +18,10 @@ describe('FAU Week 1 GNFP film lands on Film Breakdowns', () => {
     assert.equal(offense.source, 'GNFP');
     assert.equal(defense.source, 'GNFP');
     assert.doesNotMatch(JSON.stringify([offense, defense]), /Lagway/i);
+    assert.ok(
+      !items.some((row) => /gnfp/i.test(row.source || '') && /\b2025\b/.test(row.title || '')),
+      'Napier-era 2025 GNFP film reviews must stay off the catalog'
+    );
   });
 
   it('film-room catalog hub lists them under Film Breakdown', () => {

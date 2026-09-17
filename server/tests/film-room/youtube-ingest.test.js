@@ -5,6 +5,7 @@ const {
   shouldKeepEntry,
   mergeBucket,
   toCacheRow,
+  isCurrentStaffGnfpReview,
 } = require('../../lib/film-room-youtube-ingest');
 
 const sampleXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -62,4 +63,41 @@ test('mergeBucket adds new ids only once', () => {
   const second = mergeBucket(first.rows, [row]);
   assert.equal(second.added, 0);
   assert.equal(second.rows.length, 1);
+});
+
+test('GNFP ingest keeps 2026 staff film and drops 2025 Napier-era reviews', () => {
+  const gnfp = { kind: 'gnfp', bucket: 'gnfp', label: 'GNFP' };
+  const keep = {
+    title: 'GNFP Film Review- 2026 Florida Gators Offense vs. FAU',
+    publishedAt: '2026-09-02T12:00:00.000Z',
+  };
+  const drop = {
+    title: 'GNFP Film Review - 2025 Florida Gators Offense vs FSU | The Gator Nation Football Podcast',
+    publishedAt: '2025-12-22T17:39:23.000Z',
+    season: '2025',
+  };
+  assert.equal(isCurrentStaffGnfpReview(keep), true);
+  assert.equal(isCurrentStaffGnfpReview(drop), false);
+  assert.equal(shouldKeepEntry(keep, gnfp), true);
+  assert.equal(shouldKeepEntry(drop, gnfp), false);
+
+  const stale = toCacheRow(
+    {
+      youtubeId: 'old2025fsu11',
+      title: drop.title,
+      publishedAt: drop.publishedAt,
+    },
+    gnfp
+  );
+  const fresh = toCacheRow(
+    {
+      youtubeId: 'new2026fau11',
+      title: keep.title,
+      publishedAt: keep.publishedAt,
+    },
+    gnfp
+  );
+  const pruned = mergeBucket([stale, fresh], [], { pruneGnfpNonFilm: true });
+  assert.equal(pruned.rows.length, 1);
+  assert.equal(pruned.rows[0].youtubeId, 'new2026fau11');
 });

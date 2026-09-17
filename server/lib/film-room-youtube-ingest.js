@@ -59,6 +59,31 @@ function isGnfpFilmBreakdownTitle(title) {
   return GNFP_FILM_SIGNAL.test(t);
 }
 
+/** Sumrall / Faulkner year — drop Napier-era 2025 GNFP film reviews. */
+const CURRENT_STAFF_GNFP_SEASON = 2026;
+
+function gnfpTitleSeason(title) {
+  const years = [...String(title || '').matchAll(/\b(20\d{2})\b/g)].map((m) => Number(m[1]));
+  if (years.includes(CURRENT_STAFF_GNFP_SEASON)) return CURRENT_STAFF_GNFP_SEASON;
+  if (years.includes(2025)) return 2025;
+  return null;
+}
+
+function isCurrentStaffGnfpReview(rowOrTitle) {
+  const row = rowOrTitle && typeof rowOrTitle === 'object' ? rowOrTitle : { title: rowOrTitle };
+  const title = String(row.title || '');
+  if (!isGnfpFilmBreakdownTitle(title)) return false;
+  const titled = gnfpTitleSeason(title);
+  if (titled != null) return titled >= CURRENT_STAFF_GNFP_SEASON;
+  const seasonNum = Number(row.season);
+  if (Number.isFinite(seasonNum) && seasonNum > 0) {
+    return seasonNum >= CURRENT_STAFF_GNFP_SEASON;
+  }
+  const pub = row.publishedAt ? new Date(row.publishedAt).getUTCFullYear() : 0;
+  if (Number.isFinite(pub) && pub > 0) return pub >= CURRENT_STAFF_GNFP_SEASON;
+  return false;
+}
+
 /** Live shows, reactions, and pick 'em — not tape. */
 const FILM_GUY_NOT_BREAKDOWN =
   /\b(fgn\s*live|reaction|score predictions?|\bpicks\b|preview hour)\b/i;
@@ -188,7 +213,7 @@ function classifySourceBucket(entry, source) {
 function shouldKeepEntry(entry, source) {
   const title = entry.title || '';
   if (source.kind === 'gnfp' || source.bucket === 'gnfp') {
-    return isGnfpFilmBreakdownTitle(title);
+    return isCurrentStaffGnfpReview(entry);
   }
   if (source.kind === 'film_guy' || source.bucket === 'filmGuy') {
     return isFilmGuyFloridaBreakdownTitle(title);
@@ -278,7 +303,7 @@ function mergeBucket(existing, incoming, { pruneGnfpNonFilm, pruneFilmGuyNonFlor
   }
   let merged = Array.from(byId.values());
   if (pruneGnfpNonFilm) {
-    merged = merged.filter((row) => isGnfpFilmBreakdownTitle(row?.title));
+    merged = merged.filter((row) => isCurrentStaffGnfpReview(row));
   }
   if (pruneFilmGuyNonFlorida) {
     merged = merged.filter((row) => isFilmGuyFloridaBreakdownTitle(row?.title));
@@ -657,6 +682,8 @@ module.exports = {
   parseSourcesFromEnv,
   parseRssEntries,
   isGnfpFilmBreakdownTitle,
+  isCurrentStaffGnfpReview,
+  CURRENT_STAFF_GNFP_SEASON,
   isFilmGuyFloridaBreakdownTitle,
   titleHasUfFootball,
   isCondensedGameTitle,
