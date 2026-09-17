@@ -1,6 +1,6 @@
 /**
  * Admin Hub — Recent Members (newest signups from users.json).
- * Read-only roster; PIN-gated via hub apiGet.
+ * PIN-gated via hub apiGet / apiPost. Expired locker rows can get +30 days + email.
  */
 (function (global) {
   function esc(s) {
@@ -112,8 +112,9 @@
 
   function render(container, ctx) {
     var apiGet = ctx.apiGet;
+    var apiPost = ctx.apiPost;
     var onNavigate = ctx.onNavigate || function () {};
-    var state = { since: '30d', access: 'all', limit: 50 };
+    var state = { since: '30d', access: 'all', limit: 50, lastMembers: [] };
 
     container.innerHTML =
       '<div class="hub-sum hub-members">'
@@ -137,6 +138,9 @@
       + '<button type="button" class="hub-mem-chip" data-access="paid">Paid</button>'
       + '<button type="button" class="hub-mem-chip" data-access="expired">Expired</button>'
       + '</div>'
+      + '<div class="hub-btn-row" style="margin-top:10px">'
+      + '<button type="button" class="hub-btn" id="hub-mem-extend-visible">Extend visible expired +30d</button>'
+      + '</div>'
       + '</div>'
       + '<div id="hub-mem-counts" class="hub-mem-counts hub-meta"></div>'
       + '<div id="hub-mem-loading" class="hub-dash-loading">Loading members…</div>'
@@ -152,6 +156,12 @@
     document.getElementById('hub-mem-refresh').addEventListener('click', load);
     document.getElementById('hub-mem-points').addEventListener('click', function () {
       onNavigate('#settings/platform');
+    });
+    document.getElementById('hub-mem-extend-visible').addEventListener('click', function () {
+      var emails = (state.lastMembers || [])
+        .filter(function (m) { return m && m.access === 'expired' && m.email; })
+        .map(function (m) { return m.email; });
+      extendEmails(emails, 'visible expired');
     });
 
     container.querySelectorAll('[data-since]').forEach(function (btn) {
@@ -185,8 +195,41 @@
       msg.style.color = isErr ? '#fca5a5' : '';
     }
 
+    function extendEmails(emails, label) {
+      if (!apiPost) {
+        setMsg('Extend is not wired in this hub build', true);
+        return Promise.resolve();
+      }
+      var list = (emails || []).filter(Boolean);
+      if (!list.length) {
+        setMsg('No expired locker emails to extend');
+        return Promise.resolve();
+      }
+      if (!window.confirm('Give ' + list.length + ' expired locker ' + (list.length === 1 ? 'account' : 'accounts') + ' 30 more days and email them? Test/demo addresses are skipped.')) {
+        return Promise.resolve();
+      }
+      setMsg('Extending ' + (label || list.length + ' accounts') + '…');
+      return apiPost('/api/admin/members/extend-trial', {
+        emails: list,
+        days: 30,
+        sendEmail: true,
+        dryRun: false
+      })
+        .then(function (payload) {
+          var extended = payload && payload.extended != null ? payload.extended : 0;
+          var emailed = payload && payload.emailed != null ? payload.emailed : 0;
+          var skipped = payload && payload.skipped != null ? payload.skipped : 0;
+          setMsg('Extended ' + extended + ' · emailed ' + emailed + ' · skipped ' + skipped);
+          return load();
+        })
+        .catch(function (e) {
+          setMsg((e && e.message) || 'Extend failed', true);
+        });
+    }
+
     function renderTable(payload) {
       var members = payload.members || [];
+      state.lastMembers = members;
       var counts = payload.counts || {};
       if (countsEl) {
         countsEl.innerHTML =
@@ -219,7 +262,11 @@
           + '<td>' + esc(billingLabel(m)) + '</td>'
           + '<td>' + esc(m.trialEnd ? fmtWhen(m.trialEnd) : '—') + '</td>'
           + '<td><button type="button" class="hub-btn secondary hub-mem-copy" data-email="' + esc(email) + '"'
-          + (email ? '' : ' disabled') + '>Copy</button></td>'
+          + (email ? '' : ' disabled') + '>Copy</button>'
+          + (m.access === 'expired' && email
+            ? ' <button type="button" class="hub-btn secondary hub-mem-extend" data-email="' + esc(email) + '">+30d</button>'
+            : '')
+          + '</td>'
           + '</tr>';
       }).join('');
 
@@ -236,6 +283,11 @@
           copyText(email)
             .then(function () { setMsg('Copied ' + email); })
             .catch(function () { setMsg('Copy failed', true); });
+        });
+      });
+      body.querySelectorAll('.hub-mem-extend').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          extendEmails([btn.getAttribute('data-email') || ''], 'this account');
         });
       });
     }

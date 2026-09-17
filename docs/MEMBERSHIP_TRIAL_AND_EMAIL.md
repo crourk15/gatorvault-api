@@ -61,6 +61,16 @@ If you stay on EmailJS, paste `server/emailjs-welcome-template.html` into `templ
 
 If EmailJS **Save** is broken (their outage), use Resend instead — do not block the drip on their dashboard.
 
+## Expired locker win-back (courtesy +30 days)
+
+When Charles wants expired locker trials back in:
+
+- `POST /api/admin/members/extend-trial` with `{ emails, days: 30, sendEmail: true }`
+- Members hub: **+30d** on an Expired row, or **Extend visible expired +30d**
+- Script default list (Sep 2026 paste): `node server/scripts/extend-expired-locker-trials.js`
+
+This **resets `trialEnd` to now + 30 days** and updates the trial ledger so delete → re-register cannot snap back to the old expiry. It does **not** mark them paid / manual. Test/demo (`@gatorvault.test`, `testeraccount@gamil.com`) and paid accounts are skipped. Trial-clock d5/d1 stamps are cleared so the new window can remind; signup drip days stay sent.
+
 ## Where fans see the clock
 
 1. Join success copy (days left)

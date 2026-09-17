@@ -143,6 +143,34 @@ function resolveRegistrationTrial(email, { trialDays = 30 } = {}) {
   };
 }
 
+/**
+ * Courtesy extension (expired locker win-back). Writes a new trialEnd so
+ * delete → re-register cannot snap back to the old expired window.
+ * Active windows add `days` onto the current end; expired windows start from now.
+ */
+function extendTrial(email, { days = 30, now = new Date() } = {}) {
+  const key = normalizeEmail(email);
+  const n = Math.min(Math.max(parseInt(String(days), 10) || 30, 1), 90);
+  if (!key) return null;
+  const prior = getTrialRecord(email);
+  const priorEnd = prior?.trialEnd ? new Date(prior.trialEnd) : null;
+  const priorEndMs = priorEnd && Number.isFinite(priorEnd.getTime()) ? priorEnd.getTime() : 0;
+  const baseMs = priorEndMs > now.getTime() ? priorEndMs : now.getTime();
+  const trialEnd = new Date(baseMs);
+  trialEnd.setDate(trialEnd.getDate() + n);
+  const row = rememberTrial(email, {
+    trialEnd: trialEnd.toISOString(),
+    trialStart: prior?.trialStart || null,
+  });
+  return {
+    email: key,
+    days: n,
+    trialEnd: trialEnd.toISOString(),
+    trialStart: row?.trialStart || prior?.trialStart || null,
+    fromActiveWindow: priorEndMs > now.getTime(),
+  };
+}
+
 module.exports = {
   ledgerPath,
   loadLedger,
@@ -150,4 +178,5 @@ module.exports = {
   rememberTrial,
   markTrialDeleted,
   resolveRegistrationTrial,
+  extendTrial,
 };
