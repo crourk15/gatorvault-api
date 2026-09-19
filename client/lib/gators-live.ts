@@ -173,6 +173,15 @@ export function gatorsLiveVoice(phase: GatorsLivePhase, opp: string): string {
   return `Next: Florida vs ${who}. The room stays open all week.`;
 }
 
+/** Betting / ticker rows: "Florida State" is not UF. */
+export function isFloridaGatorsMatchupText(text: string): boolean {
+  const s = String(text || '');
+  if (!s.trim()) return false;
+  if (/\bgators\b|\bflorida\s+gators\b/i.test(s)) return true;
+  if (/\bflorida\s+(state|atlantic|a&m|international)\b|\bfsu\b|\bfau\b|\bfiu\b/i.test(s)) return false;
+  return /\bflorida\b|\buf\b/i.test(s);
+}
+
 export function possessionSide(possession?: string | null): 'uf' | 'opp' | null {
   const raw = String(possession || '').trim();
   if (!raw) return null;

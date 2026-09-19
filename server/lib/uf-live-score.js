@@ -9,7 +9,22 @@ const { parseEasternKickoff } = require('./eastern-kickoff');
 const PREGAME_HOURS = 3;
 const POSTGAME_HOURS = 5;
 const FLORIDA_TEAM_ID = '57';
+const UF_ABBREVS = new Set(['FLA', 'UF']);
+const NOT_UF_ABBREVS = new Set(['FSU', 'FAU', 'FIU', 'FAMU']);
+const NOT_UF_NAME = /\b(state|atlantic|a&m|international|tech)\b/i;
 const CACHE_MS = 10_000;
+
+/** ESPN "Florida State" / FAU must never count as the Gators. */
+function isFloridaGatorsTeam(team) {
+  if (!team || typeof team !== 'object') return false;
+  if (String(team.id) === FLORIDA_TEAM_ID) return true;
+  const abbr = String(team.abbreviation || team.abbrev || '').trim().toUpperCase();
+  if (UF_ABBREVS.has(abbr)) return true;
+  if (NOT_UF_ABBREVS.has(abbr)) return false;
+  const name = String(team.displayName || team.shortDisplayName || team.name || '').trim();
+  if (!name || NOT_UF_NAME.test(name)) return false;
+  return /^florida(?:\s+gators)?$/i.test(name);
+}
 
 const UF_2026_GAMES = [
   { id: 'fau', opp: 'FAU Owls', date: 'September 5, 2026 7:45 PM ET' },
@@ -58,9 +73,7 @@ function extractFloridaGame(scoreboard) {
     const comps = event.competitions || [];
     for (const comp of comps) {
       const competitors = comp.competitors || [];
-      const florida = competitors.find(
-        (c) => String(c.team?.id) === FLORIDA_TEAM_ID || /florida/i.test(c.team?.displayName || '')
-      );
+      const florida = competitors.find((c) => isFloridaGatorsTeam(c.team));
       if (!florida) continue;
       const opponent = competitors.find((c) => c !== florida);
       const type = comp.status?.type || {};
@@ -238,6 +251,8 @@ module.exports = {
   UF_2026_GAMES,
   PREGAME_HOURS,
   POSTGAME_HOURS,
+  FLORIDA_TEAM_ID,
+  isFloridaGatorsTeam,
   extractFloridaGame,
   buildStatusLine,
   toBettingOverlay,

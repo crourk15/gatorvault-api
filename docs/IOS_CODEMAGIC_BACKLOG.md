@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Gators Live: ESPN extract matches Florida Gators only (id 57 / FLA) — skip FSU–Alabama when it is listed first (`/api/gators-live` after Render).
 - [x] 2028 LB Ryquan Butler: Florida offer + scheduled Gainesville trip + Hudl sit (`filmWatched: true`) on War Room / fan Vault Scouting after Render (API — no Codemagic).
 - [x] Member page trail: `/api/member-activity/ping` on vault navigation + `X-GV-Client` — **baked in 1.0.23**. Activity card should not say the trail is waiting on another bake.
 - [x] Locker article “The Questions Saturday Night Will Answer” (`art-auburn-questions-2026`) on `/api/content/published` after Render (API — no Codemagic)
@@ -136,6 +137,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-19 | Gators Live betting fallback: skip FSU/FAU rows (`isFloridaGatorsMatchupText`) | `VaultLiveScoresPage` in binary; **live score already API after Render** | pending · bake 1.0.26 |
 | 2026-09-17 | Film Room hub seed: drop 2025 GNFP film reviews from first-paint (keep 2026 FAU / Philo / Faulkner) | `film-room-hub-seed.json` in binary; **live catalog already API after Render** | #688 · bake 1.0.26 |
 | 2026-09-16 | FutureCast Lab seed first-paint: drop Aug-stale "Updated Aug 7" until live HP lands | `futurecast-lab-updated` + Lab hook in binary; **live master-board stamp already API after Render** | #684 · bake 1.0.26 |
 | 2026-09-13 | Home countdown: **RIVALRY WEEK** only for FSU + UGA (Auburn is Game Week) | `RIVAL_OPPONENT_IDS` + `gameDayBadge` in binary — **1.0.26**; web already correct after #673 | #673 · bake 1.0.26 |

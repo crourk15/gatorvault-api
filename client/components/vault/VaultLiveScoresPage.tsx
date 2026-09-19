@@ -21,6 +21,7 @@ import {
   gatorsLivePhase,
   gatorsLivePollMs,
   gatorsLiveVoice,
+  isFloridaGatorsMatchupText,
   getFeaturedUfGame,
   isUfGameLiveWindow,
   kickCountdown,
@@ -399,8 +400,8 @@ export function VaultLiveScoresPage(): React.ReactElement {
       }
 
       const data = await fetchBettingLines();
-      const uf = data.nextGame || (data.schedule || []).find((g) =>
-        /\bflorida\b|\bgators\b|\buf\b/i.test([g.homeTeam, g.awayTeam, g.home, g.away, g.game, g.opponent].filter(Boolean).join(' ')),
+      const uf = [data.nextGame, ...(data.schedule || [])].filter(Boolean).find((g) =>
+        isFloridaGatorsMatchupText([g.homeTeam, g.awayTeam, g.home, g.away, g.game, g.opponent].filter(Boolean).join(' ')),
       );
       if (!uf) {
         setBoard(null);
