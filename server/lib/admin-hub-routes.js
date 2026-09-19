@@ -719,7 +719,7 @@ function listMemberActivityForHub(opts = {}) {
     includeStaff,
     limit,
     note:
-      'Last-seen stamps on sign-in and app open (session check). Page-by-page trail needs the website (or the next iOS bake).',
+      'Last-seen stamps on sign-in and app open. Page trail is live on iOS and the website.',
   };
 }
 
