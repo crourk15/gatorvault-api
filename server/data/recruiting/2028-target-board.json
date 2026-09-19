@@ -817,6 +817,21 @@
       "inState": true,
       "committedTo": null,
       "ufProbability": null
+    },
+    {
+      "slug": "ryquan-butler",
+      "name": "Ryquan Butler",
+      "pos": "LB",
+      "school": "Loachapoka",
+      "state": "AL",
+      "stars": 3,
+      "rating": 84.67,
+      "natlRank": 548,
+      "posRank": 39,
+      "stateRank": 16,
+      "inState": false,
+      "committedTo": null,
+      "ufProbability": null
     }
   ],
   "updatedAt": "2026-08-14T00:21:32.154Z"

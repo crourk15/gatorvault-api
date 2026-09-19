@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-03T01:48:06.220Z",
+  "updatedAt": "2026-09-19T02:33:19.590Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -18654,6 +18654,40 @@
       "updatedAt": "2026-09-01T15:00:50.518Z",
       "filmWatched": true,
       "provisional": false
+    },
+    "ryquan-butler": {
+      "playerSlug": "ryquan-butler",
+      "playerName": "Ryquan Butler",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": null,
+          "publishedAt": "2026-09-19"
+        }
+      ],
+      "strengths": [
+        "Butler is listed 6-3 / 205 at Loachapoka — a long LB frame that still has room to fill.",
+        "Butler reopened after an Alabama commit and has Florida in the top mix with a Gainesville trip already scheduled.",
+        "Butler's junior start is 27 tackles and 6 TFL through two games — production on the board, not a Hudl sit."
+      ],
+      "weaknesses": [
+        "Butler (6-3 / 205) still needs 15–20 pounds before the second-level job is every-down SEC weight."
+      ],
+      "comparison": "Butler comps to Cedric Gray — 6-2 / 220 rangy second-level LB who wins with length and chase speed before the frame fills.",
+      "schemeFit": "Butler fits a rangy WILL who can run and fill, then grow into a two-down / coverage hybrid as the weight comes.",
+      "staffNotes": "PROVISIONAL — board/process draft 2026-09-19. No Hudl sit. filmWatched false. Do not treat as live Vault Scouting until a real film watch.",
+      "projection": "Butler projects as a Year 1 special-teams / package WILL, then a Year 2 rotation piece, with Year 3 starter upside at WILL if he adds 15–20 pounds.",
+      "insiderNotes": "Butler is a 6-3 / 205 Loachapoka LB. Florida is in the top mix after he reopened, and a Gainesville trip is already scheduled. Alabama still leads the prediction board. No Hudl sit on this card.",
+      "recruitingStory": "Ryquan Butler is a 2028 LB · listed 6-3 / 205 · Loachapoka (Loachapoka, AL) · former Alabama commit, Florida offer, Gainesville trip planned.",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-09-19T02:33:19.581Z",
+      "filmWatched": false,
+      "provisional": true
     }
   }
 }

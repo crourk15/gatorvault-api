@@ -325701,5 +325701,141 @@
     "state": "FL",
     "displayRating": null,
     "ratingIsOverride": false
+  },
+  {
+    "id": "ryquan-butler",
+    "slug": "ryquan-butler",
+    "name": "Ryquan Butler",
+    "pos": "LB",
+    "classYear": 2028,
+    "school": "Loachapoka",
+    "htWt": "6-3 / 205",
+    "stars": 3,
+    "rating": 84.67,
+    "ratingOverride": null,
+    "vaultGrade": null,
+    "vaultGradeUpdatedAt": null,
+    "natlRank": 548,
+    "posRank": 39,
+    "stateRank": 16,
+    "inState": false,
+    "category": "target",
+    "status": "uncommitted",
+    "committedTo": null,
+    "fromSchool": null,
+    "commitDate": null,
+    "skinny": "3-star LB · 84.67 · Loachapoka (AL)",
+    "profileNote": "",
+    "on3Id": "289367",
+    "on3Slug": "ryquan-butler-289367",
+    "on3ProfileUrl": "https://www.on3.com/rivals/ryquan-butler-289367/",
+    "on3Source": "desk-open-2026-09-19",
+    "boardSource": null,
+    "protected": false,
+    "verifiedCommit": false,
+    "rivalsLastPrediction": null,
+    "rivalsAnalyst": null,
+    "rivalsConfidence": null,
+    "rivalsArticleUrl": null,
+    "ufOvStatus": "scheduled",
+    "ufOvCancelledAt": null,
+    "nextVisitSchool": "Florida",
+    "visitStart": null,
+    "visitEnd": null,
+    "starsDisplay": null,
+    "headliner": false,
+    "ufProbability": null,
+    "fitScore": null,
+    "staff_lead_id": null,
+    "secondary_recruiter_id": null,
+    "hometownCity": "Loachapoka",
+    "hometownState": "AL",
+    "stateFips": "01",
+    "pinLat": 32.806671,
+    "pinLng": -86.79113,
+    "nilValue": null,
+    "nilEstimate": null,
+    "nilSource": null,
+    "competitors": [
+      {
+        "school": "Alabama",
+        "pct": 30.3,
+        "source": "on3-rpm",
+        "updatedAt": "2026-09-19T02:33:26.123Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Ole Miss",
+        "pct": 26.5,
+        "source": "on3-rpm",
+        "updatedAt": "2026-09-19T02:33:26.123Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Auburn",
+        "pct": 22.7,
+        "source": "on3-rpm",
+        "updatedAt": "2026-09-19T02:33:26.123Z",
+        "trend": "flat"
+      }
+    ],
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-09-11",
+        "source": "beat-intel"
+      },
+      {
+        "school": "Alabama",
+        "offerType": "Offered",
+        "source": "on3"
+      },
+      {
+        "school": "Ole Miss",
+        "offerType": "Offered",
+        "source": "on3"
+      },
+      {
+        "school": "Auburn",
+        "offerType": "Offered",
+        "source": "on3"
+      }
+    ],
+    "offerList": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-09-11",
+        "source": "beat-intel"
+      },
+      {
+        "school": "Alabama",
+        "offerType": "Offered",
+        "source": "on3"
+      },
+      {
+        "school": "Ole Miss",
+        "offerType": "Offered",
+        "source": "on3"
+      },
+      {
+        "school": "Auburn",
+        "offerType": "Offered",
+        "source": "on3"
+      }
+    ],
+    "visits": [
+      {
+        "school": "Florida",
+        "type": "unofficial",
+        "status": "scheduled"
+      }
+    ],
+    "ufRpmPct": null,
+    "updatedAt": "2026-09-19T02:33:26.277Z",
+    "state": "AL",
+    "displayRating": 84.67,
+    "ratingIsOverride": false
   }
 ]
