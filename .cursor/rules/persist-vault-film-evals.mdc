@@ -24,6 +24,8 @@ Required fields: `slug`, `name`, `comparison`, `projection`, `strengths` (tape t
 
 **Film-watch rule (Harris-Payne standard):** only set `filmWatched: true` after Hudl is actually watched. Board/bio drafts must use `filmWatched: false` and `staffNotes` containing `PROVISIONAL` — fan Vault Scouting hides those via `getVaultScoutingForSlug`.
 
+**Fan copy rule (hard):** Never tell fans the sit was Hudl / On3 / a highlight reel. Forbidden in HEADER, X body, and fan Vault Scouting (`insiderNotes`, `angle`, `vaultFilmAngle`): Hudl, “soph Hudl,” highlight reel, “on the tape we have,” “no Hudl sit,” “I watched the film.” State tape facts as Vault fact. Staff notes / persist source URLs may name Hudl.
+
 3. Confirm War Room is live:
 
 ```bash
