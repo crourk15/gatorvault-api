@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] 2028 LB Ryquan Butler: Florida offer + scheduled Gainesville trip on allowlist / War Room after Render (API — no Codemagic). Fan Vault Scouting stays hidden until a real Hudl sit.
 - [x] Member page trail: `/api/member-activity/ping` on vault navigation + `X-GV-Client` — **baked in 1.0.23**. Activity card should not say the trail is waiting on another bake.
 - [x] Locker article “The Questions Saturday Night Will Answer” (`art-auburn-questions-2026`) on `/api/content/published` after Render (API — no Codemagic)
 - [x] Expired locker win-back: +30 days on `trialEnd` + come-back email (`POST /api/admin/members/extend-trial`). Same login unlocks iOS after Render — no Codemagic.
