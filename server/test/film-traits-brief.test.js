@@ -109,6 +109,9 @@ describe('beat brief film section', () => {
     assert.match(paste, /FILM \/ HIGHLIGHTS/);
     assert.match(paste, /REQUIRED AGENT REVIEW|Highlight /);
     assert.match(paste, /FILM REVIEW RULE|Open every Highlight LINK/i);
+    assert.match(paste, /FAN COPY RULE/i);
+    assert.match(paste, /Never tell fans you watched Hudl/i);
+    assert.match(paste, /HEADER RULE[\s\S]*Hudl/);
     assert.match(paste, /Film \/ highlights: OPEN the Highlight LINK/);
     assert.match(paste, /Show, don't announce|meta flex/i);
     assert.match(paste, /RIVAL RULE|Rivals: context only/i);
