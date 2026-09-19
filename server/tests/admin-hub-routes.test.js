@@ -348,6 +348,8 @@ test('listMemberActivityForHub joins last-seen without leaking secrets', () => {
     assert.equal(hidden.members[0].access, 'trial');
     assert.equal(hidden.counts.ios, 1);
     assert.ok(hidden.topPages.some((p) => p.path === '/vault/recruiting'));
+    assert.match(String(hidden.note || ''), /live on iOS/i);
+    assert.ok(!/next (iOS|App Store) bake/i.test(String(hidden.note || '')));
     assert.equal(Object.prototype.hasOwnProperty.call(hidden.members[0], 'passwordHash'), false);
     assert.ok(!JSON.stringify(hidden).includes('SECRET'));
 

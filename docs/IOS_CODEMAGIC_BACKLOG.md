@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Member page trail: `/api/member-activity/ping` on vault navigation + `X-GV-Client` — **baked in 1.0.23**. Activity card should not say the trail is waiting on another bake.
 - [x] Locker article “The Questions Saturday Night Will Answer” (`art-auburn-questions-2026`) on `/api/content/published` after Render (API — no Codemagic)
 - [x] Expired locker win-back: +30 days on `trialEnd` + come-back email (`POST /api/admin/members/extend-trial`). Same login unlocks iOS after Render — no Codemagic.
 - [x] Film Room: drop Napier-era 2025 GNFP film reviews — catalog is 2026 Sumrall/Faulkner tape only (`/api/film-room/catalog` after Render). Hub-seed first-paint waits for the bake row below.
@@ -149,7 +150,6 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-09-06 | Game Week Depth Chart: official two-deep OFF/DEF/ST cards (drop placeholder column dump) | `GameWeekDepthPanel` in binary; **board data already live via `/api/roster/depth-chart`** | pending |
 | 2026-09-06 | Game Week + Home countdown: auto-open next kickoff (no more hardcoded FAU) | `defaultGameWeekId` + `buildGameDayView` / `getFeaturedUfGame` in binary; **weekly intel stays API** | #627 + auto-advance |
 | 2026-09-05 | Community: Game day chip + hero copy on Staff open (title/body already live via API) | `VaultCommunityPage` chip/hero in binary | #623 |
-| 2026-09-05 | Member page trail: ping `/api/member-activity/ping` on vault navigation + `X-GV-Client` on `/api/session` | `VaultNavigationProvider` + `member-activity.ts` + session header in binary; **last-seen already live via login/session API** | #621 |
 | 2026-09-06 | Gators Live poll: 10s live / 15s idle + ticking countdown (was 30s) | `VaultLiveScoresPage` poll in binary | #625 |
 | 2026-09-06 | Gators Live living room: stadium hero, logos, countdown, 3 keys, talk, visitors, film bite | `VaultLiveScoresPage` + `gators-live-elite.css` in binary; **score/clock/possession already live via API** | #624 |
 | 2026-09-04 | Game Week Film Notes: prefer `filmNotes` (stop concatenating raw tendencies into Film Notes) | `game-week-data` `buildFilmNotes` in binary; **FAU fan copy already live via API** | pending |

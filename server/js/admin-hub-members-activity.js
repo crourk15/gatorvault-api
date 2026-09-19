@@ -76,7 +76,7 @@
       '<div class="hub-sum hub-members">'
       + '<div class="hub-dash-head">'
       + '<div><h2 class="hub-dash-title">Member Activity</h2>'
-      + '<p class="hub-dash-sub">Who opened the vault, on iOS vs website, and which pages they hit. Last-seen stamps on sign-in and app open. Page trail fills in on the website now; iOS page trail needs the next App Store bake.</p></div>'
+      + '<p class="hub-dash-sub">Who opened the vault, on iOS vs website, and which pages they hit. Last-seen on sign-in and app open. Page trail is live on iOS and the website.</p></div>'
       + '<div class="hub-btn-row">'
       + '<button type="button" class="hub-btn secondary" id="hub-act-refresh">Refresh</button>'
       + '<button type="button" class="hub-btn secondary" id="hub-act-roster">Recent Members</button>'
