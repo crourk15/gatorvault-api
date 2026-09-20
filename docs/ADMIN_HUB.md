@@ -166,7 +166,8 @@ Curated Hudl / On3 highlight traits live in `server/data/recruiting/film-traits.
    - `GET /api/admin/hub/film-traits/:slug` — one player
    - `POST /api/admin/hub/film-traits` — body `{ slug, playerName, sources[], traits[], vaultFilmAngle, doNotClaim[], clipNotes }`
 4. Goal: paste brief → Cursor already has tape facts. Use them in the post; never announce that you’re “different” or ahead of the beat.
-5. **Rival rule:** rivals are calm mid-post board context only — never dunk, never the punchline/closer. Close on Florida process.
+5. **Fan copy (hard):** Never tell fans the sit was Hudl / On3 / a highlight reel. HEADER, X body, and Vault Scouting state tape as Vault fact. Forbidden: Hudl, “soph Hudl,” highlight reel, “I watched the film,” “the tape we sat.” Staff notes / source URLs may name Hudl.
+6. **Rival rule:** rivals are calm mid-post board context only — never dunk, never the punchline/closer. Close on Florida process.
 
 ## Why we chase (Priority Chase cards)
 
@@ -265,7 +266,7 @@ Recruit briefs embed a **PLAYER PROJECTION / COMP** block from War Room breakdow
 1. Film desk / Open **reads** War Room `projection` + `comparison` when available.
 2. **Copy Brief** always prints both — War Room values when present, or “none on file — AGENT MUST DRAFT” instructions when empty.
 3. Cursor post must always include: **HEADER** (intel leap) + deeper film eval (2–3 tape specifics) + short projection clause + one calm size-matched GatorVault comp mid-post. Never close on the comp.
-4. **Persist (required):** after drafting a new eval/comp/projection, write it into War Room + film-traits with `node server/scripts/upsert-vault-film-eval.js` (JSON under `server/data/war-room/vault-evals/`). Do not leave comps only in the X draft.
+4. **Persist (required):** after drafting a new eval/comp/projection, write it into War Room + film-traits with `node server/scripts/upsert-vault-film-eval.js` (JSON under `server/data/war-room/vault-evals/`). Do not leave comps only in the X draft. Fan fields (`insiderNotes`, `angle`) never name Hudl — staff notes / source URLs may.
 5. Commit cards / profiles pull Comp + Projection live from War Room (`getVaultScoutingForSlug`) — no app rebuild.
 6. Confirm with Charles before treating a brand-new eval/comp as live FutureCast card copy (Charles asking to embed = confirmation).
 
