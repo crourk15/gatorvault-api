@@ -118,6 +118,7 @@ function loadBundleUniformMap(season) {
 /** Model / film intel fields that git-bundle edits should win when the bundle is newer. */
 const BUNDLE_MODEL_KEYS = [
   'ufPct',
+  'tv',
   'pred',
   'predUF',
   'predOpp',

@@ -41,10 +41,10 @@ export const TICKET_GAMES: TicketGame[] = [
   },
   {
     game: '🐊 UF vs Ole Miss',
-    date: 'September 26, 2026 · 3:30–8:00 PM ET',
+    date: 'September 26, 2026 · 3:30 PM ET',
     venue: 'Ben Hill Griffin Stadium, Gainesville FL',
     type: 'HOME',
-    note: 'TV TBD · window 3:30–8:00 PM ET',
+    note: 'ABC · 3:30 PM ET',
   },
   {
     game: '🐊 UF @ Missouri',

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Ole Miss TV: official **ABC / 3:30 p.m. ET** on `/api/schedule` after Render (SEC via floridagators.com Sep 20). API — no Codemagic. Matchup Edge hexagon still needs the `buildRadar` bake below.
 - [x] Game Week Ole Miss: pointer + Auburn 44–39 final + Week 3 remaining-season preds on `/api/schedule` after Render (API — no Codemagic). LSU condensed was not posted; sit is official ESPN PBP (`filmWatched: false`).
 - [x] Game Week Ole Miss Vegas: stamp live DraftKings via ESPN **UF +1.5 / O/U 58.5** on `/api/betting/lines` (opened FLA -1.5; flipped after the LSU/Auburn finals). API — no Codemagic.
 - [x] Gators Live / score alerts: 15s watch + 4s ESPN cache + 8h postgame window; failed pushes do not eat the next score (`/api/gators-live` + `gators-score-alerts` after Render).
