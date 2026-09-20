@@ -3,8 +3,27 @@
  * Official Florida Gators football pressers + GNFP film reviews + Film Guy
  * UF-football breakdowns only (they cover every team).
  */
-const fetch = require('node-fetch');
 const { loadFilmRoomCache, saveFilmRoomCache } = require('./film-room-cache-store');
+const {
+  isGnfpFilmBreakdownTitle,
+  isCurrentStaffGnfpReview,
+  CURRENT_STAFF_GNFP_SEASON,
+} = require('./film-room-gnfp-filter');
+
+/** Native fetch on Node 18+ (Codemagic). Lazy node-fetch only on older runtimes. */
+async function httpFetch(url, opts = {}) {
+  const impl = typeof fetch === 'function' ? fetch : require('node-fetch');
+  if (typeof fetch === 'function' && opts.timeout && !opts.signal) {
+    const ac = new AbortController();
+    const timer = setTimeout(() => ac.abort(), opts.timeout);
+    try {
+      return await impl(url, { ...opts, signal: ac.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  return impl(url, opts);
+}
 
 const DEFAULT_SOURCES = [
   {
@@ -43,46 +62,6 @@ const PRESSER_TITLE =
 
 const FOOTBALL_HINT =
   /\b(football|gators football|spring (?:practice|game)|sumrall|faulkner|napier|sec media|offense|defense|coordinator|head coach|rb\b|wr\b|qb\b|lb\b)\b/i;
-
-/** Real film study — not coach sit-downs / podcast episodes. */
-const GNFP_FILM_SIGNAL =
-  /\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i;
-
-/** Coach conversations / podcast eps that match "GNFP" but are not tape breakdown. */
-const GNFP_PODCAST_CONVO =
-  /\b(podcast\s*episode|talking\s*ball|sit[\s-]?down|q\s*&\s*a)\b/i;
-
-function isGnfpFilmBreakdownTitle(title) {
-  const t = String(title || '');
-  if (!t) return false;
-  if (GNFP_PODCAST_CONVO.test(t) && !GNFP_FILM_SIGNAL.test(t)) return false;
-  return GNFP_FILM_SIGNAL.test(t);
-}
-
-/** Sumrall / Faulkner year — drop Napier-era 2025 GNFP film reviews. */
-const CURRENT_STAFF_GNFP_SEASON = 2026;
-
-function gnfpTitleSeason(title) {
-  const years = [...String(title || '').matchAll(/\b(20\d{2})\b/g)].map((m) => Number(m[1]));
-  if (years.includes(CURRENT_STAFF_GNFP_SEASON)) return CURRENT_STAFF_GNFP_SEASON;
-  if (years.includes(2025)) return 2025;
-  return null;
-}
-
-function isCurrentStaffGnfpReview(rowOrTitle) {
-  const row = rowOrTitle && typeof rowOrTitle === 'object' ? rowOrTitle : { title: rowOrTitle };
-  const title = String(row.title || '');
-  if (!isGnfpFilmBreakdownTitle(title)) return false;
-  const titled = gnfpTitleSeason(title);
-  if (titled != null) return titled >= CURRENT_STAFF_GNFP_SEASON;
-  const seasonNum = Number(row.season);
-  if (Number.isFinite(seasonNum) && seasonNum > 0) {
-    return seasonNum >= CURRENT_STAFF_GNFP_SEASON;
-  }
-  const pub = row.publishedAt ? new Date(row.publishedAt).getUTCFullYear() : 0;
-  if (Number.isFinite(pub) && pub > 0) return pub >= CURRENT_STAFF_GNFP_SEASON;
-  return false;
-}
 
 /** Live shows, reactions, and pick 'em — not tape. */
 const FILM_GUY_NOT_BREAKDOWN =
@@ -179,7 +158,7 @@ function parseRssEntries(xml) {
 
 async function fetchChannelFeed(channelId) {
   const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(channelId)}`;
-  const res = await fetch(url, {
+  const res = await httpFetch(url, {
     headers: { Accept: 'application/atom+xml,application/xml,text/xml', 'User-Agent': 'gatorvault-film-room-ingest/1.0' },
     timeout: 25000,
   });
@@ -482,7 +461,7 @@ function searchQueries() {
 
 async function fetchSearchVideoIds(query, limit = 12) {
   const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
-  const res = await fetch(url, {
+  const res = await httpFetch(url, {
     headers: {
       'User-Agent': 'Mozilla/5.0 (compatible; GatorVaultFilmRoom/1.0)',
       Accept: 'text/html',
@@ -502,7 +481,7 @@ async function fetchSearchVideoIds(query, limit = 12) {
 
 async function fetchOEmbed(youtubeId) {
   const url = `https://www.youtube.com/oembed?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${youtubeId}`)}&format=json`;
-  const res = await fetch(url, { timeout: 15000, headers: { Accept: 'application/json' } });
+  const res = await httpFetch(url, { timeout: 15000, headers: { Accept: 'application/json' } });
   if (!res.ok) return null;
   const json = await res.json();
   return {
