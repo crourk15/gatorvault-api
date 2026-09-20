@@ -101,7 +101,7 @@ const OPPONENT_META: Record<string, { short: string; logo: string }> = {
 };
 
 const TV_PLACEHOLDERS = new Set(['FLEX', 'EARLY', 'NIGHT', 'TBD', '—', '-']);
-const POSTGAME_MS = 5 * 3600_000;
+const POSTGAME_MS = 8 * 3600_000;
 
 export function isByeGame(game: Pick<ScheduleGame, 'kind' | 'id' | 'opp'>): boolean {
   if (game.kind === 'bye') return true;

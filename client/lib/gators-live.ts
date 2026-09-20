@@ -6,8 +6,8 @@ import { SCHEDULE_GAMES, type ScheduleGame } from './schedule-data';
 
 /** Hours before kickoff to start polling. */
 const PREGAME_HOURS = 3;
-/** Hours after kickoff to keep polling (covers OT / final). */
-const POSTGAME_HOURS = 5;
+/** Hours after kickoff to keep polling (covers OT / a long road final). */
+const POSTGAME_HOURS = 8;
 
 const MONTHS: Record<string, number> = {
   january: 1,
@@ -212,8 +212,8 @@ export function periodClockLabel(opts: {
   return 'Game window';
 }
 
-export const GATORS_LIVE_POLL_MS = 10_000;
-export const GATORS_LIVE_IDLE_POLL_MS = 15_000;
+export const GATORS_LIVE_POLL_MS = 5_000;
+export const GATORS_LIVE_IDLE_POLL_MS = 10_000;
 
 export function gatorsLivePollMs(phase: GatorsLivePhase): number {
   if (phase === 'live' || phase === 'halftime') return GATORS_LIVE_POLL_MS;

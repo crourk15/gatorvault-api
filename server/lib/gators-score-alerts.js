@@ -8,6 +8,7 @@ const { dispatchScorePush } = require('./push-alert-service');
 const { parseEasternKickoff } = require('./eastern-kickoff');
 const {
   extractFloridaGame,
+  featuredUfGame,
   fetchEspnScoreboard,
   isInProgressState,
   isPrematchState,
@@ -178,18 +179,45 @@ function planScoreAlerts(game, prev = {}) {
   return planned;
 }
 
+function scorePushDelivered(push) {
+  if (!push) return false;
+  if (push.dryRun) return true;
+  if (push.skipped && /already/.test(String(push.reason || ''))) return true;
+  return push.ok === true && Number(push.sent || 0) > 0;
+}
+
+/** Do not advance lastScores if a score beat was planned and never delivered. */
+function shouldAdvanceSeenScores(planned, results) {
+  const scorePlanned = (planned || []).filter((p) => p.kind === 'score');
+  if (!scorePlanned.length) return true;
+  const scoreResults = (results || []).filter((r) => r.kind === 'score');
+  return (
+    scoreResults.length === scorePlanned.length &&
+    scoreResults.every((r) => scorePushDelivered(r.push))
+  );
+}
+
+let runLock = null;
+
 async function runGatorsScoreAlerts(options = {}) {
   const now = options.asOf ? new Date(options.asOf) : new Date();
   const force = options.force === true;
   const dryRun = options.dryRun === true;
 
+  if (!force && runLock) {
+    return { ok: true, skipped: true, reason: 'in_flight' };
+  }
+
   if (!force && !isUfGameLiveWindow(now)) {
     return { ok: true, skipped: true, reason: 'outside_uf_game_window' };
   }
 
+  runLock = true;
+  try {
+  const featured = featuredUfGame(now);
   let scoreboard;
   try {
-    scoreboard = await fetchEspnScoreboard();
+    scoreboard = await fetchEspnScoreboard({ now, featured });
   } catch (err) {
     return { ok: false, error: err.message || String(err) };
   }
@@ -236,7 +264,7 @@ async function runGatorsScoreAlerts(options = {}) {
       }
     );
     results.push({ kind: beat.kind, title: beat.title, push });
-    if (!dryRun && push.ok && !push.skipped) {
+    if (!dryRun && scorePushDelivered(push)) {
       if (beat.kind === 'kickoff') {
         prev.kickoffSent = true;
         prev.kickoffAt = new Date().toISOString();
@@ -253,11 +281,14 @@ async function runGatorsScoreAlerts(options = {}) {
     }
   }
 
+  const seenScores = shouldAdvanceSeenScores(planned, results)
+    ? { uf: game.ufScore, opp: game.oppScore }
+    : prev.lastScores || { uf: game.ufScore, opp: game.oppScore };
   stateDoc.games[game.eventId] = {
     ...prev,
     opponent: game.opponent,
     lastState: game.state,
-    lastScores: { uf: game.ufScore, opp: game.oppScore },
+    lastScores: seenScores,
     updatedAt: new Date().toISOString(),
   };
   if (!dryRun && !options.stateDoc) writeState(stateDoc);
@@ -269,14 +300,17 @@ async function runGatorsScoreAlerts(options = {}) {
     results,
     dryRun,
   };
+  } finally {
+    runLock = null;
+  }
 }
 
 function startScoreAlertWatch() {
   if (startScoreAlertWatch._started) return;
   startScoreAlertWatch._started = true;
   const intervalMs = Math.max(
-    30000,
-    parseInt(process.env.GATORS_SCORE_ALERTS_WATCH_MS || '60000', 10) || 60000
+    10000,
+    parseInt(process.env.GATORS_SCORE_ALERTS_WATCH_MS || '15000', 10) || 15000
   );
   const tick = () => {
     runGatorsScoreAlerts().catch((err) => {
@@ -292,6 +326,8 @@ module.exports = {
   runGatorsScoreAlerts,
   planScoreAlerts,
   classifyScoreDelta,
+  scorePushDelivered,
+  shouldAdvanceSeenScores,
   startScoreAlertWatch,
   isUfGameLiveWindow,
   parseScheduleKickoff,

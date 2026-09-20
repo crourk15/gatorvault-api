@@ -5,7 +5,7 @@
 'use strict';
 
 /** Hold the just-played game through the Gators Live postgame window, then advance. */
-const POSTGAME_HOURS = 5;
+const POSTGAME_HOURS = 8;
 
 function gameKickMs(g) {
   const d = new Date(g && (g.date || g.kickoff) || '');

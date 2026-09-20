@@ -6,6 +6,7 @@ const {
   toBettingOverlay,
   getUfLiveBoard,
   isFloridaGatorsTeam,
+  espnScoreboardUrl,
 } = require('../../lib/uf-live-score');
 
 const liveBoard = {
@@ -72,6 +73,14 @@ describe('uf-live-score', () => {
     assert.equal(out.mode, 'ready');
     assert.equal(out.board, null);
     assert.equal(out.overlay, null);
+  });
+
+  it('pins ESPN to the featured kickoff date so Saturday is not dropped after midnight', () => {
+    const url = espnScoreboardUrl(new Date('2026-09-20T04:10:00.000Z'), {
+      kickoffIso: '2026-09-19T23:00:00.000Z',
+    });
+    assert.match(url, /dates=20260919/);
+    assert.match(url, /groups=80/);
   });
 
   it('does not treat Florida State or FAU as the Gators', () => {

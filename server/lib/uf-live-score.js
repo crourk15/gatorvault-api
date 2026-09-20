@@ -7,12 +7,13 @@
 const { parseEasternKickoff } = require('./eastern-kickoff');
 
 const PREGAME_HOURS = 3;
-const POSTGAME_HOURS = 5;
+/** Hold the living room + score watch through OT / a long road game. */
+const POSTGAME_HOURS = 8;
 const FLORIDA_TEAM_ID = '57';
 const UF_ABBREVS = new Set(['FLA', 'UF']);
 const NOT_UF_ABBREVS = new Set(['FSU', 'FAU', 'FIU', 'FAMU']);
 const NOT_UF_NAME = /\b(state|atlantic|a&m|international|tech)\b/i;
-const CACHE_MS = 10_000;
+const CACHE_MS = 4_000;
 
 /** ESPN "Florida State" / FAU must never count as the Gators. */
 function isFloridaGatorsTeam(team) {
@@ -167,14 +168,32 @@ function isUfGameLiveWindow(now = new Date()) {
   return false;
 }
 
-async function fetchEspnScoreboard({ force = false } = {}) {
+function easternYmd(date) {
+  const d = date instanceof Date ? date : new Date(date);
+  if (!Number.isFinite(d.getTime())) return null;
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/New_York',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(d);
+  return parts.replace(/-/g, '');
+}
+
+function espnScoreboardUrl(now, featured) {
+  if (process.env.ESPN_CFB_SCOREBOARD_URL) return process.env.ESPN_CFB_SCOREBOARD_URL;
+  const kick = featured?.kickoffIso ? new Date(featured.kickoffIso) : now;
+  const dates = easternYmd(kick || now);
+  const qs = new URLSearchParams({ groups: '80', limit: '300' });
+  if (dates) qs.set('dates', dates);
+  return `https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?${qs}`;
+}
+
+async function fetchEspnScoreboard({ force = false, now, featured } = {}) {
   if (!force && scoreboardCache.data && Date.now() - scoreboardCache.at < CACHE_MS) {
     return scoreboardCache.data;
   }
-  const url =
-    process.env.ESPN_CFB_SCOREBOARD_URL ||
-    'https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=8&limit=100';
-  const data = await httpGetJson(url, {
+  const data = await httpGetJson(espnScoreboardUrl(now || new Date(), featured), {
     Accept: 'application/json',
     'User-Agent': 'GatorVaultGatorsLive/1.0',
   });
@@ -201,7 +220,13 @@ async function getUfLiveBoard(options = {}) {
   }
 
   try {
-    const scoreboard = options.scoreboard || (await fetchEspnScoreboard({ force: options.refresh === true }));
+    const scoreboard =
+      options.scoreboard ||
+      (await fetchEspnScoreboard({
+        force: options.refresh === true,
+        now,
+        featured,
+      }));
     const game = extractFloridaGame(scoreboard);
     if (!game) {
       return {
@@ -260,6 +285,8 @@ module.exports = {
   isUfGameLiveWindow,
   getUfLiveBoard,
   fetchEspnScoreboard,
+  espnScoreboardUrl,
+  easternYmd,
   resetUfLiveScoreCache,
   isInProgressState,
   isPrematchState,

@@ -170,6 +170,11 @@ describe("gators-score-alerts window", () => {
     assert.equal(isUfGameLiveWindow(new Date("2026-09-06T02:30:00.000Z")), true);
   });
 
+  it("keeps Auburn open through a late Q4 / OT", () => {
+    assert.equal(isUfGameLiveWindow(new Date("2026-09-20T02:30:00.000Z")), true);
+    assert.equal(isUfGameLiveWindow(new Date("2026-09-20T05:30:00.000Z")), true);
+  });
+
   it("extracts Florida from ESPN-shaped scoreboard", () => {
     const game = extractFloridaGame({
       events: [

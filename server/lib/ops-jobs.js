@@ -448,7 +448,7 @@ const JOBS = {
   'gators-score-alerts': {
     label: 'UF kickoff / score / halftime / final push alerts (game window only)',
     subsystem: 'cron:gators-score-alerts',
-    schedule: 'Every 2 min + 60s web watch during UF windows',
+    schedule: 'Every 1 min + 15s web watch during UF windows',
     async run(opts = {}) {
       const { runGatorsScoreAlerts } = require('./gators-score-alerts');
       return runGatorsScoreAlerts({

@@ -639,8 +639,8 @@ services:
 
   - type: cron
     name: gatorvault-api-gators-score-alerts
-    # Every 2m backup. Web dyno also watches every 60s in-window (idle skip is cheap).
-    schedule: "*/2 * * * *"
+    # Every 1m backup. Web dyno watches every 15s in-window (idle skip is cheap).
+    schedule: "* * * * *"
     runtime: node
     region: oregon
     rootDir: server
