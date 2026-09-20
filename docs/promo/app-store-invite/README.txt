@@ -1,0 +1,47 @@
+GatorVault — App Store invite / offer sheet
+==========================================
+
+PRIMARY (use this for DMs, email, texts, print-style share)
+  PRIMARY-offer-sheet.png
+    Vertical invite sheet.
+    Brand: GatorVault
+    Five offers: FutureCast, Recruiting, Team, Live, Game Week
+    "You're invited" + Download on the App Store
+    Search cue: Gator Vault Insider
+
+Also included
+  offer-sheet-square.png
+    Square / social feed version of the same invite
+  download-on-app-store-black.png
+    Official Apple badge asset (standalone)
+
+Brand rules
+  Brand on art: GatorVault
+  App Store search name: Gator Vault Insider
+  Avoid official UF / Florida Gators marks on promo art.
+
+When to send
+  Wait until the app is Ready for Sale on the App Store
+  (or paste your live App Store / TestFlight link below).
+
+Invite message (paste)
+----------------------
+You're invited to open the vault.
+
+GatorVault is Florida Gators football in one place:
+- FutureCast — commit odds & movement
+- Recruiting — board, battles, beat intel
+- Team — roster, depth, staff
+- Live — GatorNation pulse
+- Game Week — depth chart & prep
+
+Download on the App Store.
+Search: Gator Vault Insider
+
+[optional] App Store link: ______________________________
+
+Short invite (SMS / DM)
+-----------------------
+You're invited — open the vault.
+GatorVault: FutureCast, Recruiting, Team, Live, Game Week.
+App Store -> search Gator Vault Insider
