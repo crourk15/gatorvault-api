@@ -181,6 +181,28 @@ describe('schedule-api uniforms', () => {
     assert.deepEqual(live[0]?.radar, [{ label: 'Front 7', uf: 72, opp: 48 }]);
   });
 
+  it('normalizeGames prefers a firm seed kickoff over a live window', () => {
+    const live = normalizeGames([
+      {
+        id: 'olemiss',
+        label: 'Sep 26 vs Ole Miss',
+        opp: 'Ole Miss Rebels',
+        date: 'September 26, 2026 · 3:30–8:00 PM ET',
+        venue: 'Ben Hill Griffin Stadium, Gainesville FL',
+        ufPct: 51,
+        tv: 'TBD',
+        keys: [],
+        swing: [],
+        film: '',
+        pred: '',
+        predUF: 28,
+        predOpp: 27,
+      },
+    ]);
+    assert.equal(live[0]?.date, 'September 26, 2026 · 3:30 PM ET');
+    assert.equal(live[0]?.tv, 'ABC');
+  });
+
   it('mergeUniform prefers live over seed', () => {
     const merged = mergeUniform(
       { helmet: 'Blue', jersey: 'Blue', pants: 'Blue', label: 'All-Blue' },
