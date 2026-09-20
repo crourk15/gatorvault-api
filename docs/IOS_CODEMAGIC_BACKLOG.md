@@ -140,6 +140,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-20 | Game Week Matchup Edge reads sat `game.radar` (Ole Miss LSU-sit stamp) | `buildRadar` in binary; **API `/api/schedule` radar already live after Render**. Old binary still draws the 51% formula hexagon. | pending · bake 1.0.26 |
 | 2026-09-20 | Home Game Week skips a posted final immediately (no 8h hold on last week's opponent) | `getFeaturedUfGame` in binary; **API `currentGameId` + Game Week page already Ole Miss after Render**. Old binary still advances after the 8h postgame window — do not start Codemagic for this. | pending · bake 1.0.26 |
 | 2026-09-20 | Gators Live poll 5s live / 10s idle + no stacked fetches | `VaultLiveScoresPage` + `gatorsLivePollMs` in binary; **API score/cache already faster after Render** | pending · bake 1.0.26 |
 | 2026-09-19 | Gators Live betting fallback: skip FSU/FAU rows (`isFloridaGatorsMatchupText`) | `VaultLiveScoresPage` in binary; **live score already API after Render** | #697 · bake 1.0.26 |

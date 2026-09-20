@@ -230,6 +230,11 @@ function buildSwing(game: ScheduleGame): SwingPlayerIntel[] {
   }));
 }
 
+function clampAxis(n: number): number {
+  return Math.max(0, Math.min(100, Math.round(n)));
+}
+
+/** Win% placeholder — only for games that have not been sat. */
 function defaultRadar(ufPct: number): RadarAxis[] {
   const oppBase = 100 - ufPct;
   return [
@@ -240,6 +245,20 @@ function defaultRadar(ufPct: number): RadarAxis[] {
     { label: 'Special Teams', uf: 70, opp: 65 },
     { label: 'Coaching Edge', uf: ufPct > 55 ? 76 : 68, opp: oppBase },
   ];
+}
+
+/** Prefer a sat `game.radar` stamp. Do not invent axes from win%. */
+export function buildRadar(game: ScheduleGame): RadarAxis[] {
+  const stamped = (game.radar || [])
+    .map((axis) => ({
+      label: String(axis?.label || '').trim(),
+      uf: Number(axis?.uf),
+      opp: Number(axis?.opp),
+    }))
+    .filter((axis) => axis.label && Number.isFinite(axis.uf) && Number.isFinite(axis.opp))
+    .map((axis) => ({ ...axis, uf: clampAxis(axis.uf), opp: clampAxis(axis.opp) }));
+  if (stamped.length >= 3) return stamped;
+  return defaultRadar(game.ufPct);
 }
 
 function playerSlug(name: string): string {
@@ -357,7 +376,7 @@ function generateBundle(
     keys: buildKeys(game),
     swingPlayers: buildSwing(game),
     filmNotes: buildFilmNotes(game),
-    radar: defaultRadar(game.ufPct),
+    radar: buildRadar(game),
     depthChart: defaultDepthChart(),
     scouting: buildScouting(game),
     prediction: buildPrediction(game, betting),

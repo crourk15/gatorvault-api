@@ -19,6 +19,11 @@ export type ScheduleGame = {
   tv?: string;
   keys: string[];
   swing: { name: string; role: string }[];
+  /**
+   * Optional Matchup Edge axes (0–100). When present, Game Week uses this
+   * instead of the win% formula. Stamp from the sit — do not invent.
+   */
+  radar?: { label: string; uf: number; opp: number }[];
   film: string;
   /** Fan-facing Film Notes bullets. Command Center prefers this over the scout dump. */
   filmNotes?: string[];
@@ -359,6 +364,14 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Jadan Baugh", role: "Early-down rhythm vs a front that just gave LSU 172" },
       { name: "Jayden Woods", role: "Keep Chambliss in the pocket" },
       { name: "Aaron Philo", role: "Louisville still threw 307 — they will trade chunks" },
+    ],
+    radar: [
+      { label: "Run Game", uf: 70, opp: 56 },
+      { label: "Pass Efficiency", uf: 66, opp: 78 },
+      { label: "Front 7", uf: 72, opp: 48 },
+      { label: "Secondary", uf: 68, opp: 54 },
+      { label: "Special Teams", uf: 58, opp: 58 },
+      { label: "Coaching Edge", uf: 52, opp: 52 },
     ],
     filmWatched: false,
     film: "Ole Miss is no-huddle shotgun and Trinidad Chambliss. Crowd him or he throws it short and keeps it. They jumped LSU 24-7 and still had to win it with a keep left. Then go score — Louisville threw 307 and LSU ran for 172.",

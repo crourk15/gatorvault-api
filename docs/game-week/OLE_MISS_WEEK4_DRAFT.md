@@ -34,6 +34,19 @@ Ole Miss is no-huddle shotgun and Trinidad Chambliss. Crowd him or he throws it 
 | Jayden Woods | Keep Chambliss in the pocket |
 | Aaron Philo | Louisville still threw 307 — they will trade chunks |
 
+## Matchup Edge (sat stamp — not the 51% formula)
+
+Axes are 0–100. Official LSU PBP + Louisville/LSU boxes. Special teams and coaching were not sit-graded — even on a 51–49 board.
+
+| Axis | UF | OM | Receipt |
+|---|---|---|---|
+| Run Game | 70 | 56 | Baugh is the engine. OM vs LSU: Lacy 9-43, Chambliss 63 rush (keeps, not downhill). |
+| Pass Efficiency | 66 | 78 | Chambliss 363 vs LSU, 336 vs Louisville. That is their show. |
+| Front 7 | 72 | 48 | LSU ran for 172. Louisville ran 162. |
+| Secondary | 68 | 54 | Louisville threw 307. LSU only 158. Power can throw on them. |
+| Special Teams | 58 | 58 | Carneiro 48 walk-off + 53 miss. Not sit-graded. |
+| Coaching Edge | 52 | 52 | Not on the PBP. 51–49 board. |
+
 ## Prediction
 
 **UF 28 · Ole Miss 27** · board 51% · Vegas **UF +1.5 / 58.5** (DraftKings via ESPN, Sep 20 — opened FLA -1.5, flipped after the LSU/Auburn finals)
@@ -66,3 +79,5 @@ From how teams looked — not FPI paste. Texas and Georgia stay UF losses.
 ## Shipped
 
 Stamped onto `2026-season.json` and `game-week/meta.json` (`currentGameId: olemiss`). Auburn final 44–39 is on the schedule card.
+
+Matchup Edge is a sat `radar` stamp on the Ole Miss row (not `defaultRadar(ufPct)`). Web reads it after Netlify. Current iOS still draws the 51% formula until the 1.0.26 bake.

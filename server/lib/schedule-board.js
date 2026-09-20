@@ -125,6 +125,7 @@ const BUNDLE_MODEL_KEYS = [
   'filmNotes',
   'keys',
   'swing',
+  'radar',
   'opponentTendencies',
   'defenseTendencies',
   'offenseScout',
@@ -263,6 +264,20 @@ function normalizeGame(row) {
         }))
         .filter((s) => s.name)
     : [];
+  const radar = Array.isArray(row.radar)
+    ? row.radar
+        .map((axis) => ({
+          label: String(axis?.label || '').trim(),
+          uf: Number(axis?.uf),
+          opp: Number(axis?.opp),
+        }))
+        .filter((axis) => axis.label && Number.isFinite(axis.uf) && Number.isFinite(axis.opp))
+        .map((axis) => ({
+          ...axis,
+          uf: Math.max(0, Math.min(100, Math.round(axis.uf))),
+          opp: Math.max(0, Math.min(100, Math.round(axis.opp))),
+        }))
+    : [];
   const kind = String(row.kind || 'game').trim().toLowerCase() === 'bye' ? 'bye' : 'game';
   const uniform = normalizeUniform(row.uniform);
   return {
@@ -276,6 +291,7 @@ function normalizeGame(row) {
     tv: row.tv != null ? String(row.tv).trim() : undefined,
     keys,
     swing,
+    ...(radar.length ? { radar } : {}),
     film: String(row.film || '').trim(),
     filmNotes: Array.isArray(row.filmNotes)
       ? row.filmNotes.map((x) => String(x || '').trim()).filter(Boolean)
