@@ -36,7 +36,7 @@ Ole Miss is no-huddle shotgun and Trinidad Chambliss. Crowd him or he throws it 
 
 ## Prediction
 
-**UF 28 · Ole Miss 27** · board 51% · Vegas **UF -1.5 / 57.5** (DraftKings via ESPN, Sep 20)
+**UF 28 · Ole Miss 27** · board 51% · Vegas **UF +1.5 / 58.5** (DraftKings via ESPN, Sep 20 — opened FLA -1.5, flipped after the LSU/Auburn finals)
 
 Home after a real SEC road win. They just beat LSU. This is not a 40-point card.
 
