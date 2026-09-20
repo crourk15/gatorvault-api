@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-09-20T03:50:00.000Z",
+  "updatedAt": "2026-09-20T04:40:00.000Z",
   "label": "2026 Florida football schedule",
   "source": "vault-schedule-board",
   "predThrough": "2026-W3",
@@ -335,6 +335,14 @@
           "name": "Aaron Philo",
           "role": "Louisville still threw 307 \u2014 they will trade chunks"
         }
+      ],
+      "radar": [
+        { "label": "Run Game", "uf": 70, "opp": 56 },
+        { "label": "Pass Efficiency", "uf": 66, "opp": 78 },
+        { "label": "Front 7", "uf": 72, "opp": 48 },
+        { "label": "Secondary", "uf": 68, "opp": 54 },
+        { "label": "Special Teams", "uf": 58, "opp": 58 },
+        { "label": "Coaching Edge", "uf": 52, "opp": 52 }
       ],
       "film": "Ole Miss is no-huddle shotgun and Trinidad Chambliss. Crowd him or he throws it short and keeps it. They jumped LSU 24-7 and still had to win it with a keep left. Then go score \u2014 Louisville threw 307 and LSU ran for 172.",
       "filmNotes": [

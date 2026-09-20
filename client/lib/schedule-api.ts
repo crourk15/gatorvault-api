@@ -72,6 +72,19 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
         ufPct: Number.isFinite(Number(g.ufPct)) ? Number(g.ufPct) : 50,
         keys: Array.isArray(g.keys) ? g.keys : [],
         swing: Array.isArray(g.swing) ? g.swing : [],
+        ...(Array.isArray(g.radar) && g.radar.length
+          ? {
+              radar: g.radar
+                .map((axis) => ({
+                  label: String(axis?.label || '').trim(),
+                  uf: Number(axis?.uf),
+                  opp: Number(axis?.opp),
+                }))
+                .filter((axis) => axis.label && Number.isFinite(axis.uf) && Number.isFinite(axis.opp)),
+            }
+          : seed?.radar
+            ? { radar: seed.radar }
+            : {}),
         film: String(g.film || ''),
         filmNotes: Array.isArray(g.filmNotes)
           ? g.filmNotes.map((n) => String(n || '').trim()).filter(Boolean)

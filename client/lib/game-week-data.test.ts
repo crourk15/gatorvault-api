@@ -5,6 +5,7 @@ import { SCHEDULE_GAMES } from './schedule-data';
 import { getFeaturedUfGame } from './gators-live';
 import {
   buildFilmNotes,
+  buildRadar,
   defaultGameWeekId,
   resolveGameWeekId,
   DESK_SCOUT_TALK_RE,
@@ -133,6 +134,14 @@ describe('Game Week Film Notes', () => {
     });
     assert.equal(withVegas.prediction.spread, 'UF +1.5');
     assert.equal(withVegas.prediction.total, 'O/U 58.5');
+    const radar = buildRadar(olemiss);
+    assert.deepEqual(radar, olemiss.radar);
+    assert.equal(radar.find((a) => a.label === 'Pass Efficiency')?.opp, 78);
+    assert.equal(radar.find((a) => a.label === 'Front 7')?.opp, 48);
+    assert.notDeepEqual(
+      radar.find((a) => a.label === 'Run Game'),
+      { label: 'Run Game', uf: 78, opp: 59 },
+    );
   });
 
   it('defaults Game Week to the next upcoming kickoff', () => {

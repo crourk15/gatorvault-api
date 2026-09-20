@@ -199,6 +199,9 @@ describe('schedule-board', () => {
     assert.match(olemiss.howUFWins[2], /Traylon Ray and Deuce Alexander/i);
     assert.equal(olemiss.pred, 'UF 28 · Ole Miss 27');
     assert.equal(olemiss.filmWatched, false);
+    assert.equal(olemiss.radar.find((a) => a.label === 'Pass Efficiency')?.opp, 78);
+    assert.equal(olemiss.radar.find((a) => a.label === 'Front 7')?.opp, 48);
+    assert.equal(olemiss.radar.find((a) => a.label === 'Coaching Edge')?.uf, 52);
     assert.ok(olemiss.offenseScout?.some((n) => /No Huddle-Shotgun/i.test(n)));
     assert.ok(olemiss.defenseScout?.some((n) => /NOT confirmed/i.test(n)));
     const payload = scheduleBoard.toApiPayload(board);
