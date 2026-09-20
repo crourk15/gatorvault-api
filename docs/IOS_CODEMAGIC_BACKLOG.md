@@ -22,7 +22,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Game Week Auburn: drop Jalanie George expected-visitor — road games do not get a Swamp visitor panel (API `/api/schedule` — no Codemagic)
 - [x] Locker article “Home Was the Easy Part” (`art-two-games-in-2026`) taken down — remove from `articles.json` / `/api/content/published` after merge (no Codemagic)
 - [x] Roster Week 2 Campbell official box on Stats tabs (Philo 16/21 242 2 TD, Baugh 136 2 TD, Wilson 104) — API `/api/roster/players/:slug` after merge (no Codemagic)
-- [x] Schedule remaining-season predictions: weekly `ufPct` / `pred` restamp via `/api/schedule` after how teams looked (API — no Codemagic). Week 2 board is live after merge. Home **RIVALRY WEEK** badge (FSU / UGA only) waits for the **1.0.26** bake.
+- [x] Schedule remaining-season predictions: weekly `ufPct` / `pred` restamp via `/api/schedule` after how teams looked (API — no Codemagic). Week 2 board is live after merge. Home **RIVALRY WEEK** badge (FSU / UGA only) waits for the **1.0.27** bake.
 - [x] Game Week Auburn week: pointer + Campbell 52–3 + Auburn card on `/api/schedule` (API — no Codemagic). Current App Store already live-fetches the board and opens the next kickoff after the 5-hour postgame window — do **not** bake for a new opponent.
 - [x] Game Week Auburn Vegas: stamp consensus UF -2.5 / O/U 51.5 on `/api/betting/lines` so Prediction is not Line pending (API — no Codemagic)
 - [x] Game Week Auburn 3 keys: 1 offense + 2 defense as clear win statements (no play-by-play cites) — API `keys` / `howUFWins` (no Codemagic)
@@ -73,7 +73,8 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Why we chase generator + Admin/script overrides on HP API (`whyWeChase`) — live after Render; **client prefer-field needs Codemagic bake below**
 - [x] 2028 HP chase cards: visit lines + Why we chase notes from live visit/intel stores + soft priority nudge (API — no Codemagic; Rising still snapshot `delta7d` only)
 - [x] Home NOW / class-overview 2027 commit count lockstep with commit cards (26) — kill protected-only phantom inflate + shared `loadHubHsClassCommits` (API)
-- [x] App Store **1.0.26** / build 91+ is the next Codemagic train — 1.0.25 train closed (`90062` / `90186`); Rivalry Week badge + queued 1.0.25 client UI (`docs/APP_STORE_1_0_26.md`)
+- [x] App Store **1.0.27** / build 92+ is the next Codemagic train — 1.0.26 train closed (`90062` / `90186`); Matchup Edge sit + queued 1.0.26 client UI (`docs/APP_STORE_1_0_27.md`)
+- [x] App Store **1.0.26** / build 91+ train **closed** — already approved; Codemagic cannot upload another 1.0.26 IPA
 - [x] App Store **1.0.25** / build 90+ train **closed** — already approved; Codemagic cannot upload another 1.0.25 IPA
 - [x] App Store **1.0.24** / build 89 was the prior pbxproj train (Film Room Review-off)
 - [x] App Store **1.0.23** train closed for new builds (`iris-code` 90186) — 1.0.23 / build 88+ already used
@@ -135,19 +136,19 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 ## Waiting for next Codemagic build
 
-**Next bake target: App Store `1.0.26` / build `91+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_26.md`. 1.0.25 is approved and closed. Merge this bump, create **1.0.26** in App Store Connect, then Charles starts Codemagic **ios-release** on `main`.
+**Next bake target: App Store `1.0.27` / build `92+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_27.md`. 1.0.26 is approved and closed. Merge this bump, create **1.0.27** in App Store Connect, then Charles starts Codemagic **ios-release** on `main`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-20 | Game Week Matchup Edge reads sat `game.radar` (Ole Miss LSU-sit stamp) | `buildRadar` in binary; **API `/api/schedule` radar already live after Render**. Old binary still draws the 51% formula hexagon. | pending · bake 1.0.26 |
-| 2026-09-20 | Home Game Week skips a posted final immediately (no 8h hold on last week's opponent) | `getFeaturedUfGame` in binary; **API `currentGameId` + Game Week page already Ole Miss after Render**. Old binary still advances after the 8h postgame window — do not start Codemagic for this. | pending · bake 1.0.26 |
-| 2026-09-20 | Gators Live poll 5s live / 10s idle + no stacked fetches | `VaultLiveScoresPage` + `gatorsLivePollMs` in binary; **API score/cache already faster after Render** | pending · bake 1.0.26 |
-| 2026-09-19 | Gators Live betting fallback: skip FSU/FAU rows (`isFloridaGatorsMatchupText`) | `VaultLiveScoresPage` in binary; **live score already API after Render** | #697 · bake 1.0.26 |
-| 2026-09-17 | Film Room hub seed: drop 2025 GNFP film reviews from first-paint (keep 2026 FAU / Philo / Faulkner) | `film-room-hub-seed.json` in binary; **live catalog already API after Render** | #688 · bake 1.0.26 |
-| 2026-09-16 | FutureCast Lab seed first-paint: drop Aug-stale "Updated Aug 7" until live HP lands | `futurecast-lab-updated` + Lab hook in binary; **live master-board stamp already API after Render** | #684 · bake 1.0.26 |
-| 2026-09-13 | Home countdown: **RIVALRY WEEK** only for FSU + UGA (Auburn is Game Week) | `RIVAL_OPPONENT_IDS` + `gameDayBadge` in binary — **1.0.26**; web already correct after #673 | #673 · bake 1.0.26 |
+| 2026-09-20 | Game Week Matchup Edge reads sat `game.radar` (Ole Miss LSU-sit stamp) | `buildRadar` in binary; **API `/api/schedule` radar already live after Render**. Old binary still draws the 51% formula hexagon. | pending · bake 1.0.27 |
+| 2026-09-20 | Home Game Week skips a posted final immediately (no 8h hold on last week's opponent) | `getFeaturedUfGame` in binary; **API `currentGameId` + Game Week page already Ole Miss after Render**. Old binary still advances after the 8h postgame window — do not start Codemagic for this. | pending · bake 1.0.27 |
+| 2026-09-20 | Gators Live poll 5s live / 10s idle + no stacked fetches | `VaultLiveScoresPage` + `gatorsLivePollMs` in binary; **API score/cache already faster after Render** | pending · bake 1.0.27 |
+| 2026-09-19 | Gators Live betting fallback: skip FSU/FAU rows (`isFloridaGatorsMatchupText`) | `VaultLiveScoresPage` in binary; **live score already API after Render** | #697 · bake 1.0.27 |
+| 2026-09-17 | Film Room hub seed: drop 2025 GNFP film reviews from first-paint (keep 2026 FAU / Philo / Faulkner) | `film-room-hub-seed.json` in binary; **live catalog already API after Render** | #688 · bake 1.0.27 |
+| 2026-09-16 | FutureCast Lab seed first-paint: drop Aug-stale "Updated Aug 7" until live HP lands | `futurecast-lab-updated` + Lab hook in binary; **live master-board stamp already API after Render** | #684 · bake 1.0.27 |
+| 2026-09-13 | Home countdown: **RIVALRY WEEK** only for FSU + UGA (Auburn is Game Week) | `RIVAL_OPPONENT_IDS` + `gameDayBadge` in binary — **1.0.27**; web already correct after #673 | #673 · bake 1.0.27 |
 | 2026-09-12 | Roster Stats tab: accept `source: official` (Philo Week 1 box) + Official box footer | `hasProductionStats` in 1.0.23 still requires `cfbd` — **this is the 1.0.25 reason**; web + API already show | #668 · bake 1.0.25 |
 | 2026-09-10 | Game Week Scouting Report: bundled mapper prefers fan tendencies + `film` | `buildScouting` in binary — **current App Store copy is already API-fixed** (public schedule empties desk scout); bake only drops the leftover mapper | #652 |
 | 2026-09-08 | Film Room: hide empty Review tab; land on Breakdowns; GNFP FAU cuts in hub seed | `VaultFilmRoomPage` rail + `film-room-hub-seed.json` first-paint; **live catalog stays API after Render** | #643 |
