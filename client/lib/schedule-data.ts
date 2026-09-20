@@ -354,7 +354,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     date: "September 26, 2026 · 3:30 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
     ufPct: 51,
-    tv: "TBD",
+    tv: "ABC",
     keys: [
       "Attack a front that just gave LSU 172",
       "Crowd Chambliss before the first read",

@@ -126,6 +126,7 @@ describe('Game Week Film Notes', () => {
     assert.match(bundle.keys[1].body, /Crowd Chambliss/i);
     assert.match(bundle.keys[2].body, /Traylon Ray and Deuce Alexander/i);
     assert.equal(olemiss.filmWatched, false);
+    assert.equal(olemiss.tv, 'ABC');
     assert.equal(bundle.prediction.scoreLine, 'UF 28 · Ole Miss 27');
     assert.equal(bundle.prediction.spread, 'Line pending');
     const withVegas = getGameWeekBundle('olemiss', SCHEDULE_GAMES, {

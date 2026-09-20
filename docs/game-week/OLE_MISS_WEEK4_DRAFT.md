@@ -2,7 +2,7 @@
 
 Charles asked to move Game Week off Auburn after 44–39. Live Game Week is Ole Miss. `2026-season.json` + `game-week/meta.json` stamped.
 
-Sep 26 · 3:30 PM ET · TV TBD · vs The Swamp
+Sep 26 · 3:30 PM ET · ABC · vs The Swamp
 Florida 3–0 (66–21 FAU, 52–3 Campbell, **44–39 at Auburn**). Ole Miss 3–0 (41–38 Louisville, 41–9 Charlotte, **32–24 LSU**).
 
 **What we sat:** official ESPN LSU play-by-play (Oxford, Sep 19).
@@ -74,7 +74,7 @@ From how teams looked — not FPI paste. Texas and Georgia stay UF losses.
 - LSU SEC condensed — not posted. Fold in before calling `filmWatched: true`.
 - Official Ole Miss box page 404. ESPN box + PBP used.
 - Coverage shells — not on the PBP text.
-- TV window still TBD on the board even with a 3:30 ET kick.
+- Official window stamped **ABC / 3:30 p.m. ET** from floridagators.com (SEC announced Saturday, posted Sunday Sep 20).
 
 ## Shipped
 

@@ -198,6 +198,7 @@ describe('schedule-board', () => {
     assert.match(olemiss.howUFWins[1], /Crowd Chambliss/i);
     assert.match(olemiss.howUFWins[2], /Traylon Ray and Deuce Alexander/i);
     assert.equal(olemiss.pred, 'UF 28 · Ole Miss 27');
+    assert.equal(olemiss.tv, 'ABC');
     assert.equal(olemiss.filmWatched, false);
     assert.equal(olemiss.radar.find((a) => a.label === 'Pass Efficiency')?.opp, 78);
     assert.equal(olemiss.radar.find((a) => a.label === 'Front 7')?.opp, 48);
