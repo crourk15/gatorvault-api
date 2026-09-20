@@ -118,6 +118,9 @@ function loadBundleUniformMap(season) {
 /** Model / film intel fields that git-bundle edits should win when the bundle is newer. */
 const BUNDLE_MODEL_KEYS = [
   'ufPct',
+  'date',
+  'label',
+  'venue',
   'tv',
   'pred',
   'predUF',
@@ -162,7 +165,9 @@ function loadBundleDoc(season) {
 function overlayBundleModelFields(doc, season) {
   const bundle = loadBundleDoc(season);
   if (!bundle) return { doc, healed: 0 };
-  if (parseTs(bundle.updatedAt) <= parseTs(doc.updatedAt)) {
+  // Equal stamps still heal — Render durable often copies bundle updatedAt
+  // without taking a later kickoff window (Ole Miss 3:30–8:00 vs 3:30 PM ET).
+  if (parseTs(bundle.updatedAt) < parseTs(doc.updatedAt)) {
     return { doc, healed: 0 };
   }
   const byId = new Map((bundle.games || []).map((g) => [String(g.id || ''), g]));

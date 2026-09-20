@@ -50,6 +50,30 @@ function mergeUniform(
   return normalizeUniform(live) || normalizeUniform(seed);
 }
 
+function isKickoffWindow(date: string): boolean {
+  return /\d{1,2}:\d{2}\s*[-–]\s*\d{1,2}:\d{2}/.test(date);
+}
+
+function isFirmKickoff(date: string): boolean {
+  return /\d{1,2}:\d{2}\s*(AM|PM)/i.test(date) && !isKickoffWindow(date);
+}
+
+/** Prefer a firm kickoff over a leftover SEC window (3:30–8:00). */
+function preferKickoffDate(live: string, seed?: string): string {
+  const seedDate = String(seed || '').trim();
+  if (isKickoffWindow(live) && isFirmKickoff(seedDate)) return seedDate;
+  return live || seedDate;
+}
+
+function preferTv(live: unknown, seed?: string): string | undefined {
+  const liveTv = String(live || '').trim();
+  const seedTv = String(seed || '').trim();
+  if ((!liveTv || /^(TBD|TBA|—|-)$/i.test(liveTv)) && seedTv && !/^(TBD|TBA|—|-)$/i.test(seedTv)) {
+    return seedTv;
+  }
+  return liveTv || seedTv || undefined;
+}
+
 function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] {
   if (!Array.isArray(raw) || !raw.length) return [];
   const seedById = new Map(SCHEDULE_GAMES.map((g) => [g.id, g]));
@@ -58,15 +82,17 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
       if (!g || typeof g !== 'object') return null;
       const id = String(g.id || '').trim();
       const opp = String(g.opp || '').trim();
-      const date = String(g.date || '').trim();
-      if (!id || !opp || !date) return null;
       const seed = seedById.get(id);
+      const date = preferKickoffDate(String(g.date || '').trim(), seed?.date);
+      if (!id || !opp || !date) return null;
       const uniform = mergeUniform(g.uniform, seed?.uniform);
+      const tv = preferTv(g.tv, seed?.tv);
       return {
         ...g,
         id,
         opp,
         date,
+        ...(tv ? { tv } : {}),
         label: String(g.label || id).trim(),
         venue: String(g.venue || '').trim(),
         ufPct: Number.isFinite(Number(g.ufPct)) ? Number(g.ufPct) : 50,
