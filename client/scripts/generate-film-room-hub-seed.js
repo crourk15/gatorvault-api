@@ -10,7 +10,7 @@ const http = require('http');
 const ROOT = path.resolve(__dirname, '../..');
 const OUT = path.join(__dirname, '../lib/film-room-hub-seed.json');
 const API = process.env.FILM_SEED_API || 'https://gatorvault-api.onrender.com';
-const { isCurrentStaffGnfpReview } = require('../../server/lib/film-room-youtube-ingest');
+const { isCurrentStaffGnfpReview } = require('../../server/lib/film-room-gnfp-filter');
 
 function fetchJson(url, timeoutMs = 35000) {
   return new Promise((resolve, reject) => {
