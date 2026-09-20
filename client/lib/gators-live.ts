@@ -113,9 +113,14 @@ export function getFeaturedUfGame(now = new Date()): ScheduleGame | null {
     if (g.kind === 'bye' || String(g.id || '').startsWith('bye')) continue;
     const kick = parseScheduleKickoff(g.date);
     if (!kick) continue;
+    const t = now.getTime();
+    // Final on the row means the whistle already blew — do not hold the home
+    // Game Week card on last week's opponent through the postgame window.
+    const postedFinal =
+      Number.isFinite(Number(g.finalUF)) && Number.isFinite(Number(g.finalOpp));
+    if (postedFinal && t > kick.getTime()) continue;
     const start = kick.getTime() - PREGAME_HOURS * 3600_000;
     const end = kick.getTime() + POSTGAME_HOURS * 3600_000;
-    const t = now.getTime();
     if (t >= start && t <= end) {
       current = g;
       break;

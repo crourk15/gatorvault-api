@@ -68,7 +68,13 @@ const STATIC_LINES = [
     moneyline: null,
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
-    source: 'schedule'
+    source: 'schedule',
+    completed: true,
+    homeScore: 52,
+    awayScore: 3,
+    status: 'Final',
+    live: false,
+    scoreSource: 'official'
   },
   {
     id: 'uf-auburn-2026-w3',
@@ -81,6 +87,21 @@ const STATIC_LINES = [
     spread: { line: 'UF -2.5', uf: -2.5 },
     total: 51.5,
     moneyline: { uf: -135, opp: +114 },
+    sportsbookUrl: FANDUEL_AFFILIATE,
+    sportsbookLinks: SPORTSBOOKS,
+    source: 'schedule'
+  },
+  {
+    id: 'uf-olemiss-2026-w4',
+    week: 4,
+    game: 'Florida vs Ole Miss',
+    opponent: 'Ole Miss',
+    date: '2026-09-26T19:30:00.000Z',
+    venue: 'Ben Hill Griffin Stadium',
+    // Market ~Sep 20 2026: DraftKings via ESPN FLA -1.5 / 57.5
+    spread: { line: 'UF -1.5', uf: -1.5 },
+    total: 57.5,
+    moneyline: { uf: -115, opp: -105 },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
     source: 'schedule'

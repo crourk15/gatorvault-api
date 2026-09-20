@@ -102,15 +102,51 @@ describe('Game Week Film Notes', () => {
     assert.equal(withVegas.prediction.total, 'O/U 51.5');
   });
 
+  it('Ole Miss Film Notes stay fan-facing and skip the tempo placeholder', () => {
+    const olemiss = SCHEDULE_GAMES.find((g) => g.id === 'olemiss');
+    assert.ok(olemiss);
+    const notes = buildFilmNotes(olemiss);
+    assert.ok(notes.length >= 8);
+    assert.match(notes[0], /no-huddle shotgun and Trinidad Chambliss/i);
+    assert.ok(!notes.some((n) => /tempo offense stresses|NOT confirmed/i.test(n)));
+
+    const bundle = getGameWeekBundle('olemiss');
+    assert.deepEqual(bundle.filmNotes, notes);
+    assert.ok(bundle.scouting.offense.some((n) => /no-huddle shotgun/i.test(n)));
+    assert.ok(bundle.scouting.defense.some((n) => /LSU ran for 172/i.test(n)));
+    assert.ok(!bundle.scouting.offense.some((n) => DESK_SCOUT_TALK_RE.test(n)));
+    assert.ok(!bundle.scouting.defense.some((n) => DESK_SCOUT_TALK_RE.test(n)));
+    assert.ok(!DESK_SCOUT_TALK_RE.test(bundle.scouting.matchupSummary));
+    assert.match(bundle.scouting.matchupSummary, /Trinidad Chambliss/i);
+    assert.equal(bundle.keys[0].title, 'Attack a front that just gave LSU 172');
+    assert.equal(bundle.keys[1].title, 'Crowd Chambliss before the first read');
+    assert.equal(bundle.keys[2].title, "Don't let the short throw become a long run");
+    assert.match(bundle.keys[0].body, /LSU ran for 172/i);
+    assert.match(bundle.keys[1].body, /Crowd Chambliss/i);
+    assert.match(bundle.keys[2].body, /Traylon Ray and Deuce Alexander/i);
+    assert.equal(olemiss.filmWatched, false);
+    assert.equal(bundle.prediction.scoreLine, 'UF 28 · Ole Miss 27');
+    assert.equal(bundle.prediction.spread, 'Line pending');
+    const withVegas = getGameWeekBundle('olemiss', SCHEDULE_GAMES, {
+      spreadLine: 'UF -1.5',
+      total: 57.5,
+    });
+    assert.equal(withVegas.prediction.spread, 'UF -1.5');
+    assert.equal(withVegas.prediction.total, 'O/U 57.5');
+  });
+
   it('defaults Game Week to the next upcoming kickoff', () => {
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-04T18:00:00-04:00')), 'fau');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-06T12:00:00-04:00')), 'campbell');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-12T22:18:00-04:00')), 'auburn');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-13T12:00:00-04:00')), 'auburn');
+    assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-20T00:30:00-04:00')), 'olemiss');
     assert.equal(resolveGameWeekId(SCHEDULE_GAMES, new Date('2026-09-06T12:00:00-04:00'), 'auburn'), 'auburn');
+    assert.equal(resolveGameWeekId(SCHEDULE_GAMES, new Date('2026-09-20T00:30:00-04:00'), 'olemiss'), 'olemiss');
     assert.equal(getFeaturedUfGame(new Date('2026-09-04T18:00:00-04:00'))?.id, 'fau');
     assert.equal(getFeaturedUfGame(new Date('2026-09-06T12:00:00-04:00'))?.id, 'campbell');
     assert.equal(getFeaturedUfGame(new Date('2026-09-13T12:00:00-04:00'))?.id, 'auburn');
+    assert.equal(getFeaturedUfGame(new Date('2026-09-20T00:30:00-04:00'))?.id, 'olemiss');
   });
 
   it('Game Week depth board is the official two-deep, not the placeholder dump', () => {

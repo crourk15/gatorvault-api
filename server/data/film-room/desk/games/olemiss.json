@@ -1,0 +1,67 @@
+{
+  "gameId": "olemiss",
+  "locked": false,
+  "whatTheyRan": [
+    "Offense: no-huddle shotgun. Official ESPN LSU PBP (Sep 19): 74 shotgun tags, 58 No Huddle-Shotgun, 16 Shotgun, 0 under-center. Trinidad Chambliss is the show — throw it short, keep it, hit Ray and Deuce.",
+    "Defense: they can be scored on by Power teams (Louisville 38 / 469, LSU 24 / 330 with 172 rush). Coverage shells NOT confirmed.",
+    "Specials: they will go on 4th-and-short (Lindsey rush 2). Carneiro 37 good, 53 no good. Do not write Florida punts."
+  ],
+  "howItPlayed": [
+    "Oxford was 32-24 because they jumped LSU 24-7 and still had to win it after LSU tied it at 24.",
+    "Winning score: Shotgun Chambliss rush left 14. JT Lindsey two-point run.",
+    "First TD: Lacy middle 5 after Ray 36.",
+    "Chunks were short throws that ran: Ray 36 and 21 TD, Fields 22, Odom 23, Alexander 20 TD to close the half.",
+    "One pick: Q3 Jackson at the 43.",
+    "Louisville week was the same picture — Chambliss 336, Deuce 62 twice, walk-off 48 FG."
+  ],
+  "doNotSay": [
+    "personnel codes (10/11/12/GT)",
+    "every snap / every single time",
+    "DJ Lagway",
+    "four down as the Florida front",
+    "the night was two-high",
+    "leak (use areas of opportunity)",
+    "writer names in fan copy",
+    "GNFP / Patreon wording",
+    "Florida punts",
+    "Lane Kiffin as the 2026 Ole Miss identity unless stamped",
+    "filmWatched true — LSU condensed not posted"
+  ],
+  "jerseys": {
+    "Chambliss": "6",
+    "Lacy": "5",
+    "Alexander": "1",
+    "Ray": "7",
+    "Odom": "4",
+    "Fields": "11",
+    "Lindsey": "26"
+  },
+  "snapLocks": [
+    "Official ESPN PBP sit — LSU / ESPN 401856688. SEC condensed NOT POSTED hours after the whistle. Louisville condensed exists (not sat). watchStandard: official-pbp. filmWatched: false.",
+    "Q1 06:38: Carneiro 37 FG. 3-0.",
+    "Q1 02:00: Lacy middle 5 TD after Ray 36. 10-0.",
+    "Q2 09:49: Chambliss short left Ray 21 TD. 17-0.",
+    "Q2 00:05: Chambliss deep middle Alexander 20 TD. 24-7.",
+    "Q3 12:13: Chambliss INT Jackson at the 43.",
+    "Q3 05:42: Carneiro 53 no good.",
+    "Q4 06:14: Chambliss rush left 14 TD; Lindsey two-point run. 32-24.",
+    "Q4 01:02: Braxton INT of Leavitt in the end zone. Kneels."
+  ],
+  "intelSeeds": [],
+  "tapeLinks": [
+    {
+      "label": "ESPN LSU box / PBP",
+      "url": "https://www.espn.com/college-football/game/_/gameId/401856688"
+    },
+    {
+      "label": "ESPN highlight clips (not a condensed sit)",
+      "url": "https://www.espn.com/video/clip/_/id/49984171"
+    },
+    {
+      "label": "Official Ole Miss box page — 404 at draft",
+      "url": "https://olemisssports.com/sports/football/stats/2026/lsu/boxscore"
+    }
+  ],
+  "reviewStatus": "official-pbp",
+  "notes": "SHIPPED to live Game Week. filmWatched still false until LSU condensed/broadcast is sat. Louisville condensed exists and was not sat."
+}

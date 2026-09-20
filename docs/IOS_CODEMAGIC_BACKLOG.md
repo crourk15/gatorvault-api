@@ -7,6 +7,8 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Ole Miss: pointer + Auburn 44–39 final + Week 3 remaining-season preds on `/api/schedule` after Render (API — no Codemagic). LSU condensed was not posted; sit is official ESPN PBP (`filmWatched: false`).
+- [x] Game Week Ole Miss Vegas: stamp DraftKings via ESPN UF -1.5 / O/U 57.5 on `/api/betting/lines` (API — no Codemagic).
 - [x] Gators Live / score alerts: 15s watch + 4s ESPN cache + 8h postgame window; failed pushes do not eat the next score (`/api/gators-live` + `gators-score-alerts` after Render).
 - [x] Gators Live: ESPN extract matches Florida Gators only (id 57 / FLA) — skip FSU–Alabama when it is listed first (`/api/gators-live` after Render).
 - [x] 2028 LB Ryquan Butler: Florida offer + scheduled Gainesville trip + Hudl sit (`filmWatched: true`) on War Room / fan Vault Scouting after Render (API — no Codemagic).
@@ -138,6 +140,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-20 | Home Game Week skips a posted final immediately (no 8h hold on last week's opponent) | `getFeaturedUfGame` in binary; **API `currentGameId` + Game Week page already Ole Miss after Render**. Old binary still advances after the 8h postgame window — do not start Codemagic for this. | pending · bake 1.0.26 |
 | 2026-09-20 | Gators Live poll 5s live / 10s idle + no stacked fetches | `VaultLiveScoresPage` + `gatorsLivePollMs` in binary; **API score/cache already faster after Render** | pending · bake 1.0.26 |
 | 2026-09-19 | Gators Live betting fallback: skip FSU/FAU rows (`isFloridaGatorsMatchupText`) | `VaultLiveScoresPage` in binary; **live score already API after Render** | #697 · bake 1.0.26 |
 | 2026-09-17 | Film Room hub seed: drop 2025 GNFP film reviews from first-paint (keep 2026 FAU / Philo / Faulkner) | `film-room-hub-seed.json` in binary; **live catalog already API after Render** | #688 · bake 1.0.26 |

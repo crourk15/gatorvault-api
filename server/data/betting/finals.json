@@ -16,5 +16,14 @@
     "opp": 3,
     "source": "official",
     "completedAt": "2026-09-13T00:30:00.000Z"
+  },
+  "uf-auburn-2026-w3": {
+    "gameKey": "uf-auburn-2026-w3",
+    "scheduleId": "auburn",
+    "opponent": "Auburn",
+    "uf": 44,
+    "opp": 39,
+    "source": "official",
+    "completedAt": "2026-09-20T03:15:00.000Z"
   }
 }
