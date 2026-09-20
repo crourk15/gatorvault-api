@@ -405,9 +405,12 @@ export function VaultLiveScoresPage(): React.ReactElement {
       }
 
       const data = await fetchBettingLines();
-      const uf = [data.nextGame, ...(data.schedule || [])].filter(Boolean).find((g) =>
-        isFloridaGatorsMatchupText([g.homeTeam, g.awayTeam, g.home, g.away, g.game, g.opponent].filter(Boolean).join(' ')),
-      );
+      const uf = [data.nextGame, ...(data.schedule || [])].filter(Boolean).find((g) => {
+        if (!g) return false;
+        return isFloridaGatorsMatchupText(
+          [g.homeTeam, g.awayTeam, g.home, g.away, g.game, g.opponent].filter(Boolean).join(' '),
+        );
+      });
       if (!uf) {
         setBoard(null);
         return;
