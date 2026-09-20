@@ -98,10 +98,10 @@ const STATIC_LINES = [
     opponent: 'Ole Miss',
     date: '2026-09-26T19:30:00.000Z',
     venue: 'Ben Hill Griffin Stadium',
-    // Market ~Sep 20 2026: DraftKings via ESPN FLA -1.5 / 57.5
-    spread: { line: 'UF -1.5', uf: -1.5 },
-    total: 57.5,
-    moneyline: { uf: -115, opp: -105 },
+    // Market ~Sep 20 2026 late: DraftKings via ESPN flipped to MISS -1.5 / 58.5 (opened FLA -1.5 / 57.5)
+    spread: { line: 'UF +1.5', uf: 1.5 },
+    total: 58.5,
+    moneyline: { uf: -105, opp: -115 },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
     source: 'schedule'

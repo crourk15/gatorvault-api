@@ -128,11 +128,11 @@ describe('Game Week Film Notes', () => {
     assert.equal(bundle.prediction.scoreLine, 'UF 28 · Ole Miss 27');
     assert.equal(bundle.prediction.spread, 'Line pending');
     const withVegas = getGameWeekBundle('olemiss', SCHEDULE_GAMES, {
-      spreadLine: 'UF -1.5',
-      total: 57.5,
+      spreadLine: 'UF +1.5',
+      total: 58.5,
     });
-    assert.equal(withVegas.prediction.spread, 'UF -1.5');
-    assert.equal(withVegas.prediction.total, 'O/U 57.5');
+    assert.equal(withVegas.prediction.spread, 'UF +1.5');
+    assert.equal(withVegas.prediction.total, 'O/U 58.5');
   });
 
   it('defaults Game Week to the next upcoming kickoff', () => {
