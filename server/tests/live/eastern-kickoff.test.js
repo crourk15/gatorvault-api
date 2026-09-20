@@ -29,7 +29,8 @@ describe('UF live window (Eastern)', () => {
     assert.equal(isUfGameLiveWindow(new Date('2026-09-06T02:30:00.000Z')), true);
   });
 
-  it('is closed after the 5-hour post window', () => {
-    assert.equal(isUfGameLiveWindow(new Date('2026-09-06T05:00:00.000Z')), false);
+  it('is closed after the 8-hour post window', () => {
+    assert.equal(isUfGameLiveWindow(new Date('2026-09-06T05:00:00.000Z')), true);
+    assert.equal(isUfGameLiveWindow(new Date('2026-09-06T08:00:00.000Z')), false);
   });
 });

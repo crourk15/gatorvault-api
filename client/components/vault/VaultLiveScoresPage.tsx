@@ -4,7 +4,7 @@
  * Gators Live — Florida football living room.
  * Route stays /vault/live-scores/; score is the heartbeat, not the product.
  */
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PageLayout } from '@/components/brand';
 import { fetchBettingLines } from '@/lib/betting-api';
 import { fetchCommunityThreads, type CommunityThread } from '@/lib/community-api';
@@ -351,8 +351,11 @@ export function VaultLiveScoresPage(): React.ReactElement {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [now, setNow] = useState(() => new Date());
+  const liveInFlight = useRef(false);
 
   const loadLive = useCallback(async () => {
+    if (liveInFlight.current) return;
+    liveInFlight.current = true;
     const localPreview = readLocalPreviewPhase();
     if (localPreview) {
       setPreview(localPreview);
@@ -360,6 +363,7 @@ export function VaultLiveScoresPage(): React.ReactElement {
       setBoard(localPreview === 'ready' ? null : previewBoard(localPreview, featured));
       setLoading(false);
       setError(null);
+      liveInFlight.current = false;
       return;
     }
     setPreview(null);
@@ -367,6 +371,7 @@ export function VaultLiveScoresPage(): React.ReactElement {
       setMode('ready');
       setBoard(null);
       setLoading(false);
+      liveInFlight.current = false;
       return;
     }
     setMode('live-window');
@@ -438,6 +443,7 @@ export function VaultLiveScoresPage(): React.ReactElement {
       }
     } finally {
       setLoading(false);
+      liveInFlight.current = false;
     }
   }, [featured]);
 

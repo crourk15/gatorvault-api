@@ -105,7 +105,7 @@ Enable on a member account: sign in → **My Alerts** → toggle Visits / Commit
 5. `cd client && npm i && npx cap sync ios` then archive a new build (APNs does not OTA)
 6. On device: open My Alerts → Save Preferences → allow notifications → expect confirmation push
 
-Commit pushes fire from On3 ingest. Score pushes: web dyno watches every 60s in-window, plus Render cron `gatorvault-api-gators-score-alerts` (`*/2`) calling `POST /api/ops/run-job` `{ jobId: "gators-score-alerts" }`. Beats: kickoff, every score, halftime, final.
+Commit pushes fire from On3 ingest. Score pushes: web dyno watches every 15s in-window, plus Render cron `gatorvault-api-gators-score-alerts` (`* * * * *`) calling `POST /api/ops/run-job` `{ jobId: "gators-score-alerts" }`. Beats: kickoff, every score, halftime, final. A failed send does not advance the last-seen scoreline.
 
 ## Windows note
 

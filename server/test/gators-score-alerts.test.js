@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('assert');
 const { describe, it } = require('node:test');
-const { planScoreAlerts, classifyScoreDelta } = require('../lib/gators-score-alerts');
+const { planScoreAlerts, classifyScoreDelta, scorePushDelivered, shouldAdvanceSeenScores } = require('../lib/gators-score-alerts');
 
 describe('gators-score-alerts beats', () => {
   it('classifies Gators TD / FG and skips extra points', () => {
@@ -50,5 +50,25 @@ describe('gators-score-alerts beats', () => {
       { kickoffSent: true, lastScores: { uf: 14, opp: 7 }, lastScoreAlert: '14-7' },
     );
     assert.deepEqual(again, []);
+  });
+
+  it('does not treat a failed score push as delivered', () => {
+    assert.equal(scorePushDelivered({ ok: true, sent: 0, failed: 4 }), false);
+    assert.equal(scorePushDelivered({ ok: true, sent: 2 }), true);
+    assert.equal(scorePushDelivered({ ok: true, skipped: true, reason: 'already_dispatched' }), true);
+    assert.equal(
+      shouldAdvanceSeenScores(
+        [{ kind: 'score' }],
+        [{ kind: 'score', push: { ok: true, sent: 0, failed: 3 } }],
+      ),
+      false,
+    );
+    assert.equal(
+      shouldAdvanceSeenScores(
+        [{ kind: 'halftime' }],
+        [{ kind: 'halftime', push: { ok: true, sent: 1 } }],
+      ),
+      true,
+    );
   });
 });
