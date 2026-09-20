@@ -26,8 +26,8 @@ describe('schedule-board', () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
-    assert.equal(payload.predThrough, '2026-W2');
-    assert.equal(payload.currentGameId, 'auburn');
+    assert.equal(payload.predThrough, '2026-W3');
+    assert.equal(payload.currentGameId, 'olemiss');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);
     assert.equal(campbell.finalOpp, 3);
@@ -78,7 +78,7 @@ describe('schedule-board', () => {
   it('game-week meta games also hide desk scout', () => {
     const feed = require('../lib/game-week-feed');
     const payload = feed.buildGameWeekPayload();
-    assert.equal(payload.currentGameId, 'auburn');
+    assert.equal(payload.currentGameId, 'olemiss');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.deepEqual(campbell.offenseScout, []);
     assert.equal(campbell.scoutingReport, undefined);
@@ -182,6 +182,30 @@ describe('schedule-board', () => {
     assert.deepEqual(fan.offenseScout, []);
     assert.equal(fan.scoutingReport, undefined);
     assert.match(fan.film, /Byrum Brown/i);
+  });
+
+  it('Ole Miss Film Notes are fan-facing and raw scout stays on file', () => {
+    const board = scheduleBoard.getScheduleBoard(2026);
+    const olemiss = board.games.find((g) => g.id === 'olemiss');
+    assert.ok(olemiss.filmNotes?.length >= 8);
+    assert.match(olemiss.filmNotes[0], /no-huddle shotgun and Trinidad Chambliss/i);
+    assert.ok(!olemiss.filmNotes.some((n) => /NOT confirmed|401856688|tempo offense stresses/i.test(n)));
+    assert.match(olemiss.film, /Trinidad Chambliss/i);
+    assert.equal(olemiss.keys[0], 'Attack a front that just gave LSU 172');
+    assert.equal(olemiss.keys[1], 'Crowd Chambliss before the first read');
+    assert.equal(olemiss.keys[2], "Don't let the short throw become a long run");
+    assert.match(olemiss.howUFWins[0], /LSU ran for 172/i);
+    assert.match(olemiss.howUFWins[1], /Crowd Chambliss/i);
+    assert.match(olemiss.howUFWins[2], /Traylon Ray and Deuce Alexander/i);
+    assert.equal(olemiss.pred, 'UF 28 · Ole Miss 27');
+    assert.equal(olemiss.filmWatched, false);
+    assert.ok(olemiss.offenseScout?.some((n) => /No Huddle-Shotgun/i.test(n)));
+    assert.ok(olemiss.defenseScout?.some((n) => /NOT confirmed/i.test(n)));
+    const payload = scheduleBoard.toApiPayload(board);
+    const fan = payload.games.find((g) => g.id === 'olemiss');
+    assert.deepEqual(fan.offenseScout, []);
+    assert.equal(fan.scoutingReport, undefined);
+    assert.match(fan.film, /Chambliss/i);
   });
 
   it('bundle path points at repo seed', () => {

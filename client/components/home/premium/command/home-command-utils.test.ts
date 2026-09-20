@@ -14,4 +14,10 @@ describe('home Game Week badge', () => {
     assert.equal(gameDayBadge(10, true), 'RIVALRY WEEK');
     assert.equal(gameDayBadge(10, false), null);
   });
+
+  it('advances the home card to Ole Miss after the Auburn final', () => {
+    const view = buildGameDayView(new Date('2026-09-20T04:30:00.000Z'));
+    assert.equal(view.gameId, 'olemiss');
+    assert.equal(view.isRival, false);
+  });
 });

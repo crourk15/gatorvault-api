@@ -33,13 +33,26 @@ describe('schedule-premium finals', () => {
     assert.equal(hasPostedFinal(game), true);
   });
 
-  it('leaves upcoming games without a posted final', () => {
+  it('maps the official Auburn final onto the schedule card', () => {
     const raw = SCHEDULE_GAMES.find((g) => g.id === 'auburn');
+    assert.ok(raw);
+    const game = toPremiumScheduleGame(raw);
+    assert.equal(game.finalUF, 44);
+    assert.equal(game.finalOpp, 39);
+    assert.equal(game.finalSource, 'official');
+    assert.equal(
+      game.boxScoreUrl,
+      'https://floridagators.com/sports/football/stats/2026/auburn/boxscore/27905',
+    );
+    assert.equal(hasPostedFinal(game), true);
+  });
+
+  it('leaves upcoming games without a posted final', () => {
+    const raw = SCHEDULE_GAMES.find((g) => g.id === 'olemiss');
     assert.ok(raw);
     const game = toPremiumScheduleGame(raw);
     assert.equal(game.finalUF, undefined);
     assert.equal(game.finalOpp, undefined);
-    assert.equal(game.boxScoreUrl, undefined);
     assert.equal(hasPostedFinal(game), false);
   });
 
@@ -57,5 +70,15 @@ describe('schedule-premium finals', () => {
 
     const nextWeek = new Date('2026-09-13T12:00:00-04:00');
     assert.equal(getNextScheduleGame(games, nextWeek)?.id, 'auburn');
+  });
+
+  it('opens Ole Miss Game Week once Auburn has a posted final after kick', () => {
+    const games = SCHEDULE_GAMES.map(toPremiumScheduleGame);
+    const afterWhistle = new Date('2026-09-20T00:30:00-04:00');
+    assert.equal(getNextScheduleGame(games, afterWhistle)?.id, 'olemiss');
+    assert.equal(
+      getScheduleGameStatus(games.find((g) => g.id === 'auburn')!, 'olemiss', afterWhistle),
+      'past',
+    );
   });
 });
