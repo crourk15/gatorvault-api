@@ -50,8 +50,15 @@ export const VAULT_REVIEW_HUB = 'GatorVault Review';
 /** Fan-visible reviews only. Empty until a real Florida tape watch lands. */
 export const VAULT_FILM_REVIEWS: VaultFilmReview[] = [];
 
+export const EMPTY_REVIEW_RAIL_COPY = 'Empty until a board is live.';
+
+export function isProvisionalFilmReview(review: Pick<VaultFilmReview, 'watchNote'>): boolean {
+  return /\bPROVISIONAL\b/i.test(String(review.watchNote || ''));
+}
+
 export function isLiveVaultFilmReview(review: VaultFilmReview): boolean {
   if (!review.filmWatched) return false;
+  if (isProvisionalFilmReview(review)) return false;
   return review.watchStandard === 'broadcast' || review.watchStandard === 'all22';
 }
 

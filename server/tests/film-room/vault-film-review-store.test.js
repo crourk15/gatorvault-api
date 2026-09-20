@@ -73,6 +73,15 @@ describe('vault-film-review-store', () => {
     assert.equal(store.toApiPayload().ok, true);
   });
 
+  it('hides a broadcast watch still marked PROVISIONAL', () => {
+    store.upsertReview(sample({ id: 'week-97-prov', watchNote: 'PROVISIONAL — desk only.' }));
+    assert.equal(store.getLiveReviewById('week-97-prov'), null);
+    assert.equal(
+      store.listLiveReviews().some((row) => row.id === 'week-97-prov'),
+      false
+    );
+  });
+
   it('hides filmWatched:false even when labeled broadcast', () => {
     store.upsertReview(sample({ id: 'week-98-hidden', filmWatched: false }));
     assert.equal(store.getLiveReviewById('week-98-hidden'), null);

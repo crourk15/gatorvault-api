@@ -28,6 +28,7 @@ function durableDir() {
 
 function isLiveReview(review) {
   if (!review || review.filmWatched !== true) return false;
+  if (/\bPROVISIONAL\b/i.test(String(review.watchNote || ''))) return false;
   return review.watchStandard === 'broadcast' || review.watchStandard === 'all22';
 }
 

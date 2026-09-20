@@ -39,6 +39,8 @@ const NO_CACHE_PREFIXES = [
   // Chase Expected visit labels live on HP visitHistory — stale SWR hid them
   // after the API merge until a hard cache clear.
   '/api/futurecast/high-priority',
+  // Parked Film Review boards must not replay a published SWR paint on iOS.
+  '/api/film-room/reviews',
 ];
 
 type CacheEnvelope<T> = { at: number; data: T };
