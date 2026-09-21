@@ -300,8 +300,8 @@ export function VaultAlertsPage(): React.ReactElement {
       const canEmail = wantsEmailMethod(prefs.method) && visitOn;
       const canPush = wantsPushMethod(prefs.method);
       const bits: string[] = [];
-      let visitOut = { ok: false, reason: undefined as string | undefined, hint: undefined as string | undefined, emailSent: false, pushSent: 0 };
-      let pushOut = { ok: false, reason: undefined as string | undefined };
+      let visitOut: Awaited<ReturnType<typeof sendVisitAlertToMe>> = { ok: false };
+      let pushOut: Awaited<ReturnType<typeof sendTestPushAlert>> = { ok: false };
 
       if (canEmail || visitOn) {
         visitOut = await sendVisitAlertToMe('brysen-wright');
