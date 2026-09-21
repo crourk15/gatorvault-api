@@ -11,6 +11,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Home NOW last-week drop: movement-intel + ticker skip completed-opponent gameday/visit pulses (Man Robinson Campbell, Cyion Sep 11). API after Render — 1.0.28 stops painting those alerts without a bake. Client join/filter is the next-bake row.
 - [x] Home NOW pillars: ticker items are Game / Visitors / Season (ABC on Game only; visitor names, not “Expected visitors in the Swamp”). API after Render — 1.0.28 bolds Game first. Three-label UI is the next-bake row.
 - [x] Home NOW middle-slot break-in: any Florida commit/flip this week takes Visitors; road week fills with that week’s Florida commit (never NA). API after Render.
+- [x] Home NOW News freshness: only this-week commit days (commitDate / players.json). Rematerialized intel on older board commits (Tommy Douglas April 16) stays off News. API after Render — ticker cache t14.
 - [x] Trial-ending email: next drip/d5/d1 sends use the Stay with Gator Nation letter. Already-sent mail is not rewritten. API after Render — no Codemagic.
 - [x] Film Room: drop Film Guy Alabama–FSU sit (`kNrIT61SLVM` / “Florida State” is not Florida) from `/api/film-room/catalog` after Render. Hard-block + title strip so it cannot ingest again. API — no Codemagic.
 - [x] Film Room: Landon Tengwall UF-only 2026 run-game film studies from Auburn Week 3 (`MRjoBzMLD2s`) onward on `/api/film-room/catalog` (API — no Codemagic). Pass-game sits and the Week 1 FAU tape stay off. Hub-seed first-paint waits for a later bake.
