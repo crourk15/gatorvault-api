@@ -19,6 +19,15 @@ export type CommunityCategory = {
   description?: string;
 };
 
+export type CommunityLastReply = {
+  id: string;
+  authorDisplay?: string;
+  authorEmail?: string | null;
+  bodyPreview?: string;
+  createdAt?: string;
+  isYours?: boolean;
+};
+
 export type CommunityThread = {
   id: string;
   title: string;
@@ -41,6 +50,30 @@ export type CommunityThread = {
   dailyKey?: string;
   gameday?: boolean;
   category?: { name?: string; slug?: string } | null;
+  lastReply?: CommunityLastReply | null;
+  yourReplyCount?: number;
+  yourRole?: 'started' | 'replied' | 'following' | 'gameday' | null;
+};
+
+export type CommunityLockerThread = CommunityThread;
+
+export type CommunityReplyOnYours = {
+  threadId: string;
+  title: string;
+  replyCount?: number;
+  lastReplyAt?: string;
+  lastReplyPreview?: string;
+  lastReplyAuthor?: string;
+};
+
+export type CommunityMe = {
+  user?: { id?: string; displayName?: string; email?: string };
+  locker?: CommunityLockerThread[];
+  started?: CommunityLockerThread[];
+  replied?: CommunityLockerThread[];
+  following?: CommunityLockerThread[];
+  repliesOnYours?: CommunityReplyOnYours[];
+  gameRooms?: CommunityLockerThread[];
 };
 
 export type CommunityPost = {
@@ -78,6 +111,9 @@ export type CommunityPageData = {
   threads: CommunityThread[];
   pulse: CommunityPulse;
   rooms: LiveRoom[];
+  gameRooms?: CommunityLockerThread[];
+  me?: CommunityMe | null;
+  followed?: string[];
 };
 
 function authHeaders(json = false): HeadersInit {
@@ -122,26 +158,37 @@ export async function fetchCommunityThreads(opts: {
   category?: string;
   limit?: number;
 } = {}): Promise<CommunityThread[]> {
+  const bundle = await fetchCommunityThreadsBundle(opts);
+  return bundle.threads;
+}
+
+export async function fetchCommunityThreadsBundle(opts: {
+  sort?: string;
+  category?: string;
+  limit?: number;
+} = {}): Promise<{ threads: CommunityThread[]; followed: string[] }> {
   const params = new URLSearchParams();
   if (opts.sort) params.set('sort', opts.sort);
   if (opts.category) params.set('category', opts.category);
   if (opts.limit) params.set('limit', String(opts.limit));
   const qs = params.toString();
-  const data = await apiFetch<{ threads?: CommunityThread[] }>(
+  const data = await apiFetch<{ threads?: CommunityThread[]; followed?: string[] }>(
     `/api/community/threads${qs ? `?${qs}` : ''}`,
     communityFetchInit(),
   );
-  return data.threads ?? [];
+  return { threads: data.threads ?? [], followed: data.followed ?? [] };
 }
 
 export async function fetchCommunityThread(id: string): Promise<{
   thread: CommunityThread;
   posts: CommunityPost[];
+  following?: boolean;
 }> {
   const data = await apiFetch<{
     thread?: CommunityThread;
     posts?: CommunityPost[];
     author?: CommunityAuthor | null;
+    following?: boolean;
   }>(`/api/community/thread/${encodeURIComponent(id)}`, communityFetchInit());
   if (!data.thread) throw new Error('Thread not found');
   const thread = { ...data.thread };
@@ -152,7 +199,33 @@ export async function fetchCommunityThread(id: string): Promise<{
   } else if (!thread.authorDisplay && thread.author?.displayName) {
     thread.authorDisplay = thread.author.displayName;
   }
-  return { thread, posts: data.posts ?? [] };
+  return { thread, posts: data.posts ?? [], following: Boolean(data.following) };
+}
+
+export async function fetchCommunityGameRooms(limit = 8): Promise<CommunityLockerThread[]> {
+  const data = await apiFetch<{ gameRooms?: CommunityLockerThread[] }>(
+    `/api/community/game-rooms?limit=${encodeURIComponent(String(limit))}`,
+    communityFetchInit(),
+  );
+  return data.gameRooms ?? [];
+}
+
+export async function fetchMyCommunity(): Promise<CommunityMe | null> {
+  const session = loadSession();
+  if (!session?.email) return null;
+  const data = await apiFetch<{ me?: CommunityMe }>('/api/community/me', communityFetchInit());
+  return data.me ?? null;
+}
+
+export async function toggleCommunityFollow(threadId: string): Promise<{ following: boolean }> {
+  const data = await apiFetch<{ following?: boolean }>(
+    `/api/community/thread/${encodeURIComponent(threadId)}/follow`,
+    {
+      ...communityFetchInit(true),
+      method: 'POST',
+    },
+  );
+  return { following: Boolean(data.following) };
 }
 
 export async function fetchCommunityPulse(): Promise<CommunityPulse> {
@@ -172,13 +245,24 @@ export async function fetchCommunityPageData(opts: {
   limit?: number;
 } = {}): Promise<CommunityPageData> {
   return fetchWithWarmPoll(async () => {
-    const [categories, threads, pulse, rooms] = await Promise.all([
+    const signedIn = Boolean(loadSession()?.email);
+    const [categories, threadBundle, pulse, rooms, gameRooms, me] = await Promise.all([
       fetchCommunityCategories(),
-      fetchCommunityThreads(opts),
+      fetchCommunityThreadsBundle(opts),
       fetchCommunityPulse(),
       fetchLiveRooms(),
+      fetchCommunityGameRooms(8),
+      signedIn ? fetchMyCommunity().catch(() => null) : Promise.resolve(null),
     ]);
-    return { categories, threads, pulse, rooms };
+    return {
+      categories,
+      threads: threadBundle.threads,
+      followed: threadBundle.followed,
+      pulse,
+      rooms,
+      gameRooms,
+      me,
+    };
   }, warmPollProfile());
 }
 
