@@ -146,7 +146,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-21 | Community locker + Game talk: find Saturday comments, New reply chip, Keep in locker | `VaultCommunityPage` + locker CSS in binary. **GET `/api/community/me`, `/api/community/game-rooms`, auto-follow on post/reply** are API-live after Render. Do not start Codemagic. | pending |
+| 2026-09-21 | Community locker + Game talk: find Saturday comments, New reply chip, Keep in locker | `VaultCommunityPage` + locker CSS in binary. **GET `/api/community/me`, `/api/community/game-rooms`, auto-follow on post/reply** are API-live after Render. Do not start Codemagic. | #715 |
 | 2026-09-21 | Game Week expected-visitor cards: two-line meta + no blank `HS` badge | `ExpectedVisitorsPanel` + CSS in binary; **name/pos/school data is API-live after Render**. Old binary still truncates one line and shows `HS` if a slug had no pos. | pending |
 | 2026-09-20 | Game Week Matchup Edge reads sat `game.radar` (Ole Miss LSU-sit stamp) | `buildRadar` in binary; **API `/api/schedule` radar already live after Render**. Old binary still draws the 51% formula hexagon. | pending · bake 1.0.27 |
 | 2026-09-20 | Home Game Week skips a posted final immediately (no 8h hold on last week's opponent) | `getFeaturedUfGame` in binary; **API `currentGameId` + Game Week page already Ole Miss after Render**. Old binary still advances after the 8h postgame window — do not start Codemagic for this. | pending · bake 1.0.27 |
