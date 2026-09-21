@@ -74,6 +74,28 @@ function pushEnabled() {
   return process.env.PUSH_ALERTS_ENABLED !== 'false' && (vapidConfigured() || apnsConfigured());
 }
 
+function summarizePushForEmail(email) {
+  const normalized = String(email || '').trim().toLowerCase();
+  const store = readStore();
+  const devices = (store.deviceTokens || []).filter((d) => String(d.email || '').toLowerCase() === normalized);
+  const browsers = (store.subscriptions || []).filter((s) => String(s.email || '').toLowerCase() === normalized);
+  const rows = [...devices, ...browsers];
+  const latest = rows
+    .map((r) => r.updatedAt)
+    .filter(Boolean)
+    .sort()
+    .reverse()[0] || null;
+  const any = (key) => rows.some((r) => r.prefs && r.prefs[key]);
+  return {
+    phones: devices.length,
+    browsers: browsers.length,
+    visit: any('visit'),
+    commit: any('commit'),
+    score: any('score'),
+    updatedAt: latest,
+  };
+}
+
 function hasSubscriberAccess(user) {
   if (!user) return false;
   if (hasPaidAccess(user)) return true;
@@ -786,6 +808,7 @@ async function initPushAlertStore() {
 
 module.exports = {
   pushEnabled,
+  summarizePushForEmail,
   getPublicConfig,
   upsertSubscription,
   upsertDeviceToken,

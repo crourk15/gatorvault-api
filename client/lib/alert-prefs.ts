@@ -178,6 +178,32 @@ export function loadAlertPrefs(): AlertPrefs {
   }
 }
 
+export function applyServerAlertPrefs(
+  local: AlertPrefs,
+  server: {
+    method?: AlertMethod;
+    freq?: AlertFreq;
+    visit?: boolean;
+    followPlayers?: string[];
+  } | null | undefined
+): AlertPrefs {
+  if (!server) return local;
+  const next = mergeStored(local);
+  if (server.method === 'push' || server.method === 'email' || server.method === 'both') {
+    next.method = server.method;
+  }
+  if (server.freq === 'instant' || server.freq === 'daily' || server.freq === 'weekly') {
+    next.freq = server.freq;
+  }
+  if (typeof server.visit === 'boolean' && (next.method === 'email' || next.method === 'both')) {
+    next.types = { ...next.types, visit: server.visit };
+  }
+  if (Array.isArray(server.followPlayers)) {
+    next.followPlayers = server.followPlayers.slice();
+  }
+  return next;
+}
+
 export function saveAlertPrefs(prefs: AlertPrefs): void {
   if (typeof window === 'undefined') return;
   try {

@@ -65,8 +65,20 @@ function visitAlertPlayerUrl(slug) {
   return `${SITE_URL}/vault/recruiting/player/${encodeURIComponent(normalized)}/`;
 }
 
-async function sendSubscriberDigestEmail(to, subject, html, options = {}) {
-  if (!isEmailJsReady()) return { sent: false, reason: "email_not_configured" };
+function isVisitEmailReady() {
+  try {
+    if (isEmailJsReady()) return true;
+  } catch {
+    /* EmailJS optional */
+  }
+  try {
+    return require("./resend-server").isResendReady();
+  } catch {
+    return false;
+  }
+}
+
+async function sendViaEmailJs(to, subject, html, options = {}) {
   const { serviceId, templateId, publicKey, privateKey } = getEmailJsConfig();
   const vaultUrl =
     options.vaultUrl ||
@@ -87,7 +99,57 @@ async function sendSubscriberDigestEmail(to, subject, html, options = {}) {
       support_email: process.env.EMAILJS_REPLY_TO || "gatorvaultinsider@gmail.com",
     },
   });
-  return { sent: true };
+  return { sent: true, provider: "emailjs" };
+}
+
+async function sendViaResend(to, subject, html) {
+  const { sendEmailViaResend } = require("./resend-server");
+  const out = await sendEmailViaResend({ to, subject, html });
+  return { sent: true, provider: "resend", id: out.id || null };
+}
+
+async function sendWithRetry(fn, attempts = 2) {
+  let lastErr = null;
+  for (let i = 0; i < attempts; i += 1) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr || new Error("email send failed");
+}
+
+async function sendSubscriberDigestEmail(to, subject, html, options = {}) {
+  const emailJsReady = (() => {
+    try {
+      return isEmailJsReady();
+    } catch {
+      return false;
+    }
+  })();
+  const resendReady = (() => {
+    try {
+      return require("./resend-server").isResendReady();
+    } catch {
+      return false;
+    }
+  })();
+  if (!emailJsReady && !resendReady) return { sent: false, reason: "email_not_configured" };
+
+  const chain = [];
+  if (emailJsReady) chain.push(() => sendViaEmailJs(to, subject, html, options));
+  if (resendReady) chain.push(() => sendViaResend(to, subject, html));
+
+  let last = { sent: false, reason: "email_not_configured" };
+  for (const fn of chain) {
+    try {
+      return await sendWithRetry(fn, 2);
+    } catch (err) {
+      last = { sent: false, reason: err.message || "email_send_failed" };
+    }
+  }
+  return last;
 }
 
 function formatVisitWindow(log) {
@@ -159,7 +221,7 @@ async function dispatchVisitInstantEmail(payload, options = {}) {
     return { ok: true, skipped: true, reason: "already_dispatched", fingerprint };
   }
 
-  if (!isEmailJsReady()) {
+  if (!isVisitEmailReady()) {
     return { ok: false, skipped: true, reason: "email_not_configured", fingerprint };
   }
 
@@ -379,4 +441,6 @@ module.exports = {
   sendVisitIntelDailyDigest,
   dispatchVisitScheduledEmail,
   dispatchVisitCancelledEmail,
+  sendSubscriberDigestEmail,
+  isVisitEmailReady,
 };

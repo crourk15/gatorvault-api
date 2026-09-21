@@ -94,7 +94,7 @@ Suggested Review Notes reply:
 
 Enable on a member account: sign in → **My Alerts** → toggle Visits / Commits / Scores → Push → Save.
 
-**Phone QA:** Save Preferences should deliver a confirmation lock-screen ping (“GatorVault alerts connected”). You can also tap **Send test alert** on My Alerts, or call `POST /api/push/test` with `{ "kind": "confirm"|"visit"|"commit"|"score" }`.
+**Phone QA:** Save Preferences should deliver a confirmation lock-screen ping (“GatorVault alerts connected”). My Alerts now reads `GET /api/alerts/status` so Daily / Weekly and registered devices show after refresh. **Send test alert** is a one-off proof — it does not overwrite visit email frequency. You can also call `POST /api/push/test` with `{ "kind": "confirm"|"visit"|"commit"|"score" }`.
 
 ### Step 5b — Native APNs (App Store binary)
 

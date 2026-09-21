@@ -58,6 +58,75 @@ async function upsertEmailAlertPrefs(email, prefs) {
   return persistence.upsertPref(email, normalizePrefs(prefs));
 }
 
+async function getEmailAlertPrefs(email) {
+  const row = await persistence.getPref(email);
+  if (!row) return null;
+  return {
+    email: row.email,
+    prefs: normalizePrefs(row.prefs),
+    updatedAt: row.updatedAt || null,
+  };
+}
+
+function nextDigestAtUtc(hourUtc, weekday, now = new Date()) {
+  const d = new Date(now);
+  d.setUTCMinutes(0, 0, 0);
+  d.setUTCHours(hourUtc);
+  if (weekday == null) {
+    if (d <= now) d.setUTCDate(d.getUTCDate() + 1);
+    return d.toISOString();
+  }
+  for (let i = 0; i < 8; i += 1) {
+    if (d.getUTCDay() === weekday && d > now) return d.toISOString();
+    d.setUTCDate(d.getUTCDate() + 1);
+    d.setUTCHours(hourUtc, 0, 0, 0);
+  }
+  return d.toISOString();
+}
+
+function describeVisitEmailSchedule(prefs, now = new Date()) {
+  if (!prefs || (!wantsEmailVisitInstant(prefs) && !wantsEmailVisitDigest(prefs))) {
+    return {
+      active: false,
+      freq: prefs?.freq || null,
+      summary: "Visit email is off. Choose Email or Both, turn Visits on, and Save.",
+      nextAt: null,
+    };
+  }
+  if (prefs.freq === "instant") {
+    return {
+      active: true,
+      freq: "instant",
+      summary: "Instant — email fires when a verified UF official visit is scheduled or cancelled.",
+      nextAt: null,
+    };
+  }
+  if (prefs.freq === "daily") {
+    return {
+      active: true,
+      freq: "daily",
+      summary: "Daily digest — about 10:00 a.m. Eastern when verified visits landed in the last day.",
+      nextAt: nextDigestAtUtc(14, null, now),
+    };
+  }
+  return {
+    active: true,
+    freq: "weekly",
+    summary: "Weekly roundup — Mondays about 10:00 a.m. Eastern when verified visits landed that week.",
+    nextAt: nextDigestAtUtc(14, 1, now),
+  };
+}
+
+function maskEmail(email) {
+  const raw = String(email || "").trim().toLowerCase();
+  const at = raw.indexOf("@");
+  if (at < 1) return raw;
+  const name = raw.slice(0, at);
+  const domain = raw.slice(at + 1);
+  const shown = name.length <= 2 ? `${name[0] || ""}*` : `${name.slice(0, 2)}***`;
+  return `${shown}@${domain}`;
+}
+
 async function listEligibleVisitInstantRecipients() {
   const rows = await persistence.loadAllPrefs();
   const byEmail = indexUsersByEmail(loadUsers());
@@ -122,6 +191,10 @@ module.exports = {
   wantsEmailVisitInstant,
   filterRecapRowsForSubscriber,
   upsertEmailAlertPrefs,
+  getEmailAlertPrefs,
+  describeVisitEmailSchedule,
+  nextDigestAtUtc,
+  maskEmail,
   listEligibleVisitDigestRecipients,
   listEligibleVisitInstantRecipients,
   requireAlertEmailSession,

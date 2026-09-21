@@ -48,6 +48,13 @@ function writeJsonStore(doc) {
   fs.writeFileSync(STORE_PATH, JSON.stringify(doc, null, 2));
 }
 
+async function getPref(email) {
+  const normalized = String(email || "").trim().toLowerCase();
+  if (!normalized) return null;
+  const rows = await loadAllPrefs();
+  return rows.find((row) => String(row.email || "").toLowerCase() === normalized) || null;
+}
+
 async function loadAllPrefs() {
   if (isEnabled()) {
     const client = pgClient();
@@ -153,6 +160,7 @@ async function initAlertEmailPrefsStore() {
 module.exports = {
   isEnabled,
   ensureTables,
+  getPref,
   loadAllPrefs,
   upsertPref,
   initAlertEmailPrefsStore,

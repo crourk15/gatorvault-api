@@ -1,15 +1,64 @@
 const {
   upsertEmailAlertPrefs,
+  getEmailAlertPrefs,
+  describeVisitEmailSchedule,
+  maskEmail,
   requireAlertEmailSession,
 } = require("./alert-email-prefs-service");
 
 function mountAlertEmailRoutes(app) {
+  app.get("/api/alerts/status", async (req, res) => {
+    const auth = requireAlertEmailSession(req, res);
+    if (!auth) return;
+    const email = String(auth.session.email || "").toLowerCase();
+    const stored = await getEmailAlertPrefs(email);
+    const prefs = stored?.prefs || null;
+    const { isVisitEmailReady } = require("./visit-intel-email-digest");
+    const { isEmailJsReady } = require("./emailjs-config");
+    const { isResendReady } = require("./resend-server");
+    const { pushEnabled, summarizePushForEmail } = require("./push-alert-service");
+    return res.json({
+      ok: true,
+      email: maskEmail(email),
+      prefs,
+      savedAt: stored?.updatedAt || null,
+      emailReady: isVisitEmailReady(),
+      emailProviders: {
+        emailjs: Boolean(isEmailJsReady()),
+        resend: Boolean(isResendReady()),
+      },
+      visitEmail: describeVisitEmailSchedule(prefs),
+      push: {
+        enabled: pushEnabled(),
+        ...summarizePushForEmail(email),
+      },
+    });
+  });
+
+  app.get("/api/alerts/email-preferences", async (req, res) => {
+    const auth = requireAlertEmailSession(req, res);
+    if (!auth) return;
+    const stored = await getEmailAlertPrefs(auth.session.email);
+    return res.json({
+      ok: true,
+      prefs: stored?.prefs || null,
+      savedAt: stored?.updatedAt || null,
+    });
+  });
+
   app.post("/api/alerts/email-preferences", async (req, res) => {
     const auth = requireAlertEmailSession(req, res);
     if (!auth) return;
     const out = await upsertEmailAlertPrefs(auth.session.email, req.body?.prefs || req.body || {});
     if (!out.ok) return res.status(400).json(out);
-    return res.json({ ok: true, updated: true, email: out.email });
+    const stored = await getEmailAlertPrefs(out.email);
+    return res.json({
+      ok: true,
+      updated: true,
+      email: maskEmail(out.email),
+      prefs: stored?.prefs || null,
+      visitEmail: describeVisitEmailSchedule(stored?.prefs || null),
+    });
   });
 
   /**
@@ -20,12 +69,7 @@ function mountAlertEmailRoutes(app) {
     const auth = requireAlertEmailSession(req, res);
     if (!auth) return;
     const email = String(auth.session.email || "").toLowerCase();
-    await upsertEmailAlertPrefs(email, {
-      method: "both",
-      freq: "instant",
-      visit: true,
-      followPlayers: [],
-    });
+    // One-off proof send — never overwrite Daily / Weekly / method the member saved.
 
     const slug = String(req.body?.slug || "brysen-wright").trim().toLowerCase() || "brysen-wright";
     const visitLogStore = require("./recruiting-visit-log-store");

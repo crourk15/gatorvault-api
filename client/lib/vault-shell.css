@@ -1024,6 +1024,65 @@ body.gv-film-page-active .gv-vault-shell__main {
   line-height: 1.4;
 }
 
+.gv-alerts-health {
+  margin: 0 0 1.15rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 0.75rem;
+  background: #f4f7ff;
+  border: 1px solid rgba(0, 33, 165, 0.12);
+}
+
+.gv-alerts-health__label {
+  margin: 0 0 0.55rem;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #0021a5;
+}
+
+.gv-alerts-health__row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.45rem 0.75rem;
+  align-items: start;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.gv-alerts-health__row span {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.gv-alerts-health__row strong {
+  font-weight: 600;
+  color: #0b1b4a;
+}
+
+.gv-alerts-health__row strong.is-on {
+  color: #166534;
+}
+
+.gv-alerts-health__row strong.is-off {
+  color: #9a3412;
+}
+
+.gv-vault-alerts__status {
+  margin: 0.75rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.gv-vault-alerts__status--ok {
+  color: #166534;
+}
+
+.gv-vault-alerts__status--warn {
+  color: #9a3412;
+}
+
 .gv-vault-alerts__section-hint--flush {
   margin-bottom: 0;
 }

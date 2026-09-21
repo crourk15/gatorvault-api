@@ -146,6 +146,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-21 | My Alerts elite: delivery health, server pref read-back, honest On/Off, visit frequency only when email is on | `VaultAlertsPage` + CSS in binary. **GET `/api/alerts/status`, visit email (Resend fallback), and Daily/Weekly no longer overwritten by test** are API-live after Render. Do not start Codemagic. | pending |
 | 2026-09-21 | Game Week Swing Impact: weekly official-box + opponent restamp (Baugh FAU 92 / Campbell 95 / Auburn 93 / Ole Miss 95) | `buildSwing` still list-index 72 in **1.0.27**. Live `/api/schedule` already stamps `swing[].impact` / `trend` after Render. Next bake prefers the stamp. Do not start Codemagic. | pending |
 | 2026-09-21 | Game Week expected-visitor cards: two-line meta + no blank `HS` badge | `ExpectedVisitorsPanel` + CSS in binary; **name/pos/school data is API-live after Render**. Old binary still truncates one line and shows `HS` if a slug had no pos. | pending |
 | 2026-09-20 | Game Week Matchup Edge reads sat `game.radar` (Ole Miss LSU-sit stamp) | `buildRadar` in binary; **API `/api/schedule` radar already live after Render**. Old binary still draws the 51% formula hexagon. | pending · bake 1.0.27 |

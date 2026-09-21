@@ -19,9 +19,47 @@ function authHeaders(): HeadersInit {
   return headers;
 }
 
+export type AlertAccountStatus = {
+  ok: boolean;
+  email?: string;
+  prefs?: EmailAlertPrefsPayload | null;
+  savedAt?: string | null;
+  emailReady?: boolean;
+  emailProviders?: { emailjs?: boolean; resend?: boolean };
+  visitEmail?: {
+    active: boolean;
+    freq?: AlertFreq | null;
+    summary: string;
+    nextAt?: string | null;
+  };
+  push?: {
+    enabled?: boolean;
+    phones?: number;
+    browsers?: number;
+    visit?: boolean;
+    commit?: boolean;
+    score?: boolean;
+    updatedAt?: string | null;
+  };
+  reason?: string;
+};
+
+export async function fetchAlertStatus(): Promise<AlertAccountStatus> {
+  const res = await fetch(`${getApiBase()}/api/alerts/status`, {
+    method: 'GET',
+    headers: authHeaders(),
+    cache: 'no-store',
+  });
+  if (res.status === 401) return { ok: false, reason: 'sign_in' };
+  if (res.status === 403) return { ok: false, reason: 'membership' };
+  if (!res.ok) return { ok: false, reason: 'server' };
+  const data = (await res.json()) as AlertAccountStatus;
+  return { ...data, ok: true };
+}
+
 export async function syncEmailAlertPrefs(
   prefs: EmailAlertPrefsPayload
-): Promise<{ ok: boolean; reason?: string }> {
+): Promise<{ ok: boolean; reason?: string; visitEmail?: AlertAccountStatus['visitEmail'] }> {
   const res = await fetch(`${getApiBase()}/api/alerts/email-preferences`, {
     method: 'POST',
     headers: authHeaders(),
@@ -32,7 +70,10 @@ export async function syncEmailAlertPrefs(
   if (res.status === 403) return { ok: false, reason: 'membership' };
   if (!res.ok) return { ok: false, reason: 'server' };
 
-  return { ok: true };
+  const data = (await res.json().catch(() => ({}))) as {
+    visitEmail?: AlertAccountStatus['visitEmail'];
+  };
+  return { ok: true, visitEmail: data.visitEmail };
 }
 
 /** Email + push a verified scheduled OV to the signed-in member (Brysen by default). */

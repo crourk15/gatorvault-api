@@ -11,7 +11,7 @@ const {
 } = require("./visit-intel-utils");
 
 const STATE_PATH = path.join(__dirname, "../data/ops/visit-intel-recap-state.json");
-const TARGET_BOARD_PATH = path.join(__dirname, "../data/recruiting/2027-target-board.json");
+const TARGET_BOARD_YEARS = [2028, 2027];
 const SITE_URL = (process.env.SITE_URL || "https://gatorvaultinsider.com").replace(/\/$/, "");
 
 function readState() {
@@ -45,12 +45,20 @@ function mondayYmdUtc(asOf = new Date()) {
 }
 
 function loadPrioritySlugs() {
-  try {
-    const doc = JSON.parse(fs.readFileSync(TARGET_BOARD_PATH, "utf8"));
-    return (doc.targets || []).map((t) => t.slug).filter(Boolean);
-  } catch {
-    return [];
+  const slugs = [];
+  for (const year of TARGET_BOARD_YEARS) {
+    try {
+      const doc = JSON.parse(
+        fs.readFileSync(path.join(__dirname, `../data/recruiting/${year}-target-board.json`), "utf8")
+      );
+      for (const target of doc.targets || []) {
+        if (target?.slug) slugs.push(String(target.slug));
+      }
+    } catch {
+      /* board optional */
+    }
   }
+  return [...new Set(slugs)];
 }
 
 function buildWeekendRecapRows(asOfInput = new Date(), windowDays = 7) {
@@ -164,7 +172,7 @@ function buildRecapPostText(recapRows) {
     .join(", ");
   const suffix = n > 4 ? ", …" : "";
   return (
-    `Verified 2027 summer OV recap — GatorVault confirms ${n} completed official visit${n === 1 ? "" : "s"}` +
+    `Verified UF official visit recap — GatorVault confirms ${n} completed official visit${n === 1 ? "" : "s"}` +
     `${names ? ` (${names}${suffix})` : ""}.\n\nFull tracker: ${SITE_URL}/vault/futurecast#visits`
   );
 }
@@ -299,4 +307,5 @@ module.exports = {
   runVisitIntelRecap,
   runVisitIntelDailyDigest,
   isoWeekKey,
+  loadPrioritySlugs,
 };

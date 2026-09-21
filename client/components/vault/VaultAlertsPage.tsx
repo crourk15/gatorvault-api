@@ -5,6 +5,7 @@ import {
   ALERT_CATEGORY_META,
   DEFAULT_ALERT_PREFS,
   PRIMARY_ALERT_CATEGORIES,
+  applyServerAlertPrefs,
   loadAlertPrefs,
   loadLocalRecentAlerts,
   markLocalAlertsRead,
@@ -19,7 +20,12 @@ import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
 import { buildSeedAlerts } from '@/lib/alerts-hub-seed';
 import { buildFanAlertCards, formatAlertTime } from '@/lib/alert-fan-copy';
 import { sendTestPushAlert, syncAlertPushPrefs, unsubscribeVisitPush } from '@/lib/push-alerts-api';
-import { sendVisitAlertToMe, syncEmailAlertPrefs } from '@/lib/alert-email-api';
+import {
+  fetchAlertStatus,
+  sendVisitAlertToMe,
+  syncEmailAlertPrefs,
+  type AlertAccountStatus,
+} from '@/lib/alert-email-api';
 import { isNativeApp } from '@/lib/api-base';
 import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
@@ -55,24 +61,62 @@ function ChoiceButtons<T extends string>({
   );
 }
 
+function formatNextAt(iso?: string | null): string | null {
+  if (!iso) return null;
+  const ms = Date.parse(iso);
+  if (!Number.isFinite(ms)) return null;
+  return new Date(ms).toLocaleString('en-US', {
+    timeZone: 'America/New_York',
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+function wantsEmailMethod(method: AlertMethod): boolean {
+  return method === 'email' || method === 'both';
+}
+
+function wantsPushMethod(method: AlertMethod): boolean {
+  return method === 'push' || method === 'both';
+}
+
 export function VaultAlertsPage(): React.ReactElement {
   const [prefs, setPrefs] = useState<AlertPrefs>(DEFAULT_ALERT_PREFS);
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [playerInput, setPlayerInput] = useState('');
   const [apiAlerts, setApiAlerts] = useState<FutureCastAlert[]>(HAS_SEED ? SEED_ALERTS : []);
   const [localAlerts, setLocalAlerts] = useState<LocalRecentAlert[]>([]);
-  // Seeded first paint is content-ready; live refresh still runs in background.
   const [loading, setLoading] = useState(!HAS_SEED);
   const [error, setError] = useState<string | null>(null);
   const [pushStatus, setPushStatus] = useState<string | null>(null);
+  const [statusTone, setStatusTone] = useState<'ok' | 'warn'>('ok');
   const [nativeShell, setNativeShell] = useState(false);
   const [testingPush, setTestingPush] = useState(false);
+  const [account, setAccount] = useState<AlertAccountStatus | null>(null);
+
+  const refreshAccount = useCallback(async () => {
+    const status = await fetchAlertStatus();
+    setAccount(status);
+    if (status.ok && status.prefs) {
+      setPrefs((current) => {
+        const next = applyServerAlertPrefs(current, status.prefs);
+        saveAlertPrefs(next);
+        return next;
+      });
+    }
+    return status;
+  }, []);
 
   useEffect(() => {
     setPrefs(loadAlertPrefs());
     setLocalAlerts(loadLocalRecentAlerts());
     setNativeShell(isNativeApp());
-  }, []);
+    void refreshAccount();
+  }, [refreshAccount]);
 
   const loadFeed = useCallback(async (isInitial: boolean) => {
     if (isInitial && !HAS_SEED) {
@@ -81,7 +125,6 @@ export function VaultAlertsPage(): React.ReactElement {
     }
     try {
       const rows = await fetchAlerts();
-      // Never wipe a good first-paint seed with an empty live payload (deferred rebuild).
       if (Array.isArray(rows) && rows.length > 0) {
         setApiAlerts(rows);
       } else if (!HAS_SEED) {
@@ -90,7 +133,6 @@ export function VaultAlertsPage(): React.ReactElement {
       setLocalAlerts(loadLocalRecentAlerts());
       setError(null);
     } catch (err) {
-      // Keep seed painted if live wake fails.
       if (!HAS_SEED) {
         setError(err instanceof Error ? err.message : 'Could not load alerts.');
       }
@@ -127,93 +169,104 @@ export function VaultAlertsPage(): React.ReactElement {
 
   const handleSave = () => {
     saveAlertPrefs(prefs);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    setSaving(true);
+    setSaved(false);
 
-    const wantsPush = prefs.method === 'push' || prefs.method === 'both';
-    const wantsEmail = prefs.method === 'email' || prefs.method === 'both';
+    const wantsPush = wantsPushMethod(prefs.method);
+    const wantsEmail = wantsEmailMethod(prefs.method);
     const pushPrefs = {
       visit: Boolean(prefs.types.visit),
       commit: Boolean(prefs.types.commit),
       score: Boolean(prefs.types.score),
-      followPlayers: prefs.followPlayers,
     };
 
-    if (wantsEmail && prefs.types.visit) {
-      void syncEmailAlertPrefs({
+    const jobs: Promise<string | null>[] = [];
+
+    jobs.push(
+      syncEmailAlertPrefs({
         method: prefs.method,
         freq: prefs.freq || 'instant',
-        visit: true,
+        visit: Boolean(wantsEmail && prefs.types.visit),
         followPlayers: prefs.followPlayers,
       }).then((out) => {
-        if (out.ok && !wantsPush) {
-          setPushStatus(
-            prefs.freq === 'weekly'
-              ? 'Weekly verified OV recap emails enabled.'
-              : prefs.freq === 'daily'
-                ? 'Daily verified OV digest emails enabled.'
-                : prefs.freq === 'instant'
-                  ? 'Instant verified OV emails enabled.'
-                  : 'Email alert preferences saved.'
-          );
-        } else if (out.reason === 'sign_in') {
-          setPushStatus('Sign in to enable email alerts.');
-        } else if (out.reason === 'membership') {
-          setPushStatus('Active membership required for email alerts.');
+        if (out.ok) {
+          if (wantsEmail && prefs.types.visit) {
+            return (
+              out.visitEmail?.summary ||
+              (prefs.freq === 'weekly'
+                ? 'Weekly verified OV recap emails are on.'
+                : prefs.freq === 'daily'
+                  ? 'Daily verified OV digest emails are on.'
+                  : 'Instant verified OV emails are on.')
+            );
+          }
+          return wantsEmail ? 'Visit email turned off.' : null;
         }
-      });
-    }
+        if (out.reason === 'sign_in') return 'Sign in to save email alerts.';
+        if (out.reason === 'membership') return 'Active membership required for email alerts.';
+        return 'Could not save email alerts.';
+      })
+    );
 
     if (wantsPush && (prefs.types.visit || prefs.types.commit || prefs.types.score)) {
-      void syncAlertPushPrefs(pushPrefs).then((out) => {
-        if (out.ok) {
-          const parts: string[] = [];
-          if (prefs.types.visit) parts.push('visits');
-          if (prefs.types.commit) parts.push('commits');
-          if (prefs.types.score) parts.push('scores');
-          setPushStatus(
-            nativeShell
-              ? `Lock-screen alerts enabled for ${parts.join(', ')} on this iPhone.`
-              : `Push enabled for ${parts.join(', ')} on this browser.`
-          );
-        } else if (out.reason === 'denied') {
-          setPushStatus(
-            nativeShell
+      jobs.push(
+        syncAlertPushPrefs({ ...pushPrefs, followPlayers: prefs.followPlayers }).then((out) => {
+          if (out.ok) {
+            const parts: string[] = [];
+            if (prefs.types.visit) parts.push('visits');
+            if (prefs.types.commit) parts.push('commits');
+            if (prefs.types.score) parts.push('scores');
+            return nativeShell
+              ? `Lock-screen alerts on for ${parts.join(', ')} on this iPhone.`
+              : `Push on for ${parts.join(', ')} on this browser.`;
+          }
+          if (out.reason === 'denied') {
+            return nativeShell
               ? 'Notifications blocked — enable them in iPhone Settings → GatorVault.'
-              : 'Browser blocked notifications — enable them in site settings.'
-          );
-        } else if (out.reason === 'sign_in') {
-          setPushStatus('Sign in to enable push alerts.');
-        } else if (out.reason === 'membership') {
-          setPushStatus('Active membership required for push alerts.');
-        } else if (out.reason === 'disabled') {
-          setPushStatus('Lock-screen alerts are unavailable right now. Try again later.');
-        } else if (out.reason === 'unsupported') {
-          setPushStatus(
-            nativeShell
+              : 'Browser blocked notifications — enable them in site settings.';
+          }
+          if (out.reason === 'sign_in') return 'Sign in to enable push alerts.';
+          if (out.reason === 'membership') return 'Active membership required for push alerts.';
+          if (out.reason === 'disabled') return 'Lock-screen alerts are unavailable right now. Try again later.';
+          if (out.reason === 'unsupported') {
+            return nativeShell
               ? 'Lock-screen alerts need an app update. Your in-app feed still works.'
-              : 'This browser does not support push notifications.'
-          );
-        }
-      });
+              : 'This browser does not support push notifications.';
+          }
+          return 'Could not register this device for push.';
+        })
+      );
     } else if (!wantsPush) {
-      void unsubscribeVisitPush().then(() => {
-        setPushStatus('Push alerts disabled on this device.');
-      });
-    } else if (wantsPush && !prefs.types.visit && !prefs.types.commit && !prefs.types.score) {
-      void syncAlertPushPrefs({
-        visit: false,
-        commit: false,
-        score: false,
-        followPlayers: prefs.followPlayers,
-      }).then((out) => {
-        if (out.ok) {
-          setPushStatus('All lock-screen categories off — feed still updates in-app.');
-        } else if (out.reason === 'sign_in') {
-          setPushStatus('Sign in to update push alert preferences.');
-        }
-      });
+      jobs.push(
+        unsubscribeVisitPush().then(() => 'Push alerts disabled on this device.')
+      );
+    } else {
+      jobs.push(
+        syncAlertPushPrefs({
+          visit: false,
+          commit: false,
+          score: false,
+          followPlayers: prefs.followPlayers,
+        }).then((out) => {
+          if (out.ok) return 'All lock-screen categories off — board intel still updates in-app.';
+          if (out.reason === 'sign_in') return 'Sign in to update push alert preferences.';
+          return null;
+        })
+      );
     }
+
+    void Promise.all(jobs).then((lines) => {
+      const notes = lines.filter(Boolean) as string[];
+      const warn = notes.some((line) =>
+        /sign in|membership|blocked|unavailable|could not|need an app/i.test(line)
+      );
+      setStatusTone(warn ? 'warn' : 'ok');
+      setPushStatus(notes.join(' '));
+      setSaving(false);
+      setSaved(!warn);
+      setTimeout(() => setSaved(false), 2500);
+      void refreshAccount();
+    });
   };
 
   const addPlayer = () => {
@@ -240,7 +293,63 @@ export function VaultAlertsPage(): React.ReactElement {
     setLocalAlerts(loadLocalRecentAlerts());
   };
 
+  const handleTestAlert = () => {
+    setTestingPush(true);
+    void (async () => {
+      const visitOn = Boolean(prefs.types.visit);
+      const canEmail = wantsEmailMethod(prefs.method) && visitOn;
+      const canPush = wantsPushMethod(prefs.method);
+      const bits: string[] = [];
+      let visitOut = { ok: false, reason: undefined as string | undefined, hint: undefined as string | undefined, emailSent: false, pushSent: 0 };
+      let pushOut = { ok: false, reason: undefined as string | undefined };
+
+      if (canEmail || visitOn) {
+        visitOut = await sendVisitAlertToMe('brysen-wright');
+      }
+      if (canPush) {
+        pushOut = await sendTestPushAlert(visitOn ? 'visit' : prefs.types.score ? 'score' : 'confirm', {
+          force: true,
+        });
+      }
+      setTestingPush(false);
+      if (visitOut.emailSent) bits.push('email');
+      if ((visitOut.pushSent || 0) > 0 || pushOut.ok) bits.push('lock screen');
+      if (bits.length) {
+        setStatusTone('ok');
+        setPushStatus(`Test alert sent (${bits.join(' + ')}). Check your inbox and lock screen.`);
+        void refreshAccount();
+        return;
+      }
+      setStatusTone('warn');
+      if (visitOut.reason === 'no_devices' || pushOut.reason === 'no_devices') {
+        setPushStatus(
+          visitOut.emailSent
+            ? 'Email sent. For lock screen: Save Preferences, allow notifications, then retry.'
+            : 'Save Preferences first so this device can register for push.'
+        );
+      } else if (visitOut.reason === 'sign_in' || pushOut.reason === 'sign_in') {
+        setPushStatus('Sign in to send a test alert.');
+      } else if (visitOut.reason === 'membership' || pushOut.reason === 'membership') {
+        setPushStatus('Active membership required for alerts.');
+      } else {
+        setPushStatus(
+          visitOut.hint ||
+            'Could not send. Save Preferences, allow notifications, then tap Send test alert again.'
+        );
+      }
+    })();
+  };
+
   const fanCards = useMemo(() => buildFanAlertCards(apiAlerts), [apiAlerts]);
+  const showVisitFreq = wantsEmailMethod(prefs.method) && prefs.types.visit;
+  const nextDigest = formatNextAt(account?.visitEmail?.nextAt);
+  const phones = account?.push?.phones || 0;
+  const browsers = account?.push?.browsers || 0;
+  const pushRegistered = phones + browsers > 0;
+  const canTest =
+    prefs.types.visit ||
+    ((prefs.method === 'push' || prefs.method === 'both') &&
+      (prefs.types.commit || prefs.types.score));
 
   return (
     <div className="gv-vault-alerts" data-testid="vault-alerts">
@@ -264,8 +373,49 @@ export function VaultAlertsPage(): React.ReactElement {
         <section className="gv-vault-alerts__prefs">
           <h2 className="gv-vault-alerts__section-title">Lock-screen &amp; email</h2>
           <p className="gv-vault-alerts__section-hint">
-            Choose what hits your phone. Visits can digest by email; commits and scores fire push.
+            Push covers visits, commits, and scores. Email covers verified official visits at the
+            frequency you pick.
           </p>
+
+          <div className="gv-alerts-health" data-testid="alerts-health">
+            <p className="gv-alerts-health__label">Delivery</p>
+            <div className="gv-alerts-health__row">
+              <span>Account</span>
+              <strong>
+                {account?.reason === 'sign_in'
+                  ? 'Sign in to register this device'
+                  : account?.reason === 'membership'
+                    ? 'Active membership required'
+                    : account?.email || 'Checking…'}
+              </strong>
+            </div>
+            <div className="gv-alerts-health__row">
+              <span>Email</span>
+              <strong className={account?.visitEmail?.active ? 'is-on' : 'is-off'}>
+                {account?.ok === false
+                  ? 'Not confirmed'
+                  : account?.visitEmail?.summary || 'Save Preferences to confirm visit email.'}
+              </strong>
+            </div>
+            {nextDigest ? (
+              <div className="gv-alerts-health__row">
+                <span>Next digest</span>
+                <strong>{nextDigest} ET</strong>
+              </div>
+            ) : null}
+            <div className="gv-alerts-health__row">
+              <span>Push</span>
+              <strong className={pushRegistered ? 'is-on' : 'is-off'}>
+                {!account || account.ok === false
+                  ? 'Not confirmed'
+                  : pushRegistered
+                    ? `${phones ? `${phones} iPhone${phones === 1 ? '' : 's'}` : ''}${
+                        phones && browsers ? ' · ' : ''
+                      }${browsers ? `${browsers} browser${browsers === 1 ? '' : 's'}` : ''} registered`
+                    : 'No device registered yet — Save Preferences'}
+              </strong>
+            </div>
+          </div>
 
           <div className="gv-alert-toggles">
             {PRIMARY_ALERT_CATEGORIES.map((id) => {
@@ -280,7 +430,7 @@ export function VaultAlertsPage(): React.ReactElement {
                   title={meta.hint}
                 >
                   <span className="gv-alert-toggle__label">{meta.label}</span>
-                  <span className="gv-alert-toggle__status">Live</span>
+                  <span className="gv-alert-toggle__status">{active ? 'On' : 'Off'}</span>
                 </button>
               );
             })}
@@ -321,28 +471,31 @@ export function VaultAlertsPage(): React.ReactElement {
                 { id: 'both', label: 'Both' },
               ]}
             />
-            <p className="gv-vault-alerts__section-hint">
-              Email currently covers verified official visits. Push covers visits, commits, and
-              scores.
-            </p>
           </div>
 
-          <div className="gv-vault-alerts__field">
-            <p className="gv-vault-alerts__field-label">Visit email frequency</p>
-            <ChoiceButtons<AlertFreq>
-              ariaLabel="Alert frequency"
-              value={prefs.freq}
-              onChange={(freq) => {
-                setPrefs((p) => ({ ...p, freq }));
-                setSaved(false);
-              }}
-              options={[
-                { id: 'instant', label: 'Instant' },
-                { id: 'daily', label: 'Daily Digest' },
-                { id: 'weekly', label: 'Weekly Roundup' },
-              ]}
-            />
-          </div>
+          {showVisitFreq ? (
+            <div className="gv-vault-alerts__field">
+              <p className="gv-vault-alerts__field-label">Visit email frequency</p>
+              <ChoiceButtons<AlertFreq>
+                ariaLabel="Alert frequency"
+                value={prefs.freq}
+                onChange={(freq) => {
+                  setPrefs((p) => ({ ...p, freq }));
+                  setSaved(false);
+                }}
+                options={[
+                  { id: 'instant', label: 'Instant' },
+                  { id: 'daily', label: 'Daily Digest' },
+                  { id: 'weekly', label: 'Weekly Roundup' },
+                ]}
+              />
+              <p className="gv-vault-alerts__section-hint">
+                Instant fires when a verified UF official visit is scheduled or cancelled. Daily
+                lands around 10:00 a.m. Eastern if visits hit that day. Weekly is Monday morning.
+                Save Preferences to lock it in.
+              </p>
+            </div>
+          ) : null}
 
           <div className="gv-vault-alerts__field">
             <p className="gv-vault-alerts__field-label">Favorite players (optional filter)</p>
@@ -378,58 +531,27 @@ export function VaultAlertsPage(): React.ReactElement {
             )}
           </div>
 
-          <button type="button" className="gv-alert-save-btn" onClick={handleSave}>
-            {saved ? 'Preferences Saved' : 'Save Preferences'}
+          <button type="button" className="gv-alert-save-btn" disabled={saving} onClick={handleSave}>
+            {saving ? 'Saving…' : saved ? 'Preferences Saved' : 'Save Preferences'}
           </button>
-          {(prefs.method === 'push' || prefs.method === 'both') &&
-          (prefs.types.visit || prefs.types.commit || prefs.types.score) ? (
+          {canTest ? (
             <button
               type="button"
               className="gv-alert-save-btn gv-alert-save-btn--secondary"
               disabled={testingPush}
-              onClick={() => {
-                setTestingPush(true);
-                void (async () => {
-                  // Register email prefs + fire Brysen Wright OV to this account, then confirm push.
-                  await syncEmailAlertPrefs({
-                    method: prefs.method === 'push' ? 'both' : prefs.method,
-                    freq: prefs.freq || 'instant',
-                    visit: true,
-                    followPlayers: prefs.followPlayers,
-                  });
-                  const visitOut = await sendVisitAlertToMe('brysen-wright');
-                  const pushOut = await sendTestPushAlert('visit', { force: true });
-                  setTestingPush(false);
-                  if (visitOut.emailSent || (visitOut.pushSent || 0) > 0 || pushOut.ok) {
-                    const bits: string[] = [];
-                    if (visitOut.emailSent) bits.push('email');
-                    if ((visitOut.pushSent || 0) > 0 || pushOut.ok) bits.push('lock screen');
-                    setPushStatus(
-                      `Brysen Wright OV alert sent (${bits.join(' + ') || 'queued'}). Check phone + inbox.`
-                    );
-                  } else if (visitOut.reason === 'no_devices' || pushOut.reason === 'no_devices') {
-                    setPushStatus(
-                      visitOut.emailSent
-                        ? 'Email sent. For lock screen: Save Preferences, allow notifications, then retry.'
-                        : 'Save Preferences first so this device can register for push.'
-                    );
-                  } else if (visitOut.reason === 'sign_in' || pushOut.reason === 'sign_in') {
-                    setPushStatus('Sign in to send a test alert.');
-                  } else if (visitOut.reason === 'membership' || pushOut.reason === 'membership') {
-                    setPushStatus('Active membership required for alerts.');
-                  } else {
-                    setPushStatus(
-                      visitOut.hint ||
-                        'Could not send. Save Preferences (Both + Instant), then tap Send test alert again.'
-                    );
-                  }
-                })();
-              }}
+              onClick={handleTestAlert}
             >
               {testingPush ? 'Sending test…' : 'Send test alert'}
             </button>
           ) : null}
-          {pushStatus ? <p className="gv-vault-alerts__section-hint">{pushStatus}</p> : null}
+          {pushStatus ? (
+            <p
+              className={`gv-vault-alerts__status gv-vault-alerts__status--${statusTone}`}
+              data-testid="alerts-status"
+            >
+              {pushStatus}
+            </p>
+          ) : null}
           {nativeShell ? (
             <p className="gv-vault-alerts__section-hint">
               On iPhone: Save Preferences → Allow notifications. You should get a confirmation

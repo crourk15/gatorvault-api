@@ -5,6 +5,8 @@ const {
   wantsEmailVisitDigest,
   wantsEmailVisitInstant,
   filterRecapRowsForSubscriber,
+  describeVisitEmailSchedule,
+  maskEmail,
 } = require("../../lib/alert-email-prefs-service");
 const {
   buildVisitRecapEmailHtml,
@@ -13,6 +15,7 @@ const {
   buildVisitCancelledEmailHtml,
   dispatchVisitScheduledEmail,
   sendVisitIntelDailyDigest,
+  isVisitEmailReady,
 } = require("../../lib/visit-intel-email-digest");
 const { runVisitIntelDailyDigest } = require("../../lib/visit-intel-recap");
 
@@ -84,6 +87,32 @@ describe("alert-email-prefs-service", () => {
     assert.equal(prefs.method, "both");
     assert.deepEqual(prefs.followPlayers, ["A"]);
   });
+
+  it("keeps visit email off when the member turns Visits off", () => {
+    const prefs = normalizePrefs({ method: "both", freq: "daily", visit: false });
+    assert.equal(prefs.visit, false);
+    assert.equal(wantsEmailVisitDigest(prefs), false);
+    assert.equal(wantsEmailVisitInstant(prefs), false);
+  });
+
+  it("explains Daily and Weekly windows in plain language", () => {
+    const daily = describeVisitEmailSchedule(
+      { method: "email", freq: "daily", visit: true },
+      new Date("2026-09-21T12:00:00.000Z")
+    );
+    assert.equal(daily.active, true);
+    assert.equal(daily.freq, "daily");
+    assert.match(daily.summary, /10:00 a.m. Eastern/);
+    assert.equal(daily.nextAt, "2026-09-21T14:00:00.000Z");
+
+    const weekly = describeVisitEmailSchedule(
+      { method: "both", freq: "weekly", visit: true },
+      new Date("2026-09-21T15:00:00.000Z")
+    );
+    assert.equal(weekly.freq, "weekly");
+    assert.equal(weekly.nextAt, "2026-09-28T14:00:00.000Z");
+    assert.equal(maskEmail("charles@gatorvaultinsider.com"), "ch***@gatorvaultinsider.com");
+  });
 });
 
 describe("visit-intel-email-digest", () => {
@@ -137,10 +166,10 @@ describe("visit-intel-email-digest", () => {
   it("dispatchVisitScheduledEmail dryRun does not throw", async () => {
     const out = await dispatchVisitScheduledEmail(
       {
-        playerSlug: "easton-royal",
-        playerName: "Easton Royal",
+        playerSlug: "qa-alerts-player",
+        playerName: "QA Alerts Player",
         date: "2099-07-10",
-        fingerprint: "visit|easton|test|2099-07-10",
+        fingerprint: "visit|qa-alerts-player|test|2099-07-10",
         source: "on3",
         visitType: "official_visit",
         school: "Florida",
@@ -158,6 +187,29 @@ describe("visit-intel-email-digest", () => {
     );
     assert.match(html, /2026-06-22/);
     assert.match(html, /Easton Royal/);
+  });
+
+  it("test visit send does not overwrite saved email frequency", () => {
+    const src = require("fs").readFileSync(
+      require("path").join(__dirname, "../../lib/alert-email-routes.js"),
+      "utf8"
+    );
+    const sendBlock = src.split("send-visit-alert")[1] || "";
+    assert.ok(sendBlock.includes("never overwrite"));
+    assert.ok(!/upsertEmailAlertPrefs\(email/.test(sendBlock));
+  });
+
+  it("isVisitEmailReady is false when EmailJS and Resend are both unset", () => {
+    const prevEmail = process.env.EMAILJS_PUBLIC_KEY;
+    const prevResend = process.env.RESEND_API_KEY;
+    delete process.env.EMAILJS_PUBLIC_KEY;
+    delete process.env.RESEND_API_KEY;
+    try {
+      assert.equal(isVisitEmailReady(), false);
+    } finally {
+      if (prevEmail != null) process.env.EMAILJS_PUBLIC_KEY = prevEmail;
+      if (prevResend != null) process.env.RESEND_API_KEY = prevResend;
+    }
   });
 
   it("sendVisitIntelDailyDigest dryRun does not throw", async () => {

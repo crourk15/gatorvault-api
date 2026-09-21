@@ -5,6 +5,7 @@ const {
   buildRecapPostText,
   runVisitIntelRecap,
   isoWeekKey,
+  loadPrioritySlugs,
 } = require('../lib/visit-intel-recap');
 const {
   isFloridaOfficialVisit,
@@ -25,7 +26,7 @@ describe('visit-intel-recap', () => {
     const text = buildRecapPostText([
       { name: 'Test Player', visitStart: '2026-06-11', visitEnd: '2026-06-13' },
     ]);
-    assert.match(text, /Verified 2027 summer OV recap/);
+    assert.match(text, /Verified UF official visit recap/);
     assert.match(text, /futurecast#visits/);
   });
 
@@ -37,6 +38,20 @@ describe('visit-intel-recap', () => {
 
   it('isoWeekKey is stable format', () => {
     assert.match(isoWeekKey(new Date('2026-06-22')), /^\d{4}-W\d{2}$/);
+  });
+
+  it('priority slugs include the 2028 board, not only 2027', () => {
+    const slugs = loadPrioritySlugs();
+    assert.ok(slugs.length > 0);
+    const has2028 = slugs.some((slug) => {
+      try {
+        const board = require('../data/recruiting/2028-target-board.json');
+        return (board.targets || []).some((t) => t.slug === slug);
+      } catch {
+        return false;
+      }
+    });
+    assert.equal(has2028, true);
   });
 });
 
