@@ -113,6 +113,42 @@ describe('game-week-visitors', () => {
     assert.equal(expectedVisitLabelForSlug('antonio-thomas-jr'), 'Expected Ole Miss visit · Sep 26');
   });
 
+  it('resolves Ole Miss identities and drops the Wessel alias', () => {
+    const panel = visitorsPanelForGameId('olemiss');
+    assert.ok(panel);
+    assert.match(String(panel.source || ''), /expected \/ planning, not confirmed on campus/i);
+    assert.equal(panel.visitors.filter((v) => /wessel/i.test(v.slug)).length, 1);
+    assert.ok(!panel.visitors.some((v) => v.slug === 'j-c-wessel'));
+    assert.ok(!panel.visitors.some((v) => v.slug === 'jdeion-jackson' || v.slug === 'j-deion-jackson'));
+
+    const lawson = panel.visitors.find((v) => v.slug === 'omari-lawson');
+    assert.equal(lawson?.name, 'Omari Lawson');
+    assert.equal(lawson?.position, 'OT');
+    assert.match(String(lawson?.school || ''), /Zarephath/i);
+
+    const craig = panel.visitors.find((v) => v.slug === 'cj-craig-james');
+    assert.equal(craig?.name, 'CJ Craig-James');
+    assert.equal(craig?.position, 'S');
+
+    const evans = panel.visitors.find((v) => v.slug === 'shamar-evans');
+    assert.equal(evans?.name, 'Shamar Evans');
+    assert.equal(evans?.position, 'LB');
+
+    const winn = panel.visitors.find((v) => v.slug === 'ty-winn');
+    assert.equal(winn?.name, 'Ty Winn');
+    assert.equal(winn?.position, 'OT');
+
+    const vickers = panel.visitors.find((v) => v.slug === 'izayah-vickers');
+    assert.ok(vickers);
+    assert.equal(vickers.position, 'CB');
+    assert.equal(expectedVisitLabelForSlug('izayah-vickers'), 'Expected Ole Miss visit · Sep 26');
+
+    const turner = panel.visitors.find((v) => v.slug === 'anthony-turner');
+    assert.equal(turner?.name, 'Anthony Turner');
+    assert.equal(turner?.position, 'QB');
+    assert.equal(turner?.classYear, 2028);
+  });
+
   it('attaches expectedVisitors onto schedule games', () => {
     const games = attachExpectedVisitorsToGames([
       { id: 'fau', opp: 'FAU Owls', date: 'September 5, 2026' },

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Ole Miss expected visitors: verified the Aug early look against players / visit logs / intel; dropped the `j-c-wessel` duplicate; filled missing identities (Craig-James, Lawson, Evans, Winn); added Vickers + Turner from the later 247/Gators Wire look. Jackson 2029 stayed off — no dated Sep 26 sit. API `/api/schedule` — no Codemagic.
 - [x] Game Week Ole Miss window: official **ABC / 3:30 p.m. ET** on `/api/schedule` after Render. Heal `date` + `tv` from the git board so Render durable cannot keep the old **3:30–8:00** window. API — current App Store Game Week already live-fetches. Home countdown seed still needs the 1.0.27 bake.
 - [x] Game Week Ole Miss: pointer + Auburn 44–39 final + Week 3 remaining-season preds on `/api/schedule` after Render (API — no Codemagic). LSU condensed was not posted; sit is official ESPN PBP (`filmWatched: false`).
 - [x] Game Week Ole Miss Vegas: stamp live DraftKings via ESPN **UF +1.5 / O/U 58.5** on `/api/betting/lines` (opened FLA -1.5; flipped after the LSU/Auburn finals). API — no Codemagic.

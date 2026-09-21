@@ -24,6 +24,8 @@ describe('game visitor visit sync', () => {
     assert.equal(SKIP_SLUGS.has('chayse-brown'), true);
     assert.equal(SKIP_SLUGS.has('timi-aliu'), true);
     assert.equal(SKIP_SLUGS.has('judah-gumbs'), true);
+    assert.equal(SKIP_SLUGS.has('easton-royal'), true);
+    assert.equal(SKIP_SLUGS.has('omari-lawson'), true);
     const now = Date.parse('2026-09-10T12:00:00-04:00');
     const out = await syncPlayedGameVisitors({ dryRun: true, nowMs: now, seasonYear: 2026 });
     const fsu = out.skipped.filter((s) => s.slug === 'chayse-brown');
