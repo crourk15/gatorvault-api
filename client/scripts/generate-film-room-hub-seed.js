@@ -31,21 +31,40 @@ function fetchJson(url, timeoutMs = 35000) {
   });
 }
 
+const BLOCKED_FILM_YOUTUBE_IDS = new Set(['kNrIT61SLVM']);
+
+function titleHasUfFootball(title) {
+  const t = String(title || '');
+  if (!t) return false;
+  if (/\bflorida\s+gators\b/i.test(t) || /\bgators\b/i.test(t)) return true;
+  const stripped = t
+    .replace(/\bflorida\s+atlantic(?:\s+owls)?\b/gi, 'FAU')
+    .replace(/\bflorida\s+state(?:\s+seminoles)?\b/gi, 'FSU')
+    .replace(/\bflorida\s+a\s*&\s*m(?:\s+rattlers)?\b/gi, 'FAMU')
+    .replace(/\bflorida\s+international(?:\s+golden\s+panthers)?\b/gi, 'FIU')
+    .replace(/\bsouth\s+florida(?:\s+bulls)?\b/gi, 'USF')
+    .replace(/\bseminoles\b/gi, 'FSU');
+  return /\bflorida\b/i.test(stripped);
+}
+
 /** Coach sit-downs / podcast eps — not tape. Keep "| The Gator Nation Football Podcast" film reviews. */
-function isFilmBreakdownEligibleTitle(title) {
+function isFilmBreakdownEligibleTitle(title, youtubeId, source) {
+  if (BLOCKED_FILM_YOUTUBE_IDS.has(String(youtubeId || '').trim())) return false;
   const t = String(title || '');
   if (!t) return true;
   const filmSignal =
-    /\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i.test(t);
+    /^(film\s*:)|\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i.test(t);
   const podcastConvo = /\b(podcast\s*episode|talking\s*ball|sit[\s-]?down|q\s*&\s*a)\b/i.test(t);
   if (podcastConvo && !filmSignal) return false;
+  const filmGuyTape = /film guy/i.test(String(source || '')) || /^(film\s*:)|\bfilm\s+study\b/i.test(t);
+  if (filmGuyTape && !titleHasUfFootball(t)) return false;
   return true;
 }
 
 function slimItem(item) {
   if (!item || !(item.id || item.title)) return null;
   if (/\bcondensed(?:\s+game)?\b/i.test(String(item.title || ''))) return null;
-  if (!isFilmBreakdownEligibleTitle(item.title)) return null;
+  if (!isFilmBreakdownEligibleTitle(item.title, item.youtubeId, item.source)) return null;
   const gnfp =
     /gnfp/i.test(String(item.source || '')) ||
     /gnfp/i.test(String(item.filmHub || item.category || ''));
@@ -82,6 +101,7 @@ function fromLocalCache() {
   const rows = [];
   const seen = new Set();
   function push(item, filmHub) {
+    if (!isFilmBreakdownEligibleTitle(item.title, item.youtubeId, item.source)) return;
     const slim = slimItem({ ...item, filmHub });
     if (!slim) return;
     const key = String(slim.youtubeId || slim.id || '');
@@ -96,7 +116,7 @@ function fromLocalCache() {
         ? 'GNFP Film Review'
         : cat === 'Highlights' || /highlight/i.test(item.title || '')
           ? 'Highlights'
-          : cat === 'Film Breakdown' || /film guy/i.test(item.source || '')
+          : cat === 'Film Breakdown' || /film guy|tengwall/i.test(item.source || '')
             ? 'Film Breakdown'
             : (item.category || 'Film Breakdown');
     push(item, filmHub);
@@ -111,7 +131,7 @@ function fromLocalCache() {
             ? 'GNFP Film Review'
             : key === 'highlights'
               ? 'Highlights'
-              : key === 'filmGuy'
+              : key === 'filmGuy' || key === 'tengwall'
                 ? 'Film Breakdown'
                 : (item.category || 'Film Breakdown');
       push(item, filmHub);

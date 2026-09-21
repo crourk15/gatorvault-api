@@ -60,7 +60,9 @@ export async function fetchFilmRoomCatalog(): Promise<FilmRoomCatalog> {
   const data = await fetchWithWarmPoll(() =>
     snapshotLiveFetch<FilmRoomCatalog>('/api/film-room/catalog', filmFetchInit())
   );
-  const items = (data.items ?? []).filter((item) => isFilmBreakdownEligibleTitle(item.title));
+  const items = (data.items ?? []).filter((item) =>
+    isFilmBreakdownEligibleTitle(item.title, item.youtubeId, item.source)
+  );
   return { categories: data.categories, items };
 }
 
@@ -112,14 +114,45 @@ export function landingFilmHub(
   return hub;
 }
 
+/** Hard-block Film Guy FSU/other-team sits that once leaked onto Breakdowns. */
+export const BLOCKED_FILM_YOUTUBE_IDS = new Set([
+  'kNrIT61SLVM', // FILM: Alabama vs Florida State - Alabama's Run Game Makes FSU Quit
+]);
+
+export function isBlockedFilmYoutubeId(youtubeId?: string | null): boolean {
+  return BLOCKED_FILM_YOUTUBE_IDS.has(String(youtubeId || '').trim());
+}
+
+/** Florida / Gators as the team — never Florida State, FAU, USF, FAMU, or FIU alone. */
+export function titleHasUfFootball(title?: string | null): boolean {
+  const t = String(title || '');
+  if (!t) return false;
+  if (/\bflorida\s+gators\b/i.test(t) || /\bgators\b/i.test(t)) return true;
+  const stripped = t
+    .replace(/\bflorida\s+atlantic(?:\s+owls)?\b/gi, 'FAU')
+    .replace(/\bflorida\s+state(?:\s+seminoles)?\b/gi, 'FSU')
+    .replace(/\bflorida\s+a\s*&\s*m(?:\s+rattlers)?\b/gi, 'FAMU')
+    .replace(/\bflorida\s+international(?:\s+golden\s+panthers)?\b/gi, 'FIU')
+    .replace(/\bsouth\s+florida(?:\s+bulls)?\b/gi, 'USF')
+    .replace(/\bseminoles\b/gi, 'FSU');
+  return /\bflorida\b/i.test(stripped);
+}
+
 /** Coach sit-downs / podcast eps — not tape. Keep "| The Gator Nation Football Podcast" film reviews. */
-export function isFilmBreakdownEligibleTitle(title?: string | null): boolean {
+export function isFilmBreakdownEligibleTitle(
+  title?: string | null,
+  youtubeId?: string | null,
+  source?: string | null
+): boolean {
+  if (isBlockedFilmYoutubeId(youtubeId)) return false;
   const t = String(title || '');
   if (!t) return true;
   const filmSignal =
-    /\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i.test(t);
+    /^(film\s*:)|\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i.test(t);
   const podcastConvo = /\b(podcast\s*episode|talking\s*ball|sit[\s-]?down|q\s*&\s*a)\b/i.test(t);
   if (podcastConvo && !filmSignal) return false;
+  const filmGuyTape = /film guy/i.test(String(source || '')) || /^(film\s*:)|\bfilm\s+study\b/i.test(t);
+  if (filmGuyTape && !titleHasUfFootball(t)) return false;
   return true;
 }
 
@@ -133,7 +166,7 @@ export function normalizeFilmHub(hub?: string | null): string {
   if (
     raw === 'GNFP Film Review' ||
     raw === 'Game Week' ||
-    /film\s*breakdown|film\s*guy|gnfp/i.test(raw) ||
+    /film\s*breakdown|film\s*guy|gnfp|tengwall/i.test(raw) ||
     (/film\s*review/i.test(raw) && !/gatorvault|vault/i.test(raw))
   ) {
     return 'Film Breakdown';

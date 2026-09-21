@@ -44,6 +44,7 @@ function normalizeAuto(auto) {
     pressers: Array.isArray(a.pressers) ? a.pressers : [],
     highlights: Array.isArray(a.highlights) ? a.highlights : [],
     filmGuy: Array.isArray(a.filmGuy) ? a.filmGuy : [],
+    tengwall: Array.isArray(a.tengwall) ? a.tengwall : [],
   };
 }
 

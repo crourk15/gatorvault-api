@@ -1,7 +1,13 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { SCHEME_SCHOOL_LESSONS, schemeSchoolLesson } from './scheme-school-data';
-import { FILM_HUB_ORDER, landingFilmHub, normalizeFilmHub, visibleFilmHubs } from './film-room-api';
+import {
+  FILM_HUB_ORDER,
+  isFilmBreakdownEligibleTitle,
+  landingFilmHub,
+  normalizeFilmHub,
+  visibleFilmHubs,
+} from './film-room-api';
 import { parseFilmRoomSegmentFromPath } from './vault-route-map';
 import {
   VAULT_FILM_REVIEWS,
@@ -93,6 +99,23 @@ describe('GatorVault Film Review', () => {
   it('does not dump GNFP film review into the Vault rail', () => {
     assert.equal(normalizeFilmHub('GNFP Film Review'), 'Film Breakdown');
     assert.equal(normalizeFilmHub('Film Guy Network'), 'Film Breakdown');
+    assert.equal(normalizeFilmHub('Landon Tengwall'), 'Film Breakdown');
+    assert.equal(
+      isFilmBreakdownEligibleTitle(
+        'FILM: Alabama vs Florida State - Alabama\'s Run Game Makes FSU Quit',
+        'kNrIT61SLVM',
+        'Film Guy Network'
+      ),
+      false
+    );
+    assert.equal(
+      isFilmBreakdownEligibleTitle(
+        'FILM: Florida vs Auburn - Faulkner Gets the Best of Durkin',
+        'pfAZ342ROKo',
+        'Film Guy Network'
+      ),
+      true
+    );
     assert.equal(normalizeFilmHub('GatorVault Review'), 'GatorVault Review');
     assert.equal(normalizeFilmHub('GatorVault Film Review'), 'GatorVault Review');
   });

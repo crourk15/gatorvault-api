@@ -55,7 +55,15 @@
     "Q4 02:16: 4th-and-10, Baylor hits Freeman 28 over the middle. Then Porter 27 to the 4. They will get hit late if they grab (PI Winters / Pleasant earlier).",
     "Q4 00:09: 2-point pass attempt failed (review upheld). Winters is the closer on that night."
   ],
-  "intelSeeds": [],
+  "intelSeeds": [
+    {
+      "sourceId": "tengwall",
+      "title": "FILM STUDY: How Florida's Run Game DOMINATED Auburn's Defense",
+      "url": "https://www.youtube.com/watch?v=MRjoBzMLD2s",
+      "claim": "UF run game vs Auburn — 53 carries, 243 yards. Absorb a fact. Do not paste his wording onto the Review.",
+      "postedAt": "2026-09-20T23:13:48.000Z"
+    }
+  ],
   "tapeLinks": [
     {
       "label": "SEC condensed (could not play in this environment)",

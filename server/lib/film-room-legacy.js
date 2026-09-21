@@ -1,5 +1,5 @@
 /**
- * Film Room — legacy verified video catalog (GNFP, Film Guy Network, UF pressers).
+ * Film Room — legacy verified video catalog (GNFP, Film Guy, Tengwall, UF pressers).
  * Merged alongside Knowledge Engine lessons in film-room-feed.js.
  */
 const fs = require('fs');
@@ -8,6 +8,8 @@ const { loadFilmRoomCache, resolveCachePath } = require('./film-room-cache-store
 const {
   isCurrentStaffGnfpReview,
   isFilmGuyFloridaBreakdownTitle,
+  isBlockedFilmYoutubeId,
+  isTengwallUfFilmReview,
   isCondensedGameTitle,
   dedupePressersByEvent,
 } = require('./film-room-youtube-ingest');
@@ -17,6 +19,7 @@ const MANUAL_PATH = path.join(__dirname, '..', 'data', 'film-room', 'manual.json
 const LEGACY_CATEGORIES = {
   GNFP: 'GNFP Film Review',
   FILM_GUY: 'Film Guy Network',
+  TENGWALL: 'Landon Tengwall',
   PRESS: 'UF Press Conferences',
   HIGHLIGHTS: 'Highlights',
   BREAKDOWN: 'Film Breakdown'
@@ -79,6 +82,7 @@ function loadLegacyVideoCatalog() {
 
   function pushUnique(row, category) {
     const key = youtubeKey(row);
+    if (isBlockedFilmYoutubeId(row?.youtubeId) || isBlockedFilmYoutubeId(key)) return;
     if (key && seenYoutube.has(key)) return;
     if (key) seenYoutube.add(key);
     items.push(legacyItemToCatalog(row, category));
@@ -100,7 +104,11 @@ function loadLegacyVideoCatalog() {
     } else if (/gnfp/i.test(src) || cat === 'GNFP Film Review') {
       if (!isCurrentStaffGnfpReview(row)) return;
       pushUnique(row, LEGACY_CATEGORIES.GNFP);
+    } else if (/tengwall/i.test(src) || cat === 'Landon Tengwall') {
+      if (!isTengwallUfFilmReview(row)) return;
+      pushUnique(row, LEGACY_CATEGORIES.TENGWALL);
     } else if (cat === 'Film Breakdown' || /film guy/i.test(src)) {
+      if (!isFilmGuyFloridaBreakdownTitle(row?.title)) return;
       pushUnique(row, LEGACY_CATEGORIES.FILM_GUY);
     } else if (/gators online/i.test(src) && /spring game/i.test(row.title || '')) {
       pushUnique(row, LEGACY_CATEGORIES.HIGHLIGHTS);
@@ -110,6 +118,11 @@ function loadLegacyVideoCatalog() {
   (cache.auto?.filmGuy || []).forEach((row) => {
     if (!isFilmGuyFloridaBreakdownTitle(row?.title)) return;
     pushUnique(row, LEGACY_CATEGORIES.FILM_GUY);
+  });
+
+  (cache.auto?.tengwall || []).forEach((row) => {
+    if (!isTengwallUfFilmReview(row)) return;
+    pushUnique(row, LEGACY_CATEGORIES.TENGWALL);
   });
 
   (cache.auto?.highlights || []).forEach((row) => {
