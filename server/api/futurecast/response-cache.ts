@@ -605,12 +605,47 @@ function scheduleHealPlayersWarm(): void {
     });
 }
 
+function pickHealRpm(warm: number | null | undefined, floor: number | null | undefined): number | null {
+  const w = warm != null && Number.isFinite(Number(warm)) ? Number(warm) : null;
+  const f = floor != null && Number.isFinite(Number(floor)) ? Number(floor) : null;
+  if (f != null && f > 0 && (w == null || w <= 0)) return f;
+  if (f != null && w != null && w >= 70 && f + 40 < w) return f;
+  // Durable warm lost a real Florida share (Antonio 41 → null/1).
+  if (f != null && w != null && f >= 20 && w + 15 < f) return f;
+  return w ?? f;
+}
+
+/** Merge slim floors over a hollow/poisoned warm players.json row. */
+export function mergeHealBoardTruth(
+  warm: HealBoardTruth | null | undefined,
+  floor: HealBoardTruth | null | undefined
+): HealBoardTruth | null {
+  if (!warm) return floor || null;
+  if (!floor) return warm;
+  return {
+    storeRpm: pickHealRpm(warm.storeRpm, floor.storeRpm),
+    boardRpm: pickHealRpm(warm.boardRpm, floor.boardRpm),
+    storeComps: warm.storeComps?.length ? warm.storeComps : floor.storeComps || [],
+  };
+}
+
 function lookupHealBoardTruth(slug: string): HealBoardTruth | null {
   if (!slug) return null;
-  // Prefer full warm Map; fall back to slim 2028 floors (never parse players.json here).
-  const warm = healTruthBySlug.get(slug);
-  if (warm) return warm;
-  return loadHealFloors2028().get(slug) || null;
+  const warm = healTruthBySlug.get(slug) || null;
+  const floor = loadHealFloors2028().get(slug) || null;
+  return mergeHealBoardTruth(warm, floor);
+}
+
+/** Test hook — prime a hollow warm row so floors still win. */
+export function __testPrimeHealTruth(slug: string, truth: HealBoardTruth | null): void {
+  const key = String(slug || '').toLowerCase();
+  if (!key) return;
+  if (truth) {
+    healTruthBySlug.set(key, truth);
+    healTruthWarmAt = Date.now();
+  } else {
+    healTruthBySlug.delete(key);
+  }
 }
 
 function boardTruthFromPlayer(
