@@ -1,10 +1,18 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { applyLiveCommitCountToTicker, buildHomePulseStories } from './home-command-utils';
+import {
+  applyLiveCommitCountToTicker,
+  buildHomeNowGameStory,
+  buildHomePulseStories,
+} from './home-command-utils';
+
+const OFFSEASON = new Date('2026-07-15T16:00:00.000Z');
+const OLE_MISS_WEEK = new Date('2026-09-21T18:00:00.000Z');
 
 describe('buildHomePulseStories', () => {
   it('prefers named visits/flips over generic class trending', () => {
     const stories = buildHomePulseStories({
+      now: OFFSEASON,
       hubTicker: [
         '2027 class trending nationally — UF at #8',
         'Blue chip % at 65%',
@@ -32,14 +40,15 @@ describe('buildHomePulseStories', () => {
     });
     assert.equal(stories[0], 'Verified OV: Brysen Wright (2026-08-22–2026-08-24)');
     assert.ok(stories.some((s) => /Flip Watch: Easton Royal/.test(s)));
-    assert.ok(stories.some((s) => /26 commits locked/.test(s)));
     assert.ok(stories.some((s) => /Tranard Roberts/.test(s)));
-    // Generic class line can remain but must not lead when named intel exists.
+    // One class-metric filler max — never the lead when named intel exists.
+    assert.equal(stories.filter((s) => /class trending|commits locked|Blue chip %/i.test(s)).length, 1);
     assert.notEqual(stories[0], '2027 class trending nationally — UF at #8');
   });
 
   it('does not freeze on the old UF in the mix fallback when hub ticker is live', () => {
     const stories = buildHomePulseStories({
+      now: OFFSEASON,
       hubTicker: ['26 commits locked for 2027', '2027 class trending nationally — UF at #8'],
       hpIntel: [],
       movement: null,
@@ -49,6 +58,7 @@ describe('buildHomePulseStories', () => {
         stories[0] === '26 commits locked for 2027'
     );
     assert.ok(!stories.some((s) => /UF in the mix/i.test(s)));
+    assert.equal(stories.filter((s) => /class trending|commits locked|Blue chip %/i.test(s)).length, 1);
   });
 
   it('rewrites commit-count lines from live metrics and strips seed stone counts', () => {
@@ -74,6 +84,7 @@ describe('buildHomePulseStories', () => {
 
   it('ranks Florida visits and real class heat over allowlist offer spam', () => {
     const stories = buildHomePulseStories({
+      now: OFFSEASON,
       hubTicker: [
         'Blue chip % at 100%',
         '1 commits locked for 2028',
@@ -109,8 +120,7 @@ describe('buildHomePulseStories', () => {
       } as any,
     });
     assert.equal(stories[0], 'Tranard Roberts — unofficial visit · Florida');
-    assert.ok(stories.some((s) => /2027 class trending nationally — UF at #8/.test(s)));
-    assert.ok(stories.some((s) => /26 commits locked for 2027/.test(s)));
+    assert.equal(stories.filter((s) => /class trending|commits locked|Blue chip %/i.test(s)).length, 1);
     assert.ok(!stories.some((s) => /Blue chip % at 100%|1 commits locked/i.test(s)));
     assert.ok(stories.filter((s) => /Florida offer/i.test(s)).length <= 2);
   });
@@ -118,6 +128,7 @@ describe('buildHomePulseStories', () => {
 
   it('drops stale unofficial visit alerts from Home NOW', () => {
     const stories = buildHomePulseStories({
+      now: OFFSEASON,
       hubTicker: ['2027 class trending nationally — UF at #8', '26 commits locked for 2027'],
       hpIntel: [],
       movement: {
@@ -138,6 +149,7 @@ describe('buildHomePulseStories', () => {
 
   it('does not paint Beat Desk / allowlist-intel ops into Home NOW', () => {
     const stories = buildHomePulseStories({
+      now: OFFSEASON,
       hubTicker: [
         '26 commits locked for 2027',
         'Dominick Harris Payne — Staff note — Brandon Harris cooking',
@@ -150,16 +162,16 @@ describe('buildHomePulseStories', () => {
             id: '1',
             type: 'OFFER',
             player: 'Gionni Lewis',
-            detail: 'Gionni Lewis — Florida offer on file (2026-08-20) from player card.',
-            timestamp: '2026-08-24T18:03:06.055Z',
+            detail: 'Gionni Lewis — Florida offer on file (2026-09-10) from player card.',
+            timestamp: '2026-09-12T18:03:06.055Z',
           },
           {
             id: '2',
             type: 'OFFER',
             player: 'Kaleb Ballard',
             detail:
-              'Kaleb Ballard — Florida offer on file (2026-08-18). Continuous allowlist intel sweep.',
-            timestamp: '2026-08-24T12:28:57.660Z',
+              'Kaleb Ballard — Florida offer on file (2026-09-08). Continuous allowlist intel sweep.',
+            timestamp: '2026-09-12T12:28:57.660Z',
           },
         ],
       } as any,
@@ -174,6 +186,7 @@ describe('buildHomePulseStories', () => {
 
   it('compresses article blurbs into finished Florida visit chips', () => {
     const stories = buildHomePulseStories({
+      now: OFFSEASON,
       hubTicker: [],
       hpIntel: [],
       movement: {
@@ -195,6 +208,7 @@ describe('buildHomePulseStories', () => {
 
   it('drops Florida offers older than 3 weeks', () => {
     const stories = buildHomePulseStories({
+      now: OFFSEASON,
       hubTicker: ['2027 class trending nationally — UF at #8'],
       hpIntel: [],
       movement: {
@@ -218,4 +232,50 @@ describe('buildHomePulseStories', () => {
     assert.ok(stories.some((s) => /2027 class trending nationally/i.test(s)));
   });
 
+  it('leads Ole Miss week with the game, not frozen class metrics', () => {
+    const stories = buildHomePulseStories({
+      now: OLE_MISS_WEEK,
+      hubTicker: [
+        '2027 class trending nationally — UF at #8',
+        'Blue chip % at 65%',
+        '26 commits locked for 2027',
+        'Cyion Smith — Visit scheduled (Saturday)',
+      ],
+      hpIntel: [{ id: '1', text: 'Izayah Vickers — Florida process.', timestamp: '', ufProbability: 0 }],
+      movement: null,
+    });
+    assert.match(stories[0], /Game Week — Ole Miss in the Swamp/i);
+    assert.ok(stories.some((s) => /Cyion Smith — Visit scheduled \(Saturday\)/.test(s)));
+    assert.ok(!stories.some((s) => /Florida process/i.test(s)));
+    assert.equal(stories.filter((s) => /class trending|commits locked|Blue chip %/i.test(s)).length, 1);
+    assert.ok(!/class trending|commits locked|Blue chip %/i.test(stories[0]));
+  });
+
+  it('drops thin Florida process rows', () => {
+    const stories = buildHomePulseStories({
+      now: OFFSEASON,
+      hubTicker: ['Hudson West — Florida process.', '2027 class trending nationally — UF at #8'],
+      hpIntel: [],
+      movement: null,
+    });
+    assert.ok(!stories.some((s) => /Florida process/i.test(s)));
+    assert.ok(stories.some((s) => /2027 class trending nationally/i.test(s)));
+  });
+
+});
+
+describe('buildHomeNowGameStory', () => {
+  it('stamps Ole Miss Game Week the Monday after Auburn', () => {
+    const line = buildHomeNowGameStory(OLE_MISS_WEEK);
+    assert.equal(line, 'Game Week — Ole Miss in the Swamp · ABC');
+  });
+
+  it('names Saturday kick inside 3 days', () => {
+    const line = buildHomeNowGameStory(new Date('2026-09-25T16:00:00.000Z'));
+    assert.match(String(line), /Ole Miss Saturday — 3:30 PM · ABC/);
+  });
+
+  it('stays quiet in July', () => {
+    assert.equal(buildHomeNowGameStory(OFFSEASON), null);
+  });
 });

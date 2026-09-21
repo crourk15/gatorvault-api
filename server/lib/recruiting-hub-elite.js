@@ -413,25 +413,27 @@ async function buildHubTicker(year = 2027) {
   const {
     rankEliteHomeNowLines,
     isThinClassMetricLine,
+    isThinFloridaProcessLine,
     isVisitPulseSummary,
     isFreshHomeNowVisit,
     isFreshHomeNowTimestamp,
     isOfferPulseSummary,
     isFreshHomeNowOffer,
     isRivalOnlyOfferLine,
+    buildHomeNowGameStory,
   } = require('./elite-home-now');
 
-  // Class metrics earn a NOW slot only when the class is real — never thin open-cycle stone.
+  // One class-metric filler max — rank if we have it, else commit count.
+  // Blue chip never paints Home NOW (dashboard metric, not a weekly story).
   if (rank && nCommits >= 5) {
     classLines.push(`${year} class trending nationally — UF at #${rank}`);
+  } else if (nCommits >= 5) {
+    const label = nCommits === 1 ? countLabel.replace(/s$/i, '') : countLabel;
+    classLines.push(`${nCommits} ${label} locked for ${year}`);
   }
   if (chip != null && nCommits >= 5 && !(Number(chip) >= 100 && nCommits <= 2)) {
     const line = `Blue chip % at ${chip}%`;
-    if (!isThinClassMetricLine(line)) classLines.push(line);
-  }
-  if (nCommits >= 5) {
-    const label = nCommits === 1 ? countLabel.replace(/s$/i, '') : countLabel;
-    classLines.push(`${nCommits} ${label} locked for ${year}`);
+    if (!isThinClassMetricLine(line) && classLines.length === 0) classLines.push(line);
   }
 
   const { buildHubMovementFeed } = require('./recruiting-hub-data');
@@ -483,14 +485,18 @@ async function buildHubTicker(year = 2027) {
     }
     const line = lineProbe;
     if (isDeskOpsIntelCopy(line)) continue;
+    if (isThinFloridaProcessLine(line)) continue;
     const { isDeniedVisitTickerLine } = require('./recruiting-visit-scrub');
     if (isDeniedVisitTickerLine(line)) continue;
     if (!named.includes(line)) named.push(line);
   }
 
-  // Named Florida process first; class metrics fill remaining elite slots.
+  const gameStory = buildHomeNowGameStory();
+  const pool = [...named, ...(gameStory ? [gameStory] : []), ...classLines];
+
+  // Named + this-week game first; one class metric fills only if the strip is thin.
   const { scrubHubTickerLines } = require('./recruiting-visit-scrub');
-  return scrubHubTickerLines(rankEliteHomeNowLines([...named, ...classLines], 6));
+  return scrubHubTickerLines(rankEliteHomeNowLines(pool, 6));
 }
 
 async function buildHubClassOverview(year = 2027) {

@@ -14,11 +14,18 @@ const THIN_DESK_SUMMARY_RE =
 const ARTICLE_PROSE_RE =
   /\b(four|three|five)-star\b|\btells?\s+@|\bNEW:\s*\d{4}\b|has not been on .{0,40}campus|visit the Swamp|along with \d+ other/i;
 
+function isThinFloridaProcessCopy(text) {
+  const raw = String(text || '').trim();
+  if (!raw) return false;
+  return /(?:—|-)\s*Florida process\.?$/i.test(raw) || /^Florida process\.?$/i.test(raw);
+}
+
 function isDeskOpsIntelCopy(text) {
   const raw = String(text || '').trim();
   if (!raw) return true;
   if (DESK_OPS_RE.test(raw)) return true;
   if (THIN_DESK_SUMMARY_RE.test(raw)) return true;
+  if (isThinFloridaProcessCopy(raw)) return true;
   return false;
 }
 
@@ -194,6 +201,7 @@ function toFanFacingHubSummary(summary, opts) {
 
 module.exports = {
   isDeskOpsIntelCopy: isDeskOpsIntelCopy,
+  isThinFloridaProcessCopy: isThinFloridaProcessCopy,
   toFanFacingIntelDetail: toFanFacingIntelDetail,
   toFanFacingHubSummary: toFanFacingHubSummary,
   stripDeskOpsResidue: stripDeskOpsResidue,

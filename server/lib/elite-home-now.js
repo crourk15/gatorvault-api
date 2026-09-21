@@ -12,6 +12,35 @@ function isThinClassMetricLine(text) {
   return false;
 }
 
+/** Evergreen class-dashboard lines — filler, never the weekly NOW lead. */
+function isClassMetricLine(text) {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  if (/class trending nationally/i.test(t)) return true;
+  if (/^\d+\s+(commits|signees)\s+locked\b/i.test(t)) return true;
+  if (/^Blue chip % at\b/i.test(t)) return true;
+  return false;
+}
+
+/** Allowlist auto-rows — no fan fact. */
+function isThinFloridaProcessLine(text) {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  return /(?:—|-)\s*Florida process\.?$/i.test(t) || /^Florida process\.?$/i.test(t);
+}
+
+function isGameWeekPulse(text) {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  return (
+    /^Game Week\b/i.test(t) ||
+    /^LIVE — Florida vs\b/i.test(t) ||
+    /^Up next — /i.test(t) ||
+    /\bin the Swamp\b/i.test(t) ||
+    /^[A-Za-z].+\s(Saturday|Sunday|Friday|Thursday)\s—/.test(t)
+  );
+}
+
 function isFloridaProcessLine(text) {
   const t = String(text || '').trim();
   if (!t) return false;
@@ -35,23 +64,34 @@ function isRivalOnlyOfferLine(text) {
 function eliteHomeNowScore(text) {
   const t = String(text || '').trim();
   if (!t) return 0;
+  if (isThinFloridaProcessLine(t)) return 0;
   if (isThinClassMetricLine(t)) return 5;
+  if (isGameWeekPulse(t) && /^LIVE — Florida vs\b/i.test(t)) return 112;
+  if (isGameWeekPulse(t)) return 110;
   if (/\bVerified OV\b/i.test(t)) return 104;
-  if (/\bFlip Watch\b/i.test(t)) return 102;
+  if (/\bFlip Watch\b/i.test(t) && /\bFlip\s+\d+/i.test(t)) return 102;
+  if (/\bFlip Watch\b/i.test(t)) return 8;
+  if (/\bVisit scheduled\b/i.test(t)) {
+    if (/\b(Saturday|Sunday|Friday|Thursday|today|tonight|this week|this weekend)\b/i.test(t)) {
+      return 108;
+    }
+    return 96;
+  }
   if (/\b(unofficial|official)\s+visit\s*[·•]\s*Florida\b/i.test(t)) return 100;
   if (/\bFlorida\s+(?:unofficial\s+|official\s+)?visit\b/i.test(t)) return 98;
-  if (/\brising\s*—\s*UF\b/i.test(t)) return 90;
+  if (/\brising\s*—\s*UF\b/i.test(t) || /\bleaning UF at\b/i.test(t)) return 90;
   if (/\bunofficial visit\s*[·•]/i.test(t) || /\bofficial visit\s*[·•]/i.test(t)) return 72;
   if (/\bFlorida offer\b/i.test(t) || /\bOffer from Florida\b/i.test(t)) return 58;
-  if (/class trending nationally/i.test(t) && /#\d+/i.test(t)) return 70;
-  if (/^\d+\s+(commits|signees)\s+locked\b/i.test(t)) {
-    const n = Number((t.match(/^(\d+)/) || [])[1] || 0);
-    if (n >= 10) return 68;
-    if (n >= 5) return 50;
-    return 12;
+  if (isClassMetricLine(t)) {
+    if (/class trending nationally/i.test(t) && /#\d+/i.test(t)) return 18;
+    if (/^\d+\s+(commits|signees)\s+locked\b/i.test(t)) {
+      const n = Number((t.match(/^(\d+)/) || [])[1] || 0);
+      if (n >= 10) return 16;
+      if (n >= 5) return 14;
+      return 8;
+    }
+    if (/^Blue chip % at\b/i.test(t)) return 12;
   }
-  if (/^Blue chip % at\b/i.test(t)) return 35;
-  if (/\bVisit scheduled\b/i.test(t)) return 48;
   if (isRivalOnlyOfferLine(t)) return 22;
   return 40;
 }
@@ -72,6 +112,7 @@ function rankEliteHomeNowLines(lines, limit = 6) {
 
     let score = eliteHomeNowScore(line);
     if (score <= 5) continue;
+    if (isThinFloridaProcessLine(line)) continue;
     // Rival offer spam is profile noise — not Gator Nation NOW.
     if (isRivalOnlyOfferLine(line)) continue;
 
@@ -81,11 +122,21 @@ function rankEliteHomeNowLines(lines, limit = 6) {
       if (floridaOfferCount > 2) continue;
     }
 
-    scored.push({ line, score });
+    scored.push({ line, score, classMetric: isClassMetricLine(line) });
   }
 
   scored.sort((a, b) => b.score - a.score || a.line.localeCompare(b.line));
-  return scored.slice(0, limit).map((row) => row.line);
+  const out = [];
+  let classMetricCount = 0;
+  for (const row of scored) {
+    if (row.classMetric) {
+      classMetricCount += 1;
+      if (classMetricCount > 1) continue;
+    }
+    out.push(row.line);
+    if (out.length >= limit) break;
+  }
+  return out;
 }
 
 function shortenSchoolLabel(school) {
@@ -210,19 +261,174 @@ function isFreshHomeNowOffer(raw, nowMs = Date.now()) {
   return nowMs - ts <= HOME_NOW_OFFER_MAX_AGE_MS;
 }
 
+const MONTHS = {
+  january: 1,
+  february: 2,
+  march: 3,
+  april: 4,
+  may: 5,
+  june: 6,
+  july: 7,
+  august: 8,
+  september: 9,
+  october: 10,
+  november: 11,
+  december: 12,
+};
+
+function parseScheduleKickoffMs(dateStr) {
+  const cleaned = String(dateStr || '')
+    .replace(/\s*[·|]\s*/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!cleaned || /\b(OFF|FLEX|EARLY|NIGHT|TBA|TBD)\b/i.test(cleaned)) return NaN;
+  const ranged = cleaned.replace(
+    /(\d{1,2}:\d{2})\s*[-–]\s*\d{1,2}:\d{2}\s*(AM|PM)/i,
+    (_, t, ap) => `${t} ${ap}`
+  );
+  const m = ranged.match(
+    /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),\s*(\d{4})(?:\s+(\d{1,2}):(\d{2})\s*(AM|PM))?(?:\s*ET)?/i
+  );
+  if (!m) {
+    const d = Date.parse(cleaned.replace(/\s*ET\s*$/i, '').trim());
+    return Number.isFinite(d) ? d : NaN;
+  }
+  const month = MONTHS[m[1].toLowerCase()];
+  const day = Number(m[2]);
+  const year = Number(m[3]);
+  let hour = m[4] ? Number(m[4]) : 12;
+  const minute = m[4] ? Number(m[5]) : 0;
+  const ap = String(m[6] || 'AM').toUpperCase();
+  if (m[4] && ap === 'PM' && hour < 12) hour += 12;
+  if (m[4] && ap === 'AM' && hour === 12) hour = 0;
+  // Kick times are Eastern — Date.UTC + 4h is close enough for NOW windowing.
+  return Date.UTC(year, month - 1, day, hour + 4, minute, 0);
+}
+
+function shortenOpponentName(opp) {
+  return String(opp || '')
+    .replace(/\s+Rebels$/i, '')
+    .replace(/\s+Tigers$/i, '')
+    .replace(/\s+Bulldogs$/i, '')
+    .replace(/\s+Crimson Tide$/i, '')
+    .replace(/\s+Seminoles$/i, '')
+    .replace(/\s+Gamecocks$/i, '')
+    .replace(/\s+Longhorns$/i, '')
+    .replace(/\s+Sooners$/i, '')
+    .replace(/\s+Wildcats$/i, '')
+    .replace(/\s+Gators$/i, '')
+    .replace(/\s+Owls$/i, '')
+    .replace(/\s+Camels$/i, '')
+    .trim();
+}
+
+function formatKickClock(dateStr) {
+  const m = String(dateStr || '').match(/(\d{1,2}:\d{2})\s*(AM|PM)/i);
+  if (!m) return '';
+  return `${m[1]} ${m[2].toUpperCase()}`;
+}
+
+function weekdayFromKick(kickMs) {
+  return new Date(kickMs).toLocaleDateString('en-US', {
+    weekday: 'long',
+    timeZone: 'America/New_York',
+  });
+}
+
+/**
+ * This-week game chip — Home NOW must move with the slate, not sit on class rank.
+ * Schedule facts only (opponent / venue / TV / kick). Never invented tape.
+ */
+function buildHomeNowGameStory(now = new Date(), games) {
+  const list = Array.isArray(games) ? games : loadScheduleGamesForNow();
+  if (!list.length) return null;
+  const nowMs = now instanceof Date ? now.getTime() : Date.parse(now);
+  if (!Number.isFinite(nowMs)) return null;
+
+  let current = null;
+  let next = null;
+  let nextTs = Infinity;
+  for (const g of list) {
+    if (!g || g.kind === 'bye' || String(g.id || '').startsWith('bye')) continue;
+    const kickMs = parseScheduleKickoffMs(g.date);
+    if (!Number.isFinite(kickMs)) continue;
+    const postedFinal =
+      Number.isFinite(Number(g.finalUF)) && Number.isFinite(Number(g.finalOpp));
+    if (postedFinal && nowMs > kickMs) continue;
+    const start = kickMs - 3 * 60 * 60 * 1000;
+    const end = kickMs + 8 * 60 * 60 * 1000;
+    if (nowMs >= start && nowMs <= end) {
+      current = { game: g, kickMs };
+      break;
+    }
+    if (kickMs > nowMs && kickMs < nextTs) {
+      nextTs = kickMs;
+      next = { game: g, kickMs };
+    }
+  }
+  const picked = current || next;
+  if (!picked) return null;
+
+  const { game, kickMs } = picked;
+  const opp = shortenOpponentName(game.opp) || 'the opponent';
+  const venue = String(game.venue || '');
+  const home = /gainesville|swamp|hill griffin/i.test(venue);
+  const where = home ? 'in the Swamp' : venue ? `at ${venue.split(',')[0].trim()}` : '';
+  const tvRaw = String(game.tv || '').trim();
+  const tv = tvRaw && !/^(TBD|—|-)$/i.test(tvRaw) ? tvRaw : '';
+  const clock = formatKickClock(game.date);
+  const weekday = weekdayFromKick(kickMs);
+  const days = (kickMs - nowMs) / DAY_MS;
+
+  if (nowMs >= kickMs && nowMs <= kickMs + 8 * 60 * 60 * 1000) {
+    return `LIVE — Florida vs ${opp}`;
+  }
+  if (days <= 3) {
+    const bits = [`${opp} ${weekday}`];
+    if (clock) bits[0] += ` — ${clock}`;
+    if (tv) bits[0] += ` · ${tv}`;
+    return bits[0];
+  }
+  if (days <= 7) {
+    const loc = where ? ` ${where}` : '';
+    return tv ? `Game Week — ${opp}${loc} · ${tv}` : `Game Week — ${opp}${loc}`.trim();
+  }
+  if (days <= 14) {
+    const loc = where ? ` ${where}` : '';
+    return `Up next — ${opp}${loc}`.trim();
+  }
+  return null;
+}
+
+function loadScheduleGamesForNow() {
+  try {
+    const { getScheduleBoard } = require('./schedule-board');
+    const board = getScheduleBoard(2026);
+    return Array.isArray(board?.games) ? board.games : [];
+  } catch {
+    return [];
+  }
+}
+
 module.exports = {
   isThinClassMetricLine,
+  isClassMetricLine,
+  isThinFloridaProcessLine,
+  isGameWeekPulse,
   isFloridaProcessLine,
   isRivalOnlyOfferLine,
   eliteHomeNowScore,
   rankEliteHomeNowLines,
   shortenSchoolLabel,
+  shortenOpponentName,
   parseHomeNowTimestamp,
   isVisitPulseSummary,
   isFreshHomeNowVisit,
   isFreshHomeNowTimestamp,
   isOfferPulseSummary,
   isFreshHomeNowOffer,
+  buildHomeNowGameStory,
+  parseScheduleKickoffMs,
   HOME_NOW_MAX_AGE_MS,
   HOME_NOW_VISIT_MAX_AGE_MS,
   HOME_NOW_VISIT_UPCOMING_MS,

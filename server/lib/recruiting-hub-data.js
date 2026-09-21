@@ -72,10 +72,19 @@ function hubFeedSlugAllowed(slug, focusYear, pool) {
 }
 
 function formatNextVisit(player) {
-  if (!player?.visitStart) return null;
-  const d = new Date(player.visitStart);
-  if (Number.isNaN(d.getTime())) return String(player.visitStart);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const dated = player?.visitStart || player?.visitDates;
+  if (player?.visitDates && !/^\d{4}-\d{2}-\d{2}/.test(String(player.visitDates))) {
+    return String(player.visitDates).trim();
+  }
+  if (!dated) return null;
+  const d = new Date(dated);
+  if (Number.isNaN(d.getTime())) return String(dated);
+  const now = Date.now();
+  const days = (d.getTime() - now) / (24 * 60 * 60 * 1000);
+  if (days >= -0.5 && days <= 7) {
+    return d.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/New_York' });
+  }
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 function shortNote(player) {

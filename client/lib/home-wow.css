@@ -1300,3 +1300,54 @@
   text-transform: uppercase;
   color: var(--home-gator-orange);
 }
+
+.home-wow-now {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 14px;
+  align-items: start;
+  margin: 10px 0 8px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+}
+.home-wow-now__label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--home-gator-orange);
+  padding-top: 3px;
+}
+.home-wow-now__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.home-wow-now__lead {
+  font-size: 1.02rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: #fff;
+}
+.home-wow-now__item {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.72);
+}
+@media (max-width: 640px) {
+  .home-wow-now {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+  .home-wow-now__lead {
+    font-size: 0.98rem;
+  }
+}

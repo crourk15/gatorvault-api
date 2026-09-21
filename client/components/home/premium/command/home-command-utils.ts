@@ -175,6 +175,8 @@ export type HomeTrustTickerInput = {
   flipWatch?: FlipWatchRow[];
   visitRecap?: VisitRecapRow[];
   movementNarratives?: MovementNarrativeRow[];
+  /** Freeze game-week chips in tests. Live home uses now. */
+  now?: Date;
 };
 
 const HOME_TICKER_FALLBACKS = [
@@ -186,6 +188,95 @@ const HOME_TICKER_FALLBACKS = [
 
 function isGenericClassPulse(text: string): boolean {
   return /class trending nationally/i.test(text) || /^Blue chip % at\b/i.test(text);
+}
+
+function isClassMetricPulse(text: string): boolean {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  if (/class trending nationally/i.test(t)) return true;
+  if (/^\d+\s+(commits|signees)\s+locked\b/i.test(t)) return true;
+  if (/^Blue chip % at\b/i.test(t)) return true;
+  return false;
+}
+
+function isThinFloridaProcessPulse(text: string): boolean {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  return /(?:—|-)\s*Florida process\.?$/i.test(t) || /^Florida process\.?$/i.test(t);
+}
+
+function isGameWeekPulse(text: string): boolean {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  return (
+    /^Game Week\b/i.test(t) ||
+    /^LIVE — Florida vs\b/i.test(t) ||
+    /^Up next — /i.test(t) ||
+    /\bin the Swamp\b/i.test(t) ||
+    /^[A-Za-z].+\s(Saturday|Sunday|Friday|Thursday)\s—/.test(t)
+  );
+}
+
+function shortenOpponentName(opp: string): string {
+  return String(opp || '')
+    .replace(/\s+Rebels$/i, '')
+    .replace(/\s+Tigers$/i, '')
+    .replace(/\s+Bulldogs$/i, '')
+    .replace(/\s+Crimson Tide$/i, '')
+    .replace(/\s+Seminoles$/i, '')
+    .replace(/\s+Gamecocks$/i, '')
+    .replace(/\s+Longhorns$/i, '')
+    .replace(/\s+Sooners$/i, '')
+    .replace(/\s+Wildcats$/i, '')
+    .replace(/\s+Gators$/i, '')
+    .replace(/\s+Owls$/i, '')
+    .replace(/\s+Camels$/i, '')
+    .trim();
+}
+
+/** This-week slate chip — Home NOW must move with the opponent, not sit on #8. */
+export function buildHomeNowGameStory(now = new Date()): string | null {
+  const game = nextHomeGame(now);
+  if (!game || game.kind === 'bye' || String(game.id || '').startsWith('bye')) return null;
+  const kick = parseScheduleKickoff(game.date);
+  if (!kick) return null;
+  const nowMs = now.getTime();
+  const kickMs = kick.getTime();
+  if (Number.isFinite(Number(game.finalUF)) && Number.isFinite(Number(game.finalOpp)) && nowMs > kickMs) {
+    return null;
+  }
+  const opp = shortenOpponentName(game.opp) || 'the opponent';
+  const venue = String(game.venue || '');
+  const home = /gainesville|swamp|hill griffin/i.test(venue);
+  const where = home ? 'in the Swamp' : venue ? `at ${venue.split(',')[0].trim()}` : '';
+  const tvRaw = String(game.tv || '').trim();
+  const tv = tvRaw && !/^(TBD|—|-)$/i.test(tvRaw) ? tvRaw : '';
+  const clockMatch = String(game.date || '').match(/(\d{1,2}:\d{2})\s*(AM|PM)/i);
+  const clock = clockMatch ? `${clockMatch[1]} ${clockMatch[2].toUpperCase()}` : '';
+  const weekday = kick.toLocaleDateString('en-US', {
+    weekday: 'long',
+    timeZone: 'America/New_York',
+  });
+  const days = (kickMs - nowMs) / (24 * 60 * 60 * 1000);
+
+  if (nowMs >= kickMs && nowMs <= kickMs + 8 * 60 * 60 * 1000) {
+    return `LIVE — Florida vs ${opp}`;
+  }
+  if (days <= 3) {
+    let line = `${opp} ${weekday}`;
+    if (clock) line += ` — ${clock}`;
+    if (tv) line += ` · ${tv}`;
+    return line;
+  }
+  if (days <= 7) {
+    const loc = where ? ` ${where}` : '';
+    return tv ? `Game Week — ${opp}${loc} · ${tv}` : `Game Week — ${opp}${loc}`.trim();
+  }
+  if (days <= 14) {
+    const loc = where ? ` ${where}` : '';
+    return `Up next — ${opp}${loc}`.trim();
+  }
+  return null;
 }
 
 function isWeakAnonPulse(text: string): boolean {
@@ -227,23 +318,34 @@ function isRivalOnlyOfferPulse(text: string): boolean {
 export function eliteHomeNowScore(text: string): number {
   const t = String(text || '').trim();
   if (!t) return 0;
+  if (isThinFloridaProcessPulse(t)) return 0;
   if (isThinClassMetricPulse(t)) return 5;
+  if (isGameWeekPulse(t) && /^LIVE — Florida vs\b/i.test(t)) return 112;
+  if (isGameWeekPulse(t)) return 110;
   if (/\bVerified OV\b/i.test(t)) return 104;
-  if (/\bFlip Watch\b/i.test(t)) return 102;
+  if (/\bFlip Watch\b/i.test(t) && /\bFlip\s+\d+/i.test(t)) return 102;
+  if (/\bFlip Watch\b/i.test(t)) return 8;
+  if (/\bVisit scheduled\b/i.test(t)) {
+    if (/\b(Saturday|Sunday|Friday|Thursday|today|tonight|this week|this weekend)\b/i.test(t)) {
+      return 108;
+    }
+    return 96;
+  }
   if (/\b(unofficial|official)\s+visit\s*[·•]\s*Florida\b/i.test(t)) return 100;
   if (/\bFlorida\s+(?:unofficial\s+|official\s+)?visit\b/i.test(t)) return 98;
-  if (/\brising\s*—\s*UF\b/i.test(t)) return 90;
+  if (/\brising\s*—\s*UF\b/i.test(t) || /\bleaning UF at\b/i.test(t)) return 90;
   if (/\b(unofficial|official)\s+visit\s*[·•]/i.test(t)) return 72;
   if (/\bFlorida offer\b/i.test(t) || /\bOffer from Florida\b/i.test(t)) return 58;
-  if (/class trending nationally/i.test(t) && /#\d+/i.test(t)) return 70;
-  if (/^\d+\s+(commits|signees)\s+locked\b/i.test(t)) {
-    const n = Number((t.match(/^(\d+)/) || [])[1] || 0);
-    if (n >= 10) return 68;
-    if (n >= 5) return 50;
-    return 12;
+  if (isClassMetricPulse(t)) {
+    if (/class trending nationally/i.test(t) && /#\d+/i.test(t)) return 18;
+    if (/^\d+\s+(commits|signees)\s+locked\b/i.test(t)) {
+      const n = Number((t.match(/^(\d+)/) || [])[1] || 0);
+      if (n >= 10) return 16;
+      if (n >= 5) return 14;
+      return 8;
+    }
+    if (/^Blue chip % at\b/i.test(t)) return 12;
   }
-  if (/^Blue chip % at\b/i.test(t)) return 35;
-  if (/\bVisit scheduled\b/i.test(t)) return 48;
   if (isRivalOnlyOfferPulse(t)) return 22;
   return 40;
 }
@@ -262,6 +364,7 @@ export function rankEliteHomeNowStories(lines: string[], limit = 6): string[] {
     seen.add(key);
     let score = eliteHomeNowScore(line);
     if (score <= 5) continue;
+    if (isThinFloridaProcessPulse(line)) continue;
     // Rival offer spam is profile noise — not Gator Nation NOW.
     if (isRivalOnlyOfferPulse(line)) continue;
     const bareFl =
@@ -270,11 +373,21 @@ export function rankEliteHomeNowStories(lines: string[], limit = 6): string[] {
       floridaOfferCount += 1;
       if (floridaOfferCount > 2) continue;
     }
-    scored.push({ line, score });
+    scored.push({ line, score, classMetric: isClassMetricPulse(line) });
   }
 
   scored.sort((a, b) => b.score - a.score || a.line.localeCompare(b.line));
-  return scored.slice(0, limit).map((row) => row.line);
+  const out: string[] = [];
+  let classMetricCount = 0;
+  for (const row of scored) {
+    if (row.classMetric) {
+      classMetricCount += 1;
+      if (classMetricCount > 1) continue;
+    }
+    out.push(row.line);
+    if (out.length >= limit) break;
+  }
+  return out;
 }
 
 /** Merge closing-class + chase tickers into one elite NOW strip. */
@@ -434,8 +547,12 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
     const text = fanFacingPulseLine(value);
     if (!text) return;
     if (isThinClassMetricPulse(text)) return;
+    if (isThinFloridaProcessPulse(text)) return;
     pool.push(text);
   };
+
+  const gameStory = buildHomeNowGameStory(input.now || new Date());
+  if (gameStory) push(gameStory);
 
   for (const row of input.visitRecap ?? []) {
     if (row.movementNarrative) {

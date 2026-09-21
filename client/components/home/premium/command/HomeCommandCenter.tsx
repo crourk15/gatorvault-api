@@ -14,7 +14,7 @@ import type {
 
 type Props = {
   pulseHeadline: string;
-  /** Live NOW stories from hub/intel — rotates so the strip doesn't freeze on one line. */
+  /** Live NOW stories from hub/intel — lead stays pinned; support rotates. */
   pulseStories?: string[];
   gameDay: HomeGameDayView;
   futureCastTargets: HomeFutureCastTargetView[];
@@ -23,7 +23,8 @@ type Props = {
   beatLoading?: boolean;
 };
 
-const PULSE_ROTATE_MS = 8_000;
+const SUPPORT_ROTATE_MS = 7_000;
+const SUPPORT_SLOTS = 2;
 
 /** Home = full-bleed brand hero first; live pulse + countdown below the fold. */
 export function HomeCommandCenter({
@@ -42,30 +43,44 @@ export function HomeCommandCenter({
     return single ? [single] : ['Live intel loading…'];
   }, [pulseStories, pulseHeadline]);
 
-  const [storyIndex, setStoryIndex] = useState(0);
+  const lead = stories[0] || 'Live intel loading…';
+  const supportPool = stories.slice(1);
+  const [supportOffset, setSupportOffset] = useState(0);
 
   useEffect(() => {
-    setStoryIndex(0);
+    setSupportOffset(0);
   }, [stories.join('\u0001')]);
 
   useEffect(() => {
-    if (stories.length <= 1) return undefined;
+    if (supportPool.length <= SUPPORT_SLOTS) return undefined;
     const id = window.setInterval(() => {
-      setStoryIndex((prev) => (prev + 1) % stories.length);
-    }, PULSE_ROTATE_MS);
+      setSupportOffset((prev) => (prev + SUPPORT_SLOTS) % supportPool.length);
+    }, SUPPORT_ROTATE_MS);
     return () => window.clearInterval(id);
-  }, [stories]);
+  }, [supportPool]);
 
-  const pulse = stories[storyIndex % stories.length] || 'Live intel loading…';
+  const support = supportPool
+    .slice(supportOffset)
+    .concat(supportPool.slice(0, supportOffset))
+    .slice(0, SUPPORT_SLOTS);
 
   return (
     <div className="home-wow-page__frame">
       <HomeCommandHero pulseHeadline={pulseHeadline} />
       <div className="home-wow-page__stack">
-        <p className="home-wow-below-pulse" data-testid="home-hero-pulse" aria-live="polite">
-          <span className="home-wow-below-pulse__label">Now</span>
-          <span key={pulse}>{pulse}</span>
-        </p>
+        <section className="home-wow-now" aria-label="Now" data-testid="home-hero-pulse">
+          <span className="home-wow-now__label">Now</span>
+          <ul className="home-wow-now__list">
+            <li className="home-wow-now__lead" aria-live="polite">
+              {lead}
+            </li>
+            {support.map((story) => (
+              <li key={story} className="home-wow-now__item">
+                {story}
+              </li>
+            ))}
+          </ul>
+        </section>
         <HomeCommandGameDay game={gameDay} />
         <HomeCommandLiveStrip />
         <HomeCommandFutureCastPreview targets={futureCastTargets} loading={loading} />
