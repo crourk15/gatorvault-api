@@ -145,15 +145,16 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 ## Waiting for next Codemagic build
 
-**Next bake target: App Store `1.0.28` / build `93+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_28.md`. 1.0.27 is closed. Merge this bump, create **1.0.28** in App Store Connect, then Charles starts Codemagic **ios-release** on `main`. Do **not** start until this agent says the bump is on `main`.
+**Next bake target: App Store `1.0.28` / build `94+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_28.md`. Build 93 is on TestFlight with the old one-line NOW. Merge this bump, then Charles starts Codemagic **ios-release** on `main`. Do **not** start until this agent says the bump is on `main`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-21 | Home NOW three bold pillars (Game / Visitors / Season) with names ticking under Visitors | `HomeCommandCenter` + `home-wow.css` in binary. **Ticker API already serves pillar lines + `nowWeek` after Render.** | pending |
-| 2026-09-21 | Home NOW drops last-week gameday/visit lines (no “Man Robinson — Robinson — Campbell”) | `isPriorGameWeekNowPulse` + `joinPlayerPulse` in binary. **Movement-intel API already skips those after Render.** | pending |
-| 2026-09-21 | Home NOW pins three weekly lines (no class-rank filler, no leftover rotation) | `buildHomePulseStories` cap in binary. **Ticker API already serves the weekly 3 after Render.** | pending |
+| 2026-09-21 | Home NOW three bold pillars (Game / Visitors or News / Season) with names ticking under Visitors | `HomeCommandCenter` + `home-wow.css` in binary. **Ticker API already serves pillar lines + `nowWeek` after Render.** | bake 94 |
+| 2026-09-21 | Home NOW drops last-week gameday/visit lines (no “Man Robinson — Robinson — Campbell”) | `isPriorGameWeekNowPulse` + `joinPlayerPulse` in binary. **Movement-intel API already skips those after Render.** | bake 94 |
+| 2026-09-21 | Home NOW pins three weekly lines (no class-rank filler, no leftover rotation) | `buildHomePulseStories` cap in binary. **Ticker API already serves the weekly 3 after Render.** | bake 94 |
+| 2026-09-21 | App Store **1.0.28** / build **94** (NOW pillars). Build 93 already on TestFlight. | `CURRENT_PROJECT_VERSION` 94. 1.0.28 exists in App Store Connect. | pending |
 | 2026-09-21 | App Store **1.0.28** / build 93+ bake train | `MARKETING_VERSION` + this client UI stack. Do not start Codemagic until this is on `main` and **1.0.28** exists in App Store Connect. | #716 |
 | 2026-09-21 | Game Week Swing Impact: player grade, not 72 + list order (Baugh Ole Miss **95**) | `buildSwing` prefers `/api/schedule` `swing[].impact`. Old binary still does `72 + index * 8` so Baugh first = 72 and Philo third = 88. | #711 |
 | 2026-09-21 | Community locker + Game talk: find Saturday comments, New reply chip, Keep in locker | `VaultCommunityPage` + locker CSS in binary. **GET `/api/community/me`, `/api/community/game-rooms`, auto-follow on post/reply** are API-live after Render. | #715 |

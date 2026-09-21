@@ -330,7 +330,7 @@ describe('buildHomePulseStories', () => {
 describe('buildHomeNowGameStory', () => {
   it('stamps Ole Miss Game Week the Monday after Auburn', () => {
     const line = buildHomeNowGameStory(OLE_MISS_WEEK);
-    assert.equal(line, 'Game Week — Ole Miss in the Swamp · ABC');
+    assert.equal(line, 'Game — Ole Miss in the Swamp · ABC');
   });
 
   it('names Saturday kick inside 3 days', () => {
