@@ -22,7 +22,7 @@ const FOOTPRINT_CACHE_REV = 'fp3';
 const COMMITS_CACHE_REV = 'c5';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
-const TICKER_CACHE_REV = 't13';
+const TICKER_CACHE_REV = 't14';
 
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
@@ -192,7 +192,7 @@ function parseHubSnapshotDoc(endpoint, doc) {
     const scrubbed = rawItems ? scrubHubTickerLines(rawItems) : null;
     if (!scrubbed || !scrubbed.length) return null;
     const rev = meta?.cacheRev || doc.cacheRev || null;
-    // t13 = News can take the Visitors/Road slot. Reject t12 plates so GET rebuilds.
+    // t14 = News only this-week commit days. Reject t13 rematerialized-commit plates.
     if (rev && rev !== TICKER_CACHE_REV) return null;
     return scrubbed;
   }

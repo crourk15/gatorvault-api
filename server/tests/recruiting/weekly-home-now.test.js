@@ -108,3 +108,60 @@ test('road week with no news stays Road, not NA', () => {
   assert.match(cats[1].items[0], /on the road/i);
   assert.doesNotMatch(cats[1].items[0], /\bNA\b/i);
 });
+
+const TOMMY_REMATERIAL = {
+  eventType: 'commit',
+  playerSlug: 'tommy-douglas',
+  playerName: 'Tommy Douglas',
+  committedTo: 'Florida',
+  natlRank: 367,
+  stars: 4,
+  timestamp: '2026-09-20T12:00:00.000Z',
+  reportedAt: '2026-09-21T18:00:00.000Z',
+  source: 'auto:allowlist-intel-sweep',
+};
+
+const OLD_COMMIT_FRESH_TS = {
+  eventType: 'commit',
+  playerName: 'April Commit',
+  committedTo: 'Florida',
+  natlRank: 40,
+  stars: 4,
+  commitDate: '2026-04-16',
+  timestamp: '2026-09-20T12:00:00.000Z',
+  reportedAt: '2026-09-20T12:00:00.000Z',
+};
+
+const FRESH_COMMIT_DATE = {
+  eventType: 'commit',
+  playerName: 'Jaden Hale',
+  committedTo: 'Florida',
+  natlRank: 12,
+  stars: 5,
+  commitDate: '2026-09-20',
+  timestamp: '2026-09-20T12:00:00.000Z',
+};
+
+test('old commitDate plus fresh intel timestamp stays Visitors', () => {
+  const now = new Date('2026-09-21T18:00:00.000Z');
+  const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [OLD_COMMIT_FRESH_TS] });
+  assert.equal(cats[1].label, 'Visitors');
+  assert.ok(!cats.some((c) => c.label === 'News'));
+  assert.ok(!cats.some((c) => /April Commit/i.test(c.items[0] || '')));
+});
+
+test('Tommy Douglas rematerialized intel stays off News', () => {
+  const now = new Date('2026-09-21T18:00:00.000Z');
+  const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [TOMMY_REMATERIAL] });
+  assert.equal(cats[1].label, 'Visitors');
+  assert.ok(!cats.some((c) => c.label === 'News'));
+  assert.ok(!cats.some((c) => /Tommy Douglas/i.test(c.items[0] || '')));
+});
+
+test('this-week commitDate still takes the Visitors slot', () => {
+  const now = new Date('2026-09-21T18:00:00.000Z');
+  const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [FRESH_COMMIT_DATE] });
+  assert.equal(cats[1].label, 'News');
+  assert.match(cats[1].items[0], /Jaden Hale commits to Florida/);
+});
+
