@@ -200,6 +200,16 @@
   line-height: 0.9;
   font-variant-numeric: tabular-nums;
   color: #fff;
+  animation: gv-gl-score-snap 280ms ease-out;
+}
+
+@keyframes gv-gl-score-snap {
+  0% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .gv-gl-elite__score-mid {

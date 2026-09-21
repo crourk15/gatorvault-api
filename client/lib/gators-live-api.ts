@@ -33,8 +33,8 @@ export type GatorsLiveResponse = {
 
 export async function fetchGatorsLive(): Promise<GatorsLiveResponse> {
   return snapshotLiveFetch<GatorsLiveResponse>('/api/gators-live', {
-    timeoutMs: 8000,
-    retries: 1,
-    retryDelayMs: 400,
+    timeoutMs: 3500,
+    retries: 0,
+    cache: 'no-store',
   });
 }

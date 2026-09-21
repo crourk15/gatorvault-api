@@ -7,6 +7,9 @@ const {
   getUfLiveBoard,
   isFloridaGatorsTeam,
   espnScoreboardUrl,
+  LIVE_CACHE_MS,
+  ESPN_FETCH_MS,
+  resetUfLiveScoreCache,
 } = require('../../lib/uf-live-score');
 
 const liveBoard = {
@@ -55,6 +58,7 @@ describe('uf-live-score', () => {
   });
 
   it('returns a live-window board from a fixture without hitting ESPN', async () => {
+    resetUfLiveScoreCache();
     const out = await getUfLiveBoard({
       asOf: new Date('2026-09-05T23:50:00.000Z'),
       scoreboard: liveBoard,
@@ -68,6 +72,7 @@ describe('uf-live-score', () => {
   });
 
   it('stays ready outside the window and does not invent a board', async () => {
+    resetUfLiveScoreCache();
     const out = await getUfLiveBoard({ asOf: new Date('2026-09-04T16:00:00.000Z') });
     assert.equal(out.ok, true);
     assert.equal(out.mode, 'ready');
@@ -130,6 +135,7 @@ describe('uf-live-score', () => {
     assert.match(game.opponent, /Auburn/i);
     assert.equal(game.live, false);
 
+    resetUfLiveScoreCache();
     const out = await getUfLiveBoard({
       asOf: new Date('2026-09-19T21:50:00.000Z'),
       scoreboard: saturdayBoard,
@@ -137,5 +143,23 @@ describe('uf-live-score', () => {
     assert.equal(out.mode, 'live-window');
     assert.match(out.board.opponent, /Auburn/i);
     assert.equal(out.board.live, false);
+  });
+
+  it('keeps a 1.5s live ESPN cache and serves last-good if ESPN dies mid-game', async () => {
+    assert.ok(LIVE_CACHE_MS <= 1_500);
+    assert.ok(ESPN_FETCH_MS <= 4_000);
+    resetUfLiveScoreCache();
+    const first = await getUfLiveBoard({
+      asOf: new Date('2026-09-05T23:50:00.000Z'),
+      scoreboard: liveBoard,
+    });
+    assert.equal(first.board.ufScore, 28);
+    const kept = await getUfLiveBoard({
+      asOf: new Date('2026-09-05T23:51:00.000Z'),
+      scoreboard: { events: [] },
+    });
+    assert.equal(kept.stale, true);
+    assert.equal(kept.board.ufScore, 28);
+    assert.equal(kept.board.clock, '8:32');
   });
 });

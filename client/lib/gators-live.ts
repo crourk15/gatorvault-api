@@ -217,12 +217,76 @@ export function periodClockLabel(opts: {
   return 'Game window';
 }
 
-export const GATORS_LIVE_POLL_MS = 5_000;
-export const GATORS_LIVE_IDLE_POLL_MS = 10_000;
+export const GATORS_LIVE_POLL_MS = 2_000;
+export const GATORS_LIVE_HALFTIME_POLL_MS = 3_000;
+export const GATORS_LIVE_PREGAME_POLL_MS = 8_000;
+export const GATORS_LIVE_IDLE_POLL_MS = 12_000;
 
 export function gatorsLivePollMs(phase: GatorsLivePhase): number {
-  if (phase === 'live' || phase === 'halftime') return GATORS_LIVE_POLL_MS;
+  if (phase === 'live') return GATORS_LIVE_POLL_MS;
+  if (phase === 'halftime') return GATORS_LIVE_HALFTIME_POLL_MS;
+  if (phase === 'pregame') return GATORS_LIVE_PREGAME_POLL_MS;
   return GATORS_LIVE_IDLE_POLL_MS;
+}
+
+export function parseDisplayClock(clock?: string | null): number | null {
+  const m = String(clock || '').trim().match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) return null;
+  const min = Number(m[1]);
+  const sec = Number(m[2]);
+  if (!Number.isFinite(min) || !Number.isFinite(sec) || sec > 59 || min < 0) return null;
+  return min * 60 + sec;
+}
+
+export function formatDisplayClock(total: number): string {
+  const n = Math.max(0, Math.floor(Number(total) || 0));
+  const min = Math.floor(n / 60);
+  const sec = n % 60;
+  return `${min}:${String(sec).padStart(2, '0')}`;
+}
+
+export function tickDisplayClock(clock?: string | null, seconds = 1): string | null {
+  const total = parseDisplayClock(clock);
+  if (total == null) return clock ?? null;
+  return formatDisplayClock(Math.max(0, total - seconds));
+}
+
+/** Keep ESPN wording; only walk the MM:SS forward. */
+export function stampClockOnStatus(status?: string | null, clock?: string | null): string {
+  const line = String(status || '').trim();
+  const next = String(clock || '').trim();
+  if (!line || !next || !/^\d{1,2}:\d{2}$/.test(next)) return line || next;
+  if (/\d{1,2}:\d{2}/.test(line)) return line.replace(/\d{1,2}:\d{2}/, next);
+  return line;
+}
+
+export type LiveClockRunState = {
+  clock: string | null;
+  running: boolean;
+  lastEspnClock: string | null;
+};
+
+/** Tick locally only while ESPN clock is moving — snap back on every stamp. */
+export function nextLiveClockRunState(
+  prev: LiveClockRunState | null,
+  espnClock: string | null,
+  phase: GatorsLivePhase
+): LiveClockRunState {
+  if (phase !== 'live' || !espnClock) {
+    return { clock: espnClock, running: false, lastEspnClock: espnClock };
+  }
+  if (!prev) {
+    return { clock: espnClock, running: true, lastEspnClock: espnClock };
+  }
+  const prevSec = parseDisplayClock(prev.lastEspnClock);
+  const nextSec = parseDisplayClock(espnClock);
+  if (prev.lastEspnClock === espnClock) {
+    return { clock: espnClock, running: false, lastEspnClock: espnClock };
+  }
+  if (prevSec != null && nextSec != null) {
+    return { clock: espnClock, running: nextSec !== prevSec, lastEspnClock: espnClock };
+  }
+  return { clock: espnClock, running: true, lastEspnClock: espnClock };
 }
 
 export function kickCountdown(

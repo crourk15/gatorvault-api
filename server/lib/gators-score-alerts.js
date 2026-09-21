@@ -309,8 +309,8 @@ function startScoreAlertWatch() {
   if (startScoreAlertWatch._started) return;
   startScoreAlertWatch._started = true;
   const intervalMs = Math.max(
-    10000,
-    parseInt(process.env.GATORS_SCORE_ALERTS_WATCH_MS || '15000', 10) || 15000
+    8000,
+    parseInt(process.env.GATORS_SCORE_ALERTS_WATCH_MS || '8000', 10) || 8000
   );
   const tick = () => {
     runGatorsScoreAlerts().catch((err) => {

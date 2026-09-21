@@ -52,11 +52,15 @@ function pickCommunityTalkThread(threads) {
   return threads.find((t) => t.pinned || t.featured) || threads[0] || null;
 }
 
-const GATORS_LIVE_POLL_MS = 5_000;
-const GATORS_LIVE_IDLE_POLL_MS = 10_000;
+const GATORS_LIVE_POLL_MS = 2_000;
+const GATORS_LIVE_HALFTIME_POLL_MS = 3_000;
+const GATORS_LIVE_PREGAME_POLL_MS = 8_000;
+const GATORS_LIVE_IDLE_POLL_MS = 12_000;
 
 function gatorsLivePollMs(phase) {
-  if (phase === 'live' || phase === 'halftime') return GATORS_LIVE_POLL_MS;
+  if (phase === 'live') return GATORS_LIVE_POLL_MS;
+  if (phase === 'halftime') return GATORS_LIVE_HALFTIME_POLL_MS;
+  if (phase === 'pregame') return GATORS_LIVE_PREGAME_POLL_MS;
   return GATORS_LIVE_IDLE_POLL_MS;
 }
 
@@ -68,5 +72,7 @@ module.exports = {
   pickCommunityTalkThread,
   gatorsLivePollMs,
   GATORS_LIVE_POLL_MS,
+  GATORS_LIVE_HALFTIME_POLL_MS,
+  GATORS_LIVE_PREGAME_POLL_MS,
   GATORS_LIVE_IDLE_POLL_MS,
 };

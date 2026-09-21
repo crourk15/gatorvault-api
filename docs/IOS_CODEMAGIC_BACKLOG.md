@@ -146,6 +146,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-21 | Gators Live snap: 2s live poll, local clock tick, no loading flash, wake refetch | `VaultLiveScoresPage` + `gatorsLivePollMs` in binary. **ESPN 1.5s cache, 4s fetch, last-good board, 8s score watch** are API-live after Render. Do not start Codemagic. | pending |
 | 2026-09-21 | Home NOW elite: this-week game lead + named process stack (Ole Miss / Saturday visits), class metrics capped at 1 | `HomeCommandCenter` + `home-command-utils` in binary. **Ticker API already ranks game week + visits after Render.** Do not start Codemagic. | #713 |
 | 2026-09-21 | My Alerts elite: delivery health, server pref read-back, honest On/Off, visit frequency only when email is on | `VaultAlertsPage` + CSS in binary. **GET `/api/alerts/status`, visit email (Resend fallback), and Daily/Weekly no longer overwritten by test** are API-live after Render. Do not start Codemagic. | pending |
 | 2026-09-21 | Game Week Swing Impact: weekly official-box + opponent restamp (Baugh FAU 92 / Campbell 95 / Auburn 93 / Ole Miss 95) | `buildSwing` still list-index 72 in **1.0.27**. Live `/api/schedule` already stamps `swing[].impact` / `trend` after Render. Next bake prefers the stamp. Do not start Codemagic. | pending |

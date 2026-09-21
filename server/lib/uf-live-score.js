@@ -13,7 +13,11 @@ const FLORIDA_TEAM_ID = '57';
 const UF_ABBREVS = new Set(['FLA', 'UF']);
 const NOT_UF_ABBREVS = new Set(['FSU', 'FAU', 'FIU', 'FAMU']);
 const NOT_UF_NAME = /\b(state|atlantic|a&m|international|tech)\b/i;
-const CACHE_MS = 4_000;
+/** Fresh enough for a living-room clock; live games go tighter. */
+const LIVE_CACHE_MS = 1_500;
+const IDLE_CACHE_MS = 4_000;
+const ESPN_FETCH_MS = 4_000;
+const LAST_GOOD_MS = 60_000;
 
 /** ESPN "Florida State" / FAU must never count as the Gators. */
 function isFloridaGatorsTeam(team) {
@@ -42,12 +46,42 @@ const UF_2026_GAMES = [
 ];
 
 let scoreboardCache = { at: 0, data: null };
+let lastGoodBoard = { at: 0, payload: null };
+let espnInFlight = null;
+
+function scoreboardCacheMs() {
+  if (lastGoodBoard.payload?.board?.live) return LIVE_CACHE_MS;
+  return IDLE_CACHE_MS;
+}
+
+function rememberGoodBoard(payload) {
+  if (payload && payload.ok && payload.board) {
+    lastGoodBoard = { at: Date.now(), payload };
+  }
+}
+
+function staleGoodBoard() {
+  if (!lastGoodBoard.payload || Date.now() - lastGoodBoard.at > LAST_GOOD_MS) return null;
+  return lastGoodBoard.payload;
+}
 
 async function httpGetJson(url, headers) {
   const impl = typeof fetch === 'function' ? fetch : require('node-fetch');
-  const res = await impl(url, { headers, timeout: 20_000 });
-  if (!res.ok) throw new Error(`espn_scoreboard_${res.status}`);
-  return res.json();
+  const controller = typeof AbortController === 'function' ? new AbortController() : null;
+  const timer = controller
+    ? setTimeout(() => controller.abort(), ESPN_FETCH_MS)
+    : null;
+  try {
+    const res = await impl(url, {
+      headers,
+      timeout: ESPN_FETCH_MS,
+      ...(controller ? { signal: controller.signal } : {}),
+    });
+    if (!res.ok) throw new Error(`espn_scoreboard_${res.status}`);
+    return res.json();
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 function ordinalPeriod(period) {
@@ -190,15 +224,23 @@ function espnScoreboardUrl(now, featured) {
 }
 
 async function fetchEspnScoreboard({ force = false, now, featured } = {}) {
-  if (!force && scoreboardCache.data && Date.now() - scoreboardCache.at < CACHE_MS) {
+  const ttl = scoreboardCacheMs();
+  if (!force && scoreboardCache.data && Date.now() - scoreboardCache.at < ttl) {
     return scoreboardCache.data;
   }
-  const data = await httpGetJson(espnScoreboardUrl(now || new Date(), featured), {
+  if (espnInFlight) return espnInFlight;
+  espnInFlight = httpGetJson(espnScoreboardUrl(now || new Date(), featured), {
     Accept: 'application/json',
     'User-Agent': 'GatorVaultGatorsLive/1.0',
-  });
-  scoreboardCache = { at: Date.now(), data };
-  return data;
+  })
+    .then((data) => {
+      scoreboardCache = { at: Date.now(), data };
+      return data;
+    })
+    .finally(() => {
+      espnInFlight = null;
+    });
+  return espnInFlight;
 }
 
 async function getUfLiveBoard(options = {}) {
@@ -229,6 +271,10 @@ async function getUfLiveBoard(options = {}) {
       }));
     const game = extractFloridaGame(scoreboard);
     if (!game) {
+      const kept = staleGoodBoard();
+      if (kept?.board) {
+        return { ...kept, stale: true, waiting: true };
+      }
       return {
         ok: true,
         mode: 'live-window',
@@ -246,7 +292,7 @@ async function getUfLiveBoard(options = {}) {
       status,
       matchup: 'Florida vs ' + game.opponent,
     };
-    return {
+    const payload = {
       ok: true,
       mode: 'live-window',
       inWindow: true,
@@ -254,8 +300,15 @@ async function getUfLiveBoard(options = {}) {
       board,
       overlay: toBettingOverlay(game),
       source: 'espn',
+      fetchedAt: new Date().toISOString(),
     };
+    rememberGoodBoard(payload);
+    return payload;
   } catch (err) {
+    const kept = staleGoodBoard();
+    if (kept) {
+      return { ...kept, stale: true, error: err.message || String(err) };
+    }
     return {
       ok: false,
       mode: inWindow ? 'live-window' : 'ready',
@@ -270,6 +323,8 @@ async function getUfLiveBoard(options = {}) {
 
 function resetUfLiveScoreCache() {
   scoreboardCache = { at: 0, data: null };
+  lastGoodBoard = { at: 0, payload: null };
+  espnInFlight = null;
 }
 
 module.exports = {
@@ -290,4 +345,7 @@ module.exports = {
   resetUfLiveScoreCache,
   isInProgressState,
   isPrematchState,
+  LIVE_CACHE_MS,
+  IDLE_CACHE_MS,
+  ESPN_FETCH_MS,
 };

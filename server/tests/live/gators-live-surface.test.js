@@ -40,12 +40,12 @@ describe('gators live surface helpers', () => {
     assert.match(gatorsLiveVoice('ready', 'Campbell Camels'), /Next: Florida vs Campbell Camels/);
   });
 
-  it('polls live at 5s and stays at 10s off the field', () => {
-    assert.equal(gatorsLivePollMs('live'), 5_000);
-    assert.equal(gatorsLivePollMs('halftime'), 5_000);
-    assert.equal(gatorsLivePollMs('pregame'), 10_000);
-    assert.equal(gatorsLivePollMs('ready'), 10_000);
-    assert.equal(gatorsLivePollMs('final'), 10_000);
+  it('polls live at 2s so the board moves with the game', () => {
+    assert.equal(gatorsLivePollMs('live'), 2_000);
+    assert.equal(gatorsLivePollMs('halftime'), 3_000);
+    assert.equal(gatorsLivePollMs('pregame'), 8_000);
+    assert.equal(gatorsLivePollMs('ready'), 12_000);
+    assert.equal(gatorsLivePollMs('final'), 12_000);
   });
 
   it('prefers game-day talk over a generic daily open', () => {

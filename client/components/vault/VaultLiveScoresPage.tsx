@@ -25,12 +25,16 @@ import {
   getFeaturedUfGame,
   isUfGameLiveWindow,
   kickCountdown,
+  nextLiveClockRunState,
   parseScheduleKickoff,
   periodClockLabel,
   pickCommunityTalkThread,
   possessionSide,
   readLocalPreviewPhase,
+  stampClockOnStatus,
+  tickDisplayClock,
   type GatorsLivePhase,
+  type LiveClockRunState,
 } from '@/lib/gators-live';
 import { fetchScheduleGames } from '@/lib/schedule-api';
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
@@ -196,12 +200,16 @@ function GatorsLiveHero({
           <div className="gv-gl-elite__scoreboard" data-testid="gators-live-scoreline">
             <div className={`gv-gl-elite__score-col is-uf${phase === 'live' ? ' is-live' : ''}`}>
               <span className="gv-gl-elite__score-name">Florida</span>
-              <strong className="gv-gl-elite__score-num">{scoreText(board?.ufScore ?? null)}</strong>
+              <strong key={`uf-${board?.ufScore ?? 'x'}`} className="gv-gl-elite__score-num">
+                {scoreText(board?.ufScore ?? null)}
+              </strong>
             </div>
             <span className="gv-gl-elite__score-mid">{phase === 'final' ? 'FIN' : 'VS'}</span>
             <div className="gv-gl-elite__score-col">
               <span className="gv-gl-elite__score-name">{opp}</span>
-              <strong className="gv-gl-elite__score-num">{scoreText(board?.oppScore ?? null)}</strong>
+              <strong key={`opp-${board?.oppScore ?? 'x'}`} className="gv-gl-elite__score-num">
+                {scoreText(board?.oppScore ?? null)}
+              </strong>
             </div>
           </div>
         ) : null}
@@ -351,43 +359,66 @@ export function VaultLiveScoresPage(): React.ReactElement {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [now, setNow] = useState(() => new Date());
-  const liveInFlight = useRef(false);
+  const liveSeq = useRef(0);
+  const clockRun = useRef<LiveClockRunState | null>(null);
+  const hasBoard = useRef(false);
+
+  const paintBoard = useCallback((next: BoardModel) => {
+    const phaseGuess = gatorsLivePhase({
+      mode: 'live-window',
+      live: next.live,
+      completed: next.completed,
+      status: next.status,
+    });
+    const run = nextLiveClockRunState(clockRun.current, next.clock, phaseGuess);
+    clockRun.current = run;
+    const clock = run.clock ?? next.clock;
+    hasBoard.current = true;
+    setBoard({ ...next, clock, status: stampClockOnStatus(next.status, clock) });
+  }, []);
 
   const loadLive = useCallback(async () => {
-    if (liveInFlight.current) return;
-    liveInFlight.current = true;
+    const seq = (liveSeq.current += 1);
+    const stale = () => seq !== liveSeq.current;
     const localPreview = readLocalPreviewPhase();
     if (localPreview) {
       setPreview(localPreview);
       setMode(localPreview === 'ready' ? 'ready' : 'live-window');
-      setBoard(localPreview === 'ready' ? null : previewBoard(localPreview, featured));
+      if (localPreview === 'ready') {
+        setBoard(null);
+        hasBoard.current = false;
+      } else {
+        paintBoard(previewBoard(localPreview, featured));
+      }
       setLoading(false);
       setError(null);
-      liveInFlight.current = false;
       return;
     }
     setPreview(null);
     if (!isUfGameLiveWindow()) {
       setMode('ready');
       setBoard(null);
+      clockRun.current = null;
+      hasBoard.current = false;
       setLoading(false);
-      liveInFlight.current = false;
       return;
     }
     setMode('live-window');
-    setLoading(true);
+    if (!hasBoard.current) setLoading(true);
     setError(null);
     try {
       try {
         const live = await fetchGatorsLive();
+        if (stale()) return;
         if (live.mode === 'ready' && !live.inWindow) {
           setMode('ready');
           setBoard(null);
+          hasBoard.current = false;
           return;
         }
         if (live.board) {
           const status = String(live.board.status || live.board.detail || 'Scheduled');
-          setBoard({
+          paintBoard({
             opponent: live.board.opponent || featured?.opp || 'Opponent',
             ufScore: live.board.ufScore ?? null,
             oppScore: live.board.oppScore ?? null,
@@ -405,18 +436,16 @@ export function VaultLiveScoresPage(): React.ReactElement {
       }
 
       const data = await fetchBettingLines();
+      if (stale()) return;
       const uf = [data.nextGame, ...(data.schedule || [])].filter(Boolean).find((g) => {
         if (!g) return false;
         return isFloridaGatorsMatchupText(
           [g.homeTeam, g.awayTeam, g.home, g.away, g.game, g.opponent].filter(Boolean).join(' '),
         );
       });
-      if (!uf) {
-        setBoard(null);
-        return;
-      }
+      if (!uf) return;
       const status = String(uf.status || featured?.date || uf.kickoff || uf.date || 'Scheduled');
-      setBoard({
+      paintBoard({
         opponent: featured?.opp || uf.opponent || uf.awayTeam || uf.away || 'Opponent',
         ufScore: uf.homeScore != null ? Number(uf.homeScore) : null,
         oppScore: uf.awayScore != null ? Number(uf.awayScore) : null,
@@ -428,27 +457,16 @@ export function VaultLiveScoresPage(): React.ReactElement {
         completed: Boolean(uf.completed) || /\bfinal\b/i.test(status),
       });
     } catch (err) {
+      if (stale()) return;
       if (featured) {
-        setBoard((prev) => prev || {
-          opponent: featured.opp,
-          ufScore: null,
-          oppScore: null,
-          status: featured.date,
-          clock: null,
-          period: null,
-          possession: null,
-          live: false,
-          completed: false,
-        });
         setError(null);
       } else {
         setError(err instanceof Error ? err.message : 'Could not load Gators Live.');
       }
     } finally {
-      setLoading(false);
-      liveInFlight.current = false;
+      if (!stale()) setLoading(false);
     }
-  }, [featured]);
+  }, [featured, paintBoard]);
 
   const phase = preview || gatorsLivePhase({
     mode,
@@ -460,11 +478,40 @@ export function VaultLiveScoresPage(): React.ReactElement {
   useEffect(() => {
     void loadLive();
     const id = window.setInterval(() => void loadLive(), gatorsLivePollMs(phase));
-    return () => window.clearInterval(id);
+    const onWake = () => {
+      if (document.visibilityState === 'visible') void loadLive();
+    };
+    document.addEventListener('visibilitychange', onWake);
+    window.addEventListener('focus', onWake);
+    window.addEventListener('pageshow', onWake);
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener('visibilitychange', onWake);
+      window.removeEventListener('focus', onWake);
+      window.removeEventListener('pageshow', onWake);
+    };
   }, [loadLive, phase]);
 
   useEffect(() => {
-    const id = window.setInterval(() => setNow(new Date()), 1000);
+    const id = window.setInterval(() => {
+      setNow(new Date());
+      const run = clockRun.current;
+      if (!run?.running || !run.clock) return;
+      const next = tickDisplayClock(run.clock, 1);
+      if (!next || next === run.clock) {
+        clockRun.current = { ...run, running: false, clock: next };
+        return;
+      }
+      clockRun.current = { ...run, clock: next };
+      setBoard((prev) => {
+        if (!prev?.live) return prev;
+        return {
+          ...prev,
+          clock: next,
+          status: stampClockOnStatus(prev.status, next),
+        };
+      });
+    }, 1000);
     return () => window.clearInterval(id);
   }, []);
 
