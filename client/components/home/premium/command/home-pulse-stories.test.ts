@@ -232,6 +232,24 @@ describe('buildHomePulseStories', () => {
     assert.ok(stories.some((s) => /2027 class trending nationally/i.test(s)));
   });
 
+  it('pins News in the middle slot when the ticker yields visitors', () => {
+    const stories = buildHomePulseStories({
+      now: OLE_MISS_WEEK,
+      hubTicker: [
+        'Game — Ole Miss in the Swamp · ABC',
+        'News — Jaden Hale commits to Florida · No. 12',
+        'Season — 3-0 · first SEC home Saturday',
+      ],
+      hpIntel: [],
+      movement: null,
+    });
+    assert.deepEqual(stories, [
+      'Game — Ole Miss in the Swamp · ABC',
+      'News — Jaden Hale commits to Florida · No. 12',
+      'Season — 3-0 · first SEC home Saturday',
+    ]);
+  });
+
   it('pins three weekly NOW lines and drops class-rank filler', () => {
     const stories = buildHomePulseStories({
       now: OLE_MISS_WEEK,
