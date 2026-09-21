@@ -305,7 +305,7 @@ export function buildHomeNowGameStory(now = new Date()): string | null {
   }
   if (days <= 7) {
     const loc = where ? ` ${where}` : '';
-    return tv ? `Game Week — ${opp}${loc} · ${tv}` : `Game Week — ${opp}${loc}`.trim();
+    return tv ? `Game — ${opp}${loc} · ${tv}` : `Game — ${opp}${loc}`.trim();
   }
   if (days <= 14) {
     const loc = where ? ` ${where}` : '';

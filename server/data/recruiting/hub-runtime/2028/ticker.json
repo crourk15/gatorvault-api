@@ -2,16 +2,16 @@
   "ok": true,
   "status": "ready",
   "meta": {
-    "generatedAt": "2026-09-21T20:00:00.000Z",
+    "generatedAt": "2026-09-21T20:55:00.000Z",
     "snapshot": true,
     "endpoint": "ticker",
     "year": 2028,
     "source": "hub-runtime",
-    "cacheRev": "t10"
+    "cacheRev": "t13"
   },
   "items": [
-    "Game Week — Ole Miss in the Swamp · ABC",
-    "Expected visitors in the Swamp this Saturday",
-    "3-0 — first SEC home Saturday"
+    "Game \u2014 Ole Miss in the Swamp \u00b7 ABC",
+    "Visitors \u2014 Royal \u00b7 Wright \u00b7 Thomas",
+    "Season \u2014 3-0 \u00b7 first SEC home Saturday"
   ]
 }
