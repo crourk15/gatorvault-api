@@ -225,11 +225,27 @@ function fetchHub<T>(path: string): Promise<T> {
   return snapshotFirstFetch(path, () => fetchHubLive<T>(path), HUB_FETCH_OPTS);
 }
 
+export type HomeNowWeekCategory = {
+  key: string;
+  label: string;
+  items: string[];
+};
+
 export async function fetchRecruitingHubTicker(year = HUB_YEAR): Promise<string[]> {
-  const data = await fetchHub<{ ok?: boolean; items?: string[] }>(
+  const pack = await fetchRecruitingHubTickerPack(year);
+  return pack.items;
+}
+
+export async function fetchRecruitingHubTickerPack(
+  year = HUB_YEAR
+): Promise<{ items: string[]; nowWeek: HomeNowWeekCategory[] }> {
+  const data = await fetchHub<{ ok?: boolean; items?: string[]; nowWeek?: HomeNowWeekCategory[] }>(
     `/api/recruiting/hub/ticker?year=${year}`
   );
-  return data.items ?? [];
+  return {
+    items: data.items ?? [],
+    nowWeek: Array.isArray(data.nowWeek) ? data.nowWeek : [],
+  };
 }
 
 export async function fetchRecruitingHubClassOverview(year = HUB_YEAR): Promise<RhHubClassOverview> {
