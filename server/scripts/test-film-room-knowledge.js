@@ -34,6 +34,10 @@ assert(
   'Tengwall FAU run study stays off',
   !catalog.items.some((i) => i.youtubeId === 'UXOweKkBadI')
 );
+assert(
+  'Film Guy Alabama–FSU sit stays off',
+  !catalog.items.some((i) => i.youtubeId === 'kNrIT61SLVM')
+);
 assert('press conferences capped at 5', catalog.items.filter((i) => i.category === 'UF Press Conferences').length <= 5);
 assert('knowledge lessons have no youtube', catalog.items.filter((i) => i.knowledgeEngine).every((i) => !i.youtubeId));
 assert('legacy videos marked noVideo false', catalog.items.filter((i) => !i.knowledgeEngine).every((i) => i.noVideo === false));

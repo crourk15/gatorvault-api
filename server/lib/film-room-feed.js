@@ -5,6 +5,11 @@ const engine = require('./film-room-knowledge-engine');
 const store = require('./film-room-knowledge-store');
 const legacy = require('./film-room-legacy');
 const cacheStore = require('./film-room-cache-store');
+const {
+  isBlockedFilmYoutubeId,
+  isFilmGuyFloridaBreakdownTitle,
+  titleHasUfFootball,
+} = require('./film-room-youtube-ingest');
 
 const KNOWLEDGE_CATEGORIES = [
   'Scheme Library',
@@ -164,6 +169,15 @@ function buildFilmRoomCatalog() {
   }
 
   const items = [...lessonItems, ...legacyItems]
+    .filter((item) => {
+      if (isBlockedFilmYoutubeId(item?.youtubeId)) return false;
+      if (item?.filmHub !== 'Film Breakdown') return true;
+      const src = String(item?.source || '');
+      if (/film guy/i.test(src)) return isFilmGuyFloridaBreakdownTitle(item?.title);
+      const filmTape = /^(film\s*:)|\bfilm\s+study\b/i.test(String(item?.title || ''));
+      if (filmTape) return titleHasUfFootball(item?.title);
+      return true;
+    })
     .map(withYoutubeEmbedRelay)
     .sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
 

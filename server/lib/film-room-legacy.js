@@ -8,6 +8,7 @@ const { loadFilmRoomCache, resolveCachePath } = require('./film-room-cache-store
 const {
   isCurrentStaffGnfpReview,
   isFilmGuyFloridaBreakdownTitle,
+  isBlockedFilmYoutubeId,
   isTengwallUfFilmReview,
   isCondensedGameTitle,
   dedupePressersByEvent,
@@ -81,6 +82,7 @@ function loadLegacyVideoCatalog() {
 
   function pushUnique(row, category) {
     const key = youtubeKey(row);
+    if (isBlockedFilmYoutubeId(row?.youtubeId) || isBlockedFilmYoutubeId(key)) return;
     if (key && seenYoutube.has(key)) return;
     if (key) seenYoutube.add(key);
     items.push(legacyItemToCatalog(row, category));
@@ -106,6 +108,7 @@ function loadLegacyVideoCatalog() {
       if (!isTengwallUfFilmReview(row)) return;
       pushUnique(row, LEGACY_CATEGORIES.TENGWALL);
     } else if (cat === 'Film Breakdown' || /film guy/i.test(src)) {
+      if (!isFilmGuyFloridaBreakdownTitle(row?.title)) return;
       pushUnique(row, LEGACY_CATEGORIES.FILM_GUY);
     } else if (/gators online/i.test(src) && /spring game/i.test(row.title || '')) {
       pushUnique(row, LEGACY_CATEGORIES.HIGHLIGHTS);

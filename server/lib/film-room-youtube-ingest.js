@@ -84,14 +84,30 @@ const FILM_GUY_NOT_BREAKDOWN =
 const FILM_GUY_FILM_SIGNAL =
   /^(film\s*:)|\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i;
 
-/** Florida / Gators as the team — not Florida Atlantic or Florida State alone. */
+/**
+ * Film Guy Alabama–FSU sit that leaked because "Florida State" matched "Florida".
+ * Hard-block so durable cache cannot put it back on the hub.
+ */
+const BLOCKED_FILM_YOUTUBE_IDS = new Set([
+  'kNrIT61SLVM', // FILM: Alabama vs Florida State - Alabama's Run Game Makes FSU Quit
+]);
+
+function isBlockedFilmYoutubeId(youtubeId) {
+  return BLOCKED_FILM_YOUTUBE_IDS.has(String(youtubeId || '').trim());
+}
+
+/** Florida / Gators as the team — never Florida State, FAU, USF, FAMU, or FIU alone. */
 function titleHasUfFootball(title) {
   const t = String(title || '');
   if (!t) return false;
   if (/\bflorida\s+gators\b/i.test(t) || /\bgators\b/i.test(t)) return true;
   const stripped = t
-    .replace(/\bflorida\s+atlantic\b/gi, 'FAU')
-    .replace(/\bflorida\s+state\b/gi, 'FSU');
+    .replace(/\bflorida\s+atlantic(?:\s+owls)?\b/gi, 'FAU')
+    .replace(/\bflorida\s+state(?:\s+seminoles)?\b/gi, 'FSU')
+    .replace(/\bflorida\s+a\s*&\s*m(?:\s+rattlers)?\b/gi, 'FAMU')
+    .replace(/\bflorida\s+international(?:\s+golden\s+panthers)?\b/gi, 'FIU')
+    .replace(/\bsouth\s+florida(?:\s+bulls)?\b/gi, 'USF')
+    .replace(/\bseminoles\b/gi, 'FSU');
   return /\bflorida\b/i.test(stripped);
 }
 
@@ -139,7 +155,7 @@ function isTengwallUfFilmReview(entryOrTitle) {
   return false;
 }
 
-/** Film Guy UF football breakdowns only. Drops other teams, live, reactions. */
+/** Film Guy UF football breakdowns only. Drops other teams, live, reactions, FSU/FAU-only. */
 function isFilmGuyFloridaBreakdownTitle(title) {
   const t = String(title || '');
   if (!t) return false;
@@ -265,6 +281,7 @@ function shouldKeepEntry(entry, source) {
     return isCurrentStaffGnfpReview(entry);
   }
   if (source.kind === 'film_guy' || source.bucket === 'filmGuy') {
+    if (isBlockedFilmYoutubeId(entry.youtubeId)) return false;
     return isFilmGuyFloridaBreakdownTitle(title);
   }
   if (source.kind === 'tengwall' || source.bucket === 'tengwall') {
@@ -360,7 +377,9 @@ function mergeBucket(existing, incoming, { pruneGnfpNonFilm, pruneFilmGuyNonFlor
     merged = merged.filter((row) => isCurrentStaffGnfpReview(row));
   }
   if (pruneFilmGuyNonFlorida) {
-    merged = merged.filter((row) => isFilmGuyFloridaBreakdownTitle(row?.title));
+    merged = merged.filter(
+      (row) => !isBlockedFilmYoutubeId(row?.youtubeId) && isFilmGuyFloridaBreakdownTitle(row?.title)
+    );
   }
   if (pruneTengwallNonUf) {
     merged = merged.filter((row) => isTengwallUfFilmReview(row));
@@ -745,6 +764,8 @@ module.exports = {
   isCurrentStaffGnfpReview,
   CURRENT_STAFF_GNFP_SEASON,
   isFilmGuyFloridaBreakdownTitle,
+  isBlockedFilmYoutubeId,
+  BLOCKED_FILM_YOUTUBE_IDS,
   isTengwallUfFilmReview,
   isTengwallPassGameTitle,
   TENGWALL_UF_START_YOUTUBE_ID,

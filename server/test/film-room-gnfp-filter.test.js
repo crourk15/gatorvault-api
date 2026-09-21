@@ -6,6 +6,7 @@ const assert = require('node:assert/strict');
 const {
   isGnfpFilmBreakdownTitle,
   isFilmGuyFloridaBreakdownTitle,
+  isBlockedFilmYoutubeId,
   isTengwallUfFilmReview,
   isOfficialHighlightTitle,
   isCondensedGameTitle,
@@ -119,6 +120,22 @@ describe('Film Guy UF football breakdowns only', () => {
     assert.equal(isFilmGuyFloridaBreakdownTitle('FILM: Florida Atlantic Offense vs Memphis'), false);
     assert.equal(
       isFilmGuyFloridaBreakdownTitle(
+        'FILM: Alabama vs Florida State - Alabama\'s Run Game Makes FSU Quit'
+      ),
+      false
+    );
+    assert.equal(
+      shouldKeepEntry(
+        {
+          title: 'FILM: Alabama vs Florida State - Alabama\'s Run Game Makes FSU Quit',
+          youtubeId: 'kNrIT61SLVM',
+        },
+        FILM_GUY_SOURCE
+      ),
+      false
+    );
+    assert.equal(
+      isFilmGuyFloridaBreakdownTitle(
         'FILM STUDY: How Alabama QB Keelon Russell TORCHED Florida State\'s Defense'
       ),
       false
@@ -135,6 +152,21 @@ describe('Film Guy UF football breakdowns only', () => {
         FILM_GUY_SOURCE
       ),
       true
+    );
+  });
+
+  it('never treats Florida State as Florida and hard-blocks the Alabama–FSU sit', () => {
+    assert.equal(
+      titleHasUfFootball('FILM: Alabama vs Florida State - Alabama\'s Run Game Makes FSU Quit'),
+      false
+    );
+    assert.equal(titleHasUfFootball('FILM: Florida vs Auburn - Faulkner Gets the Best of Durkin'), true);
+    assert.equal(titleHasUfFootball('FILM: Florida vs Florida State'), true);
+    assert.equal(isBlockedFilmYoutubeId('kNrIT61SLVM'), true);
+    const items = loadLegacyVideoCatalog();
+    assert.ok(!items.some((row) => row.youtubeId === 'kNrIT61SLVM'));
+    assert.ok(
+      !items.some((row) => /alabama vs florida state/i.test(String(row.title || '')))
     );
   });
 

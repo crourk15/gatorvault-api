@@ -25,7 +25,7 @@ Cache: repo seed `server/data/film-room/cache.json` + durable overlay `/var/data
 - Drops non-football sports from the official athletics channel
 - Keeps titles with press conference / media availability / Media Days
 - Search path requires Florida/Gators/Sumrall in the title
-- Film Guy: UF football breakdown titles only — never other teams, live shows, or reactions
+- Film Guy: UF football breakdown titles only — never other teams, live shows, or reactions. **Florida State / FSU is not Florida.** `FILM: Alabama vs Florida State` (`kNrIT61SLVM`) is hard-blocked.
 - Tengwall: UF 2026 run-game film studies from Auburn Week 3 forward — never pass-game sits, other teams, or the Week 1 FAU tape
 
 ## Optional env
