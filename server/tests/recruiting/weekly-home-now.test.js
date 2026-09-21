@@ -42,3 +42,68 @@ test('offseason has no weekly slate', () => {
   assert.deepEqual(buildWeeklyHomeNowLines(new Date('2026-07-15T16:00:00.000Z'), []), []);
   assert.deepEqual(buildWeeklyHomeNowCategories(new Date('2026-07-15T16:00:00.000Z'), []), []);
 });
+
+const AWAY_NOW = new Date('2026-09-28T18:00:00.000Z');
+const AWAY_GAMES = [
+  {
+    id: 'mizzou',
+    kind: 'game',
+    opp: 'Missouri Tigers',
+    label: 'Oct 3 @ Missouri',
+    venue: 'Columbia, MO',
+    date: 'Saturday, October 3, 2026 3:30 PM',
+    tv: 'SEC Network',
+  },
+];
+
+const TOP25_COMMIT = {
+  eventType: 'commit',
+  playerName: 'Jaden Hale',
+  committedTo: 'Florida',
+  natlRank: 12,
+  stars: 5,
+  timestamp: '2026-09-20T12:00:00.000Z',
+};
+
+const MID_COMMIT = {
+  eventType: 'commit',
+  playerName: 'Cole Rivers',
+  committedTo: 'Florida',
+  natlRank: 80,
+  stars: 4,
+  timestamp: '2026-09-27T15:00:00.000Z',
+};
+
+test('top-25 commit takes the Visitors slot; Game and Season stay', () => {
+  const now = new Date('2026-09-21T18:00:00.000Z');
+  const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [TOP25_COMMIT] });
+  assert.equal(cats[0].label, 'Game');
+  assert.equal(cats[1].label, 'News');
+  assert.match(cats[1].items[0], /Jaden Hale commits to Florida · No\. 12/);
+  assert.equal(cats[2].label, 'Season');
+  assert.match(cats[2].items[0], /3-0/);
+  assert.ok(!cats.some((c) => c.label === 'Visitors'));
+});
+
+test('mid-board commit does not beat a home visitor list', () => {
+  const now = new Date('2026-09-21T18:00:00.000Z');
+  const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [MID_COMMIT] });
+  assert.equal(cats[1].label, 'Visitors');
+  assert.ok(cats[1].items.length >= 3);
+});
+
+test('road week fills the middle slot with the week\'s Florida commit', () => {
+  const cats = buildWeeklyHomeNowCategories(AWAY_NOW, AWAY_GAMES, { breakInRows: [MID_COMMIT] });
+  assert.equal(cats[0].label, 'Game');
+  assert.match(cats[0].items[0], /Missouri/i);
+  assert.equal(cats[1].label, 'News');
+  assert.match(cats[1].items[0], /Cole Rivers commits to Florida/);
+  assert.equal(cats[2].label, 'Season');
+});
+
+test('road week with no news stays Road, not NA', () => {
+  const cats = buildWeeklyHomeNowCategories(AWAY_NOW, AWAY_GAMES, { breakInRows: [] });
+  assert.equal(cats[1].label, 'Road');
+  assert.match(cats[1].items[0], /on the road/i);
+  assert.doesNotMatch(cats[1].items[0], /\bNA\b/i);
+});

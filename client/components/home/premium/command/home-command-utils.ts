@@ -208,7 +208,7 @@ function isThinFloridaProcessPulse(text: string): boolean {
 function isGameWeekPulse(text: string): boolean {
   const t = String(text || '').trim();
   if (!t) return false;
-  if (/^Expected visitors\b/i.test(t) || /^Visitors —/i.test(t) || /^Season —/i.test(t)) {
+  if (/^Expected visitors\b/i.test(t) || /^Visitors —/i.test(t) || /^Season —/i.test(t) || /^News —/i.test(t)) {
     return false;
   }
   return (
@@ -244,14 +244,14 @@ export type HomeNowWeekPillar = {
 };
 
 export function isWeeklyNowPillarLine(text: string): boolean {
-  return /^(Game|Visitors|Road|Season|Live|Game Week)\s+[—-]/.test(String(text || '').trim());
+  return /^(Game|Visitors|Road|Season|News|Live|Game Week)\s+[—-]/.test(String(text || '').trim());
 }
 
 export function parseWeeklyNowPillars(lines: string[]): HomeNowWeekPillar[] {
   const pillars: HomeNowWeekPillar[] = [];
   for (const raw of Array.isArray(lines) ? lines : []) {
     const t = String(raw || '').trim();
-    const m = t.match(/^(Game|Visitors|Road|Season|Live|Game Week)\s+[—-]\s+(.+)$/i);
+    const m = t.match(/^(Game|Visitors|Road|Season|News|Live|Game Week)\s+[—-]\s+(.+)$/i);
     if (!m) continue;
     const rawLabel = m[1];
     const label = /^Game Week$/i.test(rawLabel)
@@ -407,6 +407,7 @@ export function eliteHomeNowScore(text: string): number {
   if (isThinClassMetricPulse(t)) return 5;
   if (isGameWeekPulse(t) && /^LIVE — Florida vs\b/i.test(t)) return 112;
   if (/^Game — /i.test(t) || /^Game Week — /i.test(t)) return 110;
+  if (/^News — /i.test(t)) return 109;
   if (/^Visitors — /i.test(t) || /^Road — /i.test(t)) return 108;
   if (/^Season — /i.test(t) || (/^\d+[–-]\d+\b/.test(t) && /\bSaturday\b/i.test(t))) return 108;
   if (/^Expected visitors in the Swamp\b/i.test(t)) return 88;

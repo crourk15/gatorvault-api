@@ -22,7 +22,7 @@ const FOOTPRINT_CACHE_REV = 'fp3';
 const COMMITS_CACHE_REV = 'c5';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
-const TICKER_CACHE_REV = 't12';
+const TICKER_CACHE_REV = 't13';
 
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
@@ -192,7 +192,7 @@ function parseHubSnapshotDoc(endpoint, doc) {
     const scrubbed = rawItems ? scrubHubTickerLines(rawItems) : null;
     if (!scrubbed || !scrubbed.length) return null;
     const rev = meta?.cacheRev || doc.cacheRev || null;
-    // t12 = Game / Visitors / Season pillars. Reject t11 plates so GET rebuilds.
+    // t13 = News can take the Visitors/Road slot. Reject t12 plates so GET rebuilds.
     if (rev && rev !== TICKER_CACHE_REV) return null;
     return scrubbed;
   }

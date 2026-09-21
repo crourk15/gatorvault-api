@@ -143,7 +143,7 @@ function gamesForNow() {
 
 function stripPillarPrefix(text) {
   return String(text || '')
-    .replace(/^(Game|Visitors|Road|Season|Live|Game Week|Up next)\s+[—-]\s+/i, '')
+    .replace(/^(Game|Visitors|Road|Season|News|Live|Game Week|Up next)\s+[—-]\s+/i, '')
     .trim();
 }
 
@@ -161,7 +161,7 @@ function formatGamePillar(gameStory) {
  * Structured weekly pillars for Home NOW.
  * Game owns the network. Visitors ticks names. Season is the record.
  */
-function buildWeeklyHomeNowCategories(now = new Date(), games) {
+function buildWeeklyHomeNowCategories(now = new Date(), games, opts = {}) {
   const list = Array.isArray(games) ? games : gamesForNow();
   const gameStory = buildHomeNowGameStory(now, list);
   if (!gameStory) return [];
@@ -169,10 +169,15 @@ function buildWeeklyHomeNowCategories(now = new Date(), games) {
   const override = loadWeeklyOverride();
   const week = picked?.game?.id ? override?.weeks?.[String(picked.game.id)] || null : null;
   const gameLine = formatGamePillar(gameStory);
-  const place = String(week?.place || '').trim() || autoPlaceLine(picked);
   const standing = String(week?.standing || '').trim() || autoStandingLine(now, picked, list);
   const home = isHomeGame(picked?.game);
   const names = home && picked?.game?.id ? visitorNamesForGame(picked.game.id) : [];
+  const hasVisitors = Boolean(home && names.length);
+  const { pickWeeklyNowBreakIn } = require('./weekly-now-breakin');
+  const breakIn = pickWeeklyNowBreakIn(now, {
+    biggerThanVisitors: hasVisitors,
+    rows: opts.breakInRows,
+  });
 
   const categories = [];
   if (gameLine) {
@@ -182,13 +187,22 @@ function buildWeeklyHomeNowCategories(now = new Date(), games) {
       items: [stripPillarPrefix(gameLine)],
     });
   }
-  if (place || names.length) {
-    const isRoad = /^Road —|^On the road/i.test(place || '');
+  if (breakIn && breakIn.text) {
     categories.push({
-      key: isRoad ? 'road' : 'visitors',
-      label: isRoad ? 'Road' : 'Visitors',
-      items: names.length ? names : [stripPillarPrefix(place)],
+      key: 'news',
+      label: 'News',
+      items: [breakIn.text],
     });
+  } else {
+    const place = String(week?.place || '').trim() || autoPlaceLine(picked);
+    if (place || names.length) {
+      const isRoad = /^Road —|^On the road/i.test(place || '');
+      categories.push({
+        key: isRoad ? 'road' : 'visitors',
+        label: isRoad ? 'Road' : 'Visitors',
+        items: names.length ? names : [stripPillarPrefix(place)],
+      });
+    }
   }
   if (standing) {
     categories.push({
@@ -204,8 +218,8 @@ function buildWeeklyHomeNowCategories(now = new Date(), games) {
  * Three weekly NOW lines for ticker / 1.0.28.
  * Game first so ABC never sits under a visitors heading.
  */
-function buildWeeklyHomeNowLines(now = new Date(), games) {
-  const cats = buildWeeklyHomeNowCategories(now, games);
+function buildWeeklyHomeNowLines(now = new Date(), games, opts = {}) {
+  const cats = buildWeeklyHomeNowCategories(now, games, opts);
   return cats.map((c) => {
     if (c.key === 'visitors' && c.items.length > 1) {
       return compactVisitorLine(c.items) || `Visitors — ${c.items[0]}`;
@@ -224,4 +238,5 @@ module.exports = {
   autoPlaceLine,
   autoStandingLine,
   shortVisitorName,
+  pickWeeklyNowBreakIn: require('./weekly-now-breakin').pickWeeklyNowBreakIn,
 };

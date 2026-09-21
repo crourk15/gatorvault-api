@@ -32,7 +32,7 @@ function isThinFloridaProcessLine(text) {
 function isGameWeekPulse(text) {
   const t = String(text || '').trim();
   if (!t) return false;
-  if (/^Expected visitors\b/i.test(t) || /^Visitors —/i.test(t) || /^Season —/i.test(t)) {
+  if (/^Expected visitors\b/i.test(t) || /^Visitors —/i.test(t) || /^Season —/i.test(t) || /^News —/i.test(t)) {
     return false;
   }
   return (
@@ -71,6 +71,7 @@ function eliteHomeNowScore(text) {
   if (isThinClassMetricLine(t)) return 5;
   if (isGameWeekPulse(t) && /^LIVE — Florida vs\b/i.test(t)) return 112;
   if (/^Game — /i.test(t) || /^Game Week — /i.test(t)) return 110;
+  if (/^News — /i.test(t)) return 109;
   if (/^Visitors — /i.test(t) || /^Road — /i.test(t)) return 108;
   if (/^Season — /i.test(t) || (/^\d+[–-]\d+\b/.test(t) && /\bSaturday\b/i.test(t))) return 108;
   if (/^Expected visitors in the Swamp\b/i.test(t)) return 88;
