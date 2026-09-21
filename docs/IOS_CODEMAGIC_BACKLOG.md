@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Trial-ending email: next drip/d5/d1 sends use the Stay with Gator Nation letter. Already-sent mail is not rewritten. API after Render — no Codemagic.
 - [x] Film Room: drop Film Guy Alabama–FSU sit (`kNrIT61SLVM` / “Florida State” is not Florida) from `/api/film-room/catalog` after Render. Hard-block + title strip so it cannot ingest again. API — no Codemagic.
 - [x] Film Room: Landon Tengwall UF-only 2026 run-game film studies from Auburn Week 3 (`MRjoBzMLD2s`) onward on `/api/film-room/catalog` (API — no Codemagic). Pass-game sits and the Week 1 FAU tape stay off. Hub-seed first-paint waits for a later bake.
 - [x] Game Week Ole Miss expected visitors: verified the Aug early look against players / visit logs / intel; dropped the `j-c-wessel` duplicate; filled every card with the same pos / year / school line (Craig-James, Lawson, Evans, Winn, Dion, Martenson). Added Vickers + Turner from the later 247/Gators Wire look. Jackson 2029 stayed off — no dated Sep 26 sit. API `/api/schedule` — no Codemagic.

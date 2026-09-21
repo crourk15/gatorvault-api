@@ -19,7 +19,19 @@ test('onboarding sequence includes drip + trial-ending day', () => {
   assert.deepEqual(days, [0, 1, 3, 7, 25]);
   assert.ok(getWelcomeEmail({ email: 'a@b.com', name: 'A' }).html.includes('GatorVault'));
   assert.ok(getOnboardingEmailByDay(7, { email: 'a@b.com' }).subject.toLowerCase().includes('checklist'));
-  assert.ok(getTrialReminderEmail(1, { email: 'a@b.com', trialEndStr: 'Friday' }).html.includes('membership'));
+  const d1 = getTrialReminderEmail(1, {
+    email: 'a@b.com',
+    name: 'Madison Wagner',
+    trialEndStr: 'Tuesday, September 22, 2026',
+  });
+  assert.equal(d1.subject, 'Stay with Gator Nation — Tuesday');
+  assert.ok(d1.html.includes('Hey Madison,'));
+  assert.ok(d1.html.includes('Your trial runs through'));
+  assert.ok(d1.html.includes('GatorVault is home for Gator Nation. We want you to stay.'));
+  assert.ok(d1.html.includes('After Tuesday, membership keeps you inside.'));
+  assert.ok(d1.html.includes('Open Membership'));
+  assert.equal(d1.html.includes('Keep Recruiting'), false);
+  assert.equal(d1.html.includes('not Home'), false);
 });
 
 test('dueDripDays respects elapsed signup days and sent set', () => {
@@ -112,7 +124,7 @@ test('processOnboardingQueue sends trial d1 convert email', async () => {
   });
 
   assert.equal(result.sent, 1);
-  assert.match(sent[0].subject, /Last day/i);
+  assert.match(sent[0].subject, /Stay with Gator Nation/i);
   assert.ok(users[0].trialRemindersSent.includes('d1'));
 });
 

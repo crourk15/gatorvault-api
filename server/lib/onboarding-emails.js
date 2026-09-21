@@ -5,7 +5,7 @@ const ALERTS_URL =
   process.env.GV_ALERTS_URL || `${SITE_URL}/join/?mode=signin&next=${encodeURIComponent('/vault/alerts/')}`;
 const MEMBERSHIP_URL = process.env.GV_MEMBERSHIP_URL || `${SITE_URL}/vault/membership/`;
 const VAULT_LINK_LABEL = 'Open your vault';
-const MEMBERSHIP_LINK_LABEL = 'Choose your membership';
+const MEMBERSHIP_LINK_LABEL = 'Open Membership';
 const ALERTS_LINK_LABEL = 'Set up My Alerts';
 const VAULT_URL_DISPLAY = `${SITE_URL.replace(/^https?:\/\//, '')}/join`;
 const SUPPORT_EMAIL = process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com';
@@ -82,7 +82,7 @@ const ONBOARDING_SEQUENCE = [
     day: 25,
     delayDays: 25,
     delayLabel: '25 days after signup',
-    subject: 'Your trial ends soon — keep your vault open',
+    subject: 'Stay with Gator Nation',
     kind: 'trial_ending'
   }
 ];
@@ -92,13 +92,13 @@ const TRIAL_REMINDER_SEQUENCE = [
   {
     key: 'd5',
     daysLeft: 5,
-    subject: '5 days left in your GatorVault trial',
+    subject: 'Stay with Gator Nation',
     kind: 'trial_d5'
   },
   {
     key: 'd1',
     daysLeft: 1,
-    subject: 'Last day of your GatorVault trial',
+    subject: 'Stay with Gator Nation',
     kind: 'trial_d1'
   }
 ];
@@ -126,6 +126,28 @@ function getTierBenefitsHtml(tier) {
 
 function displayNameFrom({ name, email } = {}) {
   return name || (email ? String(email).split('@')[0] : 'there');
+}
+
+function firstNameFrom({ name, email } = {}) {
+  const raw = String(name || '').trim();
+  if (raw) {
+    const first = raw.split(/\s+/)[0].replace(/,$/, '');
+    if (first.length >= 2) return first;
+  }
+  return displayNameFrom({ name, email });
+}
+
+function weekdayFromTrialEnd(trialEndStr) {
+  const match = String(trialEndStr || '').trim().match(
+    /^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/i
+  );
+  if (!match) return '';
+  return match[1].charAt(0).toUpperCase() + match[1].slice(1).toLowerCase();
+}
+
+function trialEndingSubject(opts = {}) {
+  const weekday = weekdayFromTrialEnd(opts.trialEndStr);
+  return weekday ? `Stay with Gator Nation — ${weekday}` : 'Stay with Gator Nation';
 }
 
 function ctaButton(href, label) {
@@ -221,17 +243,23 @@ function checklistBodyHtml({ name, email } = {}) {
   <p style="margin:16px 0 0;font-size:14px;color:#94a3b8;line-height:1.6;">— GatorVault Media, LLC</p>`;
 }
 
-function trialEndingBodyHtml({ name, email, trialEndStr, daysLeft } = {}) {
-  const displayName = displayNameFrom({ name, email });
+function trialEndingBodyHtml({ name, email, trialEndStr } = {}) {
+  const firstName = firstNameFrom({ name, email });
+  const weekday = weekdayFromTrialEnd(trialEndStr);
   const when = trialEndStr
-    ? `Your trial ends <strong>${trialEndStr}</strong>${daysLeft != null ? ` (${daysLeft} day${daysLeft === 1 ? '' : 's'} left)` : ''}.`
-    : 'Your trial is almost over.';
+    ? `Your trial runs through <strong>${trialEndStr}</strong>.`
+    : 'Your trial is coming to a close.';
+  const after = weekday
+    ? `After ${weekday}, membership keeps you inside.`
+    : 'After that, membership keeps you inside.';
   return `
-  <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">Hey ${displayName},</p>
+  <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">Hey ${firstName},</p>
   <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">${when}</p>
-  <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">Keep Recruiting, Film Room, FutureCast, and Community unlocked — choose your membership in the GatorVault iOS app (Apple In-App Purchase). Same account works on the web after you subscribe.</p>
+  <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">GatorVault is home for Gator Nation. We want you to stay.</p>
+  <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">${after} Your login stays yours. Open the GatorVault Insider app, go to Membership, and choose your plan. Same email. Once you subscribe, that login unlocks the website too.</p>
   ${ctaButton(MEMBERSHIP_URL, MEMBERSHIP_LINK_LABEL)}
   <p style="margin:0 0 12px;font-size:13px;color:#94a3b8;line-height:1.55;">Already subscribed? Open the app → Membership → Restore Purchases.</p>
+  <p style="margin:0 0 8px;font-size:15px;line-height:1.6;">Glad you're here. Stay with us.</p>
   <p style="margin:16px 0 0;font-size:14px;color:#94a3b8;line-height:1.6;">— GatorVault Media, LLC</p>`;
 }
 
@@ -258,11 +286,13 @@ function buildEmailPayload(def, opts = {}) {
   const bodyInner = bodyHtmlForKind(def.kind, opts);
   const html = emailShell(bodyInner);
   const tierLabel = getTierLabel(opts.tier);
+  const subject =
+    def.kind && String(def.kind).startsWith('trial') ? trialEndingSubject(opts) : def.subject;
   return {
     day: def.day,
     key: def.key || null,
     kind: def.kind,
-    subject: def.subject,
+    subject,
     html,
     tier: tierLabel,
     templateParams: {
@@ -276,7 +306,7 @@ function buildEmailPayload(def, opts = {}) {
       vault_url_display: VAULT_URL_DISPLAY,
       support_email: SUPPORT_EMAIL,
       trial_end: opts.trialEndStr || '',
-      email_subject: def.subject,
+      email_subject: subject,
     }
   };
 }
@@ -383,4 +413,6 @@ module.exports = {
   emailShell,
   ctaButton,
   displayNameFrom,
+  firstNameFrom,
+  trialEndingSubject,
 };
