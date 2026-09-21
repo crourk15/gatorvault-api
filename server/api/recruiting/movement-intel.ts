@@ -169,18 +169,21 @@ function buildAlerts(intel: IntelRow[], limit: number): MovementIntelAlert[] {
     if (!detail) continue;
 
     if (type === 'VISIT') {
-      const { isFreshHomeNowVisit } = require('../../lib/elite-home-now') as {
+      const { isFreshHomeNowVisit, isPriorGameWeekNowPulse } = require('../../lib/elite-home-now') as {
         isFreshHomeNowVisit: (raw: Record<string, unknown>) => boolean;
+        isPriorGameWeekNowPulse: (text: string, raw?: Record<string, unknown>, nowMs?: number) => boolean;
       };
-      if (
-        !isFreshHomeNowVisit({
-          visitDate: row.visitDate || row.date || row.visitStart,
-          date: row.date || row.visitDate,
-          visitStart: row.visitStart,
-          timestamp: row.timestamp,
-          reportedAt: row.reportedAt || row.createdAt,
-        })
-      ) {
+      const visitRaw = {
+        visitDate: row.visitDate || row.date || row.visitStart,
+        date: row.date || row.visitDate,
+        visitStart: row.visitStart,
+        timestamp: row.timestamp,
+        reportedAt: row.reportedAt || row.createdAt,
+      };
+      if (!isFreshHomeNowVisit(visitRaw)) {
+        continue;
+      }
+      if (isPriorGameWeekNowPulse(detail, visitRaw)) {
         continue;
       }
     }

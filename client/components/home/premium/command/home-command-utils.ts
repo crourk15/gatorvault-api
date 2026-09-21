@@ -301,6 +301,56 @@ function isVisitPulseLine(text: string): boolean {
   );
 }
 
+function shortenNowOpp(opp: string): string {
+  return String(opp || '')
+    .replace(/\s+Rebels$/i, '')
+    .replace(/\s+Tigers$/i, '')
+    .replace(/\s+Owls$/i, '')
+    .replace(/\s+Camels$/i, '')
+    .replace(/\s+Bulldogs$/i, '')
+    .replace(/\s+Gators$/i, '')
+    .trim();
+}
+
+/** Last week's gameday / visit — not this week's NOW. */
+function isPriorGameWeekNowPulse(text: string, timestamp?: string | null, now = new Date()): boolean {
+  const t = String(text || '').trim();
+  const nowMs = now.getTime();
+  let lastKick = NaN;
+  for (const g of SCHEDULE_GAMES) {
+    if (!g || g.kind === 'bye') continue;
+    const kick = parseScheduleKickoff(g.date);
+    const posted =
+      Number.isFinite(Number(g.finalUF)) && Number.isFinite(Number(g.finalOpp));
+    if (!kick || !posted || kick.getTime() >= nowMs) continue;
+    if (!Number.isFinite(lastKick) || kick.getTime() > lastKick) lastKick = kick.getTime();
+    const name = shortenNowOpp(g.opp);
+    if (!name || name.length < 3) continue;
+    const hit = new RegExp(`\\b${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(t);
+    if (hit && /\b(gameday|game day|expected .{0,60}visit|visit weekend)\b/i.test(t)) {
+      return true;
+    }
+  }
+  if (!Number.isFinite(lastKick) || !timestamp) return false;
+  const ts = Date.parse(String(timestamp));
+  if (!Number.isFinite(ts) || ts > nowMs) return false;
+  return ts < lastKick;
+}
+
+function joinPlayerPulse(player: string, detail: string): string {
+  const p = String(player || '').trim();
+  const d = String(detail || '').trim();
+  if (!p) return d;
+  if (!d) return p;
+  if (d.toLowerCase().startsWith(p.toLowerCase())) return d;
+  const last = p.split(/\s+/).pop() || '';
+  if (last.length >= 3 && d.toLowerCase().startsWith(last.toLowerCase())) {
+    const rest = d.slice(last.length).replace(/^\s*[—\-]+\s*/, '').trim();
+    return rest ? `${p} — ${rest}` : p;
+  }
+  return `${p} — ${d}`;
+}
+
 function isThinClassMetricPulse(text: string): boolean {
   const t = String(text || '').trim();
   if (!t) return true;
@@ -588,6 +638,12 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
     ) {
       continue;
     }
+    if (
+      isPriorGameWeekNowPulse(detailRaw, (alert as { timestamp?: string }).timestamp, input.now || new Date()) ||
+      isPriorGameWeekNowPulse(detail, (alert as { timestamp?: string }).timestamp, input.now || new Date())
+    ) {
+      continue;
+    }
     if (isRivalOnlyOfferPulse(detail)) continue;
     if (alertType === 'OFFER' || /\bFlorida offer\b/i.test(detail)) {
       // Offer day from raw detail (fanFacing strips "on file (date)").
@@ -600,13 +656,7 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
       if (!Number.isFinite(ts) || Date.now() - ts > 21 * 24 * 60 * 60 * 1000) continue;
     }
     const player = String(alert.player || '').trim();
-    if (player && detail.toLowerCase().startsWith(player.toLowerCase())) {
-      push(detail);
-    } else if (player) {
-      push(`${player} — ${detail}`);
-    } else {
-      push(detail);
-    }
+    push(player ? joinPlayerPulse(player, detail) : detail);
   }
   for (const player of input.movement?.risers ?? []) {
     const ufPct = Math.round(player.ufProb <= 1 ? player.ufProb * 100 : player.ufProb);

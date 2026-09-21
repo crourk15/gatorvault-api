@@ -420,6 +420,7 @@ async function buildHubTicker(year = 2027) {
     isOfferPulseSummary,
     isFreshHomeNowOffer,
     isRivalOnlyOfferLine,
+    isPriorGameWeekNowPulse,
     buildHomeNowGameStory,
   } = require('./elite-home-now');
 
@@ -486,6 +487,16 @@ async function buildHubTicker(year = 2027) {
     const line = lineProbe;
     if (isDeskOpsIntelCopy(line)) continue;
     if (isThinFloridaProcessLine(line)) continue;
+    if (
+      isPriorGameWeekNowPulse(line, {
+        visitDate: row.visitDate,
+        date: row.visitDate || row.date,
+        timestamp: row.timestamp,
+        reportedAt: row.reportedAt,
+      })
+    ) {
+      continue;
+    }
     const { isDeniedVisitTickerLine } = require('./recruiting-visit-scrub');
     if (isDeniedVisitTickerLine(line)) continue;
     if (!named.includes(line)) named.push(line);
