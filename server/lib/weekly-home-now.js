@@ -101,9 +101,9 @@ function shortVisitorName(name) {
 }
 
 function compactVisitorLine(names) {
-  const short = names.slice(0, 3).map(shortVisitorName).filter(Boolean);
-  if (!short.length) return null;
-  return `Visitors — ${short.join(' · ')}`;
+  const full = (Array.isArray(names) ? names : []).map((n) => String(n || '').trim()).filter(Boolean);
+  if (!full.length) return null;
+  return `Visitors — ${full[0]}`;
 }
 
 function autoPlaceLine(picked) {
@@ -113,8 +113,7 @@ function autoPlaceLine(picked) {
     return `Road — on the road this ${weekday}`;
   }
   const names = visitorNamesForGame(picked.game.id);
-  const compact = compactVisitorLine(names);
-  if (compact) return compact;
+  if (names.length) return `Visitors — ${names[0]}`;
   return `Visitors — home this ${weekday}`;
 }
 
@@ -220,14 +219,19 @@ function buildWeeklyHomeNowCategories(now = new Date(), games, opts = {}) {
  */
 function buildWeeklyHomeNowLines(now = new Date(), games, opts = {}) {
   const cats = buildWeeklyHomeNowCategories(now, games, opts);
-  return cats.map((c) => {
-    if (c.key === 'visitors' && c.items.length > 1) {
-      return compactVisitorLine(c.items) || `Visitors — ${c.items[0]}`;
+  const lines = [];
+  for (const c of cats) {
+    if (c.key === 'visitors' && c.items.length) {
+      for (const name of c.items) {
+        if (name) lines.push(`Visitors — ${name}`);
+      }
+      continue;
     }
     const item = c.items[0] || '';
-    if (!item) return '';
-    return `${c.label} — ${item}`;
-  }).filter(Boolean).slice(0, 3);
+    if (!item) continue;
+    lines.push(`${c.label} — ${item}`);
+  }
+  return lines;
 }
 
 module.exports = {

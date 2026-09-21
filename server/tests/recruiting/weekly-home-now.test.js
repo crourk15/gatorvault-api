@@ -12,11 +12,15 @@ const { getScheduleBoard } = require('../../lib/schedule-board');
 test('Ole Miss week NOW is three pillars — Game owns ABC', () => {
   const now = new Date('2026-09-21T18:00:00.000Z');
   const lines = buildWeeklyHomeNowLines(now);
-  assert.equal(lines.length, 3);
+  assert.ok(lines.length >= 3);
   assert.match(lines[0], /^Game — Ole Miss in the Swamp · ABC$/);
-  assert.match(lines[1], /^Visitors — /);
-  assert.doesNotMatch(lines[1], /ABC|in the Swamp/i);
-  assert.match(lines[2], /^Season — 3-0 · first SEC home Saturday$/);
+  const visitors = lines.filter((s) => /^Visitors — /.test(s));
+  assert.ok(visitors.length >= 3);
+  assert.match(visitors[0], /^Visitors — \S+\s+\S+/);
+  assert.ok(visitors.some((s) => /Easton Royal/.test(s)));
+  assert.ok(!visitors.some((s) => /Royal · Wright · Thomas/.test(s)));
+  assert.doesNotMatch(visitors[0], /ABC|in the Swamp/i);
+  assert.match(lines[lines.length - 1], /^Season — 3-0 · first SEC home Saturday$/);
   assert.ok(!lines.some((s) => /class trending|#8|blue chip/i.test(s)));
 });
 
@@ -165,3 +169,12 @@ test('this-week commitDate still takes the Visitors slot', () => {
   assert.match(cats[1].items[0], /Jaden Hale commits to Florida/);
 });
 
+test('Ole Miss visitors tick first and last names, not three last names', () => {
+  const cats = buildWeeklyHomeNowCategories(new Date('2026-09-21T18:00:00.000Z'));
+  assert.equal(cats[1].label, 'Visitors');
+  assert.ok(cats[1].items.length >= 10);
+  assert.ok(cats[1].items.includes('Easton Royal'));
+  assert.ok(cats[1].items.includes('Antonio Thomas Jr.'));
+  assert.ok(cats[1].items.every((n) => /\s/.test(n)));
+  assert.ok(!cats[1].items.some((n) => / · /.test(n)));
+});
