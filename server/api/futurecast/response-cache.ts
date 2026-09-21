@@ -23,7 +23,8 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** v39: Chase UV/OV soft filter — drop plates older than Board Intel window (~21d). */
 /** v40: stale DISK GET schedules rebuild; warm bypasses wrap-hit on stale/force plates. */
 /** v41: stale master-board GET/warm same as HP — Lab hero no longer freezes on Aug 7 seed. */
-export const FUTURECAST_API_CACHE_VERSION = 41;
+/** v42: Antonio UF-lead floor must overlay a hollow warm players.json row on every HP serve. */
+export const FUTURECAST_API_CACHE_VERSION = 42;
 
 /** Disk/memory plate older than this is stale — GET still serves it, warm/GET schedule rebuild. */
 export const HP_DISK_MAX_AGE_MS = 36 * 60 * 60 * 1000; // 36h
@@ -751,6 +752,13 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
       boardRpm = truth.boardRpm;
       storeRpm = truth.storeRpm;
     }
+  }
+  // Always overlay slim floors — a hollow warm Map used to hide Antonio's UF 41
+  // and leave the disk plate on Miami 13 / UF Shot 11.
+  const floor = slug ? loadHealFloors2028().get(slug) : null;
+  if (floor) {
+    if (!(Number(boardRpm) > 0) && Number(floor.boardRpm) > 0) boardRpm = floor.boardRpm;
+    if (!(Number(storeRpm) > 0) && Number(floor.storeRpm) > 0) storeRpm = floor.storeRpm;
   }
 
   let comps = rowCompsPreview;
