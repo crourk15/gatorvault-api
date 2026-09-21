@@ -17,14 +17,25 @@ import {
   editCommunityThread,
   fetchCommunityPageData,
   fetchCommunityThread,
+  fetchMyCommunity,
   flagCommunityPost,
   flagCommunityThread,
+  toggleCommunityFollow,
   type CommunityCategory,
+  type CommunityLockerThread,
+  type CommunityMe,
   type CommunityPost,
   type CommunityPulse,
   type CommunityThread,
   type LiveRoom,
 } from '@/lib/community-api';
+import {
+  communityTimeAgo,
+  loadCommunitySeen,
+  lockerRoleLabel,
+  markCommunitySeen,
+  threadHasNewReply,
+} from '@/lib/community-locker';
 import { buildSeedCommunityPageData } from '@/lib/community-hub-seed';
 import { fetchWithWarmPoll, userFacingLoadError } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
@@ -65,12 +76,7 @@ type DeleteTarget =
 const FALLBACK_TOPICS = ['2027 board', 'Portal watch', 'Game week keys', 'NIL pulse', 'Film Room'];
 
 function timeAgo(iso?: string): string {
-  if (!iso) return '';
-  const ms = Date.now() - new Date(iso).getTime();
-  const h = Math.floor(ms / 3600000);
-  if (h < 1) return 'Just now';
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+  return communityTimeAgo(iso);
 }
 
 function threadCategoryLabel(thread: CommunityThread): string {
@@ -118,6 +124,14 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     HAS_COMMUNITY_SEED ? SEED_COMMUNITY.pulse : null
   );
   const [rooms, setRooms] = useState<LiveRoom[]>(HAS_COMMUNITY_SEED ? SEED_COMMUNITY.rooms : []);
+  const [gameRooms, setGameRooms] = useState<CommunityLockerThread[]>(
+    HAS_COMMUNITY_SEED ? SEED_COMMUNITY.gameRooms || [] : []
+  );
+  const [me, setMe] = useState<CommunityMe | null>(HAS_COMMUNITY_SEED ? SEED_COMMUNITY.me || null : null);
+  const [followedIds, setFollowedIds] = useState<string[]>([]);
+  const [followingThread, setFollowingThread] = useState(false);
+  const [followBusy, setFollowBusy] = useState(false);
+  const [seenMap, setSeenMap] = useState<Record<string, string>>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedThread, setSelectedThread] = useState<CommunityThread | null>(null);
   const [selectedPosts, setSelectedPosts] = useState<CommunityPost[]>([]);
@@ -150,7 +164,10 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const canModerate = Boolean(viewerEmail);
 
   useEffect(() => {
-    if (viewerEmail) setBlockedEmails(loadBlockedEmails(viewerEmail));
+    if (viewerEmail) {
+      setBlockedEmails(loadBlockedEmails(viewerEmail));
+      setSeenMap(loadCommunitySeen(viewerEmail));
+    }
   }, [viewerEmail]);
 
   const requireSignIn = useCallback(
@@ -191,6 +208,9 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
         ? data.pulse
         : SEED_COMMUNITY.pulse || data.pulse);
       setRooms(data.rooms.length ? data.rooms : SEED_COMMUNITY.rooms);
+      setGameRooms(data.gameRooms?.length ? data.gameRooms : []);
+      setMe(data.me || null);
+      setFollowedIds(data.followed || []);
       setError(null);
       if (data.categories.length && !newCategory) setNewCategory(data.categories[0].slug);
     } catch (err) {
@@ -238,6 +258,8 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
       );
       setSelectedThread(data.thread);
       setSelectedPosts(data.posts);
+      setFollowingThread(Boolean(data.following) || followedIds.includes(threadId));
+      if (viewerEmail) setSeenMap(markCommunitySeen(viewerEmail, threadId));
     } catch {
       // Keep the list/seed OP when live detail fails (common for daily threads + native CORS blips).
       if (fromList) {
@@ -250,7 +272,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     } finally {
       setThreadLoading(false);
     }
-  }, [threads]);
+  }, [followedIds, threads, viewerEmail]);
 
   useEffect(() => {
     void load();
@@ -289,6 +311,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
         body: 'Opening your thread…',
       });
       await openThread(thread.id);
+      try {
+        const nextMe = await fetchMyCommunity();
+        setMe(nextMe);
+      } catch {
+        /* locker refresh is best-effort */
+      }
     } catch (err) {
       setPostError(err instanceof Error ? err.message : 'Could not post thread.');
     } finally {
@@ -306,6 +334,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
       setReplyBody('');
       await openThread(selectedThread.id);
       await load();
+      try {
+        const nextMe = await fetchMyCommunity();
+        setMe(nextMe);
+      } catch {
+        /* locker refresh is best-effort */
+      }
     } catch (err) {
       setReplyError(err instanceof Error ? err.message : 'Could not post reply.');
     } finally {
@@ -533,13 +567,121 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     [threads],
   );
 
-  /** Daily-open hook — ET daily staff OP first, then pinned/featured. */
+  /** Daily-open hook — pinned today first so Saturday game talk does not steal Staff open. */
   const todaysThread = useMemo(() => {
+    const pinnedDaily = threads.find((t) => t.pinned && t.dailyKey);
+    if (pinnedDaily) return pinnedDaily;
     const daily = threads.find((t) => Boolean(t.dailyKey));
     if (daily) return daily;
     const pinned = threads.find((t) => t.pinned || t.featured);
     return pinned || threads[0] || null;
   }, [threads]);
+
+  const lockerThreads = me?.locker || [];
+  const repliesOnYours = me?.repliesOnYours || [];
+  const pastGameRooms = useMemo(() => {
+    const todayId = todaysThread?.id;
+    const rooms = (me?.gameRooms?.length ? me.gameRooms : gameRooms) || [];
+    return rooms.filter((t) => t.id !== todayId);
+  }, [gameRooms, me, todaysThread]);
+
+  const handleFollowToggle = async () => {
+    if (!selectedThread?.id) return;
+    if (!requireSignIn('Sign in to keep a thread in your locker.')) return;
+    setFollowBusy(true);
+    try {
+      const result = await toggleCommunityFollow(selectedThread.id);
+      setFollowingThread(result.following);
+      setFollowedIds((prev) => {
+        if (result.following) {
+          return prev.includes(selectedThread.id) ? prev : [...prev, selectedThread.id];
+        }
+        return prev.filter((id) => id !== selectedThread.id);
+      });
+      try {
+        const nextMe = await fetchMyCommunity();
+        setMe(nextMe);
+      } catch {
+        /* ignore */
+      }
+      pushToast({
+        kind: 'success',
+        title: result.following ? 'In your locker' : 'Removed from locker',
+        body: result.following
+          ? 'We’ll keep this thread here so you can come back after the game.'
+          : 'This thread left your locker.',
+      });
+    } catch (err) {
+      pushToast({
+        kind: 'error',
+        title: 'Could not update locker',
+        body: err instanceof Error ? err.message : 'Please try again.',
+      });
+    } finally {
+      setFollowBusy(false);
+    }
+  };
+
+  const jumpToYourComments = () => {
+    const mine = selectedPosts.find((p) => isOwnAuthor(p.authorEmail));
+    if (!mine || typeof document === 'undefined') return;
+    const el = document.getElementById(`community-post-${mine.id}`);
+    el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const renderActivityRow = (
+    t: CommunityLockerThread,
+    opts: { showRole?: boolean; justPosted?: boolean; emptyLast?: string } = {},
+  ) => {
+    const blockedAuthor = isAuthorBlocked(t.authorEmail);
+    const isYours = isOwnAuthor(t.authorEmail);
+    const isJustPosted = Boolean(opts.justPosted || justPostedId === t.id);
+    const hasNew = threadHasNewReply(t, seenMap[t.id]);
+    const role = lockerRoleLabel(t.yourRole);
+    const last = t.lastReply;
+    return (
+      <li key={t.id}>
+        <button
+          type="button"
+          className={`gv-community__thread-row${blockedAuthor ? ' gv-community__thread-row--blocked' : ''}${
+            t.flagged ? ' gv-community__thread-row--flagged' : ''
+          }${isJustPosted ? ' gv-community__thread-row--just-posted' : ''}${
+            hasNew ? ' gv-community__thread-row--new' : ''
+          }`}
+          onClick={() => void openThread(t.id)}
+        >
+          <span className="gv-community__thread-author">{communityAuthorLabel(t)}</span>
+          <span className="gv-community__thread-title">
+            {isJustPosted ? <Chip variant="staff">Just posted</Chip> : null}{' '}
+            {hasNew ? <Chip variant="orange">New reply</Chip> : null}{' '}
+            {opts.showRole && role ? <Chip variant="trending">{role}</Chip> : null}{' '}
+            {isYours && !isJustPosted && !opts.showRole ? <Chip variant="trending">Yours</Chip> : null}{' '}
+            {t.gameday || /game day talk/i.test(t.title || '') ? <Chip variant="staff">Game</Chip> : null}{' '}
+            {t.title}
+            {blockedAuthor ? <span className="gv-community__blocked-chip">Blocked author</span> : null}
+          </span>
+          <span className="gv-community__thread-meta">
+            {threadCategoryLabel(t)} · {t.replyCount ?? 0}{' '}
+            {(t.replyCount ?? 0) === 1 ? 'reply' : 'replies'} ·{' '}
+            {timeAgo(t.lastActivityAt || t.createdAt)}
+            {typeof t.yourReplyCount === 'number' && t.yourReplyCount > 0
+              ? ` · You commented ${t.yourReplyCount === 1 ? 'once' : `${t.yourReplyCount} times`}`
+              : ''}
+          </span>
+          {last ? (
+            <span className={`gv-community__thread-last${hasNew ? ' is-new' : ''}`}>
+              {last.isYours ? 'You' : last.authorDisplay || 'Member'} · {timeAgo(last.createdAt)}
+              {last.bodyPreview ? ` — ${last.bodyPreview}` : ''}
+            </span>
+          ) : (
+            <span className="gv-community__thread-last gv-community__thread-last--empty">
+              {opts.emptyLast || 'No replies yet — this thread stays here so you can find it later.'}
+            </span>
+          )}
+        </button>
+      </li>
+    );
+  };
 
   const isGamedayTalk = Boolean(
     todaysThread?.gameday || /game day talk/i.test(todaysThread?.title || ''),
@@ -632,9 +774,11 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             <p className="gv-community__hero-brand">GatorVault</p>
             <h1 className="gv-community__hero-title">Community</h1>
             <p className="gv-community__hero-sub">
-              {isGamedayTalk
-                ? 'Game day talk is open. Jump in now, during the game, and after.'
-                : 'Staff opens today. Member threads below — use Recent to find yours.'}
+              {viewerEmail
+                ? 'Your locker holds every game you talked. Open it to see if anyone replied.'
+                : isGamedayTalk
+                  ? 'Game day talk is open. Sign in so your comments have a locker after the game.'
+                  : 'Staff opens today. Game talk stays after Saturday. Sign in so you can find your comments later.'}
             </p>
           </div>
           <div className="gv-community__hero-accent" aria-hidden="true" />
@@ -643,6 +787,84 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     >
       <div className="gv-community__layout">
         <div className="gv-community__main">
+          {!selectedId && viewerEmail ? (
+            <PageSection
+              title="Your locker"
+              subtitle={
+                repliesOnYours.length
+                  ? `${repliesOnYours.length} thread${repliesOnYours.length === 1 ? '' : 's'} got a reply since you posted.`
+                  : lockerThreads.length
+                    ? 'Every thread you started or commented in — jump back in after the game.'
+                    : 'Reply to Staff open or a game room. We’ll keep the thread here.'
+              }
+            >
+              {repliesOnYours.length ? (
+                <button
+                  type="button"
+                  className="gv-community__today-card gv-community__locker-ping"
+                  onClick={() => void openThread(repliesOnYours[0].threadId)}
+                >
+                  <Chip variant="orange">Someone replied</Chip>
+                  <h3 className="gv-community__today-title">{repliesOnYours[0].title}</h3>
+                  <p className="gv-community__today-meta">
+                    {repliesOnYours[0].lastReplyAuthor} · {timeAgo(repliesOnYours[0].lastReplyAt)}
+                    {repliesOnYours[0].lastReplyPreview
+                      ? ` — ${repliesOnYours[0].lastReplyPreview}`
+                      : ''}
+                  </p>
+                </button>
+              ) : null}
+              <ul className="gv-community__threads">
+                {lockerThreads.map((t) =>
+                  renderActivityRow(t, {
+                    showRole: true,
+                    emptyLast: 'No replies yet — this is still yours to find.',
+                  }),
+                )}
+                {lockerThreads.length === 0 ? (
+                  <li className="gv-community__empty-cta">
+                    <UiEmpty
+                      message="Nothing in your locker yet."
+                      hint="Comment during the game or start a thread — we’ll put it here so Monday is one tap."
+                    />
+                    <button
+                      type="button"
+                      className="gv-community__new-btn"
+                      onClick={() => {
+                        if (todaysThread) void openThread(todaysThread.id);
+                        else setShowForm(true);
+                      }}
+                    >
+                      {todaysThread ? 'Jump into today’s open' : 'Start a thread'}
+                    </button>
+                  </li>
+                ) : null}
+              </ul>
+            </PageSection>
+          ) : null}
+
+          {!selectedId && !viewerEmail ? (
+            <p className="gv-community__board-note" role="status">
+              Sign in to keep a locker — that’s how you get back to Saturday’s game talk.
+            </p>
+          ) : null}
+
+          {!selectedId && pastGameRooms.length > 0 ? (
+            <PageSection
+              title="Game talk"
+              subtitle="Past Saturdays stay here after Staff open rolls to a new day."
+            >
+              <ul className="gv-community__threads">
+                {pastGameRooms.map((t) =>
+                  renderActivityRow(t, {
+                    showRole: false,
+                    emptyLast: 'No replies yet — jump back in anytime.',
+                  }),
+                )}
+              </ul>
+            </PageSection>
+          ) : null}
+
           {todaysThread && !selectedId ? (
             <PageSection
               title={isGamedayTalk ? 'Game day talk' : 'Staff open'}
@@ -807,18 +1029,45 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
 
           {(HAS_COMMUNITY_SEED || (!loading && !error)) && selectedId && selectedThread && (
             <div className="gv-community__thread-detail">
-              <button
-                type="button"
-                className="gv-film-back"
-                onClick={() => {
-                  setSelectedId(null);
-                  setSelectedThread(null);
-                  setSelectedPosts([]);
-                  void load();
-                }}
-              >
-                ← All threads
-              </button>
+              <div className="gv-community__thread-toolbar">
+                <button
+                  type="button"
+                  className="gv-film-back"
+                  onClick={() => {
+                    setSelectedId(null);
+                    setSelectedThread(null);
+                    setSelectedPosts([]);
+                    void load();
+                  }}
+                >
+                  ← All threads
+                </button>
+                {viewerEmail ? (
+                  <div className="gv-community__thread-tools">
+                    {selectedPosts.some((p) => isOwnAuthor(p.authorEmail)) ? (
+                      <button
+                        type="button"
+                        className="gv-community__action-btn"
+                        onClick={jumpToYourComments}
+                      >
+                        Your comments
+                      </button>
+                    ) : null}
+                    <button
+                      type="button"
+                      className={`gv-community__action-btn${followingThread ? ' is-active' : ''}`}
+                      disabled={followBusy}
+                      onClick={() => void handleFollowToggle()}
+                    >
+                      {followBusy
+                        ? 'Saving…'
+                        : followingThread
+                          ? 'In your locker'
+                          : 'Keep in locker'}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
               <ul className="gv-community__posts">
                 <li
                   className={`gv-community__post${selectedThread.flagged ? ' gv-community__post--flagged' : ''}${
@@ -908,19 +1157,24 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                 </li>
                 {selectedPosts.map((p) => {
                   const blocked = isAuthorBlocked(p.authorEmail);
+                  const mine = isOwnAuthor(p.authorEmail);
                   return (
                     <li
                       key={p.id}
+                      id={`community-post-${p.id}`}
                       className={`gv-community__post${p.flagged ? ' gv-community__post--flagged' : ''}${
                         blocked ? ' gv-community__post--blocked-author' : ''
-                      }`}
+                      }${mine ? ' gv-community__post--mine' : ''}`}
                     >
                       {blocked ? (
                         renderBlockedPlaceholder(communityAuthorLabel(p), p.authorEmail)
                       ) : (
                         <>
                           <div className="gv-community__post-head">
-                            <p className="gv-community__post-author">{communityAuthorLabel(p)}</p>
+                            <p className="gv-community__post-author">
+                              {communityAuthorLabel(p)}
+                              {mine ? <Chip variant="trending">You</Chip> : null}
+                            </p>
                             <CommunityPostActions
                               canModerate={canModerate}
                               isOwnContent={isOwnAuthor(p.authorEmail)}
@@ -1026,39 +1280,15 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
           {(HAS_COMMUNITY_SEED || (!loading && !error)) && !selectedId && (
             <PageSection
               title="Member threads"
-              subtitle="Your posts land here under Recent. Staff pins stay in Staff open."
+              subtitle="New conversations. Your locker above holds every game you already talked."
             >
               <ul className="gv-community__threads">
-                {memberThreads.map((t) => {
-                  const blockedAuthor = isAuthorBlocked(t.authorEmail);
-                  const isYours = isOwnAuthor(t.authorEmail);
-                  const isJustPosted = justPostedId === t.id;
-                  return (
-                    <li key={t.id}>
-                      <button
-                        type="button"
-                        className={`gv-community__thread-row${blockedAuthor ? ' gv-community__thread-row--blocked' : ''}${
-                          t.flagged ? ' gv-community__thread-row--flagged' : ''
-                        }${isJustPosted ? ' gv-community__thread-row--just-posted' : ''}`}
-                        onClick={() => void openThread(t.id)}
-                      >
-                        <span className="gv-community__thread-author">{communityAuthorLabel(t)}</span>
-                        <span className="gv-community__thread-title">
-                          {isJustPosted ? <Chip variant="staff">Just posted</Chip> : null}{' '}
-                          {isYours && !isJustPosted ? <Chip variant="trending">Yours</Chip> : null}{' '}
-                          {t.title}
-                          {blockedAuthor ? (
-                            <span className="gv-community__blocked-chip">Blocked author</span>
-                          ) : null}
-                        </span>
-                        <span className="gv-community__thread-meta">
-                          {threadCategoryLabel(t)} · {t.replyCount ?? 0} replies ·{' '}
-                          {timeAgo(t.lastActivityAt || t.createdAt)}
-                        </span>
-                      </button>
-                    </li>
-                  );
-                })}
+                {memberThreads.map((t) =>
+                  renderActivityRow(t, {
+                    justPosted: justPostedId === t.id,
+                    emptyLast: 'No replies yet — be the first.',
+                  }),
+                )}
                 {memberThreads.length === 0 && (
                   <li className="gv-community__empty-cta">
                     <UiEmpty message="No member threads yet — start one." />
@@ -1169,11 +1399,17 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                 <span>Threads with replies</span>
                 <strong>{threadsWithReplies > 0 ? threadsWithReplies : '—'}</strong>
               </div>
+              {viewerEmail ? (
+                <div className="gv-community__pulse-stat">
+                  <span>In your locker</span>
+                  <strong>{lockerThreads.length > 0 ? lockerThreads.length : '—'}</strong>
+                </div>
+              ) : null}
             </div>
             <p className="gv-community__pulse-note">
               {boardWarming
-                ? 'Board warming up — first replies light the pulse.'
-                : 'Live activity across staff opens and member threads.'}
+                ? 'Board warming up — first replies light the pulse. Your locker still holds every comment you make.'
+                : 'Live activity across staff opens, game talk, and member threads.'}
             </p>
           </section>
 

@@ -709,7 +709,12 @@ function getThreads({ sort = 'trending', category, limit = 50 } = {}) {
     threads = threads.filter((t) => t.categorySlug === category || t.categoryId === category);
   }
   threads = sortThreads(threads, sort).slice(0, limit);
-  return threads.map((t) => enrichThreadWithAuthor(t, categoryMap, users));
+  const posts = loadPosts();
+  return threads.map((t) => {
+    const enriched = enrichThreadWithAuthor(t, categoryMap, users);
+    enriched.lastReply = lastReplyForThread(t.id, posts, users, null);
+    return enriched;
+  });
 }
 
 function getThreadById(id, incrementView = false) {
@@ -795,6 +800,7 @@ function createThread(session, { title, body, categorySlug }) {
   if (!thread.title || !thread.body) throw new Error('Title and body required');
   threads.unshift(thread);
   saveThreads(threads);
+  ensureFollow(user.email, thread.id);
   return { thread: enrichThread(thread, getCategoryMap()), user };
 }
 
@@ -823,6 +829,7 @@ function createReply(session, threadId, body) {
   threads[idx].replyCount = (threads[idx].replyCount || 0) + 1;
   threads[idx].lastActivityAt = nowIso();
   saveThreads(threads);
+  ensureFollow(user.email, resolvedId);
   const badge = badgeForUser(user);
   return {
     post: {
@@ -842,21 +849,189 @@ function createReply(session, threadId, body) {
 }
 
 function toggleFollow(email, threadId) {
+  const e = String(email || '').trim();
+  const tid = resolveThreadId(threadId);
   const follows = loadFollows();
-  const key = `${email}:${threadId}`;
-  const idx = follows.findIndex((f) => f.key === key);
+  const idx = follows.findIndex((f) => emailsMatch(f.email, e) && f.threadId === tid);
   if (idx >= 0) {
     follows.splice(idx, 1);
     saveFollows(follows);
     return { following: false };
   }
-  follows.push({ key, email, threadId, createdAt: nowIso() });
+  follows.push({ key: `${e}:${tid}`, email: e, threadId: tid, createdAt: nowIso() });
+  saveFollows(follows);
+  return { following: true };
+}
+
+function emailsMatch(a, b) {
+  return String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
+}
+
+function looksLikeGamedayThread(thread) {
+  if (!thread) return false;
+  if (thread.gameday === true) return true;
+  return /game day talk/i.test(String(thread.title || ''));
+}
+
+function lastReplyForThread(threadId, posts, users, viewerEmail) {
+  const threadPosts = (posts || [])
+    .filter((p) => p.threadId === threadId && !p.deleted)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const last = threadPosts[0];
+  if (!last) return null;
+  const author = (users || []).find((u) => u.id === last.authorId);
+  const preview = String(last.body || '').replace(/\s+/g, ' ').trim().slice(0, 90);
+  return {
+    id: last.id,
+    authorDisplay: author?.displayName || 'Member',
+    authorEmail: last.authorEmail || null,
+    bodyPreview: preview,
+    createdAt: last.createdAt,
+    isYours: Boolean(viewerEmail && emailsMatch(last.authorEmail, viewerEmail)),
+  };
+}
+
+function decorateActivityThread(thread, { posts, users, categoryMap, viewerEmail, yourRole } = {}) {
+  const enriched = enrichThreadWithAuthor(thread, categoryMap || getCategoryMap(), users || loadUsers());
+  const allPosts = posts || loadPosts();
+  const lastReply = lastReplyForThread(thread.id, allPosts, users || loadUsers(), viewerEmail);
+  const yourReplyCount = viewerEmail
+    ? allPosts.filter(
+        (p) => p.threadId === thread.id && !p.deleted && emailsMatch(p.authorEmail, viewerEmail)
+      ).length
+    : 0;
+  return {
+    ...enriched,
+    lastReply,
+    yourReplyCount,
+    yourRole: yourRole || null,
+  };
+}
+
+/** Follow without toggling off — used when a member starts or replies. */
+function ensureFollow(email, threadId) {
+  const e = String(email || '').trim();
+  const tid = resolveThreadId(threadId);
+  if (!e || !tid) return { following: false };
+  const follows = loadFollows();
+  if (follows.some((f) => emailsMatch(f.email, e) && f.threadId === tid)) {
+    return { following: true };
+  }
+  follows.push({ key: `${e}:${tid}`, email: e, threadId: tid, createdAt: nowIso() });
   saveFollows(follows);
   return { following: true };
 }
 
 function getFollowedThreadIds(email) {
-  return loadFollows().filter((f) => f.email === email).map((f) => f.threadId);
+  const e = String(email || '').trim();
+  if (!e) return [];
+  return loadFollows()
+    .filter((f) => emailsMatch(f.email, e))
+    .map((f) => f.threadId);
+}
+
+/**
+ * Last game-day talk rooms — stays findable after Staff open rolls to the next ET day.
+ * Does not invent replies.
+ */
+function getGameRooms({ limit = 8, viewerEmail = null } = {}) {
+  ensureCategories();
+  ensureFoundingSurface();
+  ensureDailyOpenThread();
+  const categoryMap = getCategoryMap();
+  const users = loadUsers();
+  const posts = loadPosts();
+  const cap = Math.max(1, Math.min(20, Number(limit) || 8));
+  return loadThreads()
+    .filter((t) => !t.deleted && looksLikeGamedayThread(t))
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+    .slice(0, cap)
+    .map((t) =>
+      decorateActivityThread(t, {
+        posts,
+        users,
+        categoryMap,
+        viewerEmail,
+        yourRole: 'gameday',
+      })
+    );
+}
+
+/**
+ * Signed-in locker: threads you started, replied in, or follow — plus honest reply-on-yours.
+ */
+function getMyCommunity(session) {
+  const user = getOrCreateUser(session);
+  const email = String(user.email || session?.email || '').trim();
+  const categoryMap = getCategoryMap();
+  const users = loadUsers();
+  const posts = loadPosts().filter((p) => !p.deleted);
+  const threads = loadThreads().filter((t) => !t.deleted);
+  const followedIds = new Set(getFollowedThreadIds(email));
+
+  const started = threads.filter(
+    (t) => t.authorId === user.id || emailsMatch(t.authorEmail, email)
+  );
+  const startedIds = new Set(started.map((t) => t.id));
+  const repliedIds = new Set(
+    posts
+      .filter((p) => p.authorId === user.id || emailsMatch(p.authorEmail, email))
+      .map((p) => p.threadId)
+  );
+
+  const lockerMap = new Map();
+  for (const t of started) lockerMap.set(t.id, 'started');
+  for (const id of repliedIds) {
+    if (!lockerMap.has(id)) lockerMap.set(id, 'replied');
+  }
+  for (const id of followedIds) {
+    if (!lockerMap.has(id)) lockerMap.set(id, 'following');
+  }
+
+  const locker = [...lockerMap.entries()]
+    .map(([id, role]) => {
+      const t = threads.find((x) => x.id === id);
+      if (!t) return null;
+      return decorateActivityThread(t, {
+        posts,
+        users,
+        categoryMap,
+        viewerEmail: email,
+        yourRole: role,
+      });
+    })
+    .filter(Boolean)
+    .sort((a, b) => new Date(b.lastActivityAt || 0) - new Date(a.lastActivityAt || 0));
+
+  const repliesOnYours = started
+    .map((t) => {
+      const others = posts
+        .filter((p) => p.threadId === t.id && !emailsMatch(p.authorEmail, email))
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const last = others[0];
+      if (!last) return null;
+      const author = users.find((u) => u.id === last.authorId);
+      return {
+        threadId: t.id,
+        title: t.title,
+        replyCount: others.length,
+        lastReplyAt: last.createdAt,
+        lastReplyPreview: String(last.body || '').replace(/\s+/g, ' ').trim().slice(0, 90),
+        lastReplyAuthor: author?.displayName || 'Member',
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => new Date(b.lastReplyAt) - new Date(a.lastReplyAt));
+
+  return {
+    user: { id: user.id, displayName: user.displayName, email: user.email },
+    locker,
+    started: locker.filter((t) => startedIds.has(t.id)),
+    replied: locker.filter((t) => repliedIds.has(t.id) && !startedIds.has(t.id)),
+    following: locker.filter((t) => t.yourRole === 'following'),
+    repliesOnYours,
+    gameRooms: getGameRooms({ limit: 8, viewerEmail: email }),
+  };
 }
 
 function getPulseStats() {
@@ -1223,7 +1398,11 @@ module.exports = {
   deletePost,
   isAuthorOf,
   toggleFollow,
+  ensureFollow,
   getFollowedThreadIds,
+  getGameRooms,
+  getMyCommunity,
+  looksLikeGamedayThread,
   getPulseStats,
   getLiveRooms,
   getLiveRoomMessages,

@@ -19,5 +19,8 @@ export function buildSeedCommunityPageData(): CommunityPageData {
     threads: Array.isArray(COMMUNITY_HUB_SEED.threads) ? COMMUNITY_HUB_SEED.threads : [],
     pulse: COMMUNITY_HUB_SEED.pulse || {},
     rooms: Array.isArray(COMMUNITY_HUB_SEED.rooms) ? COMMUNITY_HUB_SEED.rooms : [],
+    gameRooms: [],
+    me: null,
+    followed: [],
   };
 }

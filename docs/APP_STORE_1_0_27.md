@@ -1,4 +1,6 @@
-# Submit 1.0.27 (Build 92+) — closed 1.0.26 train
+# Submit 1.0.27 (Build 92+) — closed
+
+**Closed:** 1.0.27 shipped Matchup Edge only. Next train is **1.0.28** (`docs/APP_STORE_1_0_28.md`). Do not start another 1.0.27 IPA.
 
 **Why:** App Store Connect closed the **1.0.26** pre-release train. Codemagic publish failed:
 

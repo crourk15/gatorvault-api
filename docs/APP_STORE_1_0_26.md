@@ -1,6 +1,6 @@
 # Submit 1.0.26 (Build 91+) — closed 1.0.25 train + Rivalry Week badge
 
-**Closed:** 1.0.26 is approved. Codemagic cannot upload another 1.0.26 IPA (`90062` / `90186`). Next train is **1.0.27** (`docs/APP_STORE_1_0_27.md`).
+**Closed:** 1.0.26 is approved. Codemagic cannot upload another 1.0.26 IPA (`90062` / `90186`). Next train is **1.0.28** (`docs/APP_STORE_1_0_28.md`).
 
 **Why:** App Store Connect closed the **1.0.25** pre-release train. Codemagic publish failed:
 

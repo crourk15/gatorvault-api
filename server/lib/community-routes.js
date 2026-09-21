@@ -51,10 +51,11 @@ function mountCommunityRoutes(app) {
       if (!data) return res.status(404).json({ ok: false, error: 'Thread not found' });
       const session = getSessionFromReq(req);
       const followed = session ? store.getFollowedThreadIds(session.email) : [];
+      const resolvedId = store.resolveThreadId(req.params.id);
       return res.json({
         ok: true,
         ...data,
-        following: followed.includes(req.params.id)
+        following: followed.includes(resolvedId) || followed.includes(req.params.id),
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -64,6 +65,31 @@ function mountCommunityRoutes(app) {
   app.get('/api/community/pulse', (req, res) => {
     try {
       return res.json({ ok: true, pulse: store.getPulseStats() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Last game-day talk rooms — public, stays after Staff open rolls. */
+  app.get('/api/community/game-rooms', (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit || '8', 10);
+      const session = getSessionFromReq(req);
+      return res.json({
+        ok: true,
+        gameRooms: store.getGameRooms({ limit, viewerEmail: session?.email || null }),
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Signed-in locker: started, replied, following, replies-on-yours. */
+  app.get('/api/community/me', (req, res) => {
+    const session = requireSession(req, res);
+    if (!session) return;
+    try {
+      return res.json({ ok: true, me: store.getMyCommunity(session) });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

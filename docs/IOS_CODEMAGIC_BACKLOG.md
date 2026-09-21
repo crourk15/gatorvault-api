@@ -77,7 +77,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Why we chase generator + Admin/script overrides on HP API (`whyWeChase`) — live after Render; **client prefer-field needs Codemagic bake below**
 - [x] 2028 HP chase cards: visit lines + Why we chase notes from live visit/intel stores + soft priority nudge (API — no Codemagic; Rising still snapshot `delta7d` only)
 - [x] Home NOW / class-overview 2027 commit count lockstep with commit cards (26) — kill protected-only phantom inflate + shared `loadHubHsClassCommits` (API)
-- [x] App Store **1.0.27** / build 92+ is the next Codemagic train — 1.0.26 train closed (`90062` / `90186`); Matchup Edge sit + queued 1.0.26 client UI (`docs/APP_STORE_1_0_27.md`)
+- [x] App Store **1.0.27** / build 92+ Matchup Edge train is closed. Next bake is **1.0.28** / build 93+ (`docs/APP_STORE_1_0_28.md`).
 - [x] App Store **1.0.26** / build 91+ train **closed** — already approved; Codemagic cannot upload another 1.0.26 IPA
 - [x] App Store **1.0.25** / build 90+ train **closed** — already approved; Codemagic cannot upload another 1.0.25 IPA
 - [x] App Store **1.0.24** / build 89 was the prior pbxproj train (Film Room Review-off)
@@ -140,16 +140,18 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 ## Waiting for next Codemagic build
 
-**Next bake target: App Store `1.0.27` / build `92+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_27.md`. 1.0.26 is approved and closed. Merge this bump, create **1.0.27** in App Store Connect, then Charles starts Codemagic **ios-release** on `main`.
+**Next bake target: App Store `1.0.28` / build `93+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_28.md`. 1.0.27 is closed. Merge this bump, create **1.0.28** in App Store Connect, then Charles starts Codemagic **ios-release** on `main`. Do **not** start until this agent says the bump is on `main`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-21 | Gators Live snap: 2s live poll, local clock tick, no loading flash, wake refetch | `VaultLiveScoresPage` + `gatorsLivePollMs` in binary. **ESPN 1.5s cache, 4s fetch, last-good board, 8s score watch** are API-live after Render. Do not start Codemagic. | #714 |
-| 2026-09-21 | Home NOW elite: this-week game lead + named process stack (Ole Miss / Saturday visits), class metrics capped at 1 | `HomeCommandCenter` + `home-command-utils` in binary. **Ticker API already ranks game week + visits after Render.** Do not start Codemagic. | #713 |
-| 2026-09-21 | My Alerts elite: delivery health, server pref read-back, honest On/Off, visit frequency only when email is on | `VaultAlertsPage` + CSS in binary. **GET `/api/alerts/status`, visit email (Resend fallback), and Daily/Weekly no longer overwritten by test** are API-live after Render. Do not start Codemagic. | pending |
-| 2026-09-21 | Game Week Swing Impact: weekly official-box + opponent restamp (Baugh FAU 92 / Campbell 95 / Auburn 93 / Ole Miss 95) | `buildSwing` still list-index 72 in **1.0.27**. Live `/api/schedule` already stamps `swing[].impact` / `trend` after Render. Next bake prefers the stamp. Do not start Codemagic. | pending |
+| 2026-09-21 | App Store **1.0.28** / build 93+ bake train | `MARKETING_VERSION` + this client UI stack. Do not start Codemagic until this is on `main` and **1.0.28** exists in App Store Connect. | pending |
+| 2026-09-21 | Game Week Swing Impact: player grade, not 72 + list order (Baugh Ole Miss **95**) | `buildSwing` prefers `/api/schedule` `swing[].impact`. Old binary still does `72 + index * 8` so Baugh first = 72 and Philo third = 88. | #711 |
+| 2026-09-21 | Community locker + Game talk: find Saturday comments, New reply chip, Keep in locker | `VaultCommunityPage` + locker CSS in binary. **GET `/api/community/me`, `/api/community/game-rooms`, auto-follow on post/reply** are API-live after Render. | #715 |
+| 2026-09-21 | Gators Live snap: 2s live poll, local clock tick, no loading flash, wake refetch | `VaultLiveScoresPage` + `gatorsLivePollMs` in binary. **ESPN 1.5s cache, 4s fetch, last-good board, 8s score watch** are API-live after Render. | #714 |
+| 2026-09-21 | Home NOW elite: this-week game lead + named process stack (Ole Miss / Saturday visits), class metrics capped at 1 | `HomeCommandCenter` + `home-command-utils` in binary. **Ticker API already ranks game week + visits after Render.** | #713 |
+| 2026-09-21 | My Alerts elite: delivery health, server pref read-back, honest On/Off, visit frequency only when email is on | `VaultAlertsPage` + CSS in binary. **GET `/api/alerts/status`, visit email (Resend fallback), and Daily/Weekly no longer overwritten by test** are API-live after Render. | #712 |
 | 2026-09-21 | Game Week expected-visitor cards: two-line meta + no blank `HS` badge | `ExpectedVisitorsPanel` + CSS in binary; **name/pos/school data is API-live after Render**. Old binary still truncates one line and shows `HS` if a slug had no pos. | pending |
 | 2026-09-20 | Game Week Matchup Edge reads sat `game.radar` (Ole Miss LSU-sit stamp) | `buildRadar` in binary; **API `/api/schedule` radar already live after Render**. Old binary still draws the 51% formula hexagon. | pending · bake 1.0.27 |
 | 2026-09-20 | Home Game Week skips a posted final immediately (no 8h hold on last week's opponent) | `getFeaturedUfGame` in binary; **API `currentGameId` + Game Week page already Ole Miss after Render**. Old binary still advances after the 8h postgame window — do not start Codemagic for this. | pending · bake 1.0.27 |

@@ -2,7 +2,7 @@
 
 **Why:** Charles called this bake **1.0.25**. Current `project.pbxproj` was **1.0.24** / 89. New upload is a higher `CFBundleShortVersionString`.
 
-**Closed:** 1.0.25 is approved. Codemagic cannot upload another 1.0.25 IPA (`90062` / `90186`). Next train is **1.0.27** (`docs/APP_STORE_1_0_27.md`).
+**Closed:** 1.0.25 is approved. Codemagic cannot upload another 1.0.25 IPA (`90062` / `90186`). Next train is **1.0.28** (`docs/APP_STORE_1_0_28.md`).
 
 ## iOS
 
