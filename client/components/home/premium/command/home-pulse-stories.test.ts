@@ -255,7 +255,7 @@ describe('buildHomePulseStories', () => {
       now: OLE_MISS_WEEK,
       hubTicker: [
         'Game — Ole Miss in the Swamp · ABC',
-        'Visitors — Craig-James · Vickers · Flowers',
+        'Visitors — Easton Royal',
         'Season — 3-0 · first SEC home Saturday',
         '2027 class trending nationally — UF at #8',
         'Cyion Smith — Visit scheduled (Saturday)',
@@ -265,10 +265,33 @@ describe('buildHomePulseStories', () => {
     });
     assert.deepEqual(stories, [
       'Game — Ole Miss in the Swamp · ABC',
-      'Visitors — Craig-James · Vickers · Flowers',
+      'Visitors — Easton Royal',
       'Season — 3-0 · first SEC home Saturday',
     ]);
     assert.ok(!stories.some((s) => /Cyion Smith|Florida process|class trending/i.test(s)));
+  });
+
+  it('keeps every this-week visitor first and last name on NOW', () => {
+    const stories = buildHomePulseStories({
+      now: OLE_MISS_WEEK,
+      hubTicker: [
+        'Game — Ole Miss in the Swamp · ABC',
+        'Visitors — Easton Royal',
+        'Visitors — Brysen Wright',
+        'Visitors — Antonio Thomas Jr.',
+        'Season — 3-0 · first SEC home Saturday',
+        '2027 class trending nationally — UF at #8',
+      ],
+      hpIntel: [],
+      movement: null,
+    });
+    assert.deepEqual(stories, [
+      'Game — Ole Miss in the Swamp · ABC',
+      'Visitors — Easton Royal',
+      'Visitors — Brysen Wright',
+      'Visitors — Antonio Thomas Jr.',
+      'Season — 3-0 · first SEC home Saturday',
+    ]);
   });
 
   it('does not let Expected visitors outrank Game Week', () => {

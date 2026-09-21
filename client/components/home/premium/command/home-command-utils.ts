@@ -721,6 +721,11 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
     .filter((t) => t && !isClassMetricPulse(t) && !isThinClassMetricPulse(t) && !isThinFloridaProcessPulse(t));
   const weeklyPillars = tickerSolid.filter(isWeeklyNowPillarLine);
   if (weeklyPillars.length >= 3) {
+    const game = weeklyPillars.filter((t) => /^(Game|Live|Game Week)\s+[—-]/.test(t));
+    const mid = weeklyPillars.filter((t) => /^(Visitors|News|Road)\s+[—-]/.test(t));
+    const season = weeklyPillars.filter((t) => /^Season\s+[—-]/.test(t));
+    const slate = [...game.slice(0, 1), ...mid, ...season.slice(0, 1)].filter(Boolean);
+    if (slate.length >= 3) return slate;
     return weeklyPillars.slice(0, 3);
   }
   if (gameStory) {
