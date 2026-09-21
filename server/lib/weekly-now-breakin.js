@@ -1,6 +1,6 @@
 /**
  * Middle NOW slot break-in — Game and Season stay.
- * Home + visitors: only news bigger than the list (top-25 / 5-star UF commit).
+ * Home + visitors: any Florida commit/flip this week beats the visitor list.
  * Road / empty visitors: the week's Florida commit or flip, if we have one.
  */
 'use strict';
@@ -75,11 +75,8 @@ function scoreBreakIn(row, nowMs, biggerThanVisitors) {
   const kind = eventKind(row);
   const top25 = Number.isFinite(rank) && rank <= TOP25;
   const fiveStar = stars >= 5;
-  if (biggerThanVisitors) {
-    if (!top25 && !fiveStar) return 0;
-    return (top25 ? 200 - rank : 170) + (kind === 'flip' ? 4 : 0);
-  }
-  if (top25) return 200 - rank;
+  // Any Florida commit/flip this week beats visitors. Rank only picks the best one.
+  if (top25) return 200 - rank + (kind === 'flip' ? 4 : 0);
   if (fiveStar) return 170;
   if (Number.isFinite(rank) && rank <= 100) return 140 - rank / 2;
   if (stars >= 4) return 90;
