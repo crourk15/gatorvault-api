@@ -1506,6 +1506,9 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const healLookedUseful = healedPlayers.some((p) => {
         const rpm = Number(p?.ufRpmPct);
         const lead = String(p?.on3Lead || '');
+        const slug = String(p?.slug || '');
+        // Do not persist a Miami stamp on Antonio while Florida RPM is still missing.
+        if (slug === 'antonio-thomas-jr' && /miami/i.test(lead) && !(rpm >= 20)) return false;
         return (Number.isFinite(rpm) && rpm > 0) || (lead && lead !== '—' && lead !== '-');
       });
       if (fresh && healLookedUseful && Date.now() - lastWrite > 60_000) {
