@@ -79,8 +79,8 @@ const SLUG_ALIASES: Record<string, string> = {
 const ROSTER_VAULT_GRADES: Record<string, number> = {
   'tramell-jones-jr': 84,
   'aaron-philo': 86,
-  'jaden-baugh': 88,
-  'jadan-baugh': 88,
+  'jaden-baugh': 95,
+  'jadan-baugh': 95,
   'eric-singleton-jr': 87,
   'jayden-woods': 90,
   'cormani-mcclain': 86,
@@ -220,14 +220,39 @@ function buildSwing(game: ScheduleGame): SwingPlayerIntel[] {
     'Myles Graham': 'myles-graham',
     QB1: 'aaron-philo',
   };
-  return game.swing.map((s, i) => ({
-    name: s.name,
-    position: posMap[s.name] ?? 'KEY',
-    role: s.role,
-    impact: Math.min(95, 72 + i * 8 + (game.ufPct > 60 ? 5 : 0)),
-    trend: i === 0 ? 'up' : i === 1 ? 'up' : 'flat',
-    slug: slugMap[s.name] ?? 'aaron-philo',
-  }));
+  return game.swing.map((s, i) => {
+    const slug = slugMap[s.name] ?? slugFromSwingName(s.name);
+    return {
+      name: s.name,
+      position: posMap[s.name] ?? 'KEY',
+      role: s.role,
+      impact: swingImpactFor(s.name, slug, s.impact),
+      trend: i === 0 ? 'up' : i === 1 ? 'up' : 'flat',
+      slug,
+    };
+  });
+}
+
+function slugFromSwingName(name: string): string {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'aaron-philo';
+}
+
+/**
+ * Swing Impact is the player, not list order.
+ * Old formula `72 + index * 8` put Baugh (first) at 72 and Philo (third) at 88.
+ */
+function swingImpactFor(name: string, slug: string, stamped?: number): number {
+  if (Number.isFinite(stamped) && (stamped as number) >= 1 && (stamped as number) <= 99) {
+    return Math.round(stamped as number);
+  }
+  const key = SLUG_ALIASES[slug] ?? slug;
+  const fromName = /baugh/i.test(name) ? 'jadan-baugh' : key;
+  const grade = vaultGradeForSlug(fromName);
+  if (grade != null) return grade;
+  return 78;
 }
 
 function clampAxis(n: number): number {

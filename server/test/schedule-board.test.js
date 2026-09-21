@@ -201,6 +201,8 @@ describe('schedule-board', () => {
     assert.equal(olemiss.date, 'September 26, 2026 · 3:30 PM ET');
     assert.equal(olemiss.tv, 'ABC');
     assert.equal(olemiss.filmWatched, false);
+    const baughSwing = olemiss.swing.find((s) => /baugh/i.test(s.name));
+    assert.equal(baughSwing?.impact, 95);
     assert.equal(olemiss.radar.find((a) => a.label === 'Pass Efficiency')?.opp, 78);
     assert.equal(olemiss.radar.find((a) => a.label === 'Front 7')?.opp, 48);
     assert.equal(olemiss.radar.find((a) => a.label === 'Coaching Edge')?.uf, 52);

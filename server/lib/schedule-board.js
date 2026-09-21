@@ -264,10 +264,16 @@ function normalizeGame(row) {
   const keys = Array.isArray(row.keys) ? row.keys.map((k) => String(k || '').trim()).filter(Boolean) : [];
   const swing = Array.isArray(row.swing)
     ? row.swing
-        .map((s) => ({
-          name: String(s?.name || '').trim(),
-          role: String(s?.role || '').trim(),
-        }))
+        .map((s) => {
+          const impactNum = Number(s?.impact);
+          return {
+            name: String(s?.name || '').trim(),
+            role: String(s?.role || '').trim(),
+            ...(Number.isFinite(impactNum) && impactNum >= 1 && impactNum <= 99
+              ? { impact: Math.round(impactNum) }
+              : {}),
+          };
+        })
         .filter((s) => s.name)
     : [];
   const radar = Array.isArray(row.radar)

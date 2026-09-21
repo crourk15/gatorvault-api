@@ -18,7 +18,7 @@ export type ScheduleGame = {
   ufPct: number;
   tv?: string;
   keys: string[];
-  swing: { name: string; role: string }[];
+  swing: { name: string; role: string; impact?: number }[];
   /**
    * Optional Matchup Edge axes (0–100). When present, Game Week uses this
    * instead of the win% formula. Stamp from the sit — do not invent.
@@ -107,7 +107,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     swing: [
       { name: "Aaron Philo", role: "QB1 — attack a secondary that forced only 3 INTs in 2025" },
-      { name: "Jaden Baugh", role: "RB — FAU allowed 200 rush YPG; Navy hit them for 397" },
+      { name: "Jaden Baugh", impact: 95, role: "RB — FAU allowed 200 rush YPG; Navy hit them for 397" },
       { name: "Jayden Woods", role: "JACK — set the edge and rush Veltkamp off rhythm" },
     ],
     film:
@@ -195,7 +195,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     swing: [
       { name: "Aaron Philo", role: "Attack a secondary that allowed 27 pass TDs in 2025" },
-      { name: "Jaden Baugh", role: "Run-game rhythm vs 143 rush YPG allowed" },
+      { name: "Jaden Baugh", impact: 95, role: "Run-game rhythm vs 143 rush YPG allowed" },
       { name: "Jayden Woods", role: "Keep Sixkiller in the pocket" },
     ],
     filmWatched: true,
@@ -288,7 +288,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     swing: [
       { name: "Jayden Woods", role: "Keep Byrum Brown in the pocket" },
-      { name: "Jadan Baugh", role: "Early-down rhythm vs a front that held Baylor to 103 rush" },
+      { name: "Jadan Baugh", impact: 95, role: "Early-down rhythm vs a front that held Baylor to 103 rush" },
       { name: "Aaron Philo", role: "They sit on the run — Baylor still threw 333" },
     ],
     filmWatched: false,
@@ -361,7 +361,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Don't let the short throw become a long run",
     ],
     swing: [
-      { name: "Jadan Baugh", role: "Early-down rhythm vs a front that just gave LSU 172" },
+      { name: "Jadan Baugh", impact: 95, role: "Early-down rhythm vs a front that just gave LSU 172" },
       { name: "Jayden Woods", role: "Keep Chambliss in the pocket" },
       { name: "Aaron Philo", role: "Louisville still threw 307 — they will trade chunks" },
     ],
@@ -434,7 +434,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     tv: "TBD",
     keys: ["Establish run on road", "Win turnover battle", "Execute red zone"],
     swing: [
-      { name: "Jaden Baugh", role: "Physical run game" },
+      { name: "Jaden Baugh", impact: 95, role: "Physical run game" },
       { name: "Secondary", role: "Limit deep shots" },
     ],
     film: "Missouri uses RPO and play-action.",
@@ -544,7 +544,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     tv: "ABC",
     keys: ["Control time of possession", "Get pressure on their QB", "Establish run before going downfield"],
     swing: [
-      { name: "Jadan Baugh", role: "Must go 100+ yards" },
+      { name: "Jadan Baugh", impact: 95, role: "Must go 100+ yards" },
       { name: "Jayden Woods", role: "Must generate pressure" },
     ],
     film: "Neutral-site Cocktail Party at Mercedes-Benz Stadium in Atlanta for 2026.",
@@ -610,7 +610,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     tv: "TBD",
     keys: ["Physical run fits", "Win the trenches", "Finish in red zone"],
     swing: [
-      { name: "Jadan Baugh", role: "Wear down front" },
+      { name: "Jadan Baugh", impact: 95, role: "Wear down front" },
       { name: "WR room", role: "Explosive plays" },
     ],
     film: "Kentucky power run and play-action on the road.",

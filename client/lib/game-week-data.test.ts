@@ -135,6 +135,13 @@ describe('Game Week Film Notes', () => {
     });
     assert.equal(withVegas.prediction.spread, 'UF +1.5');
     assert.equal(withVegas.prediction.total, 'O/U 58.5');
+    const baugh = bundle.swingPlayers.find((p) => /baugh/i.test(p.name));
+    const woods = bundle.swingPlayers.find((p) => /woods/i.test(p.name));
+    const philo = bundle.swingPlayers.find((p) => /philo/i.test(p.name));
+    assert.ok(baugh);
+    assert.equal(baugh.impact, 95);
+    assert.ok(woods && woods.impact < baugh.impact);
+    assert.ok(philo && philo.impact < baugh.impact);
     const radar = buildRadar(olemiss);
     assert.deepEqual(radar, olemiss.radar);
     assert.equal(radar.find((a) => a.label === 'Pass Efficiency')?.opp, 78);
