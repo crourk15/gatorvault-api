@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T23:20:00.000Z",
+  "updatedAt": "2026-09-21T03:20:00.000Z",
   "source": "Home-game visitor look only — plans can change. Away games do not get a visitor panel.",
   "visitorMeta": {
     "zylen-little": {
@@ -26,8 +26,64 @@
     "josiah-taylor": {
       "name": "Josiah Taylor",
       "position": "DL",
-      "school": "Vero Beach (FL)",
+      "school": "Vero Beach (Vero Beach, FL)",
       "stars": 3,
+      "classYear": 2028
+    },
+    "easton-royal": {
+      "name": "Easton Royal",
+      "position": "WR",
+      "school": "Brother Martin (New Orleans, LA)",
+      "stars": 5,
+      "classYear": 2027
+    },
+    "cj-craig-james": {
+      "name": "CJ Craig-James",
+      "position": "S",
+      "school": "Parker (Birmingham, AL)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "omari-lawson": {
+      "name": "Omari Lawson",
+      "position": "OT",
+      "school": "Zarephath Academy (Jacksonville, FL)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "shamar-evans": {
+      "name": "Shamar Evans",
+      "position": "LB",
+      "school": "Ruston (Ruston, LA)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "ty-winn": {
+      "name": "Ty Winn",
+      "position": "OT",
+      "school": "Monsignor Bonner (Drexel Hill, PA)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "anthony-turner": {
+      "name": "Anthony Turner",
+      "position": "QB",
+      "school": "Landstown (Virginia Beach, VA)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "izayah-vickers": {
+      "name": "Izayah Vickers",
+      "position": "CB",
+      "school": "Florida State University School (Tallahassee, FL)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "jc-wessel": {
+      "name": "J.C. Wessel",
+      "position": "TE",
+      "school": "The Bolles School (Jacksonville, FL)",
+      "stars": 4,
       "classYear": 2028
     },
     "derrell-hines-jr": {
@@ -79,11 +135,95 @@
       "stars": 4,
       "classYear": 2029
     },
+    "brysen-wright": {
+      "name": "Brysen Wright",
+      "position": "WR",
+      "school": "Mandarin (Jacksonville, FL)",
+      "stars": 5,
+      "classYear": 2028
+    },
+    "antonio-thomas-jr": {
+      "name": "Antonio Thomas Jr.",
+      "position": "EDGE",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "tyzon-swann": {
+      "name": "Tyzon Swann",
+      "position": "DL",
+      "school": "Henry E. Lackey (Indian Head, MD)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "madoxx-davis": {
+      "name": "Madoxx Davis",
+      "position": "WR",
+      "school": "Cartersville (Cartersville, GA)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "jayden-bell": {
+      "name": "Jayden Bell",
+      "position": "EDGE",
+      "school": "Brother Rice (Bloomfield Hills, MI)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "giovanni-tuggle": {
+      "name": "Giovanni Tuggle",
+      "position": "S",
+      "school": "Winder-Barrow (Winder, GA)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "dion-edwards": {
+      "name": "Dion Edwards",
+      "position": "S",
+      "school": "Tyner Academy (Chattanooga, TN)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "merrick-ham": {
+      "name": "Merrick Ham",
+      "position": "EDGE",
+      "school": "Marietta (Marietta, GA)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "xander-edwards": {
+      "name": "Xander Edwards",
+      "position": "RB",
+      "school": "The Bolles School (Jacksonville, FL)",
+      "stars": 4,
+      "classYear": 2028
+    },
     "jaxon-flowers": {
       "name": "Jaxon Flowers",
       "position": "S",
-      "school": "Bolles (Jacksonville, FL)",
+      "school": "The Bolles School (Jacksonville, FL)",
       "stars": 4,
+      "classYear": 2028
+    },
+    "anthony-howard-jr": {
+      "name": "Anthony Howard Jr.",
+      "position": "RB",
+      "school": "IMG Academy (Bradenton, FL)",
+      "stars": 3,
+      "classYear": 2028
+    },
+    "hudson-west": {
+      "name": "Hudson West",
+      "position": "QB",
+      "school": "Sarasota (Sarasota, FL)",
+      "stars": 3,
+      "classYear": 2028
+    },
+    "cooper-martenson": {
+      "name": "Cooper Martenson",
+      "position": "OT",
+      "school": "Marist School (Atlanta, GA)",
+      "stars": null,
       "classYear": 2028
     },
     "cyion-smith": {
@@ -145,6 +285,7 @@
       "date": "2026-09-26",
       "dateLabel": "Sep 26",
       "chaseLabel": "Expected Ole Miss visit · Sep 26",
+      "source": "Expected / planning, not confirmed on campus. Plans can change. Thomas, Flowers, and Taylor have later return notes for this weekend. Royal is a Texas commit. Lawson is a Syracuse commit.",
       "slugs": [
         "easton-royal",
         "brysen-wright",
@@ -159,12 +300,13 @@
         "xander-edwards",
         "omari-lawson",
         "jc-wessel",
-        "j-c-wessel",
         "shamar-evans",
         "ty-winn",
         "jaxon-flowers",
+        "izayah-vickers",
         "anthony-howard-jr",
         "hudson-west",
+        "anthony-turner",
         "cooper-martenson",
         "josiah-taylor"
       ]

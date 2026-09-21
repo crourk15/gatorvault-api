@@ -20,6 +20,15 @@ function metaLine(v: Visitor): string {
   return bits.join(' · ');
 }
 
+function positionMark(v: Visitor): string {
+  const pos = String(v.position || '')
+    .trim()
+    .toUpperCase();
+  if (!pos) return '—';
+  if (pos === 'EDGE') return 'EDG';
+  return pos.slice(0, 3);
+}
+
 /**
  * Dedicated Game Week Expected visitors surface — not buried in 3 Keys.
  */
@@ -43,7 +52,7 @@ export function ExpectedVisitorsPanel({ panel }: Props): React.ReactElement {
               <li key={v.slug} className="gv-gw-visitors__item">
                 <VaultNavLink href={href} className="gv-gw-visitors__link">
                   <span className="gv-gw-visitors__mark" aria-hidden>
-                    {(v.position || 'HS').slice(0, 3).toUpperCase()}
+                    {positionMark(v)}
                   </span>
                   <span className="gv-gw-visitors__copy">
                     <span className="gv-gw-visitors__name">{v.name}</span>
