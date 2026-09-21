@@ -4,6 +4,9 @@ import {
   applyLiveCommitCountToTicker,
   buildHomeNowGameStory,
   buildHomePulseStories,
+  buildLocalWeeklyNowWeek,
+  parseWeeklyNowPillars,
+  resolveHomeNowWeekPillars,
 } from './home-command-utils';
 
 const OFFSEASON = new Date('2026-07-15T16:00:00.000Z');
@@ -363,5 +366,51 @@ describe('buildHomeNowGameStory', () => {
 
   it('stays quiet in July', () => {
     assert.equal(buildHomeNowGameStory(OFFSEASON), null);
+  });
+});
+
+describe('buildLocalWeeklyNowWeek', () => {
+  it('paints Game / Visitors / Season on Ole Miss week without the one-line ABC lead', () => {
+    const pillars = buildLocalWeeklyNowWeek(OLE_MISS_WEEK);
+    assert.equal(pillars.length, 3);
+    assert.equal(pillars[0].label, 'Game');
+    assert.ok(pillars[0].items.some((s) => /Ole Miss in the Swamp · ABC/.test(s)));
+    assert.ok(!pillars[0].items.some((s) => /^Game\s+[—-]/.test(s)));
+    assert.equal(pillars[1].label, 'Visitors');
+    assert.ok(pillars[1].items.includes('Easton Royal'));
+    assert.ok(pillars[1].items.includes('Antonio Thomas Jr.'));
+    assert.ok(pillars[1].items.length >= 20);
+    assert.ok(pillars[1].items.every((s) => !/ABC/i.test(s)));
+    assert.equal(pillars[2].label, 'Season');
+    assert.match(pillars[2].items[0], /3-0 first SEC home Saturday/);
+  });
+
+  it('stays quiet in July', () => {
+    assert.deepEqual(buildLocalWeeklyNowWeek(OFFSEASON), []);
+  });
+});
+
+describe('resolveHomeNowWeekPillars', () => {
+  it('does not keep the TestFlight Game ABC list when nowWeek is empty', () => {
+    const stories = [buildHomeNowGameStory(OLE_MISS_WEEK) || ''];
+    assert.equal(stories[0], 'Game — Ole Miss in the Swamp · ABC');
+    assert.equal(parseWeeklyNowPillars(stories).length, 1);
+    const pillars = resolveHomeNowWeekPillars([], stories, OLE_MISS_WEEK);
+    assert.equal(pillars.length, 3);
+    assert.equal(pillars[0].label, 'Game');
+    assert.equal(pillars[1].label, 'Visitors');
+    assert.equal(pillars[2].label, 'Season');
+    assert.ok(!pillars.some((p) => p.items.some((s) => /^Game — Ole Miss in the Swamp · ABC$/.test(s))));
+  });
+
+  it('keeps live nowWeek when the API pack arrives', () => {
+    const live = [
+      { key: 'game', label: 'Game', items: ['Ole Miss Saturday — 3:30 PM · ABC'] },
+      { key: 'news', label: 'News', items: ['Jaden Hale commits to Florida'] },
+      { key: 'season', label: 'Season', items: ['3-0 first SEC home Saturday'] },
+    ];
+    const pillars = resolveHomeNowWeekPillars(live, ['Game — Ole Miss in the Swamp · ABC'], OLE_MISS_WEEK);
+    assert.equal(pillars[1].label, 'News');
+    assert.equal(pillars[1].items[0], 'Jaden Hale commits to Florida');
   });
 });

@@ -269,6 +269,163 @@ export function parseWeeklyNowPillars(lines: string[]): HomeNowWeekPillar[] {
   return pillars;
 }
 
+/** Bundled this-week Swamp names so first paint can tick before /hub/ticker. */
+const WEEKLY_NOW_VISITORS_BY_GAME: Record<string, string[]> = {
+  olemiss: [
+    'Easton Royal',
+    'Brysen Wright',
+    'Antonio Thomas Jr.',
+    'Tyzon Swann',
+    'Madoxx Davis',
+    'Jayden Bell',
+    'Giovanni Tuggle',
+    'CJ Craig-James',
+    'Dion Edwards',
+    'Merrick Ham',
+    'Xander Edwards',
+    'Omari Lawson',
+    'J.C. Wessel',
+    'Shamar Evans',
+    'Ty Winn',
+    'Jaxon Flowers',
+    'Izayah Vickers',
+    'Anthony Howard Jr.',
+    'Hudson West',
+    'Anthony Turner',
+    'Cooper Martenson',
+    'Josiah Taylor',
+  ],
+};
+
+function isWeeklyNowHomeGame(game: { venue?: string; label?: string } | null | undefined): boolean {
+  const venue = String(game?.venue || '');
+  const label = String(game?.label || '');
+  if (/@/.test(label) || /\bat\b/i.test(label)) return false;
+  if (/gainesville|swamp|hill griffin/i.test(venue)) return true;
+  return /\bvs\b/i.test(label);
+}
+
+function isWeeklyNowSecOpponent(game: { id?: string; opp?: string; label?: string } | null | undefined): boolean {
+  const blob = `${game?.id || ''} ${game?.opp || ''} ${game?.label || ''}`;
+  return /ole\s*miss|georgia|alabama|auburn|texas a&m|oklahoma|\blsu\b|tennessee|kentucky|missouri|south carolina|vanderbilt|arkansas|mississippi state|\btexas\b/i.test(
+    blob
+  );
+}
+
+function weeklyNowSeasonRecord(now: Date): { wins: number; losses: number } {
+  const nowMs = now.getTime();
+  let wins = 0;
+  let losses = 0;
+  for (const g of SCHEDULE_GAMES) {
+    if (!g || g.kind === 'bye') continue;
+    const uf = Number(g.finalUF);
+    const opp = Number(g.finalOpp);
+    if (!Number.isFinite(uf) || !Number.isFinite(opp)) continue;
+    const kick = parseScheduleKickoff(g.date);
+    if (kick && kick.getTime() > nowMs) continue;
+    if (uf > opp) wins += 1;
+    else if (uf < opp) losses += 1;
+  }
+  return { wins, losses };
+}
+
+function weeklyNowFirstSecHome(
+  now: Date,
+  current: { id?: string; date?: string; venue?: string; label?: string; opp?: string } | null | undefined
+): boolean {
+  if (!current || !isWeeklyNowHomeGame(current) || !isWeeklyNowSecOpponent(current)) return false;
+  const nowMs = now.getTime();
+  const currentKick = parseScheduleKickoff(String(current.date || ''));
+  for (const g of SCHEDULE_GAMES) {
+    if (!g || g.kind === 'bye') continue;
+    if (String(g.id || '') === String(current.id || '')) continue;
+    if (!isWeeklyNowHomeGame(g) || !isWeeklyNowSecOpponent(g)) continue;
+    const kick = parseScheduleKickoff(g.date);
+    const posted = Number.isFinite(Number(g.finalUF)) && Number.isFinite(Number(g.finalOpp));
+    if (posted && kick && kick.getTime() < nowMs) continue;
+    if (kick && currentKick && kick.getTime() < currentKick.getTime()) return false;
+  }
+  return true;
+}
+
+function stripWeeklyNowPrefix(text: string): string {
+  return String(text || '')
+    .replace(/^(Game|Visitors|Road|Season|News|Live|Game Week|Up next)\s+[—-]\s+/i, '')
+    .trim();
+}
+
+function weekdayForKick(kick: Date): string {
+  return kick.toLocaleDateString('en-US', {
+    weekday: 'long',
+    timeZone: 'America/New_York',
+  });
+}
+
+/**
+ * Local Game / Visitors / Season so TestFlight never first-paints the old
+ * one-line `Game — Ole Miss in the Swamp · ABC` list. Live nowWeek replaces this.
+ */
+export function buildLocalWeeklyNowWeek(now = new Date()): HomeNowWeekPillar[] {
+  const game = nextHomeGame(now);
+  const gameStory = buildHomeNowGameStory(now);
+  if (!gameStory || !game) return [];
+  const kick = parseScheduleKickoff(game.date);
+  const weekday = kick ? weekdayForKick(kick) : 'Saturday';
+  const live = /^LIVE\s+[—-]/i.test(gameStory);
+  const gameItem = stripWeeklyNowPrefix(gameStory);
+  const pillars: HomeNowWeekPillar[] = [
+    {
+      key: live ? 'live' : 'game',
+      label: live ? 'Live' : 'Game',
+      items: gameItem ? [gameItem] : [],
+    },
+  ];
+  const home = isWeeklyNowHomeGame(game);
+  const names = WEEKLY_NOW_VISITORS_BY_GAME[String(game.id || '')] || [];
+  if (home) {
+    pillars.push({
+      key: 'visitors',
+      label: 'Visitors',
+      items: names.length ? names : [`home this ${weekday}`],
+    });
+  } else {
+    pillars.push({
+      key: 'road',
+      label: 'Road',
+      items: [`on the road this ${weekday}`],
+    });
+  }
+  const { wins, losses } = weeklyNowSeasonRecord(now);
+  const standing = weeklyNowFirstSecHome(now, game)
+    ? `${wins}-${losses} first SEC home ${weekday}`
+    : isWeeklyNowSecOpponent(game) && home
+      ? `${wins}-${losses} SEC home ${weekday}`
+      : `${wins}-${losses} heading into ${weekday}`;
+  pillars.push({ key: 'season', label: 'Season', items: [standing] });
+  return pillars.filter((row) => row.label && row.items.length).slice(0, 3);
+}
+
+/** Live API → parsed ticker lines → local week. Never a single Game ABC lead. */
+export function resolveHomeNowWeekPillars(
+  nowWeek: HomeNowWeekPillar[] | undefined,
+  stories: string[],
+  now = new Date()
+): HomeNowWeekPillar[] {
+  const live = (nowWeek ?? [])
+    .map((row) => ({
+      key: String(row.key || row.label || '')
+        .trim()
+        .toLowerCase(),
+      label: String(row.label || '').trim(),
+      items: (row.items || []).map((s) => String(s || '').trim()).filter(Boolean),
+    }))
+    .filter((row) => row.label && row.items.length);
+  if (live.length >= 2) return live.slice(0, 3);
+  const parsed = parseWeeklyNowPillars(stories);
+  if (parsed.length >= 2) return parsed.slice(0, 3);
+  return buildLocalWeeklyNowWeek(now);
+}
+
 /** This-week slate chip — Home NOW must move with the opponent, not sit on #8. */
 export function buildHomeNowGameStory(now = new Date()): string | null {
   const game = nextHomeGame(now);

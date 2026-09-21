@@ -147,12 +147,14 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 ## Waiting for next Codemagic build
 
-**Next bake target: App Store `1.0.28` / build `94+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_28.md`. Build 93 is on TestFlight with the old one-line NOW. Merge this bump, then Charles starts Codemagic **ios-release** on `main`. Do **not** start until this agent says the bump is on `main`.
+**Next bake target: App Store `1.0.28` / build `95`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_28.md`. Build 94 is on TestFlight and still first-paints the one-line `Game — Ole Miss in the Swamp · ABC` when `nowWeek` is empty. Merge this bump, then Charles starts Codemagic **ios-release** on `main`. Do **not** start until this agent says the bump is on `main`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-21 | Home NOW first-paint pillars + skip ticker SWR (never the one-line Game ABC list) | `buildLocalWeeklyNowWeek` + `resolveHomeNowWeekPillars` + SWR skip in binary. **Ticker API already has `nowWeek` after Render.** Bake **95**. | pending |
+| 2026-09-21 | App Store **1.0.28** / build **95** (NOW first-paint). Build 94 still shows Game ABC. | `CURRENT_PROJECT_VERSION` 95. 1.0.28 exists in App Store Connect. | pending |
 | 2026-09-21 | Home NOW keeps every `Visitors — First Last` ticker line so fallback parse can tick the full list | `buildHomePulseStories` in binary. **Ticker API already serves full names + `nowWeek` after Render.** | pending |
 | 2026-09-21 | Home NOW three bold pillars (Game / Visitors or News / Season) with names ticking under Visitors | `HomeCommandCenter` + `home-wow.css` in binary. **Ticker API already serves pillar lines + `nowWeek` after Render.** | bake 94 |
 | 2026-09-21 | Home NOW drops last-week gameday/visit lines (no “Man Robinson — Robinson — Campbell”) | `isPriorGameWeekNowPulse` + `joinPlayerPulse` in binary. **Movement-intel API already skips those after Render.** | bake 94 |

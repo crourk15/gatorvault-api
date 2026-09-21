@@ -42,6 +42,7 @@ import {
   buildHomePulseHeadline,
   buildHomePulseStories,
   applyLiveCommitCountToTicker,
+  buildLocalWeeklyNowWeek,
   mergeEliteHomeTickers,
 } from '@/components/home/premium/command/home-command-utils';
 
@@ -123,7 +124,7 @@ export function HomePremiumPage(): React.ReactElement {
   const [hubTicker, setHubTicker] = useState<string[]>(() =>
     seedHomeTicker(ACTIVE_RECRUITING_CLASS_YEAR)
   );
-  const [nowWeek, setNowWeek] = useState<HomeNowWeekCategory[]>([]);
+  const [nowWeek, setNowWeek] = useState<HomeNowWeekCategory[]>(() => buildLocalWeeklyNowWeek());
   const [hpIntel, setHpIntel] = useState<HighPriorityIntelItem[]>([]);
   const [movementIntel, setMovementIntel] = useState<MovementIntelResponse | null>(null);
   // Seeded beat + metrics so first paint never waits on cold intel APIs.

@@ -12,7 +12,7 @@ import type {
   HomeGameDayView,
   HomeNowWeekPillar,
 } from '@/components/home/premium/command/home-command-utils';
-import { parseWeeklyNowPillars } from '@/components/home/premium/command/home-command-utils';
+import { resolveHomeNowWeekPillars } from '@/components/home/premium/command/home-command-utils';
 
 type Props = {
   pulseHeadline: string;
@@ -79,18 +79,10 @@ export function HomeCommandCenter({
     return single ? [single] : ['Live intel loading…'];
   }, [pulseStories, pulseHeadline]);
 
-  const pillars = useMemo(() => {
-    const live = (nowWeek ?? [])
-      .map((row) => ({
-        key: String(row.key || row.label || '').trim().toLowerCase(),
-        label: String(row.label || '').trim(),
-        items: (row.items || []).map((s) => String(s || '').trim()).filter(Boolean),
-      }))
-      .filter((row) => row.label && row.items.length);
-    if (live.length >= 2) return live.slice(0, 3);
-    const parsed = parseWeeklyNowPillars(stories);
-    return parsed.length >= 2 ? parsed.slice(0, 3) : [];
-  }, [nowWeek, stories]);
+  const pillars = useMemo(
+    () => resolveHomeNowWeekPillars(nowWeek, stories),
+    [nowWeek, stories]
+  );
 
   const lead = stories[0] || 'Live intel loading…';
   const supportPool = stories.slice(1);

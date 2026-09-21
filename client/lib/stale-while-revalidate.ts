@@ -39,6 +39,9 @@ const NO_CACHE_PREFIXES = [
   // Chase Expected visit labels live on HP visitHistory — stale SWR hid them
   // after the API merge until a hard cache clear.
   '/api/futurecast/high-priority',
+  // Home NOW pillars live on nowWeek. An items-only SWR paint kept the old
+  // one-line Game — Ole Miss ABC list on TestFlight after bake 94.
+  '/api/recruiting/hub/ticker',
 ];
 
 type CacheEnvelope<T> = { at: number; data: T };
