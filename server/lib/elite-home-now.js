@@ -188,6 +188,55 @@ function isVisitPulseSummary(text) {
   return false;
 }
 
+function escapeNowNameRe(name) {
+  return String(name || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function lastCompletedKickMs(nowMs, games) {
+  const list = Array.isArray(games) ? games : loadScheduleGamesForNow();
+  let last = NaN;
+  for (const g of list) {
+    if (!g || g.kind === 'bye') continue;
+    const kickMs = parseScheduleKickoffMs(g.date);
+    const postedFinal =
+      Number.isFinite(Number(g.finalUF)) && Number.isFinite(Number(g.finalOpp));
+    if (!postedFinal || !Number.isFinite(kickMs) || kickMs >= nowMs) continue;
+    if (!Number.isFinite(last) || kickMs > last) last = kickMs;
+  }
+  return last;
+}
+
+/**
+ * Last week's gameday / visit pulse — not this week's NOW.
+ * "expected Campbell gameday" dies once Campbell is final.
+ */
+function isPriorGameWeekNowPulse(text, raw = {}, nowMs = Date.now()) {
+  const t = String(text || '').trim();
+  const list = loadScheduleGamesForNow();
+  for (const g of list) {
+    const kickMs = parseScheduleKickoffMs(g.date);
+    const postedFinal =
+      Number.isFinite(Number(g.finalUF)) && Number.isFinite(Number(g.finalOpp));
+    if (!postedFinal || !Number.isFinite(kickMs) || kickMs >= nowMs) continue;
+    const name = shortenOpponentName(g.opp);
+    if (!name || name.length < 3) continue;
+    const hit = new RegExp(`\\b${escapeNowNameRe(name)}\\b`, 'i').test(t);
+    if (hit && /\b(gameday|game day|expected .{0,60}visit|visit weekend)\b/i.test(t)) {
+      return true;
+    }
+  }
+  const lastKick = lastCompletedKickMs(nowMs, list);
+  if (!Number.isFinite(lastKick)) return false;
+  const row = raw && typeof raw === 'object' ? raw : {};
+  let ts = NaN;
+  for (const c of [row.visitDate, row.visitStart, row.date, row.timestamp, row.reportedAt]) {
+    ts = parseHomeNowTimestamp(c);
+    if (Number.isFinite(ts)) break;
+  }
+  if (!Number.isFinite(ts) || ts > nowMs) return false;
+  return ts < lastKick;
+}
+
 /**
  * Fresh enough for Home NOW.
  * Prefer actual visit day when known (past ≤3 weeks / upcoming ≤120d).
@@ -431,6 +480,7 @@ module.exports = {
   shortenOpponentName,
   parseHomeNowTimestamp,
   isVisitPulseSummary,
+  isPriorGameWeekNowPulse,
   isFreshHomeNowVisit,
   isFreshHomeNowTimestamp,
   isOfferPulseSummary,

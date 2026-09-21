@@ -253,6 +253,26 @@ describe('buildHomePulseStories', () => {
     assert.ok(!stories.some((s) => /Cyion Smith|Florida process|class trending/i.test(s)));
   });
 
+  it('drops last-week Campbell gameday from NOW', () => {
+    const stories = buildHomePulseStories({
+      now: OLE_MISS_WEEK,
+      hubTicker: ['Game Week — Ole Miss in the Swamp · ABC'],
+      hpIntel: [],
+      movement: {
+        alerts: [
+          {
+            type: 'VISIT',
+            player: 'Man Robinson',
+            detail: 'Robinson — expected Campbell gameday (2nd UF visit, first Swamp game).',
+            timestamp: '2026-09-11T23:10:00.000Z',
+          },
+        ],
+      } as any,
+    });
+    assert.ok(!stories.some((s) => /Man Robinson|Campbell gameday/i.test(s)));
+    assert.match(stories[0], /Ole Miss/i);
+  });
+
   it('drops thin Florida process rows', () => {
     const stories = buildHomePulseStories({
       now: OFFSEASON,
