@@ -355,7 +355,7 @@ export function rankEliteHomeNowStories(lines: string[], limit = 6): string[] {
     .map((t) => String(t || '').trim())
     .filter(Boolean);
   const seen = new Set<string>();
-  const scored: Array<{ line: string; score: number }> = [];
+  const scored: Array<{ line: string; score: number; classMetric?: boolean }> = [];
   let floridaOfferCount = 0;
 
   for (const line of incoming) {
