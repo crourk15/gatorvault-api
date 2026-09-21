@@ -2,17 +2,16 @@
   "ok": true,
   "status": "ready",
   "meta": {
-    "generatedAt": "2026-08-15T11:17:26.749Z",
+    "generatedAt": "2026-09-21T20:00:00.000Z",
     "snapshot": true,
     "endpoint": "ticker",
     "year": 2027,
     "source": "hub-runtime",
-    "cacheRev": "t9"
+    "cacheRev": "t10"
   },
   "items": [
-    "2027 class trending nationally \u2014 UF at #8",
-    "Blue chip % at 65%",
-    "26 commits locked for 2027",
-    "Tranard Roberts \u2014 unofficial visit \u00b7 Florida"
+    "Game Week — Ole Miss in the Swamp · ABC",
+    "Expected visitors in the Swamp this Saturday",
+    "3-0 — first SEC home Saturday"
   ]
 }

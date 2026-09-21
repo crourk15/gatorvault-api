@@ -2,16 +2,16 @@
   "ok": true,
   "status": "ready",
   "meta": {
-    "generatedAt": "2026-08-27T21:00:00.000Z",
+    "generatedAt": "2026-09-21T20:00:00.000Z",
     "snapshot": true,
     "endpoint": "ticker",
     "year": 2026,
     "source": "hub-runtime",
-    "cacheRev": "t9"
+    "cacheRev": "t10"
   },
   "items": [
-    "2026 class trending nationally \u2014 UF at #15",
-    "Blue chip % at 59%",
-    "22 signees locked for 2026"
+    "Game Week — Ole Miss in the Swamp · ABC",
+    "Expected visitors in the Swamp this Saturday",
+    "3-0 — first SEC home Saturday"
   ]
 }

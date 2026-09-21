@@ -67,6 +67,9 @@ function eliteHomeNowScore(text) {
   if (isThinFloridaProcessLine(t)) return 0;
   if (isThinClassMetricLine(t)) return 5;
   if (isGameWeekPulse(t) && /^LIVE — Florida vs\b/i.test(t)) return 112;
+  if (/^Expected visitors in the Swamp\b/i.test(t)) return 109;
+  if (/^On the road this\b/i.test(t)) return 109;
+  if (/^\d+[–-]\d+\b/.test(t) && /\bSaturday\b/i.test(t)) return 109;
   if (isGameWeekPulse(t)) return 110;
   if (/\bVerified OV\b/i.test(t)) return 104;
   if (/\bFlip Watch\b/i.test(t) && /\bFlip\s+\d+/i.test(t)) return 102;
@@ -335,11 +338,7 @@ function weekdayFromKick(kickMs) {
   });
 }
 
-/**
- * This-week game chip — Home NOW must move with the slate, not sit on class rank.
- * Schedule facts only (opponent / venue / TV / kick). Never invented tape.
- */
-function buildHomeNowGameStory(now = new Date(), games) {
+function pickCurrentNowGame(now = new Date(), games) {
   const list = Array.isArray(games) ? games : loadScheduleGamesForNow();
   if (!list.length) return null;
   const nowMs = now instanceof Date ? now.getTime() : Date.parse(now);
@@ -366,9 +365,18 @@ function buildHomeNowGameStory(now = new Date(), games) {
       next = { game: g, kickMs };
     }
   }
-  const picked = current || next;
+  return current || next;
+}
+
+/**
+ * This-week game chip — Home NOW must move with the slate, not sit on class rank.
+ * Schedule facts only (opponent / venue / TV / kick). Never invented tape.
+ */
+function buildHomeNowGameStory(now = new Date(), games) {
+  const picked = pickCurrentNowGame(now, games);
   if (!picked) return null;
 
+  const nowMs = now instanceof Date ? now.getTime() : Date.parse(now);
   const { game, kickMs } = picked;
   const opp = shortenOpponentName(game.opp) || 'the opponent';
   const venue = String(game.venue || '');
@@ -427,6 +435,7 @@ module.exports = {
   isFreshHomeNowTimestamp,
   isOfferPulseSummary,
   isFreshHomeNowOffer,
+  pickCurrentNowGame,
   buildHomeNowGameStory,
   parseScheduleKickoffMs,
   HOME_NOW_MAX_AGE_MS,

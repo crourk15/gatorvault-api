@@ -626,6 +626,22 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
   }
 
   const ranked = rankEliteHomeNowStories(pool, limit);
+  if (gameStory) {
+    const tickerSolid = (Array.isArray(input.hubTicker) ? input.hubTicker : [])
+      .map((t) => fanFacingPulseLine(t) || String(t || '').trim())
+      .filter((t) => t && !isClassMetricPulse(t) && !isThinClassMetricPulse(t) && !isThinFloridaProcessPulse(t));
+    const weeklySlate = tickerSolid.filter((t) => t !== gameStory);
+    if (tickerSolid.some((t) => isGameWeekPulse(t)) && tickerSolid.length >= 3) {
+      const rest: string[] = [];
+      for (const t of weeklySlate) {
+        if (!rest.includes(t)) rest.push(t);
+        if (rest.length >= 2) break;
+      }
+      return [gameStory, ...rest].slice(0, 3);
+    }
+    const named = ranked.filter((t) => !isClassMetricPulse(t) && t !== gameStory);
+    return [gameStory, ...named].filter(Boolean).slice(0, 3);
+  }
   if (ranked.length > 0) return ranked;
   return [...HOME_TICKER_FALLBACKS].slice(0, limit);
 }

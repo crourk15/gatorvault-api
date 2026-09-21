@@ -232,23 +232,25 @@ describe('buildHomePulseStories', () => {
     assert.ok(stories.some((s) => /2027 class trending nationally/i.test(s)));
   });
 
-  it('leads Ole Miss week with the game, not frozen class metrics', () => {
+  it('pins three weekly NOW lines and drops class-rank filler', () => {
     const stories = buildHomePulseStories({
       now: OLE_MISS_WEEK,
       hubTicker: [
+        'Game Week — Ole Miss in the Swamp · ABC',
+        'Expected visitors in the Swamp this Saturday',
+        '3-0 — first SEC home Saturday',
         '2027 class trending nationally — UF at #8',
-        'Blue chip % at 65%',
-        '26 commits locked for 2027',
         'Cyion Smith — Visit scheduled (Saturday)',
       ],
       hpIntel: [{ id: '1', text: 'Izayah Vickers — Florida process.', timestamp: '', ufProbability: 0 }],
       movement: null,
     });
-    assert.match(stories[0], /Game Week — Ole Miss in the Swamp/i);
-    assert.ok(stories.some((s) => /Cyion Smith — Visit scheduled \(Saturday\)/.test(s)));
-    assert.ok(!stories.some((s) => /Florida process/i.test(s)));
-    assert.equal(stories.filter((s) => /class trending|commits locked|Blue chip %/i.test(s)).length, 1);
-    assert.ok(!/class trending|commits locked|Blue chip %/i.test(stories[0]));
+    assert.deepEqual(stories, [
+      'Game Week — Ole Miss in the Swamp · ABC',
+      'Expected visitors in the Swamp this Saturday',
+      '3-0 — first SEC home Saturday',
+    ]);
+    assert.ok(!stories.some((s) => /Cyion Smith|Florida process|class trending/i.test(s)));
   });
 
   it('drops thin Florida process rows', () => {

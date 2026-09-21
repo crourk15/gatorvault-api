@@ -491,11 +491,17 @@ async function buildHubTicker(year = 2027) {
     if (!named.includes(line)) named.push(line);
   }
 
+  const { buildWeeklyHomeNowLines } = require('./weekly-home-now');
+  const weekly = buildWeeklyHomeNowLines();
+  const { scrubHubTickerLines } = require('./recruiting-visit-scrub');
+  if (weekly.length >= 3) {
+    return scrubHubTickerLines(weekly);
+  }
+
   const gameStory = buildHomeNowGameStory();
   const pool = [...named, ...(gameStory ? [gameStory] : []), ...classLines];
 
   // Named + this-week game first; one class metric fills only if the strip is thin.
-  const { scrubHubTickerLines } = require('./recruiting-visit-scrub');
   return scrubHubTickerLines(rankEliteHomeNowLines(pool, 6));
 }
 

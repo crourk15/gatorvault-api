@@ -22,7 +22,7 @@ const FOOTPRINT_CACHE_REV = 'fp3';
 const COMMITS_CACHE_REV = 'c5';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
-const TICKER_CACHE_REV = 't9';
+const TICKER_CACHE_REV = 't10';
 
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
@@ -191,9 +191,9 @@ function parseHubSnapshotDoc(endpoint, doc) {
         : null;
     const scrubbed = rawItems ? scrubHubTickerLines(rawItems) : null;
     if (!scrubbed || !scrubbed.length) return null;
-    // Soft-serve scrubbed plates even when cacheRev mismatches (pre-t9 disk).
-    // Empty ticker → iOS Capacitor seed paints Tranard Auburn UV; website seed
-    // is already scrubbed so web looks fine while App Store stays poisoned.
+    const rev = meta?.cacheRev || doc.cacheRev || null;
+    // t10 = weekly 3-line NOW. Reject t9 class-rank plates so GET rebuilds.
+    if (rev && rev !== TICKER_CACHE_REV) return null;
     return scrubbed;
   }
   if (

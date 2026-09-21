@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Home NOW weekly 3: ticker API serves game + place + record (Ole Miss / expected visitors / 2-0). Class-rank #8 is off the weekly slate. API after Render — 1.0.28 still may rotate leftover intel until the client-cap bake below.
 - [x] Trial-ending email: next drip/d5/d1 sends use the Stay with Gator Nation letter. Already-sent mail is not rewritten. API after Render — no Codemagic.
 - [x] Film Room: drop Film Guy Alabama–FSU sit (`kNrIT61SLVM` / “Florida State” is not Florida) from `/api/film-room/catalog` after Render. Hard-block + title strip so it cannot ingest again. API — no Codemagic.
 - [x] Film Room: Landon Tengwall UF-only 2026 run-game film studies from Auburn Week 3 (`MRjoBzMLD2s`) onward on `/api/film-room/catalog` (API — no Codemagic). Pass-game sits and the Week 1 FAU tape stay off. Hub-seed first-paint waits for a later bake.
@@ -147,6 +148,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-21 | Home NOW pins three weekly lines (no class-rank filler, no leftover rotation) | `buildHomePulseStories` cap in binary. **Ticker API already serves the weekly 3 after Render.** | pending |
 | 2026-09-21 | App Store **1.0.28** / build 93+ bake train | `MARKETING_VERSION` + this client UI stack. Do not start Codemagic until this is on `main` and **1.0.28** exists in App Store Connect. | #716 |
 | 2026-09-21 | Game Week Swing Impact: player grade, not 72 + list order (Baugh Ole Miss **95**) | `buildSwing` prefers `/api/schedule` `swing[].impact`. Old binary still does `72 + index * 8` so Baugh first = 72 and Philo third = 88. | #711 |
 | 2026-09-21 | Community locker + Game talk: find Saturday comments, New reply chip, Keep in locker | `VaultCommunityPage` + locker CSS in binary. **GET `/api/community/me`, `/api/community/game-rooms`, auto-follow on post/reply** are API-live after Render. | #715 |
