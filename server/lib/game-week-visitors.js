@@ -146,26 +146,20 @@ function resolveVisitorRow(slug) {
   } catch {
     /* optional */
   }
-  // Fallback when slug is on the visitor list but missing from recruiting players.json
-  if (!position || !school || !classYear || stars == null) {
-    const meta = metaFromDoc(key);
-    if (meta) {
-      if (!name || name === titleCaseSlug(key)) {
-        name = String(meta.name || name).trim() || name;
-      }
-      if (!position && meta.position) position = meta.position;
-      if (!school && meta.school) school = meta.school;
-      if (stars == null && meta.stars != null && Number(meta.stars) > 0) {
-        stars = Number(meta.stars);
-      }
-      if (!classYear && meta.classYear != null) classYear = Number(meta.classYear);
-    }
+  // Editorial visitorMeta wins for panel display so every card has the same line.
+  const meta = metaFromDoc(key);
+  if (meta) {
+    if (meta.name) name = String(meta.name).trim() || name;
+    if (meta.position) position = meta.position;
+    if (meta.school) school = meta.school;
+    if (meta.stars != null && Number(meta.stars) > 0) stars = Number(meta.stars);
+    if (meta.classYear != null) classYear = Number(meta.classYear);
   }
   return {
     slug: key,
     name,
     position: position ? String(position) : null,
-    school: school ? String(school) : null,
+    school: school ? String(school).trim() || null : null,
     stars,
     classYear: Number.isFinite(classYear) ? classYear : null,
   };

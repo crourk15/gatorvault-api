@@ -149,6 +149,28 @@ describe('game-week-visitors', () => {
     assert.equal(turner?.classYear, 2028);
   });
 
+  it('gives every Ole Miss card the same pos / year / school line', () => {
+    const panel = visitorsPanelForGameId('olemiss');
+    assert.ok(panel);
+    assert.ok(panel.visitors.length >= 20);
+    for (const v of panel.visitors) {
+      assert.ok(v.position, `${v.slug} missing position`);
+      assert.ok(v.classYear, `${v.slug} missing classYear`);
+      assert.ok(v.school, `${v.slug} missing school`);
+      assert.match(String(v.school), /\(/, `${v.slug} school should be School (City, ST)`);
+      assert.notEqual(v.position, 'HS');
+    }
+    const wessel = panel.visitors.find((v) => v.slug === 'jc-wessel');
+    assert.equal(wessel?.name, 'J.C. Wessel');
+    const dion = panel.visitors.find((v) => v.slug === 'dion-edwards');
+    assert.equal(dion?.position, 'S');
+    assert.match(String(dion?.school || ''), /Tyner/);
+    const cooper = panel.visitors.find((v) => v.slug === 'cooper-martenson');
+    assert.equal(cooper?.position, 'OT');
+    assert.equal(cooper?.stars, null);
+    assert.match(String(cooper?.school || ''), /Marist/);
+  });
+
   it('attaches expectedVisitors onto schedule games', () => {
     const games = attachExpectedVisitorsToGames([
       { id: 'fau', opp: 'FAU Owls', date: 'September 5, 2026' },
