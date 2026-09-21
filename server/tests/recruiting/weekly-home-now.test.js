@@ -43,7 +43,7 @@ test('offseason has no weekly slate', () => {
   assert.deepEqual(buildWeeklyHomeNowCategories(new Date('2026-07-15T16:00:00.000Z'), []), []);
 });
 
-const AWAY_NOW = new Date('2026-09-28T18:00:00.000Z');
+const AWAY_NOW = new Date('2026-09-22T18:00:00.000Z');
 const AWAY_GAMES = [
   {
     id: 'mizzou',
@@ -71,10 +71,10 @@ const MID_COMMIT = {
   committedTo: 'Florida',
   natlRank: 80,
   stars: 4,
-  timestamp: '2026-09-27T15:00:00.000Z',
+  timestamp: '2026-09-20T15:00:00.000Z',
 };
 
-test('top-25 commit takes the Visitors slot; Game and Season stay', () => {
+test('a Florida commit takes the Visitors slot; Game and Season stay', () => {
   const now = new Date('2026-09-21T18:00:00.000Z');
   const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [TOP25_COMMIT] });
   assert.equal(cats[0].label, 'Game');
@@ -85,11 +85,12 @@ test('top-25 commit takes the Visitors slot; Game and Season stay', () => {
   assert.ok(!cats.some((c) => c.label === 'Visitors'));
 });
 
-test('mid-board commit does not beat a home visitor list', () => {
+test('any Florida commit beats a home visitor list', () => {
   const now = new Date('2026-09-21T18:00:00.000Z');
   const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [MID_COMMIT] });
-  assert.equal(cats[1].label, 'Visitors');
-  assert.ok(cats[1].items.length >= 3);
+  assert.equal(cats[1].label, 'News');
+  assert.match(cats[1].items[0], /Cole Rivers commits to Florida/);
+  assert.ok(!cats.some((c) => c.label === 'Visitors'));
 });
 
 test('road week fills the middle slot with the week\'s Florida commit', () => {
