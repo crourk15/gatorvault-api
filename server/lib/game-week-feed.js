@@ -21,7 +21,8 @@ function buildGameWeekPayload() {
   let scheduleUpdatedAt = null;
   try {
     const scheduleBoard = require('./schedule-board');
-    const board = scheduleBoard.getScheduleBoard(meta.season || 2026);
+    const { decorateBoardSwing } = require('./swing-impact');
+    const board = decorateBoardSwing(scheduleBoard.getScheduleBoard(meta.season || 2026));
     games = (board.games || []).map(scheduleBoard.toFanGame);
     scheduleUpdatedAt = board.updatedAt || null;
   } catch {

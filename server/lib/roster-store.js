@@ -172,6 +172,11 @@ function applyProductionStatsUpdates(updatesBySlug) {
     changed += 1;
   }
   savePlayers(players);
+  try {
+    require('./swing-impact').clearSwingProductionCache();
+  } catch {
+    /* optional — Game Week restamps from official box */
+  }
   return { changed };
 }
 

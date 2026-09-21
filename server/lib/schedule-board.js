@@ -512,7 +512,8 @@ function readCurrentGameId() {
 }
 
 function toApiPayload(doc, opts) {
-  const board = doc || getScheduleBoard(2026);
+  const { decorateBoardSwing } = require('./swing-impact');
+  const board = decorateBoardSwing(doc || getScheduleBoard(2026));
   const includeDeskScout = Boolean(opts && opts.includeDeskScout);
   const games = includeDeskScout ? board.games : (board.games || []).map(toFanGame);
   const currentGameId = readCurrentGameId();

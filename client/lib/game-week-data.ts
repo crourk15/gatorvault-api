@@ -227,7 +227,7 @@ function buildSwing(game: ScheduleGame): SwingPlayerIntel[] {
       position: posMap[s.name] ?? 'KEY',
       role: s.role,
       impact: swingImpactFor(s.name, slug, s.impact),
-      trend: i === 0 ? 'up' : i === 1 ? 'up' : 'flat',
+      trend: swingTrendFor(s.trend, i),
       slug,
     };
   });
@@ -253,6 +253,11 @@ function swingImpactFor(name: string, slug: string, stamped?: number): number {
   const grade = vaultGradeForSlug(fromName);
   if (grade != null) return grade;
   return 78;
+}
+
+function swingTrendFor(stamped: unknown, index: number): 'up' | 'down' | 'flat' {
+  if (stamped === 'up' || stamped === 'down' || stamped === 'flat') return stamped;
+  return index === 0 || index === 1 ? 'up' : 'flat';
 }
 
 function clampAxis(n: number): number {

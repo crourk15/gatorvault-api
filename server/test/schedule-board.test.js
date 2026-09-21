@@ -213,6 +213,20 @@ describe('schedule-board', () => {
     assert.deepEqual(fan.offenseScout, []);
     assert.equal(fan.scoutingReport, undefined);
     assert.match(fan.film, /Chambliss/i);
+    const liveBaugh = fan.swing.find((s) => /baugh/i.test(s.name));
+    assert.equal(liveBaugh?.impact, 95);
+    assert.equal(liveBaugh?.trend, 'up');
+  });
+
+  it('Swing Impact restamps from official box form + this opponent', () => {
+    const payload = scheduleBoard.toApiPayload();
+    const baughOn = (id) => payload.games.find((g) => g.id === id)?.swing.find((s) => /baugh/i.test(s.name));
+    assert.equal(baughOn('fau')?.impact, 92);
+    assert.equal(baughOn('campbell')?.impact, 95);
+    assert.equal(baughOn('auburn')?.impact, 93);
+    assert.equal(baughOn('olemiss')?.impact, 95);
+    assert.ok(baughOn('fau')?.impact < baughOn('campbell')?.impact);
+    assert.ok(baughOn('auburn')?.impact < baughOn('olemiss')?.impact);
   });
 
   it('bundle path points at repo seed', () => {

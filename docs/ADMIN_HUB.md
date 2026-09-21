@@ -36,6 +36,8 @@ Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTu
 
 **Remaining-season predictions (weekly, no Codemagic):** After each Saturday, restamp `ufPct` / `pred` / `predUF` / `predOpp` on remaining games from how Florida and those opponents actually looked — not FPI paste, not FCS/G5 blowouts flipping Texas or Georgia. Set board `predThrough` (e.g. `2026-W3`) and bump `updatedAt` so Render overlay heals. Keep `client/lib/schedule-data.ts` in sync (seed fallback only). Ole Miss week is the official LSU PBP sit (`filmWatched: false` until condensed is up). Rivalry-badge bake is **1.0.26** — do not wait on Codemagic to move the prediction board.
 
+**Game Week Swing Impact (weekly, no JSON rewrite):** `/api/schedule` computes each swing card from official 2026 box form (`productionStats.recentGames` with week < this game) plus this opponent’s rush/pass look. Identity floors keep Baugh from looking like a 72 role card. Official-box sync clears the 5-minute production cache so the next GET restamps. Do not invent an Auburn (or later) line that is not on the official box.
+
 **Community Staff open (no Codemagic):** Cron publishes a rotating daily prompt. To set today’s topic on demand:
 
 ```bash

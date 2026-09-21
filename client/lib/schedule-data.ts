@@ -5,6 +5,8 @@
  * fixes without Codemagic after the live-fetch client bake ships.
  * Remaining-season `ufPct` / `pred` restamp after each Saturday from how Florida
  * and those opponents actually looked (`predThrough` on the API board).
+ * Swing `impact` / `trend` are computed at serve from official box form + this
+ * opponent — seed 95 is fallback only.
  */
 
 export type ScheduleGame = {
@@ -18,7 +20,7 @@ export type ScheduleGame = {
   ufPct: number;
   tv?: string;
   keys: string[];
-  swing: { name: string; role: string; impact?: number }[];
+  swing: { name: string; role: string; impact?: number; trend?: 'up' | 'down' | 'flat' }[];
   /**
    * Optional Matchup Edge axes (0–100). When present, Game Week uses this
    * instead of the win% formula. Stamp from the sit — do not invent.

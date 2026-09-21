@@ -142,6 +142,17 @@ describe('Game Week Film Notes', () => {
     assert.equal(baugh.impact, 95);
     assert.ok(woods && woods.impact < baugh.impact);
     assert.ok(philo && philo.impact < baugh.impact);
+
+    const fromApi = getGameWeekBundle('olemiss', [
+      {
+        ...olemiss,
+        swing: olemiss.swing.map((s) =>
+          /baugh/i.test(s.name) ? { ...s, impact: 93, trend: 'up' as const } : s
+        ),
+      },
+    ]);
+    assert.equal(fromApi.swingPlayers.find((p) => /baugh/i.test(p.name))?.impact, 93);
+    assert.equal(fromApi.swingPlayers.find((p) => /baugh/i.test(p.name))?.trend, 'up');
     const radar = buildRadar(olemiss);
     assert.deepEqual(radar, olemiss.radar);
     assert.equal(radar.find((a) => a.label === 'Pass Efficiency')?.opp, 78);
