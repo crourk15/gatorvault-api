@@ -10,12 +10,16 @@ import type {
   HomeBeatPostView,
   HomeFutureCastTargetView,
   HomeGameDayView,
+  HomeNowWeekPillar,
 } from '@/components/home/premium/command/home-command-utils';
+import { parseWeeklyNowPillars } from '@/components/home/premium/command/home-command-utils';
 
 type Props = {
   pulseHeadline: string;
   /** Live NOW stories from hub/intel — lead stays pinned; support rotates. */
   pulseStories?: string[];
+  /** Game / Visitors / Season — each bold, items tick under that category. */
+  nowWeek?: HomeNowWeekPillar[];
   gameDay: HomeGameDayView;
   futureCastTargets: HomeFutureCastTargetView[];
   beatPosts: HomeBeatPostView[];
@@ -26,10 +30,42 @@ type Props = {
 const SUPPORT_ROTATE_MS = 7_000;
 const SUPPORT_SLOTS = 2;
 
+function NowPillars({ pillars }: { pillars: HomeNowWeekPillar[] }): React.ReactElement {
+  const [tick, setTick] = useState(0);
+  const key = pillars.map((p) => `${p.label}:${p.items.join('|')}`).join('\u0001');
+  useEffect(() => {
+    setTick(0);
+  }, [key]);
+  useEffect(() => {
+    const needsTick = pillars.some((p) => p.items.length > 1);
+    if (!needsTick) return undefined;
+    const id = window.setInterval(() => setTick((n) => n + 1), SUPPORT_ROTATE_MS);
+    return () => window.clearInterval(id);
+  }, [key, pillars]);
+
+  return (
+    <ul className="home-wow-now__pillars">
+      {pillars.map((pillar) => {
+        const items = pillar.items.filter(Boolean);
+        const item = items.length ? items[tick % items.length] : '';
+        return (
+          <li key={pillar.key || pillar.label} className="home-wow-now__pillar">
+            <span className="home-wow-now__cat">{pillar.label}</span>
+            <span className="home-wow-now__tick" aria-live="polite">
+              {item}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 /** Home = full-bleed brand hero first; live pulse + countdown below the fold. */
 export function HomeCommandCenter({
   pulseHeadline,
   pulseStories,
+  nowWeek,
   gameDay,
   futureCastTargets,
   beatPosts,
@@ -42,6 +78,19 @@ export function HomeCommandCenter({
     const single = pulseHeadline.trim();
     return single ? [single] : ['Live intel loading…'];
   }, [pulseStories, pulseHeadline]);
+
+  const pillars = useMemo(() => {
+    const live = (nowWeek ?? [])
+      .map((row) => ({
+        key: String(row.key || row.label || '').trim().toLowerCase(),
+        label: String(row.label || '').trim(),
+        items: (row.items || []).map((s) => String(s || '').trim()).filter(Boolean),
+      }))
+      .filter((row) => row.label && row.items.length);
+    if (live.length >= 2) return live.slice(0, 3);
+    const parsed = parseWeeklyNowPillars(stories);
+    return parsed.length >= 2 ? parsed.slice(0, 3) : [];
+  }, [nowWeek, stories]);
 
   const lead = stories[0] || 'Live intel loading…';
   const supportPool = stories.slice(1);
@@ -70,16 +119,20 @@ export function HomeCommandCenter({
       <div className="home-wow-page__stack">
         <section className="home-wow-now" aria-label="Now" data-testid="home-hero-pulse">
           <span className="home-wow-now__label">Now</span>
-          <ul className="home-wow-now__list">
-            <li className="home-wow-now__lead" aria-live="polite">
-              {lead}
-            </li>
-            {support.map((story) => (
-              <li key={story} className="home-wow-now__item">
-                {story}
+          {pillars.length >= 2 ? (
+            <NowPillars pillars={pillars} />
+          ) : (
+            <ul className="home-wow-now__list">
+              <li className="home-wow-now__lead" aria-live="polite">
+                {lead}
               </li>
-            ))}
-          </ul>
+              {support.map((story) => (
+                <li key={story} className="home-wow-now__item">
+                  {story}
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
         <HomeCommandGameDay game={gameDay} />
         <HomeCommandLiveStrip />

@@ -236,9 +236,9 @@ describe('buildHomePulseStories', () => {
     const stories = buildHomePulseStories({
       now: OLE_MISS_WEEK,
       hubTicker: [
-        'Game Week — Ole Miss in the Swamp · ABC',
-        'Expected visitors in the Swamp this Saturday',
-        '3-0 — first SEC home Saturday',
+        'Game — Ole Miss in the Swamp · ABC',
+        'Visitors — Craig-James · Vickers · Flowers',
+        'Season — 3-0 · first SEC home Saturday',
         '2027 class trending nationally — UF at #8',
         'Cyion Smith — Visit scheduled (Saturday)',
       ],
@@ -246,11 +246,34 @@ describe('buildHomePulseStories', () => {
       movement: null,
     });
     assert.deepEqual(stories, [
-      'Game Week — Ole Miss in the Swamp · ABC',
-      'Expected visitors in the Swamp this Saturday',
-      '3-0 — first SEC home Saturday',
+      'Game — Ole Miss in the Swamp · ABC',
+      'Visitors — Craig-James · Vickers · Flowers',
+      'Season — 3-0 · first SEC home Saturday',
     ]);
     assert.ok(!stories.some((s) => /Cyion Smith|Florida process|class trending/i.test(s)));
+  });
+
+  it('does not let Expected visitors outrank Game Week', () => {
+    const stories = buildHomePulseStories({
+      now: OLE_MISS_WEEK,
+      hubTicker: [
+        'Expected visitors in the Swamp this Saturday',
+        'Game Week — Ole Miss in the Swamp · ABC',
+      ],
+      hpIntel: [],
+      movement: {
+        alerts: [
+          {
+            type: 'VISIT',
+            player: 'Izayah Vickers',
+            detail: 'Vickers — expected Ole Miss gameday.',
+            timestamp: '2026-09-21T12:00:00.000Z',
+          },
+        ],
+      } as any,
+    });
+    assert.match(stories[0], /^Game Week — Ole Miss|^Game — Ole Miss/);
+    assert.ok(stories[0] !== 'Expected visitors in the Swamp this Saturday');
   });
 
   it('drops last-week Campbell gameday from NOW', () => {

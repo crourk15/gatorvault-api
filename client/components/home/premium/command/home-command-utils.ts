@@ -208,11 +208,14 @@ function isThinFloridaProcessPulse(text: string): boolean {
 function isGameWeekPulse(text: string): boolean {
   const t = String(text || '').trim();
   if (!t) return false;
+  if (/^Expected visitors\b/i.test(t) || /^Visitors —/i.test(t) || /^Season —/i.test(t)) {
+    return false;
+  }
   return (
+    /^Game\b/i.test(t) ||
     /^Game Week\b/i.test(t) ||
     /^LIVE — Florida vs\b/i.test(t) ||
     /^Up next — /i.test(t) ||
-    /\bin the Swamp\b/i.test(t) ||
     /^[A-Za-z].+\s(Saturday|Sunday|Friday|Thursday)\s—/.test(t)
   );
 }
@@ -232,6 +235,38 @@ function shortenOpponentName(opp: string): string {
     .replace(/\s+Owls$/i, '')
     .replace(/\s+Camels$/i, '')
     .trim();
+}
+
+export type HomeNowWeekPillar = {
+  key: string;
+  label: string;
+  items: string[];
+};
+
+export function isWeeklyNowPillarLine(text: string): boolean {
+  return /^(Game|Visitors|Road|Season|Live|Game Week)\s+[—-]/.test(String(text || '').trim());
+}
+
+export function parseWeeklyNowPillars(lines: string[]): HomeNowWeekPillar[] {
+  const pillars: HomeNowWeekPillar[] = [];
+  for (const raw of Array.isArray(lines) ? lines : []) {
+    const t = String(raw || '').trim();
+    const m = t.match(/^(Game|Visitors|Road|Season|Live|Game Week)\s+[—-]\s+(.+)$/i);
+    if (!m) continue;
+    const rawLabel = m[1];
+    const label = /^Game Week$/i.test(rawLabel)
+      ? 'Game'
+      : rawLabel.charAt(0).toUpperCase() + rawLabel.slice(1).toLowerCase();
+    const item = m[2].trim();
+    const key = label.toLowerCase();
+    const existing = pillars.find((p) => p.key === key);
+    if (existing) {
+      if (item && !existing.items.includes(item)) existing.items.push(item);
+    } else {
+      pillars.push({ key, label, items: item ? [item] : [] });
+    }
+  }
+  return pillars;
 }
 
 /** This-week slate chip — Home NOW must move with the opponent, not sit on #8. */
@@ -371,6 +406,10 @@ export function eliteHomeNowScore(text: string): number {
   if (isThinFloridaProcessPulse(t)) return 0;
   if (isThinClassMetricPulse(t)) return 5;
   if (isGameWeekPulse(t) && /^LIVE — Florida vs\b/i.test(t)) return 112;
+  if (/^Game — /i.test(t) || /^Game Week — /i.test(t)) return 110;
+  if (/^Visitors — /i.test(t) || /^Road — /i.test(t)) return 108;
+  if (/^Season — /i.test(t) || (/^\d+[–-]\d+\b/.test(t) && /\bSaturday\b/i.test(t))) return 108;
+  if (/^Expected visitors in the Swamp\b/i.test(t)) return 88;
   if (isGameWeekPulse(t)) return 110;
   if (/\bVerified OV\b/i.test(t)) return 104;
   if (/\bFlip Watch\b/i.test(t) && /\bFlip\s+\d+/i.test(t)) return 102;
@@ -676,10 +715,14 @@ export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): s
   }
 
   const ranked = rankEliteHomeNowStories(pool, limit);
+  const tickerSolid = (Array.isArray(input.hubTicker) ? input.hubTicker : [])
+    .map((t) => fanFacingPulseLine(t) || String(t || '').trim())
+    .filter((t) => t && !isClassMetricPulse(t) && !isThinClassMetricPulse(t) && !isThinFloridaProcessPulse(t));
+  const weeklyPillars = tickerSolid.filter(isWeeklyNowPillarLine);
+  if (weeklyPillars.length >= 3) {
+    return weeklyPillars.slice(0, 3);
+  }
   if (gameStory) {
-    const tickerSolid = (Array.isArray(input.hubTicker) ? input.hubTicker : [])
-      .map((t) => fanFacingPulseLine(t) || String(t || '').trim())
-      .filter((t) => t && !isClassMetricPulse(t) && !isThinClassMetricPulse(t) && !isThinFloridaProcessPulse(t));
     const weeklySlate = tickerSolid.filter((t) => t !== gameStory);
     if (tickerSolid.some((t) => isGameWeekPulse(t)) && tickerSolid.length >= 3) {
       const rest: string[] = [];

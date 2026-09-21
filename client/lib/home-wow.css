@@ -1341,6 +1341,36 @@
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.72);
 }
+.home-wow-now__pillars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.home-wow-now__pillar {
+  display: grid;
+  grid-template-columns: 5.4rem 1fr;
+  gap: 10px;
+  align-items: baseline;
+  min-width: 0;
+}
+.home-wow-now__cat {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.home-wow-now__tick {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.82);
+  min-width: 0;
+}
 @media (max-width: 640px) {
   .home-wow-now {
     grid-template-columns: 1fr;
@@ -1349,5 +1379,12 @@
   }
   .home-wow-now__lead {
     font-size: 0.98rem;
+  }
+  .home-wow-now__pillar {
+    grid-template-columns: 4.8rem 1fr;
+    gap: 8px;
+  }
+  .home-wow-now__tick {
+    font-size: 0.86rem;
   }
 }

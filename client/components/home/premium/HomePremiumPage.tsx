@@ -7,6 +7,8 @@ import { fetchRecruitingBoard, type RecruitingBoardResponse } from '@/lib/recrui
 import {
   fetchRecruitingHubBundle,
   fetchRecruitingHubTicker,
+  fetchRecruitingHubTickerPack,
+  type HomeNowWeekCategory,
 } from '@/lib/recruiting-hub-elite-api';
 import { RECRUITING_HUB_BUNDLE_SEED } from '@/lib/recruiting-hub-bundle-seed';
 import { useVaultDataReload } from '@/lib/vault-navigation';
@@ -121,6 +123,7 @@ export function HomePremiumPage(): React.ReactElement {
   const [hubTicker, setHubTicker] = useState<string[]>(() =>
     seedHomeTicker(ACTIVE_RECRUITING_CLASS_YEAR)
   );
+  const [nowWeek, setNowWeek] = useState<HomeNowWeekCategory[]>([]);
   const [hpIntel, setHpIntel] = useState<HighPriorityIntelItem[]>([]);
   const [movementIntel, setMovementIntel] = useState<MovementIntelResponse | null>(null);
   // Seeded beat + metrics so first paint never waits on cold intel APIs.
@@ -173,10 +176,13 @@ export function HomePremiumPage(): React.ReactElement {
       const year = ACTIVE_RECRUITING_CLASS_YEAR;
       // APIs that already warm-poll internally — do not nest another warm layer.
       const chaseYear = year + 1;
-      const [hubTickerLive, chaseTickerLive, hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets] =
+      const [hubTickerPack, chaseTickerLive, hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets] =
         await Promise.all([
           // Dedicated ticker — lighter than full bundle; keeps NOW live without Codemagic.
-          fetchWithWarmPoll(() => fetchRecruitingHubTicker(year), poll).catch(() => []),
+          fetchWithWarmPoll(() => fetchRecruitingHubTickerPack(year), poll).catch(() => ({
+            items: [] as string[],
+            nowWeek: [] as HomeNowWeekCategory[],
+          })),
           // Chase-class process (2028 while closing 2027) — elite NOW mixes both.
           fetchWithWarmPoll(() => fetchRecruitingHubTicker(chaseYear), poll).catch(() => []),
           fetchWithWarmPoll(() => fetchRecruitingHubBundle(year), poll).catch(() => null),
@@ -189,8 +195,12 @@ export function HomePremiumPage(): React.ReactElement {
         ]);
       // Cold API miss must NOT wipe build-time seeds — first-open chill was clearing
       // metrics/beat to null/[] and looking broken until a later warm revisit.
+      const hubTickerLive = Array.isArray(hubTickerPack?.items) ? hubTickerPack.items : [];
+      if (Array.isArray(hubTickerPack?.nowWeek) && hubTickerPack.nowWeek.length) {
+        setNowWeek(hubTickerPack.nowWeek);
+      }
       const primaryTicker =
-        (Array.isArray(hubTickerLive) && hubTickerLive.length && hubTickerLive) ||
+        (hubTickerLive.length && hubTickerLive) ||
         (hubBundle?.ticker?.length ? hubBundle.ticker : null);
       const nextTicker = mergeEliteHomeTickers(
         primaryTicker,
@@ -303,6 +313,7 @@ export function HomePremiumPage(): React.ReactElement {
       <HomeCommandCenter
         pulseHeadline={pulseHeadline}
         pulseStories={pulseStories}
+        nowWeek={nowWeek}
         gameDay={gameDay}
         futureCastTargets={futureCastTargets}
         beatPosts={beatPosts}

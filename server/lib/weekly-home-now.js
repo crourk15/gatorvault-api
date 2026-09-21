@@ -1,6 +1,6 @@
 /**
- * Home NOW weekly slate — three solid lines that move with the game week.
- * Slot 1 is the live game chip. Slots 2–3 are place + record. No class-rank filler.
+ * Home NOW weekly slate — three pillars that move with the game week.
+ * Game / Visitors (or Road) / Season. ABC lives on Game only.
  */
 'use strict';
 
@@ -78,22 +78,44 @@ function weekdayForKick(kickMs) {
   });
 }
 
+function visitorNamesForGame(gameId) {
+  try {
+    const { visitorsPanelForGameId } = require('./game-week-visitors');
+    const panel = visitorsPanelForGameId(gameId);
+    return (panel?.visitors || [])
+      .map((v) => String(v.name || '').trim())
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+function shortVisitorName(name) {
+  const cleaned = String(name || '')
+    .trim()
+    .replace(/\s+(jr|sr|ii|iii|iv)\.?$/i, '')
+    .trim();
+  const parts = cleaned.split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) return parts.slice(1).join(' ');
+  return parts[0] || String(name || '').trim();
+}
+
+function compactVisitorLine(names) {
+  const short = names.slice(0, 3).map(shortVisitorName).filter(Boolean);
+  if (!short.length) return null;
+  return `Visitors — ${short.join(' · ')}`;
+}
+
 function autoPlaceLine(picked) {
   if (!picked?.game) return null;
   const weekday = weekdayForKick(picked.kickMs);
   if (!isHomeGame(picked.game)) {
-    return `On the road this ${weekday}`;
+    return `Road — on the road this ${weekday}`;
   }
-  try {
-    const { visitorsPanelForGameId } = require('./game-week-visitors');
-    const panel = visitorsPanelForGameId(picked.game.id);
-    if (panel && Array.isArray(panel.visitors) && panel.visitors.length) {
-      return `Expected visitors in the Swamp this ${weekday}`;
-    }
-  } catch {
-    /* optional */
-  }
-  return `Home in the Swamp this ${weekday}`;
+  const names = visitorNamesForGame(picked.game.id);
+  const compact = compactVisitorLine(names);
+  if (compact) return compact;
+  return `Visitors — home this ${weekday}`;
 }
 
 function autoStandingLine(now, picked, games) {
@@ -101,12 +123,12 @@ function autoStandingLine(now, picked, games) {
   const { wins, losses } = seasonRecord(now, games);
   const weekday = weekdayForKick(picked.kickMs);
   if (firstSecHome(now, picked, games)) {
-    return `${wins}-${losses} — first SEC home ${weekday}`;
+    return `Season — ${wins}-${losses} · first SEC home ${weekday}`;
   }
   if (isSecOpponent(picked.game) && isHomeGame(picked.game)) {
-    return `${wins}-${losses} — SEC home ${weekday}`;
+    return `Season — ${wins}-${losses} · SEC home ${weekday}`;
   }
-  return `${wins}-${losses} heading into ${weekday}`;
+  return `Season — ${wins}-${losses} heading into ${weekday}`;
 }
 
 function gamesForNow() {
@@ -119,30 +141,87 @@ function gamesForNow() {
   }
 }
 
+function stripPillarPrefix(text) {
+  return String(text || '')
+    .replace(/^(Game|Visitors|Road|Season|Live|Game Week|Up next)\s+[—-]\s+/i, '')
+    .trim();
+}
+
+function formatGamePillar(gameStory) {
+  const t = String(gameStory || '').trim();
+  if (!t) return null;
+  if (/^LIVE —/i.test(t)) return t;
+  if (/^Game — /i.test(t)) return t;
+  if (/^Game Week — /i.test(t)) return t.replace(/^Game Week — /i, 'Game — ');
+  if (/^Up next — /i.test(t)) return t.replace(/^Up next — /i, 'Game — ');
+  return `Game — ${t}`;
+}
+
 /**
- * Three weekly NOW lines, or [] when there is no game in the 14-day window.
+ * Structured weekly pillars for Home NOW.
+ * Game owns the network. Visitors ticks names. Season is the record.
  */
-function buildWeeklyHomeNowLines(now = new Date(), games) {
+function buildWeeklyHomeNowCategories(now = new Date(), games) {
   const list = Array.isArray(games) ? games : gamesForNow();
   const gameStory = buildHomeNowGameStory(now, list);
   if (!gameStory) return [];
   const picked = pickCurrentNowGame(now, list);
   const override = loadWeeklyOverride();
-  const week = picked?.game?.id
-    ? override?.weeks?.[String(picked.game.id)] || null
-    : null;
+  const week = picked?.game?.id ? override?.weeks?.[String(picked.game.id)] || null : null;
+  const gameLine = formatGamePillar(gameStory);
   const place = String(week?.place || '').trim() || autoPlaceLine(picked);
   const standing = String(week?.standing || '').trim() || autoStandingLine(now, picked, list);
-  const lines = [gameStory];
-  if (place && place !== gameStory) lines.push(place);
-  if (standing && !lines.includes(standing)) lines.push(standing);
-  return lines.slice(0, 3);
+  const home = isHomeGame(picked?.game);
+  const names = home && picked?.game?.id ? visitorNamesForGame(picked.game.id) : [];
+
+  const categories = [];
+  if (gameLine) {
+    categories.push({
+      key: /^LIVE —/i.test(gameLine) ? 'live' : 'game',
+      label: /^LIVE —/i.test(gameLine) ? 'Live' : 'Game',
+      items: [stripPillarPrefix(gameLine)],
+    });
+  }
+  if (place || names.length) {
+    const isRoad = /^Road —|^On the road/i.test(place || '');
+    categories.push({
+      key: isRoad ? 'road' : 'visitors',
+      label: isRoad ? 'Road' : 'Visitors',
+      items: names.length ? names : [stripPillarPrefix(place)],
+    });
+  }
+  if (standing) {
+    categories.push({
+      key: 'season',
+      label: 'Season',
+      items: [stripPillarPrefix(standing)],
+    });
+  }
+  return categories.slice(0, 3);
+}
+
+/**
+ * Three weekly NOW lines for ticker / 1.0.28.
+ * Game first so ABC never sits under a visitors heading.
+ */
+function buildWeeklyHomeNowLines(now = new Date(), games) {
+  const cats = buildWeeklyHomeNowCategories(now, games);
+  return cats.map((c) => {
+    if (c.key === 'visitors' && c.items.length > 1) {
+      return compactVisitorLine(c.items) || `Visitors — ${c.items[0]}`;
+    }
+    const item = c.items[0] || '';
+    if (!item) return '';
+    return `${c.label} — ${item}`;
+  }).filter(Boolean).slice(0, 3);
 }
 
 module.exports = {
   OVERRIDE_PATH,
   buildWeeklyHomeNowLines,
+  buildWeeklyHomeNowCategories,
   seasonRecord,
   autoPlaceLine,
   autoStandingLine,
+  shortVisitorName,
 };

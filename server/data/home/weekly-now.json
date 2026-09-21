@@ -1,9 +1,5 @@
 {
-  "updatedAt": "2026-09-21T20:00:00.000Z",
-  "note": "Optional per-gameId place/standing copy. The game line always comes from the live slate. Leave a field off to use the auto line.",
-  "weeks": {
-    "olemiss": {
-      "place": "Expected visitors in the Swamp this Saturday"
-    }
-  }
+  "updatedAt": "2026-09-21T20:20:00.000Z",
+  "note": "Optional per-gameId place/standing copy. Leave a field off to use the auto line. Game always comes from the live slate.",
+  "weeks": {}
 }
