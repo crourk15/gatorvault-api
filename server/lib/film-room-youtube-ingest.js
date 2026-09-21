@@ -1,7 +1,8 @@
 /**
  * Auto-ingest Film Room videos from YouTube channel RSS (no API key required).
  * Official Florida Gators football pressers + GNFP film reviews + Film Guy
- * UF-football breakdowns only (they cover every team).
+ * UF-football breakdowns only (they cover every team) + Landon Tengwall
+ * UF 2026 run-game film studies from Auburn Week 3 onward.
  */
 const { loadFilmRoomCache, saveFilmRoomCache } = require('./film-room-cache-store');
 const {
@@ -52,7 +53,20 @@ const DEFAULT_SOURCES = [
     label: 'Film Guy Network',
     kind: 'film_guy',
   },
+  // Landon Tengwall — UF 2026 run-game film studies only, Auburn Week 3 and later.
+  {
+    channelId: 'UCKhl02UZMecnCNweA2nMnQw',
+    bucket: 'tengwall',
+    label: 'Landon Tengwall',
+    kind: 'tengwall',
+  },
 ];
+
+/** First Tengwall UF 2026 sit Charles asked on the hub. Earlier FAU run tape stays off. */
+const TENGWALL_UF_START_YOUTUBE_ID = 'MRjoBzMLD2s';
+const TENGWALL_UF_START_AT = '2026-09-20T23:13:48.000Z';
+const TENGWALL_UF_START_MS = Date.parse(TENGWALL_UF_START_AT);
+const TENGWALL_UF_SEASON = 2026;
 
 const NON_FOOTBALL =
   /\b(soccer|softball|baseball|basketball|gymnast|swimming|diving|tennis|golf|volleyball|lacrosse|cross country|track|soccer|wrestling|row(?:ing)?|cheer)\b/i;
@@ -70,13 +84,59 @@ const FILM_GUY_NOT_BREAKDOWN =
 const FILM_GUY_FILM_SIGNAL =
   /^(film\s*:)|\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i;
 
-/** Florida / Gators as the team — not "Florida Atlantic" alone. */
+/** Florida / Gators as the team — not Florida Atlantic or Florida State alone. */
 function titleHasUfFootball(title) {
   const t = String(title || '');
   if (!t) return false;
   if (/\bflorida\s+gators\b/i.test(t) || /\bgators\b/i.test(t)) return true;
-  const stripped = t.replace(/\bflorida\s+atlantic\b/gi, 'FAU');
+  const stripped = t
+    .replace(/\bflorida\s+atlantic\b/gi, 'FAU')
+    .replace(/\bflorida\s+state\b/gi, 'FSU');
   return /\bflorida\b/i.test(stripped);
+}
+
+const TENGWALL_FILM_SIGNAL =
+  /^(film\s*:)|\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i;
+
+const TENGWALL_PASS_GAME =
+  /\b(pass(?:ing)?\s+game|passing\s+attack|pass\s+offense|pass\s+film)\b/i;
+
+const TENGWALL_NOT_BREAKDOWN =
+  /\b(live\s+postgame|postgame\s+show|pregame\s+show|kickoff\s+show|interviewing|press conference)\b/i;
+
+function isTengwallPassGameTitle(title) {
+  return TENGWALL_PASS_GAME.test(String(title || ''));
+}
+
+/**
+ * Landon Tengwall UF 2026 film studies only — Auburn run tape and later.
+ * Drops other teams, FSU, FAU-only, pass-game sits, live/postgame, and Week 1 FAU.
+ */
+function isTengwallUfFilmReview(entryOrTitle) {
+  const entry =
+    entryOrTitle && typeof entryOrTitle === 'object'
+      ? entryOrTitle
+      : { title: entryOrTitle };
+  const title = String(entry.title || '');
+  if (!title) return false;
+  if (!TENGWALL_FILM_SIGNAL.test(title)) return false;
+  if (isTengwallPassGameTitle(title)) return false;
+  if (TENGWALL_NOT_BREAKDOWN.test(title)) return false;
+  if (!titleHasUfFootball(title)) return false;
+
+  const youtubeId = String(entry.youtubeId || '').trim();
+  if (youtubeId === TENGWALL_UF_START_YOUTUBE_ID) return true;
+
+  const publishedAt = entry.publishedAt || null;
+  if (publishedAt) {
+    const t = new Date(publishedAt).getTime();
+    if (!Number.isFinite(t)) return false;
+    const year = new Date(publishedAt).getUTCFullYear();
+    if (year !== TENGWALL_UF_SEASON) return false;
+    return t >= TENGWALL_UF_START_MS;
+  }
+
+  return false;
 }
 
 /** Film Guy UF football breakdowns only. Drops other teams, live, reactions. */
@@ -95,6 +155,7 @@ function normalizeSourceBucket(raw) {
     .replace(/[-_]/g, '');
   if (b === 'gnfp') return 'gnfp';
   if (b === 'filmguy') return 'filmGuy';
+  if (b === 'tengwall') return 'tengwall';
   if (b === 'highlights') return 'highlights';
   return 'pressers';
 }
@@ -115,7 +176,15 @@ function parseSourcesFromEnv() {
     const [channelId, bucketRaw, label] = part.split(':').map((s) => String(s || '').trim());
     const bucket = normalizeSourceBucket(bucketRaw);
     const kind =
-      bucket === 'gnfp' ? 'gnfp' : bucket === 'filmGuy' ? 'film_guy' : bucket === 'highlights' ? 'highlights' : 'custom';
+      bucket === 'gnfp'
+        ? 'gnfp'
+        : bucket === 'filmGuy'
+          ? 'film_guy'
+          : bucket === 'tengwall'
+            ? 'tengwall'
+            : bucket === 'highlights'
+              ? 'highlights'
+              : 'custom';
     return {
       channelId,
       bucket,
@@ -185,6 +254,7 @@ function isOfficialHighlightTitle(title) {
 function classifySourceBucket(entry, source) {
   if (source.kind === 'gnfp' || source.bucket === 'gnfp') return 'gnfp';
   if (source.kind === 'film_guy' || source.bucket === 'filmGuy') return 'filmGuy';
+  if (source.kind === 'tengwall' || source.bucket === 'tengwall') return 'tengwall';
   if (isOfficialHighlightTitle(entry?.title)) return 'highlights';
   return 'pressers';
 }
@@ -196,6 +266,9 @@ function shouldKeepEntry(entry, source) {
   }
   if (source.kind === 'film_guy' || source.bucket === 'filmGuy') {
     return isFilmGuyFloridaBreakdownTitle(title);
+  }
+  if (source.kind === 'tengwall' || source.bucket === 'tengwall') {
+    return isTengwallUfFilmReview(entry);
   }
   // Florida official + custom presser sources
   if (NON_FOOTBALL.test(title) && !/football/i.test(title)) return false;
@@ -229,11 +302,13 @@ function toCacheRow(entry, source) {
       ? 'GNFP Film Review'
       : source.bucket === 'filmGuy'
         ? 'Film Guy Network'
-        : source.bucket === 'highlights'
-          ? 'Highlights'
-          : 'Florida Gators Football',
+        : source.bucket === 'tengwall'
+          ? 'Landon Tengwall'
+          : source.bucket === 'highlights'
+            ? 'Highlights'
+            : 'Florida Gators Football',
     season: String(Number.isFinite(year) ? year : new Date().getUTCFullYear()),
-    category: source.bucket === 'gnfp' || source.bucket === 'filmGuy'
+    category: source.bucket === 'gnfp' || source.bucket === 'filmGuy' || source.bucket === 'tengwall'
       ? 'Film Breakdown'
       : source.bucket === 'highlights'
         ? 'Highlights'
@@ -252,7 +327,7 @@ function toCacheRow(entry, source) {
   };
 }
 
-function mergeBucket(existing, incoming, { pruneGnfpNonFilm, pruneFilmGuyNonFlorida } = {}) {
+function mergeBucket(existing, incoming, { pruneGnfpNonFilm, pruneFilmGuyNonFlorida, pruneTengwallNonUf } = {}) {
   const byId = new Map();
   for (const row of existing || []) {
     if (row?.id) byId.set(row.id, row);
@@ -286,6 +361,9 @@ function mergeBucket(existing, incoming, { pruneGnfpNonFilm, pruneFilmGuyNonFlor
   }
   if (pruneFilmGuyNonFlorida) {
     merged = merged.filter((row) => isFilmGuyFloridaBreakdownTitle(row?.title));
+  }
+  if (pruneTengwallNonUf) {
+    merged = merged.filter((row) => isTengwallUfFilmReview(row));
   }
   merged.sort((a, b) => {
     const ta = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
@@ -561,11 +639,12 @@ async function syncFilmRoomYouTubeInner({ sources } = {}) {
 
   if (!cache.auto.highlights) cache.auto.highlights = [];
   if (!cache.auto.filmGuy) cache.auto.filmGuy = [];
+  if (!cache.auto.tengwall) cache.auto.tengwall = [];
 
   for (const source of list) {
     try {
       const entries = await fetchChannelFeed(source.channelId);
-      const keptByBucket = { pressers: [], gnfp: [], highlights: [], filmGuy: [] };
+      const keptByBucket = { pressers: [], gnfp: [], highlights: [], filmGuy: [], tengwall: [] };
       for (const entry of entries) {
         if (!shouldKeepEntry(entry, source)) continue;
         const bucket = classifySourceBucket(entry, source);
@@ -575,13 +654,14 @@ async function syncFilmRoomYouTubeInner({ sources } = {}) {
       let sourceAdded = 0;
       let sourceUpdated = 0;
       let sourceMatched = 0;
-      for (const bucket of ['pressers', 'gnfp', 'highlights', 'filmGuy']) {
+      for (const bucket of ['pressers', 'gnfp', 'highlights', 'filmGuy', 'tengwall']) {
         const kept = keptByBucket[bucket];
         if (!kept.length) continue;
         sourceMatched += kept.length;
         const { rows, added, updated } = mergeBucket(cache.auto[bucket] || [], kept, {
           pruneGnfpNonFilm: bucket === 'gnfp',
           pruneFilmGuyNonFlorida: bucket === 'filmGuy',
+          pruneTengwallNonUf: bucket === 'tengwall',
         });
         cache.auto[bucket] = rows;
         sourceAdded += added;
@@ -652,6 +732,7 @@ async function syncFilmRoomYouTubeInner({ sources } = {}) {
       gnfp: (cache.auto.gnfp || []).length,
       highlights: (cache.auto.highlights || []).length,
       filmGuy: (cache.auto.filmGuy || []).length,
+      tengwall: (cache.auto.tengwall || []).length,
     },
   };
 }
@@ -664,6 +745,11 @@ module.exports = {
   isCurrentStaffGnfpReview,
   CURRENT_STAFF_GNFP_SEASON,
   isFilmGuyFloridaBreakdownTitle,
+  isTengwallUfFilmReview,
+  isTengwallPassGameTitle,
+  TENGWALL_UF_START_YOUTUBE_ID,
+  TENGWALL_UF_START_AT,
+  TENGWALL_UF_SEASON,
   titleHasUfFootball,
   isCondensedGameTitle,
   isOfficialHighlightTitle,

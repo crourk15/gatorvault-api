@@ -96,7 +96,7 @@ function fromLocalCache() {
         ? 'GNFP Film Review'
         : cat === 'Highlights' || /highlight/i.test(item.title || '')
           ? 'Highlights'
-          : cat === 'Film Breakdown' || /film guy/i.test(item.source || '')
+          : cat === 'Film Breakdown' || /film guy|tengwall/i.test(item.source || '')
             ? 'Film Breakdown'
             : (item.category || 'Film Breakdown');
     push(item, filmHub);
@@ -111,7 +111,7 @@ function fromLocalCache() {
             ? 'GNFP Film Review'
             : key === 'highlights'
               ? 'Highlights'
-              : key === 'filmGuy'
+              : key === 'filmGuy' || key === 'tengwall'
                 ? 'Film Breakdown'
                 : (item.category || 'Film Breakdown');
       push(item, filmHub);

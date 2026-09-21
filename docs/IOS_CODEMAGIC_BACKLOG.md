@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Film Room: Landon Tengwall UF-only 2026 run-game film studies from Auburn Week 3 (`MRjoBzMLD2s`) onward on `/api/film-room/catalog` (API — no Codemagic). Pass-game sits and the Week 1 FAU tape stay off. Hub-seed first-paint waits for a later bake.
 - [x] Game Week Ole Miss expected visitors: verified the Aug early look against players / visit logs / intel; dropped the `j-c-wessel` duplicate; filled every card with the same pos / year / school line (Craig-James, Lawson, Evans, Winn, Dion, Martenson). Added Vickers + Turner from the later 247/Gators Wire look. Jackson 2029 stayed off — no dated Sep 26 sit. API `/api/schedule` — no Codemagic.
 - [x] Game Week Ole Miss window: official **ABC / 3:30 p.m. ET** on `/api/schedule` after Render. Heal `date` + `tv` from the git board so Render durable cannot keep the old **3:30–8:00** window. API — current App Store Game Week already live-fetches. Home countdown seed still needs the 1.0.27 bake.
 - [x] Game Week Ole Miss: pointer + Auburn 44–39 final + Week 3 remaining-season preds on `/api/schedule` after Render (API — no Codemagic). LSU condensed was not posted; sit is official ESPN PBP (`filmWatched: false`).

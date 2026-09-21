@@ -24,6 +24,8 @@ const FILM_HUBS = [
 const LEGACY_VIDEO_CATEGORIES = [
   legacy.LEGACY_CATEGORIES.GNFP,
   legacy.LEGACY_CATEGORIES.FILM_GUY,
+  legacy.LEGACY_CATEGORIES.TENGWALL,
+  legacy.LEGACY_CATEGORIES.BREAKDOWN,
   legacy.LEGACY_CATEGORIES.PRESS,
   legacy.LEGACY_CATEGORIES.HIGHLIGHTS
 ];
@@ -75,7 +77,14 @@ function inferFilmHub(item) {
   const cat = item.category || '';
   const lessonType = String(item.lessonType || '').toLowerCase();
   if (lessonType === 'opponent_prep' || cat === 'Opponent Prep') return 'Film Breakdown';
-  if (cat === legacy.LEGACY_CATEGORIES.GNFP || cat === legacy.LEGACY_CATEGORIES.FILM_GUY) return 'Film Breakdown';
+  if (
+    cat === legacy.LEGACY_CATEGORIES.GNFP ||
+    cat === legacy.LEGACY_CATEGORIES.FILM_GUY ||
+    cat === legacy.LEGACY_CATEGORIES.TENGWALL ||
+    cat === legacy.LEGACY_CATEGORIES.BREAKDOWN
+  ) {
+    return 'Film Breakdown';
+  }
   if (cat === legacy.LEGACY_CATEGORIES.PRESS) return 'UF Press Conferences';
   if (cat === legacy.LEGACY_CATEGORIES.HIGHLIGHTS) return 'Highlights';
   if (item.schemeSide === 'defense' || item.schemeSide === 'offense') return 'Scheme School';

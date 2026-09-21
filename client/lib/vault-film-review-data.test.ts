@@ -93,6 +93,7 @@ describe('GatorVault Film Review', () => {
   it('does not dump GNFP film review into the Vault rail', () => {
     assert.equal(normalizeFilmHub('GNFP Film Review'), 'Film Breakdown');
     assert.equal(normalizeFilmHub('Film Guy Network'), 'Film Breakdown');
+    assert.equal(normalizeFilmHub('Landon Tengwall'), 'Film Breakdown');
     assert.equal(normalizeFilmHub('GatorVault Review'), 'GatorVault Review');
     assert.equal(normalizeFilmHub('GatorVault Film Review'), 'GatorVault Review');
   });

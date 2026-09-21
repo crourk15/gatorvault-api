@@ -3,6 +3,23 @@
   "notes": "Manual-only Film Room entries — never auto-updated or removed by sync.",
   "items": [
     {
+      "id": "manual-tengwall-auburn-run-2026",
+      "slug": "tengwall-florida-run-game-vs-auburn-2026",
+      "title": "FILM STUDY: How Florida's Run Game DOMINATED Auburn's Defense",
+      "dek": "Landon Tengwall tape study of Florida's run game vs Auburn. 53 carries, 243 yards.",
+      "gameLine": "Florida 44 · Auburn 39",
+      "season": "2026",
+      "category": "Film Breakdown",
+      "duration": "YouTube",
+      "youtubeId": "MRjoBzMLD2s",
+      "videoUrl": "https://www.youtube.com/watch?v=MRjoBzMLD2s",
+      "embedUrl": "https://www.youtube.com/embed/MRjoBzMLD2s",
+      "thumbUrl": "https://i.ytimg.com/vi/MRjoBzMLD2s/hqdefault.jpg",
+      "source": "Landon Tengwall",
+      "featured": true,
+      "publishedAt": "2026-09-20T23:13:48.000Z"
+    },
+    {
       "id": "manual-film-guy-faulkner-offense-2026",
       "slug": "film-guy-buster-faulkner-florida-offense-2026",
       "title": "FILM: I Can't Stop Studying Buster Faulkner Florida Offense",

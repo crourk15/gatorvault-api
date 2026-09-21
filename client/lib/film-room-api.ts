@@ -133,7 +133,7 @@ export function normalizeFilmHub(hub?: string | null): string {
   if (
     raw === 'GNFP Film Review' ||
     raw === 'Game Week' ||
-    /film\s*breakdown|film\s*guy|gnfp/i.test(raw) ||
+    /film\s*breakdown|film\s*guy|gnfp|tengwall/i.test(raw) ||
     (/film\s*review/i.test(raw) && !/gatorvault|vault/i.test(raw))
   ) {
     return 'Film Breakdown';

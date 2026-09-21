@@ -8,6 +8,7 @@
 | **GNFP Film Review** | YouTube RSS: GNFP channel |
 | **Scheme School** | Curated lessons in code (`scheme-school-data.ts`) — not YouTube auto |
 | **Film Guy Network** | YouTube RSS: UF football breakdowns only (`FILM:` / film study + Florida/Gators). Drops Georgia, Texas, FGN Live, reactions, score predictions. Tapes already off the 15-item RSS still need `manual.json`. |
+| **Landon Tengwall** | YouTube RSS: UF-only 2026 run-game film studies from Auburn Week 3 (`MRjoBzMLD2s`) onward. Drops pass-game sits, other teams, FSU, and the Week 1 FAU tape. Pin older-than-RSS rows in `manual.json`. |
 | **Highlights** | Official Gators Football highlights via RSS + manual `server/data/film-room/manual.json`. Condensed games stay off this hub. |
 
 Catalog API: `GET /api/film-room/catalog`  
@@ -25,10 +26,11 @@ Cache: repo seed `server/data/film-room/cache.json` + durable overlay `/var/data
 - Keeps titles with press conference / media availability / Media Days
 - Search path requires Florida/Gators/Sumrall in the title
 - Film Guy: UF football breakdown titles only — never other teams, live shows, or reactions
+- Tengwall: UF 2026 run-game film studies from Auburn Week 3 forward — never pass-game sits, other teams, or the Week 1 FAU tape
 
 ## Optional env
 
-- `FILM_ROOM_YOUTUBE_SOURCES=channelId:pressers:Label,channelId:gnfp:GNFP,channelId:filmGuy:Film Guy Network`
+- `FILM_ROOM_YOUTUBE_SOURCES=channelId:pressers:Label,channelId:gnfp:GNFP,channelId:filmGuy:Film Guy Network,channelId:tengwall:Landon Tengwall`
 - `FILM_ROOM_YOUTUBE_SEARCH_QUERIES=query one|query two`
 - `FILM_ROOM_YOUTUBE_SEARCH_DISABLED=true`
 - `FILM_ROOM_CACHE_PATH=/path/to/cache.json`
