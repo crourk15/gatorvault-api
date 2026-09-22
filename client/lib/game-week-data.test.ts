@@ -113,8 +113,20 @@ describe('Game Week Film Notes', () => {
 
     const bundle = getGameWeekBundle('olemiss');
     assert.deepEqual(bundle.filmNotes, notes);
-    assert.ok(bundle.scouting.offense.some((n) => /no-huddle shotgun/i.test(n)));
-    assert.ok(bundle.scouting.defense.some((n) => /LSU ran for 172/i.test(n)));
+    assert.ok(bundle.scouting.offense.some((n) => /no-huddle, shotgun-only/i.test(n)));
+    assert.ok(bundle.scouting.defense.some((n) => /172 rushing yards to LSU/i.test(n)));
+    assert.equal(
+      bundle.keys[0].body,
+      "Do not allow Chambliss to comfortably sit in the pocket or break containment on scramble drills. Defensive ends must rush with contain equity—do not crash past his upfield shoulder. The edge defenders must play parallel to stay in the running lane on the QB keep."
+    );
+    assert.equal(
+      bundle.keys[1].body,
+      "Eradicate the explosive chunk play. Do not bite on short hitch routes or play-action windows. Defensive backs must maintain depth over the top of Traylon Ray's vertical stems and respect Deuce Alexander on the back-corner extended plays."
+    );
+    assert.equal(
+      bundle.keys[2].body,
+      "Ole Miss' front seven is vulnerable to a physical ground attack, having just surrendered 172 yards to LSU. Start Baugh to establish physical dominance early. Once Ole Miss is forced to over-rotate safeties down to load the box, unleash Philo to attack the single-high coverages over the top."
+    );
     assert.ok(!bundle.scouting.offense.some((n) => DESK_SCOUT_TALK_RE.test(n)));
     assert.ok(!bundle.scouting.defense.some((n) => DESK_SCOUT_TALK_RE.test(n)));
     assert.ok(!DESK_SCOUT_TALK_RE.test(bundle.scouting.matchupSummary));

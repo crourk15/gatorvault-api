@@ -194,9 +194,18 @@ describe('schedule-board', () => {
     assert.equal(olemiss.keys[0], 'Maintain Lane Discipline & Crowd Chambliss');
     assert.equal(olemiss.keys[1], 'Cap the Vertical Shots');
     assert.equal(olemiss.keys[2], 'Establish the Downhill Run Game');
-    assert.match(olemiss.howUFWins[0], /contain equity/i);
-    assert.match(olemiss.howUFWins[1], /Traylon Ray/i);
-    assert.match(olemiss.howUFWins[2], /172 yards to LSU/i);
+    assert.equal(
+      olemiss.howUFWins[0],
+      'Do not allow Chambliss to comfortably sit in the pocket or break containment on scramble drills. Defensive ends must rush with contain equity—do not crash past his upfield shoulder. The edge defenders must play parallel to stay in the running lane on the QB keep.'
+    );
+    assert.equal(
+      olemiss.howUFWins[1],
+      "Eradicate the explosive chunk play. Do not bite on short hitch routes or play-action windows. Defensive backs must maintain depth over the top of Traylon Ray's vertical stems and respect Deuce Alexander on the back-corner extended plays."
+    );
+    assert.equal(
+      olemiss.howUFWins[2],
+      "Ole Miss' front seven is vulnerable to a physical ground attack, having just surrendered 172 yards to LSU. Start Baugh to establish physical dominance early. Once Ole Miss is forced to over-rotate safeties down to load the box, unleash Philo to attack the single-high coverages over the top."
+    );
     assert.ok(olemiss.specialTeams?.some((n) => /Lucas Carneiro/i.test(n)));
     assert.ok(!olemiss.filmNotes.some((n) => /Kiffin/i.test(n)));
     assert.ok(!/Kiffin/i.test(olemiss.film));
