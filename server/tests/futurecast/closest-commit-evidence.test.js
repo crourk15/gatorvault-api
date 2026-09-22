@@ -36,6 +36,16 @@ describe('Closest-to-commit process evidence', () => {
     );
   });
 
+  it('soft 2028 plate carries Closest flags so iOS does not wait on a rebuild', () => {
+    const { softOpenClassHighPriorityFromSeed } = require('../../api/futurecast/high-priority.ts');
+    const soft = softOpenClassHighPriorityFromSeed(2028);
+    assert.ok(Array.isArray(soft.players) && soft.players.length > 0);
+    const hudson = soft.players.find((p) => p.slug === 'hudson-west');
+    assert.ok(hudson, 'Hudson on soft plate');
+    assert.ok(hudson.processEvidence, 'soft plate must attach processEvidence');
+    assert.equal(hudson.closestCommitEligible, true);
+  });
+
   it('high-priority 2028 payload attaches processEvidence', async () => {
     const { buildHighPriorityPayload } = require('../../api/futurecast/high-priority.ts');
     const payload = await buildHighPriorityPayload(2028);

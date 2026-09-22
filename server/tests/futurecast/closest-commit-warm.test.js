@@ -31,6 +31,15 @@ describe('Closest to commit live warm (no Codemagic)', () => {
     assert.match(src, /scheduleClosestCommitWarm/);
   });
 
+  it('2028 GET heals Closest flags onto the disk plate', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'api', 'futurecast', 'high-priority.ts'),
+      'utf8'
+    );
+    assert.match(src, /function withClosestCommitEvidence/);
+    assert.match(src, /withClosestCommitEvidence\(\s*sanitizeHighPriorityStarsPayload\(primed\)/);
+  });
+
   it('high-priority stays no-store so Closest is never stuck on an old plate', () => {
     const policy = fs.readFileSync(
       path.join(__dirname, '..', '..', 'lib', 'api-cache-policy.js'),

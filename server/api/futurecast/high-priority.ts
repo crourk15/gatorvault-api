@@ -363,23 +363,42 @@ export function softOpenClassHighPriorityFromSeed(classYear = 2028) {
   });
 
   const lastUpdated = new Date().toISOString();
-  return sanitizeHighPriorityStarsPayload({
-    ok: true,
-    classYear: year,
-    count: players.length,
-    visitIntelCount: 0,
-    visitRecapCount: 0,
-    flipWatchCount: 0,
-    visitBoardSnapshot: { upcomingCount: 0, recapCount: 0 },
-    updatedAt: lastUpdated,
-    lastUpdated,
-    players,
-    visitIntel: [],
-    visitRecap: [],
-    flipWatch: [],
-    movementNarratives: [],
-    degraded: 'open_seed',
-  });
+  return withClosestCommitEvidence(
+    sanitizeHighPriorityStarsPayload({
+      ok: true,
+      classYear: year,
+      count: players.length,
+      visitIntelCount: 0,
+      visitRecapCount: 0,
+      flipWatchCount: 0,
+      visitBoardSnapshot: { upcomingCount: 0, recapCount: 0 },
+      updatedAt: lastUpdated,
+      lastUpdated,
+      players,
+      visitIntel: [],
+      visitRecap: [],
+      flipWatch: [],
+      movementNarratives: [],
+      degraded: 'open_seed',
+    }),
+    year
+  );
+}
+
+/** Live Closest flags on every 2028 HP serve — iOS hides Closest until these exist. */
+function withClosestCommitEvidence<T extends { players?: unknown[] }>(payload: T, classYear: number): T {
+  if (!isUnderclassmenHighPriorityYear(classYear)) return payload;
+  const players = Array.isArray(payload?.players) ? payload.players : [];
+  if (!players.length) return payload;
+  try {
+    const { attachClosestCommitEvidence } = require('../../lib/closest-commit-evidence');
+    return {
+      ...payload,
+      players: attachClosestCommitEvidence(players, { classYear, days: 180 }),
+    };
+  } catch {
+    return payload;
+  }
 }
 
 /** Underclassmen years served by the high-priority endpoint (2027 uses legacy board pipeline). */
@@ -1481,7 +1500,10 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
     // rebuild so chase/delta7d cannot freeze for a week after warm wrap-hits.
     const primed = loadHighPriorityCached(classYear);
     if (primed != null) {
-      const healed = sanitizeHighPriorityStarsPayload(primed);
+      const healed = withClosestCommitEvidence(
+        sanitizeHighPriorityStarsPayload(primed),
+        classYear
+      );
       primeFuturecastCache(cacheKey, healed);
       const fresh = isHpPlateFresh(healed);
       if (fresh) {
