@@ -23,7 +23,7 @@ import {
 import { isHsLifecycle, isTrendingEligibleRow } from './eligibility';
 import { applyMomentumBoosts, loadSignalMomentumBoosts } from './momentum';
 import { listRecruitingStoreCommits, mergeLiveCommits } from './live-commits';
-import { sendCachedJson } from './response-cache';
+import { sendCachedJson, scheduleClosestCommitWarm } from './response-cache';
 import { enrichFeedPlayers } from './ranking-enrichment';
 import {
   buildHeatmapResponse,
@@ -70,6 +70,7 @@ function sortTargets(rows: Awaited<ReturnType<typeof serializeFeedRowsWithVolati
 
 export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Response) => {
   try {
+    scheduleClosestCommitWarm();
     const commitSort =
       req.query.commitSort === 'stability' ? ('stability' as const) : ('fit' as const);
     const cacheKey = `futurecast:home:${commitSort}`;

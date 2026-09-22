@@ -80,6 +80,14 @@ describe('FutureCast elite Lab load path', () => {
     assert.match(src, /writeHighPriorityCache/);
   });
 
+  it('Home hub primes Closest 2028 without a client bake', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'api', 'futurecast', 'response-cache.ts'),
+      'utf8'
+    );
+    assert.match(src, /export function scheduleClosestCommitWarm/);
+  });
+
   it('warmFuturecastLabCaches starts high-priority early', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', '..', 'api', 'futurecast', 'response-cache.ts'),

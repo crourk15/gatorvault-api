@@ -312,6 +312,38 @@ export function primeFuturecastCache(cacheKey: string, value: unknown): void {
   cache.set(cacheKey, value, CACHE_TTL_MS);
 }
 
+/**
+ * Cheap Closest warm for the current App Store binary (no Codemagic).
+ * Lifts the live 2028 HP plate into memory so `/api/futurecast/high-priority?year=2028`
+ * is a hit when they tap FutureCast. Does not rebuild. Does not block the request.
+ * HP stays no-store so a later board update is never stuck in iOS URLCache.
+ */
+let closestPrimeAt = 0;
+const CLOSEST_PRIME_COOLDOWN_MS = 15_000;
+
+export function scheduleClosestCommitWarm(): void {
+  const now = Date.now();
+  if (now - closestPrimeAt < CLOSEST_PRIME_COOLDOWN_MS) return;
+  closestPrimeAt = now;
+  setImmediate(() => {
+    try {
+      const year = 2028;
+      const existing = loadHighPriorityCached(year);
+      if (existing != null) {
+        primeFuturecastCache(highPriorityCacheKey(year), existing);
+        return;
+      }
+      scheduleHighPriorityDiskRebuild(year, () => {
+        const { buildHighPriorityPayload } = require('./high-priority');
+        return buildHighPriorityPayload(year);
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.warn('[closest-warm] failed:', message);
+    }
+  });
+}
+
 /** One in-flight + cooldown so DISK hits do not OOM Starter with parallel HP rebuilds. */
 const hpDiskRebuildInFlight = new Map<number, Promise<void>>();
 const hpDiskRebuildAt = new Map<number, number>();

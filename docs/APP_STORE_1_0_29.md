@@ -24,7 +24,7 @@ I will not start Codemagic.
 - **Game Week:** first-paints the live Ole Miss keys / scout / swing (Maintain Lane Discipline / Cap the Vertical Shots / Establish the Downhill Run Game). No 5-second swap from the Sep 21 seed.
 - **Game Week still editable:** last-good + live `/api/schedule`. Home prefetches the board so keys are already there when you open the page.
 - **Swing Impact:** player grade, not `72 + list order`. Baugh on Ole Miss is **95**.
-- **FutureCast Closest:** first-paints process-backed 2028 names from the Lab seed (not an empty panel for ~30s). Home warms `/api/futurecast/high-priority?year=2028` so the live board is usually already there. Movement stays honest — no invented Auburn-road-win recruiting stories.
-- **Community:** last-good + one `/api/community/page` GET instead of six list calls. Seed/last-good paint immediately; live locker still refreshes.
+
+Closest to commit and Community speed are **API after Render** — no Codemagic. Live HP stays no-store so Closest is never stuck on a baked list.
 
 Weekly visitor names / predictions stay API after this bake.

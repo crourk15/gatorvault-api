@@ -863,6 +863,12 @@ function refreshCacheKey(cacheKey, builderFn, timeoutMs = BUILD_TIMEOUT_MS) {
 }
 
 async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = false, hubMeta, timeoutMs, force = false }) {
+  try {
+    const { scheduleClosestCommitWarm } = require('../api/futurecast/response-cache.ts');
+    scheduleClosestCommitWarm();
+  } catch {
+    /* boot / missing plate */
+  }
   const result = await serveCached(cacheKey, builder, {
     timeoutMs,
     force,
