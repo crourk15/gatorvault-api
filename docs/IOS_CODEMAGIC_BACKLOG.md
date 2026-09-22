@@ -7,7 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
-- [x] Game Week Ole Miss scout + 3 keys: Stay Home / Play the Shot / Run the Front plus football-structure offense/defense/film (`/api/schedule` after Render). No Lane Kiffin — Golding still calls D. `filmWatched: false`. Current App Store already live-fetches keys + tendencies + film. Special-teams Carneiro/2-pt needs the `game.specialTeams` mapper bake below.
+- [x] Game Week Ole Miss scout + 3 keys: Maintain Lane Discipline & Crowd Chambliss / Cap the Vertical Shots / Establish the Downhill Run Game plus football-structure offense/defense/film (`/api/schedule` after Render). No Lane Kiffin — Golding still calls D. `filmWatched: false`. Current App Store already live-fetches keys + tendencies + film. Special-teams Carneiro/2-pt needs the `game.specialTeams` mapper bake below.
 - [x] Home NOW weekly 3: ticker API serves game + place + record (Ole Miss / expected visitors / 3-0). Class-rank #8 is off the weekly slate. API after Render — 1.0.28 still may rotate leftover intel until the client-cap bake below.
 - [x] Home NOW last-week drop: movement-intel + ticker skip completed-opponent gameday/visit pulses (Man Robinson Campbell, Cyion Sep 11). API after Render — 1.0.28 stops painting those alerts without a bake. Client join/filter is the next-bake row.
 - [x] Home NOW pillars: ticker items are Game / Visitors / Season (ABC on Game only; visitor names, not “Expected visitors in the Swamp”). API after Render — 1.0.28 bolds Game first. Three-label UI is the next-bake row.
