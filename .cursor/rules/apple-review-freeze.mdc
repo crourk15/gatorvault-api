@@ -4,7 +4,7 @@ alwaysApply: true
 ---
 # Apple App Store review freeze — LIFTED
 
-**Status: LIFTED** (user cleared Jul 11, 2026; App Store **1.0.17** accepted Aug 17, 2026 — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`). Next client bake train: **1.0.27** / build 92+ (`docs/APP_STORE_1_0_27.md`).
+**Status: LIFTED** (user cleared Jul 11, 2026; App Store **1.0.17** accepted Aug 17, 2026 — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`). **1.0.28 accepted** Sep 21, 2026 — submission `3e6e63db-1028-4ca3-a71a-51584bf05f32`. Do not upload another 1.0.28. Charles asked for **1.0.29** / build 97+ (`docs/APP_STORE_1_0_29.md`). Do not start Codemagic until this bump is on `main`.
 
 Normal push / Render auto-deploy / production API deploys are allowed again.
 

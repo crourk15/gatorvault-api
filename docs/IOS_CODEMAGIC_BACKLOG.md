@@ -151,13 +151,13 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 **1.0.28 is closed.** Apple accepted it Sep 21, 2026 (submission `3e6e63db-1028-4ca3-a71a-51584bf05f32`). Do not upload another 1.0.28.
 
-**Next bake target: App Store `1.0.29` / build `97`** only when Charles asks. See `docs/APP_STORE_1_0_29.md`. Do **not** start Codemagic.
+**Next bake target: App Store `1.0.29` / build `97`.** Charles asked for this train. See `docs/APP_STORE_1_0_29.md`. Merge to `main`, then Charles starts Codemagic **ios-release**. Do **not** start until this agent says the bump is on `main`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-22 | Next train **1.0.29** / build **97** (NOW last-good + Game Week first-paint). **1.0.28 accepted — do not re-upload.** | `MARKETING_VERSION` 1.0.29. Only when Charles asks. | this PR |
+| 2026-09-22 | App Store **1.0.29** / build **97** (NOW + Game Week first-paint + Baugh 95). **1.0.28 accepted — do not re-upload.** | `MARKETING_VERSION` 1.0.29. Charles asked for this train. | #731 |
 | 2026-09-22 | Home NOW last-good week (no snap back to #8 class-rank seed) | `applyHomeNowWeekPack` + last-good localStorage in binary. **Ticker `nowWeek` is API-live after Render.** Current 1.0.28 still falls to hub-bundle ticker when the 30s refresh misses. | this PR |
 | 2026-09-22 | Game Week last-good board (no snap back to Sep 21 seed on API 502) | `peekScheduleBoard` + localStorage in binary. **Intel overlay on `/api/schedule` is API-live after Render.** 1.0.28 still falls to baked keys when Render 502s. | this PR |
 | 2026-09-22 | Game Week special teams from `game.specialTeams` (Carneiro / 2-pt) | `buildScouting` in binary. **Keys + offense/defense/film already API-live after Render.** Old binary keeps hardcoded “Win field position.” | this PR |
