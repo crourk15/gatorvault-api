@@ -239,8 +239,11 @@ export async function fetchRecruitingHubTicker(year = HUB_YEAR): Promise<string[
 export async function fetchRecruitingHubTickerPack(
   year = HUB_YEAR
 ): Promise<{ items: string[]; nowWeek: HomeNowWeekCategory[] }> {
-  const data = await fetchHub<{ ok?: boolean; items?: string[]; nowWeek?: HomeNowWeekCategory[] }>(
-    `/api/recruiting/hub/ticker?year=${year}`
+  // Live only — snapshot/SWR first-paint hid nowWeek and snapped NOW back
+  // to the hub-bundle class-rank seed after a 30s refresh miss.
+  const data = await snapshotLiveFetch<{ ok?: boolean; items?: string[]; nowWeek?: HomeNowWeekCategory[] }>(
+    `/api/recruiting/hub/ticker?year=${year}`,
+    HUB_FETCH_OPTS
   );
   return {
     items: data.items ?? [],

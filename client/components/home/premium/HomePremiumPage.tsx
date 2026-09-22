@@ -41,9 +41,13 @@ import {
   buildGameDayView,
   buildHomePulseHeadline,
   buildHomePulseStories,
+  applyHomeNowTickerPack,
+  applyHomeNowWeekPack,
   applyLiveCommitCountToTicker,
-  buildLocalWeeklyNowWeek,
+  homeNowWeekToTickerLines,
+  isWeeklyNowPillarLine,
   mergeEliteHomeTickers,
+  resolveInitialHomeNowWeek,
 } from '@/components/home/premium/command/home-command-utils';
 
 /** Visit/offer school lines go stale in the binary — only live /hub/ticker may paint them. */
@@ -57,13 +61,15 @@ function isSeedUnsafeVisitOrOfferLine(text: string): boolean {
 }
 
 function seedHomeTicker(year: number): string[] {
+  const weekly = homeNowWeekToTickerLines(resolveInitialHomeNowWeek());
+  if (weekly.length) return weekly;
   const fromSeed = RECRUITING_HUB_BUNDLE_SEED?.byYear?.[String(year)]?.ticker;
   const raw = Array.isArray(fromSeed)
     ? fromSeed
         .map((t) => String(t || '').trim())
-        .filter((t) => t && !isSeedUnsafeVisitOrOfferLine(t))
+        .filter((t) => t && !isSeedUnsafeVisitOrOfferLine(t) && !/class trending nationally/i.test(t))
     : [];
-  // Never paint a stone commit/signee count from the Capacitor seed.
+  // Never paint a stone commit/signee count or #8 class-rank line from the Capacitor seed.
   return applyLiveCommitCountToTicker(raw, { year, commits: null });
 }
 
@@ -124,7 +130,7 @@ export function HomePremiumPage(): React.ReactElement {
   const [hubTicker, setHubTicker] = useState<string[]>(() =>
     seedHomeTicker(ACTIVE_RECRUITING_CLASS_YEAR)
   );
-  const [nowWeek, setNowWeek] = useState<HomeNowWeekCategory[]>(() => buildLocalWeeklyNowWeek());
+  const [nowWeek, setNowWeek] = useState<HomeNowWeekCategory[]>(() => resolveInitialHomeNowWeek());
   const [hpIntel, setHpIntel] = useState<HighPriorityIntelItem[]>([]);
   const [movementIntel, setMovementIntel] = useState<MovementIntelResponse | null>(null);
   // Seeded beat + metrics so first paint never waits on cold intel APIs.
@@ -197,16 +203,7 @@ export function HomePremiumPage(): React.ReactElement {
       // Cold API miss must NOT wipe build-time seeds — first-open chill was clearing
       // metrics/beat to null/[] and looking broken until a later warm revisit.
       const hubTickerLive = Array.isArray(hubTickerPack?.items) ? hubTickerPack.items : [];
-      if (Array.isArray(hubTickerPack?.nowWeek) && hubTickerPack.nowWeek.length) {
-        setNowWeek(hubTickerPack.nowWeek);
-      }
-      const primaryTicker =
-        (hubTickerLive.length && hubTickerLive) ||
-        (hubBundle?.ticker?.length ? hubBundle.ticker : null);
-      const nextTicker = mergeEliteHomeTickers(
-        primaryTicker,
-        Array.isArray(chaseTickerLive) ? chaseTickerLive : []
-      );
+      setNowWeek((current) => applyHomeNowWeekPack(hubTickerPack?.nowWeek, current));
       const liveMetrics = hubBundle?.classOverview
         ? ({ ...hubBundle.classOverview } as ClassMetricsResponse)
         : null;
@@ -222,17 +219,26 @@ export function HomePremiumPage(): React.ReactElement {
         }
       }
       const metricsForCount = liveMetrics;
-      if (nextTicker?.length || metricsForCount?.commits) {
-        setHubTicker(
-          applyLiveCommitCountToTicker(nextTicker ?? [], {
-            year,
-            commits: metricsForCount?.commits ?? null,
-            commitLabel: metricsForCount?.commitLabel ?? null,
-            // Live ticker already carries the count when overview is still warming.
-            allowExistingCount: Boolean(nextTicker?.length),
-          })
-        );
-      }
+      setHubTicker((current) => {
+        // Never fall back to hub-bundle ticker — that seed is still
+        // "2027 class trending nationally — UF at #8" and snaps NOW back
+        // when the 30s ticker refresh misses.
+        const kept = applyHomeNowTickerPack(hubTickerLive, current);
+        const weekly = kept.filter(isWeeklyNowPillarLine).length >= 2;
+        const source = weekly
+          ? kept
+          : mergeEliteHomeTickers(
+              hubTickerLive.length ? hubTickerLive : null,
+              Array.isArray(chaseTickerLive) ? chaseTickerLive : []
+            );
+        const next = source.length ? source : current;
+        return applyLiveCommitCountToTicker(next, {
+          year,
+          commits: metricsForCount?.commits ?? null,
+          commitLabel: metricsForCount?.commitLabel ?? null,
+          allowExistingCount: Boolean(next.length),
+        });
+      });
       if (Array.isArray(intel) && intel.length) setHpIntel(intel);
       if (movement) setMovementIntel(movement);
       // Keep seeded real writers if live beat is empty or brand-only (@gatorvault).

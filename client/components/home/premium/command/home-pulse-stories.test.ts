@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
+  __resetLastGoodNowWeekForTest,
+  applyHomeNowTickerPack,
+  applyHomeNowWeekPack,
   applyLiveCommitCountToTicker,
   buildHomeNowGameStory,
   buildHomePulseStories,
@@ -392,6 +395,7 @@ describe('buildLocalWeeklyNowWeek', () => {
 
 describe('resolveHomeNowWeekPillars', () => {
   it('does not keep the TestFlight Game ABC list when nowWeek is empty', () => {
+    __resetLastGoodNowWeekForTest();
     const stories = [buildHomeNowGameStory(OLE_MISS_WEEK) || ''];
     assert.equal(stories[0], 'Game — Ole Miss in the Swamp · ABC');
     assert.equal(parseWeeklyNowPillars(stories).length, 1);
@@ -412,5 +416,48 @@ describe('resolveHomeNowWeekPillars', () => {
     const pillars = resolveHomeNowWeekPillars(live, ['Game — Ole Miss in the Swamp · ABC'], OLE_MISS_WEEK);
     assert.equal(pillars[1].label, 'News');
     assert.equal(pillars[1].items[0], 'Jaden Hale commits to Florida');
+  });
+});
+
+describe('applyHomeNowWeekPack', () => {
+  it('keeps the painted week when the 30s ticker pack is empty', () => {
+    __resetLastGoodNowWeekForTest();
+    const current = [
+      { key: 'game', label: 'Game', items: ['Ole Miss in the Swamp · ABC'] },
+      { key: 'visitors', label: 'Visitors', items: ['Easton Royal'] },
+      { key: 'season', label: 'Season', items: ['3-0 first SEC home Saturday'] },
+    ];
+    const kept = applyHomeNowWeekPack([], current);
+    assert.equal(kept[0].items[0], 'Ole Miss in the Swamp · ABC');
+    assert.equal(kept[1].label, 'Visitors');
+    assert.equal(applyHomeNowWeekPack(undefined, current)[2].items[0], '3-0 first SEC home Saturday');
+  });
+
+  it('writes last-good so a remount does not snap to class-rank seed', () => {
+    __resetLastGoodNowWeekForTest();
+    const live = [
+      { key: 'game', label: 'Game', items: ['Ole Miss in the Swamp · ABC'] },
+      { key: 'visitors', label: 'Visitors', items: ['Easton Royal', 'Brysen Wright'] },
+      { key: 'season', label: 'Season', items: ['3-0 first SEC home Saturday'] },
+    ];
+    applyHomeNowWeekPack(live, []);
+    const remount = applyHomeNowWeekPack([], []);
+    assert.equal(remount[0].items[0], 'Ole Miss in the Swamp · ABC');
+    assert.ok(remount[1].items.includes('Easton Royal'));
+  });
+});
+
+describe('applyHomeNowTickerPack', () => {
+  it('does not replace weekly lines with the hub-bundle class-rank seed', () => {
+    const current = [
+      'Game — Ole Miss in the Swamp · ABC',
+      'Visitors — Easton Royal',
+      'Season — 3-0 · first SEC home Saturday',
+    ];
+    assert.deepEqual(
+      applyHomeNowTickerPack(['2027 class trending nationally — UF at #8', 'Blue chip % at 68%'], current),
+      current
+    );
+    assert.deepEqual(applyHomeNowTickerPack([], current), current);
   });
 });

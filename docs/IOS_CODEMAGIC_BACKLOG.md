@@ -155,6 +155,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-22 | Home NOW last-good week (no snap back to #8 class-rank seed) | `applyHomeNowWeekPack` + last-good localStorage in binary. **Ticker `nowWeek` is API-live after Render.** Current 1.0.28 still falls to hub-bundle ticker when the 30s refresh misses. | this PR |
 | 2026-09-22 | Game Week last-good board (no snap back to Sep 21 seed on API 502) | `peekScheduleBoard` + localStorage in binary. **Intel overlay on `/api/schedule` is API-live after Render.** 1.0.28 still falls to baked keys when Render 502s. | this PR |
 | 2026-09-22 | Game Week special teams from `game.specialTeams` (Carneiro / 2-pt) | `buildScouting` in binary. **Keys + offense/defense/film already API-live after Render.** Old binary keeps hardcoded “Win field position.” | this PR |
 | 2026-09-21 | Home NOW first-paint pillars + skip ticker SWR (never the one-line Game ABC list) | `buildLocalWeeklyNowWeek` + `resolveHomeNowWeekPillars` + SWR skip in binary. **Ticker API already has `nowWeek` after Render.** Bake **95**. | pending |

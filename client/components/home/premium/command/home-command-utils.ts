@@ -405,25 +405,119 @@ export function buildLocalWeeklyNowWeek(now = new Date()): HomeNowWeekPillar[] {
   return pillars.filter((row) => row.label && row.items.length).slice(0, 3);
 }
 
-/** Live API → parsed ticker lines → local week. Never a single Game ABC lead. */
+/** Live API → parsed ticker lines → last-good → local week. Never a single Game ABC lead. */
 export function resolveHomeNowWeekPillars(
   nowWeek: HomeNowWeekPillar[] | undefined,
   stories: string[],
   now = new Date()
 ): HomeNowWeekPillar[] {
-  const live = (nowWeek ?? [])
-    .map((row) => ({
-      key: String(row.key || row.label || '')
-        .trim()
-        .toLowerCase(),
-      label: String(row.label || '').trim(),
-      items: (row.items || []).map((s) => String(s || '').trim()).filter(Boolean),
-    }))
-    .filter((row) => row.label && row.items.length);
-  if (live.length >= 2) return live.slice(0, 3);
+  const live = usableHomeNowWeek(nowWeek);
+  if (live.length >= 2) return live;
   const parsed = parseWeeklyNowPillars(stories);
   if (parsed.length >= 2) return parsed.slice(0, 3);
+  const lastGood = peekLastGoodNowWeek();
+  if (lastGood.length >= 2) return lastGood;
   return buildLocalWeeklyNowWeek(now);
+}
+
+const LAST_GOOD_NOW_WEEK_KEY = 'gv-home-now-week-last-good';
+
+let lastGoodNowWeekMemory: HomeNowWeekPillar[] | null = null;
+
+export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNowWeekPillar[] {
+  return (Array.isArray(nowWeek) ? nowWeek : [])
+    .map((row) => ({
+      key: String(row?.key || row?.label || '')
+        .trim()
+        .toLowerCase(),
+      label: String(row?.label || '').trim(),
+      items: (row?.items || []).map((s) => String(s || '').trim()).filter(Boolean),
+    }))
+    .filter((row) => row.label && row.items.length)
+    .slice(0, 3);
+}
+
+export function peekLastGoodNowWeek(): HomeNowWeekPillar[] {
+  const fromMemory = usableHomeNowWeek(lastGoodNowWeekMemory);
+  if (fromMemory.length >= 2) return fromMemory;
+  if (typeof window === 'undefined' || !window.localStorage) return [];
+  try {
+    const raw = window.localStorage.getItem(LAST_GOOD_NOW_WEEK_KEY);
+    if (!raw) return [];
+    const parsed = usableHomeNowWeek(JSON.parse(raw) as HomeNowWeekPillar[]);
+    if (parsed.length < 2) return [];
+    lastGoodNowWeekMemory = parsed;
+    return parsed;
+  } catch {
+    return [];
+  }
+}
+
+export function writeLastGoodNowWeek(nowWeek: HomeNowWeekPillar[]): HomeNowWeekPillar[] {
+  const usable = usableHomeNowWeek(nowWeek);
+  if (usable.length < 2) return usable;
+  lastGoodNowWeekMemory = usable;
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      window.localStorage.setItem(LAST_GOOD_NOW_WEEK_KEY, JSON.stringify(usable));
+    } catch {
+      /* quota / private mode */
+    }
+  }
+  return usable;
+}
+
+/** First paint — last live week, then this-week local slate. Never class-rank seed. */
+export function resolveInitialHomeNowWeek(now = new Date()): HomeNowWeekPillar[] {
+  const last = peekLastGoodNowWeek();
+  if (last.length >= 2) return last;
+  return buildLocalWeeklyNowWeek(now);
+}
+
+/** Empty / thin ticker packs must not wipe a painted week. */
+export function applyHomeNowWeekPack(
+  incoming: HomeNowWeekPillar[] | undefined,
+  current: HomeNowWeekPillar[]
+): HomeNowWeekPillar[] {
+  const live = usableHomeNowWeek(incoming);
+  if (live.length >= 2) return writeLastGoodNowWeek(live);
+  const keep = usableHomeNowWeek(current);
+  if (keep.length >= 2) return keep;
+  const last = peekLastGoodNowWeek();
+  if (last.length >= 2) return last;
+  return current;
+}
+
+/**
+ * Keep the weekly Game / Visitors / Season lines.
+ * Do not fall back to hub-bundle class-rank seed when the ticker flaps.
+ */
+export function applyHomeNowTickerPack(liveItems: string[] | undefined, currentItems: string[]): string[] {
+  const live = (Array.isArray(liveItems) ? liveItems : [])
+    .map((s) => String(s || '').trim())
+    .filter(Boolean);
+  const current = (Array.isArray(currentItems) ? currentItems : [])
+    .map((s) => String(s || '').trim())
+    .filter(Boolean);
+  if (live.filter(isWeeklyNowPillarLine).length >= 2) return live;
+  if (current.filter(isWeeklyNowPillarLine).length >= 2) return current;
+  return current.length ? current : live;
+}
+
+export function homeNowWeekToTickerLines(pillars: HomeNowWeekPillar[]): string[] {
+  return usableHomeNowWeek(pillars).flatMap((row) =>
+    row.items.map((item) => `${row.label} — ${item}`)
+  );
+}
+
+export function __resetLastGoodNowWeekForTest(): void {
+  lastGoodNowWeekMemory = null;
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  try {
+    window.localStorage.removeItem(LAST_GOOD_NOW_WEEK_KEY);
+  } catch {
+    /* ignore */
+  }
 }
 
 /** This-week slate chip — Home NOW must move with the opponent, not sit on #8. */
