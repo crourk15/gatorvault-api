@@ -103,6 +103,12 @@ function mountAlertEmailRoutes(app) {
     const { dispatchVisitPushToEmail } = require("./push-alert-service");
     const name = log.playerName || log.playerSlug;
     const subject = `Verified UF OV scheduled — ${name}`;
+    // Lock-screen first. EmailJS/Resend retries were blocking APNs, so Test
+    // looked dead for several seconds (or never returned).
+    const pushOut = await dispatchVisitPushToEmail(email, log, {
+      force: true,
+      fingerprint: `self_serve_visit|${email}|${log.fingerprint || slug}|${Date.now()}`,
+    });
     let emailOut = { sent: false };
     try {
       emailOut = await sendSubscriberDigestEmail(
@@ -114,10 +120,6 @@ function mountAlertEmailRoutes(app) {
     } catch (err) {
       emailOut = { sent: false, reason: err.message };
     }
-    const pushOut = await dispatchVisitPushToEmail(email, log, {
-      force: true,
-      fingerprint: `self_serve_visit|${email}|${log.fingerprint || slug}|${Date.now()}`,
-    });
 
     return res.json({
       ok: Boolean(emailOut.sent || (pushOut.sent || 0) > 0),

@@ -57,7 +57,8 @@ async function sendEmailViaEmailJS({ serviceId, templateId, publicKey, templateP
       'Content-Type': 'application/json',
       Accept: 'application/json'
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
+    timeout: 8000
   });
 
   const text = await res.text();
