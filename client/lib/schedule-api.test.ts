@@ -203,6 +203,19 @@ describe('schedule-api uniforms', () => {
     assert.equal(live[0]?.tv, 'ABC');
   });
 
+  it('bundled Ole Miss seed first-paints the live keys and Baugh 95', () => {
+    const olemiss = SCHEDULE_GAMES.find((g) => g.id === 'olemiss');
+    assert.ok(olemiss);
+    assert.deepEqual(olemiss.keys, [
+      'Maintain Lane Discipline & Crowd Chambliss',
+      'Cap the Vertical Shots',
+      'Establish the Downhill Run Game',
+    ]);
+    const baugh = olemiss.swing.find((s) => /baugh/i.test(s.name));
+    assert.equal(baugh?.impact, 95);
+    assert.ok(!olemiss.keys.some((k) => /Attack a front that just gave LSU 172/i.test(k)));
+  });
+
   it('peekScheduleBoard prefers last-good live keys over the baked seed', () => {
     const olemiss = SCHEDULE_GAMES.find((g) => g.id === 'olemiss');
     assert.ok(olemiss);

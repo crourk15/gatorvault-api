@@ -79,6 +79,15 @@ export function warmVaultApi(): void {
       void ping('/api/live/ticker');
       void ping('/api/recruiting/movement-intel');
     }
+    if (
+      path === '/vault' ||
+      path.startsWith('/vault/game-week') ||
+      path.startsWith('/vault/schedule')
+    ) {
+      void import('./schedule-api')
+        .then((m) => m.fetchScheduleBoard(2026))
+        .catch(() => {});
+    }
   });
 
   scheduleIdle(() => {

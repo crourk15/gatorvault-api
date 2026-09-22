@@ -14,6 +14,7 @@ import { RECRUITING_HUB_BUNDLE_SEED } from '@/lib/recruiting-hub-bundle-seed';
 import { useVaultDataReload } from '@/lib/vault-navigation';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
+import { prefetchScheduleBoard } from '@/lib/schedule-api';
 import { HomeCommandCenter } from '@/components/home/premium/command/HomeCommandCenter';
 import {
   fetchBeatIntel,
@@ -179,6 +180,7 @@ export function HomePremiumPage(): React.ReactElement {
       setLoading(false);
     }
     const poll = warmPollProfile();
+    prefetchScheduleBoard(2026);
     try {
       const year = ACTIVE_RECRUITING_CLASS_YEAR;
       // APIs that already warm-poll internally — do not nest another warm layer.

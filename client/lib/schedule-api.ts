@@ -233,6 +233,12 @@ export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]>
   return board.games;
 }
 
+/** Warm last-good from Home so Game Week opens on live keys, not the baked seed. */
+export function prefetchScheduleBoard(season = 2026): void {
+  if (typeof window === 'undefined') return;
+  void fetchScheduleBoard(season).catch(() => {});
+}
+
 /** Test helpers */
 export const __scheduleApiTest = {
   normalizeGames,

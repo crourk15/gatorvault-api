@@ -9,7 +9,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ## Already live on iOS (no build needed)
 - [x] Game Week intel heal: git bundle keys/scout/swing always overlay a newer Render durable (official-box `updatedAt: now` can no longer revive last week's card). API after Render — 1.0.28 already live-fetches `/api/schedule`. Last-good first-paint on 502 is the bake row below.
 - [x] Game Week Ole Miss scout + 3 keys: Maintain Lane Discipline & Crowd Chambliss / Cap the Vertical Shots / Establish the Downhill Run Game plus football-structure offense/defense/film (`/api/schedule` after Render). No Lane Kiffin — Golding still calls D. `filmWatched: false`. Current App Store already live-fetches keys + tendencies + film. Special-teams Carneiro/2-pt needs the `game.specialTeams` mapper bake below.
-- [x] Home NOW weekly 3: ticker API serves game + place + record (Ole Miss / expected visitors / 3-0). Class-rank #8 is off the weekly slate. API after Render — 1.0.28 still may rotate leftover intel until the client-cap bake below.
+- [x] Home NOW weekly 3: ticker API serves game + place + record (Ole Miss / expected visitors / 3-0). Class-rank #8 is off the weekly slate. API after Render — current App Store may still snap to leftover intel until the build **96** last-good bake below.
 - [x] Home NOW last-week drop: movement-intel + ticker skip completed-opponent gameday/visit pulses (Man Robinson Campbell, Cyion Sep 11). API after Render — 1.0.28 stops painting those alerts without a bake. Client join/filter is the next-bake row.
 - [x] Home NOW pillars: ticker items are Game / Visitors / Season (ABC on Game only; visitor names, not “Expected visitors in the Swamp”). API after Render — 1.0.28 bolds Game first. Three-label UI is the next-bake row.
 - [x] Home NOW middle-slot break-in: any Florida commit/flip this week takes Visitors; road week fills with that week’s Florida commit (never NA). API after Render.
@@ -149,12 +149,13 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 ## Waiting for next Codemagic build
 
-**Next bake target: App Store `1.0.28` / build `95`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_28.md`. Build 94 is on TestFlight and still first-paints the one-line `Game — Ole Miss in the Swamp · ABC` when `nowWeek` is empty. Merge this bump, then Charles starts Codemagic **ios-release** on `main`. Do **not** start until this agent says the bump is on `main`.
+**Next bake target: App Store `1.0.28` / build `96`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_28.md`. Build 95 still first-paints the Sep 21 Game Week seed and can snap Home NOW to the class-rank seed. Merge this bump, then Charles starts Codemagic **ios-release** on `main`. Do **not** start until this agent says the bump is on `main`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-22 | App Store **1.0.28** / build **96** (NOW last-good + Game Week first-paint + Baugh 95) | `CURRENT_PROJECT_VERSION` 96. 1.0.28 exists in App Store Connect. | this PR |
 | 2026-09-22 | Home NOW last-good week (no snap back to #8 class-rank seed) | `applyHomeNowWeekPack` + last-good localStorage in binary. **Ticker `nowWeek` is API-live after Render.** Current 1.0.28 still falls to hub-bundle ticker when the 30s refresh misses. | this PR |
 | 2026-09-22 | Game Week last-good board (no snap back to Sep 21 seed on API 502) | `peekScheduleBoard` + localStorage in binary. **Intel overlay on `/api/schedule` is API-live after Render.** 1.0.28 still falls to baked keys when Render 502s. | this PR |
 | 2026-09-22 | Game Week special teams from `game.specialTeams` (Carneiro / 2-pt) | `buildScouting` in binary. **Keys + offense/defense/film already API-live after Render.** Old binary keeps hardcoded “Win field position.” | this PR |
