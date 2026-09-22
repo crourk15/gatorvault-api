@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-09-20T18:15:00.000Z",
+  "updatedAt": "2026-09-22T13:40:00.000Z",
   "label": "2026 Florida football schedule",
   "source": "vault-schedule-board",
   "predThrough": "2026-W3",
@@ -321,9 +321,9 @@
       "ufPct": 51,
       "tv": "ABC",
       "keys": [
-        "Attack a front that just gave LSU 172",
-        "Crowd Chambliss before the first read",
-        "Don't let the short throw become a long run"
+        "Stay Home",
+        "Play the Shot",
+        "Run the Front"
       ],
       "swing": [
         {
@@ -333,77 +333,107 @@
         },
         {
           "name": "Jayden Woods",
-          "role": "Keep Chambliss in the pocket"
+          "role": "Stay in the lane on the Chambliss keep"
         },
         {
           "name": "Aaron Philo",
-          "role": "Louisville still threw 307 \u2014 they will trade chunks"
+          "role": "When they load the box, go over the top"
         }
       ],
       "radar": [
-        { "label": "Run Game", "uf": 70, "opp": 56 },
-        { "label": "Pass Efficiency", "uf": 66, "opp": 78 },
-        { "label": "Front 7", "uf": 72, "opp": 48 },
-        { "label": "Secondary", "uf": 68, "opp": 54 },
-        { "label": "Special Teams", "uf": 58, "opp": 58 },
-        { "label": "Coaching Edge", "uf": 52, "opp": 52 }
+        {
+          "label": "Run Game",
+          "uf": 70,
+          "opp": 56
+        },
+        {
+          "label": "Pass Efficiency",
+          "uf": 66,
+          "opp": 78
+        },
+        {
+          "label": "Front 7",
+          "uf": 72,
+          "opp": 48
+        },
+        {
+          "label": "Secondary",
+          "uf": 68,
+          "opp": 54
+        },
+        {
+          "label": "Special Teams",
+          "uf": 58,
+          "opp": 58
+        },
+        {
+          "label": "Coaching Edge",
+          "uf": 52,
+          "opp": 52
+        }
       ],
-      "film": "Ole Miss is no-huddle shotgun and Trinidad Chambliss. Crowd him or he throws it short and keeps it. They jumped LSU 24-7 and still had to win it with a keep left. Then go score \u2014 Louisville threw 307 and LSU ran for 172.",
+      "film": "Ole Miss is no-huddle shotgun and Trinidad Chambliss. Stay home on him, cap the shot plays, and run the front \u2014 they go as he goes.",
       "filmNotes": [
-        "Ole Miss is no-huddle shotgun and Trinidad Chambliss. Crowd him or he throws it short and keeps it. They jumped LSU 24-7 and still had to win it with a keep left. Then go score \u2014 Louisville threw 307 and LSU ran for 172.",
-        "They do not huddle up. Almost every snap vs LSU was no-huddle shotgun. No under center.",
-        "They will keep it. The winning score was Chambliss left 14. Stay in your lane.",
-        "The chunk throws were short and ran \u2014 Traylon Ray 36 and 21, Horatio Fields 22, Caleb Odom 23. Crowd the catch.",
-        "Deuce Alexander is the volume guy. He went 62 twice on Louisville and finished the half vs LSU from 20.",
-        "Kewan Lacy is the early-down back. He punched the first LSU score from 5.",
-        "One pick when he was off schedule. Crowd him and make him live as a thrower.",
-        "Louisville threw 307 and ran 162. LSU ran for 172. If they sit, run it \u2014 then throw it over them.",
-        "They will go on 4th-and-short. Do not treat it as a punt.",
-        "Coverage calls not on the tape we have."
+        "Ole Miss is no-huddle shotgun and Trinidad Chambliss. Stay home on him, cap the shot plays, and run the front \u2014 they go as he goes.",
+        "Pure no-huddle shotgun. They play to score fast \u2014 38.0 points and 445 yards a game, 27:11 time of possession. No under center vs LSU.",
+        "Money downs: 46 percent on third, 2-for-3 on fourth-and-short, 12-for-12 in the red zone with 11 touchdowns.",
+        "Chambliss is 70 percent, 924 yards, 7 TD, 2 INT. He will sit for the isolated shot and he will keep it. The winning score vs LSU was the 14-yard keep. He will hold it and he will throw it late.",
+        "Traylon Ray is the isolated X \u2014 7-115-1 vs LSU, 21-yard play-action over the top. Deuce Alexander is volume and the back-corner \u2014 two 62s vs Louisville, 20-yard TD on the run vs LSU. Caleb Odom (5-88) and Horatio Fields (5-52) work the middle.",
+        "Kewan Lacy (39-191-4) is game-time with a left shoulder. JT Lindsey is next \u2014 fourth-and-1 and the two-point after the keep.",
+        "Pete Golding's 4-2-5 can close a game (Franklin tip, Braxton INT) and bend in the red zone (3 touchdowns on 9 trips), but the front just gave LSU 172 and Louisville 162.",
+        "Will Echoles anchors the interior. Blake Purchase is the edge. Suntarine Perkins is the hybrid. Louisville threw 307 when they got them in space.",
+        "Start Baugh downhill. When they load the box, Philo goes over the top.",
+        "Lucas Carneiro is 5-for-7 (48 walk-off, 53 miss). They will go for two after a keep."
       ],
       "pred": "UF 28 \u00b7 Ole Miss 27",
       "predUF": 28,
       "predOpp": 27,
       "filmWatched": false,
       "opponentTendencies": [
-        "They do not huddle up. Almost every snap vs LSU was no-huddle shotgun. No under center.",
-        "They will keep it. The winning score was Chambliss left 14. Stay in your lane.",
-        "The chunk throws were short and ran \u2014 Traylon Ray 36 and 21, Horatio Fields 22, Caleb Odom 23. Crowd the catch.",
-        "Deuce Alexander is the volume guy. He went 62 twice on Louisville and finished the half vs LSU from 20.",
-        "Kewan Lacy is the early-down back. He punched the first LSU score from 5.",
-        "One pick when he was off schedule. Crowd him and make him live as a thrower.",
-        "They will go on 4th-and-short. Do not treat it as a punt."
+        "Schematic identity: Pure no-huddle shotgun. They play to score fast, not bleed the clock \u2014 27:11 time of possession.",
+        "Efficiency: 38.0 points and 445 yards a game (331 pass / 114 rush) through three.",
+        "Situational: 46 percent on third down, 2-for-3 on fourth-and-short, 12-for-12 in the red zone with 11 touchdowns.",
+        "Trinidad Chambliss is the engine \u2014 70 percent (77-of-110), 924 yards, 7 TD, 2 INT. He will sit and take the isolated shot, and he is lethal when the play breaks. vs LSU he threw the 20-yard back-corner TD on the run to Deuce Alexander and scored the winner himself on a 14-yard keep. He will hold it too long (20-yard sack vs LSU) and he will throw it if you force him past the first downfield read.",
+        "You cannot bracket one wideout. Four cleared 50 vs LSU. Traylon Ray is the isolated X (7-115-1 vs LSU, 21-yard play-action over the top). Deuce Alexander is the volume chain-mover and scramble-drill target (two 62s vs Louisville; 7-60-1 vs LSU). Caleb Odom (5-88) and Horatio Fields (5-52) work the middle.",
+        "The run is secondary. Kewan Lacy is the early-down and short-yardage back (39-191-4). Left shoulder vs LSU \u2014 game-time. JT Lindsey is next (4-20 vs LSU) \u2014 fourth-and-1 sneak and the two-point after the keep."
       ],
       "defenseTendencies": [
-        "Louisville threw 307 and ran 162. LSU ran for 172. If they sit, run it \u2014 then throw it over them.",
-        "Coverage calls not on the tape we have."
+        "Schematic identity: Pete Golding's base is a 4-2-5 \u2014 four down, two linebackers, five DBs \u2014 with pre-snap disguise and DB versatility. Jaylon Braxton rotated safety and corner vs LSU.",
+        "Pass rush is methodical, not overwhelming \u2014 6 sacks and 14 hurries through three.",
+        "They are allowing 24.0 points and 374 yards a game (215 pass / 159 rush).",
+        "Red zone is bend-but-don't-break. Opponents scored on 8 of 9 trips inside the 20, but only 3 touchdowns \u2014 five field-goal attempts.",
+        "The front has pursuit speed and will get combo-blocked downhill \u2014 Louisville ran for 162 and LSU ran for 172 (Dilin Jones 106). Will Echoles (6-3, 315) is the interior anchor. Blake Purchase is the edge closer. Tah'j Butler, Luke Ferrelli, and Keaton Thomas are the off-ball tacklers. Suntarine Perkins is the hybrid \u2014 edge, delayed blitz, or zone drop.",
+        "The secondary can close a game. Kam Franklin tipped the fourth-and-goal that Jaylon Braxton intercepted to seal LSU. Sharif Denson had 8 tackles in his LSU debut. The hole is space \u2014 Louisville threw 307 when they stretched them horizontally."
       ],
       "offenseScout": [
+        "Official 3-game: 38.0 PPG, 444.7 YPG (330.7 pass / 114 rush), TOP 27:11, 16-35 3rd (45.7%), 2-3 4th, RZ 12-12 / 11 TD. John David Baker is OC / play-caller. Do not write Lane Kiffin as the 2026 Ole Miss identity (he is at LSU).",
         "Official ESPN PBP sit Week 3 (LSU, Oxford, Sep 19 / ESPN 401856688): Ole Miss 32, LSU 24. 74 shotgun tags, 58 No Huddle-Shotgun, 16 Shotgun, 0 under-center. Two kneels to close.",
         "Box-confirmed Week 3: Trinidad Chambliss 33/48, 363, 2 TD, 1 INT. Rushing 25-63-1 TD (2.5 YPC). 25 first downs, 9/15 on 3rd, 1-1 on 4th.",
         "Keep is the close-game plan. Winning score: Shotgun Chambliss rush left 14. JT Lindsey two-point run. They had just been tied 24-24.",
-        "Chunks were short throws that ran: Traylon Ray 36 (deep right) and 21 TD (short left), Horatio Fields 22, Caleb Odom 23, Deuce Alexander 20 TD (deep middle to close the half).",
-        "Kewan Lacy 9-43-1 TD (5-yard punch). Chambliss seven designed/keep rushes in the PBP including the winner.",
+        "Shot plays, not short-YAC TDs: Traylon Ray 21-yard play-action over the top (PBP tagged short left); Deuce Alexander 20-yard back-corner on the run to close the half. Intermediate: Horatio Fields 22, Caleb Odom 23. Ray also 36 contested.",
+        "Kewan Lacy 9-43-1 TD (5-yard punch). Left shoulder \u2014 Golding said game-time. Chambliss seven designed/keep rushes in the PBP including the winner.",
         "One INT off-schedule: Q3 Jackson at the Ole Miss 43 after a three-and-out look.",
         "They will go on 4th-and-short: Lindsey rush middle 2, first down (official 1-1). 53-yard Carneiro FG no good.",
         "Box-confirmed Week 1 (Louisville, Sep 6): Ole Miss 41, Louisville 38. Chambliss 21/36, 336, 3 TD, 1 INT. Lacy 17-61-1. Deuce Alexander 5-159-2 TD (both 62). Chambliss 5-yard rush TD. Carneiro 48 walk-off FG.",
-        "Box-confirmed Week 2 (Charlotte, Sep 12): Ole Miss 41, Charlotte 9. Chambliss 23/26, 225, 2 TD. Lacy 13-87-2. Johntay Cook II 14 TD. Horatio Fields 9 TD.",
+        "Box-confirmed Week 2 (Charlotte, Sep 12): Ole Miss 41, Charlotte 9. Chambliss 23/26, 225, 2 TD. Lacy 13-87-2. Johntay Cook II 14 TD. Horatio Fields 9 TD. Season Lacy 39-191-4. Season Chambliss 77/110, 924, 7 TD, 2 INT.",
         "SEC condensed for LSU: NOT POSTED hours after the whistle. Louisville condensed exists \u2014 not sat. filmWatched: false. watchStandard: official-pbp."
       ],
       "defenseScout": [
-        "Coverage shells (Cover 2/3/man) + pressure packages: NOT confirmed on ESPN PBP text.",
-        "Box-confirmed Week 3 vs LSU: allowed 330 yards (158 pass / 172 rush), 24 points, 19 first downs. LSU came back from 24-7 to 24-24.",
-        "Box-confirmed Week 1 vs Louisville: allowed 469 yards (307 pass / 162 rush), 38 points \u2014 Power opponent can light them up.",
+        "Pete Golding is HC and still calls D. Base 4-2-5 with pre-snap disguise. Coverage shells (Cover 2/3/man) + pressure packages: NOT confirmed on ESPN PBP text.",
+        "Official 3-game allowed: 23.67 PPG, 373.7 YPG (214.7 pass / 159 rush). 6 sacks, 14 QBH, 22 TFL. RZ 8-9 scores / 3 TDs (5 FG).",
+        "Box-confirmed Week 3 vs LSU: allowed 330 yards (158 pass / 172 rush), 24 points, 19 first downs. Dilin Jones 106. LSU came back from 24-7 to 24-24.",
+        "Box-confirmed Week 1 vs Louisville: allowed 469 yards (307 pass / 162 rush), 38 points \u2014 Power opponent can light them up in space.",
         "Box-confirmed Week 2 vs Charlotte: allowed 322 yards, 9 points.",
-        "LSU PBP: Blake Purchase sack; Sharif Denson 8 tackles. One takeaway (Braxton INT of Leavitt in the end zone late).",
-        "Official Ole Miss box page 404 at draft. Staff names not stamped \u2014 do not invent a coordinator."
+        "Front names: Will Echoles interior (sack + 3 TFL vs LSU); Blake Purchase edge (1.5 sacks); Tah'j Butler 20, Luke Ferrelli 18, Keaton Thomas 16; Suntarine Perkins 14 hybrid.",
+        "LSU PBP: Blake Purchase sack; Sharif Denson 8 tackles. Late takeaway: Kam Franklin tip, Jaylon Braxton INT of Leavitt in the end zone.",
+        "Official Ole Miss box page 404 at draft. Coordinator is Golding (HC), not an invented DC. Baker is the OC on the other side."
       ],
       "howUFWins": [
-        "That's how you score on this front. Louisville threw 307 and ran 162. LSU ran for 172. Establish Baugh and force them to load the box.",
-        "That's how you get him off schedule. He threw for 363 on LSU and still kept it for the winning score. Crowd Chambliss and stay home on the keep.",
-        "That's how they got their chunks. Traylon Ray and Deuce Alexander caught it and ran. Get there and wrap them up."
+        "Crowd Chambliss so he cannot sit in the pocket or break contain. Ends stay parallel and keep the lane on the keep \u2014 Woods has to be home. The winning score vs LSU was Chambliss left 14.",
+        "Cap the vertical. Traylon Ray is the isolated X; Deuce Alexander is the back-corner scramble target. Do not sit the hitch. Ray went 7-115-1 vs LSU with a 21-yard play-action score over the top. Deuce hit two 62s vs Louisville and the 20-yard back-corner TD on the run.",
+        "The Ole Miss front just gave LSU 172 and Louisville 162. Start Baugh downhill. When they load the box, Philo goes over the top."
       ],
-      "scoutingReport": "OLE MISS OFFENSE (official ESPN LSU PBP sit): This is no-huddle shotgun and Trinidad Chambliss. 74 shotgun, 58 No Huddle-Shotgun, 0 under-center. 33/48, 363, 2 pass TD, 1 INT, plus the winning keep left 14. Chunks were short throws that ran \u2014 Ray 36 and 21, Fields 22, Odom 23. Deuce Alexander is the volume guy (62 twice vs Louisville; 20 TD vs LSU). Kewan Lacy punched the first score. They will go on 4th-and-short (1-1). OLE MISS DEFENSE (2026 boxes): Louisville 469/38, LSU 330/24 with 172 rush. Coverage shells NOT confirmed. UF wins by crowding Chambliss, staying in the lane on the keep, crowding the short catch, then running at a front that just gave LSU 172. Swamp night is the environment \u2014 not the picture. filmWatched: false.",
+      "scoutingReport": "OLE MISS OFFENSE (official 3-game + ESPN LSU PBP sit): Pure no-huddle shotgun. 38.0 PPG, 445 YPG (331 pass / 114 rush), TOP 27:11, 46% 3rd, 2-3 4th, RZ 12-12 / 11 TD. Trinidad Chambliss is the engine (77/110, 924, 7 TD, 2 INT). Sit-and-shot + scramble + keep (winner left 14 vs LSU). Ray isolated X 7-115-1 LSU (21-yard play-action over the top). Deuce volume + back-corner (two 62s Louisville; 20 TD on the run vs LSU). Odom 5-88, Fields 5-52. Lacy 39-191-4 GTD left shoulder; Lindsey next (4-20, 4th-and-1, 2-pt). John David Baker calls it \u2014 not Lane Kiffin (LSU 2026). OLE MISS DEFENSE (Pete Golding HC still calls D, base 4-2-5): 24.0 PPG, 374 YPG (215 pass / 159 rush). 6 sacks, 14 QBH. RZ 8-9 scores / 3 TDs. Front hole: Louisville 162, LSU 172 (Jones 106). Echoles interior, Purchase edge, Butler/Ferrelli/Thomas off-ball, Perkins hybrid. Secondary can close (Franklin tip, Braxton INT) and gets picked in space (Louisville 307). Coverage shells NOT confirmed on PBP. UF wins: Stay Home / Play the Shot / Run the Front. filmWatched: false.",
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27906",
         "official": "https://www.ticketmaster.com/florida-gators-football-vs-ole-miss-gainesville-florida-09-26-2026/event/2200645C218D0934",
@@ -416,7 +446,11 @@
         "pants": "White",
         "label": "Orange / Blue / White",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
-      }
+      },
+      "specialTeams": [
+        "Lucas Carneiro is 5-for-7 this season \u2014 hit from 37, missed from 53, and converted a 48-yard walk-off to beat Louisville.",
+        "After a Chambliss keep they will chase two. JT Lindsey ran the two-point after the 14-yard winner vs LSU."
+      ]
     },
     {
       "id": "missouri",

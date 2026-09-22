@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Ole Miss scout + 3 keys: Stay Home / Play the Shot / Run the Front plus football-structure offense/defense/film (`/api/schedule` after Render). No Lane Kiffin — Golding still calls D. `filmWatched: false`. Current App Store already live-fetches keys + tendencies + film. Special-teams Carneiro/2-pt needs the `game.specialTeams` mapper bake below.
 - [x] Home NOW weekly 3: ticker API serves game + place + record (Ole Miss / expected visitors / 3-0). Class-rank #8 is off the weekly slate. API after Render — 1.0.28 still may rotate leftover intel until the client-cap bake below.
 - [x] Home NOW last-week drop: movement-intel + ticker skip completed-opponent gameday/visit pulses (Man Robinson Campbell, Cyion Sep 11). API after Render — 1.0.28 stops painting those alerts without a bake. Client join/filter is the next-bake row.
 - [x] Home NOW pillars: ticker items are Game / Visitors / Season (ABC on Game only; visitor names, not “Expected visitors in the Swamp”). API after Render — 1.0.28 bolds Game first. Three-label UI is the next-bake row.
@@ -153,6 +154,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-22 | Game Week special teams from `game.specialTeams` (Carneiro / 2-pt) | `buildScouting` in binary. **Keys + offense/defense/film already API-live after Render.** Old binary keeps hardcoded “Win field position.” | this PR |
 | 2026-09-21 | Home NOW first-paint pillars + skip ticker SWR (never the one-line Game ABC list) | `buildLocalWeeklyNowWeek` + `resolveHomeNowWeekPillars` + SWR skip in binary. **Ticker API already has `nowWeek` after Render.** Bake **95**. | pending |
 | 2026-09-21 | App Store **1.0.28** / build **95** (NOW first-paint). Build 94 still shows Game ABC. | `CURRENT_PROJECT_VERSION` 95. 1.0.28 exists in App Store Connect. | pending |
 | 2026-09-21 | Home NOW keeps every `Visitors — First Last` ticker line so fallback parse can tick the full list | `buildHomePulseStories` in binary. **Ticker API already serves full names + `nowWeek` after Render.** | pending |

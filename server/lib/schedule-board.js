@@ -132,6 +132,7 @@ const BUNDLE_MODEL_KEYS = [
   'radar',
   'opponentTendencies',
   'defenseTendencies',
+  'specialTeams',
   'offenseScout',
   'defenseScout',
   'howUFWins',
@@ -331,6 +332,9 @@ function normalizeGame(row) {
       : undefined,
     defenseTendencies: Array.isArray(row.defenseTendencies)
       ? row.defenseTendencies.map((x) => String(x || '').trim()).filter(Boolean)
+      : undefined,
+    specialTeams: Array.isArray(row.specialTeams)
+      ? row.specialTeams.map((x) => String(x || '').trim()).filter(Boolean)
       : undefined,
     offenseScout: Array.isArray(row.offenseScout)
       ? row.offenseScout.map((x) => String(x || '').trim()).filter(Boolean)
