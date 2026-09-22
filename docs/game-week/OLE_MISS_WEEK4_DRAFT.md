@@ -13,26 +13,26 @@ Florida 3–0 (66–21 FAU, 52–3 Campbell, **44–39 at Auburn**). Ole Miss 3�
 
 ## The picture (fan `film`)
 
-Ole Miss is no-huddle shotgun and Trinidad Chambliss. Crowd him or he throws it short and keeps it. They jumped LSU 24-7 and still had to win it with a keep left. Then go score — Louisville threw 307 and LSU ran for 172.
+Ole Miss is no-huddle shotgun and Trinidad Chambliss. Stay home on him, cap the shot plays, and run the front — they go as he goes.
 
 ## 3 keys
 
-1. **Attack a front that just gave LSU 172** (offense)
-   That's how you score on this front. Louisville threw 307 and ran 162. LSU ran for 172. Establish Baugh and force them to load the box.
+1. **Stay Home** (defense)
+   Crowd Chambliss so he cannot sit in the pocket or break contain. Ends stay parallel and keep the lane on the keep — Woods has to be home. The winning score vs LSU was Chambliss left 14.
 
-2. **Crowd Chambliss before the first read** (defense)
-   That's how you get him off schedule. He threw for 363 on LSU and still kept it for the winning score. Crowd Chambliss and stay home on the keep.
+2. **Play the Shot** (defense)
+   Cap the vertical. Traylon Ray is the isolated X; Deuce Alexander is the back-corner scramble target. Do not sit the hitch. Ray went 7-115-1 vs LSU with a 21-yard play-action score over the top. Deuce hit two 62s vs Louisville and the 20-yard back-corner TD on the run.
 
-3. **Don't let the short throw become a long run** (defense)
-   That's how they got their chunks. Traylon Ray and Deuce Alexander caught it and ran. Get there and wrap them up.
+3. **Run the Front** (offense)
+   The Ole Miss front just gave LSU 172 and Louisville 162. Start Baugh downhill. When they load the box, Philo goes over the top.
 
 ## Swing
 
 | Name | Role |
 |---|---|
 | Jadan Baugh | Early-down rhythm vs a front that just gave LSU 172 |
-| Jayden Woods | Keep Chambliss in the pocket |
-| Aaron Philo | Louisville still threw 307 — they will trade chunks |
+| Jayden Woods | Stay in the lane on the Chambliss keep |
+| Aaron Philo | When they load the box, go over the top |
 
 ## Matchup Edge (sat stamp — not the 51% formula)
 
@@ -73,8 +73,13 @@ From how teams looked — not FPI paste. Texas and Georgia stay UF losses.
 
 - LSU SEC condensed — not posted. Fold in before calling `filmWatched: true`.
 - Official Ole Miss box page 404. ESPN box + PBP used.
-- Coverage shells — not on the PBP text.
+- Coverage shells — not on the PBP text. Stay off the fan rail.
+- Lane Kiffin is LSU 2026 — never the Ole Miss identity. Pete Golding HC still calls D. John David Baker is OC.
 - Official window stamped **ABC / 3:30 p.m. ET** from floridagators.com (SEC announced Saturday, posted Sunday Sep 20).
+
+## Verified for the football-structure stamp (Sep 22)
+
+3-game official: 38.0 PPG, 445 YPG (331/114), TOP 27:11, 46% 3rd, 2-for-3 4th, RZ 12-12 / 11 TD. Allowed 24.0 PPG, 374 YPG (215/159), RZ 8-9 scores / 3 TDs. Chambliss 77/110, 924, 7 TD, 2 INT. Lacy 39-191-4 GTD left shoulder. Ray 7-115-1 LSU (21 play-action over the top). Deuce two 62s Louisville + 20 back-corner on the run. Carneiro 5-for-7 (37 / 53 miss / 48 walk-off). Ray 21 and Deuce 20 are air-yard shots, not short-throw YAC.
 
 ## Shipped
 

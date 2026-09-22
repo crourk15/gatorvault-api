@@ -365,7 +365,11 @@ function buildScouting(game: ScheduleGame): ScoutingReportIntel {
       'Communicate in tempo',
       'Limit explosives',
     ]),
-    specialTeams: ['Win field position', 'Clean punt coverage', 'No missed kicks'],
+    specialTeams: fanScoutLines(game.specialTeams, [
+      'Win field position',
+      'Clean punt coverage',
+      'No missed kicks',
+    ]),
     matchupSummary: String(game.film || '').trim() || 'Matchup notes posting this week.',
   };
 }
