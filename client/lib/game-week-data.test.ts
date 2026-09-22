@@ -119,12 +119,12 @@ describe('Game Week Film Notes', () => {
     assert.ok(!bundle.scouting.defense.some((n) => DESK_SCOUT_TALK_RE.test(n)));
     assert.ok(!DESK_SCOUT_TALK_RE.test(bundle.scouting.matchupSummary));
     assert.match(bundle.scouting.matchupSummary, /Trinidad Chambliss/i);
-    assert.equal(bundle.keys[0].title, 'Stay Home');
-    assert.equal(bundle.keys[1].title, 'Play the Shot');
-    assert.equal(bundle.keys[2].title, 'Run the Front');
-    assert.match(bundle.keys[0].body, /Crowd Chambliss/i);
+    assert.equal(bundle.keys[0].title, 'Maintain Lane Discipline & Crowd Chambliss');
+    assert.equal(bundle.keys[1].title, 'Cap the Vertical Shots');
+    assert.equal(bundle.keys[2].title, 'Establish the Downhill Run Game');
+    assert.match(bundle.keys[0].body, /contain equity/i);
     assert.match(bundle.keys[1].body, /Traylon Ray/i);
-    assert.match(bundle.keys[2].body, /LSU 172/i);
+    assert.match(bundle.keys[2].body, /172 yards to LSU/i);
     assert.ok(bundle.scouting.specialTeams.some((n) => /Lucas Carneiro/i.test(n)));
     assert.ok(!bundle.scouting.offense.some((n) => /Kiffin/i.test(n)));
     assert.ok(!bundle.scouting.defense.some((n) => /Kiffin/i.test(n)));

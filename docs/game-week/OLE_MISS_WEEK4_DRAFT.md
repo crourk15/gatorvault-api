@@ -17,14 +17,14 @@ Ole Miss is no-huddle shotgun and Trinidad Chambliss. Stay home on him, cap the 
 
 ## 3 keys
 
-1. **Stay Home** (defense)
-   Crowd Chambliss so he cannot sit in the pocket or break contain. Ends stay parallel and keep the lane on the keep — Woods has to be home. The winning score vs LSU was Chambliss left 14.
+1. **Maintain Lane Discipline & Crowd Chambliss** (defense)
+   Do not allow Chambliss to comfortably sit in the pocket or break containment on scramble drills. Defensive ends must rush with contain equity — do not crash past his upfield shoulder. The edge defenders must play parallel to stay in the running lane on the QB keep.
 
-2. **Play the Shot** (defense)
-   Cap the vertical. Traylon Ray is the isolated X; Deuce Alexander is the back-corner scramble target. Do not sit the hitch. Ray went 7-115-1 vs LSU with a 21-yard play-action score over the top. Deuce hit two 62s vs Louisville and the 20-yard back-corner TD on the run.
+2. **Cap the Vertical Shots** (defense)
+   Eradicate the explosive chunk play. Do not bite on short hitch routes or play-action windows. Defensive backs must maintain depth over the top of Traylon Ray's vertical stems and respect Deuce Alexander on the back-corner extended plays.
 
-3. **Run the Front** (offense)
-   The Ole Miss front just gave LSU 172 and Louisville 162. Start Baugh downhill. When they load the box, Philo goes over the top.
+3. **Establish the Downhill Run Game** (offense)
+   Ole Miss' front seven is vulnerable to a physical ground attack, having just surrendered 172 yards to LSU. Start Baugh to establish physical dominance early. Once Ole Miss is forced to over-rotate safeties down to load the box, unleash Philo to attack the single-high coverages over the top.
 
 ## Swing
 

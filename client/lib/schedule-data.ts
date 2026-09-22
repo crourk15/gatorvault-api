@@ -360,9 +360,9 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ufPct: 51,
     tv: "ABC",
     keys: [
-      "Stay Home",
-      "Play the Shot",
-      "Run the Front",
+      "Maintain Lane Discipline & Crowd Chambliss",
+      "Cap the Vertical Shots",
+      "Establish the Downhill Run Game",
     ],
     swing: [
       { name: "Jadan Baugh", impact: 95, role: "Early-down rhythm vs a front that just gave LSU 172" },
@@ -415,12 +415,12 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "After a Chambliss keep they will chase two. JT Lindsey ran the two-point after the 14-yard winner vs LSU.",
     ],
     howUFWins: [
-      "Crowd Chambliss so he cannot sit in the pocket or break contain. Ends stay parallel and keep the lane on the keep — Woods has to be home. The winning score vs LSU was Chambliss left 14.",
-      "Cap the vertical. Traylon Ray is the isolated X; Deuce Alexander is the back-corner scramble target. Do not sit the hitch. Ray went 7-115-1 vs LSU with a 21-yard play-action score over the top. Deuce hit two 62s vs Louisville and the 20-yard back-corner TD on the run.",
-      "The Ole Miss front just gave LSU 172 and Louisville 162. Start Baugh downhill. When they load the box, Philo goes over the top.",
+      "Do not allow Chambliss to comfortably sit in the pocket or break containment on scramble drills. Defensive ends must rush with contain equity — do not crash past his upfield shoulder. The edge defenders must play parallel to stay in the running lane on the QB keep.",
+      "Eradicate the explosive chunk play. Do not bite on short hitch routes or play-action windows. Defensive backs must maintain depth over the top of Traylon Ray's vertical stems and respect Deuce Alexander on the back-corner extended plays.",
+      "Ole Miss' front seven is vulnerable to a physical ground attack, having just surrendered 172 yards to LSU. Start Baugh to establish physical dominance early. Once Ole Miss is forced to over-rotate safeties down to load the box, unleash Philo to attack the single-high coverages over the top.",
     ],
     scoutingReport:
-      "OLE MISS OFFENSE (official 3-game + ESPN LSU PBP sit): Pure no-huddle shotgun. 38.0 PPG, 445 YPG (331 pass / 114 rush), TOP 27:11, 46% 3rd, 2-3 4th, RZ 12-12 / 11 TD. Trinidad Chambliss is the engine (77/110, 924, 7 TD, 2 INT). Sit-and-shot + scramble + keep (winner left 14 vs LSU). Ray isolated X 7-115-1 LSU (21-yard play-action over the top). Deuce volume + back-corner (two 62s Louisville; 20 TD on the run vs LSU). Odom 5-88, Fields 5-52. Lacy 39-191-4 GTD left shoulder; Lindsey next (4-20, 4th-and-1, 2-pt). John David Baker calls it — not Lane Kiffin (LSU 2026). OLE MISS DEFENSE (Pete Golding HC still calls D, base 4-2-5): 24.0 PPG, 374 YPG (215 pass / 159 rush). 6 sacks, 14 QBH. RZ 8-9 scores / 3 TDs. Front hole: Louisville 162, LSU 172 (Jones 106). Echoles interior, Purchase edge, Butler/Ferrelli/Thomas off-ball, Perkins hybrid. Secondary can close (Franklin tip, Braxton INT) and gets picked in space (Louisville 307). Coverage shells NOT confirmed on PBP. UF wins: Stay Home / Play the Shot / Run the Front. filmWatched: false.",
+      "OLE MISS OFFENSE (official 3-game + ESPN LSU PBP sit): Pure no-huddle shotgun. 38.0 PPG, 445 YPG (331 pass / 114 rush), TOP 27:11, 46% 3rd, 2-3 4th, RZ 12-12 / 11 TD. Trinidad Chambliss is the engine (77/110, 924, 7 TD, 2 INT). Sit-and-shot + scramble + keep (winner left 14 vs LSU). Ray isolated X 7-115-1 LSU (21-yard play-action over the top). Deuce volume + back-corner (two 62s Louisville; 20 TD on the run vs LSU). Odom 5-88, Fields 5-52. Lacy 39-191-4 GTD left shoulder; Lindsey next (4-20, 4th-and-1, 2-pt). John David Baker calls it — not Lane Kiffin (LSU 2026). OLE MISS DEFENSE (Pete Golding HC still calls D, base 4-2-5): 24.0 PPG, 374 YPG (215 pass / 159 rush). 6 sacks, 14 QBH. RZ 8-9 scores / 3 TDs. Front hole: Louisville 162, LSU 172 (Jones 106). Echoles interior, Purchase edge, Butler/Ferrelli/Thomas off-ball, Perkins hybrid. Secondary can close (Franklin tip, Braxton INT) and gets picked in space (Louisville 307). Coverage shells NOT confirmed on PBP. UF wins: Maintain Lane Discipline & Crowd Chambliss / Cap the Vertical Shots / Establish the Downhill Run Game. filmWatched: false.",
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27906",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-ole-miss-gainesville-florida-09-26-2026/event/2200645C218D0934",

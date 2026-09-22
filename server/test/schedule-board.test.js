@@ -191,12 +191,12 @@ describe('schedule-board', () => {
     assert.match(olemiss.filmNotes[0], /no-huddle shotgun and Trinidad Chambliss/i);
     assert.ok(!olemiss.filmNotes.some((n) => /NOT confirmed|401856688|tempo offense stresses/i.test(n)));
     assert.match(olemiss.film, /Trinidad Chambliss/i);
-    assert.equal(olemiss.keys[0], 'Stay Home');
-    assert.equal(olemiss.keys[1], 'Play the Shot');
-    assert.equal(olemiss.keys[2], 'Run the Front');
-    assert.match(olemiss.howUFWins[0], /Crowd Chambliss/i);
+    assert.equal(olemiss.keys[0], 'Maintain Lane Discipline & Crowd Chambliss');
+    assert.equal(olemiss.keys[1], 'Cap the Vertical Shots');
+    assert.equal(olemiss.keys[2], 'Establish the Downhill Run Game');
+    assert.match(olemiss.howUFWins[0], /contain equity/i);
     assert.match(olemiss.howUFWins[1], /Traylon Ray/i);
-    assert.match(olemiss.howUFWins[2], /LSU 172/i);
+    assert.match(olemiss.howUFWins[2], /172 yards to LSU/i);
     assert.ok(olemiss.specialTeams?.some((n) => /Lucas Carneiro/i.test(n)));
     assert.ok(!olemiss.filmNotes.some((n) => /Kiffin/i.test(n)));
     assert.ok(!/Kiffin/i.test(olemiss.film));
