@@ -53,6 +53,7 @@ function slimThread(t) {
     viewCount: t.viewCount || 0,
     pinned: Boolean(t.pinned),
     featured: Boolean(t.featured),
+    gameday: Boolean(t.gameday),
     createdAt: t.createdAt || null,
     lastActivityAt: t.lastActivityAt || null,
   };
@@ -200,21 +201,34 @@ async function main() {
   let threads = [];
   let pulse = {};
   let rooms = [];
+  let gameRooms = [];
   let source = 'local-fallback';
   const nowIso = new Date().toISOString();
 
   for (let i = 0; i < 3; i += 1) {
     try {
-      const [cats, thr, pul, rms] = await Promise.all([
+      const page = await fetchJson(API + '/api/community/page?sort=recent&limit=24').catch(() => null);
+      if (page && Array.isArray(page.threads)) {
+        categories = page.categories || [];
+        threads = (page.threads || []).map(slimThread).filter(Boolean);
+        pulse = page.pulse || {};
+        rooms = page.rooms || [];
+        gameRooms = (page.gameRooms || []).map(slimThread).filter(Boolean);
+        source = 'prod-api-page';
+        break;
+      }
+      const [cats, thr, pul, rms, roomsLive] = await Promise.all([
         fetchJson(API + '/api/community/categories'),
-        fetchJson(API + '/api/community/threads?sort=trending&limit=24'),
+        fetchJson(API + '/api/community/threads?sort=recent&limit=24'),
         fetchJson(API + '/api/community/pulse'),
         fetchJson(API + '/api/community/live-rooms'),
+        fetchJson(API + '/api/community/game-rooms?limit=8').catch(() => ({ gameRooms: [] })),
       ]);
       categories = cats.categories || [];
       threads = (thr.threads || []).map(slimThread).filter(Boolean);
       pulse = pul.pulse || {};
       rooms = rms.rooms || [];
+      gameRooms = (roomsLive.gameRooms || []).map(slimThread).filter(Boolean);
       source = 'prod-api';
       break;
     } catch (err) {
@@ -229,6 +243,7 @@ async function main() {
     categories = prev.categories;
     if (!threads.length) threads = prev.threads || [];
     if (!rooms.length) rooms = prev.rooms || [];
+    if (!gameRooms.length) gameRooms = prev.gameRooms || [];
     if (!pulse || !Object.keys(pulse).length) pulse = prev.pulse || {};
     source = threads.length ? 'retained-previous' : source;
   }
@@ -263,9 +278,20 @@ async function main() {
     activeToday: Number(pulse.activeToday) || 0,
   };
 
-  const seed = { generatedAt: nowIso, source, categories, threads, pulse, rooms };
+  const seed = { generatedAt: nowIso, source, categories, threads, pulse, rooms, gameRooms };
   fs.writeFileSync(OUT, JSON.stringify(seed, null, 2) + '\n');
-  console.log('[generate-community-hub-seed] wrote', OUT, 'source=', source, 'cats=', categories.length, 'threads=', threads.length);
+  console.log(
+    '[generate-community-hub-seed] wrote',
+    OUT,
+    'source=',
+    source,
+    'cats=',
+    categories.length,
+    'threads=',
+    threads.length,
+    'gameRooms=',
+    gameRooms.length
+  );
 }
 
 main().catch((err) => { console.error('[generate-community-hub-seed] FATAL', err); process.exit(1); });

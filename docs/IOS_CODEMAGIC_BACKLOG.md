@@ -137,6 +137,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 - [x] FutureCast Closest to commit: 2028 high-priority API returns full allowlist (not chase-hot top-18 cut) so board leaders like Hudson West update live on iOS
 - [x] Vault Scouting: provisional / `filmWatched:false` evals hidden from fan profiles (Harris-Payne film-watch standard) — API gate
 - [x] FutureCast Closest processEvidence on HP API (offer/visits/intel flags) — live on iOS for payload; stamp gate needs client bake below
+- [x] Community public page cache: `GET /api/community/page` + 15s memory cache + one disk pass (API after Render — no Codemagic). Old binary still uses six list GETs until the bake row below.
 - [x] Member signup channel — Website vs iOS app on register + Admin Members Channel / byChannel rollup (API + Hub; web Netlify client; iOS bake for in-app Join)
 - [x] Member first-touch attribution persist on `POST /api/register` + Admin Members Source/bySource (API) — live once any client sends `firstTouch`
 - [x] 2028 HP seed refresh — Alderman locks Wilkes / McCary / Bailey / Hines on FutureCast Priority Chase (bundled seed; API)
@@ -157,6 +158,8 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-22 | FutureCast Closest first-paint: processEvidence in Lab seed + Home prefetch HP 2028 | Seed + `prefetchHighPriorityTargets(2028)` in binary. **Live HP already has process / Closest after Render.** Old binary seed has 0 closestEligible so the panel is empty ~30s. | this PR |
+| 2026-09-22 | Community hub last-good + `/api/community/page` client | `fetchCommunityPageData` + last-good in binary. **Page cache is API-live after Render.** Old binary still fires 6 list GETs and 10×2s warm-poll. | this PR |
 | 2026-09-22 | App Store **1.0.29** / build **97** (NOW + Game Week first-paint + Baugh 95). **1.0.28 accepted — do not re-upload.** | `MARKETING_VERSION` 1.0.29. Charles asked for this train. | #731 |
 | 2026-09-22 | Home NOW last-good week (no snap back to #8 class-rank seed) | `applyHomeNowWeekPack` + last-good localStorage in binary. **Ticker `nowWeek` is API-live after Render.** Current 1.0.28 still falls to hub-bundle ticker when the 30s refresh misses. | this PR |
 | 2026-09-22 | Game Week last-good board (no snap back to Sep 21 seed on API 502) | `peekScheduleBoard` + localStorage in binary. **Intel overlay on `/api/schedule` is API-live after Render.** 1.0.28 still falls to baked keys when Render 502s. | this PR |

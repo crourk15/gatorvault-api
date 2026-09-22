@@ -218,10 +218,26 @@ export async function fetchHighPriorityTargets(
 ): Promise<HighPriorityResponse> {
   const path = `/api/futurecast/high-priority?year=${year}`;
   try {
-    return await snapshotFirstFetch(path, () => snapshotLiveFetch<HighPriorityResponse>(path));
+    const live = await snapshotFirstFetch(path, () => snapshotLiveFetch<HighPriorityResponse>(path));
+    if ((live?.players?.length ?? 0) > 0) writeHighPriorityCache(live);
+    return live;
   } catch (err) {
     const stale = readStaleHighPriorityCache(year);
     if (stale) return stale;
     throw err;
   }
+}
+
+/** Warm Discovery Closest from Home so Lab is not empty until HP lands. */
+export function prefetchHighPriorityTargets(year = HIGH_PRIORITY_YEAR): void {
+  if (typeof window === 'undefined') return;
+  void snapshotLiveFetch<HighPriorityResponse>(`/api/futurecast/high-priority?year=${year}`, {
+    timeoutMs: 15_000,
+    retries: 1,
+    retryDelayMs: 1_500,
+  })
+    .then((live) => {
+      if ((live?.players?.length ?? 0) > 0) writeHighPriorityCache(live);
+    })
+    .catch(() => {});
 }

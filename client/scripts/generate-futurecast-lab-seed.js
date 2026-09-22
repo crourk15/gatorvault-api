@@ -66,9 +66,31 @@ function emptyMovement() {
   };
 }
 
+function slimProcessEvidence(ev) {
+  if (!ev || typeof ev !== 'object') return null;
+  return {
+    allowlisted: ev.allowlisted !== false,
+    hasUFOffer: ev.hasUFOffer === true,
+    flOfferCount: Number(ev.flOfferCount || 0),
+    floridaVisits: Number(ev.floridaVisits || 0),
+    ov: Number(ev.ov || 0),
+    uv: Number(ev.uv || 0),
+    home: Number(ev.home || 0),
+    intel90: Number(ev.intel90 || 0),
+    pursuitHits: Number(ev.pursuitHits || 0),
+    scheduledOv: ev.scheduledOv === true,
+    recentVisit: ev.recentVisit === true,
+    hasProcess: ev.hasProcess === true,
+    stillWarm: ev.stillWarm === true,
+    closestEligible: ev.closestEligible === true,
+    reasons: Array.isArray(ev.reasons) ? ev.reasons.slice(0, 8) : [],
+  };
+}
+
 function slimPlayer(p) {
   if (!p || !(p.slug || p.name)) return null;
   const slug = p.slug || String(p.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const processEvidence = slimProcessEvidence(p.processEvidence);
   return {
     id: p.id || slug,
     slug,
@@ -101,7 +123,25 @@ function slimPlayer(p) {
     committedTo: p.committedTo ?? null,
     predictors: Array.isArray(p.predictors) ? p.predictors.slice(0, 3) : [],
     competingSchools: Array.isArray(p.competingSchools) ? p.competingSchools.slice(0, 4) : [],
+    on3Lead: p.on3Lead ?? null,
+    // Closest to commit first-paints from seed — do not strip process.
+    hasUFOffer: p.hasUFOffer === true || processEvidence?.hasUFOffer === true,
+    closestCommitEligible:
+      p.closestCommitEligible === true || processEvidence?.closestEligible === true,
+    processEvidence,
   };
+}
+
+/** Prefer process-backed Closest names so the panel is not empty on first paint. */
+function slimHighPriorityList(players, cap = 40) {
+  const slimmed = (players || []).map(slimPlayer).filter(Boolean);
+  const closest = [];
+  const rest = [];
+  for (const row of slimmed) {
+    if (row.closestCommitEligible || row.processEvidence?.closestEligible) closest.push(row);
+    else rest.push(row);
+  }
+  return closest.concat(rest).slice(0, cap);
 }
 
 function slimMasterBoard(board) {
@@ -148,7 +188,7 @@ async function fromProd() {
     fetchJsonRetry(API + '/api/futurecast/high-priority?year=2027').catch(() => null),
     fetchJsonRetry(API + '/api/futurecast/high-priority?year=2028').catch(() => null),
     fetchJsonRetry(API + '/api/futurecast/trending').catch(() => null),
-    fetchJsonRetry(API + '/api/futurecast/movement-intel').catch(() => null),
+    fetchJsonRetry(API + '/api/futurecast/movement-intel?year=2028').catch(() => null),
   ]);
   return { master, home, hp27, hp28, trending, movement, source: 'prod-api' };
 }
@@ -243,14 +283,14 @@ function writePayload(pack) {
     portalWatchlist: [],
   };
 
-  const highPriority = (pack.hp28?.players || pack.hp27?.players || masterBoard.highPriority.players || [])
-    .map(slimPlayer)
-    .filter(Boolean)
-    .slice(0, 16);
-  const highPriorityClosing = (pack.hp27?.players || masterBoard.highPriority.players || [])
-    .map(slimPlayer)
-    .filter(Boolean)
-    .slice(0, 16);
+  const highPriority = slimHighPriorityList(
+    pack.hp28?.players || pack.hp27?.players || masterBoard.highPriority.players || [],
+    40
+  );
+  const highPriorityClosing = slimHighPriorityList(
+    pack.hp27?.players || masterBoard.highPriority.players || [],
+    16
+  );
 
   const payload = {
     generatedAt: new Date().toISOString(),

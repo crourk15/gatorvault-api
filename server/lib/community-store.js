@@ -223,6 +223,17 @@ function staffSession() {
   };
 }
 
+/** Same-process memo so 6 parallel community GETs do not each reload + rewrite today's OP. */
+let dailyOpenMemo = null;
+
+function resetDailyOpenMemo() {
+  dailyOpenMemo = null;
+}
+
+function rememberDailyOpen(today, thread) {
+  if (today && thread) dailyOpenMemo = { key: today, thread };
+}
+
 /**
  * One fresh staff OP per ET calendar day. Does not invent fan replies.
  * Idempotent: returns existing daily thread when already published.
@@ -232,6 +243,9 @@ function ensureDailyOpenThread(opts = {}) {
   ensureFoundingSurface();
   ensureStaffUser();
   const today = opts.dayKey || todayKeyET(opts.asOf);
+  if (!opts.force && !opts.asOf && dailyOpenMemo && dailyOpenMemo.key === today && dailyOpenMemo.thread) {
+    return { created: false, thread: dailyOpenMemo.thread, replaced: false };
+  }
   const threads = loadThreads();
   const existing = threads.find((t) => t.dailyKey === today && !t.deleted);
   let gameday = null;
@@ -249,6 +263,7 @@ function ensureDailyOpenThread(opts = {}) {
       existing.pinned = true;
       existing.featured = true;
       saveThreads(threads);
+      rememberDailyOpen(today, existing);
       return { created: false, thread: existing, replaced: true };
     }
   } catch {
@@ -261,6 +276,7 @@ function ensureDailyOpenThread(opts = {}) {
       existing.featured = true;
       saveThreads(threads);
     }
+    rememberDailyOpen(today, existing);
     return { created: false, thread: existing, replaced: false };
   }
 
@@ -296,6 +312,7 @@ function ensureDailyOpenThread(opts = {}) {
   };
   threads.unshift(thread);
   saveThreads(threads);
+  rememberDailyOpen(today, thread);
   return { created: true, thread, replaced: false };
 }
 
@@ -348,6 +365,7 @@ function adminSetDailyOpen({ title, body, categorySlug } = {}) {
   }
 
   saveThreads(threads);
+  rememberDailyOpen(today, threads[idx]);
 
   return {
     created: Boolean(ensured.created),
@@ -1047,6 +1065,66 @@ function getPulseStats() {
   return { repliesToday, trending, pinned, liveRooms };
 }
 
+/**
+ * One disk pass for the Community hub — categories, threads, pulse, rooms.
+ * Used by GET /api/community/page so the client does not fire six list GETs.
+ */
+function getPublicPage({ sort = 'recent', category = null, limit = 40, gameRoomLimit = 8 } = {}) {
+  ensureCategories();
+  ensureFoundingSurface();
+  ensureDailyOpenThread();
+  const categoryMap = getCategoryMap();
+  const users = loadUsers();
+  const posts = loadPosts();
+  const allThreads = loadThreads().filter((t) => !t.deleted);
+  const livePosts = posts.filter((p) => !p.deleted);
+
+  let listed = allThreads;
+  if (category) {
+    listed = listed.filter((t) => t.categorySlug === category || t.categoryId === category);
+  }
+  const cap = Math.max(1, Math.min(100, Number(limit) || 40));
+  listed = sortThreads(listed, sort).slice(0, cap);
+  const threads = listed.map((t) => {
+    const enriched = enrichThreadWithAuthor(t, categoryMap, users);
+    enriched.lastReply = lastReplyForThread(t.id, posts, users, null);
+    return enriched;
+  });
+
+  const since = Date.now() - 24 * 60 * 60 * 1000;
+  const pulse = {
+    repliesToday: livePosts.filter((p) => new Date(p.createdAt).getTime() > since).length,
+    trending: allThreads.filter((t) => (t.replyCount || 0) > 0).length,
+    pinned: allThreads.filter((t) => t.pinned).length,
+    liveRooms: loadLiveRooms().filter((r) => r.status === 'live').length,
+    threadCount: allThreads.length,
+    postCount: livePosts.length,
+  };
+
+  const roomCap = Math.max(1, Math.min(20, Number(gameRoomLimit) || 8));
+  const gameRooms = allThreads
+    .filter((t) => looksLikeGamedayThread(t))
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+    .slice(0, roomCap)
+    .map((t) =>
+      decorateActivityThread(t, {
+        posts,
+        users,
+        categoryMap,
+        viewerEmail: null,
+        yourRole: 'gameday',
+      })
+    );
+
+  return {
+    categories: ensureCategories(),
+    threads,
+    pulse,
+    rooms: getLiveRooms(),
+    gameRooms,
+  };
+}
+
 /** Admin: create a real staff OP (PIN-gated). */
 function adminCreateStaffThread({ title, body, categorySlug, pinned, featured }) {
   const result = createThread(staffSession(), {
@@ -1386,7 +1464,9 @@ module.exports = {
   ensureCategories,
   ensureFoundingSurface,
   ensureDailyOpenThread,
+  resetDailyOpenMemo,
   adminSetDailyOpen,
+  getPublicPage,
   getOrCreateUser,
   getThreads,
   getThreadById,

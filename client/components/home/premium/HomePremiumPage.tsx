@@ -15,6 +15,7 @@ import { useVaultDataReload } from '@/lib/vault-navigation';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
 import { prefetchScheduleBoard } from '@/lib/schedule-api';
+import { prefetchCommunityPage } from '@/lib/community-api';
 import { HomeCommandCenter } from '@/components/home/premium/command/HomeCommandCenter';
 import {
   fetchBeatIntel,
@@ -27,13 +28,14 @@ import {
 import { fetchFutureCastHome, type FutureCastHomeResponse } from '@/lib/futurecast-home-api';
 import {
   fetchHighPriorityTargets,
+  prefetchHighPriorityTargets,
   type FlipWatchRow,
   type HighPriorityResponse,
   type MovementNarrativeRow,
   type VisitRecapRow,
 } from '@/lib/futurecast-high-priority-api';
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
-import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { ACTIVE_RECRUITING_CLASS_YEAR, primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { RECRUITING_HUB_HERO_SEED } from '@/lib/recruiting-hub-hero-seed';
 import { GNL_HUB_SEED } from '@/lib/gnl-hub-seed';
 import {
@@ -181,6 +183,8 @@ export function HomePremiumPage(): React.ReactElement {
     }
     const poll = warmPollProfile();
     prefetchScheduleBoard(2026);
+    prefetchHighPriorityTargets(primaryRecruitingClassYear());
+    prefetchCommunityPage();
     try {
       const year = ACTIVE_RECRUITING_CLASS_YEAR;
       // APIs that already warm-poll internally — do not nest another warm layer.

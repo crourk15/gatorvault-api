@@ -1,7 +1,6 @@
 import { apiFetch } from './api-fetch';
 import { fetchWithWarmPoll } from './api-warm-poll';
 import { loadSession } from './auth-api';
-import { warmPollProfile } from './warm-poll-profile';
 import type { ReportReasonId } from './community-ugc';
 
 export type CommunityAuthor = {
@@ -238,32 +237,137 @@ export async function fetchLiveRooms(): Promise<LiveRoom[]> {
   return data.rooms ?? [];
 }
 
-/** Load community hub data with warm-poll while Render wakes. */
+const COMMUNITY_LAST_GOOD_KEY = 'gv-community-page-last-good';
+const COMMUNITY_LAST_GOOD_MAX_MS = 24 * 60 * 60_000;
+
+function publicCommunityPage(data: CommunityPageData): CommunityPageData {
+  return {
+    categories: data.categories || [],
+    threads: data.threads || [],
+    pulse: data.pulse || {},
+    rooms: data.rooms || [],
+    gameRooms: data.gameRooms || [],
+    me: null,
+    followed: [],
+  };
+}
+
+/** Sync first paint — last live hub, not the July seed. */
+export function peekLastGoodCommunityPage(): CommunityPageData | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(COMMUNITY_LAST_GOOD_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { savedAt?: number; payload?: CommunityPageData };
+    if (!parsed?.payload || Date.now() - Number(parsed.savedAt || 0) > COMMUNITY_LAST_GOOD_MAX_MS) {
+      return null;
+    }
+    if (!parsed.payload.threads?.length && !parsed.payload.categories?.length) return null;
+    return publicCommunityPage(parsed.payload);
+  } catch {
+    return null;
+  }
+}
+
+export function writeLastGoodCommunityPage(data: CommunityPageData): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(
+      COMMUNITY_LAST_GOOD_KEY,
+      JSON.stringify({ savedAt: Date.now(), payload: publicCommunityPage(data) })
+    );
+  } catch {
+    /* quota / private mode */
+  }
+}
+
+function communityPageQuery(opts: { sort?: string; category?: string; limit?: number } = {}): string {
+  const params = new URLSearchParams();
+  if (opts.sort) params.set('sort', opts.sort);
+  if (opts.category) params.set('category', opts.category);
+  if (opts.limit) params.set('limit', String(opts.limit));
+  const qs = params.toString();
+  return qs ? `?${qs}` : '';
+}
+
+export async function fetchCommunityPageBundle(opts: {
+  sort?: string;
+  category?: string;
+  limit?: number;
+} = {}): Promise<CommunityPageData> {
+  const data = await apiFetch<CommunityPageData & { ok?: boolean }>(
+    `/api/community/page${communityPageQuery(opts)}`,
+    { ...communityFetchInit(), timeoutMs: 8_000, retries: 1, retryDelayMs: 800 }
+  );
+  if (!data || !Array.isArray(data.threads)) {
+    throw new Error('community page empty');
+  }
+  return {
+    categories: data.categories ?? [],
+    threads: data.threads ?? [],
+    pulse: data.pulse ?? {},
+    rooms: data.rooms ?? [],
+    gameRooms: data.gameRooms ?? [],
+    me: data.me ?? null,
+    followed: data.followed ?? [],
+  };
+}
+
+async function fetchCommunityPageDataLegacy(opts: {
+  sort?: string;
+  category?: string;
+  limit?: number;
+} = {}): Promise<CommunityPageData> {
+  const signedIn = Boolean(loadSession()?.email);
+  const [categories, threadBundle, pulse, rooms, gameRooms, me] = await Promise.all([
+    fetchCommunityCategories(),
+    fetchCommunityThreadsBundle(opts),
+    fetchCommunityPulse(),
+    fetchLiveRooms(),
+    fetchCommunityGameRooms(8),
+    signedIn ? fetchMyCommunity().catch(() => null) : Promise.resolve(null),
+  ]);
+  return {
+    categories,
+    threads: threadBundle.threads,
+    followed: threadBundle.followed,
+    pulse,
+    rooms,
+    gameRooms,
+    me,
+  };
+}
+
+/** Load community hub data — one page GET when live, last-good/seed while it warms. */
 export async function fetchCommunityPageData(opts: {
   sort?: string;
   category?: string;
   limit?: number;
 } = {}): Promise<CommunityPageData> {
+  // Seed / last-good already paint the hub — do not 10×2s warm-poll on mobile.
+  const poll = { maxAttempts: 3, delayMs: 700 };
+
   return fetchWithWarmPoll(async () => {
     const signedIn = Boolean(loadSession()?.email);
-    const [categories, threadBundle, pulse, rooms, gameRooms, me] = await Promise.all([
-      fetchCommunityCategories(),
-      fetchCommunityThreadsBundle(opts),
-      fetchCommunityPulse(),
-      fetchLiveRooms(),
-      fetchCommunityGameRooms(8),
-      signedIn ? fetchMyCommunity().catch(() => null) : Promise.resolve(null),
-    ]);
-    return {
-      categories,
-      threads: threadBundle.threads,
-      followed: threadBundle.followed,
-      pulse,
-      rooms,
-      gameRooms,
-      me,
-    };
-  }, warmPollProfile());
+    try {
+      const [page, me] = await Promise.all([
+        fetchCommunityPageBundle(opts),
+        signedIn ? fetchMyCommunity().catch(() => null) : Promise.resolve(null),
+      ]);
+      writeLastGoodCommunityPage(page);
+      return { ...page, me };
+    } catch {
+      const legacy = await fetchCommunityPageDataLegacy(opts);
+      writeLastGoodCommunityPage(legacy);
+      return legacy;
+    }
+  }, poll);
+}
+
+/** Warm Community from Home so the locker is not six cold GETs. */
+export function prefetchCommunityPage(): void {
+  if (typeof window === 'undefined') return;
+  void fetchCommunityPageData({ sort: 'recent', limit: 40 }).catch(() => {});
 }
 
 export async function createCommunityThread(input: {

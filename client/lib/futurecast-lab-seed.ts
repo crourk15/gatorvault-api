@@ -69,6 +69,12 @@ export function normalizeSeedHighPriorityPlayer(
     predictors: Array.isArray(p.predictors)
       ? (p.predictors as HighPriorityPlayer['predictors'])
       : [],
+    hasUFOffer: p.hasUFOffer === true || (p.processEvidence as { hasUFOffer?: boolean } | null)?.hasUFOffer === true,
+    closestCommitEligible:
+      p.closestCommitEligible === true ||
+      (p.processEvidence as { closestEligible?: boolean } | null)?.closestEligible === true,
+    processEvidence: (p.processEvidence as HighPriorityPlayer['processEvidence']) ?? null,
+    on3Lead: (p.on3Lead as string | null | undefined) ?? null,
   };
 }
 

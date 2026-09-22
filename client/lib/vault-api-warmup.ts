@@ -61,10 +61,12 @@ export function warmVaultApi(): void {
       void ping('/api/roster/players');
       void ping('/api/staff/dashboard');
     }
-    if (path.startsWith('/vault/futurecast')) void ping('/api/futurecast/home');
+    if (path.startsWith('/vault/futurecast')) {
+      void ping('/api/futurecast/home');
+      void ping('/api/futurecast/high-priority?year=2028');
+    }
     if (path.startsWith('/vault/community')) {
-      void ping('/api/community/categories');
-      void ping('/api/community/threads?sort=trending&limit=12');
+      void ping('/api/community/page?sort=recent&limit=40');
     }
     if (
       path.startsWith('/vault/live') ||
@@ -78,6 +80,7 @@ export function warmVaultApi(): void {
       void ping('/api/recruiting/intel/beat?limit=5');
       void ping('/api/live/ticker');
       void ping('/api/recruiting/movement-intel');
+      void ping('/api/futurecast/high-priority?year=2028');
     }
     if (
       path === '/vault' ||
@@ -92,8 +95,13 @@ export function warmVaultApi(): void {
 
   scheduleIdle(() => {
     // Soft prime adjacent pillars so navigation stays warm.
-    if (!path.startsWith('/vault/futurecast')) void ping('/api/futurecast/home');
-    if (!path.startsWith('/vault/community')) void ping('/api/community/categories');
+    if (!path.startsWith('/vault/futurecast')) {
+      void ping('/api/futurecast/home');
+      void ping('/api/futurecast/high-priority?year=2028');
+    }
+    if (!path.startsWith('/vault/community')) {
+      void ping('/api/community/page?sort=recent&limit=40');
+    }
     if (!path.startsWith('/vault/live') && !path.startsWith('/vault/podcasts')) {
       void ping('/api/live/dashboard?limit=20');
     }

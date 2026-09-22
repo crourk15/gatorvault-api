@@ -28,6 +28,15 @@ describe('FutureCast Lab seed commit likelihood', () => {
     assert.match(src, /ufProbability \?\? p\.ufConfidence/);
   });
 
+  it('seed generator keeps processEvidence for Closest first paint', () => {
+    const gen = fs.readFileSync(
+      path.join(__dirname, '../../client/scripts/generate-futurecast-lab-seed.js'),
+      'utf8'
+    );
+    assert.match(gen, /slimProcessEvidence/);
+    assert.match(gen, /closestCommitEligible/);
+  });
+
   it('Lab hook treats ufConfidence as usable odds', () => {
     const hook = fs.readFileSync(
       path.join(__dirname, '../../client/components/futurecast/lab/useFutureCastLabData.ts'),

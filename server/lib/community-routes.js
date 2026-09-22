@@ -1,6 +1,11 @@
 const store = require('./community-store');
+const pageCache = require('./community-page-cache');
 const { getSessionFromReq } = require('./session-auth');
 const { verifyAdminPin, pinFromReq: adminPinFromReq } = require('./admin-pin');
+
+function bustCommunityPageCache() {
+  pageCache.invalidateCommunityPageCache();
+}
 
 function pinFromReq(req) {
   return req.headers['x-community-pin'] || adminPinFromReq(req) || req.body?.pin || req.query?.pin;
@@ -31,15 +36,38 @@ function mountCommunityRoutes(app) {
     }
   });
 
+  /** One request for the hub — replaces 6 parallel list GETs on first open. */
+  app.get('/api/community/page', (req, res) => {
+    try {
+      const sort = req.query.sort || 'recent';
+      const category = req.query.category || null;
+      const limit = parseInt(req.query.limit || '40', 10);
+      const payload = pageCache.getPage({ sort, category, limit });
+      const session = getSessionFromReq(req);
+      const followed = session ? store.getFollowedThreadIds(session.email) : [];
+      return res.json({
+        ok: true,
+        categories: payload.categories,
+        threads: payload.threads,
+        pulse: payload.pulse,
+        rooms: payload.rooms,
+        gameRooms: payload.gameRooms,
+        followed,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/community/threads', (req, res) => {
     try {
       const sort = req.query.sort || 'trending';
       const category = req.query.category || null;
       const limit = parseInt(req.query.limit || '50', 10);
-      const threads = store.getThreads({ sort, category, limit });
+      const payload = pageCache.getPage({ sort, category, limit });
       const session = getSessionFromReq(req);
       const followed = session ? store.getFollowedThreadIds(session.email) : [];
-      return res.json({ ok: true, threads, followed, sort });
+      return res.json({ ok: true, threads: payload.threads, followed, sort });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -64,7 +92,8 @@ function mountCommunityRoutes(app) {
 
   app.get('/api/community/pulse', (req, res) => {
     try {
-      return res.json({ ok: true, pulse: store.getPulseStats() });
+      const payload = pageCache.getPage({ sort: 'recent', limit: 40 });
+      return res.json({ ok: true, pulse: payload.pulse });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -75,9 +104,13 @@ function mountCommunityRoutes(app) {
     try {
       const limit = parseInt(req.query.limit || '8', 10);
       const session = getSessionFromReq(req);
+      const payload = pageCache.getPage({ sort: 'recent', limit: 40, gameRoomLimit: limit });
+      const gameRooms = session?.email
+        ? store.getGameRooms({ limit, viewerEmail: session.email })
+        : payload.gameRooms;
       return res.json({
         ok: true,
-        gameRooms: store.getGameRooms({ limit, viewerEmail: session?.email || null }),
+        gameRooms,
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -104,6 +137,7 @@ function mountCommunityRoutes(app) {
         body: req.body.body,
         categorySlug: req.body.category || req.body.categorySlug || 'locker'
       });
+      bustCommunityPageCache();
       return res.json({ ok: true, ...result });
     } catch (err) {
       return res.status(400).json({ ok: false, error: err.message });
@@ -115,6 +149,7 @@ function mountCommunityRoutes(app) {
     if (!session) return;
     try {
       const result = store.createReply(session, req.params.id, req.body.body || req.body.text);
+      bustCommunityPageCache();
       return res.json({ ok: true, ...result });
     } catch (err) {
       return res.status(400).json({ ok: false, error: err.message });
@@ -141,6 +176,7 @@ function mountCommunityRoutes(app) {
         title: req.body?.title,
         body: req.body?.body,
       });
+      bustCommunityPageCache();
       return res.json({ ok: true, ...result });
     } catch (err) {
       const status = err.statusCode || 400;
@@ -154,6 +190,7 @@ function mountCommunityRoutes(app) {
     if (!session) return;
     try {
       const result = store.deleteThread(session, req.params.id);
+      bustCommunityPageCache();
       return res.json({ ok: true, ...result });
     } catch (err) {
       const status = err.statusCode || 400;
@@ -169,6 +206,7 @@ function mountCommunityRoutes(app) {
       const result = store.editPost(session, req.params.id, {
         body: req.body?.body ?? req.body?.text,
       });
+      bustCommunityPageCache();
       return res.json({ ok: true, ...result });
     } catch (err) {
       const status = err.statusCode || 400;
@@ -182,6 +220,7 @@ function mountCommunityRoutes(app) {
     if (!session) return;
     try {
       const result = store.deletePost(session, req.params.id);
+      bustCommunityPageCache();
       return res.json({ ok: true, ...result });
     } catch (err) {
       const status = err.statusCode || 400;
@@ -271,6 +310,7 @@ function mountCommunityRoutes(app) {
         pinned: Boolean(req.body.pinned),
         featured: req.body.featured !== false,
       });
+      bustCommunityPageCache();
       return res.json({ ok: true, ...result });
     } catch (err) {
       return res.status(400).json({ ok: false, error: err.message });
@@ -283,6 +323,7 @@ function mountCommunityRoutes(app) {
     }
     try {
       const result = store.adminStaffReply(req.params.id, req.body.body || req.body.text);
+      bustCommunityPageCache();
       return res.json({ ok: true, ...result });
     } catch (err) {
       return res.status(400).json({ ok: false, error: err.message });
@@ -314,6 +355,7 @@ function mountCommunityRoutes(app) {
             categorySlug: categorySlug || undefined,
           })
         : store.ensureDailyOpenThread();
+      bustCommunityPageCache();
       return res.json({
         ok: true,
         created: result.created,
@@ -344,6 +386,7 @@ function mountCommunityRoutes(app) {
       if (text) threads[idx].body = text;
       threads[idx].lastActivityAt = new Date().toISOString();
       store.saveThreads(threads);
+      bustCommunityPageCache();
       const thread = store.getThreadById(req.params.id);
       return res.json({ ok: true, thread });
     } catch (err) {
@@ -357,6 +400,7 @@ function mountCommunityRoutes(app) {
     }
     const thread = store.adminPinThread(req.params.id, req.body.pinned !== false);
     if (!thread) return res.status(404).json({ ok: false, error: 'Thread not found' });
+    bustCommunityPageCache();
     return res.json({ ok: true, thread });
   });
 
@@ -366,6 +410,7 @@ function mountCommunityRoutes(app) {
     }
     const thread = store.adminLockThread(req.params.id, req.body.locked !== false);
     if (!thread) return res.status(404).json({ ok: false, error: 'Thread not found' });
+    bustCommunityPageCache();
     return res.json({ ok: true, thread });
   });
 
@@ -375,6 +420,7 @@ function mountCommunityRoutes(app) {
     }
     const thread = store.adminFeatureThread(req.params.id, req.body.featured !== false);
     if (!thread) return res.status(404).json({ ok: false, error: 'Thread not found' });
+    bustCommunityPageCache();
     return res.json({ ok: true, thread });
   });
 
@@ -384,6 +430,7 @@ function mountCommunityRoutes(app) {
     }
     const thread = store.adminDeleteThread(req.params.id);
     if (!thread) return res.status(404).json({ ok: false, error: 'Thread not found' });
+    bustCommunityPageCache();
     return res.json({ ok: true, thread });
   });
 
@@ -393,6 +440,7 @@ function mountCommunityRoutes(app) {
     }
     const post = store.adminDeletePost(req.params.id);
     if (!post) return res.status(404).json({ ok: false, error: 'Post not found' });
+    bustCommunityPageCache();
     return res.json({ ok: true, post });
   });
 

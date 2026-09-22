@@ -8,6 +8,7 @@ export type CommunityHubSeed = {
   threads: CommunityThread[];
   pulse: CommunityPulse;
   rooms: LiveRoom[];
+  gameRooms?: CommunityThread[];
 };
 
 export const COMMUNITY_HUB_SEED = seedJson as CommunityHubSeed;
@@ -19,7 +20,7 @@ export function buildSeedCommunityPageData(): CommunityPageData {
     threads: Array.isArray(COMMUNITY_HUB_SEED.threads) ? COMMUNITY_HUB_SEED.threads : [],
     pulse: COMMUNITY_HUB_SEED.pulse || {},
     rooms: Array.isArray(COMMUNITY_HUB_SEED.rooms) ? COMMUNITY_HUB_SEED.rooms : [],
-    gameRooms: [],
+    gameRooms: Array.isArray(COMMUNITY_HUB_SEED.gameRooms) ? COMMUNITY_HUB_SEED.gameRooms : [],
     me: null,
     followed: [],
   };

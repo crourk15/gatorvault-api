@@ -18,6 +18,7 @@ import {
   fetchCommunityPageData,
   fetchCommunityThread,
   fetchMyCommunity,
+  peekLastGoodCommunityPage,
   flagCommunityPost,
   flagCommunityThread,
   toggleCommunityFollow,
@@ -53,6 +54,10 @@ import '@/lib/community-elite.css';
 const SEED_COMMUNITY = buildSeedCommunityPageData();
 const HAS_COMMUNITY_SEED =
   SEED_COMMUNITY.categories.length > 0 || SEED_COMMUNITY.threads.length > 0;
+
+function initialCommunityPaint() {
+  return peekLastGoodCommunityPage() || SEED_COMMUNITY;
+}
 
 type SortId = 'trending' | 'recent' | 'active' | 'replies';
 
@@ -114,18 +119,18 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const [sort, setSort] = useState<SortId>('recent');
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState<CommunityCategory[]>(
-    HAS_COMMUNITY_SEED ? SEED_COMMUNITY.categories : []
+    () => initialCommunityPaint().categories
   );
   const [threads, setThreads] = useState<CommunityThread[]>(
-    HAS_COMMUNITY_SEED ? SEED_COMMUNITY.threads : []
+    () => initialCommunityPaint().threads
   );
   const [justPostedId, setJustPostedId] = useState<string | null>(null);
   const [pulse, setPulse] = useState<CommunityPulse | null>(
-    HAS_COMMUNITY_SEED ? SEED_COMMUNITY.pulse : null
+    () => initialCommunityPaint().pulse || null
   );
-  const [rooms, setRooms] = useState<LiveRoom[]>(HAS_COMMUNITY_SEED ? SEED_COMMUNITY.rooms : []);
+  const [rooms, setRooms] = useState<LiveRoom[]>(() => initialCommunityPaint().rooms);
   const [gameRooms, setGameRooms] = useState<CommunityLockerThread[]>(
-    HAS_COMMUNITY_SEED ? SEED_COMMUNITY.gameRooms || [] : []
+    () => initialCommunityPaint().gameRooms || []
   );
   const [me, setMe] = useState<CommunityMe | null>(HAS_COMMUNITY_SEED ? SEED_COMMUNITY.me || null : null);
   const [followedIds, setFollowedIds] = useState<string[]>([]);
