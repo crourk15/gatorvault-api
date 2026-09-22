@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { __scheduleApiTest, fallbackScheduleGames } from './schedule-api';
+import { __scheduleApiTest, fallbackScheduleGames, peekScheduleBoard } from './schedule-api';
 import { SCHEDULE_GAMES } from './schedule-data';
 
 const { normalizeGames, mergeUniform } = __scheduleApiTest;
@@ -201,6 +201,18 @@ describe('schedule-api uniforms', () => {
     ]);
     assert.equal(live[0]?.date, 'September 26, 2026 · 3:30 PM ET');
     assert.equal(live[0]?.tv, 'ABC');
+  });
+
+  it('peekScheduleBoard prefers last-good live keys over the baked seed', () => {
+    const olemiss = SCHEDULE_GAMES.find((g) => g.id === 'olemiss');
+    assert.ok(olemiss);
+    __scheduleApiTest.writeLastGood(2026, {
+      games: [{ ...olemiss, keys: ['Maintain Lane Discipline & Crowd Chambliss'] }],
+      currentGameId: 'olemiss',
+    });
+    const peeked = peekScheduleBoard(2026);
+    assert.equal(peeked.games[0]?.keys?.[0], 'Maintain Lane Discipline & Crowd Chambliss');
+    assert.equal(__scheduleApiTest.readLastGood(2026)?.currentGameId, 'olemiss');
   });
 
   it('mergeUniform prefers live over seed', () => {

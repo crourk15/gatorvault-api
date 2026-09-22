@@ -9,7 +9,7 @@ import {
   type GameWeekBettingLine,
 } from '@/lib/game-week-data';
 import { fetchBettingLines } from '@/lib/betting-api';
-import { fetchScheduleBoard } from '@/lib/schedule-api';
+import { fetchScheduleBoard, peekScheduleBoard } from '@/lib/schedule-api';
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 import { InsiderPaywall } from '@/components/futurecast/InsiderPaywall';
 import { MatchupHeroWidget } from './MatchupHeroWidget';
@@ -58,7 +58,7 @@ export function GameWeekCommandCenter({
   const [gameId, setGameId] = useState(initialGameId);
   const [userPicked, setUserPicked] = useState(false);
   const [tab, setTab] = useState('intel');
-  const [games, setGames] = useState<ScheduleGame[]>(SCHEDULE_GAMES);
+  const [games, setGames] = useState<ScheduleGame[]>(() => peekScheduleBoard(2026).games);
   const [bettingByGameId, setBettingByGameId] = useState<Record<string, GameWeekBettingLine | null>>({});
 
   useEffect(() => {

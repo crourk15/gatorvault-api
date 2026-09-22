@@ -365,9 +365,9 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Establish the Downhill Run Game",
     ],
     swing: [
-      { name: "Jadan Baugh", impact: 95, role: "Early-down rhythm vs a front that just gave LSU 172" },
-      { name: "Jayden Woods", role: "Stay in the lane on the Chambliss keep" },
-      { name: "Aaron Philo", role: "When they load the box, go over the top" },
+      { name: "Jadan Baugh", impact: 95, role: "Ole Miss' front seven is vulnerable to a physical ground attack, having just surrendered 172 yards to LSU. Start Baugh to establish physical dominance early." },
+      { name: "Jayden Woods", role: "Do not allow Chambliss to comfortably sit in the pocket or break containment on scramble drills. Defensive ends must rush with contain equity—do not crash past his upfield shoulder. The edge defenders must play parallel to stay in the running lane on the QB keep." },
+      { name: "Aaron Philo", role: "Once Ole Miss is forced to over-rotate safeties down to load the box, unleash Philo to attack the single-high coverages over the top." },
     ],
     radar: [
       { label: "Run Game", uf: 70, opp: 56 },

@@ -160,8 +160,49 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
     .filter(Boolean) as ScheduleGame[];
 }
 
+const LAST_GOOD_PREFIX = 'gv-schedule-board-last-good:';
+
+let lastGoodMemory: Record<number, ScheduleBoardLive> = {};
+
+function lastGoodKey(season: number): string {
+  return `${LAST_GOOD_PREFIX}${season}`;
+}
+
+function readLastGood(season: number): ScheduleBoardLive | null {
+  if (lastGoodMemory[season]?.games?.length) return lastGoodMemory[season];
+  if (typeof window === 'undefined' || !window.localStorage) return null;
+  try {
+    const raw = window.localStorage.getItem(lastGoodKey(season));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as ScheduleBoardLive;
+    const games = normalizeGames(parsed?.games);
+    if (!games.length) return null;
+    const currentGameId = String(parsed.currentGameId || '').trim() || undefined;
+    const board = { games, currentGameId };
+    lastGoodMemory[season] = board;
+    return board;
+  } catch {
+    return null;
+  }
+}
+
+function writeLastGood(season: number, board: ScheduleBoardLive): void {
+  lastGoodMemory[season] = board;
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  try {
+    window.localStorage.setItem(lastGoodKey(season), JSON.stringify(board));
+  } catch {
+    /* quota / private mode */
+  }
+}
+
 export function fallbackScheduleGames(): ScheduleGame[] {
   return SCHEDULE_GAMES.slice();
+}
+
+/** Sync first paint — last live board, not the App Store seed. */
+export function peekScheduleBoard(season = 2026): ScheduleBoardLive {
+  return readLastGood(season) || { games: fallbackScheduleGames() };
 }
 
 export async function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLive> {
@@ -174,11 +215,17 @@ export async function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLi
     );
     const live = normalizeGames(data?.games);
     const currentGameId = String(data?.currentGameId || '').trim() || undefined;
-    if (live.length) return { games: live, currentGameId };
+    if (live.length) {
+      const board = { games: live, currentGameId };
+      writeLastGood(season, board);
+      return board;
+    }
   } catch {
     /* fall through */
   }
-  return { games: fallbackScheduleGames() };
+  // 502 / flap: keep the last live board. Do not snap back to the baked seed
+  // (1.0.28 still has the Sep 21 Ole Miss keys).
+  return readLastGood(season) || { games: fallbackScheduleGames() };
 }
 
 export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]> {
@@ -187,4 +234,11 @@ export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]>
 }
 
 /** Test helpers */
-export const __scheduleApiTest = { normalizeGames, normalizeUniform, mergeUniform };
+export const __scheduleApiTest = {
+  normalizeGames,
+  normalizeUniform,
+  mergeUniform,
+  writeLastGood,
+  readLastGood,
+  lastGoodKey,
+};

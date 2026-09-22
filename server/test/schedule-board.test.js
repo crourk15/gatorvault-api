@@ -214,7 +214,12 @@ describe('schedule-board', () => {
     assert.equal(olemiss.tv, 'ABC');
     assert.equal(olemiss.filmWatched, false);
     const baughSwing = olemiss.swing.find((s) => /baugh/i.test(s.name));
+    const woodsSwing = olemiss.swing.find((s) => /woods/i.test(s.name));
+    const philoSwing = olemiss.swing.find((s) => /philo/i.test(s.name));
     assert.equal(baughSwing?.impact, 95);
+    assert.match(baughSwing?.role || '', /Start Baugh to establish physical dominance early/);
+    assert.match(woodsSwing?.role || '', /contain equity/);
+    assert.match(philoSwing?.role || '', /unleash Philo/);
     assert.equal(olemiss.radar.find((a) => a.label === 'Pass Efficiency')?.opp, 78);
     assert.equal(olemiss.radar.find((a) => a.label === 'Front 7')?.opp, 48);
     assert.equal(olemiss.radar.find((a) => a.label === 'Coaching Edge')?.uf, 52);
