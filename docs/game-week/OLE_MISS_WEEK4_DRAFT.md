@@ -30,9 +30,9 @@ Ole Miss is no-huddle shotgun and Trinidad Chambliss. Stay home on him, cap the 
 
 | Name | Role |
 |---|---|
-| Jadan Baugh | Early-down rhythm vs a front that just gave LSU 172 |
-| Jayden Woods | Stay in the lane on the Chambliss keep |
-| Aaron Philo | When they load the box, go over the top |
+| Jadan Baugh | Ole Miss' front seven is vulnerable to a physical ground attack, having just surrendered 172 yards to LSU. Start Baugh to establish physical dominance early. |
+| Jayden Woods | Do not allow Chambliss to comfortably sit in the pocket or break containment on scramble drills. Defensive ends must rush with contain equity—do not crash past his upfield shoulder. The edge defenders must play parallel to stay in the running lane on the QB keep. |
+| Aaron Philo | Once Ole Miss is forced to over-rotate safeties down to load the box, unleash Philo to attack the single-high coverages over the top. |
 
 ## Matchup Edge (sat stamp — not the 51% formula)
 
