@@ -13,6 +13,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Home NOW middle-slot break-in: any Florida commit/flip this week takes Visitors; road week fills with that week’s Florida commit (never NA). API after Render.
 - [x] Home NOW News freshness: only this-week commit days (commitDate / players.json). Rematerialized intel on older board commits (Tommy Douglas April 16) stays off News. API after Render — ticker cache t14.
 - [x] Home NOW Visitors: tick every this-week visitor with first + last name (not three last names). API after Render — ticker cache t15. Three-label tick is bake 94+.
+- [x] My Alerts test: lock-screen push fires before visit email so a slow EmailJS send cannot hide the ping. API after Render — current TestFlight can retry. Client parallel fire waits for the next bake.
 - [x] Trial-ending email: next drip/d5/d1 sends use the Stay with Gator Nation letter. Already-sent mail is not rewritten. API after Render — no Codemagic.
 - [x] Film Room: drop Film Guy Alabama–FSU sit (`kNrIT61SLVM` / “Florida State” is not Florida) from `/api/film-room/catalog` after Render. Hard-block + title strip so it cannot ingest again. API — no Codemagic.
 - [x] Film Room: Landon Tengwall UF-only 2026 run-game film studies from Auburn Week 3 (`MRjoBzMLD2s`) onward on `/api/film-room/catalog` (API — no Codemagic). Pass-game sits and the Week 1 FAU tape stay off. Hub-seed first-paint waits for a later bake.
@@ -153,6 +154,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-22 | My Alerts test fires lock-screen push in parallel with visit email | `VaultAlertsPage` in binary. **API already sends APNs before EmailJS after Render.** | pending |
 | 2026-09-21 | Home NOW first-paint pillars + skip ticker SWR (never the one-line Game ABC list) | `buildLocalWeeklyNowWeek` + `resolveHomeNowWeekPillars` + SWR skip in binary. **Ticker API already has `nowWeek` after Render.** Bake **95**. | pending |
 | 2026-09-21 | App Store **1.0.28** / build **95** (NOW first-paint). Build 94 still shows Game ABC. | `CURRENT_PROJECT_VERSION` 95. 1.0.28 exists in App Store Connect. | pending |
 | 2026-09-21 | Home NOW keeps every `Visitors — First Last` ticker line so fallback parse can tick the full list | `buildHomePulseStories` in binary. **Ticker API already serves full names + `nowWeek` after Render.** | pending |

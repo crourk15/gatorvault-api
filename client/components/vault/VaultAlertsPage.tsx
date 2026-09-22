@@ -303,13 +303,27 @@ export function VaultAlertsPage(): React.ReactElement {
       let visitOut: Awaited<ReturnType<typeof sendVisitAlertToMe>> = { ok: false };
       let pushOut: Awaited<ReturnType<typeof sendTestPushAlert>> = { ok: false };
 
-      if (canEmail || visitOn) {
-        visitOut = await sendVisitAlertToMe('brysen-wright');
-      }
-      if (canPush) {
-        pushOut = await sendTestPushAlert(visitOn ? 'visit' : prefs.types.score ? 'score' : 'confirm', {
-          force: true,
-        });
+      try {
+        const jobs: Promise<void>[] = [];
+        if (canPush) {
+          jobs.push(
+            sendTestPushAlert(visitOn ? 'visit' : prefs.types.score ? 'score' : 'confirm', {
+              force: true,
+            }).then((out) => {
+              pushOut = out;
+            })
+          );
+        }
+        if (canEmail || visitOn) {
+          jobs.push(
+            sendVisitAlertToMe('brysen-wright').then((out) => {
+              visitOut = out;
+            })
+          );
+        }
+        await Promise.all(jobs);
+      } catch {
+        /* status below */
       }
       setTestingPush(false);
       if (visitOut.emailSent) bits.push('email');

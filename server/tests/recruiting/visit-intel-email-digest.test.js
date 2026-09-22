@@ -197,6 +197,9 @@ describe("visit-intel-email-digest", () => {
     const sendBlock = src.split("send-visit-alert")[1] || "";
     assert.ok(sendBlock.includes("never overwrite"));
     assert.ok(!/upsertEmailAlertPrefs\(email/.test(sendBlock));
+    const pushAt = sendBlock.indexOf("await dispatchVisitPushToEmail");
+    const emailAt = sendBlock.indexOf("await sendSubscriberDigestEmail");
+    assert.ok(pushAt >= 0 && emailAt >= 0 && pushAt < emailAt);
   });
 
   it("isVisitEmailReady is false when EmailJS and Resend are both unset", () => {
