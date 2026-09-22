@@ -115,8 +115,11 @@ function loadBundleUniformMap(season) {
   }
 }
 
-/** Model / film intel fields that git-bundle edits should win when the bundle is newer. */
-const BUNDLE_MODEL_KEYS = [
+/** Weekly film / keys / scout — git bundle always wins, even if durable is newer.
+ *  Official-box sync stamps `updatedAt: now` when it finds a box URL; that used to
+ *  lock stale Ole Miss keys/scout on Render until a manual durable wipe.
+ */
+const BUNDLE_INTEL_KEYS = [
   'ufPct',
   'date',
   'label',
@@ -138,12 +141,18 @@ const BUNDLE_MODEL_KEYS = [
   'howUFWins',
   'scoutingReport',
   'filmWatched',
+];
+
+/** Discovery fields — overlay from bundle only when the bundle stamp is newer/equal. */
+const BUNDLE_DISCOVERY_KEYS = [
   'vaultReviewId',
   'finalUF',
   'finalOpp',
   'finalSource',
   'boxScoreUrl',
 ];
+
+const BUNDLE_MODEL_KEYS = [...BUNDLE_INTEL_KEYS, ...BUNDLE_DISCOVERY_KEYS];
 
 function parseTs(value) {
   const ms = Date.parse(String(value || '').trim());
@@ -166,11 +175,10 @@ function loadBundleDoc(season) {
 function overlayBundleModelFields(doc, season) {
   const bundle = loadBundleDoc(season);
   if (!bundle) return { doc, healed: 0 };
-  // Equal stamps still heal — Render durable often copies bundle updatedAt
-  // without taking a later kickoff window (Ole Miss 3:30–8:00 vs 3:30 PM ET).
-  if (parseTs(bundle.updatedAt) < parseTs(doc.updatedAt)) {
-    return { doc, healed: 0 };
-  }
+  // Discovery (box URL / official final) still follows the stamp. Intel does not —
+  // a newer durable clock from box-sync must not revive last week's keys.
+  const bundleWinsDiscovery = parseTs(bundle.updatedAt) >= parseTs(doc.updatedAt);
+  const overlayKeys = bundleWinsDiscovery ? BUNDLE_MODEL_KEYS : BUNDLE_INTEL_KEYS;
   const byId = new Map((bundle.games || []).map((g) => [String(g.id || ''), g]));
   let healed = 0;
   const games = (doc.games || []).map((game) => {
@@ -179,7 +187,7 @@ function overlayBundleModelFields(doc, season) {
     if (!fromBundle) return game;
     let changed = false;
     const next = { ...game };
-    for (const key of BUNDLE_MODEL_KEYS) {
+    for (const key of overlayKeys) {
       const incoming = fromBundle[key];
       if (incoming === undefined) continue;
       const same =
@@ -547,5 +555,6 @@ module.exports = {
   normalizeUniform,
   backfillUniforms,
   overlayBundleModelFields,
+  BUNDLE_INTEL_KEYS,
   loadBundleUniformMap,
 };

@@ -177,4 +177,44 @@ describe('schedule uniform board', () => {
       delete require.cache[require.resolve('../lib/schedule-board')];
     }
   });
+
+  it('getScheduleBoard heals stale Ole Miss keys even when durable is newer', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-sched-intel-'));
+    const file = path.join(tmp, '2026-season.json');
+    const seed = JSON.parse(
+      fs.readFileSync(path.join(__dirname, '..', 'data/schedule/2026-season.json'), 'utf8')
+    );
+    seed.updatedAt = '2099-01-01T00:00:00.000Z';
+    seed.games = seed.games.map((g) => {
+      if (g.id !== 'olemiss') return g;
+      return {
+        ...g,
+        keys: [
+          'Attack a front that just gave LSU 172',
+          'Crowd Chambliss before the first read',
+          "Don't let the short throw become a long run",
+        ],
+        howUFWins: ['old run', 'old crowd', 'old catch'],
+        film: 'Crowd him or he throws it short and keeps it.',
+        boxScoreUrl: 'https://example.com/kept-box',
+      };
+    });
+    fs.writeFileSync(file, JSON.stringify(seed));
+    const prev = process.env.GV_SCHEDULE_PATH;
+    process.env.GV_SCHEDULE_PATH = file;
+    try {
+      delete require.cache[require.resolve('../lib/schedule-board')];
+      const fresh = require('../lib/schedule-board');
+      const board = fresh.getScheduleBoard(2026);
+      const olemiss = board.games.find((g) => g.id === 'olemiss');
+      assert.equal(olemiss.keys[0], 'Maintain Lane Discipline & Crowd Chambliss');
+      assert.match(olemiss.howUFWins[0], /contain equity/);
+      assert.match(olemiss.film, /goes as Trinidad Chambliss goes/i);
+      assert.equal(olemiss.boxScoreUrl, 'https://example.com/kept-box');
+    } finally {
+      if (prev == null) delete process.env.GV_SCHEDULE_PATH;
+      else process.env.GV_SCHEDULE_PATH = prev;
+      delete require.cache[require.resolve('../lib/schedule-board')];
+    }
+  });
 });
