@@ -107,6 +107,15 @@ const ALLOWLIST_2028 = [
   'jaxon-flowers',
   // Player said he will be in the Swamp Ole Miss weekend (first Gainesville trip)
   'domonic-williams-jr',
+  // Ole Miss weekend expected visitors — campus sit → locked chase
+  'madoxx-davis',
+  'jayden-bell',
+  'cj-craig-james',
+  'jc-wessel',
+  'shamar-evans',
+  'ty-winn',
+  'anthony-turner',
+  'cooper-martenson',
 ];
 
 /** Charles' display names — used for On3/Rivals/247 identity lookup (never synthetic cards). */
@@ -178,6 +187,14 @@ const CANONICAL_TARGET_NAMES = {
   'josiah-taylor': 'Josiah Taylor',
   'jaxon-flowers': 'Jaxon Flowers',
   'domonic-williams-jr': 'Domonic Williams Jr.',
+  'madoxx-davis': 'Madoxx Davis',
+  'jayden-bell': 'Jayden Bell',
+  'cj-craig-james': 'CJ Craig-James',
+  'jc-wessel': 'J.C. Wessel',
+  'shamar-evans': 'Shamar Evans',
+  'ty-winn': 'Ty Winn',
+  'anthony-turner': 'Anthony Turner',
+  'cooper-martenson': 'Cooper Martenson',
 };
 
 /** Display name → canonical slug (handles typos / aliases) */

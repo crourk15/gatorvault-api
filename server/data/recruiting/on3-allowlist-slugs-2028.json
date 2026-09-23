@@ -1,7 +1,7 @@
 {
   "version": 1,
   "description": "Verified On3 recruit slugs for locked 2028 UF allowlist targets",
-  "updatedAt": "2026-09-23T18:50:00.000Z",
+  "updatedAt": "2026-09-23T20:06:00.000Z",
   "slugs": {
     "hudson-west": "hudson-west-284243",
     "phoenix-evans": "phoenix-evans-243873",
@@ -47,7 +47,15 @@
     "dion-edwards": "dion-edwards-271327",
     "jaxen-cepeda": "jaxen-cepeda-287390",
     "jaxon-flowers": "jaxon-flowers-281921",
-    "domonic-williams-jr": "domonic-williams-jr-284895"
+    "domonic-williams-jr": "domonic-williams-jr-284895",
+    "madoxx-davis": "madoxx-davis-254776",
+    "jayden-bell": "jayden-bell-243518",
+    "cj-craig-james": "cj-craig-james-282399",
+    "jc-wessel": "j-c-wessel-284208",
+    "shamar-evans": "shamar-evans-282093",
+    "ty-winn": "ty-winn-286597",
+    "anthony-turner": "anthony-turner-287130",
+    "cooper-martenson": "cooper-martenson-288764"
   },
-  "count": 45
+  "count": 53
 }
