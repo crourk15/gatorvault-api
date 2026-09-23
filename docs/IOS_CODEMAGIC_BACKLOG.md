@@ -163,7 +163,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-23 | Game Week Expected visitors: do not scroll-prefetch every profile (cap 2) | `ExpectedVisitorsPanel` `data-no-profile-prefetch` + `VaultNavigationProvider` skip + `PREFETCH_CONCURRENCY`. **Stamps + lite cook are API-live after Render.** Old binary still fires 20+ full-profile GETs when the list comes on screen. | this PR |
+| 2026-09-23 | Game Week Expected visitors: do not scroll-prefetch every profile (cap 2) | `ExpectedVisitorsPanel` `data-no-profile-prefetch` + `VaultNavigationProvider` skip + `PREFETCH_CONCURRENCY`. **Stamps + lite cook are API-live after Render.** Old binary still fires 20+ full-profile GETs when the list comes on screen. | #737 |
 | 2026-09-22 | Community hub last-good + `/api/community/page` client | Optional later bake. **Page cache + Closest 2028 prime are API-live after Render — no Codemagic for speed.** | #732 |
 | 2026-09-22 | App Store **1.0.29** / build **97** (NOW + Game Week first-paint + Baugh 95). **1.0.28 accepted — do not re-upload.** | `MARKETING_VERSION` 1.0.29. Charles asked for this train. | #731 |
 | 2026-09-22 | Home NOW last-good week (no snap back to #8 class-rank seed) | `applyHomeNowWeekPack` + last-good localStorage in binary. **Ticker `nowWeek` is API-live after Render.** Current 1.0.28 still falls to hub-bundle ticker when the 30s refresh misses. | this PR |
