@@ -16,7 +16,7 @@ const PLAYER_SLUGS = {
 const ROUTES = [
   '/vault/schedule',
   '/vault/team',
-  `/vault/recruiting/player/${PLAYER_SLUGS.recruiting}`,
+  `/vault/recruiting/player/${PLAYER_SLUGS.recruiting}/`,
   '/vault/recruiting/2026/commits',
   '/vault/recruiting/2027/commits',
   '/vault/recruiting/2026/targets',
@@ -28,7 +28,7 @@ const ROUTES = [
   '/vault/futurecast/board',
   '/vault/futurecast/movement',
   '/vault/futurecast/staff',
-  `/vault/futurecast/player/${PLAYER_SLUGS.futurecast}`,
+  `/vault/futurecast/player/${PLAYER_SLUGS.futurecast}/`,
   '/vault/film-room/review',
   '/vault/film-room/scheme',
   '/vault/film-room/breakdowns',

@@ -192,12 +192,12 @@ export function playerProfileRoute(slug: string, context: PlayerProfileContext):
   const safe = encodeURIComponent(slug);
   switch (context) {
     case 'roster':
-      return `/vault/players/${safe}`;
+      return `/vault/players/${safe}/`;
     case 'recruiting':
-      return `/vault/recruiting/player/${safe}`;
+      return `/vault/recruiting/player/${safe}/`;
     case 'futurecast':
     default:
-      return `/vault/futurecast/player/${safe}`;
+      return `/vault/futurecast/player/${safe}/`;
   }
 }
 

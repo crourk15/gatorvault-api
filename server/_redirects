@@ -188,6 +188,9 @@
 /recruiting-hub  /recruiting  301
 /recruiting-hub/  /recruiting  301
 /recruiting-hub/*  /recruiting/:splat  301
+/vault/recruiting/player/:slug  /vault/recruiting/player/:slug/  301
+/vault/futurecast/player/:slug  /vault/futurecast/player/:slug/  301
+/vault/players/:slug  /vault/players/:slug/  301
 /vault/recruiting/player/*  /vault/recruiting/player/index.html  200
 /vault/futurecast/player/*  /vault/futurecast/player/index.html  200
 /vault/players/*  /vault/players/index.html  200
