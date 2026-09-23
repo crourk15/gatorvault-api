@@ -9,7 +9,9 @@
  *
  * Cron must accept-and-background. The 7am pass often takes ~30 minutes; a
  * 4-minute HTTP wait + retries will 502 the Starter dyno and the 7pm stamp
- * never writes. Hours 8 and 20 ET catch a missed 7 / 19 slot.
+ * never writes. Hours 8–9 and 20–21 ET catch a missed 7 / 19 slot.
+ * Scheduled cron skips allowlist + full beat-ingest (those have their own
+ * jobs) so the 7am / 7pm FutureCast pass can finish on Starter memory.
  */
 'use strict';
 
@@ -26,12 +28,36 @@ function reportPath() {
   return path.join(resolveRecruitingDataDir(), 'vault-feed-2028-last-report.json');
 }
 
-function readLastReport() {
+function readLastReport(opts = {}) {
+  let report = null;
   try {
-    return JSON.parse(fs.readFileSync(reportPath(), 'utf8'));
+    report = JSON.parse(fs.readFileSync(reportPath(), 'utf8'));
   } catch {
     return null;
   }
+  if (opts.healStale === true) report = healStaleRunningReport(report);
+  return report;
+}
+
+/** Turn a dead "running" stamp into an error so Hub is not stuck on running. */
+function healStaleRunningReport(report) {
+  if (!report || report.status !== 'running') return report;
+  if (isActiveVaultFeedRun(report)) return report;
+  const dead = {
+    ...report,
+    ok: false,
+    status: 'error',
+    finishedAt: new Date().toISOString(),
+    heartbeatAt: new Date().toISOString(),
+    errors: [...(report.errors || []), { step: 'heartbeat', error: 'stale_running_no_heartbeat' }],
+    message: 'Vault feed started but did not finish — no heartbeat. Next 7am / 7pm slot will retry.',
+  };
+  try {
+    writeReport(dead);
+  } catch {
+    /* still return honest status */
+  }
+  return dead;
 }
 
 function writeReport(report) {
@@ -59,11 +85,11 @@ function etParts(date = new Date()) {
   };
 }
 
-/** Primary slot 7 or 19; hours 8 and 20 are the same-day catch-up. */
+/** Primary slot 7 or 19; hours 8–9 and 20–21 are the same-day catch-up. */
 function vaultFeedSlotHour(etHour) {
   const h = Number(etHour);
-  if (h === 7 || h === 8) return 7;
-  if (h === 19 || h === 20) return 19;
+  if (h === 7 || h === 8 || h === 9) return 7;
+  if (h === 19 || h === 20 || h === 21) return 19;
   return null;
 }
 
@@ -95,7 +121,16 @@ function isVaultFeedEtWindow(date = new Date()) {
   } catch {
     const utc = date.getUTCHours();
     // EDT 11–12 / 23–0 · EST 12–13 / 0–1
-    return utc === 11 || utc === 12 || utc === 13 || utc === 23 || utc === 0 || utc === 1;
+    return (
+      utc === 11 ||
+      utc === 12 ||
+      utc === 13 ||
+      utc === 14 ||
+      utc === 23 ||
+      utc === 0 ||
+      utc === 1 ||
+      utc === 2
+    );
   }
 }
 
@@ -1008,14 +1043,22 @@ function acceptVaultFeedSweep(opts = {}) {
     }
   }
 
+  // Scheduled 7am/7pm: beat refresh + named-candidate feed only. Allowlist and
+  // full beat-ingest have their own crons and OOMed the Starter dyno here, so
+  // last-report sat on "running" with zero names written.
+  const cronLite = trigger === 'cron' && force !== true;
+  const skipAllowlistIntel =
+    opts.skipAllowlistIntel != null ? opts.skipAllowlistIntel === true : cronLite;
+  const skipBeatIngest = opts.skipBeatIngest != null ? opts.skipBeatIngest === true : cronLite;
+
   const sweepOpts = {
     dryRun: opts.dryRun === true,
     force,
     maxCreates: opts.maxCreates,
     lookbackHours: opts.lookbackHours,
     skipBeatRefresh: opts.skipBeatRefresh,
-    skipAllowlistIntel: opts.skipAllowlistIntel,
-    skipBeatIngest: opts.skipBeatIngest,
+    skipAllowlistIntel,
+    skipBeatIngest,
     skipOn3Articles: opts.skipOn3Articles,
     skipPersist: opts.skipPersist,
     slotId,
@@ -1025,6 +1068,17 @@ function acceptVaultFeedSweep(opts = {}) {
   if (opts.launch === false) {
     return { ok: true, started: true, accepted: true, report: running };
   }
+
+  const hb = setInterval(() => {
+    try {
+      const live = readLastReport();
+      const base = live && live.status === 'running' ? live : running;
+      touchVaultFeedHeartbeat(base, { skipPersist: opts.skipPersist === true });
+    } catch {
+      /* ignore */
+    }
+  }, 60 * 1000);
+  if (typeof hb.unref === 'function') hb.unref();
 
   setImmediate(() => {
     Promise.resolve()
@@ -1043,7 +1097,8 @@ function acceptVaultFeedSweep(opts = {}) {
         } catch {
           /* ignore */
         }
-      });
+      })
+      .finally(() => clearInterval(hb));
   });
 
   return { ok: true, started: true, accepted: true, report: running };
@@ -1067,6 +1122,7 @@ module.exports = {
   vaultFeedSlotId,
   alreadyFinishedThisSlot,
   isActiveVaultFeedRun,
+  healStaleRunningReport,
   buildRunningReport,
   CLASS_YEAR_MIN,
   CLASS_YEAR_MAX,

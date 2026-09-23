@@ -1152,7 +1152,7 @@ function mountAdminHubRoutes(app) {
     if (!requireAdmin(req, res)) return;
     try {
       const { readLastReport } = require('./vault-feed-2028-sweep');
-      return res.status(200).json({ ok: true, report: readLastReport() });
+      return res.status(200).json({ ok: true, report: readLastReport({ healStale: true }) });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message, report: null });
     }

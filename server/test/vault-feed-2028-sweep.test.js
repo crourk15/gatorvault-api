@@ -15,6 +15,7 @@ const {
   vaultFeedSlotId,
   alreadyFinishedThisSlot,
   isActiveVaultFeedRun,
+  healStaleRunningReport,
   acceptVaultFeedSweep,
   CLASS_YEAR_MIN,
 } = require('../lib/vault-feed-2028-sweep');
@@ -103,13 +104,15 @@ describe('vault-feed-2028-sweep gates', () => {
 });
 
 describe('vault-feed 7am / 7pm ET slots', () => {
-  it('opens at 7 and 8 ET for the 7am slot, 19 and 20 for 7pm', () => {
+  it('opens at 7–9 ET for the 7am slot, 19–21 for 7pm', () => {
     assert.equal(vaultFeedSlotHour(7), 7);
     assert.equal(vaultFeedSlotHour(8), 7);
+    assert.equal(vaultFeedSlotHour(9), 7);
     assert.equal(vaultFeedSlotHour(19), 19);
     assert.equal(vaultFeedSlotHour(20), 19);
-    assert.equal(vaultFeedSlotHour(9), null);
-    assert.equal(vaultFeedSlotHour(21), null);
+    assert.equal(vaultFeedSlotHour(21), 19);
+    assert.equal(vaultFeedSlotHour(10), null);
+    assert.equal(vaultFeedSlotHour(22), null);
   });
 
   it('treats 8:05 ET as the same slot as 7:05 so a miss can catch up', () => {
@@ -118,16 +121,19 @@ describe('vault-feed 7am / 7pm ET slots', () => {
     const pm7 = new Date('2026-09-22T23:05:00.000Z'); // 7:05 PM EDT
     const pm8 = new Date('2026-09-23T00:05:00.000Z'); // 8:05 PM EDT
     const pm9 = new Date('2026-09-23T01:05:00.000Z'); // 9:05 PM EDT
+    const pm10 = new Date('2026-09-23T02:05:00.000Z'); // 10:05 PM EDT
     assert.equal(isVaultFeedEtWindow(am7), true);
     assert.equal(isVaultFeedEtWindow(am8), true);
     assert.equal(isVaultFeedEtWindow(pm7), true);
     assert.equal(isVaultFeedEtWindow(pm8), true);
-    assert.equal(isVaultFeedEtWindow(pm9), false);
+    assert.equal(isVaultFeedEtWindow(pm9), true);
+    assert.equal(isVaultFeedEtWindow(pm10), false);
     assert.equal(vaultFeedSlotId(am7), '2026-09-22T07');
     assert.equal(vaultFeedSlotId(am8), '2026-09-22T07');
     assert.equal(vaultFeedSlotId(pm7), '2026-09-22T19');
     assert.equal(vaultFeedSlotId(pm8), '2026-09-22T19');
-    assert.equal(vaultFeedSlotId(pm9), null);
+    assert.equal(vaultFeedSlotId(pm9), '2026-09-22T19');
+    assert.equal(vaultFeedSlotId(pm10), null);
   });
 
   it('EST 7pm / 8pm still map to the evening slot', () => {
@@ -150,6 +156,33 @@ describe('vault-feed 7am / 7pm ET slots', () => {
     };
     assert.equal(alreadyFinishedThisSlot(morningDone, am), true);
     assert.equal(alreadyFinishedThisSlot(morningDone, pm), false);
+  });
+
+  it('healStaleRunningReport marks a dead running stamp as error', () => {
+    const fs = require('fs');
+    const os = require('os');
+    const path = require('path');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vf-2028-'));
+    const prevEnv = process.env.GV_RECRUITING_DATA_DIR;
+    process.env.GV_RECRUITING_DATA_DIR = dir;
+    const now = Date.parse('2026-09-23T13:10:00.000Z');
+    const dead = {
+      status: 'running',
+      startedAt: '2026-09-23T12:05:26.265Z',
+      heartbeatAt: '2026-09-23T12:05:26.265Z',
+      slotId: '2026-09-23T07',
+      window: '7am',
+      errors: [],
+    };
+    try {
+      assert.equal(isActiveVaultFeedRun(dead, now), false);
+      const healed = healStaleRunningReport(dead);
+      assert.equal(healed.status, 'error');
+      assert.match(String(healed.message || ''), /did not finish/i);
+    } finally {
+      if (prevEnv == null) delete process.env.GV_RECRUITING_DATA_DIR;
+      else process.env.GV_RECRUITING_DATA_DIR = prevEnv;
+    }
   });
 
   it('isActiveVaultFeedRun dies after 15 minutes without a heartbeat', () => {

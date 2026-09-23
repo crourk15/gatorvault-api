@@ -681,7 +681,7 @@ function mountRecruitingRoutes(app) {
   app.get('/api/recruiting/vault-feed-2028/last-report', (req, res) => {
     try {
       const { readLastReport } = require('./vault-feed-2028-sweep');
-      const report = readLastReport();
+      const report = readLastReport({ healStale: true });
       return res.json({ ok: true, report });
     } catch (err) {
       return res.status(200).json({ ok: false, error: err.message, report: null });

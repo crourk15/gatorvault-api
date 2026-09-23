@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
  * Render cron — 2028+ vault feed at 7am / 7pm Eastern.
- * Schedule fires hourly; script no-ops unless America/New_York hour is 7, 8,
- * 19, or 20 (8am / 8pm catch a missed 7 slot). Set VAULT_FEED_FORCE=true to
- * run outside the window (ops). The API accepts immediately and finishes in
- * the background — do not wait on the 30-minute pass.
+ * Schedule fires hourly; script no-ops unless America/New_York hour is 7–9
+ * or 19–21 (8–9am / 8–9pm catch a missed 7 slot). Set VAULT_FEED_FORCE=true
+ * to run outside the window (ops). The API accepts immediately and finishes
+ * in the background — do not wait on the 30-minute pass.
  */
 require('./render-cron-env');
 

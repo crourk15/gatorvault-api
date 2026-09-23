@@ -7,7 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
-- [x] FutureCast vault-feed 2028+ 7am **and** 7pm ET: cron accepts immediately, 8am/8pm catch a missed slot, last-report writes a running stamp so 7pm cannot stay stuck on the morning pass. API after Render — no Codemagic.
+- [x] FutureCast vault-feed 2028+ 7am **and** 7pm ET: cron accepts immediately, 8–9am/8–9pm catch a missed slot, last-report writes a running stamp so 7pm cannot stay stuck on the morning pass. Dead “running” with no heartbeat marks error. Scheduled pass skips allowlist + full beat-ingest so it can finish on Starter. API after Render — no Codemagic.
 - [x] Game Week intel heal: git bundle keys/scout/swing always overlay a newer Render durable (official-box `updatedAt: now` can no longer revive last week's card). API after Render — 1.0.28 already live-fetches `/api/schedule`. Last-good first-paint on 502 is the bake row below.
 - [x] Game Week Ole Miss scout + 3 keys: Maintain Lane Discipline & Crowd Chambliss / Cap the Vertical Shots / Establish the Downhill Run Game plus football-structure offense/defense/film (`/api/schedule` after Render). No Lane Kiffin — Golding still calls D. `filmWatched: false`. Current App Store already live-fetches keys + tendencies + film. Special-teams Carneiro/2-pt needs the `game.specialTeams` mapper bake below.
 - [x] Home NOW weekly 3: ticker API serves game + place + record (Ole Miss / expected visitors / 3-0). Class-rank #8 is off the weekly slate. API after Render — accepted **1.0.28** may still snap to leftover intel until the **1.0.29** last-good row below.
