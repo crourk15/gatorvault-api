@@ -105,6 +105,8 @@ const ALLOWLIST_2028 = [
   'josiah-taylor',
   // Corey Bender 09/10/26 — close to UF RPM picks, not posted yet
   'jaxon-flowers',
+  // Player said he will be in the Swamp Ole Miss weekend (first Gainesville trip)
+  'domonic-williams-jr',
 ];
 
 /** Charles' display names — used for On3/Rivals/247 identity lookup (never synthetic cards). */
@@ -175,6 +177,7 @@ const CANONICAL_TARGET_NAMES = {
   'denairo-girton-jr': 'DeNairo Girton Jr.',
   'josiah-taylor': 'Josiah Taylor',
   'jaxon-flowers': 'Jaxon Flowers',
+  'domonic-williams-jr': 'Domonic Williams Jr.',
 };
 
 /** Display name → canonical slug (handles typos / aliases) */

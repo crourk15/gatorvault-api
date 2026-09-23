@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-21T03:20:00.000Z",
+  "updatedAt": "2026-09-23T18:50:00.000Z",
   "source": "Home-game visitor look only — plans can change. Away games do not get a visitor panel.",
   "visitorMeta": {
     "zylen-little": {
@@ -76,6 +76,13 @@
       "name": "Izayah Vickers",
       "position": "CB",
       "school": "Florida State University School (Tallahassee, FL)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "domonic-williams-jr": {
+      "name": "Domonic Williams Jr.",
+      "position": "CB",
+      "school": "Jacksonville (Jacksonville, NC)",
       "stars": 4,
       "classYear": 2028
     },
@@ -285,7 +292,7 @@
       "date": "2026-09-26",
       "dateLabel": "Sep 26",
       "chaseLabel": "Expected Ole Miss visit · Sep 26",
-      "source": "Expected / planning, not confirmed on campus. Plans can change. Thomas, Flowers, and Taylor have later return notes for this weekend. Royal is a Texas commit. Lawson is a Syracuse commit.",
+      "source": "Expected / planning, not confirmed on campus. Plans can change. Thomas, Flowers, and Taylor have later return notes for this weekend. Williams is a first Gainesville trip from Jacksonville, NC. Royal is a Texas commit. Lawson is a Syracuse commit.",
       "slugs": [
         "easton-royal",
         "brysen-wright",
@@ -308,7 +315,8 @@
         "hudson-west",
         "anthony-turner",
         "cooper-martenson",
-        "josiah-taylor"
+        "josiah-taylor",
+        "domonic-williams-jr"
       ]
     }
   ]

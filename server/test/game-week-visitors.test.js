@@ -147,6 +147,15 @@ describe('game-week-visitors', () => {
     assert.equal(turner?.name, 'Anthony Turner');
     assert.equal(turner?.position, 'QB');
     assert.equal(turner?.classYear, 2028);
+
+    const williams = panel.visitors.find((v) => v.slug === 'domonic-williams-jr');
+    assert.ok(williams);
+    assert.equal(williams.name, 'Domonic Williams Jr.');
+    assert.equal(williams.position, 'CB');
+    assert.equal(williams.classYear, 2028);
+    assert.equal(williams.stars, 4);
+    assert.match(String(williams.school || ''), /Jacksonville/);
+    assert.equal(expectedVisitLabelForSlug('domonic-williams-jr'), 'Expected Ole Miss visit · Sep 26');
   });
 
   it('gives every Ole Miss card the same pos / year / school line', () => {

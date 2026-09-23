@@ -2,6 +2,17 @@
   "version": 1,
   "events": [
     {
+      "id": "gm2_1790189368256_lfj78",
+      "at": "2026-09-23T18:49:28.256Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "domonic-williams-jr",
+      "fingerprint": "manual_unofficial_visit_domonic-williams-jr_2026-09-26",
+      "source": "manual",
+      "eventType": "unofficial_visit"
+    },
+    {
       "id": "gm2_1789095534929_s85nj",
       "at": "2026-09-11T02:58:54.929Z",
       "layer": "sil",
@@ -5253,19 +5264,7 @@
       "playerSlug": "josh-johnson",
       "reason": "invalid_player_on_write",
       "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1783769292388_08mkw",
-      "at": "2026-07-11T11:28:12.388Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "nash-johnson",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
     }
   ],
-  "updatedAt": "2026-09-11T02:58:54.929Z"
+  "updatedAt": "2026-09-23T18:49:28.256Z"
 }

@@ -832,6 +832,21 @@
       "inState": false,
       "committedTo": null,
       "ufProbability": null
+    },
+    {
+      "slug": "domonic-williams-jr",
+      "name": "Domonic Williams Jr.",
+      "pos": "CB",
+      "school": "Jacksonville (Jacksonville, NC)",
+      "state": "NC",
+      "stars": 4,
+      "rating": 87.89,
+      "natlRank": 276,
+      "posRank": 28,
+      "stateRank": 10,
+      "inState": false,
+      "committedTo": null,
+      "ufProbability": null
     }
   ],
   "updatedAt": "2026-08-14T00:21:32.154Z"
