@@ -176,7 +176,7 @@ describe('game-week-visitors', () => {
     assert.match(String(dion?.school || ''), /Tyner/);
     const cooper = panel.visitors.find((v) => v.slug === 'cooper-martenson');
     assert.equal(cooper?.position, 'OT');
-    assert.equal(cooper?.stars, null);
+    assert.equal(cooper?.stars, 3);
     assert.match(String(cooper?.school || ''), /Marist/);
   });
 

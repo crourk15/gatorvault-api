@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-19T02:40:19.613Z",
+  "updatedAt": "2026-09-23T19:49:48.218Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -9,25 +9,30 @@
       "sources": [
         {
           "type": "hudl",
-          "url": "https://www.hudl.com/embed/video/3/19296947/68afc5668a2aca5d1686b639",
-          "label": "Hudl highlight reel (~2:12)",
-          "durationSec": 132,
-          "reviewedAt": "2026-07-29",
-          "reviewedBy": "vault"
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/19296947/68afc5668a2aca5d1686b639"
         }
       ],
       "traits": [
-        "Deep / centerfield safety look — length over the top, not a box-only silhouette",
-        "Rangy frame; AL competition on tape (Carrollton looks appear)",
-        "Athlete package: some WR / returner looks mixed into the reel"
+        "range",
+        "ball skills",
+        "close",
+        "length",
+        "alley fill"
       ],
-      "vaultFilmAngle": "Lead with length + centerfield look and Florida's game-day visit process. Alabama RPM may appear once as calm board context mid-post — never dunk, never close on Bama.",
+      "vaultFilmAngle": "Lead with the range pick and the closing hit on the out; Craig-James looks the 6-3 part.",
       "doNotClaim": [
-        "Do not invent tackle totals, INT counts, or ballhawk rates from this short reel",
-        "Do not overclaim coverage grade from highlights alone",
-        "Hudl owner metadata shows Anthony \"CJ\" Craig — confirm identity before public attribution if challenged"
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
       ],
-      "clipNotes": "Short reel (~2:12). Best as length/centerfield proof next to board process (game-day visits), not a full evaluation."
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
     },
     "casey-barner": {
       "playerName": "Casey Barner",
@@ -3153,6 +3158,326 @@
         "length"
       ],
       "vaultFilmAngle": "Lead with backside chase and the mesh TFL on the soph Hudl; Gainesville is already on the calendar.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "madoxx-davis": {
+      "playerName": "Madoxx Davis",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/13575393/68dd4e5cc7273590630152b9"
+        }
+      ],
+      "traits": [
+        "vertical speed",
+        "YAC",
+        "returner",
+        "contact balance",
+        "ball track"
+      ],
+      "vaultFilmAngle": "Lead with the kick-return score and the stacked go; Davis is a home-run WR / returner.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "jayden-bell": {
+      "playerName": "Jayden Bell",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22613769/68be4189186c18e53cc7f78f"
+        }
+      ],
+      "traits": [
+        "first step",
+        "bend",
+        "chase",
+        "motor",
+        "length"
+      ],
+      "vaultFilmAngle": "Lead with the first-step speed rush and the backside chase; Bell is still a lean 210.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "giovanni-tuggle": {
+      "playerName": "Giovanni Tuggle",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/21059824/68b631ddca15ad3459d47f2e"
+        }
+      ],
+      "traits": [
+        "ball skills",
+        "downhill",
+        "tackle",
+        "special teams",
+        "range"
+      ],
+      "vaultFilmAngle": "Lead with the one-handed pick and the kick-coverage thump; Tuggle just pledged Ole Miss and is still on the visitor list.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "jc-wessel": {
+      "playerName": "J.C. Wessel",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/23224172/69025c880d2241dbb094580d"
+        }
+      ],
+      "traits": [
+        "catch radius",
+        "YAC",
+        "inline block",
+        "seam",
+        "size"
+      ],
+      "vaultFilmAngle": "Lead with the catch-and-break and the pancake edge block; Wessel is a true Y.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "shamar-evans": {
+      "playerName": "Shamar Evans",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/27177919/69022fe70d2241dbb0943c93"
+        }
+      ],
+      "traits": [
+        "burst",
+        "blitz",
+        "ball",
+        "chase",
+        "thump"
+      ],
+      "vaultFilmAngle": "Lead with the A-gap TFL and the zone pick; Evans creates takeaways.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "ty-winn": {
+      "playerName": "Ty Winn",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/27446373/694ee444e973529892f8a3d5"
+        }
+      ],
+      "traits": [
+        "length",
+        "finish",
+        "drive block",
+        "grip",
+        "size"
+      ],
+      "vaultFilmAngle": "Lead with the drive-block bury and the wingspan; Winn is a true 6-7.5 mauler.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "jaxon-flowers": {
+      "playerName": "Jaxon Flowers",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22173193/6940a3df540685f13c786fa3"
+        }
+      ],
+      "traits": [
+        "dual threat",
+        "arm talent",
+        "speed",
+        "escapability",
+        "stride"
+      ],
+      "vaultFilmAngle": "Lead with the 75-yard QB run and the rollout deep ball; Flowers is a dual-threat on this reel.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "anthony-turner": {
+      "playerName": "Anthony Turner",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22721750/6916992bb81c8d758803e71d"
+        }
+      ],
+      "traits": [
+        "arm talent",
+        "deep ball",
+        "on the run",
+        "mobility",
+        "release"
+      ],
+      "vaultFilmAngle": "Lead with the deep-middle strike and the left-roll velocity; Turner has a live arm.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "cooper-martenson": {
+      "playerName": "Cooper Martenson",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/19862813/6934d893ea0d31db03934fb0"
+        }
+      ],
+      "traits": [
+        "pull",
+        "finish",
+        "second level",
+        "power",
+        "mobility"
+      ],
+      "vaultFilmAngle": "Lead with the pull-and-flatten and the pancake down block; Martenson is a road-grader on this reel.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "domonic-williams-jr": {
+      "playerName": "Domonic Williams Jr.",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/23135595/694b0fbfe973529892f84416"
+        }
+      ],
+      "traits": [
+        "ball skills",
+        "anticipation",
+        "physical",
+        "close",
+        "pursuit"
+      ],
+      "vaultFilmAngle": "Lead with the pick-six on the out and the fumble-forcing tackle; Williams is a physical corner.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-19T02:40:19.592Z",
+  "updatedAt": "2026-09-23T19:49:48.207Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -13749,26 +13749,33 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/jaxon-flowers-281921/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22173193/6940a3df540685f13c786fa3",
+          "publishedAt": "2026-09-23"
         }
       ],
       "strengths": [
-        "Jaxon Flowers continues to draw attention from major programs, but not for the position many recruiting services currently list him at."
+        "Flowers takes the designed QB run, jump-cuts the linebacker, and outruns the secondary for the long score.",
+        "Flowers rolls right and drives the deep ball 45 yards in the air, hitting the receiver in stride.",
+        "Flowers pulls the read, bounces outside, and wins the edge with a long stride.",
+        "Flowers extends the play when the pocket breaks and still gets the ball out with a snappy release."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Jaxon Flowers continues to draw attention from major programs, but not for the position many recruiting services currently list him at.  The 2028",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Flowers throws back across his body on the move and the base in the pocket is still upper-body arm talent more than a firm step."
+      ],
+      "comparison": "Flowers comps to Justin Fields — 6-3 / 227 dual-threat QB with a long stride, off-platform arm, and the same athletic tools that also play in the secondary.",
+      "schemeFit": "Flowers fits a dual-threat QB who can also be an ATH chess piece — this sit is exclusively quarterback, even if the board also lists safety.",
+      "staffNotes": "Vault film desk verified 2026-09-23 from Bolles sophomore reel titled Dual Threat QB (embed 22173193 / 6940a3df540685f13c786fa3). Visitor list still bills him S; tape on this sit is QB. Comp height-matched at 6-3 — not a Florida-alum default.",
+      "projection": "Flowers projects as a Year 1 developmental dual-threat / ATH, then he competes for the job in Year 2, with Year 3 starter upside if the pocket base catches the arm.",
+      "insiderNotes": "Flowers is a 6-3 / 185 ATH. On the Bolles sophomore sit he plays quarterback — designed runs for scores, a 45-yard rollout strike, and a snappy release. Florida has also looked at him at safety; this reel is not DB tape.",
+      "recruitingStory": "Jaxon Flowers is a 2028 ATH · listed 6-3 / 185 · The Bolles School (Jacksonville, FL) · expected Ole Miss weekend in the Swamp. This sit is quarterback tape.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:12:38.848Z"
+      "updatedAt": "2026-09-23T19:49:48.080Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "troy-silberzahn": {
       "playerSlug": "troy-silberzahn",
@@ -13890,26 +13897,33 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/cooper-martenson-288764/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19862813/6934d893ea0d31db03934fb0",
+          "publishedAt": "2026-09-23"
         }
       ],
       "strengths": [
-        "Last week, Florida hosted a fast-rising 2028 offensive lineman for Friday Night Lights and the Grill in the Ville cookout."
+        "Martenson fires off left tackle, down-blocks, and pancakes the lineman into the turf.",
+        "Martenson pulls across the formation, finds the linebacker, and flattens him in the hole.",
+        "Martenson pulls from right tackle, gets out in front of the runner, and leads down the sideline.",
+        "Martenson keeps his legs churning after contact and finishes through the whistle."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Last week, Florida hosted a fast-rising 2028 offensive lineman for Friday Night Lights and the Grill in the Ville cookout. That prospect is Atlanta",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Martenson's reel is a run-heavy wing look — true drop-back pass set versus edge speed is thin, and he can play high off the snap."
+      ],
+      "comparison": "Martenson comps to Broderick Jones — 6-5 / 311 athletic tackle who can pull, climb, and finish before the pass set is finished product.",
+      "schemeFit": "Martenson fits a zone / pull-heavy tackle who can also kick inside — this sit is exclusively tackle, left and right.",
+      "staffNotes": "Vault film desk verified 2026-09-23 from Marist sophomore reel (embed 19862813 / 6934d893ea0d31db03934fb0). On3 lists IOL / 3-star; this sit is OT. Comp height-matched at 6-5 — not a Florida-alum default.",
+      "projection": "Martenson projects as a Year 1 developmental OL, then he competes for the job in Year 2, with Year 3 starter upside at tackle or guard if the pass set shows up.",
+      "insiderNotes": "Martenson is a 6-5 / 285 tackle. On the Marist sophomore sit he pancakes the down block, pulls and flattens the linebacker, and leads down the sideline. Pass-protection tape is thin.",
+      "recruitingStory": "Cooper Martenson is a 2028 OT · listed 6-5 / 285 · Marist School (Atlanta, GA) · 3-star · expected Ole Miss weekend in the Swamp.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:12:49.140Z"
+      "updatedAt": "2026-09-23T19:49:48.159Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "zylen-little": {
       "playerSlug": "zylen-little",
@@ -13952,26 +13966,33 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/cj-craig-james-282399/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19296947/68afc5668a2aca5d1686b639",
+          "publishedAt": "2026-09-23"
         }
       ],
       "strengths": [
-        "Birmingham (Ala.) Parker 4-star safety CJ Craig-James already knows what Florida has to offer after making the trip to Gainesville during the spring."
+        "Craig-James covers ground from the hash to the sideline and intercepts the deep ball without breaking stride.",
+        "Craig-James drives from off coverage, closes the out, and hits the catch point on time.",
+        "Craig-James reads the out, dives, and finishes the interception with the ball away from his body.",
+        "Craig-James fills the alley downhill and squares the runner instead of grabbing high and hoping."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Birmingham (Ala.) Parker 4-star safety CJ Craig-James already knows what Florida has to offer after making the trip to Gainesville during the spring.",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Craig-James still comes in high on some tackles and the aggressive trigger can get him out of place on play-action."
+      ],
+      "comparison": "Craig-James comps to Jeremy Chinn — 6-3 / 220 long safety who can play single-high, close the alley, and still get his hands on the ball.",
+      "schemeFit": "Craig-James fits a long single-high / two-high safety who can range the deep ball and fill the run.",
+      "staffNotes": "Vault film desk verified 2026-09-23 from Parker sophomore reel (embed 19296947 / 68afc5668a2aca5d1686b639). Comp height-matched at 6-3 — not a Florida-alum default.",
+      "projection": "Craig-James projects as a Year 1 special-teams safety, then a Year 2 rotation piece, with Year 3 starter upside at single-high if he adds mass and stays in phase.",
+      "insiderNotes": "Craig-James is a long 6-3 / 185 safety. On the Parker sophomore sit he ranges the deep ball for a pick, closes the out, and dives on another interception. Tackling is still a little high.",
+      "recruitingStory": "CJ Craig-James is a 2028 S · listed 6-3 / 185 · Parker (Birmingham, AL) · expected Ole Miss weekend in the Swamp.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:13:06.500Z"
+      "updatedAt": "2026-09-23T19:49:47.914Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "sam-sollie": {
       "playerSlug": "sam-sollie",
@@ -14369,26 +14390,33 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Sam Spiegelman",
-          "writerId": "spiegelman",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/shamar-evans-282093/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/27177919/69022fe70d2241dbb0943c93",
+          "publishedAt": "2026-09-23"
         }
       ],
       "strengths": [
-        "After a closer look at updated film and live evaluations at various offseason events, the Rivals300 for the 2028 class has been updated."
+        "Evans shoots the A-gap off the snap and drops the back in the backfield before the line can get a hat on him.",
+        "Evans drops, reads the quarterback's eyes, and steps in front of the throw for the interception.",
+        "Evans times the blitz, hits the quarterback, and rips the ball loose.",
+        "Evans closes from sideline to sideline and arrives with heavy contact."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "After a closer look at updated film and live evaluations at various offseason events, the Rivals300 for the 2028 class has been updated.  Rivals has",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Evans can play high into blocks and the downhill trigger will miss if he does not throttle on misdirection."
+      ],
+      "comparison": "Evans comps to Cedric Gray — 6-2 / 220 rangy second-level LB who wins with burst, downhill trigger, and a knack for the ball.",
+      "schemeFit": "Evans fits a downhill WILL / money LB who can blitz, fill, and still drop and play the ball.",
+      "staffNotes": "Vault film desk verified 2026-09-23 from sophomore reel (embed 27177919 / 69022fe70d2241dbb0943c93), now at Ruston (LA). Comp height-matched at 6-2 — not a Florida-alum default.",
+      "projection": "Evans projects as a Year 1 special-teams LB, then a Year 2 package WILL, with Year 3 starter upside if he adds 15 pounds and keeps the trigger clean.",
+      "insiderNotes": "Evans is a lean 6-2 / 205 LB. On the sophomore sit he shoots the A-gap for a TFL, picks the zone throw, and strips the quarterback on the blitz. Pad level into blocks is the next step.",
+      "recruitingStory": "Shamar Evans is a 2028 LB · listed 6-2 / 205 · Ruston (Ruston, LA) · expected Ole Miss weekend in the Swamp.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:12:59.172Z"
+      "updatedAt": "2026-09-23T19:49:47.999Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "nathan-holston": {
       "playerSlug": "nathan-holston",
@@ -14511,28 +14539,31 @@
         {
           "writer": "Charles Power",
           "writerId": "power",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/madoxx-davis-254776/",
-          "publishedAt": "2026-07-11"
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/13575393/68dd4e5cc7273590630152b9",
+          "publishedAt": "2026-09-23"
         }
       ],
       "strengths": [
-        "Approved · Feb 1, 2026 Madoxx Davis Scouted by Charles Power WR 2028 · Football Madoxx Davis had a great showing at Rivals Camp Atlanta.",
-        "The Cartersville (Ga.) High pass-catcher measured in at 5-foot-10.5 and around 190 pounds and tied for the fastest 40 at the event, with a 4.43.",
-        "Davis was a tough cover during 1-on-1’s consistently breaking off corners at the top his route to gain easy separation.",
-        "He made a strong case as the top route-runner on hand, using his long speed and deceleration ability to create issues for defensive backs.",
-        "One of Davis’ best reps on the day came on a comeback route that resulted in a toe-tapping grab on the…"
+        "Davis returns the opening kick and weaves through the wedge, then turns on vertical speed and scores.",
+        "Davis stacks the corner on the deep sideline go and tracks the ball over his shoulder in stride.",
+        "Davis makes the first defender miss on manufactured screens and keeps his feet through arm tackles.",
+        "Davis spins off a wedge hit on the next return and accelerates up the sideline with the same compact burst."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Approved · Feb 1, 2026 Madoxx Davis Scouted by Charles Power WR 2028 · Football Madoxx Davis had a great showing at Rivals Camp Atlanta. The Cartersville (Ga.) High pass-catcher measured in at 5-foot-10.5 and around 190 pounds and tied for the fastest 40 at the event, with a 4.43. Davis was a tough cover during 1-on-1’s consistently breaking off corners at the top his route to gain easy separation. He made a strong case as the top route-runner on hand, using his long speed and deceleration ability to create issues for defensive backs. One of Davis’ best reps on the day came on a comeback route that resulted in a toe-tapping grab on the…",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Davis's sophomore reel is mostly gos and manufactured touches — intermediate route polish versus press is the next tape."
+      ],
+      "comparison": "Davis comps to Jaylen Waddle — 5-10 / 182 compact slot-to-perimeter burner who wins with vertical speed, vision after the catch, and contact balance.",
+      "schemeFit": "Davis fits a speed WR / returner who can take the top off and win YAC on screens while the route tree grows.",
+      "staffNotes": "Vault film desk verified 2026-09-23 from Cartersville sophomore reel (embed 13575393 / 68dd4e5cc7273590630152b9), first 2:30 of the 9:41 sit. Comp size-matched within ~1 inch — not a Florida-alum default.",
+      "projection": "Davis projects as a Year 1 return / package WR, then a Year 2 rotation piece, with Year 3 starter upside if the intermediate tree matches the deep ball.",
+      "insiderNotes": "Davis is a compact 5-10.5 / 190 WR with track speed. On the Cartersville sophomore sit he scores on the opening return, stacks the corner on the go, and keeps his feet through arm tackles. Route tree on this clip is still gos and manufactured touches.",
+      "recruitingStory": "Madoxx Davis is a 2028 WR · listed 5-10.5 / 190 · Cartersville (Cartersville, GA) · expected Ole Miss weekend in the Swamp.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:13:12.458Z"
+      "updatedAt": "2026-09-23T19:49:47.774Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "blake-mccullough": {
       "playerSlug": "blake-mccullough",
@@ -14813,26 +14844,33 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/player/jayden-bell-46150224/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22613769/68be4189186c18e53cc7f78f",
+          "publishedAt": "2026-09-23"
         }
       ],
       "strengths": [
-        "s Jayden Bell Pos Edge Height 6-4 Weight 210 Timeline Prospect Info High School Brother Rice City Bloomfield Hills, MI Class 2028 Play Watch Highlights Player Rating i 247Sports 90 Natl. 36 Edge 9 MI 2 247Sports Composite&reg; 0.9848 Natl. 34 Edge 8 MI 4 Your Prediction Manage Predictions Make a Prediction Crystal Ball&reg; Predictions No Crystal Ball predictions at this time. College List Offer Interest Recruited By Roster Outlook Visit 39 Offers 0 Visits 0 Coach Visits Alabama (Edit) Cool - 4 Edge, 2 Commits - Arizona State (Edit) Cool - 17 Edge, 0 Commits - Auburn (Edit) Cool - 8 Edge, 3 Commits - Boston College (Edit) Cool - 9 Edge, 1 Commits - Florida (Edit) Cool - 5 Edge, 0 Commits - View complete team list Add Interests Manage Interests 39 Offers 0 Visits 0 Coach Visits Add Video Accolades adidas Polynesian Bowl Roster Scouting Report Evaluated 08/13/2025 Andrew Ivins Director of Scouting -Equipped with an exceptional profile for a young pass rusher. -Pulling double-duty as a tight end, but can be a difference-maker on defense. -Camp footage reveals a budding frame that’s yet to fully mature. -Wins with finesse and his overall fluidity as he can twist and turn. -Has to keep learning, but has the juice and length to hound quarterbacks. Athletic Background Multi-sport athlete. –––– TRACK & FIELD Posted a 5-8 effort in the high jump and a 17-11.5 effort in the long jump as a 9th grader. -Andrew Ivins Add Timeline Events Timeline Add Stats Add Photos View all articles CBS Sports Digital YouTube Facebook X Instagram TikTok CBS Sports Betting Podcast Newsletter Text Alert About Contact Us Advertisers Help Center Careers Privacy Policy Minors&apos; Privacy Policy California Notice Terms of Use Subscription Terms cbsoptanon.ot.showPreferenceCenter()}>Your Privacy Choices &copy; 2005-2026 CBS INTERACTIVE ALL RIGHTS RESERVED. CBS Sports is a registered trademark of CBS Broadcasting Inc. 247Sports is a registered service mark of CBT Sports, LLC. Scout is a registered service mark of CBS 247 Inc. Fans Only is a registered service mark of CSTV Online, Inc. The content on this site is for entertainment purposes only and 247Sports makes no representation or warranty as to the accuracy of the information given or the outcome of any game or event. There is no gambling offered on this site. This site contains commercial content and 247Sports may be compensated for the links provided on this site."
+        "Bell wins the edge with a first-step burst and a dip under the tackle's punch.",
+        "Bell strips the quarterback from behind on a speed rush after he clears the corner.",
+        "Bell shoots inside, dips the shoulder, and drops the back in the backfield.",
+        "Bell chases 30 yards down the sideline and finishes a hustle tackle after a breakaway."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "s Jayden Bell Pos Edge Height 6-4 Weight 210 Timeline Prospect Info High School Brother Rice City Bloomfield Hills, MI Class 2028 Play Watch Highlights Player Rating i 247Sports 90 Natl. 36 Edge 9 MI 2 247Sports Composite&reg; 0.9848 Natl. 34 Edge 8 MI 4 Your Prediction Manage Predictions Make a Prediction Crystal Ball&reg; Predictions No Crystal Ball predictions at this time. College List Offer Interest Recruited By Roster Outlook Visit 39 Offers 0 Visits 0 Coach Visits Alabama (Edit) Cool - 4 Edge, 2 Commits - Arizona State (Edit) Cool - 17 Edge, 0 Commits - Auburn (Edit) Cool - 8 Edge, 3 Commits - Boston College (Edit) Cool - 9 Edge, 1 Commits - Florida (Edit) Cool - 5 Edge, 0 Commits - View complete team list Add Interests Manage Interests 39 Offers 0 Visits 0 Coach Visits Add Video Accolades adidas Polynesian Bowl Roster Scouting Report Evaluated 08/13/2025 Andrew Ivins Director of Scouting -Equipped with an exceptional profile for a young pass rusher. -Pulling double-duty as a tight end, but can be a difference-maker on defense. -Camp footage reveals a budding frame that’s yet to fully mature. -Wins with finesse and his overall fluidity as he can twist and turn. -Needs to unlock some power. -Has to keep learning, but has the juice and length to hound quarterbacks. H.S. Athletic Background Multi-sport athlete. –––– TRACK & FIELD Posted a 5-8 effort in the high jump and a 17-11.5 effort in the long jump as a 9th grader. Also went 12.59 in the 100-meter dash. -Andrew Ivins Add Timeline Events Timeline Add Stats Add Photos View all articles CBS Sports Digital YouTube Facebook X Instagram TikTok CBS Sports Betting Podcast Newsletter Text Alert About Contact Us Advertisers Help Center Careers Privacy Policy Minors&apos; Privacy Policy California Notice Terms of Use Subscription Terms cbsoptanon.ot.showPreferenceCenter()}>Your Privacy Choices &copy; 2005-2026 CBS INTERACTIVE ALL RIGHTS RESERVED. CBS Sports is a registered trademark of CBS Broadcasting Inc. 247Sports is a registered service mark of CBT Sports, LLC. Scout is a registered service mark of CBS 247 Inc. Fans Only is a registered service mark of CSTV Online, Inc. The content on this site is for entertainment purposes only and 247Sports makes no representation or warranty as to the accuracy of the information given or the outcome of any game or event. There is no gambling offered on this site. This site contains commercial content and 247Sports may be compensated for the links provided on this site. Timer List",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Bell (6-4 / 210) still plays high at times and needs lower-body mass so heavier tackles cannot wash him."
+      ],
+      "comparison": "Bell comps to Will Anderson Jr. — 6-3 / 243 long EDGE who wins with first-step burst and chase before the frame fills.",
+      "schemeFit": "Bell fits a lean EDGE who can rush from a two-point or a hand in the dirt and chase from the backside while the weight comes.",
+      "staffNotes": "Vault film desk verified 2026-09-23 from Brother Rice sophomore reel (embed 22613769 / 68be4189186c18e53cc7f78f). Comp height-matched within ~1 inch — not a Florida-alum default.",
+      "projection": "Bell projects as a Year 1 special-teams / package EDGE, then a Year 2 rotation rusher, with Year 3 starter upside if he adds 25–30 pounds and keeps the bend.",
+      "insiderNotes": "Bell is a long 6-4 / 210 EDGE. On the Brother Rice sophomore sit he wins with get-off and a dip, strips from behind, and chases down the sideline. Pad level and mass are the next step.",
+      "recruitingStory": "Jayden Bell is a 2028 EDGE · listed 6-4 / 210 · Brother Rice (Bloomfield Hills, MI) · expected Ole Miss weekend in the Swamp.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:13:52.690Z"
+      "updatedAt": "2026-09-23T19:49:47.827Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "major-green": {
       "playerSlug": "major-green",
@@ -16440,53 +16478,66 @@
         {
           "writer": "Charles Power",
           "writerId": "power",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/giovanni-tuggle-248982/",
-          "publishedAt": "2026-07-11"
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/21059824/68b631ddca15ad3459d47f2e",
+          "publishedAt": "2026-09-23"
         }
       ],
       "strengths": [
-        "Approved · Feb 1, 2026 Giovanni Tuggle Scouted by Charles Power S 2028 · Football Giovanni Tuggle pushed Casey Barner as the top defensive back at Rivals Camp Atlanta. Tuggle was an explosive, twitchy mover in defensive back drills, generating easy speed in his back pedal. His ability in man coverage during the 1-on-1 period caught our eye. Tuggle flashed the play speed to run with receivers and quickly broke on the ball to defend quick passes. The 2028 four-star prospect lived up to the billing on Sunday."
+        "Tuggle tracks the deep ball from high safety and finishes a one-handed interception.",
+        "Tuggle triggers downhill from two-high, shoots the gap, and drops the back in the backfield.",
+        "Tuggle fills the alley and finishes with a square, physical tackle.",
+        "Tuggle flies downfield on kick coverage and delivers a form hit that forces a fumble."
       ],
-      "weaknesses": [],
-      "comparison": "Similar to Barner, he flashed impressive makeup speed, leading to a high level pass breakup when defending a vertical route.",
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Approved · Feb 1, 2026 Giovanni Tuggle Scouted by Charles Power S 2028 · Football Giovanni Tuggle pushed Casey Barner as the top defensive back at Rivals Camp Atlanta. Tuggle was an explosive, twitchy mover in defensive back drills, generating easy speed in his back pedal. His ability in man coverage during the 1-on-1 period caught our eye. Tuggle flashed the play speed to run with receivers and quickly broke on the ball to defend quick passes. Similar to Barner, he flashed impressive makeup speed, leading to a high level pass breakup when defending a vertical route. The 2028 four-star prospect lived up to the billing on Sunday. Full report →",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Tuggle can come in hot on downhill angles — shifty backs will make him miss if he does not throttle down."
+      ],
+      "comparison": "Tuggle comps to Jalen Thompson — 5-11 / 190 compact safety who wins with ball skills, downhill trigger, and special-teams thump.",
+      "schemeFit": "Tuggle fits a two-high / single-high safety who can play the ball and fill the run, plus core coverage units.",
+      "staffNotes": "Vault film desk verified 2026-09-23 from Winder-Barrow sophomore reel (embed 21059824 / 68b631ddca15ad3459d47f2e). Ole Miss verbal 2026-09-22 — still expected in the Swamp. Comp height-matched within ~1 inch — not a Florida-alum default.",
+      "projection": "Tuggle projects as a Year 1 special-teams / nickel safety, then a Year 2 rotation piece, with Year 3 starter upside if the angles stay clean.",
+      "insiderNotes": "Tuggle is a compact 5-11.5 / 180 safety. On the Winder-Barrow sophomore sit he high-points a one-handed pick, shoots the run, and thumps on kick coverage. Ole Miss got the pledge Sep 22; the Swamp trip is still on the list.",
+      "recruitingStory": "Giovanni Tuggle is a 2028 S · listed 5-11.5 / 180 · Winder-Barrow (Winder, GA) · Ole Miss commit who is still expected for Ole Miss weekend in Gainesville. Plans can change.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:12:56.788Z"
+      "updatedAt": "2026-09-23T19:49:47.873Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "ty-winn": {
       "playerSlug": "ty-winn",
       "playerName": "Ty Winn",
-      "playerType": "commit",
+      "playerType": "target",
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/27446373/694ee444e973529892f8a3d5",
+          "publishedAt": "2026-09-23"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Winn locks his hands on the edge and drives the end 10 yards down the field before he buries him.",
+        "Winn washes the down block and collapses the front so the back has a lane.",
+        "Winn finishes with a pancake — he keeps the grip and puts the rusher in the turf.",
+        "Winn uses that 6-7.5 wingspan to engulf high-school ends before they get a second move."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Winn's kick slide is still heavy-footed and the tall pad level will get tested by true edge speed."
+      ],
+      "comparison": "Winn comps to Walker Little — 6-7 / 313 long tackle who wins with length and a nasty finish before the lower half fills.",
+      "schemeFit": "Winn fits a vertical-set tackle who can maul in the run game while the pass set gets cleaner.",
+      "staffNotes": "Vault film desk verified 2026-09-23 from Bonner sophomore reel (embed 27446373 / 694ee444e973529892f8a3d5). Comp height-matched within ~1 inch — not a Florida-alum default.",
+      "projection": "Winn projects as a Year 1 developmental tackle, then he competes for the job in Year 2, with Year 3 starter upside if the feet catch the frame.",
+      "insiderNotes": "Winn is a 6-7.5 / 255 tackle. On the Bonner sophomore sit he drives the end 10 yards, washes the down block, and pancakes with a locked grip. Pass set is still raw.",
+      "recruitingStory": "Ty Winn is a 2028 OT · listed 6-7.5 / 255 · Monsignor Bonner (Drexel Hill, PA) · expected Ole Miss weekend in the Swamp.",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-07-11T05:15:11.707Z"
+      "featured": false,
+      "updatedAt": "2026-09-23T19:49:48.039Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "lee-steele": {
       "playerSlug": "lee-steele",
@@ -16558,27 +16609,33 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/jc-wessel-284208/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/23224172/69025c880d2241dbb094580d",
+          "publishedAt": "2026-09-23"
         }
       ],
       "strengths": [
-        "One of the nation's top 2028 tight ends has plenty on his plate these days.",
-        "Jacksonville (Fla.) Bolles 4-star tight end J.C."
+        "Wessel tracks the underthrown ball over his shoulder, snags it, and breaks the first tackle up the sideline.",
+        "Wessel explodes out of a three-point stance and flattens the edge on the inline run block.",
+        "Wessel catches the crosser in stride, takes a big hit at the catch point, and keeps the ball.",
+        "Wessel flexes into the slot and still accelerates down the seam with that 6-6 frame."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "One of the nation's top 2028 tight ends has plenty on his plate these days.  Jacksonville (Fla.) Bolles 4-star tight end J.C. Wessel recently",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Wessel wins with size and contact balance more than suddenness — route twitch and pad level are the next step."
+      ],
+      "comparison": "Wessel comps to Kyle Pitts — 6-6 / 246 long Y / flexed tight end who can track the seam ball and still put his hands on an edge.",
+      "schemeFit": "Wessel fits a traditional Y who can flex — seam threat and drive-block TE, not a gadget H-back.",
+      "staffNotes": "Vault film desk verified 2026-09-23 from Frederica Academy sophomore reel (embed 23224172 / 69025c880d2241dbb094580d). Wessel is now at The Bolles School. Comp height-matched within ~1 inch — not a Florida-alum default.",
+      "projection": "Wessel projects as a Year 1 developmental Y, then a Year 2 rotation tight end, with Year 3 starter upside if the inline block stays nasty at Bolles.",
+      "insiderNotes": "Wessel is a 6-6.5 / 227 Y. On the Frederica sophomore sit he tracks the underthrown ball, flattens the edge inline, and holds the crosser through a big hit. He is at Bolles now.",
+      "recruitingStory": "J.C. Wessel is a 2028 TE · listed 6-6.5 / 227 · The Bolles School (Jacksonville, FL) · sophomore tape is Frederica Academy · expected Ole Miss weekend in the Swamp.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:13:06.765Z"
+      "updatedAt": "2026-09-23T19:49:47.955Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "taihj-moore": {
       "playerSlug": "taihj-moore",
@@ -18686,6 +18743,76 @@
       "nflProjection": null,
       "featured": false,
       "updatedAt": "2026-09-19T02:40:19.582Z",
+      "filmWatched": true,
+      "provisional": false
+    },
+    "anthony-turner": {
+      "playerSlug": "anthony-turner",
+      "playerName": "Anthony Turner",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22721750/6916992bb81c8d758803e71d",
+          "publishedAt": "2026-09-23"
+        }
+      ],
+      "strengths": [
+        "Turner steps up and drops the deep ball down the middle with the receiver in stride.",
+        "Turner flushes left and still drives the sideline ball with velocity on the run.",
+        "Turner gets the slant and screen out with a quick release before the rush arrives.",
+        "Turner keeps the designed run, breaks a tackle, and finishes in the end zone with long strides."
+      ],
+      "weaknesses": [
+        "Turner still throws on the move without a firm base, and this reel is mostly first-read verticals — full-field processing is the next tape."
+      ],
+      "comparison": "Turner comps to Jordan Love — 6-4 / 219 tall QB who can drive the deep ball and still move when the pocket breaks.",
+      "schemeFit": "Turner fits a vertical-shot QB who can also run the designed keep — tall, live arm, still growing into the pocket.",
+      "staffNotes": "Vault film desk verified 2026-09-23 from Landstown sophomore reel (embed 22721750 / 6916992bb81c8d758803e71d). On3 lists 6-3 / 185; the reel intro card reads 6-5 / 189. Comp height-matched within ~1 inch — not a Florida-alum default.",
+      "projection": "Turner projects as a Year 1 developmental QB, then he competes for the job in Year 2, with Year 3 starter upside if the base and second read catch the arm.",
+      "insiderNotes": "Turner is a tall Landstown QB. On the sophomore sit he drives the deep middle, throws with velocity rolling left, and finishes a designed keep. Processing beyond the first read is not on this clip.",
+      "recruitingStory": "Anthony Turner is a 2028 QB · listed 6-3 / 185 · Landstown (Virginia Beach, VA) · expected Ole Miss weekend in the Swamp.",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-09-23T19:49:48.120Z",
+      "filmWatched": true,
+      "provisional": false
+    },
+    "domonic-williams-jr": {
+      "playerSlug": "domonic-williams-jr",
+      "playerName": "Domonic Williams Jr.",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/23135595/694b0fbfe973529892f84416",
+          "publishedAt": "2026-09-23"
+        }
+      ],
+      "strengths": [
+        "Williams undercuts the quick out, takes the interception in stride, and scores.",
+        "Williams triggers downhill, squares the runner, and forces the fumble.",
+        "Williams chases from the backside and saves the touchdown with closing speed.",
+        "Williams gets his head around on the vertical and plays the ball instead of the back."
+      ],
+      "weaknesses": [
+        "Williams will guess and undercut the short route — double moves will punish that if he does not stay in phase, and the backpedal still gathers before he turns."
+      ],
+      "comparison": "Williams comps to Trent McDuffie — 5-11 / 193 compact press/man corner with twitch, physicality, and the same downhill strike.",
+      "schemeFit": "Williams fits a physical perimeter CB who can jump the short throw and still run the vertical.",
+      "staffNotes": "Vault film desk verified 2026-09-23 from Jacksonville (NC) sophomore reel (embed 23135595 / 694b0fbfe973529892f84416). First Gainesville trip, Ole Miss weekend. Comp height-matched at 5-11 — not a Florida-alum default.",
+      "projection": "Williams projects as a Year 1 special-teams / nickel corner, then a Year 2 rotation piece, with Year 3 starter upside if he stays in phase on the double move.",
+      "insiderNotes": "Williams is a compact 5-11 / 185 corner. On the Jacksonville (NC) sophomore sit he undercuts the out for a pick-six, forces a fumble downhill, and chases down a breakaway. He will guess the short throw.",
+      "recruitingStory": "Domonic Williams Jr. is a 2028 CB · listed 5-11 / 185 · Jacksonville (Jacksonville, NC) · first Gainesville trip set for Ole Miss weekend. Expected / planning, not confirmed on campus.",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-09-23T19:49:48.198Z",
       "filmWatched": true,
       "provisional": false
     }

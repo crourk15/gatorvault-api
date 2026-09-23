@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-09-23T18:50:00.000Z",
-  "source": "Home-game visitor look only — plans can change. Away games do not get a visitor panel.",
+  "updatedAt": "2026-09-23T19:50:00.000Z",
+  "source": "Home-game visitor look only \u2014 plans can change. Away games do not get a visitor panel.",
   "visitorMeta": {
     "zylen-little": {
       "name": "Zylen Little",
@@ -230,7 +230,7 @@
       "name": "Cooper Martenson",
       "position": "OT",
       "school": "Marist School (Atlanta, GA)",
-      "stars": null,
+      "stars": 3,
       "classYear": 2028
     },
     "cyion-smith": {
@@ -255,7 +255,7 @@
       "opponent": "FAU",
       "date": "2026-09-05",
       "dateLabel": "Sep 5",
-      "chaseLabel": "FAU visit · Sep 5",
+      "chaseLabel": "FAU visit \u00b7 Sep 5",
       "slugs": [
         "asher-ghioto",
         "zaiden-jernigan",
@@ -275,7 +275,7 @@
       "opponent": "Campbell",
       "date": "2026-09-12",
       "dateLabel": "Sep 12",
-      "chaseLabel": "Expected Campbell visit · Sep 12",
+      "chaseLabel": "Expected Campbell visit \u00b7 Sep 12",
       "slugs": [
         "cyion-smith",
         "man-robinson",
@@ -283,7 +283,7 @@
         "judah-gumbs",
         "dully-littleton"
       ],
-      "source": "Expected / planning, not confirmed on campus. Plans can change. Smith is on his fifth Gainesville trip (Campbell gameday). Robinson’s second visit and first Swamp game. Aliu is a Nebraska commit. Gumbs is an Arkansas commit and has no Florida offer."
+      "source": "Expected / planning, not confirmed on campus. Plans can change. Smith is on his fifth Gainesville trip (Campbell gameday). Robinson\u2019s second visit and first Swamp game. Aliu is a Nebraska commit. Gumbs is an Arkansas commit and has no Florida offer."
     },
     {
       "gameId": "olemiss",
@@ -291,7 +291,7 @@
       "opponent": "Ole Miss",
       "date": "2026-09-26",
       "dateLabel": "Sep 26",
-      "chaseLabel": "Expected Ole Miss visit · Sep 26",
+      "chaseLabel": "Expected Ole Miss visit \u00b7 Sep 26",
       "source": "Expected / planning, not confirmed on campus. Plans can change. Thomas, Flowers, and Taylor have later return notes for this weekend. Williams is a first Gainesville trip from Jacksonville, NC. Royal is a Texas commit. Lawson is a Syracuse commit.",
       "slugs": [
         "easton-royal",
