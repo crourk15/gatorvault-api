@@ -111,6 +111,8 @@ export async function fetchFullProfile(
     if (pending) return pending;
   }
 
+  dequeuePrefetch(normalized);
+
   const job = apiFetch<FullProfilePayload & { ok?: boolean }>(
     `/api/player/full-profile/${encodeURIComponent(normalized)}`
   ).then((raw) => {
@@ -162,11 +164,44 @@ export async function fetchFullProfile(
   return job;
 }
 
+/** Cap concurrent visitor-list prefetches so one tap is not stuck behind 20 cooks. */
+const PREFETCH_CONCURRENCY = 2;
+const prefetchQueue: string[] = [];
+const queuedPrefetch = new Set<string>();
+let prefetchActive = 0;
+
+function dequeuePrefetch(slug: string): void {
+  if (!queuedPrefetch.has(slug)) return;
+  queuedPrefetch.delete(slug);
+  const idx = prefetchQueue.indexOf(slug);
+  if (idx >= 0) prefetchQueue.splice(idx, 1);
+}
+
+function pumpPrefetchQueue(): void {
+  while (prefetchActive < PREFETCH_CONCURRENCY && prefetchQueue.length) {
+    const next = prefetchQueue.shift();
+    if (!next) break;
+    queuedPrefetch.delete(next);
+    prefetchActive += 1;
+    void fetchFullProfile(next)
+      .catch(() => {})
+      .finally(() => {
+        prefetchActive -= 1;
+        pumpPrefetchQueue();
+      });
+  }
+}
+
 /** Prefetch profile bundle when link scrolls into view (populates cache). */
 export function prefetchFullProfile(slug: string): void {
   const normalized = slug.trim().toLowerCase();
   if (!normalized) return;
-  void fetchFullProfile(normalized).catch(() => {});
+  const key = profileCacheKey(normalized);
+  if (readProfileCache(key) || getInflightProfile(key)) return;
+  if (queuedPrefetch.has(normalized)) return;
+  queuedPrefetch.add(normalized);
+  prefetchQueue.push(normalized);
+  pumpPrefetchQueue();
 }
 
 export async function resolvePlayerSlug(

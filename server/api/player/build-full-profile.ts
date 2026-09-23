@@ -267,7 +267,9 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
   const classYear = player.classYear;
 
   if (isUnderclassmenClassYear(classYear)) {
-    const intel = await buildUnderclassmenIntelForSlug(slug);
+    // Lite: recruiting-store seed only. Full board rebuild (class-wide Postgres +
+    // 12 peers) is what made Expected-visitors taps sit for 45s on Starter.
+    const intel = await buildUnderclassmenIntelForSlug(slug, { lite: true });
     if (intel) {
       player.id = intel.intelUuid;
       player.ufFitScore = intel.earlyIntel.fitScore;
@@ -379,11 +381,29 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
   });
 }
 
+function peekRecruitingClassYear(slug: string): number | null {
+  try {
+    const store = require('../../lib/recruiting-store') as {
+      findBySlug?: (slug: string) => { classYear?: number } | null;
+    };
+    const local = store.findBySlug?.(slug);
+    const year = Number(local?.classYear || 0);
+    return year > 0 ? year : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function buildFullProfileBySlug(slug: string): Promise<FullProfileResponse | null> {
   const normalized = String(slug || '').trim().toLowerCase();
   if (!normalized) return null;
 
   try {
+    const localYear = peekRecruitingClassYear(normalized);
+    if (localYear && isUnderclassmenClassYear(localYear)) {
+      return buildRecruitingStoreProfile(normalized);
+    }
+
     const resolved = await safeResolvePostgresPlayerBySlug(normalized);
     if (!resolved) {
       return buildRecruitingStoreProfile(normalized);

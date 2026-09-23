@@ -50,7 +50,11 @@ export function ExpectedVisitorsPanel({ panel }: Props): React.ReactElement {
             const meta = metaLine(v);
             return (
               <li key={v.slug} className="gv-gw-visitors__item">
-                <VaultNavLink href={href} className="gv-gw-visitors__link">
+                <VaultNavLink
+                  href={href}
+                  className="gv-gw-visitors__link"
+                  data-no-profile-prefetch=""
+                >
                   <span className="gv-gw-visitors__mark" aria-hidden>
                     {positionMark(v)}
                   </span>

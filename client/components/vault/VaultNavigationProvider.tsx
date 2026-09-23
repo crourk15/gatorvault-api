@@ -116,9 +116,17 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
           const anchor = entry.target as HTMLAnchorElement;
+          observer.unobserve(anchor);
+          // Expected visitors lists 20+ profile links — do not cook every
+          // dossier on scroll-in. Hover / tap still warms the one card.
+          if (
+            anchor.hasAttribute('data-no-profile-prefetch') ||
+            anchor.closest('.gv-gw-visitors, [data-no-profile-prefetch]')
+          ) {
+            continue;
+          }
           const href = anchor.getAttribute('href');
           if (href) warmPlayerLink(href);
-          observer.unobserve(anchor);
         }
       },
       { rootMargin: '120px', threshold: 0.01 }

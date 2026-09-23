@@ -46,6 +46,16 @@ describe('buildUnderclassmenIntelForSlug', () => {
     const bundle = await buildUnderclassmenIntelForSlug('not-a-real-player-slug-xyz');
     assert.equal(bundle, null);
   });
+
+  it('lite mode still builds a visitor profile without peer board', async () => {
+    const started = Date.now();
+    const bundle = await buildUnderclassmenIntelForSlug('cj-craig-james', { lite: true });
+    const elapsed = Date.now() - started;
+    assert.ok(bundle, 'expected lite intel bundle');
+    assert.equal(bundle.slug, 'cj-craig-james');
+    assert.ok(Array.isArray(bundle.relatedIntel));
+    assert.ok(elapsed < 5000, `lite intel took ${elapsed}ms`);
+  });
 });
 
 describe('competingSchoolsFromRecruitingRecord', () => {
