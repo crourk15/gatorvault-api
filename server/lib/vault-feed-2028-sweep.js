@@ -6,6 +6,10 @@
  * so Lab math can move. Never auto-add 2027. Never create coach/staff phantoms.
  *
  * Proof: writes vault-feed-2028-last-report.json for Admin Hub verification.
+ *
+ * Cron must accept-and-background. The 7am pass often takes ~30 minutes; a
+ * 4-minute HTTP wait + retries will 502 the Starter dyno and the 7pm stamp
+ * never writes. Hours 8 and 20 ET catch a missed 7 / 19 slot.
  */
 'use strict';
 
@@ -15,6 +19,8 @@ const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
 
 const CLASS_YEAR_MIN = 2028;
 const CLASS_YEAR_MAX = 2030;
+/** No heartbeat for this long → prior run is dead; catch-up may start. */
+const STALE_HEARTBEAT_MS = 15 * 60 * 1000;
 
 function reportPath() {
   return path.join(resolveRecruitingDataDir(), 'vault-feed-2028-last-report.json');
@@ -33,6 +39,129 @@ function writeReport(report) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
   return file;
+}
+
+function etParts(date = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(date);
+  const get = (type) => parts.find((p) => p.type === type)?.value;
+  return {
+    year: get('year'),
+    month: get('month'),
+    day: get('day'),
+    hour: Number(get('hour')),
+  };
+}
+
+/** Primary slot 7 or 19; hours 8 and 20 are the same-day catch-up. */
+function vaultFeedSlotHour(etHour) {
+  const h = Number(etHour);
+  if (h === 7 || h === 8) return 7;
+  if (h === 19 || h === 20) return 19;
+  return null;
+}
+
+function vaultFeedSlotId(date = new Date()) {
+  try {
+    const p = etParts(date);
+    const slotHour = vaultFeedSlotHour(p.hour);
+    if (slotHour == null) return null;
+    return `${p.year}-${p.month}-${p.day}T${String(slotHour).padStart(2, '0')}`;
+  } catch {
+    return null;
+  }
+}
+
+function slotIdFromTimestamp(iso) {
+  const t = Date.parse(iso || '');
+  if (!Number.isFinite(t)) return null;
+  return vaultFeedSlotId(new Date(t));
+}
+
+function windowLabelForSlot(slotId) {
+  return String(slotId || '').endsWith('T19') ? '7pm' : '7am';
+}
+
+/** True at 7–8am and 7–8pm ET so a missed :05 still runs on the next hour. */
+function isVaultFeedEtWindow(date = new Date()) {
+  try {
+    return vaultFeedSlotHour(etParts(date).hour) != null;
+  } catch {
+    const utc = date.getUTCHours();
+    // EDT 11–12 / 23–0 · EST 12–13 / 0–1
+    return utc === 11 || utc === 12 || utc === 13 || utc === 23 || utc === 0 || utc === 1;
+  }
+}
+
+function isActiveVaultFeedRun(report, now = Date.now()) {
+  if (!report || report.status !== 'running') return false;
+  const beat = Date.parse(report.heartbeatAt || report.startedAt || '') || 0;
+  if (!beat) return false;
+  return now - beat < STALE_HEARTBEAT_MS;
+}
+
+function alreadyFinishedThisSlot(report, date = new Date()) {
+  if (!report || report.status === 'running') return false;
+  if (!report.finishedAt) return false;
+  const slot = vaultFeedSlotId(date);
+  if (!slot) return false;
+  const reportSlot =
+    report.slotId || slotIdFromTimestamp(report.startedAt) || slotIdFromTimestamp(report.finishedAt);
+  return reportSlot === slot;
+}
+
+function touchVaultFeedHeartbeat(report, { skipPersist = false } = {}) {
+  if (!report || typeof report !== 'object') return report;
+  report.heartbeatAt = new Date().toISOString();
+  if (!skipPersist) {
+    try {
+      writeReport(report);
+    } catch {
+      /* disk optional */
+    }
+  }
+  return report;
+}
+
+function buildRunningReport({ dryRun = false, slotId = null, trigger = 'cron' } = {}) {
+  const startedAt = new Date().toISOString();
+  const slot = slotId || vaultFeedSlotId() || null;
+  return {
+    ok: true,
+    status: 'running',
+    job: 'vault-feed-2028-sweep',
+    startedAt,
+    heartbeatAt: startedAt,
+    finishedAt: null,
+    dryRun: !!dryRun,
+    slotId: slot,
+    trigger,
+    window: windowLabelForSlot(slot),
+    classYearMin: CLASS_YEAR_MIN,
+    classYearMax: CLASS_YEAR_MAX,
+    beatsFetched: 0,
+    created: [],
+    updated: [],
+    skipped2027: [],
+    blockedStaff: [],
+    unresolved: [],
+    skipped: [],
+    errors: [],
+    summary: {
+      createdCount: 0,
+      updatedCount: 0,
+      unresolvedCount: 0,
+      blockedStaffCount: 0,
+      skipped2027Count: 0,
+    },
+    message: 'Vault feed running — proof fills when the 7am / 7pm pass finishes.',
+  };
 }
 
 function extractClassYears(text) {
@@ -76,13 +205,19 @@ function isBlockedStaff(name, slug) {
 }
 
 function emptyReport(opts = {}) {
+  const slotId = opts.slotId || vaultFeedSlotId() || null;
+  const startedAt = new Date().toISOString();
   return {
     ok: true,
     status: 'running',
     job: 'vault-feed-2028-sweep',
-    startedAt: new Date().toISOString(),
+    startedAt,
+    heartbeatAt: startedAt,
     finishedAt: null,
     dryRun: !!opts.dryRun,
+    slotId,
+    trigger: opts.trigger || null,
+    window: windowLabelForSlot(slotId),
     classYearMin: CLASS_YEAR_MIN,
     classYearMax: CLASS_YEAR_MAX,
     beatsFetched: 0,
@@ -142,6 +277,7 @@ function finalizeSummary(report) {
   };
   report.message = `created ${report.summary.createdCount}, updated ${report.summary.updatedCount}, unresolved ${report.summary.unresolvedCount}`
     + (report.emptyReason ? ` · ${report.emptyReason}` : '');
+  if (report.slotId) report.window = windowLabelForSlot(report.slotId);
   return report;
 }
 
@@ -509,6 +645,7 @@ async function runVaultFeed2028SweepInner(opts = {}) {
   const skipBeatIngest = opts.skipBeatIngest === true;
   const skipAllowlistIntel = opts.skipAllowlistIntel === true;
   const report = emptyReport(opts);
+  if (!opts.skipPersist) touchVaultFeedHeartbeat(report, { skipPersist: false });
 
   // Allow 2029/2030 class cues during this pass (beat gate otherwise blocks ≥2029).
   const prevAllow2029 = process.env.BEAT_INGEST_ALLOW_CLASS_2029;
@@ -549,6 +686,7 @@ async function runVaultFeed2028SweepInner(opts = {}) {
     } catch (err) {
       report.errors.push({ step: 'getBeatPosts', error: err.message });
     }
+    touchVaultFeedHeartbeat(report, { skipPersist: opts.skipPersist === true });
 
     // 2) Run normal beat-writer ingest (visit/offer/intel attach + trusted provision)
     if (!skipBeatIngest) {
@@ -567,6 +705,7 @@ async function runVaultFeed2028SweepInner(opts = {}) {
         report.beatIngest = { ok: false, error: err.message };
       }
     }
+    touchVaultFeedHeartbeat(report, { skipPersist: opts.skipPersist === true });
 
     // 3) Merge On3 / Gators Online team-news articles into the beat candidate pool
     if (!opts.candidates && opts.skipOn3Articles !== true) {
@@ -601,6 +740,7 @@ async function runVaultFeed2028SweepInner(opts = {}) {
       ? opts.candidates
       : collectBeatCandidates(posts, { lookbackHours: Math.max(lookbackHours, 96) });
     report.candidatesNamed = candidates.filter((c) => c && c.kind === 'named').length;
+    touchVaultFeedHeartbeat(report, { skipPersist: opts.skipPersist === true });
 
     let creates = 0;
     for (const candidate of candidates) {
@@ -738,6 +878,7 @@ async function runVaultFeed2028SweepInner(opts = {}) {
         sourceUrl: candidate.url || null,
       });
     }
+    touchVaultFeedHeartbeat(report, { skipPersist: opts.skipPersist === true });
 
     // 5) Continuous allowlist intel for 2028 (existing chase targets)
     if (!skipAllowlistIntel) {
@@ -770,6 +911,7 @@ async function runVaultFeed2028SweepInner(opts = {}) {
         report.allowlistIntel = { ok: false, error: err.message, coverage };
       }
     }
+    touchVaultFeedHeartbeat(report, { skipPersist: opts.skipPersist === true });
 
     // 6) Seed/refresh FC predictions for newly created 2028 slugs (movement deltas)
     if (!dryRun && report.created.length) {
@@ -825,27 +967,92 @@ async function runVaultFeed2028Sweep(opts = {}) {
   }
 }
 
-/** True when America/New_York local hour is 7 or 19 (7am / 7pm ET). */
-function isVaultFeedEtWindow(date = new Date()) {
-  try {
-    const hour = Number(
-      new Intl.DateTimeFormat('en-US', {
-        timeZone: 'America/New_York',
-        hour: 'numeric',
-        hour12: false,
-      }).format(date)
-    );
-    return hour === 7 || hour === 19;
-  } catch {
-    const utc = date.getUTCHours();
-    // EDT approx: 11 and 23 UTC
-    return utc === 11 || utc === 23;
+/**
+ * Cron + Hub entry: write a running 7am/7pm stamp immediately, then finish
+ * in the background so a 4-minute HTTP wait cannot kill the pass.
+ */
+function acceptVaultFeedSweep(opts = {}) {
+  const trigger = opts.trigger || 'cron';
+  const force = opts.force === true;
+  const date = opts.now instanceof Date ? opts.now : new Date();
+  const slotId = opts.slotId || vaultFeedSlotId(date);
+  const prev = readLastReport();
+
+  if (isActiveVaultFeedRun(prev)) {
+    return { ok: true, started: false, alreadyRunning: true, accepted: true, report: prev };
   }
+  if (!force && alreadyFinishedThisSlot(prev, date)) {
+    return { ok: true, started: false, alreadyDone: true, accepted: true, report: prev };
+  }
+  if (prev && prev.status === 'running') {
+    try {
+      writeReport({
+        ...prev,
+        ok: false,
+        status: 'error',
+        finishedAt: new Date().toISOString(),
+        errors: [...(prev.errors || []), { step: 'accept', error: 'stale_running_unlocked' }],
+        message: 'Previous vault feed marked stale — starting a new 7am / 7pm pass.',
+      });
+    } catch {
+      /* continue */
+    }
+  }
+
+  const running = buildRunningReport({ dryRun: opts.dryRun === true, slotId, trigger });
+  if (!opts.skipPersist) {
+    try {
+      writeReport(running);
+    } catch (err) {
+      return { ok: false, started: false, accepted: false, error: err.message, report: running };
+    }
+  }
+
+  const sweepOpts = {
+    dryRun: opts.dryRun === true,
+    force,
+    maxCreates: opts.maxCreates,
+    lookbackHours: opts.lookbackHours,
+    skipBeatRefresh: opts.skipBeatRefresh,
+    skipAllowlistIntel: opts.skipAllowlistIntel,
+    skipBeatIngest: opts.skipBeatIngest,
+    skipOn3Articles: opts.skipOn3Articles,
+    skipPersist: opts.skipPersist,
+    slotId,
+    trigger,
+  };
+
+  if (opts.launch === false) {
+    return { ok: true, started: true, accepted: true, report: running };
+  }
+
+  setImmediate(() => {
+    Promise.resolve()
+      .then(() => runVaultFeed2028Sweep(sweepOpts))
+      .catch((err) => {
+        try {
+          writeReport({
+            ...running,
+            ok: false,
+            status: 'error',
+            finishedAt: new Date().toISOString(),
+            heartbeatAt: new Date().toISOString(),
+            errors: [{ step: trigger, error: err.message || String(err) }],
+            message: err.message || 'Vault feed failed',
+          });
+        } catch {
+          /* ignore */
+        }
+      });
+  });
+
+  return { ok: true, started: true, accepted: true, report: running };
 }
 
 module.exports = {
   runVaultFeed2028Sweep,
   runVaultFeed2028SweepInner,
+  acceptVaultFeedSweep,
   collectBeatCandidates,
   collectOn3ArticlePosts,
   pickClassYear,
@@ -856,6 +1063,12 @@ module.exports = {
   writeReport,
   reportPath,
   isVaultFeedEtWindow,
+  vaultFeedSlotHour,
+  vaultFeedSlotId,
+  alreadyFinishedThisSlot,
+  isActiveVaultFeedRun,
+  buildRunningReport,
   CLASS_YEAR_MIN,
   CLASS_YEAR_MAX,
+  STALE_HEARTBEAT_MS,
 };

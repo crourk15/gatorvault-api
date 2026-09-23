@@ -1162,86 +1162,25 @@ function mountAdminHubRoutes(app) {
     if (!requireAdmin(req, res)) return;
     try {
       const dryRun = req.body?.dryRun === true;
-      const {
-        runVaultFeed2028Sweep,
-        readLastReport,
-        writeReport,
-      } = require('./vault-feed-2028-sweep');
-      const prev = readLastReport();
-      if (prev && prev.status === 'running') {
-        const startedMs = Date.parse(prev.startedAt || '') || 0;
-        const staleMs = 8 * 60 * 1000;
-        const stale = !startedMs || Date.now() - startedMs > staleMs;
-        if (!stale) {
-          return res.status(200).json({
-            ok: true,
-            started: false,
-            alreadyRunning: true,
-            report: prev,
-          });
-        }
-        // Prior hub run likely OOM'd / never finalized — unlock so Run now can retry.
-        try {
-          writeReport({
-            ...prev,
-            ok: false,
-            status: 'error',
-            finishedAt: new Date().toISOString(),
-            errors: [...(prev.errors || []), { step: 'hub_run', error: 'stale_running_unlocked' }],
-            message: 'Previous vault feed marked stale (no finish within 8m) — starting a new run.',
-          });
-        } catch {
-          /* continue */
-        }
-      }
-      const startedAt = new Date().toISOString();
-      const running = {
-        ok: true,
-        status: 'running',
-        job: 'vault-feed-2028-sweep',
-        startedAt,
-        finishedAt: null,
-        dryRun: !!dryRun,
-        summary: {
-          createdCount: 0,
-          updatedCount: 0,
-          unresolvedCount: 0,
-          blockedStaffCount: 0,
-          skipped2027Count: 0,
-        },
-        created: [],
-        updated: [],
-        message: 'Vault feed running — refresh or wait; proof fills when finished.',
-      };
-      writeReport(running);
-      // Do not await — full beat+allowlist pass can exceed Hub/proxy timeouts.
-      setImmediate(() => {
-        runVaultFeed2028Sweep({
-          dryRun,
-          force: true,
-          // Hub Run now: refresh beat cache first + wider lookback so empty cache isn't a silent zero.
-          skipBeatRefresh: req.body?.skipBeatRefresh === true,
-          // Default skip allowlist on Hub Run now — that sweep alone can exceed Starter memory/time.
-          // Cron keeps full allowlist; pass skipAllowlistIntel:false to force both.
-          skipAllowlistIntel: req.body?.skipAllowlistIntel !== false,
-          lookbackHours: req.body?.lookbackHours != null ? Number(req.body.lookbackHours) : 72,
-          maxCreates: req.body?.maxCreates != null ? Number(req.body.maxCreates) : 40,
-        }).catch((err) => {
-          try {
-            writeReport({
-              ...running,
-              ok: false,
-              status: 'error',
-              finishedAt: new Date().toISOString(),
-              errors: [{ step: 'hub_run', error: err.message || String(err) }],
-              message: err.message || 'Vault feed failed',
-            });
-          } catch {
-            /* ignore */
-          }
-        });
+      const { acceptVaultFeedSweep } = require('./vault-feed-2028-sweep');
+      // Hub Run now always force-starts (Charles tap). Skip allowlist unless asked —
+      // that sweep alone can exceed Starter memory. Cron still runs the full pass.
+      const result = acceptVaultFeedSweep({
+        dryRun,
+        force: true,
+        trigger: 'hub',
+        skipBeatRefresh: req.body?.skipBeatRefresh === true,
+        skipAllowlistIntel: req.body?.skipAllowlistIntel !== false,
+        lookbackHours: req.body?.lookbackHours != null ? Number(req.body.lookbackHours) : 72,
+        maxCreates: req.body?.maxCreates != null ? Number(req.body.maxCreates) : 40,
       });
-      return res.status(200).json({ ok: true, started: true, report: running });
+      return res.status(200).json({
+        ok: result.ok !== false,
+        started: result.started === true,
+        alreadyRunning: result.alreadyRunning === true,
+        report: result.report || null,
+        error: result.error || undefined,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

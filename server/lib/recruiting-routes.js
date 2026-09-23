@@ -663,10 +663,11 @@ function mountRecruitingRoutes(app) {
       const force = req.body.force === true || req.query.force === 'true';
       const maxCreates = parseInt(req.body.maxCreates || req.query.maxCreates || '40', 10);
       const lookbackHours = parseInt(req.body.lookbackHours || req.query.lookbackHours || '36', 10);
-      const { runVaultFeed2028Sweep } = require('./vault-feed-2028-sweep');
-      const result = await runVaultFeed2028Sweep({
+      const { acceptVaultFeedSweep } = require('./vault-feed-2028-sweep');
+      const result = acceptVaultFeedSweep({
         dryRun,
         force,
+        trigger: 'cron',
         maxCreates: Number.isFinite(maxCreates) ? maxCreates : 40,
         lookbackHours: Number.isFinite(lookbackHours) ? lookbackHours : 36,
       });

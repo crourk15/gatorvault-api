@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /**
  * Render cron — 2028+ vault feed at 7am / 7pm Eastern.
- * Schedule fires hourly; script no-ops unless America/New_York hour is 7 or 19
- * (handles EDT/EST). Set VAULT_FEED_FORCE=true to run outside the window (ops).
+ * Schedule fires hourly; script no-ops unless America/New_York hour is 7, 8,
+ * 19, or 20 (8am / 8pm catch a missed 7 slot). Set VAULT_FEED_FORCE=true to
+ * run outside the window (ops). The API accepts immediately and finishes in
+ * the background — do not wait on the 30-minute pass.
  */
 require('./render-cron-env');
 
@@ -36,13 +38,18 @@ async function runIngest() {
       {
         name: 'vault-feed-2028',
         path: '/api/recruiting/vault-feed-2028/sweep',
+        opts: { timeoutMs: 45000, attempts: 3 },
         summarize: (r) => ({
-          createdCount: r?.summary?.createdCount ?? r?.created?.length ?? null,
-          updatedCount: r?.summary?.updatedCount ?? r?.updated?.length ?? null,
-          unresolvedCount: r?.summary?.unresolvedCount ?? null,
-          blockedStaffCount: r?.summary?.blockedStaffCount ?? null,
-          skipped2027Count: r?.summary?.skipped2027Count ?? null,
-          coveragePct: r?.summary?.allowlistCoveragePct ?? null,
+          accepted: r?.accepted === true || r?.started === true || r?.alreadyRunning === true || r?.alreadyDone === true,
+          started: r?.started === true,
+          alreadyRunning: r?.alreadyRunning === true,
+          alreadyDone: r?.alreadyDone === true,
+          window: r?.report?.window || r?.window || null,
+          slotId: r?.report?.slotId || r?.slotId || null,
+          status: r?.report?.status || r?.status || null,
+          createdCount: r?.summary?.createdCount ?? r?.report?.summary?.createdCount ?? null,
+          updatedCount: r?.summary?.updatedCount ?? r?.report?.summary?.updatedCount ?? null,
+          unresolvedCount: r?.summary?.unresolvedCount ?? r?.report?.summary?.unresolvedCount ?? null,
           softFailure: r?.softFailure === true,
         }),
       },
