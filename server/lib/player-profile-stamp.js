@@ -423,6 +423,18 @@ function overlayLiveRpm(profile, recruiting) {
 }
 
 async function loadLiveRecruiting(slug) {
+  // Stamp overlay only needs RPM / identity from the local store. Hitting
+  // Supabase (or the TS fallback) on every visitor-list prefetch is the
+  // 45s stampede when Game Week opens 20+ profile links at once.
+  try {
+    const store = require('./recruiting-store');
+    if (typeof store.findBySlug === 'function') {
+      const local = store.findBySlug(slug);
+      if (local) return local;
+    }
+  } catch {
+    /* fall through */
+  }
   try {
     // TS module — available when server boots with tsx / compiled path.
     const { getRecruitingPlayerBySlug } = requireFromHere('../api/players/recruiting-fallback');
@@ -576,11 +588,30 @@ async function getStampedFullProfile(slug) {
   return out;
 }
 
+function listVisitorStampSlugs() {
+  try {
+    const visitors = require('../data/schedule/game-visitors-2026.json');
+    const slugs = new Set();
+    for (const game of visitors.games || []) {
+      for (const slug of game.slugs || []) {
+        const key = String(slug || '')
+          .trim()
+          .toLowerCase();
+        if (key) slugs.add(key);
+      }
+    }
+    return [...slugs];
+  } catch {
+    return [];
+  }
+}
+
 function listAllowlistStampSlugs() {
   const { ALLOWLIST_2027, ALLOWLIST_2028 } = require('./recruiting-target-allowlist');
   const slugs = new Set();
   for (const s of ALLOWLIST_2027 || []) slugs.add(String(s).toLowerCase());
   for (const s of ALLOWLIST_2028 || []) slugs.add(String(s).toLowerCase());
+  for (const s of listVisitorStampSlugs()) slugs.add(s);
   return [...slugs];
 }
 
@@ -641,6 +672,7 @@ module.exports = {
   isPoisonedStamp,
   overlayLiveRpm,
   getStampedFullProfile,
+  listVisitorStampSlugs,
   listAllowlistStampSlugs,
   listRosterStampSlugs,
   listPreparedMealSlugs,

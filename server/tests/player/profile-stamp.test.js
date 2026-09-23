@@ -188,6 +188,17 @@ describe('player profile prepared-meal stamps', () => {
     assert.ok(slugs.includes('hudson-west') || slugs.some((s) => s.includes('west')));
   });
 
+  it('includes Game Week expected visitors in prepared-meal targets', () => {
+    const visitors = stamp.listVisitorStampSlugs();
+    const prepared = stamp.listAllowlistStampSlugs();
+    assert.ok(visitors.includes('cj-craig-james'));
+    assert.ok(visitors.includes('domonic-williams-jr'));
+    assert.ok(visitors.includes('madoxx-davis'));
+    for (const slug of visitors) {
+      assert.ok(prepared.includes(slug), `visitor ${slug} should be a stamp target`);
+    }
+  });
+
   it('full-profile handler prefers stamp path', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', '..', 'api', 'player', 'full-profile', '[slug].ts'),

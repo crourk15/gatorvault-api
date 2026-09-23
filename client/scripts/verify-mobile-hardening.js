@@ -61,6 +61,16 @@ mustInclude('hooks/usePlayerProfileRoute.ts', [
   'optimisticProfileState',
   'prefetchFullProfile',
 ]);
+mustInclude('lib/player-full-profile-api.ts', [
+  'PREFETCH_CONCURRENCY',
+  'dequeuePrefetch',
+]);
+mustInclude('components/vault/game-week/ExpectedVisitorsPanel.tsx', [
+  'data-no-profile-prefetch',
+]);
+mustInclude('components/vault/VaultNavigationProvider.tsx', [
+  'gv-gw-visitors',
+]);
 mustInclude('components/vault/VaultPlayerProfileRoute.tsx', [
   'ProfileSkeleton',
   'ensureDocumentScrollUnlocked',

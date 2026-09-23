@@ -725,8 +725,17 @@ function enrichPlayerFromRecruitingStore(
   };
 }
 
+export type UnderclassmenIntelOptions = {
+  /**
+   * Profile cook / visitor tap — seed from recruiting store only.
+   * Skips class-wide Postgres board + 12-peer rebuild (that path is 45s+ on Starter).
+   */
+  lite?: boolean;
+};
+
 export async function buildUnderclassmenIntelForSlug(
-  slug: string
+  slug: string,
+  options: UnderclassmenIntelOptions = {}
 ): Promise<UnderclassmenIntelBundle | null> {
   const normalized = String(slug || '').trim().toLowerCase();
   if (!normalized) return null;
@@ -735,21 +744,24 @@ export async function buildUnderclassmenIntelForSlug(
   const classYear = await resolveClassYear(normalized, entry);
   if (!classYear) return null;
 
+  const lite = options.lite === true;
   const { ALLOWLIST_2028 } = require('./recruiting-target-allowlist');
   // Related cards only need a handful of peers — do NOT rebuild the entire
   // allowlist board (~39 players) on every profile open.
-  const RELATED_PEER_LOAD_CAP = Math.max(
-    6,
-    parseInt(process.env.UNDERCLASSMEN_RELATED_PEER_CAP || '12', 10) || 12
-  );
+  const RELATED_PEER_LOAD_CAP = lite
+    ? 0
+    : Math.max(
+        6,
+        parseInt(process.env.UNDERCLASSMEN_RELATED_PEER_CAP || '12', 10) || 12
+      );
   let peerSlugs: string[] = [];
 
-  if (classYear === 2028) {
+  if (!lite && classYear === 2028) {
     peerSlugs = (ALLOWLIST_2028 as string[])
       .map((s) => String(s).toLowerCase())
       .filter((s) => s && s !== normalized)
       .slice(0, RELATED_PEER_LOAD_CAP);
-  } else {
+  } else if (!lite) {
     peerSlugs = loadEarlyWatchEntries()
       .filter((e) => Number(e.classYear) === classYear && e.slug)
       .map((e) => String(e.slug).toLowerCase())
@@ -758,11 +770,18 @@ export async function buildUnderclassmenIntelForSlug(
   }
 
   const slugSet = new Set([normalized, ...peerSlugs]);
-  let enriched = await loadEnrichedBoardPlayers(classYear, [...slugSet]);
-  let player = enriched.find((p) => p.slug === normalized);
-  if (!player) {
+  let enriched: FutureCastBoardPlayer[] = [];
+  let player: FutureCastBoardPlayer | undefined;
+  if (lite) {
     player = (await buildSeedBoardPlayerFromRecruiting(normalized, classYear, entry)) ?? undefined;
-    if (player) enriched = [...enriched, player];
+    if (player) enriched = [player];
+  } else {
+    enriched = await loadEnrichedBoardPlayers(classYear, [...slugSet]);
+    player = enriched.find((p) => p.slug === normalized);
+    if (!player) {
+      player = (await buildSeedBoardPlayerFromRecruiting(normalized, classYear, entry)) ?? undefined;
+      if (player) enriched = [...enriched, player];
+    }
   }
   if (!player) return null;
 
@@ -775,7 +794,7 @@ export async function buildUnderclassmenIntelForSlug(
   const ufConfidence = player.ufConfidence;
 
   let discoveryScore: number | null = entry?.discoveryScore ?? null;
-  if (classYear === 2028) {
+  if (!lite && classYear === 2028) {
     const { loadDiscoveryEnrichmentBySlug } = require('./underclassmen-discovery-enrich') as {
       loadDiscoveryEnrichmentBySlug: (year: number) => Promise<Map<string, { discoveryScore?: number }>>;
     };
