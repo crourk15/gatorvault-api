@@ -24,6 +24,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Ole Miss expected-visitor profiles: Hudl sits + Vault Scouting for the 11 incomplete cards (Davis, Bell, Tuggle, Craig-James, Wessel, Evans, Winn, Flowers, Turner, Martenson, Williams Jr.). Omari Lawson identity filled (Syracuse commit, 6-6 / 260) — no public Hudl sit, Vault Scouting stays hidden. API after Render — no Codemagic.
 - [x] Expected-visitor profile open: prepared-meal stamps for the visitor list + lite full-profile cook (no class-wide Postgres board). `/api/player/full-profile/:slug` after Render — current App Store already hits that API. Scroll-in prefetch skip is the bake row below.
 - [x] Vault Scouting voice: drop “sophomore sit” / “tape is thin” / named Hudl from fan cards (Martenson + the other new visitor evals, Butler, Royal, White, Lee, Johnson). War Room after Render — no Codemagic.
+- [x] Player profile no-slash URLs 500/503 (`Error - Request ID`) on Netlify: edge 308 + `_redirects` 301 to the trailing-slash shell. Web after Netlify. Trailing-slash hrefs in `playerProfileRoute` are the bake row.
 - [x] Game Week Ole Miss window: official **ABC / 3:30 p.m. ET** on `/api/schedule` after Render. Heal `date` + `tv` from the git board so Render durable cannot keep the old **3:30–8:00** window. API — current App Store Game Week already live-fetches. Home countdown seed still needs the 1.0.27 bake.
 - [x] Game Week Ole Miss: pointer + Auburn 44–39 final + Week 3 remaining-season preds on `/api/schedule` after Render (API — no Codemagic). LSU condensed was not posted; sit is official ESPN PBP (`filmWatched: false`).
 - [x] Game Week Ole Miss Vegas: stamp live DraftKings via ESPN **UF +1.5 / O/U 58.5** on `/api/betting/lines` (opened FLA -1.5; flipped after the LSU/Auburn finals). API — no Codemagic.
@@ -164,6 +165,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-23 | Player profile hrefs use a trailing slash | `playerProfileRoute` in binary. **Edge 308 + `_redirects` 301 already fix the Netlify 500 after deploy.** Old binary still links `/player/:slug` without the slash. | this PR |
 | 2026-09-23 | Game Week Expected visitors: do not scroll-prefetch every profile (cap 2) | `ExpectedVisitorsPanel` `data-no-profile-prefetch` + `VaultNavigationProvider` skip + `PREFETCH_CONCURRENCY`. **Stamps + lite cook are API-live after Render.** Old binary still fires 20+ full-profile GETs when the list comes on screen. | #737 |
 | 2026-09-22 | Community hub last-good + `/api/community/page` client | Optional later bake. **Page cache + Closest 2028 prime are API-live after Render — no Codemagic for speed.** | #732 |
 | 2026-09-22 | App Store **1.0.29** / build **97** (NOW + Game Week first-paint + Baugh 95). **1.0.28 accepted — do not re-upload.** | `MARKETING_VERSION` 1.0.29. Charles asked for this train. | #731 |
