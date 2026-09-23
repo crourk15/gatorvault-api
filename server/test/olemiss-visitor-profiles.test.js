@@ -50,4 +50,25 @@ describe('Ole Miss visitor profiles', () => {
     }
     assert.equal(elite.getVaultScoutingForSlug('omari-lawson'), null);
   });
+
+  it('keeps fan Vault Scouting in complete sentences — no sit / Hudl shop-talk', () => {
+    const shop = /sophomore sit|soph Hudl|\bHudl\b|tape is thin|not on this clip|this sit|this reel|this clip/i;
+    const slugs = [
+      ...WATCHED,
+      'ryquan-butler',
+      'easton-royal',
+      'tatum-white',
+      'malachi-lee',
+      'jamarcus-johnson',
+    ];
+    for (const slug of slugs) {
+      const card = elite.getVaultScoutingForSlug(slug);
+      assert.ok(card, `${slug} Vault Scouting hidden`);
+      assert.ok(!shop.test(card.evaluation), `${slug} evaluation shop-talk: ${card.evaluation}`);
+      assert.ok(!shop.test(String(card.schemeFit || '')), `${slug} schemeFit shop-talk: ${card.schemeFit}`);
+    }
+    const martenson = elite.getVaultScoutingForSlug('cooper-martenson');
+    assert.match(martenson.evaluation, /Martenson is a 6-5 \/ 285 tackle who/);
+    assert.doesNotMatch(martenson.evaluation, /Pass-protection tape is thin/);
+  });
 });
