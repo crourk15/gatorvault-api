@@ -561,18 +561,20 @@ function mountRecruitingHubRoutes(app) {
     }
   });
 
-  app.get('/api/recruiting/hub/ticker', async (req, res) => {
+  app.get('/api/recruiting/hub/ticker', (req, res) => {
     try {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
       const year = parseHubYear(req);
-      const { hubTickerCacheKey } = require('./recruiting-hub-cache');
-      const cacheKey = hubTickerCacheKey(year);
-      return sendHubJson(res, {
-        cacheKey,
+      const { buildHomeNowTickerPack } = require('./weekly-home-now');
+      const body = buildHomeNowTickerPack();
+      body.meta = {
+        ...(body.meta || {}),
         year,
-        endpoint: 'ticker',
-        builder: () => buildHubTicker(year),
-        hubMeta,
-      });
+        cacheKey: `hub:elite:ticker:now-direct:${year}`,
+      };
+      return res.json(body);
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
