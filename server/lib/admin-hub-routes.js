@@ -13,6 +13,7 @@ const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 const { hasPaidAccess, trialState, isSubscriptionActive } = require('./subscription-service');
 const { effectiveTier, isAdminAccount } = require('./session-auth');
 const memberAnnounce = require('./member-announce-email');
+const inboxAccountDelete = require('./inbox-account-delete');
 
 const MODULE_IDS = [
   'beat-desk',
@@ -1000,6 +1001,34 @@ function mountAdminHubRoutes(app) {
         name: updated?.name || null,
         firstTouch: updated?.firstTouch || null,
       });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /**
+   * Operator delete — company inbox / support requests.
+   * Body: { confirm: 'DELETE', emails?: string[], runListed?: true }
+   * No member email is sent.
+   */
+  app.post('/api/admin/members/delete', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const confirm = String(req.body?.confirm || '').trim();
+      if (confirm !== 'DELETE') {
+        return res.status(400).json({ ok: false, error: 'Type DELETE to confirm.' });
+      }
+      if (req.body?.runListed === true) {
+        const result = await inboxAccountDelete.runInboxAccountDeletes({ force: true });
+        return res.status(200).json({ ok: result.ok !== false, ...result });
+      }
+      const emails = Array.isArray(req.body?.emails)
+        ? req.body.emails
+        : req.body?.email
+          ? [req.body.email]
+          : [];
+      const result = await inboxAccountDelete.deleteMembersByEmails(emails);
+      return res.status(200).json(result);
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

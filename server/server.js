@@ -1721,6 +1721,29 @@ function startPostBootLightServices() {
   } catch (e) {
     console.warn('[deploy-cache] invalidate skipped:', e.message);
   }
+  setTimeout(() => {
+    try {
+      const { runInboxAccountDeletes } = require('./lib/inbox-account-delete');
+      runInboxAccountDeletes()
+        .then((out) => {
+          console.log(
+            '[inbox-account-delete] boot',
+            JSON.stringify({
+              ok: out.ok,
+              skipped: out.skipped || false,
+              deletedCount: out.deletedCount || 0,
+              missing: (out.missing || []).map((m) => m.id),
+              failed: (out.failed || []).length,
+            })
+          );
+        })
+        .catch((err) => {
+          console.warn('[inbox-account-delete] boot failed:', err.message || err);
+        });
+    } catch (e) {
+      console.warn('[inbox-account-delete] boot skipped:', e.message);
+    }
+  }, 2500);
   // One-shot pending visit alerts (e.g. Brysen Wright OV) — after push store hydrates.
   const pendingDelay = Math.max(
     8000,
