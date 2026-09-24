@@ -1001,7 +1001,25 @@ app.post('/api/onboarding/process', async (req, res) => {
       hasPaidAccess,
       pushEmailLog,
     });
-    return res.json({ ok: true, ...result });
+    let ios129Chase = null;
+    try {
+      const memberAnnounce = require('./lib/member-announce-email');
+      const chase = await memberAnnounce.sendIos129ChaseAnnounce({
+        loadUsers,
+        updateUser,
+        saveUsers,
+        deliverEmail,
+        dryRun: false,
+        requireActiveAccess: true,
+      });
+      ios129Chase = memberAnnounce.summarizeIos129ChaseResult(chase);
+    } catch (chaseErr) {
+      ios129Chase = {
+        ok: false,
+        error: chaseErr instanceof Error ? chaseErr.message : String(chaseErr),
+      };
+    }
+    return res.json({ ok: true, ...result, ios129Chase });
   } catch (err) {
     console.error('onboarding process error', err);
     return res.status(500).json({ ok: false, error: err.message || 'Onboarding process failed' });
@@ -1206,7 +1224,14 @@ app.get('/api/email-status', async (req, res) => {
         ? `Sending via Resend (${getResendFrom()}) — EmailJS template Save not required`
         : primary === 'emailjs'
           ? `Sending via EmailJS (Gmail: ${process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com'})`
-          : `Sending via ${primary}`
+          : `Sending via ${primary}`,
+    ios129ChaseAnnounce: (() => {
+      try {
+        return require('./lib/member-announce-email').readIos129ChaseReport();
+      } catch {
+        return null;
+      }
+    })()
   });
 });
 

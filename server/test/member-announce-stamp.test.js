@@ -38,12 +38,18 @@ test('sendIosUpdateAnnounce stamps via updateUser after each send', async () => 
 });
 
 test('sendIos129ChaseAnnounce stamps via updateUser after each send', async () => {
+  const os = require('os');
+  const path = require('path');
+  const prevUsers = process.env.GV_USERS_PATH;
+  process.env.GV_USERS_PATH = path.join(os.tmpdir(), `gv-users-129-${Date.now()}.json`);
   const users = [
     { email: 'fan1@example.com', name: 'Fan One', trialEnd: '2099-01-01T00:00:00.000Z' },
     { email: 'fan2@example.com', name: 'Fan Two', trialEnd: '2099-01-01T00:00:00.000Z' },
   ];
   const stamps = [];
-  const result = await sendIos129ChaseAnnounce({
+  let result;
+  try {
+  result = await sendIos129ChaseAnnounce({
     loadUsers: () => users,
     updateUser: (email, patch) => {
       stamps.push({ email, patch });
@@ -66,4 +72,33 @@ test('sendIos129ChaseAnnounce stamps via updateUser after each send', async () =
   });
   assert.equal(again.sent, 0);
   assert.ok(again.details.every((d) => d.reason === 'already_sent'));
+  } finally {
+    if (prevUsers == null) delete process.env.GV_USERS_PATH;
+    else process.env.GV_USERS_PATH = prevUsers;
+  }
+});
+
+test('sendIos129ChaseAnnounce does not stamp when deliverEmail returns sent=false', async () => {
+  const os = require('os');
+  const path = require('path');
+  const prevUsers = process.env.GV_USERS_PATH;
+  process.env.GV_USERS_PATH = path.join(os.tmpdir(), `gv-users-129-fail-${Date.now()}.json`);
+  const users = [
+    { email: 'fan3@example.com', name: 'Fan Three', trialEnd: '2099-01-01T00:00:00.000Z' },
+  ];
+  try {
+    const result = await sendIos129ChaseAnnounce({
+      loadUsers: () => users,
+      updateUser: () => {
+        throw new Error('should not stamp');
+      },
+      deliverEmail: async () => ({ sent: false, provider: null, error: 'not ready' }),
+    });
+    assert.equal(result.sent, 0);
+    assert.equal(result.failed, 1);
+    assert.equal(users[0]['iosAnnounce_1_0_29_chase'], undefined);
+  } finally {
+    if (prevUsers == null) delete process.env.GV_USERS_PATH;
+    else process.env.GV_USERS_PATH = prevUsers;
+  }
 });

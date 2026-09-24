@@ -3,6 +3,8 @@
  */
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const { emailShell, ctaButton, displayNameFrom } = require('./onboarding-emails');
 const { hasPaidAccess, trialState } = require('./subscription-service');
 const {
@@ -22,6 +24,46 @@ const IOS_129_CHASE_VERSION = '1.0.29';
 const IOS_129_CHASE_STAMP_KEY = 'iosAnnounce_1_0_29_chase';
 const IOS_129_CHASE_SUBJECT =
   'GatorVault 1.0.29 is live — 2028 is heating up. Here’s how to read it.';
+
+function ios129ChaseReportPath() {
+  const usersPath = process.env.GV_USERS_PATH || path.join(__dirname, '..', 'data', 'users.json');
+  return path.join(path.dirname(usersPath), 'ios-129-chase-announce-last.json');
+}
+
+function readIos129ChaseReport() {
+  try {
+    return JSON.parse(fs.readFileSync(ios129ChaseReportPath(), 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function writeIos129ChaseReport(payload) {
+  try {
+    fs.writeFileSync(ios129ChaseReportPath(), `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
+  } catch (err) {
+    console.warn('[announce-ios-129] report write failed', err instanceof Error ? err.message : err);
+  }
+}
+
+function summarizeIos129ChaseResult(result) {
+  if (!result || typeof result !== 'object') return null;
+  return {
+    ok: result.ok !== false,
+    at: result.at || null,
+    sent: result.sent || 0,
+    failed: result.failed || 0,
+    queued: result.queued || 0,
+    candidateCount: result.candidateCount || 0,
+    skippedCount: result.skippedCount || 0,
+    alreadySent: result.alreadySent || 0,
+    delivered: result.delivered === true,
+    deliveredViaResend: result.deliveredViaResend === true,
+    dryRun: result.dryRun === true,
+    force: result.force === true,
+    error: result.error || null,
+  };
+}
 
 const DEFAULT_VERSION = '1.0.15';
 
@@ -543,6 +585,8 @@ async function sendIos129ChaseAnnounce({
     throw new Error('sendIos129ChaseAnnounce requires loadUsers and deliverEmail');
   }
 
+  const prior = readIos129ChaseReport();
+  const effectiveForce = Boolean(force) || !(prior && prior.delivered === true);
   const key = IOS_129_CHASE_STAMP_KEY;
   const { recipients, skipped } = listAnnounceRecipients(loadUsers, { requireActiveAccess });
   const queue =
@@ -581,7 +625,7 @@ async function sendIos129ChaseAnnounce({
   }
 
   await mapPool(queue, dryRun ? 1 : concurrency, async (user) => {
-    if (!force && user[key]) {
+    if (!effectiveForce && user[key]) {
       details.push({ email: user.email, sent: false, reason: 'already_sent' });
       return;
     }
@@ -603,6 +647,17 @@ async function sendIos129ChaseAnnounce({
         emailSubject: built.subject,
         html: built.html,
       });
+      if (!delivery || delivery.sent !== true) {
+        failed += 1;
+        details.push({
+          email: user.email,
+          sent: false,
+          reason: 'send_failed',
+          error: delivery?.error || 'deliverEmail returned sent=false',
+          provider: delivery?.provider || null,
+        });
+        return;
+      }
       sent += 1;
       details.push({
         email: user.email,
@@ -634,22 +689,31 @@ async function sendIos129ChaseAnnounce({
     saveUsers(loadUsers());
   }
 
-  return {
+  const alreadySent = details.filter((d) => d.reason === 'already_sent').length;
+  const deliveredViaResend = details.some((d) => d.sent && d.provider === 'resend');
+  const payload = {
     ok: failed === 0,
     kind: 'ios_1_0_29_chase',
     version: IOS_129_CHASE_VERSION,
     stampKey: key,
     subject: IOS_129_CHASE_SUBJECT,
+    at: new Date().toISOString(),
     dryRun,
+    force: effectiveForce,
     candidateCount: recipients.length,
     queued: queue.length,
     sent,
     failed,
     skippedCount: skipped.length,
+    alreadySent,
+    delivered: sent > 0,
+    deliveredViaResend,
     skipped: skipped.slice(0, 50),
     details,
     concurrency: dryRun ? 1 : concurrency,
   };
+  if (!dryRun) writeIos129ChaseReport(summarizeIos129ChaseResult(payload));
+  return payload;
 }
 
 function shouldAutoSendIos129Chase({
@@ -684,7 +748,7 @@ function scheduleIos129ChaseAnnounce({
   global.__GV_IOS_129_CHASE_ANNOUNCE_STARTED = true;
   const wait = Number.isFinite(Number(delayMs))
     ? Number(delayMs)
-    : Math.max(20000, parseInt(process.env.IOS_129_CHASE_ANNOUNCE_BOOT_DELAY_MS || '45000', 10) || 45000);
+    : Math.max(20000, parseInt(process.env.IOS_129_CHASE_ANNOUNCE_BOOT_DELAY_MS || '180000', 10) || 180000);
   setTimeout(() => {
     sendIos129ChaseAnnounce({
       loadUsers,
@@ -735,4 +799,6 @@ module.exports = {
   sendIos129ChaseAnnounce,
   shouldAutoSendIos129Chase,
   scheduleIos129ChaseAnnounce,
+  readIos129ChaseReport,
+  summarizeIos129ChaseResult,
 };
