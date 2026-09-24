@@ -27,13 +27,31 @@ describe('depth-chart-board', () => {
     assert.equal(rg.b, 'TJ Dice Jr.');
     const wrZ = doc.offense.find((r) => r.pos === 'WR (Z)');
     assert.equal(wrZ.s, 'Eric Singleton Jr.');
-    assert.match(wrZ.analysis, /questionable vs auburn/i);
+    assert.match(wrZ.analysis, /questionable vs ole miss/i);
+    assert.match(wrZ.analysis, /brown starts at z/i);
+    const wrF = doc.offense.find((r) => r.pos === 'WR (F)');
+    assert.equal(wrF.s, 'Vernell Brown III');
+    assert.match(wrF.analysis, /stockton starts in the slot/i);
     const end = doc.defense.find((r) => r.pos === 'END');
     assert.match(end.s, /Emmanuel Oyebadejo/);
-    assert.match(end.analysis, /questionable vs auburn/i);
+    assert.doesNotMatch(end.analysis, /questionable vs auburn/i);
+    assert.match(end.analysis, /cleared from last week/i);
+    assert.match(doc.subtitle, /ole miss initial availability/i);
+    assert.doesNotMatch(doc.subtitle, /oyebadejo questionable/i);
     const payload = board.toApiPayload(doc);
     assert.equal(payload.ok, true);
     assert.deepEqual(payload.byPhase.off, doc.offense);
+  });
+
+  it('roster injury flags match Ole Miss Wed availability', () => {
+    const players = require('../../data/roster/players.json');
+    const singleton = players.find((p) => p.slug === 'eric-singleton-jr');
+    const oyebadejo = players.find((p) => p.slug === 'emmanuel-oyebadejo');
+    assert.equal(singleton.injury, 'yellow');
+    assert.match(singleton.injuryHistory, /ole miss/i);
+    assert.match(singleton.injuryHistory, /stockton/i);
+    assert.equal(oyebadejo.injury, 'green');
+    assert.match(oyebadejo.injuryHistory, /not listed on the ole miss/i);
   });
 
   it('writes durable override when GV_DEPTH_CHART_PATH set', () => {

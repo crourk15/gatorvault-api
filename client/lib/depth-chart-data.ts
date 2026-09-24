@@ -19,8 +19,8 @@ export const DEPTH_CHART_OFF: DepthChartRow[] = [
   { pos: 'QB', s: 'Aaron Philo', si: 'Jr.', b: 'Tramell Jones Jr.', bi: 'So.', third: '', status: 'locked', analysis: 'Official Week 1 chart: Philo starts vs FAU. Tramell is the listed backup. Will Griffin is not on the two-deep.' },
   { pos: 'RB', s: 'Jadan Baugh', si: 'Jr.', b: 'Evan Pryor / Duke Clark', bi: '6th / So.', third: 'London Montgomery (Sr.) / Byron Louis (So.)', status: 'locked', analysis: 'Baugh is RB1. Pryor and Clark are next; Montgomery and Louis share the fourth tier (OR on the official sheet).' },
   { pos: 'WR (X)', s: 'Dallas Wilson', si: 'So.', b: 'Micah Mays Jr. / Kahleil Jackson', bi: 'Sr. / 7th', third: '', status: 'locked', analysis: 'Wilson starts at X. Mays Jr. and Kahleil are listed as the OR behind him.' },
-  { pos: 'WR (Z)', s: 'Eric Singleton Jr.', si: 'Sr.', b: 'TJ Abrams', bi: 'Jr.', third: '', status: 'locked', analysis: 'Singleton Jr. starts at Z with Abrams next.' },
-  { pos: 'WR (F)', s: 'Vernell Brown III', si: 'So.', b: 'Bailey Stockton', bi: 'Sr.', third: '', status: 'locked', analysis: 'VB3 holds the F with Stockton behind him (also the PR two-deep).' },
+  { pos: 'WR (Z)', s: 'Eric Singleton Jr.', si: 'Sr.', b: 'TJ Abrams', bi: 'Jr.', third: '', status: 'locked', analysis: 'Singleton Jr. starts at Z with Abrams next. Questionable vs Ole Miss (ankle) — official Wed initial report, game-time again. If he can\'t go, Brown starts at Z. Stays listed 1st.' },
+  { pos: 'WR (F)', s: 'Vernell Brown III', si: 'So.', b: 'Bailey Stockton', bi: 'Sr.', third: '', status: 'locked', analysis: 'VB3 holds the F with Stockton behind him (also the PR two-deep). If Singleton sits, Brown starts at Z and Stockton starts in the slot.' },
   { pos: 'TE (Y)', s: 'Lacota Dippre', si: 'Sr.', b: 'Heze Kent', bi: 'Fr.', third: '', status: 'locked', analysis: 'Dippre is the Y starter. Kent is the listed backup — Sumrall flagged him as one of the most improved freshmen.' },
   { pos: 'TE (H)', s: 'Amir Jackson / Luke Harpring', si: 'Jr. / Jr.', b: '', bi: '', third: '', status: 'battle', analysis: 'Official co-starters at H (OR). Jackson listed first; Harpring shares the first team.' },
   { pos: 'LT', s: 'Bryce Lovett', si: 'Sr.', b: 'Eagan Boyer', bi: 'Jr.', third: '', status: 'locked', analysis: 'Lovett starts at LT; Boyer is the backup.' },
@@ -31,7 +31,7 @@ export const DEPTH_CHART_OFF: DepthChartRow[] = [
 ];
 
 export const DEPTH_CHART_DEF: DepthChartRow[] = [
-  { pos: 'END', s: 'Kamran James / LJ McCray / Emmanuel Oyebadejo', si: 'Sr. / Jr. / 5th', b: '', bi: '', third: '', status: 'battle', analysis: 'Three-way OR at defensive end on the official sheet — all listed first team.' },
+  { pos: 'END', s: 'Kamran James / LJ McCray / Emmanuel Oyebadejo', si: 'Sr. / Jr. / 5th', b: '', bi: '', third: '', status: 'battle', analysis: 'Three-way OR at defensive end on the official sheet — all listed first team. Oyebadejo not on the Ole Miss availability report — cleared from last week\'s Q. Stays in the OR.' },
   { pos: 'NOSE', s: 'Brendan Bett', si: 'Sr.', b: 'Joseph Mbatchou', bi: 'So.', third: '', status: 'locked', analysis: 'Bett starts at nose; Mbatchou is the backup.' },
   { pos: 'DT', s: 'Jeramiah McCloud', si: 'So.', b: 'DK Kalu / Jamari Lyons', bi: 'Sr. / 5th', third: '', status: 'locked', analysis: 'McCloud starts at DT. Kalu and Lyons are the OR behind him.' },
   { pos: 'JACK', s: 'Jayden Woods', si: 'So.', b: 'Kofi Asare / KJ Ford', bi: '5th / Fr.', third: '', status: 'locked', analysis: 'Woods starts at JACK. Asare and Ford share the next tier (OR).' },
