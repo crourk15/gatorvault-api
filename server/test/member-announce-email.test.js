@@ -11,6 +11,9 @@ const {
   listAnnounceRecipients,
   getIosUpdateAnnounceEmail,
   getArticleAnnounceEmail,
+  getIos129ChaseAnnounceEmail,
+  shouldAutoSendIos129Chase,
+  IOS_129_CHASE_SUBJECT,
   SEASON_PREVIEW_2026_URL,
 } = require('../lib/member-announce-email');
 
@@ -44,5 +47,28 @@ describe('member announce email', () => {
     assert.match(built.subject, /1\.0\.15/);
     assert.match(built.html, /App Store/);
     assert.match(built.html, /gatorvault-insider/);
+  });
+
+  it('builds the 1.0.29 Chase / Closest walkthrough', () => {
+    const built = getIos129ChaseAnnounceEmail({ email: 'fan@gmail.com', name: 'Alex' });
+    assert.equal(built.subject, IOS_129_CHASE_SUBJECT);
+    assert.match(built.html, /Hey Alex/);
+    assert.match(built.html, /1\.0\.29/);
+    assert.match(built.html, /Priority Chase/);
+    assert.match(built.html, /Closest to commit/);
+    assert.match(built.html, /Why we chase/);
+    assert.match(built.html, /player profile/i);
+    assert.match(built.html, /Open FutureCast/);
+    assert.match(built.html, /gatorvault-insider/);
+    assert.doesNotMatch(built.html, /Read the season preview/);
+  });
+
+  it('auto-sends 1.0.29 Chase mail on production Render unless disabled', () => {
+    assert.equal(shouldAutoSendIos129Chase({ env: { RENDER: 'true' }, nodeEnv: 'production' }), true);
+    assert.equal(
+      shouldAutoSendIos129Chase({ env: { RENDER: 'true', IOS_129_CHASE_ANNOUNCE_AUTO: '0' }, nodeEnv: 'production' }),
+      false
+    );
+    assert.equal(shouldAutoSendIos129Chase({ env: {}, nodeEnv: 'development' }), false);
   });
 });

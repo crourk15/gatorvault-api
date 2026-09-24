@@ -68,6 +68,12 @@ test('ALLOW_LEGACY_ADMIN_PIN re-enables published default in production', () => 
   });
 });
 
+test('pinFromReq reads X-Admin-Pin', () => {
+  withEnv({ NODE_ENV: 'development' }, ({ pinFromReq }) => {
+    assert.equal(pinFromReq({ headers: { 'x-admin-pin': 'ops-secret' }, body: {}, query: {} }), 'ops-secret');
+  });
+});
+
 test('DISABLE_DEFAULT_ADMIN_PIN suppresses legacy even when allow-legacy is set', () => {
   withEnv({
     NODE_ENV: 'production',

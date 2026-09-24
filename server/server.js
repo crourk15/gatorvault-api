@@ -2059,6 +2059,17 @@ function startPostBootRecruitingAndSchedulers() {
     console.warn('Onboarding scheduler init skipped', e.message);
   }
   try {
+    const memberAnnounce = require('./lib/member-announce-email');
+    memberAnnounce.scheduleIos129ChaseAnnounce({
+      loadUsers,
+      updateUser,
+      saveUsers,
+      deliverEmail,
+    });
+  } catch (e) {
+    console.warn('[announce-ios-129] boot schedule skipped', e.message);
+  }
+  try {
     if (!pipelineGuards.scheduledJobsEnabled()) {
       console.log('[autoposter] schedulers skipped — X_SCHEDULED_JOBS_ENABLED is not true');
     } else {

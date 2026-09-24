@@ -1094,6 +1094,48 @@ function mountAdminHubRoutes(app) {
   });
 
   /**
+   * Email active members + trials about iOS 1.0.29 and how to read 2028 Chase / Closest.
+   * Body: { dryRun?, force?, limit?, requireActiveAccess? }
+   */
+  app.post('/api/admin/members/announce-ios-129', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const body = req.body || {};
+      const dryRun = body.dryRun === true || body.dryRun === 'true' || body.dry_run === true;
+      const force = body.force === true || body.force === 'true';
+      const requireActiveAccess = body.requireActiveAccess !== false && body.requireActiveAccess !== 'false';
+      const limit = body.limit != null ? Number(body.limit) : null;
+
+      const mail =
+        (global.__GV_SUBSCRIPTION_MAIL__ && global.__GV_SUBSCRIPTION_MAIL__.deliverEmail) ||
+        null;
+      if (!mail && !dryRun) {
+        return res.status(503).json({ ok: false, error: 'Email deliverer not ready' });
+      }
+
+      const users = loadUsers();
+      const result = await memberAnnounce.sendIos129ChaseAnnounce({
+        loadUsers: () => users,
+        updateUser,
+        deliverEmail: mail || (async () => ({ sent: false, provider: 'dry' })),
+        dryRun,
+        force,
+        requireActiveAccess,
+        limit,
+      });
+
+      return res.status(200).json({
+        ok: true,
+        ...result,
+        appStoreUrl: memberAnnounce.APP_STORE_URL,
+        futureCastUrl: memberAnnounce.FUTURECAST_ANNOUNCE_URL,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /**
    * Email active members about a published Vault article.
    * Body: { articleUrl?, articleTitle?, subject?, introHtml?, stampKey?, dryRun?, force?, limit? }
    * Defaults to the 2026 season preview piece.

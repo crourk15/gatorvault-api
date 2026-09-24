@@ -77,6 +77,7 @@ function primaryAdminPin() {
 function pinFromReq(req) {
   if (!req) return '';
   const fromHeaders =
+    req.headers['x-admin-pin'] ||
     req.headers['x-ops-pin'] ||
     req.headers['x-recruiting-pin'] ||
     req.headers['x-roster-pin'] ||
