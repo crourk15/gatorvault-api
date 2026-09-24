@@ -740,10 +740,26 @@ function scheduleIos129ChaseAnnounce({
   deliverEmail,
   delayMs = null,
 } = {}) {
-  if (!shouldAutoSendIos129Chase()) return { scheduled: false, reason: 'disabled' };
-  if (global.__GV_IOS_129_CHASE_ANNOUNCE_STARTED) return { scheduled: false, reason: 'already_started' };
-  if (typeof loadUsers !== 'function' || typeof deliverEmail !== 'function') {
-    return { scheduled: false, reason: 'missing_deps' };
+  const gate = (() => {
+    if (!shouldAutoSendIos129Chase()) return { scheduled: false, reason: 'disabled' };
+    if (global.__GV_IOS_129_CHASE_ANNOUNCE_STARTED) return { scheduled: false, reason: 'already_started' };
+    if (typeof loadUsers !== 'function' || typeof deliverEmail !== 'function') {
+      return { scheduled: false, reason: 'missing_deps' };
+    }
+    return null;
+  })();
+  if (gate) {
+    if (gate.reason !== 'already_started') {
+      writeIos129ChaseReport({
+        ok: false,
+        at: new Date().toISOString(),
+        pending: false,
+        delivered: false,
+        deliveredViaResend: false,
+        error: gate.reason,
+      });
+    }
+    return gate;
   }
   global.__GV_IOS_129_CHASE_ANNOUNCE_STARTED = true;
   const wait = Number.isFinite(Number(delayMs))

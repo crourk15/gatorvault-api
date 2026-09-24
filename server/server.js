@@ -1233,6 +1233,23 @@ app.get('/api/email-status', async (req, res) => {
       }
     })()
   });
+  if (!global.__GV_IOS_129_CHASE_ANNOUNCE_STARTED) {
+    setImmediate(() => {
+      try {
+        const memberAnnounce = require('./lib/member-announce-email');
+        const kicked = memberAnnounce.scheduleIos129ChaseAnnounce({
+          loadUsers,
+          updateUser,
+          saveUsers,
+          deliverEmail,
+          delayMs: 3000,
+        });
+        console.log('[announce-ios-129] email-status kick', JSON.stringify(kicked));
+      } catch (kickErr) {
+        console.warn('[announce-ios-129] email-status kick skipped', kickErr.message);
+      }
+    });
+  }
 });
 
 app.post('/api/test/welcome', async (req, res) => {
@@ -1648,6 +1665,19 @@ function startPostBootServices() {
     }
   } catch (storeErr) {
     console.warn('[user-store] boot info failed:', storeErr.message || storeErr);
+  }
+  try {
+    const memberAnnounce = require('./lib/member-announce-email');
+    const scheduled = memberAnnounce.scheduleIos129ChaseAnnounce({
+      loadUsers,
+      updateUser,
+      saveUsers,
+      deliverEmail,
+      delayMs: 20000,
+    });
+    console.log('[announce-ios-129] post-boot', JSON.stringify(scheduled));
+  } catch (e) {
+    console.warn('[announce-ios-129] post-boot skipped', e.message);
   }
   // Defer scrypt user-store work so first /health probes stay instant after wiring.
   setTimeout(() => {
