@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Admin Hub member delete (company inbox): `POST /api/admin/members/delete` + boot one-shot for Cannon / Clawson / McCoy / Wilkerson. API after Render — no Codemagic.
 - [x] Home NOW Season extra tick: `GET /api/recruiting/hub/ticker` is a direct now-pack (`status: ready` + `nowWeek`, no hub-cache building). `1.0.29 is live — update in the App Store` leads Season. Empty `seasonTicks` to drop. API after Render — no Codemagic.
 - [x] Team depth / Home injury: Ole Miss Wed initial availability — Singleton stays Q (ankle, game-time; Brown at Z / Stockton in the slot if he sits). Oyebadejo not listed, injury green. Official two-deep unchanged. **API only** (`/api/roster/depth-chart` + roster after Render). Next report overwrites the same JSON — no Codemagic to add or remove.
 - [x] FutureCast vault-feed 2028+ 7am **and** 7pm ET: cron accepts immediately, 8–9am/8–9pm catch a missed slot, last-report writes a running stamp so 7pm cannot stay stuck on the morning pass. Dead “running” with no heartbeat marks error. Scheduled pass skips allowlist + full beat-ingest so it can finish on Starter. API after Render — no Codemagic.

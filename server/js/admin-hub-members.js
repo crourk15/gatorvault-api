@@ -140,6 +140,7 @@
       + '</div>'
       + '<div class="hub-btn-row" style="margin-top:10px">'
       + '<button type="button" class="hub-btn" id="hub-mem-extend-visible">Extend visible expired +30d</button>'
+      + '<button type="button" class="hub-btn secondary" id="hub-mem-inbox-delete">Delete inbox list</button>'
       + '<button type="button" class="hub-btn secondary" id="hub-mem-announce-129">Send 1.0.29 Chase email</button>'
       + '</div>'
       + '</div>'
@@ -163,6 +164,26 @@
         .filter(function (m) { return m && m.access === 'expired' && m.email; })
         .map(function (m) { return m.email; });
       extendEmails(emails, 'visible expired');
+    });
+    document.getElementById('hub-mem-inbox-delete').addEventListener('click', function () {
+      if (!apiPost) {
+        setMsg('Delete is not wired in this hub build', true);
+        return;
+      }
+      if (!window.confirm('Permanently delete the company-inbox request list (Cannon, Clawson, McCoy, Wilkerson)? No email is sent.')) {
+        return;
+      }
+      setMsg('Deleting inbox-list accounts…');
+      apiPost('/api/admin/members/delete', { runListed: true, confirm: 'DELETE' })
+        .then(function (payload) {
+          var n = payload && payload.deletedCount != null ? payload.deletedCount : 0;
+          var missing = payload && payload.missing ? payload.missing.length : 0;
+          setMsg('Inbox delete · removed ' + n + ' · not found ' + missing);
+          return load();
+        })
+        .catch(function (e) {
+          setMsg((e && e.message) || 'Inbox delete failed', true);
+        });
     });
     document.getElementById('hub-mem-announce-129').addEventListener('click', function () {
       if (!apiPost) {
@@ -288,6 +309,9 @@
           + (m.access === 'expired' && email
             ? ' <button type="button" class="hub-btn secondary hub-mem-extend" data-email="' + esc(email) + '">+30d</button>'
             : '')
+          + (email
+            ? ' <button type="button" class="hub-btn secondary hub-mem-delete" data-email="' + esc(email) + '" data-name="' + esc(m.name || '') + '">Delete</button>'
+            : '')
           + '</td>'
           + '</tr>';
       }).join('');
@@ -310,6 +334,30 @@
       body.querySelectorAll('.hub-mem-extend').forEach(function (btn) {
         btn.addEventListener('click', function () {
           extendEmails([btn.getAttribute('data-email') || ''], 'this account');
+        });
+      });
+      body.querySelectorAll('.hub-mem-delete').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var email = btn.getAttribute('data-email') || '';
+          var name = btn.getAttribute('data-name') || email;
+          if (!apiPost) {
+            setMsg('Delete is not wired in this hub build', true);
+            return;
+          }
+          if (!window.confirm('Permanently delete ' + name + ' (' + email + ')? No email is sent. This cannot be undone.')) {
+            return;
+          }
+          setMsg('Deleting ' + email + '…');
+          apiPost('/api/admin/members/delete', { emails: [email], confirm: 'DELETE' })
+            .then(function (payload) {
+              var n = payload && payload.deletedCount != null ? payload.deletedCount : 0;
+              if (n) setMsg('Deleted ' + email);
+              else setMsg((payload && payload.skipped && payload.skipped[0] && payload.skipped[0].reason) || 'Account not deleted', true);
+              return load();
+            })
+            .catch(function (e) {
+              setMsg((e && e.message) || 'Delete failed', true);
+            });
         });
       });
     }
