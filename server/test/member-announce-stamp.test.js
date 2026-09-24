@@ -72,6 +72,19 @@ test('sendIos129ChaseAnnounce stamps via updateUser after each send', async () =
   });
   assert.equal(again.sent, 0);
   assert.ok(again.details.every((d) => d.reason === 'already_sent'));
+
+  const fs = require('fs');
+  fs.writeFileSync(
+    path.join(path.dirname(process.env.GV_USERS_PATH), 'ios-129-chase-announce-last.json'),
+    JSON.stringify({ delivered: false, pending: true })
+  );
+  const third = await sendIos129ChaseAnnounce({
+    loadUsers: () => users,
+    updateUser: () => null,
+    deliverEmail: async () => ({ sent: true, provider: 'test' }),
+  });
+  assert.equal(third.sent, 0);
+  assert.equal(third.force, false);
   } finally {
     if (prevUsers == null) delete process.env.GV_USERS_PATH;
     else process.env.GV_USERS_PATH = prevUsers;

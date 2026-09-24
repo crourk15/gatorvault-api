@@ -585,8 +585,7 @@ async function sendIos129ChaseAnnounce({
     throw new Error('sendIos129ChaseAnnounce requires loadUsers and deliverEmail');
   }
 
-  const prior = readIos129ChaseReport();
-  const effectiveForce = Boolean(force) || !(prior && prior.delivered === true);
+  const effectiveForce = Boolean(force);
   const key = IOS_129_CHASE_STAMP_KEY;
   const { recipients, skipped } = listAnnounceRecipients(loadUsers, { requireActiveAccess });
   const queue =
@@ -721,16 +720,8 @@ function shouldAutoSendIos129Chase({
   nodeEnv = process.env.NODE_ENV,
 } = {}) {
   const raw = String(env.IOS_129_CHASE_ANNOUNCE_AUTO || '').trim().toLowerCase();
-  if (raw === '0' || raw === 'false' || raw === 'off') return false;
-  if (String(env.API_STAY_GREEN || '').toLowerCase() === 'true') return false;
-  if (String(nodeEnv || '').toLowerCase() === 'test') return false;
-  if (String(env.GV_TEST || '').toLowerCase() === '1' || String(env.GV_TEST || '').toLowerCase() === 'true') {
-    return false;
-  }
-  const prod =
-    String(nodeEnv || '').toLowerCase() === 'production' ||
-    String(env.RENDER || '').toLowerCase() === 'true';
-  return prod || raw === '1' || raw === 'true' || raw === 'on';
+  if (raw === '1' || raw === 'true' || raw === 'on') return true;
+  return false;
 }
 
 function scheduleIos129ChaseAnnounce({
@@ -749,16 +740,6 @@ function scheduleIos129ChaseAnnounce({
     return null;
   })();
   if (gate) {
-    if (gate.reason !== 'already_started') {
-      writeIos129ChaseReport({
-        ok: false,
-        at: new Date().toISOString(),
-        pending: false,
-        delivered: false,
-        deliveredViaResend: false,
-        error: gate.reason,
-      });
-    }
     return gate;
   }
   global.__GV_IOS_129_CHASE_ANNOUNCE_STARTED = true;
