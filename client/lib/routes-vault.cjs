@@ -154,6 +154,10 @@ const TEAM_SUB_ROUTES = ['staff', 'identity', 'history'];
 
 const VAULT_REACT_REWRITES = [
   // Dynamic profile + podcast routes MUST precede parent wildcards (Netlify first-match).
+  // No-slash player URLs 500/503 on the edge — send them to the slash shell.
+  { from: '/vault/recruiting/player/:slug', to: '/vault/recruiting/player/:slug/', status: 301 },
+  { from: '/vault/futurecast/player/:slug', to: '/vault/futurecast/player/:slug/', status: 301 },
+  { from: '/vault/players/:slug', to: '/vault/players/:slug/', status: 301 },
   { from: '/vault/recruiting/player/*', to: '/vault/recruiting/player/index.html', status: 200 },
   { from: '/vault/futurecast/player/*', to: '/vault/futurecast/player/index.html', status: 200 },
   { from: '/vault/players/*', to: '/vault/players/index.html', status: 200 },

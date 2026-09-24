@@ -2,8 +2,8 @@
   "version": 1,
   "mode": "fall-camp",
   "label": "Week 1 · Florida Atlantic",
-  "subtitle": "Official UF depth chart (Aug 31). Philo QB1 · Tramell QB2 · Will Griffin off the two-deep. Open ORs at END, H-TE, and one CB. Auburn initial availability (Wed): Singleton + Oyebadejo questionable (ankle).",
-  "updatedAt": "2026-09-17T01:40:00.000Z",
+  "subtitle": "Official UF depth chart (Aug 31). Philo QB1 · Tramell QB2 · Will Griffin off the two-deep. Open ORs at END, H-TE, and one CB. Ole Miss initial availability (Wed): Singleton questionable (ankle) — game-time. If he sits, Brown starts at Z and Stockton in the slot. Oyebadejo not listed — cleared from last week.",
+  "updatedAt": "2026-09-24T01:10:00.000Z",
   "source": "official-week1-fau-depth-chart",
   "offense": [
     {
@@ -44,7 +44,7 @@
       "bi": "Jr.",
       "third": "",
       "status": "locked",
-      "analysis": "Singleton Jr. starts at Z with Abrams next. Questionable vs Auburn (ankle) — official Wed initial report. Stays listed 1st."
+      "analysis": "Singleton Jr. starts at Z with Abrams next. Questionable vs Ole Miss (ankle) — official Wed initial report, game-time again. If he can't go, Brown starts at Z. Stays listed 1st."
     },
     {
       "pos": "WR (F)",
@@ -54,7 +54,7 @@
       "bi": "Sr.",
       "third": "",
       "status": "locked",
-      "analysis": "VB3 holds the F with Stockton behind him (also the PR two-deep)."
+      "analysis": "VB3 holds the F with Stockton behind him (also the PR two-deep). If Singleton sits, Brown starts at Z and Stockton starts in the slot."
     },
     {
       "pos": "TE (Y)",
@@ -136,7 +136,7 @@
       "bi": "",
       "third": "",
       "status": "battle",
-      "analysis": "Three-way OR at defensive end on the official sheet — all listed first team. Oyebadejo questionable vs Auburn (ankle) — official Wed initial report. Stays in the OR."
+      "analysis": "Three-way OR at defensive end on the official sheet — all listed first team. Oyebadejo not on the Ole Miss availability report — cleared from last week's Q. Stays in the OR."
     },
     {
       "pos": "NOSE",
