@@ -146,6 +146,28 @@ function stripPillarPrefix(text) {
     .trim();
 }
 
+/** Extra Season items from weekly-now.json `seasonTicks`. Empty the array to drop. */
+function seasonTickLines(override, opts = {}) {
+  const raw = opts.seasonTicks !== undefined ? opts.seasonTicks : override?.seasonTicks;
+  if (!Array.isArray(raw)) return [];
+  const out = [];
+  for (const t of raw) {
+    const stripped = stripPillarPrefix(t);
+    if (stripped && !out.includes(stripped)) out.push(stripped);
+  }
+  return out;
+}
+
+function seasonItemsForWeek(standing, override, opts = {}) {
+  const items = [];
+  const standingItem = stripPillarPrefix(standing);
+  if (standingItem) items.push(standingItem);
+  for (const tick of seasonTickLines(override, opts)) {
+    if (!items.includes(tick)) items.push(tick);
+  }
+  return items;
+}
+
 function formatGamePillar(gameStory) {
   const t = String(gameStory || '').trim();
   if (!t) return null;
@@ -158,7 +180,8 @@ function formatGamePillar(gameStory) {
 
 /**
  * Structured weekly pillars for Home NOW.
- * Game owns the network. Visitors ticks names. Season is the record.
+ * Game owns the network. Visitors ticks names. Season is the record
+ * plus optional weekly-now.json seasonTicks (drop by emptying the array).
  */
 function buildWeeklyHomeNowCategories(now = new Date(), games, opts = {}) {
   const list = Array.isArray(games) ? games : gamesForNow();
@@ -203,11 +226,12 @@ function buildWeeklyHomeNowCategories(now = new Date(), games, opts = {}) {
       });
     }
   }
-  if (standing) {
+  const seasonItems = seasonItemsForWeek(standing, override, opts);
+  if (seasonItems.length) {
     categories.push({
       key: 'season',
       label: 'Season',
-      items: [stripPillarPrefix(standing)],
+      items: seasonItems,
     });
   }
   return categories.slice(0, 3);
@@ -221,9 +245,9 @@ function buildWeeklyHomeNowLines(now = new Date(), games, opts = {}) {
   const cats = buildWeeklyHomeNowCategories(now, games, opts);
   const lines = [];
   for (const c of cats) {
-    if (c.key === 'visitors' && c.items.length) {
+    if ((c.key === 'visitors' || c.key === 'season') && c.items.length) {
       for (const name of c.items) {
-        if (name) lines.push(`Visitors — ${name}`);
+        if (name) lines.push(`${c.label} — ${name}`);
       }
       continue;
     }
@@ -241,6 +265,7 @@ module.exports = {
   seasonRecord,
   autoPlaceLine,
   autoStandingLine,
+  seasonTickLines,
   shortVisitorName,
   pickWeeklyNowBreakIn: require('./weekly-now-breakin').pickWeeklyNowBreakIn,
 };

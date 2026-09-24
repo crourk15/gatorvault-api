@@ -20,7 +20,9 @@ test('Ole Miss week NOW is three pillars — Game owns ABC', () => {
   assert.ok(visitors.some((s) => /Easton Royal/.test(s)));
   assert.ok(!visitors.some((s) => /Royal · Wright · Thomas/.test(s)));
   assert.doesNotMatch(visitors[0], /ABC|in the Swamp/i);
-  assert.match(lines[lines.length - 1], /^Season — 3-0 · first SEC home Saturday$/);
+  const season = lines.filter((s) => /^Season — /.test(s));
+  assert.ok(season.some((s) => /^Season — 3-0 · first SEC home Saturday$/.test(s)));
+  assert.ok(season.some((s) => /1\.0\.29 is live — update in the App Store/.test(s)));
   assert.ok(!lines.some((s) => /class trending|#8|blue chip/i.test(s)));
 });
 
@@ -34,6 +36,7 @@ test('Ole Miss week categories tick visitor names under Visitors, not ABC', () =
   assert.ok(cats[1].items.every((s) => !/ABC/i.test(s)));
   assert.equal(cats[2].label, 'Season');
   assert.match(cats[2].items[0], /3-0/);
+  assert.ok(cats[2].items.some((s) => /1\.0\.29 is live — update in the App Store/.test(s)));
 });
 
 test('season record after Auburn is 3-0', () => {
@@ -167,6 +170,14 @@ test('this-week commitDate still takes the Visitors slot', () => {
   const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [FRESH_COMMIT_DATE] });
   assert.equal(cats[1].label, 'News');
   assert.match(cats[1].items[0], /Jaden Hale commits to Florida/);
+});
+
+test('empty seasonTicks leaves only the standing line', () => {
+  const cats = buildWeeklyHomeNowCategories(new Date('2026-09-21T18:00:00.000Z'), undefined, {
+    seasonTicks: [],
+  });
+  assert.equal(cats[2].label, 'Season');
+  assert.deepEqual(cats[2].items, ['3-0 · first SEC home Saturday']);
 });
 
 test('Ole Miss visitors tick first and last names, not three last names', () => {
