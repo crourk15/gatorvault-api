@@ -748,7 +748,15 @@ function scheduleIos129ChaseAnnounce({
   global.__GV_IOS_129_CHASE_ANNOUNCE_STARTED = true;
   const wait = Number.isFinite(Number(delayMs))
     ? Number(delayMs)
-    : Math.max(20000, parseInt(process.env.IOS_129_CHASE_ANNOUNCE_BOOT_DELAY_MS || '180000', 10) || 180000);
+    : Math.max(5000, parseInt(process.env.IOS_129_CHASE_ANNOUNCE_BOOT_DELAY_MS || '15000', 10) || 15000);
+  writeIos129ChaseReport({
+    ok: true,
+    at: new Date().toISOString(),
+    pending: true,
+    delayMs: wait,
+    delivered: false,
+    deliveredViaResend: false,
+  });
   setTimeout(() => {
     sendIos129ChaseAnnounce({
       loadUsers,
@@ -767,6 +775,7 @@ function scheduleIos129ChaseAnnounce({
             skipped: result.skippedCount,
             failed: result.failed,
             candidateCount: result.candidateCount,
+            deliveredViaResend: result.deliveredViaResend,
           })
         );
       })

@@ -1758,6 +1758,19 @@ function startPostBootLightServices() {
       console.warn('[pending-visit-alerts] boot skipped:', e.message);
     }
   }, pendingDelay);
+  try {
+    const memberAnnounce = require('./lib/member-announce-email');
+    const scheduled = memberAnnounce.scheduleIos129ChaseAnnounce({
+      loadUsers,
+      updateUser,
+      saveUsers,
+      deliverEmail,
+      delayMs: 15000,
+    });
+    console.log('[announce-ios-129] light-boot', JSON.stringify(scheduled));
+  } catch (e) {
+    console.warn('[announce-ios-129] light-boot skipped', e.message);
+  }
 }
 
 /**
