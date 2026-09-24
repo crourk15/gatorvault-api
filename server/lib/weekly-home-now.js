@@ -269,11 +269,32 @@ function attachLiveNowWeek(payload) {
   return body;
 }
 
+/**
+ * Cheap ticker pack for iOS 1.0.29 — never waits on hub cache / status:building.
+ * apiFetch throws building away and Home keeps last-good Season.
+ */
+function buildHomeNowTickerPack(now = new Date(), games, opts = {}) {
+  const nowWeek = buildWeeklyHomeNowCategories(now, games, opts);
+  const items = buildWeeklyHomeNowLines(now, games, opts);
+  return {
+    ok: true,
+    status: 'ready',
+    items,
+    nowWeek,
+    meta: {
+      endpoint: 'ticker',
+      cacheReason: 'now-direct',
+      generatedAt: new Date().toISOString(),
+    },
+  };
+}
+
 module.exports = {
   OVERRIDE_PATH,
   buildWeeklyHomeNowLines,
   buildWeeklyHomeNowCategories,
   attachLiveNowWeek,
+  buildHomeNowTickerPack,
   seasonRecord,
   autoPlaceLine,
   autoStandingLine,

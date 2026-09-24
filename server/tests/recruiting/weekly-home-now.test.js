@@ -172,6 +172,16 @@ test('this-week commitDate still takes the Visitors slot', () => {
   assert.match(cats[1].items[0], /Jaden Hale commits to Florida/);
 });
 
+test('ticker pack is ready with Season update first so iOS 1.0.29 does not throw it away', () => {
+  const { buildHomeNowTickerPack } = require('../../lib/weekly-home-now');
+  const pack = buildHomeNowTickerPack(new Date('2026-09-21T18:00:00.000Z'));
+  assert.equal(pack.status, 'ready');
+  assert.ok(pack.nowWeek.length >= 3);
+  const season = pack.nowWeek.find((c) => c.key === 'season');
+  assert.match(season.items[0], /1\.0\.29 is live — update in the App Store/);
+  assert.ok(pack.items.some((s) => /1\.0\.29 is live — update in the App Store/.test(s)));
+});
+
 test('attachLiveNowWeek fills Season ticks when ticker items are empty', () => {
   const { attachLiveNowWeek } = require('../../lib/weekly-home-now');
   const body = attachLiveNowWeek({ ok: true, status: 'building', items: [] });
