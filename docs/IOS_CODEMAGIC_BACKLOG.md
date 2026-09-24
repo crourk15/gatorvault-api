@@ -7,7 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
-- [x] Team depth / Home injury: Ole Miss Wed initial availability — Singleton stays Q (ankle, game-time; Brown at Z / Stockton in the slot if he sits). Oyebadejo not listed, injury green. Official two-deep unchanged (`/api/roster/depth-chart` + roster after Render). No Codemagic.
+- [x] Team depth / Home injury: Ole Miss Wed initial availability — Singleton stays Q (ankle, game-time; Brown at Z / Stockton in the slot if he sits). Oyebadejo not listed, injury green. Official two-deep unchanged. **API only** (`/api/roster/depth-chart` + roster after Render). Next report overwrites the same JSON — no Codemagic to add or remove.
 - [x] FutureCast vault-feed 2028+ 7am **and** 7pm ET: cron accepts immediately, 8–9am/8–9pm catch a missed slot, last-report writes a running stamp so 7pm cannot stay stuck on the morning pass. Dead “running” with no heartbeat marks error. Scheduled pass skips allowlist + full beat-ingest so it can finish on Starter. API after Render — no Codemagic.
 - [x] Game Week intel heal: git bundle keys/scout/swing always overlay a newer Render durable (official-box `updatedAt: now` can no longer revive last week's card). API after Render — 1.0.28 already live-fetches `/api/schedule`. Last-good first-paint on 502 is the bake row below.
 - [x] Game Week Ole Miss scout + 3 keys: Maintain Lane Discipline & Crowd Chambliss / Cap the Vertical Shots / Establish the Downhill Run Game plus football-structure offense/defense/film (`/api/schedule` after Render). No Lane Kiffin — Golding still calls D. `filmWatched: false`. Current App Store already live-fetches keys + tendencies + film. Special-teams Carneiro/2-pt needs the `game.specialTeams` mapper bake below.
@@ -166,7 +166,6 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-24 | Team depth first-paint: Singleton Q vs Ole Miss + Brown/Stockton fallback | `depth-chart-data.ts` fallback in binary. **Live `/api/roster/depth-chart` + roster injury flags are API after Render.** | this PR |
 | 2026-09-23 | Player profile hrefs use a trailing slash | `playerProfileRoute` in binary. **Edge 308 + `_redirects` 301 already fix the Netlify 500 after deploy.** Old binary still links `/player/:slug` without the slash. | this PR |
 | 2026-09-23 | Game Week Expected visitors: do not scroll-prefetch every profile (cap 2) | `ExpectedVisitorsPanel` `data-no-profile-prefetch` + `VaultNavigationProvider` skip + `PREFETCH_CONCURRENCY`. **Stamps + lite cook are API-live after Render.** Old binary still fires 20+ full-profile GETs when the list comes on screen. | #737 |
 | 2026-09-22 | Community hub last-good + `/api/community/page` client | Optional later bake. **Page cache + Closest 2028 prime are API-live after Render — no Codemagic for speed.** | #732 |
