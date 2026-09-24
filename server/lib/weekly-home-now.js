@@ -258,10 +258,20 @@ function buildWeeklyHomeNowLines(now = new Date(), games, opts = {}) {
   return lines;
 }
 
+/** Home NOW pillars — attach even when hub ticker items are still warming. */
+function attachLiveNowWeek(payload) {
+  const body = payload && typeof payload === 'object' ? payload : {};
+  if (Array.isArray(body.nowWeek) && body.nowWeek.length) return body;
+  const nowWeek = buildWeeklyHomeNowCategories();
+  if (nowWeek.length) body.nowWeek = nowWeek;
+  return body;
+}
+
 module.exports = {
   OVERRIDE_PATH,
   buildWeeklyHomeNowLines,
   buildWeeklyHomeNowCategories,
+  attachLiveNowWeek,
   seasonRecord,
   autoPlaceLine,
   autoStandingLine,
