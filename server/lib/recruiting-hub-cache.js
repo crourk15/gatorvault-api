@@ -410,7 +410,7 @@ function isReady() {
 
 function buildingResponse({ endpoint, year, cacheKey, metaExtra = {} }) {
   const now = new Date().toISOString();
-  return {
+  const body = {
     ok: true,
     status: 'building',
     meta: {
@@ -425,6 +425,15 @@ function buildingResponse({ endpoint, year, cacheKey, metaExtra = {} }) {
     },
     items: [],
   };
+  if (endpoint === 'ticker') {
+    try {
+      const { attachLiveNowWeek } = require('./weekly-home-now');
+      attachLiveNowWeek(body);
+    } catch {
+      /* items-only fallback */
+    }
+  }
+  return body;
 }
 
 function clearHubCache() {
@@ -903,10 +912,10 @@ async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = fa
         : result.value;
   if (endpoint === 'ticker') {
     try {
-      const { buildWeeklyHomeNowCategories } = require('./weekly-home-now');
-      const nowWeek = buildWeeklyHomeNowCategories();
-      if (Array.isArray(nowWeek) && nowWeek.length) {
-        return res.json({ ok: true, status: 'ready', meta, items, nowWeek });
+      const { attachLiveNowWeek } = require('./weekly-home-now');
+      const body = attachLiveNowWeek({ ok: true, status: 'ready', meta, items });
+      if (Array.isArray(body.nowWeek) && body.nowWeek.length) {
+        return res.json(body);
       }
     } catch {
       /* items-only fallback */
