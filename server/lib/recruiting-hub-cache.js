@@ -22,7 +22,7 @@ const FOOTPRINT_CACHE_REV = 'fp3';
 const COMMITS_CACHE_REV = 'c5';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
-const TICKER_CACHE_REV = 't15';
+const TICKER_CACHE_REV = 't16';
 
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
@@ -192,7 +192,7 @@ function parseHubSnapshotDoc(endpoint, doc) {
     const scrubbed = rawItems ? scrubHubTickerLines(rawItems) : null;
     if (!scrubbed || !scrubbed.length) return null;
     const rev = meta?.cacheRev || doc.cacheRev || null;
-    // t15 = Visitors tick every first+last name. Reject t14 last-name compact plates.
+    // t16 = Season extra ticks (1.0.29 App Store line). Reject t15 plates.
     if (rev && rev !== TICKER_CACHE_REV) return null;
     return scrubbed;
   }
