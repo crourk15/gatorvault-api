@@ -1001,25 +1001,7 @@ app.post('/api/onboarding/process', async (req, res) => {
       hasPaidAccess,
       pushEmailLog,
     });
-    let ios129Chase = null;
-    try {
-      const memberAnnounce = require('./lib/member-announce-email');
-      const chase = await memberAnnounce.sendIos129ChaseAnnounce({
-        loadUsers,
-        updateUser,
-        saveUsers,
-        deliverEmail,
-        dryRun: false,
-        requireActiveAccess: true,
-      });
-      ios129Chase = memberAnnounce.summarizeIos129ChaseResult(chase);
-    } catch (chaseErr) {
-      ios129Chase = {
-        ok: false,
-        error: chaseErr instanceof Error ? chaseErr.message : String(chaseErr),
-      };
-    }
-    return res.json({ ok: true, ...result, ios129Chase });
+    return res.json({ ok: true, ...result });
   } catch (err) {
     console.error('onboarding process error', err);
     return res.status(500).json({ ok: false, error: err.message || 'Onboarding process failed' });
@@ -1233,23 +1215,6 @@ app.get('/api/email-status', async (req, res) => {
       }
     })()
   });
-  if (!global.__GV_IOS_129_CHASE_ANNOUNCE_STARTED) {
-    setImmediate(() => {
-      try {
-        const memberAnnounce = require('./lib/member-announce-email');
-        const kicked = memberAnnounce.scheduleIos129ChaseAnnounce({
-          loadUsers,
-          updateUser,
-          saveUsers,
-          deliverEmail,
-          delayMs: 3000,
-        });
-        console.log('[announce-ios-129] email-status kick', JSON.stringify(kicked));
-      } catch (kickErr) {
-        console.warn('[announce-ios-129] email-status kick skipped', kickErr.message);
-      }
-    });
-  }
 });
 
 app.post('/api/test/welcome', async (req, res) => {
@@ -1666,19 +1631,6 @@ function startPostBootServices() {
   } catch (storeErr) {
     console.warn('[user-store] boot info failed:', storeErr.message || storeErr);
   }
-  try {
-    const memberAnnounce = require('./lib/member-announce-email');
-    const scheduled = memberAnnounce.scheduleIos129ChaseAnnounce({
-      loadUsers,
-      updateUser,
-      saveUsers,
-      deliverEmail,
-      delayMs: 20000,
-    });
-    console.log('[announce-ios-129] post-boot', JSON.stringify(scheduled));
-  } catch (e) {
-    console.warn('[announce-ios-129] post-boot skipped', e.message);
-  }
   // Defer scrypt user-store work so first /health probes stay instant after wiring.
   setTimeout(() => {
     try {
@@ -1788,19 +1740,6 @@ function startPostBootLightServices() {
       console.warn('[pending-visit-alerts] boot skipped:', e.message);
     }
   }, pendingDelay);
-  try {
-    const memberAnnounce = require('./lib/member-announce-email');
-    const scheduled = memberAnnounce.scheduleIos129ChaseAnnounce({
-      loadUsers,
-      updateUser,
-      saveUsers,
-      deliverEmail,
-      delayMs: 15000,
-    });
-    console.log('[announce-ios-129] light-boot', JSON.stringify(scheduled));
-  } catch (e) {
-    console.warn('[announce-ios-129] light-boot skipped', e.message);
-  }
 }
 
 /**
@@ -2125,17 +2064,6 @@ function startPostBootRecruitingAndSchedulers() {
     startOnboardingScheduler({ loadUsers, saveUsers, deliverEmail, pushEmailLog });
   } catch (e) {
     console.warn('Onboarding scheduler init skipped', e.message);
-  }
-  try {
-    const memberAnnounce = require('./lib/member-announce-email');
-    memberAnnounce.scheduleIos129ChaseAnnounce({
-      loadUsers,
-      updateUser,
-      saveUsers,
-      deliverEmail,
-    });
-  } catch (e) {
-    console.warn('[announce-ios-129] boot schedule skipped', e.message);
   }
   try {
     if (!pipelineGuards.scheduledJobsEnabled()) {

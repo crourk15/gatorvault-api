@@ -63,11 +63,15 @@ describe('member announce email', () => {
     assert.doesNotMatch(built.html, /Read the season preview/);
   });
 
-  it('auto-sends 1.0.29 Chase mail on production Render unless disabled', () => {
-    assert.equal(shouldAutoSendIos129Chase({ env: { RENDER: 'true' }, nodeEnv: 'production' }), true);
+  it('does not auto-send 1.0.29 Chase mail unless explicitly enabled', () => {
+    assert.equal(shouldAutoSendIos129Chase({ env: { RENDER: 'true' }, nodeEnv: 'production' }), false);
     assert.equal(
       shouldAutoSendIos129Chase({ env: { RENDER: 'true', IOS_129_CHASE_ANNOUNCE_AUTO: '0' }, nodeEnv: 'production' }),
       false
+    );
+    assert.equal(
+      shouldAutoSendIos129Chase({ env: { IOS_129_CHASE_ANNOUNCE_AUTO: '1' }, nodeEnv: 'production' }),
+      true
     );
     assert.equal(shouldAutoSendIos129Chase({ env: {}, nodeEnv: 'development' }), false);
   });
