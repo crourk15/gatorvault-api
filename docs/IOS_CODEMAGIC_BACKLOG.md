@@ -7,7 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
-- [x] Home NOW Season extra tick: `1.0.29 is live — update in the App Store` rotates under Season (`weekly-now.json` `seasonTicks`). Empty the array to drop. Ticker cache t16. API `/api/recruiting/hub/ticker` `nowWeek` after Render — no Codemagic.
+- [x] Home NOW Season extra tick: `1.0.29 is live — update in the App Store` leads Season (`weekly-now.json` `seasonTicks`). Ticker ships `status: ready` + `nowWeek` even while items warm so iOS 1.0.29 does not throw the pack away. Empty the array to drop. Ticker cache t16. API after Render — no Codemagic.
 - [x] Team depth / Home injury: Ole Miss Wed initial availability — Singleton stays Q (ankle, game-time; Brown at Z / Stockton in the slot if he sits). Oyebadejo not listed, injury green. Official two-deep unchanged. **API only** (`/api/roster/depth-chart` + roster after Render). Next report overwrites the same JSON — no Codemagic to add or remove.
 - [x] FutureCast vault-feed 2028+ 7am **and** 7pm ET: cron accepts immediately, 8–9am/8–9pm catch a missed slot, last-report writes a running stamp so 7pm cannot stay stuck on the morning pass. Dead “running” with no heartbeat marks error. Scheduled pass skips allowlist + full beat-ingest so it can finish on Starter. API after Render — no Codemagic.
 - [x] Game Week intel heal: git bundle keys/scout/swing always overlay a newer Render durable (official-box `updatedAt: now` can no longer revive last week's card). API after Render — 1.0.28 already live-fetches `/api/schedule`. Last-good first-paint on 502 is the bake row below.

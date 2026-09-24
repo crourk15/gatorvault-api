@@ -35,8 +35,8 @@ test('Ole Miss week categories tick visitor names under Visitors, not ABC', () =
   assert.ok(cats[1].items.length >= 3);
   assert.ok(cats[1].items.every((s) => !/ABC/i.test(s)));
   assert.equal(cats[2].label, 'Season');
-  assert.match(cats[2].items[0], /3-0/);
-  assert.ok(cats[2].items.some((s) => /1\.0\.29 is live — update in the App Store/.test(s)));
+  assert.match(cats[2].items[0], /1\.0\.29 is live — update in the App Store/);
+  assert.ok(cats[2].items.some((s) => /3-0/.test(s)));
 });
 
 test('season record after Auburn is 3-0', () => {
@@ -88,7 +88,7 @@ test('a Florida commit takes the Visitors slot; Game and Season stay', () => {
   assert.equal(cats[1].label, 'News');
   assert.match(cats[1].items[0], /Jaden Hale commits to Florida · No\. 12/);
   assert.equal(cats[2].label, 'Season');
-  assert.match(cats[2].items[0], /3-0/);
+  assert.ok(cats[2].items.some((s) => /3-0/.test(s)));
   assert.ok(!cats.some((c) => c.label === 'Visitors'));
 });
 
@@ -177,7 +177,7 @@ test('attachLiveNowWeek fills Season ticks when ticker items are empty', () => {
   const body = attachLiveNowWeek({ ok: true, status: 'building', items: [] });
   const season = (body.nowWeek || []).find((c) => c.key === 'season');
   assert.ok(season);
-  assert.ok(season.items.some((s) => /1\.0\.29 is live — update in the App Store/.test(s)));
+  assert.match(season.items[0], /1\.0\.29 is live — update in the App Store/);
 });
 
 test('empty seasonTicks leaves only the standing line', () => {

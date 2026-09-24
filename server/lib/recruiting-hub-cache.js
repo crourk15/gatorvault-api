@@ -429,6 +429,10 @@ function buildingResponse({ endpoint, year, cacheKey, metaExtra = {} }) {
     try {
       const { attachLiveNowWeek } = require('./weekly-home-now');
       attachLiveNowWeek(body);
+      // iOS 1.0.29 apiFetch throws on status:building and keeps last-good Season.
+      if (Array.isArray(body.nowWeek) && body.nowWeek.length) {
+        body.status = 'ready';
+      }
     } catch {
       /* items-only fallback */
     }
