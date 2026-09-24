@@ -140,6 +140,7 @@
       + '</div>'
       + '<div class="hub-btn-row" style="margin-top:10px">'
       + '<button type="button" class="hub-btn" id="hub-mem-extend-visible">Extend visible expired +30d</button>'
+      + '<button type="button" class="hub-btn secondary" id="hub-mem-announce-129">Send 1.0.29 Chase email</button>'
       + '</div>'
       + '</div>'
       + '<div id="hub-mem-counts" class="hub-mem-counts hub-meta"></div>'
@@ -162,6 +163,27 @@
         .filter(function (m) { return m && m.access === 'expired' && m.email; })
         .map(function (m) { return m.email; });
       extendEmails(emails, 'visible expired');
+    });
+    document.getElementById('hub-mem-announce-129').addEventListener('click', function () {
+      if (!apiPost) {
+        setMsg('Announce is not wired in this hub build', true);
+        return;
+      }
+      if (!window.confirm('Email all active members and trials about 1.0.29 and how to read 2028 Chase / Closest? Expired locker is skipped. People who already got this letter will not get it again.')) {
+        return;
+      }
+      setMsg('Sending 1.0.29 Chase email…');
+      apiPost('/api/admin/members/announce-ios-129', { dryRun: false })
+        .then(function (payload) {
+          var sent = payload && payload.sent != null ? payload.sent : 0;
+          var queued = payload && payload.queued != null ? payload.queued : 0;
+          var failed = payload && payload.failed != null ? payload.failed : 0;
+          var skipped = payload && payload.skippedCount != null ? payload.skippedCount : 0;
+          setMsg('1.0.29 Chase email · sent ' + sent + ' of ' + queued + ' · failed ' + failed + ' · skipped ' + skipped);
+        })
+        .catch(function (e) {
+          setMsg((e && e.message) || '1.0.29 Chase email failed', true);
+        });
     });
 
     container.querySelectorAll('[data-since]').forEach(function (btn) {
