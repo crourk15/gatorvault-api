@@ -281,3 +281,20 @@ test('boot starts onboarding scheduler without X_SCHEDULED_JOBS_ENABLED gate', (
   void gateIdx;
 });
 
+test('onboarding first tick waits past the Render deploy health window', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const src = fs.readFileSync(path.join(__dirname, '../../lib/onboarding-scheduler.js'), 'utf8');
+  assert.match(src, /ONBOARDING_SCHEDULER_BOOT_DELAY_MS/);
+  assert.match(src, /180000/);
+  assert.equal(src.includes('45 * 1000'), false);
+});
+
+test('boot keeps heavy schedulers off the first two minutes', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const src = fs.readFileSync(path.join(__dirname, '../../server.js'), 'utf8');
+  assert.match(src, /const deferSchedMs = Math\.max\(\s*180000,/);
+  assert.match(src, /rememberTrials\(rows\)/);
+});
+

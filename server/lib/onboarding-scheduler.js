@@ -319,8 +319,13 @@ function startOnboardingScheduler(deps = {}) {
     });
   };
 
-  // First pass shortly after boot, then on interval.
-  setTimeout(tick, 45 * 1000);
+  // First pass after the instance is past Render's deploy health window.
+  // 45s after scheduler start was still inside the 502-loop window.
+  const firstTickMs = Math.max(
+    180000,
+    parseInt(process.env.ONBOARDING_SCHEDULER_BOOT_DELAY_MS || '180000', 10) || 180000
+  );
+  setTimeout(tick, firstTickMs);
   timer = setInterval(tick, intervalMs);
   if (typeof timer.unref === 'function') timer.unref();
   console.log(`[onboarding-scheduler] drip + trial reminders every ${Math.round(intervalMs / 60000)}m`);
