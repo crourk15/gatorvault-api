@@ -1,8 +1,6 @@
 {
-  "updatedAt": "2026-09-24T17:30:00.000Z",
+  "updatedAt": "2026-09-25T20:52:00.000Z",
   "note": "Optional per-gameId place/standing copy. Leave a field off to use the auto line. Game always comes from the live slate. Root seasonTicks extra Season items (Home NOW rotate). Empty the array to drop without Codemagic.",
-  "seasonTicks": [
-    "1.0.29 is live — update in the App Store"
-  ],
+  "seasonTicks": [],
   "weeks": {}
 }
