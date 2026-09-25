@@ -160,8 +160,7 @@ function seasonTickLines(override, opts = {}) {
 
 function seasonItemsForWeek(standing, override, opts = {}) {
   const items = [];
-  // Extra ticks first so iOS 1.0.29 (items[0] on open) shows the update
-  // before the 7s rotate — website already had time to land on the second line.
+  // Extra ticks first when present; empty seasonTicks leaves only standing.
   for (const tick of seasonTickLines(override, opts)) {
     if (!items.includes(tick)) items.push(tick);
   }

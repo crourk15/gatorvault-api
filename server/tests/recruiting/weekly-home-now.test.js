@@ -21,8 +21,8 @@ test('Ole Miss week NOW is three pillars — Game owns ABC', () => {
   assert.ok(!visitors.some((s) => /Royal · Wright · Thomas/.test(s)));
   assert.doesNotMatch(visitors[0], /ABC|in the Swamp/i);
   const season = lines.filter((s) => /^Season — /.test(s));
-  assert.ok(season.some((s) => /^Season — 3-0 · first SEC home Saturday$/.test(s)));
-  assert.ok(season.some((s) => /1\.0\.29 is live — update in the App Store/.test(s)));
+  assert.deepEqual(season, ['Season — 3-0 · first SEC home Saturday']);
+  assert.ok(!lines.some((s) => /1\.0\.29|update in the App Store/i.test(s)));
   assert.ok(!lines.some((s) => /class trending|#8|blue chip/i.test(s)));
 });
 
@@ -35,8 +35,7 @@ test('Ole Miss week categories tick visitor names under Visitors, not ABC', () =
   assert.ok(cats[1].items.length >= 3);
   assert.ok(cats[1].items.every((s) => !/ABC/i.test(s)));
   assert.equal(cats[2].label, 'Season');
-  assert.match(cats[2].items[0], /1\.0\.29 is live — update in the App Store/);
-  assert.ok(cats[2].items.some((s) => /3-0/.test(s)));
+  assert.deepEqual(cats[2].items, ['3-0 · first SEC home Saturday']);
 });
 
 test('season record after Auburn is 3-0', () => {
@@ -172,22 +171,23 @@ test('this-week commitDate still takes the Visitors slot', () => {
   assert.match(cats[1].items[0], /Jaden Hale commits to Florida/);
 });
 
-test('ticker pack is ready with Season update first so iOS 1.0.29 does not throw it away', () => {
+test('ticker pack is ready with standing Season only', () => {
   const { buildHomeNowTickerPack } = require('../../lib/weekly-home-now');
   const pack = buildHomeNowTickerPack(new Date('2026-09-21T18:00:00.000Z'));
   assert.equal(pack.status, 'ready');
   assert.ok(pack.nowWeek.length >= 3);
   const season = pack.nowWeek.find((c) => c.key === 'season');
-  assert.match(season.items[0], /1\.0\.29 is live — update in the App Store/);
-  assert.ok(pack.items.some((s) => /1\.0\.29 is live — update in the App Store/.test(s)));
+  assert.deepEqual(season.items, ['3-0 · first SEC home Saturday']);
+  assert.ok(pack.items.some((s) => /^Season — 3-0 · first SEC home Saturday$/.test(s)));
+  assert.ok(!pack.items.some((s) => /1\.0\.29|update in the App Store/i.test(s)));
 });
 
-test('attachLiveNowWeek fills Season ticks when ticker items are empty', () => {
+test('attachLiveNowWeek fills standing Season when ticker items are empty', () => {
   const { attachLiveNowWeek } = require('../../lib/weekly-home-now');
   const body = attachLiveNowWeek({ ok: true, status: 'building', items: [] });
   const season = (body.nowWeek || []).find((c) => c.key === 'season');
   assert.ok(season);
-  assert.match(season.items[0], /1\.0\.29 is live — update in the App Store/);
+  assert.deepEqual(season.items, ['3-0 · first SEC home Saturday']);
 });
 
 test('empty seasonTicks leaves only the standing line', () => {
