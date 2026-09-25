@@ -26,11 +26,11 @@
   - Day **1** — playbook / activate
   - Day **3** — Recruiting + FutureCast
   - Day **7** — trial checklist
-  - Day **25** — trial ending (new sends only; already-sent mail is not rewritten)
+  - Day **25** — same letter as 5 days left (`Stay with Gator Nation — {weekday}`). One send stamps both day 25 and `d5` so a 30-day trial cannot get two copies the same hour.
 - **Trial-clock convert emails** (based on `trialEnd`, not signup day):
   - **5 days left** — `Stay with Gator Nation — {weekday}`
   - **1 day left** — same letter
-  - Body: date, home for Gator Nation, membership keeps you inside, app path, Restore. Does not resend to stamped users.
+  - Body: date, home for Gator Nation, membership keeps you inside, app path, Restore. Does not resend to stamped users. In-process hourly drip and the Render cron share a queue lock so they cannot overlap.
 - Paid members are skipped.
 - Kill switch: `ONBOARDING_DRIP_DISABLED=true`.
 - **Not** gated by `X_SCHEDULED_JOBS_ENABLED` (that flag stays false on Starter for heavy X/hub work). In-process drip always starts unless the drip kill switch is on; Render cron is the backup.

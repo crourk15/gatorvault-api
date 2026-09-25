@@ -97,6 +97,66 @@ test('processOnboardingQueue sends drip and skips paid users', async () => {
   assert.deepEqual(users[0].onboardingSent, [0]);
 });
 
+test('day-25 drip and d5 are the same letter — send once and stamp both', async () => {
+  const now = new Date('2026-07-22T12:00:00.000Z');
+  const users = [
+    {
+      email: 'waltoncountynelson85@gmail.com',
+      name: 'Nelson',
+      createdAt: '2026-06-27T12:00:00.000Z',
+      trialEnd: '2026-07-27T12:00:00.000Z',
+      onboardingSent: [0, 1, 3, 7],
+      trialRemindersSent: [],
+    },
+  ];
+  const sent = [];
+  const result = await processOnboardingQueue({
+    now,
+    loadUsers: () => users,
+    saveUsers: (next) => {
+      users.splice(0, users.length, ...next);
+    },
+    deliverEmail: async (to, subject) => {
+      sent.push({ to, subject });
+      return { sent: true, provider: 'test' };
+    },
+    hasPaidAccess: () => false,
+  });
+  assert.equal(result.sent, 1);
+  assert.equal(sent.length, 1);
+  assert.match(sent[0].subject, /Stay with Gator Nation/i);
+  assert.ok(users[0].onboardingSent.includes(25));
+  assert.ok(users[0].trialRemindersSent.includes('d5'));
+
+  const again = await processOnboardingQueue({
+    now,
+    loadUsers: () => users,
+    saveUsers: (next) => {
+      users.splice(0, users.length, ...next);
+    },
+    deliverEmail: async (to, subject) => {
+      sent.push({ to, subject });
+      return { sent: true, provider: 'test' };
+    },
+    hasPaidAccess: () => false,
+  });
+  assert.equal(again.sent, 0);
+  assert.equal(sent.length, 1);
+});
+
+test('d5 is skipped when day-25 letter already went', () => {
+  const now = new Date('2026-07-22T12:00:00.000Z');
+  const user = {
+    email: 'fan@example.com',
+    createdAt: '2026-06-27T12:00:00.000Z',
+    trialEnd: '2026-07-27T12:00:00.000Z',
+    onboardingSent: [0, 1, 3, 7, 25],
+    trialRemindersSent: [],
+  };
+  assert.deepEqual(dueDripDays(user, now), []);
+  assert.deepEqual(dueTrialReminderKeys(user, now), []);
+});
+
 test('processOnboardingQueue sends trial d1 convert email', async () => {
   const now = new Date('2026-07-22T12:00:00.000Z');
   const users = [

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Trial "Stay with Gator Nation" letter: day-25 drip and 5-days-left are one send (stamp both). Stops the same-hour double. API after Render — no Codemagic.
 - [x] Admin Hub member delete (company inbox): `POST /api/admin/members/delete` + boot one-shot for Cannon / Clawson / McCoy / Wilkerson. API after Render — no Codemagic.
 - [x] Home NOW Season extra tick: `GET /api/recruiting/hub/ticker` is a direct now-pack (`status: ready` + `nowWeek`, no hub-cache building). `1.0.29 is live — update in the App Store` leads Season. Empty `seasonTicks` to drop. API after Render — no Codemagic.
 - [x] Team depth / Home injury: Ole Miss Wed initial availability — Singleton stays Q (ankle, game-time; Brown at Z / Stockton in the slot if he sits). Oyebadejo not listed, injury green. Official two-deep unchanged. **API only** (`/api/roster/depth-chart` + roster after Render). Next report overwrites the same JSON — no Codemagic to add or remove.
