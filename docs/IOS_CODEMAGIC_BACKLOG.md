@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] API boot heal: batch trial-ledger seed (one write), keep heavy schedulers off for 3 min, delay onboarding first tick. Stops Render HTML 502 after deploy. API after Render — no Codemagic.
 - [x] Trial "Stay with Gator Nation" letter: day-25 drip and 5-days-left are one send (stamp both). Stops the same-hour double. API after Render — no Codemagic.
 - [x] Admin Hub member delete (company inbox): `POST /api/admin/members/delete` + boot one-shot for Cannon / Clawson / McCoy / Wilkerson. API after Render — no Codemagic.
 - [x] Home NOW Season extra tick dropped: `seasonTicks` is empty so Season is the standing line only (`3-0 · first SEC home Saturday`). People already on 1.0.29 do not need an in-app “update” line. API after Render — no Codemagic.

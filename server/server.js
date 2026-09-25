@@ -1660,9 +1660,12 @@ function startPostBootServices() {
     15000,
     parseInt(process.env.API_BOOT_DEFER_LIGHT_MS || '30000', 10) || 30000
   );
+  // Floor 3 min so a dashboard override cannot load recruiting-store / roster
+  // at ~60s and starve /ready (Render then drops the instance → HTML 502).
   const deferSchedMs = Math.max(
-    deferLightMs + 30000,
-    parseInt(process.env.API_BOOT_DEFER_SCHED_MS || '120000', 10) || 120000
+    180000,
+    deferLightMs + 90000,
+    parseInt(process.env.API_BOOT_DEFER_SCHED_MS || '180000', 10) || 180000
   );
   console.log(
     '[boot] deferring light',
@@ -1698,19 +1701,26 @@ function startPostBootServices() {
 /** Tiny store seeds only — keep this cheap so /health stays green. */
 function startPostBootLightServices() {
   try {
-    const { rememberTrial } = require('./lib/trial-ledger');
+    const { rememberTrials } = require('./lib/trial-ledger');
     const existingUsers = loadUsers();
-    let seeded = 0;
+    const rows = [];
     for (const u of existingUsers) {
       if (!u?.email || !u?.trialEnd) continue;
-      rememberTrial(u.email, {
+      rows.push({
+        email: u.email,
         trialEnd: u.trialEnd,
         trialStart: u.createdAt,
         createdAt: u.createdAt,
       });
-      seeded += 1;
     }
-    console.log('[trial-ledger] seeded', seeded, 'active accounts');
+    const seeded = rememberTrials(rows);
+    console.log(
+      '[trial-ledger] seeded',
+      seeded.total,
+      'active accounts',
+      'wrote',
+      seeded.changed
+    );
   } catch (e) {
     console.warn('[trial-ledger] seed skipped:', e.message);
   }
@@ -1743,7 +1753,7 @@ function startPostBootLightServices() {
     } catch (e) {
       console.warn('[inbox-account-delete] boot skipped:', e.message);
     }
-  }, 2500);
+  }, Math.max(60000, parseInt(process.env.INBOX_DELETE_BOOT_DELAY_MS || '90000', 10) || 90000));
   // One-shot pending visit alerts (e.g. Brysen Wright OV) — after push store hydrates.
   const pendingDelay = Math.max(
     8000,

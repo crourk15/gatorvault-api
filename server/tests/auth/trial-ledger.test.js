@@ -9,6 +9,7 @@ process.env.GV_TRIAL_LEDGER_PATH = path.join(tmp, 'trial-ledger.json');
 
 const {
   rememberTrial,
+  rememberTrials,
   markTrialDeleted,
   resolveRegistrationTrial,
   getTrialRecord,
@@ -36,6 +37,33 @@ describe('trial-ledger', () => {
     assert.equal(plan.priorDeleted, true);
     assert.equal(plan.trialEnd.toISOString(), end);
     assert.equal(getTrialRecord('fan@example.com').trialEnd, end);
+  });
+
+  it('rememberTrials writes the ledger once and skips unchanged rows', () => {
+    const writes = [];
+    const orig = fs.writeFileSync;
+    fs.writeFileSync = (...args) => {
+      writes.push(args[0]);
+      return orig.apply(fs, args);
+    };
+    try {
+      const first = rememberTrials([
+        { email: 'a@example.com', trialEnd: '2026-10-01T00:00:00.000Z', trialStart: '2026-09-01T00:00:00.000Z' },
+        { email: 'b@example.com', trialEnd: '2026-10-02T00:00:00.000Z', trialStart: '2026-09-02T00:00:00.000Z' },
+      ]);
+      assert.equal(first.changed, 2);
+      const afterInsert = writes.length;
+      assert.ok(afterInsert >= 1);
+      const second = rememberTrials([
+        { email: 'a@example.com', trialEnd: '2026-10-01T00:00:00.000Z', trialStart: '2026-09-01T00:00:00.000Z' },
+        { email: 'b@example.com', trialEnd: '2026-10-02T00:00:00.000Z', trialStart: '2026-09-02T00:00:00.000Z' },
+      ]);
+      assert.equal(second.changed, 0);
+      assert.equal(writes.length, afterInsert);
+      assert.equal(getTrialRecord('a@example.com').trialEnd, '2026-10-01T00:00:00.000Z');
+    } finally {
+      fs.writeFileSync = orig;
+    }
   });
 
   it('extendTrial writes a new 30-day window for an expired email', () => {

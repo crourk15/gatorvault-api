@@ -81,26 +81,46 @@ function getTrialRecord(email) {
   return row && typeof row === 'object' ? row : null;
 }
 
+/**
+ * Record / refresh trial bounds. Boot seed must call rememberTrials so we
+ * write the ledger once — per-row saveLedger blocked /ready into 502 loops.
+ */
+function rememberTrials(rows) {
+  const list = Array.isArray(rows) ? rows : [];
+  if (!list.length) return { changed: 0, total: 0 };
+  const ledger = loadLedger();
+  let changed = 0;
+  let last = null;
+  const now = new Date().toISOString();
+  for (const row of list) {
+    const key = normalizeEmail(row?.email);
+    if (!key || !row?.trialEnd) continue;
+    const prev = ledger[key] || {};
+    const start = prev.trialStart || row.trialStart || row.createdAt || now;
+    const trialEnd = String(row.trialEnd);
+    const deletedAt = prev.deletedAt || null;
+    if (prev.trialStart === start && prev.trialEnd === trialEnd && (prev.deletedAt || null) === deletedAt) {
+      last = prev;
+      continue;
+    }
+    ledger[key] = {
+      email: key,
+      trialStart: start,
+      trialEnd,
+      updatedAt: now,
+      deletedAt,
+    };
+    last = ledger[key];
+    changed += 1;
+  }
+  if (changed) saveLedger(ledger);
+  return { changed, total: list.length, last };
+}
+
 /** Record / refresh trial bounds for an email (keeps earliest trialStart). */
 function rememberTrial(email, { trialEnd, trialStart, createdAt } = {}) {
-  const key = normalizeEmail(email);
-  if (!key || !trialEnd) return null;
-  const ledger = loadLedger();
-  const prev = ledger[key] || {};
-  const start =
-    prev.trialStart ||
-    trialStart ||
-    createdAt ||
-    new Date().toISOString();
-  ledger[key] = {
-    email: key,
-    trialStart: start,
-    trialEnd: String(trialEnd),
-    updatedAt: new Date().toISOString(),
-    deletedAt: prev.deletedAt || null,
-  };
-  saveLedger(ledger);
-  return ledger[key];
+  const out = rememberTrials([{ email, trialEnd, trialStart, createdAt }]);
+  return out.last || null;
 }
 
 function markTrialDeleted(email) {
@@ -176,6 +196,7 @@ module.exports = {
   loadLedger,
   getTrialRecord,
   rememberTrial,
+  rememberTrials,
   markTrialDeleted,
   resolveRegistrationTrial,
   extendTrial,
