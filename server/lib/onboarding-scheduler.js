@@ -12,6 +12,7 @@ const { onboardingMaxSendsPerTick, onboardingSaveEvery } = require('./fanout-uti
 
 const DEFAULT_INTERVAL_MS = 60 * 60 * 1000; // hourly
 let timer = null;
+let queueTail = Promise.resolve();
 
 function dripEnabled() {
   // Sole kill switch for trial drip. Do NOT also gate on X_SCHEDULED_JOBS_ENABLED —
@@ -56,11 +57,38 @@ function asSentSet(list) {
   return new Set(Array.isArray(list) ? list.map((x) => (typeof x === 'number' ? x : String(x))) : []);
 }
 
+/** Day-25 drip and d5 are the same "Stay with Gator Nation — weekday" letter. */
+const TRIAL_ENDING_DRIP_DAY = 25;
+const TRIAL_ENDING_REMINDER_KEY = 'd5';
+
+function hasTrialEndingLetter(user) {
+  const drip = asSentSet(user?.onboardingSent);
+  const reminders = new Set(
+    Array.isArray(user?.trialRemindersSent) ? user.trialRemindersSent.map(String) : []
+  );
+  return drip.has(TRIAL_ENDING_DRIP_DAY) || drip.has(String(TRIAL_ENDING_DRIP_DAY)) || reminders.has(TRIAL_ENDING_REMINDER_KEY);
+}
+
+function markTrialEndingLetterSent(user) {
+  const drip = Array.isArray(user.onboardingSent) ? user.onboardingSent.slice() : [];
+  if (!drip.some((d) => Number(d) === TRIAL_ENDING_DRIP_DAY || String(d) === String(TRIAL_ENDING_DRIP_DAY))) {
+    drip.push(TRIAL_ENDING_DRIP_DAY);
+  }
+  const reminders = Array.isArray(user.trialRemindersSent) ? user.trialRemindersSent.slice() : [];
+  if (!reminders.map(String).includes(TRIAL_ENDING_REMINDER_KEY)) {
+    reminders.push(TRIAL_ENDING_REMINDER_KEY);
+  }
+  user.onboardingSent = drip;
+  user.trialRemindersSent = reminders;
+}
+
 function dueDripDays(user, now = new Date()) {
   const elapsed = daysSinceSignup(user, now);
   const sent = asSentSet(user.onboardingSent);
+  const skipDay25 = hasTrialEndingLetter(user);
   return ONBOARDING_SEQUENCE
-    .filter((e) => e.day > 0 && elapsed >= e.delayDays && !sent.has(e.day))
+    .filter((e) => e.day > 0 && elapsed >= e.delayDays && !sent.has(e.day) && !sent.has(String(e.day)))
+    .filter((e) => !(e.day === TRIAL_ENDING_DRIP_DAY && skipDay25))
     .map((e) => e.day);
 }
 
@@ -75,6 +103,7 @@ function dueTrialReminderKeys(user, now = new Date()) {
   // Prefer the tightest unmet reminder (d1 before d5 when both due).
   const due = TRIAL_REMINDER_SEQUENCE
     .filter((e) => left <= e.daysLeft && !sent.has(e.key))
+    .filter((e) => !(e.key === TRIAL_ENDING_REMINDER_KEY && hasTrialEndingLetter(user)))
     .sort((a, b) => a.daysLeft - b.daysLeft);
   return due.length ? [due[0].key] : [];
 }
@@ -97,7 +126,16 @@ async function sendBuiltEmail(deliverEmail, to, built) {
  * Process one pass of drip + trial reminders.
  * @returns {{ processed: number, sent: number, changed: boolean, disabled?: boolean, details: object[] }}
  */
-async function processOnboardingQueue({
+async function processOnboardingQueue(opts = {}) {
+  const run = queueTail.then(
+    () => processOnboardingQueueUnlocked(opts),
+    () => processOnboardingQueueUnlocked(opts)
+  );
+  queueTail = run.catch(() => {});
+  return run;
+}
+
+async function processOnboardingQueueUnlocked({
   loadUsers,
   saveUsers,
   deliverEmail,
@@ -158,7 +196,12 @@ async function processOnboardingQueue({
       daysLeft,
     };
 
-    const dripDays = dueDripDays(user, now);
+    let dripDays = dueDripDays(user, now);
+    let reminderKeys = dueTrialReminderKeys(user, now);
+    // Same letter: day-25 drip and d5. Send once; stamp both.
+    if (dripDays.includes(TRIAL_ENDING_DRIP_DAY) && reminderKeys.includes(TRIAL_ENDING_REMINDER_KEY)) {
+      dripDays = dripDays.filter((day) => day !== TRIAL_ENDING_DRIP_DAY);
+    }
     for (const day of dripDays) {
       if (sent >= budget) {
         hitBudget = true;
@@ -169,7 +212,8 @@ async function processOnboardingQueue({
       try {
         const delivery = await sendBuiltEmail(deliverEmail, user.email, built);
         if (delivery?.sent) {
-          user.onboardingSent = Array.isArray(user.onboardingSent) ? [...user.onboardingSent, day] : [day];
+          if (Number(day) === TRIAL_ENDING_DRIP_DAY) markTrialEndingLetterSent(user);
+          else user.onboardingSent = Array.isArray(user.onboardingSent) ? [...user.onboardingSent, day] : [day];
           user.onboardingProvider = user.onboardingProvider || 'server';
           user.onboardingLastSentAt = now.toISOString();
           changed = true;
@@ -203,7 +247,6 @@ async function processOnboardingQueue({
 
     if (hitBudget) break;
 
-    const reminderKeys = dueTrialReminderKeys(user, now);
     for (const key of reminderKeys) {
       if (sent >= budget) {
         hitBudget = true;
@@ -216,9 +259,12 @@ async function processOnboardingQueue({
       try {
         const delivery = await sendBuiltEmail(deliverEmail, user.email, built);
         if (delivery?.sent) {
-          user.trialRemindersSent = Array.isArray(user.trialRemindersSent)
-            ? [...user.trialRemindersSent, key]
-            : [key];
+          if (key === TRIAL_ENDING_REMINDER_KEY) markTrialEndingLetterSent(user);
+          else {
+            user.trialRemindersSent = Array.isArray(user.trialRemindersSent)
+              ? [...user.trialRemindersSent, key]
+              : [key];
+          }
           user.onboardingLastSentAt = now.toISOString();
           changed = true;
           sent += 1;
@@ -293,6 +339,7 @@ module.exports = {
   trialDaysLeft,
   dueDripDays,
   dueTrialReminderKeys,
+  hasTrialEndingLetter,
   processOnboardingQueue,
   startOnboardingScheduler,
   stopOnboardingScheduler,
