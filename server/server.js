@@ -274,7 +274,8 @@ function wireApplication() {
   function next() {
     if (i >= steps.length) {
       console.log('[boot] route mounts complete — wiring auth/services');
-      wireApplicationRest();
+      // Leave a gap so /ready can answer after the last mount require().
+      setTimeout(wireApplicationRest, 100);
       return;
     }
     const step = steps[i++];
@@ -283,7 +284,11 @@ function wireApplication() {
     } catch (err) {
       console.warn('[boot] wire step failed:', step.name || i, err && err.message ? err.message : err);
     }
-    setImmediate(next);
+    const wireYieldMs = Math.max(
+      20,
+      parseInt(process.env.API_WIRE_YIELD_MS || '50', 10) || 50
+    );
+    setTimeout(next, wireYieldMs);
   }
   next();
 }
@@ -1607,9 +1612,14 @@ if (process.env.GUARDIAN_BOOT_SKIP === 'true') {
 }
 
 // Yield so Render /ready can answer before post-boot schedulers/store init.
-// Light path first (App Review account); heavy sync work is deferred so /health
-// stays under Render's ~5s probe during the first minutes after deploy.
-setImmediate(startPostBootServices);
+// Immediate start overlapped users.json + hub disk-prime and pushed /ready to
+// ~5s — Render then dropped the only disk instance (HTML 502 for 2+ minutes).
+const postBootDelayMs = Math.max(
+  15000,
+  parseInt(process.env.API_POST_BOOT_DELAY_MS || '20000', 10) || 20000
+);
+console.log('[boot] deferring post-boot services', postBootDelayMs, 'ms');
+setTimeout(startPostBootServices, postBootDelayMs);
 
 function startPostBootServices() {
   try {

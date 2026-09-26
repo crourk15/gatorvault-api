@@ -12,13 +12,17 @@ test('gatorvault-api ignores test and docs commits so disk deploys stay rare', (
   assert.match(yaml, /name: gatorvault-api/);
   assert.match(yaml, /buildFilter:/);
   assert.match(yaml, /server\/tests\/\*\*/);
+  assert.match(yaml, /server\/scripts\/\*\*/);
   assert.match(yaml, /ignoredPaths:/);
   assert.match(yaml, /- server\/\*\*/);
+  assert.match(yaml, /BOOT_HEAVY_MIN_UPTIME_SEC/);
 });
 
 test('post-listen boot yields content and does not scan community threads', () => {
   assert.match(boot, /function startPostBootServiceTail/);
   assert.match(boot, /API_BOOT_SCHED_YIELD_MS/);
+  assert.match(boot, /API_POST_BOOT_DELAY_MS/);
+  assert.match(boot, /API_WIRE_YIELD_MS/);
   assert.match(boot, /console\.log\('Community API: ready'\)/);
   assert.equal(boot.includes('communityStore.loadThreads()'), false);
   assert.equal(boot.includes('getAllRosterPlayers().length'), false);

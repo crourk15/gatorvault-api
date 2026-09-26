@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] API boot guard: heavy crons soft-skip for 8 min after a disk-swap deploy (`BOOT_HEAVY_MIN_UPTIME_SEC=480`) so recruiting-light at `:00` cannot 502-loop `/ready`. Score alerts stay live. Cron-script commits no longer rebuild the web API. API after Render — no Codemagic.
 - [x] API deploy filter: Render autodeploy only on `server/**` (not tests) or `render.yaml`. Website/edge-only merges no longer take the disk instance down for 2+ minutes.
 - [x] Home NOW Season: Netlify ticker edge strips `1.0.29 is live — update in the App Store` and serves a ready Game / Visitors / Season pack when Render 502s, so iOS last-good can overwrite without Codemagic.
 - [x] API boot heal: batch trial-ledger seed (one write), keep heavy schedulers off for 3 min, delay onboarding first tick. Stops Render HTML 502 after deploy. API after Render — no Codemagic.

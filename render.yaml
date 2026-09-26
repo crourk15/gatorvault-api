@@ -22,6 +22,7 @@ services:
       ignoredPaths:
         - server/tests/**
         - server/test/**
+        - server/scripts/**
         - server/**/*.md
     buildCommand: npm install && node scripts/platform-guardian-predeploy.js
     startCommand: node server.js
@@ -396,6 +397,15 @@ services:
       - key: HUB_WARM_REJECT_RSS_MB
         value: "900"
       # Pro 4GB: keep heavy warm well after listen so /ready stays cheap.
+      # Soft-skip On3/beat/allowlist/hub refresh until /ready has been cheap
+      # for 8 minutes. Stops recruiting-light at :00 from 502-looping a fresh
+      # disk instance. Score alerts stay exempt (BOOT_HEAVY_EXEMPT_JOBS).
+      - key: BOOT_HEAVY_MIN_UPTIME_SEC
+        value: "480"
+      - key: API_POST_BOOT_DELAY_MS
+        value: "20000"
+      - key: API_WIRE_YIELD_MS
+        value: "50"
       - key: API_BOOT_DEFER_HEAVY_MS
         value: "90000"
       # Hub skip/disk-prime path — don't wait on light/sched defer (Admin Hub cold).

@@ -40,7 +40,7 @@ File size at 500 accounts is fine. Real risks: **lost updates** across async gap
 
 `gatorvault-api` has a **1 GB persistent disk**. Render can only attach that disk to one instance, so every API deploy takes the live process down until the new one passes `/ready` (often 2+ minutes). HTML 502 + `x-render-routing: dynamic-paid-error` means no healthy instance.
 
-Do **not** trigger that swap for website/edge/docs/test-only commits. `render.yaml` `buildFilter` only autodeploys when `server/**` (not `server/tests/**`) or `render.yaml` itself changes.
+Do **not** trigger that swap for website/edge/docs/test/cron-script commits. `render.yaml` `buildFilter` only autodeploys when `server/**` (not `server/tests/**` / `server/scripts/**`) or `render.yaml` itself changes. After a real swap, `BOOT_HEAVY_MIN_UPTIME_SEC=480` soft-skips recruiting-light / hub refresh until `/ready` has been cheap for 8 minutes.
 
 Daytime Beat Desk red flashes (15–30s) were usually Render restarting because `/ready` could not answer within ~5s while stacked crons ran (hub-warm + recruiting-light at `:00`).
 
@@ -49,7 +49,8 @@ Mitigations (Aug 2026 + Sep 2026):
 - Skip spaced fork when parent RSS ≥ `HUB_SPACED_FORK_PARENT_RSS_MB`
 - Admin Hub: confirmed 502/504 = red; network blips get wake grace
 - Post-listen boot yields between content/community/roster so `/ready` stays cheap
-- Netlify/client/test commits do not rebuild the API
+- Netlify/client/test/cron-script commits do not rebuild the API
+- `BOOT_HEAVY_MIN_UPTIME_SEC=480` soft-skips recruiting-light / hub refresh on a young instance
 
 ## Do not break while growing
 
