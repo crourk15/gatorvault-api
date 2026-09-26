@@ -421,20 +421,31 @@ export function resolveHomeNowWeekPillars(
 }
 
 const LAST_GOOD_NOW_WEEK_KEY = 'gv-home-now-week-last-good';
+const RETIRED_NOW_TICK_RE = /1\.0\.29|update in the App Store/i;
 
 let lastGoodNowWeekMemory: HomeNowWeekPillar[] | null = null;
 
+export function isRetiredHomeNowTick(text: string): boolean {
+  return RETIRED_NOW_TICK_RE.test(String(text || ''));
+}
+
 export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNowWeekPillar[] {
-  return (Array.isArray(nowWeek) ? nowWeek : [])
+  const rows = (Array.isArray(nowWeek) ? nowWeek : [])
     .map((row) => ({
       key: String(row?.key || row?.label || '')
         .trim()
         .toLowerCase(),
       label: String(row?.label || '').trim(),
-      items: (row?.items || []).map((s) => String(s || '').trim()).filter(Boolean),
+      items: (row?.items || [])
+        .map((s) => String(s || '').trim())
+        .filter((s) => s && !isRetiredHomeNowTick(s)),
     }))
-    .filter((row) => row.label && row.items.length)
-    .slice(0, 3);
+    .filter((row) => row.label && row.items.length);
+  if (!rows.some((row) => row.key === 'season' || row.label === 'Season')) {
+    const localSeason = buildLocalWeeklyNowWeek().find((row) => row.key === 'season');
+    if (localSeason) rows.push(localSeason);
+  }
+  return rows.slice(0, 3);
 }
 
 export function peekLastGoodNowWeek(): HomeNowWeekPillar[] {
