@@ -6,6 +6,56 @@
  */
 const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolRe: /auburn/i }];
 
+const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
+const SEASON_STANDING = '3-0 · first SEC home Saturday';
+const TICKER_FALLBACK = {
+  ok: true,
+  status: 'ready',
+  items: [
+    'Game — Ole Miss Saturday — 3:30 PM · ABC',
+    'Visitors — Easton Royal',
+    `Season — ${SEASON_STANDING}`,
+  ],
+  nowWeek: [
+    { key: 'game', label: 'Game', items: ['Ole Miss Saturday — 3:30 PM · ABC'] },
+    { key: 'visitors', label: 'Visitors', items: ['Easton Royal'] },
+    { key: 'season', label: 'Season', items: [SEASON_STANDING] },
+  ],
+  meta: { endpoint: 'ticker', cacheReason: 'now-edge-fallback' },
+};
+
+function isTickerPath(pathname) {
+  return String(pathname || '').startsWith('/api/recruiting/hub/ticker');
+}
+
+function isAppStoreUpdateLine(text) {
+  return APP_STORE_UPDATE_RE.test(String(text || ''));
+}
+
+function stripAppStoreUpdateLines(lines) {
+  if (!Array.isArray(lines)) return lines;
+  return lines.filter((line) => !isAppStoreUpdateLine(typeof line === 'string' ? line : ''));
+}
+
+function stripAppStoreUpdateFromNowWeek(nowWeek) {
+  if (!Array.isArray(nowWeek)) return { nowWeek, changed: false };
+  let changed = false;
+  const next = nowWeek
+    .map((row) => {
+      if (!row || typeof row !== 'object') return row;
+      const items = Array.isArray(row.items) ? row.items.filter((s) => !isAppStoreUpdateLine(s)) : [];
+      if (JSON.stringify(items) !== JSON.stringify(row.items || [])) changed = true;
+      return { ...row, items };
+    })
+    .filter((row) => row && row.label && Array.isArray(row.items) && row.items.length);
+  const hasSeason = next.some((row) => String(row.key || '').toLowerCase() === 'season' || row.label === 'Season');
+  if (!hasSeason) {
+    next.push({ key: 'season', label: 'Season', items: [SEASON_STANDING] });
+    changed = true;
+  }
+  return { nowWeek: next, changed };
+}
+
 function isDeniedPair(nameOrSlug, schoolOrText) {
   const name = String(nameOrSlug || '');
   const school = String(schoolOrText || '');
@@ -93,7 +143,7 @@ function scrubPayload(data, pathname) {
   const out = Array.isArray(data) ? data.slice() : { ...data };
 
   if (Array.isArray(out.items) && out.items.length && typeof out.items[0] === 'string') {
-    const next = scrubTickerLines(out.items);
+    const next = stripAppStoreUpdateLines(scrubTickerLines(out.items));
     if (next.length !== out.items.length) changed = true;
     out.items = next;
   }
@@ -103,9 +153,14 @@ function scrubPayload(data, pathname) {
     out.items = next;
   }
   if (Array.isArray(out.ticker)) {
-    const next = scrubTickerLines(out.ticker);
+    const next = stripAppStoreUpdateLines(scrubTickerLines(out.ticker));
     if (next.length !== out.ticker.length) changed = true;
     out.ticker = next;
+  }
+  if (Array.isArray(out.nowWeek)) {
+    const stripped = stripAppStoreUpdateFromNowWeek(out.nowWeek);
+    if (stripped.changed) changed = true;
+    out.nowWeek = stripped.nowWeek;
   }
   if (Array.isArray(out.movementFeed)) {
     const next = scrubMovementItems(out.movementFeed);
@@ -203,10 +258,19 @@ function scrubPayload(data, pathname) {
   return { data: out, changed };
 }
 
+function tickerFallbackResponse() {
+  const headers = new Headers();
+  headers.set('content-type', 'application/json; charset=utf-8');
+  headers.set('cache-control', 'no-store, must-revalidate');
+  headers.set('pragma', 'no-cache');
+  headers.set('x-gv-visit-scrub', 'now-edge-fallback');
+  return new Response(JSON.stringify(TICKER_FALLBACK), { status: 200, headers });
+}
+
 export default async (request, context) => {
   const url = new URL(request.url);
   const origin = new URL(`https://gatorvault-api.onrender.com${url.pathname}${url.search}`);
-  origin.searchParams.set('gvScrub', 't10');
+  origin.searchParams.set('gvScrub', 't11');
 
   let upstream;
   try {
@@ -218,18 +282,24 @@ export default async (request, context) => {
       },
     });
   } catch {
+    if (isTickerPath(url.pathname)) return tickerFallbackResponse();
     return context.next();
   }
 
   const contentType = upstream.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) {
+    if (isTickerPath(url.pathname)) return tickerFallbackResponse();
     return upstream;
+  }
+  if (isTickerPath(url.pathname) && !upstream.ok) {
+    return tickerFallbackResponse();
   }
 
   let payload;
   try {
     payload = await upstream.json();
   } catch {
+    if (isTickerPath(url.pathname)) return tickerFallbackResponse();
     return upstream;
   }
 

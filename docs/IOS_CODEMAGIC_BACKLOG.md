@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Home NOW Season: Netlify ticker edge strips `1.0.29 is live — update in the App Store` and serves a ready Game / Visitors / Season pack when Render 502s, so iOS last-good can overwrite without Codemagic.
 - [x] API boot heal: batch trial-ledger seed (one write), keep heavy schedulers off for 3 min, delay onboarding first tick. Stops Render HTML 502 after deploy. API after Render — no Codemagic.
 - [x] Trial "Stay with Gator Nation" letter: day-25 drip and 5-days-left are one send (stamp both). Stops the same-hour double. API after Render — no Codemagic.
 - [x] Admin Hub member delete (company inbox): `POST /api/admin/members/delete` + boot one-shot for Cannon / Clawson / McCoy / Wilkerson. API after Render — no Codemagic.

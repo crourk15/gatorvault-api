@@ -10,6 +10,7 @@ import {
   buildLocalWeeklyNowWeek,
   parseWeeklyNowPillars,
   resolveHomeNowWeekPillars,
+  usableHomeNowWeek,
 } from './home-command-utils';
 
 const OFFSEASON = new Date('2026-07-15T16:00:00.000Z');
@@ -416,6 +417,22 @@ describe('resolveHomeNowWeekPillars', () => {
     const pillars = resolveHomeNowWeekPillars(live, ['Game — Ole Miss in the Swamp · ABC'], OLE_MISS_WEEK);
     assert.equal(pillars[1].label, 'News');
     assert.equal(pillars[1].items[0], 'Jaden Hale commits to Florida');
+  });
+});
+
+describe('usableHomeNowWeek drops the retired App Store tick', () => {
+  it('strips 1.0.29 update copy and keeps the standing Season line', () => {
+    const rows = usableHomeNowWeek([
+      { key: 'game', label: 'Game', items: ['Ole Miss Saturday — 3:30 PM · ABC'] },
+      { key: 'visitors', label: 'Visitors', items: ['Easton Royal'] },
+      {
+        key: 'season',
+        label: 'Season',
+        items: ['1.0.29 is live — update in the App Store', '3-0 · first SEC home Saturday'],
+      },
+    ]);
+    assert.equal(rows[2].label, 'Season');
+    assert.deepEqual(rows[2].items, ['3-0 · first SEC home Saturday']);
   });
 });
 
