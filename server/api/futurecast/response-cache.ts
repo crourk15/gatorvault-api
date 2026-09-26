@@ -1044,6 +1044,16 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
   } catch {
     /* optional */
   }
+  // Verified UF commits (Cyion after Sep 26) must leave Priority Chase even when
+  // the durable HP plate still has them as open targets.
+  try {
+    const { filterActiveUfTargets } = require('../../lib/recruiting-target-filters') as {
+      filterActiveUfTargets: (list: unknown[]) => unknown[];
+    };
+    players = filterActiveUfTargets(players);
+  } catch {
+    /* optional */
+  }
   // Soft/disk HP can predate a full rebuild — drop stale UV/OV plates, then stamp Expected.
   try {
     const { filterStaleChaseVisitHistory, DEFAULT_VISIT_DAYS } = require('../../lib/hp-chase-card-enrich') as {

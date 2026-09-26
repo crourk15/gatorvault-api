@@ -23,6 +23,25 @@ describe('HP disk RPM poison heal', () => {
     assert.ok(Number(on3.score) < 20);
   });
 
+  it('drops verified UF commits from chase when the disk row still looks open', () => {
+    const out = sanitizeHighPriorityStarsPayload({
+      classYear: 2028,
+      players: [
+        {
+          slug: 'cyion-smith',
+          name: 'Cyion Smith',
+          stars: 4,
+          school: 'Blountstown HS (Blountstown, FL)',
+          fitScore: 82,
+          committedTo: null,
+          status: 'uncommitted',
+        },
+      ],
+    });
+    const slugs = (out.players || []).map((p) => p.slug);
+    assert.ok(!slugs.includes('cyion-smith'), 'Cyion must leave Priority Chase after the UF commit');
+  });
+
   it('sanitizeHighPriorityStarsPayload runs heal before elite filter', () => {
     const poisoned = {
       slug: 'zaiden-jernigan',
