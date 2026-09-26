@@ -100,6 +100,38 @@ describe('commits cache rev', () => {
     assert.equal(bundle.classOverview.commits, String(bundle.commits.length));
   });
 
+  it('rejects a 1-commit 2028 hero and heals classOverviewAll from class-overview', () => {
+    const yearDir = path.join(tmpRoot, 'hub-runtime', '2028');
+    fs.mkdirSync(yearDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(yearDir, 'hero.json'),
+      JSON.stringify({
+        ok: true,
+        status: 'ready',
+        year: 2028,
+        classOverview: { commits: '1', avgRating: '89.5', blueChip: '100%' },
+        classOverviewAll: {
+          2028: { commits: '1', avgRating: '89.5', blueChip: '100%' },
+        },
+      })
+    );
+    const hero = cache.readHubDiskSnapshot('hero', 2028);
+    assert.ok(hero, 'bundled 2028 hero must win over the 1-commit runtime plate');
+    assert.equal(String(hero.classOverview.commits), '2');
+    assert.equal(String(hero.classOverview.avgRating), '89.8');
+
+    const stale = {
+      year: 2027,
+      classOverview: { commits: '25', avgRating: '89.9' },
+      classOverviewAll: {
+        2028: { commits: '1', avgRating: '90.2', blueChip: '100%' },
+      },
+    };
+    cache.healOverviewNests(stale, 2027);
+    assert.equal(String(stale.classOverviewAll[2028].commits), '2');
+    assert.equal(String(stale.classOverviewAll[2028].avgRating), '89.8');
+  });
+
   it('hub-runtime 2027 commits are c6 with Pearl #17/#12', () => {
     const snap = path.join(__dirname, '../../data/recruiting/hub-runtime/2027/commits.json');
     const doc = JSON.parse(fs.readFileSync(snap, 'utf8'));

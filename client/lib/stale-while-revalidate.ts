@@ -42,6 +42,9 @@ const NO_CACHE_PREFIXES = [
   // Home NOW pillars live on nowWeek. An items-only SWR paint kept the old
   // one-line Game — Ole Miss ABC list on TestFlight after bake 94.
   '/api/recruiting/hub/ticker',
+  // 2028 commit class — last-good Armani-only hid Cyion Smith on iOS revisit.
+  '/api/recruiting/hub/bundle',
+  '/api/recruiting/hub/commits',
 ];
 
 type CacheEnvelope<T> = { at: number; data: T };

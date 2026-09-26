@@ -9,6 +9,7 @@ import {
 import {
   getRecruitingHubBundleSeed,
   recruitingHubBundleHasSignal,
+  recruitingHubBundleIsCurrent,
 } from '@/lib/recruiting-hub-bundle-seed';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { hubBundleWarmPollProfile } from '@/lib/warm-poll-profile';
@@ -31,6 +32,7 @@ function readHubBundleCache(year: number): RhHubBundle | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as { at: number; bundle: RhHubBundle };
     if (!parsed?.bundle || Date.now() - parsed.at > HUB_BUNDLE_CACHE_TTL_MS) return null;
+    if (!recruitingHubBundleIsCurrent(parsed.bundle, year)) return null;
     return parsed.bundle;
   } catch {
     return null;
@@ -74,8 +76,8 @@ async function fetchHubBundleWithWarmPoll(year: number): Promise<RhHubBundle> {
 /** Single /api/recruiting/hub/bundle fetch for the elite landing page. */
 export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): RecruitingHubBundleState {
   const [data, setData] = useState<RhHubBundle | null>(() => initialHubBundle(year));
-  const [loading, setLoading] = useState(() => !recruitingHubBundleHasSignal(initialHubBundle(year)));
-  const [warming, setWarming] = useState(() => !recruitingHubBundleHasSignal(initialHubBundle(year)));
+  const [loading, setLoading] = useState(() => !recruitingHubBundleIsCurrent(initialHubBundle(year), year));
+  const [warming, setWarming] = useState(() => !recruitingHubBundleIsCurrent(initialHubBundle(year), year));
   const [error, setError] = useState(false);
   const [reloadToken, setReloadToken] = useState(0);
   const autoRetryCountRef = useRef(0);
@@ -89,7 +91,7 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
     let cancelled = false;
     const start = initHubMonitor(year);
     const seeded = initialHubBundle(year);
-    const hasSeedPaint = recruitingHubBundleHasSignal(seeded);
+    const hasSeedPaint = recruitingHubBundleIsCurrent(seeded, year);
     if (seeded) {
       setData(seeded);
       setLoading(false);
@@ -109,7 +111,7 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
         const bundleLoadMs = Math.round(performance.now() - t0);
         if (cancelled) return;
         // Keep seed/cache when live is empty/cold — never wipe a painted hub.
-        if (!recruitingHubBundleHasSignal(bundle) && hasSeedPaint) {
+        if (!recruitingHubBundleIsCurrent(bundle, year) && hasSeedPaint) {
           setWarming(false);
           setError(false);
           gotBundle = true;
