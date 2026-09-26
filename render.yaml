@@ -13,6 +13,16 @@ services:
     plan: pro
     region: oregon
     rootDir: server
+    # Persistent disk = one instance. Every Render deploy takes the API down
+    # for minutes. Do not rebuild for Netlify/client/docs/test-only commits.
+    buildFilter:
+      paths:
+        - server/**
+        - render.yaml
+      ignoredPaths:
+        - server/tests/**
+        - server/test/**
+        - server/**/*.md
     buildCommand: npm install && node scripts/platform-guardian-predeploy.js
     startCommand: node server.js
     healthCheckPath: /ready
