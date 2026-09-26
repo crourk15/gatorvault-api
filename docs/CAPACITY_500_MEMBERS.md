@@ -48,7 +48,7 @@ Mitigations (Aug 2026 + Sep 2026):
 - hub-warm at `:12/:42`; recruiting-ingest at `:15` every 2h
 - Skip spaced fork when parent RSS ≥ `HUB_SPACED_FORK_PARENT_RSS_MB`
 - Admin Hub: confirmed 502/504 = red; network blips get wake grace
-- Post-listen boot yields between content/community/roster so `/ready` stays cheap
+- Listen + `/ready` open before heavy route/store `require()`s; boot yields between module batches
 - Netlify/client/test/cron-script commits do not rebuild the API
 - `BOOT_HEAVY_MIN_UPTIME_SEC=480` soft-skips recruiting-light / hub refresh on a young instance
 
