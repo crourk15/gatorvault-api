@@ -207,3 +207,12 @@ test('Ole Miss visitors tick first and last names, not three last names', () => 
   assert.ok(cats[1].items.every((n) => /\s/.test(n)));
   assert.ok(!cats[1].items.some((n) => / · /.test(n)));
 });
+
+test('this-week Cyion Smith commit breaks into Home NOW News', () => {
+  const cats = buildWeeklyHomeNowCategories(new Date('2026-09-26T20:00:00.000Z'));
+  const news = cats.find((c) => c.key === 'news');
+  assert.ok(news, 'News pillar must replace Visitors this week');
+  assert.match(String(news.items[0] || ''), /Cyion Smith commits to Florida/i);
+  const season = cats.find((c) => c.key === 'season');
+  assert.deepEqual(season.items, ['3-0 · first SEC home Saturday']);
+});

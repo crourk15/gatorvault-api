@@ -173,16 +173,45 @@ function formatBreakInLine(row) {
   return name + ' ' + verb + rankBit;
 }
 
+function loadBundledThisWeekCommitRows(nowMs) {
+  try {
+    const { loadBundledVerifiedPlayers, looksLikeFloridaCommit } = require('./recruiting-verified-commits');
+    const rows = [];
+    for (const player of loadBundledVerifiedPlayers().values()) {
+      if (!looksLikeFloridaCommit(player)) continue;
+      const date = player.commitDate || player.commit_date;
+      const ts = parseDateMs(date, nowMs);
+      if (!Number.isFinite(ts) || nowMs - ts > WEEK_MS || ts > nowMs + DAY_MS) continue;
+      rows.push({
+        eventType: 'commit',
+        playerSlug: player.slug,
+        playerName: player.name,
+        commitDate: date,
+        committedTo: 'Florida',
+        stars: player.stars,
+        natlRank: player.natlRank,
+        text: `${player.name} commits to Florida`,
+        source: 'bundle_verified_commit',
+      });
+    }
+    return rows;
+  } catch {
+    return [];
+  }
+}
+
 function loadIntelRows(nowMs) {
+  let rows = [];
   try {
     const since = new Date(nowMs - WEEK_MS).toISOString();
     const store = require('./recruiting-intel-store');
     const commits = store.listIntel({ limit: 60, since, eventType: 'commit' });
     const flips = store.listIntel({ limit: 20, since, eventType: 'flip' });
-    return commits.concat(flips);
+    rows = commits.concat(flips);
   } catch {
-    return [];
+    rows = [];
   }
+  return rows.concat(loadBundledThisWeekCommitRows(nowMs));
 }
 
 function pickWeeklyNowBreakIn(now, opts) {
