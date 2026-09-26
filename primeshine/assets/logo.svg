@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Primeshine Mobile Detailing</title>
+  <defs>
+    <linearGradient id="gold" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff4c8"/>
+      <stop offset=".38" stop-color="#e7c56a"/>
+      <stop offset="1" stop-color="#9a6f28"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="12" y1="18" x2="52" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff" stop-opacity=".0"/>
+      <stop offset=".5" stop-color="#fff" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".0"/>
+    </linearGradient>
+  </defs>
+  <rect x="2.5" y="2.5" width="59" height="59" rx="16" fill="#0c0d11" stroke="url(#gold)" stroke-width="1.5"/>
+  <path d="M14 42.5c8.2-1.4 15.4-8.6 17.8-17.4.7-2.6 2.4-4.2 4.9-4.6 4.1-.6 8.2 2.4 9.3 6.6.6 2.2-.1 4.3-1.8 5.6-2.2 1.7-5.5 1.2-7.2-.8" fill="none" stroke="url(#gold)" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M12 46h40" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+  <path d="M18 28.5 46 22" stroke="url(#shine)" stroke-width="2.2" stroke-linecap="round"/>
+</svg>
