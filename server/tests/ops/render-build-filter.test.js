@@ -12,8 +12,10 @@ test('gatorvault-api ignores test and docs commits so disk deploys stay rare', (
   assert.match(yaml, /name: gatorvault-api/);
   assert.match(yaml, /buildFilter:/);
   assert.match(yaml, /server\/tests\/\*\*/);
+  assert.match(yaml, /server\/scripts\/\*\*/);
   assert.match(yaml, /ignoredPaths:/);
   assert.match(yaml, /- server\/\*\*/);
+  assert.match(yaml, /BOOT_HEAVY_MIN_UPTIME_SEC/);
 });
 
 test('post-listen boot yields content and does not scan community threads', () => {

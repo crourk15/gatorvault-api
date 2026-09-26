@@ -9,6 +9,8 @@ describe('api stay-green lockdown', () => {
   const prev = {
     API_STAY_GREEN: process.env.API_STAY_GREEN,
     API_STAY_GREEN_ALLOW_HEAVY: process.env.API_STAY_GREEN_ALLOW_HEAVY,
+    BOOT_HEAVY_MIN_UPTIME_SEC: process.env.BOOT_HEAVY_MIN_UPTIME_SEC,
+    BOOT_HEAVY_EXEMPT_JOBS: process.env.BOOT_HEAVY_EXEMPT_JOBS,
     NODE_ENV: process.env.NODE_ENV,
   };
 
@@ -23,6 +25,7 @@ describe('api stay-green lockdown', () => {
   it('defaults off after App Review; opt-in blocks ops jobs', () => {
     delete process.env.API_STAY_GREEN;
     delete process.env.API_STAY_GREEN_ALLOW_HEAVY;
+    delete process.env.BOOT_HEAVY_MIN_UPTIME_SEC;
     process.env.NODE_ENV = 'production';
     delete require.cache[require.resolve('../lib/api-stay-green')];
     const mod = require('../lib/api-stay-green');
@@ -31,9 +34,25 @@ describe('api stay-green lockdown', () => {
     assert.equal(mod.shouldBlockOpsJob('gators-score-alerts'), false);
   });
 
+  it('soft-skips heavy crons until boot uptime clears; score alerts stay live', () => {
+    delete process.env.API_STAY_GREEN;
+    process.env.BOOT_HEAVY_MIN_UPTIME_SEC = '480';
+    delete require.cache[require.resolve('../lib/api-stay-green')];
+    const mod = require('../lib/api-stay-green');
+    const skipped = mod.stayGreenSkipPayload('hub-refresh');
+    assert.ok(skipped);
+    assert.equal(skipped.reason, 'boot_guard');
+    assert.equal(skipped.skipped, true);
+    assert.equal(mod.shouldBlockOpsJob('hub-refresh'), true);
+    assert.equal(mod.stayGreenSkipPayload('gators-score-alerts'), null);
+    assert.equal(mod.stayGreenSkipPayload('ops:gators-score-alerts'), null);
+    assert.equal(mod.shouldBlockOpsJob('gators-score-alerts'), false);
+  });
+
   it('can be forced on for lockdown', () => {
     process.env.API_STAY_GREEN = 'true';
     delete process.env.API_STAY_GREEN_ALLOW_HEAVY;
+    delete process.env.BOOT_HEAVY_MIN_UPTIME_SEC;
     delete require.cache[require.resolve('../lib/api-stay-green')];
     const mod = require('../lib/api-stay-green');
     assert.equal(mod.isStayGreen(), true);
@@ -43,6 +62,7 @@ describe('api stay-green lockdown', () => {
 
   it('can be forced off', () => {
     process.env.API_STAY_GREEN = 'false';
+    delete process.env.BOOT_HEAVY_MIN_UPTIME_SEC;
     delete require.cache[require.resolve('../lib/api-stay-green')];
     const mod = require('../lib/api-stay-green');
     assert.equal(mod.isStayGreen(), false);
