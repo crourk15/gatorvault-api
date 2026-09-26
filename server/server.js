@@ -31,50 +31,58 @@ process.on('uncaughtException', (err) => {
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const { mountRecruitingRoutes } = require('./lib/recruiting-routes');
-const { mountContentRoutes } = require('./lib/content-routes');
-const { mountCommunityRoutes } = require('./lib/community-routes');
-const { mountRosterRoutes } = require('./lib/roster-routes');
-const { mountLiveRoutes } = require('./lib/live-routes');
-const { mountVaultDashboardRoutes } = require('./lib/vault-dashboard-routes');
-const { mountHighlightsRoutes } = require('./lib/highlights-routes');
-const { mountInterviewsRoutes } = require('./lib/interviews-routes');
-const { mountMediaIngestRoutes } = require('./lib/media-ingest-routes');
-const { mountWarRoomRoutes } = require('./lib/war-room-routes');
-const { mountPlatformRoutes } = require('./lib/platform-routes');
-const pointsStore = require('./lib/points-store');
-const accessConfig = require('./lib/access-config');
-const { mountXAutoposterRoutes } = require('./lib/x-autoposter-routes');
-const { mountMonitoringRoutes } = require('./lib/monitoring-routes');
-const { mountAdminRoutes } = require('./lib/admin-routes');
-const { mountAdminHubRoutes } = require('./lib/admin-hub-routes');
-const { mountFilmRoomKnowledgeRoutes } = require('./lib/film-room-knowledge-routes');
-const { mountNilRoutes } = require('./lib/nil-routes');
-const { mountOpsRoutes } = require('./lib/ops-routes');
-const { mountTeamStaffRoutes } = require('./lib/team-staff-routes');
-const { mountQaRoutes } = require('./lib/qa-routes');
-const { mountProductIntelRoutes } = require('./lib/product-intel/product-intel-routes');
-const { mountUnresolvedPredictionsRoutes } = require('./lib/unresolved-predictions-routes');
-const { mountGm2Routes } = require('./lib/gm2/gm2-routes');
-const { mountVaultGradeAdminRoutes } = require('./lib/vault-grade-admin-routes');
-const { mountPlayerIntelEntryRoutes } = require('./lib/player-intel-entry-routes');
 const { apiMonitorMiddleware } = require('./lib/api-monitor');
-const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
-const communityStore = require('./lib/community-store');
-const { effectiveTier, isAdminAccount, isReservedOperatorEmail } = require('./lib/session-auth');
-const { loadUsers, saveUsers, findUserByEmail, updateUser } = require('./lib/user-store');
-const {
-  checkAuthRateLimit,
-  clientIp,
-  rateLimitResponse,
-} = require('./lib/auth-rate-limit');
-const { hasPaidAccess, buildSessionFields } = require('./lib/subscription-service');
-const { mountSubscriptionRoutes } = require('./lib/subscription-routes');
-const { mountPushAlertRoutes } = require('./lib/push-alert-routes');
-const { mountAlertEmailRoutes } = require('./lib/alert-email-routes');
-const { mountAccountRoutes } = require('./lib/account-routes');
-const { mountMemberActivityRoutes } = require('./lib/member-activity-routes');
-const pipelineGuards = require('./lib/pipeline-guards');
+
+// Heavy route/store modules load AFTER listen (see wireApplication steps).
+// Requiring them here blocked the port on Render and HTML-502'd /ready.
+let mountRecruitingRoutes;
+let mountContentRoutes;
+let mountCommunityRoutes;
+let mountRosterRoutes;
+let mountLiveRoutes;
+let mountVaultDashboardRoutes;
+let mountHighlightsRoutes;
+let mountInterviewsRoutes;
+let mountMediaIngestRoutes;
+let mountWarRoomRoutes;
+let mountPlatformRoutes;
+let pointsStore;
+let accessConfig;
+let mountXAutoposterRoutes;
+let mountMonitoringRoutes;
+let mountAdminRoutes;
+let mountAdminHubRoutes;
+let mountFilmRoomKnowledgeRoutes;
+let mountNilRoutes;
+let mountOpsRoutes;
+let mountTeamStaffRoutes;
+let mountQaRoutes;
+let mountProductIntelRoutes;
+let mountUnresolvedPredictionsRoutes;
+let mountGm2Routes;
+let mountVaultGradeAdminRoutes;
+let mountPlayerIntelEntryRoutes;
+let ensurePublishedSeed;
+let auditPublishedArticles;
+let communityStore;
+let effectiveTier;
+let isAdminAccount;
+let isReservedOperatorEmail;
+let loadUsers;
+let saveUsers;
+let findUserByEmail;
+let updateUser;
+let checkAuthRateLimit;
+let clientIp;
+let rateLimitResponse;
+let hasPaidAccess;
+let buildSessionFields;
+let mountSubscriptionRoutes;
+let mountPushAlertRoutes;
+let mountAlertEmailRoutes;
+let mountAccountRoutes;
+let mountMemberActivityRoutes;
+let pipelineGuards;
 
 const fetch = require('node-fetch');
 const nodemailer = require('nodemailer');
@@ -165,6 +173,57 @@ app.listen(PORT, () => {
 function wireApplication() {
   // Mount routes in small yielded steps so Render /health can answer between them.
   const steps = [
+    function loadBootModulesCore() {
+      ({ mountRecruitingRoutes } = require('./lib/recruiting-routes'));
+      ({ mountContentRoutes } = require('./lib/content-routes'));
+      ({ mountCommunityRoutes } = require('./lib/community-routes'));
+      ({ mountRosterRoutes } = require('./lib/roster-routes'));
+      ({ mountLiveRoutes } = require('./lib/live-routes'));
+      console.log('[boot] loaded core route modules');
+    },
+    function loadBootModulesMedia() {
+      ({ mountVaultDashboardRoutes } = require('./lib/vault-dashboard-routes'));
+      ({ mountHighlightsRoutes } = require('./lib/highlights-routes'));
+      ({ mountInterviewsRoutes } = require('./lib/interviews-routes'));
+      ({ mountMediaIngestRoutes } = require('./lib/media-ingest-routes'));
+      ({ mountWarRoomRoutes } = require('./lib/war-room-routes'));
+      ({ mountPlatformRoutes } = require('./lib/platform-routes'));
+      console.log('[boot] loaded media/war route modules');
+    },
+    function loadBootModulesAdmin() {
+      ({ mountXAutoposterRoutes } = require('./lib/x-autoposter-routes'));
+      ({ mountMonitoringRoutes } = require('./lib/monitoring-routes'));
+      ({ mountAdminRoutes } = require('./lib/admin-routes'));
+      ({ mountAdminHubRoutes } = require('./lib/admin-hub-routes'));
+      ({ mountFilmRoomKnowledgeRoutes } = require('./lib/film-room-knowledge-routes'));
+      ({ mountNilRoutes } = require('./lib/nil-routes'));
+      ({ mountOpsRoutes } = require('./lib/ops-routes'));
+      ({ mountTeamStaffRoutes } = require('./lib/team-staff-routes'));
+      ({ mountQaRoutes } = require('./lib/qa-routes'));
+      ({ mountProductIntelRoutes } = require('./lib/product-intel/product-intel-routes'));
+      ({ mountUnresolvedPredictionsRoutes } = require('./lib/unresolved-predictions-routes'));
+      ({ mountGm2Routes } = require('./lib/gm2/gm2-routes'));
+      ({ mountVaultGradeAdminRoutes } = require('./lib/vault-grade-admin-routes'));
+      ({ mountPlayerIntelEntryRoutes } = require('./lib/player-intel-entry-routes'));
+      console.log('[boot] loaded admin route modules');
+    },
+    function loadBootModulesAuth() {
+      pointsStore = require('./lib/points-store');
+      accessConfig = require('./lib/access-config');
+      ({ ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store'));
+      communityStore = require('./lib/community-store');
+      ({ effectiveTier, isAdminAccount, isReservedOperatorEmail } = require('./lib/session-auth'));
+      ({ loadUsers, saveUsers, findUserByEmail, updateUser } = require('./lib/user-store'));
+      ({ checkAuthRateLimit, clientIp, rateLimitResponse } = require('./lib/auth-rate-limit'));
+      ({ hasPaidAccess, buildSessionFields } = require('./lib/subscription-service'));
+      ({ mountSubscriptionRoutes } = require('./lib/subscription-routes'));
+      ({ mountPushAlertRoutes } = require('./lib/push-alert-routes'));
+      ({ mountAlertEmailRoutes } = require('./lib/alert-email-routes'));
+      ({ mountAccountRoutes } = require('./lib/account-routes'));
+      ({ mountMemberActivityRoutes } = require('./lib/member-activity-routes'));
+      pipelineGuards = require('./lib/pipeline-guards');
+      console.log('[boot] loaded auth/store modules');
+    },
     function stepStaticHtml() {
       app.get('/highlight/:slug', (req, res) => {
         res.sendFile(path.join(__dirname, 'highlight.html'));
