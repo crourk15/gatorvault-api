@@ -1967,29 +1967,54 @@ function startPostBootRecruitingAndSchedulers() {
   } catch (e) {
     console.warn('Recruiting API: failed to init', e.message);
   }
-  try {
-    ensurePublishedSeed();
-    const contentAudit = auditPublishedArticles();
-    console.log('Content API: ready (accuracy validation + review queue)', contentAudit);
-  } catch (e) {
-    console.warn('Content API: failed to init', e.message);
-  }
-  try {
-    if (process.env.COMMUNITY_SEED_ENABLED === 'true' && !communityStore.isSeeded()) {
-      require('./scripts/seed-community');
+  // Same-turn content/community/roster parses starved /ready (~5s) and Render
+  // dropped the only disk instance for 2+ minutes. Yield between steps.
+  const schedYieldMs = Math.max(
+    200,
+    parseInt(process.env.API_BOOT_SCHED_YIELD_MS || '400', 10) || 400
+  );
+  setTimeout(startPostBootServiceTail, schedYieldMs);
+}
+
+function startPostBootServiceTail() {
+  const schedYieldMs = Math.max(
+    200,
+    parseInt(process.env.API_BOOT_SCHED_YIELD_MS || '400', 10) || 400
+  );
+  const steps = [
+    function contentReady() {
+      ensurePublishedSeed();
+      const contentAudit = auditPublishedArticles();
+      console.log('Content API: ready (accuracy validation + review queue)', contentAudit);
+    },
+    function communityReady() {
+      if (process.env.COMMUNITY_SEED_ENABLED === 'true' && !communityStore.isSeeded()) {
+        require('./scripts/seed-community');
+      }
+      console.log('Community API: ready');
+    },
+    function rosterReady() {
+      console.log('Roster API: ready');
+    },
+  ];
+  let i = 0;
+  function next() {
+    if (i >= steps.length) {
+      startPostBootStoresAndSchedulers();
+      return;
     }
-    console.log('Community API: ready (' + communityStore.loadThreads().filter((t) => !t.deleted).length + ' threads)');
-  } catch (e) {
-    console.warn('Community API: failed to init', e.message);
+    const step = steps[i++];
+    try {
+      step();
+    } catch (err) {
+      console.warn('[boot] post-listen step failed:', step.name, err && err.message ? err.message : err);
+    }
+    setTimeout(next, schedYieldMs);
   }
-  try {
-    const rosterStore = require('./lib/roster-store');
-    const rosterCount = rosterStore.getAllRosterPlayers().length;
-    console.log('Roster API: ready (' + rosterCount + ' players)');
-    if (!rosterCount) console.warn('[roster] players.json empty or unreadable — check data/roster/players.json');
-  } catch (e) {
-    console.warn('Roster API: failed to init', e.message);
-  }
+  next();
+}
+
+function startPostBootStoresAndSchedulers() {
   try {
     const intelStore = require('./lib/recruiting-intel-store');
     intelStore
@@ -2299,6 +2324,6 @@ function startPostBootRecruitingAndSchedulers() {
       console.warn('[guardian] runtime watchdog failed to start', e.message);
     }
   }
-} // startPostBootRecruitingAndSchedulers
+} // startPostBootStoresAndSchedulers
 
 } // wireApplicationRest
