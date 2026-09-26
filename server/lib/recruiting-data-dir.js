@@ -428,6 +428,171 @@ function mergeBundledHubRuntimeCommitsIfRicher(dataDir = resolveRecruitingDataDi
   return { merged: updated > 0, updated, details };
 }
 
+function overviewCommitCount(doc) {
+  return Number.parseInt(String(doc?.commits ?? ''), 10) || 0;
+}
+
+function pickRicherOverview(durable, bundled) {
+  if (!bundled || typeof bundled !== 'object') return durable;
+  if (!durable || typeof durable !== 'object') return bundled;
+  return overviewCommitCount(bundled) > overviewCommitCount(durable) ? bundled : durable;
+}
+
+function patchOverviewAllNest(doc, year, bundledNest) {
+  if (!doc || typeof doc !== 'object' || !bundledNest) return false;
+  const all = doc.classOverviewAll;
+  if (!all || typeof all !== 'object') return false;
+  const key = all[year] != null ? year : String(year);
+  if (all[key] == null) return false;
+  const next = pickRicherOverview(all[key], bundledNest);
+  if (next === all[key]) return false;
+  all[key] = next;
+  return true;
+}
+
+/**
+ * Hero + classOverviewAll can stay at 1 commit after commits.json already
+ * has Cyion (copyJsonIfMissing never overwrites). Merge those plates even
+ * when the commit list itself is complete.
+ */
+function mergeBundledHubRuntimeOverviewIfRicher(dataDir = resolveRecruitingDataDir()) {
+  if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
+    return { merged: false, reason: 'same_path' };
+  }
+  let updated = 0;
+  const details = [];
+  const years = [2026, 2027, 2028, 2029];
+
+  const bundledAllPath = path.join(BUNDLE_DIR, 'hub-runtime', 'class-overview-all.json');
+  const durableAllPath = path.join(dataDir, 'hub-runtime', 'class-overview-all.json');
+  let bundledAll = null;
+  if (fs.existsSync(bundledAllPath)) {
+    try {
+      bundledAll = JSON.parse(fs.readFileSync(bundledAllPath, 'utf8'));
+    } catch {
+      bundledAll = null;
+    }
+  }
+  if (bundledAll && typeof bundledAll === 'object') {
+    try {
+      let durableAll = {};
+      if (fs.existsSync(durableAllPath)) {
+        durableAll = JSON.parse(fs.readFileSync(durableAllPath, 'utf8'));
+      }
+      let changed = false;
+      for (const year of years) {
+        const bNest = bundledAll[year] || bundledAll[String(year)];
+        if (!bNest) continue;
+        const dKey = durableAll[year] != null ? year : String(year);
+        const next = pickRicherOverview(durableAll[dKey], bNest);
+        if (next !== durableAll[dKey]) {
+          durableAll[dKey] = next;
+          changed = true;
+        }
+      }
+      if (changed) {
+        fs.mkdirSync(path.dirname(durableAllPath), { recursive: true });
+        fs.writeFileSync(durableAllPath, JSON.stringify(durableAll, null, 2));
+        updated += 1;
+        details.push({ file: 'class-overview-all.json' });
+      }
+    } catch (err) {
+      console.warn('[recruiting-data-dir] class-overview-all merge failed', err.message);
+    }
+  }
+
+  for (const year of years) {
+    const bundledOv = path.join(BUNDLE_DIR, 'hub-runtime', String(year), 'class-overview.json');
+    const durableOv = path.join(dataDir, 'hub-runtime', String(year), 'class-overview.json');
+    if (fs.existsSync(bundledOv)) {
+      try {
+        const bOv = JSON.parse(fs.readFileSync(bundledOv, 'utf8'));
+        let dCount = 0;
+        if (fs.existsSync(durableOv)) {
+          dCount = overviewCommitCount(JSON.parse(fs.readFileSync(durableOv, 'utf8')));
+        }
+        if (overviewCommitCount(bOv) > dCount) {
+          fs.mkdirSync(path.dirname(durableOv), { recursive: true });
+          fs.writeFileSync(durableOv, JSON.stringify(bOv));
+          updated += 1;
+          details.push({ year, file: 'class-overview.json' });
+        }
+      } catch (err) {
+        console.warn('[recruiting-data-dir] class-overview merge failed', year, err.message);
+      }
+    }
+
+    const bundledNest =
+      (bundledAll && (bundledAll[year] || bundledAll[String(year)])) ||
+      null;
+    const bundledHeroPath = path.join(BUNDLE_DIR, 'hub-runtime', String(year), 'hero.json');
+    const durableHeroPath = path.join(dataDir, 'hub-runtime', String(year), 'hero.json');
+    if (fs.existsSync(bundledHeroPath) && fs.existsSync(durableHeroPath)) {
+      try {
+        const bundledHero = JSON.parse(fs.readFileSync(bundledHeroPath, 'utf8'));
+        const durableHero = JSON.parse(fs.readFileSync(durableHeroPath, 'utf8'));
+        let changed = false;
+        if (Number(bundledHero.year) === year || Number(durableHero.year) === year) {
+          const nextOv = pickRicherOverview(durableHero.classOverview, bundledHero.classOverview);
+          if (nextOv !== durableHero.classOverview) {
+            durableHero.classOverview = nextOv;
+            changed = true;
+          }
+          if (Array.isArray(bundledHero.ticker) && overviewCommitCount(nextOv) > 0) {
+            const n = String(nextOv.commits);
+            durableHero.ticker = (durableHero.ticker || bundledHero.ticker).map((line) =>
+              typeof line === 'string'
+                ? line.replace(/\d+ commits locked for \d+/, `${n} commits locked for ${year}`)
+                : line
+            );
+          }
+        }
+        if (patchOverviewAllNest(durableHero, 2028, bundledHero.classOverviewAll?.[2028] || bundledHero.classOverviewAll?.['2028'] || bundledNest)) {
+          changed = true;
+        }
+        if (changed) {
+          fs.writeFileSync(durableHeroPath, JSON.stringify(durableHero, null, 2));
+          updated += 1;
+          details.push({ year, file: 'hero.json' });
+        }
+      } catch (err) {
+        console.warn('[recruiting-data-dir] hero overview merge failed', year, err.message);
+      }
+    }
+
+    const durableBundlePath = path.join(dataDir, 'hub-runtime', String(year), 'bundle.json');
+    const bundledBundlePath = path.join(BUNDLE_DIR, 'hub-runtime', String(year), 'bundle.json');
+    if (fs.existsSync(durableBundlePath) && fs.existsSync(bundledBundlePath)) {
+      try {
+        const durableBundle = JSON.parse(fs.readFileSync(durableBundlePath, 'utf8'));
+        const bundledBundle = JSON.parse(fs.readFileSync(bundledBundlePath, 'utf8'));
+        let changed = false;
+        if (Number(year) === Number(durableBundle.year) || Number(year) === Number(bundledBundle.year)) {
+          const nextOv = pickRicherOverview(durableBundle.classOverview, bundledBundle.classOverview);
+          if (nextOv !== durableBundle.classOverview) {
+            durableBundle.classOverview = nextOv;
+            changed = true;
+          }
+        }
+        const nest =
+          bundledBundle.classOverviewAll?.[2028] ||
+          bundledBundle.classOverviewAll?.['2028'] ||
+          bundledNest;
+        if (patchOverviewAllNest(durableBundle, 2028, nest)) changed = true;
+        if (changed) {
+          fs.writeFileSync(durableBundlePath, JSON.stringify(durableBundle));
+          updated += 1;
+          details.push({ year, file: 'bundle.json' });
+        }
+      } catch (err) {
+        console.warn('[recruiting-data-dir] bundle overview merge failed', year, err.message);
+      }
+    }
+  }
+
+  return { merged: updated > 0, updated, details };
+}
+
 /** Drop verified UF commits from durable FutureCast HP so Chase cannot keep them. */
 function stripVerifiedCommitsFromDurableHp(dataDir = resolveRecruitingDataDir()) {
   if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
@@ -568,6 +733,10 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
     if (hubRuntimeMerge.updated) {
       console.log('[recruiting-data-dir] merged hub-runtime commits from bundle', hubRuntimeMerge.details);
     }
+    const hubOverviewMerge = mergeBundledHubRuntimeOverviewIfRicher(dataDir);
+    if (hubOverviewMerge.updated) {
+      console.log('[recruiting-data-dir] merged hub-runtime overview from bundle', hubOverviewMerge.details);
+    }
     const hpStrip = stripVerifiedCommitsFromDurableHp(dataDir);
     if (hpStrip.updated) {
       console.log('[recruiting-data-dir] stripped verified UF commits from durable HP', hpStrip.removed);
@@ -636,5 +805,6 @@ module.exports = {
   mergeBundledVerifiedCommitsIfFresher,
   mergeBundledCommitIntelIfMissing,
   mergeBundledHubRuntimeCommitsIfRicher,
+  mergeBundledHubRuntimeOverviewIfRicher,
   stripVerifiedCommitsFromDurableHp,
 };

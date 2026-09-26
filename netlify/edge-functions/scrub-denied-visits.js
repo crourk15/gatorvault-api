@@ -36,6 +36,25 @@ function isHubCommitsPath(pathname) {
   return String(pathname || '').startsWith('/api/recruiting/hub/commits');
 }
 
+function isHubHeroPath(pathname) {
+  return String(pathname || '').startsWith('/api/recruiting/hub/hero');
+}
+
+const OV_2028 = {
+  classRank: '—',
+  blueChip: '100%',
+  commits: '2',
+  commitLabel: 'Commits',
+  avgRating: '89.8',
+};
+
+function pin2028Overview(ov) {
+  const base = ov && typeof ov === 'object' ? ov : {};
+  const count = Number.parseInt(String(base.commits ?? ''), 10) || 0;
+  if (count >= 2 && String(base.avgRating || '') === OV_2028.avgRating) return base;
+  return { ...base, ...OV_2028 };
+}
+
 /** iOS last-good / URLCache can keep the Armani-only 2028 plate. Pin Cyion on the wire. */
 const CYION_2028_COMMIT = {
   id: 'cyion-smith',
@@ -86,6 +105,32 @@ function heal2028CommitPayload(data, year) {
     if (next.length !== out.players.length) {
       out.players = next;
       out.count = next.length;
+      changed = true;
+    }
+  }
+  if (Number(year) === 2028 && out.classOverview) {
+    const pinned = pin2028Overview(out.classOverview);
+    if (pinned !== out.classOverview) {
+      out.classOverview = pinned;
+      changed = true;
+    }
+  }
+  if (out.classOverviewAll && typeof out.classOverviewAll === 'object') {
+    const key = out.classOverviewAll[2028] != null ? 2028 : '2028';
+    if (out.classOverviewAll[key]) {
+      const pinned = pin2028Overview(out.classOverviewAll[key]);
+      if (pinned !== out.classOverviewAll[key]) {
+        out.classOverviewAll = { ...out.classOverviewAll, [key]: pinned };
+        changed = true;
+      }
+    }
+  }
+  if (Array.isArray(out.ticker)) {
+    const next = out.ticker.map((line) =>
+      typeof line === 'string' ? line.replace(/\d+ commits locked for 2028/, '2 commits locked for 2028') : line
+    );
+    if (next.some((line, i) => line !== out.ticker[i])) {
+      out.ticker = next;
       changed = true;
     }
   }
@@ -368,7 +413,7 @@ export default async (request, context) => {
   }
 
   let { data, changed } = scrubPayload(payload, url.pathname);
-  if (isHubBundlePath(url.pathname) || isHubCommitsPath(url.pathname)) {
+  if (isHubBundlePath(url.pathname) || isHubCommitsPath(url.pathname) || isHubHeroPath(url.pathname)) {
     const healed = heal2028CommitPayload(data, yearFromRequest(url));
     if (healed.changed) {
       data = healed.data;

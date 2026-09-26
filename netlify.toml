@@ -122,6 +122,10 @@
 
 [[edge_functions]]
   function = "scrub-denied-visits"
+  path = "/api/recruiting/hub/hero/*"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
   path = "/api/players/*"
 
 [[edge_functions]]
