@@ -304,6 +304,23 @@ test('getHubCommits ignores stale store rows when On3 snapshot defines the class
   delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
 });
 
+test('applyVerifiedHubCommit overlays Cyion Smith from the git bundle onto a durable target shell', () => {
+  const restored = applyVerifiedHubCommit({
+    slug: 'cyion-smith',
+    name: 'Cyion Smith',
+    classYear: 2028,
+    category: 'target',
+    status: 'uncommitted',
+    committedTo: null,
+    commitDate: null,
+  });
+  assert.equal(restored.status, 'committed');
+  assert.equal(restored.committedTo, 'Florida');
+  assert.equal(restored.category, 'recruit');
+  assert.equal(restored.commitDate, '2026-09-26');
+  assert.match(String(restored.profileNote || ''), /Cyion Smith committed to Florida/i);
+});
+
 test('applyVerifiedHubCommit restores demoted verified slug', () => {
   const restored = applyVerifiedHubCommit({
     slug: 'jaydee-lane',

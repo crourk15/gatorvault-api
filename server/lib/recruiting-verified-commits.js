@@ -3,6 +3,8 @@
  * Hub commit lists use official On3 board sync + enrolled/signed rows only.
  * On3 snapshot commits are also treated as authoritative and must never be demoted.
  */
+const fs = require('fs');
+const path = require('path');
 const { slugify } = require('./slug');
 
 const HUB_CLASS_YEARS = new Set([2027, 2028, 2029]);
@@ -202,6 +204,30 @@ function countVerifiedHubCommits(players, classYear) {
   return count;
 }
 
+const BUNDLE_PLAYERS_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'players.json');
+
+let _bundledVerified = null;
+let _bundledVerifiedMtime = 0;
+
+function loadBundledVerifiedPlayers() {
+  try {
+    const stat = fs.statSync(BUNDLE_PLAYERS_PATH);
+    if (_bundledVerified && stat.mtimeMs === _bundledVerifiedMtime) return _bundledVerified;
+    const players = JSON.parse(fs.readFileSync(BUNDLE_PLAYERS_PATH, 'utf8'));
+    const map = new Map();
+    for (const p of Array.isArray(players) ? players : []) {
+      const slug = playerSlug(p);
+      if (!slug || !ALL_VERIFIED_UF_COMMITS.has(slug)) continue;
+      map.set(slug, p);
+    }
+    _bundledVerified = map;
+    _bundledVerifiedMtime = stat.mtimeMs;
+    return map;
+  } catch {
+    return _bundledVerified || new Map();
+  }
+}
+
 /** Re-apply editorial commit status for verified allowlist slugs (sync, in-memory). */
 function applyVerifiedHubCommit(player) {
   if (!player) return player;
@@ -209,18 +235,26 @@ function applyVerifiedHubCommit(player) {
   const verifiedYear = verifiedClassYearForSlug(slug);
   if (verifiedYear == null) return player;
 
+  const bundled = loadBundledVerifiedPlayers().get(slug);
   const year = Number(player.classYear ?? player.class_year);
   const alreadyOk =
     looksLikeFloridaCommit(player) && Number(year) === verifiedYear && player.category === 'recruit';
-  if (alreadyOk) return player;
-
-  const out = { ...player };
-  out.classYear = verifiedYear;
-  out.status = 'committed';
-  out.committedTo = 'Florida';
-  out.category = 'recruit';
-  out.lifecycle = out.lifecycle === 'target' ? 'commit' : out.lifecycle || 'commit';
-  if (out.pipelineState === 'target' || !out.pipelineState) out.pipelineState = 'committed';
+  const out = alreadyOk ? { ...player } : { ...player };
+  if (!alreadyOk) {
+    out.classYear = verifiedYear;
+    out.status = 'committed';
+    out.committedTo = 'Florida';
+    out.category = 'recruit';
+    out.lifecycle = out.lifecycle === 'target' ? 'commit' : out.lifecycle || 'commit';
+    if (out.pipelineState === 'target' || !out.pipelineState) out.pipelineState = 'committed';
+  }
+  if (bundled && looksLikeFloridaCommit(bundled)) {
+    if (bundled.commitDate) out.commitDate = bundled.commitDate;
+    if (bundled.skinny) out.skinny = bundled.skinny;
+    if (bundled.profileNote) out.profileNote = bundled.profileNote;
+    out.protected = true;
+    out.verifiedCommit = true;
+  }
   return out;
 }
 
@@ -235,7 +269,8 @@ async function restoreVerifiedHubCommitsInStore() {
       next.status === p.status &&
       next.committedTo === p.committedTo &&
       next.category === p.category &&
-      Number(next.classYear) === Number(p.classYear)
+      Number(next.classYear) === Number(p.classYear) &&
+      next.commitDate === p.commitDate
     ) {
       continue;
     }
@@ -264,6 +299,8 @@ module.exports = {
   clearSnapshotCommitKeyCache,
   demoteUnverifiedHubCommit,
   applyVerifiedHubCommit,
+  overlayBundledVerifiedCommit: applyVerifiedHubCommit,
+  loadBundledVerifiedPlayers,
   restoreVerifiedHubCommitsInStore,
   validateVerifiedCommits,
   countVerifiedHubCommits,

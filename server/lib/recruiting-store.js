@@ -708,7 +708,12 @@ function findBySlug(slug) {
   if (isBlockedPlayer({ slug })) return null;
   const players = readJson(PLAYERS_PATH, []).map(normalizePlayer);
   const p = players.find((row) => row.slug === slug) || null;
-  return p && !isBlockedPlayer(p) ? p : null;
+  if (!p || isBlockedPlayer(p)) return null;
+  try {
+    return require('./recruiting-verified-commits').applyVerifiedHubCommit(p);
+  } catch {
+    return p;
+  }
 }
 
 function findByNameAndClass(name, classYear) {
@@ -792,14 +797,24 @@ async function getPlayerBySlug(slug) {
       }
     } else if (data) {
       const row = enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(rowToPlayer(data)), slug);
-      return isBlockedPlayer(row) ? null : row;
+      if (!row || isBlockedPlayer(row)) return null;
+      try {
+        return require('./recruiting-verified-commits').applyVerifiedHubCommit(row);
+      } catch {
+        return row;
+      }
     }
   }
   const players = await loadPlayersLocal();
   const p = players.find((x) => x.slug === slug);
   if (!p) return null;
   const row = enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(normalizePlayer(p)), slug);
-  return isBlockedPlayer(row) ? null : row;
+  if (!row || isBlockedPlayer(row)) return null;
+  try {
+    return require('./recruiting-verified-commits').applyVerifiedHubCommit(row);
+  } catch {
+    return row;
+  }
 }
 
 /**

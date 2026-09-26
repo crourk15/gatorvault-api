@@ -254,10 +254,16 @@ function getAllowlistSet(classYear) {
   } catch {
     /* optional */
   }
+  let isVerifiedCommit = () => false;
+  try {
+    isVerifiedCommit = require('./recruiting-verified-commits').isVerifiedUfCommitAnyYear;
+  } catch {
+    /* optional */
+  }
   return new Set(
     [...ALLOWLIST_2028, ...extra, ...promoted, ...formula]
       .map((s) => canonicalTargetSlug(s))
-      .filter((s) => s && !BLOCKED_SOFT_2028.has(s) && !isBlocked({ slug: s }))
+      .filter((s) => s && !BLOCKED_SOFT_2028.has(s) && !isBlocked({ slug: s }) && !isVerifiedCommit(s))
   );
 }
 

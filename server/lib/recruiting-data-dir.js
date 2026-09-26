@@ -261,6 +261,95 @@ function mergeBundledOn3BoardTruthIfFresher(dataDir = resolveRecruitingDataDir()
   }
 }
 
+function looksFloridaCommitRow(row) {
+  if (!row) return false;
+  const status = String(row.status || '').toLowerCase();
+  return (
+    ['committed', 'commit', 'signed', 'enrolled'].includes(status) &&
+    /^florida$/i.test(String(row.committedTo || row.committed_to || '').trim())
+  );
+}
+
+/** Git bundle commit stamps must win over durable /var/data target shells. */
+function mergeBundledVerifiedCommitsIfFresher(dataDir = resolveRecruitingDataDir()) {
+  if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
+    return { merged: false, reason: 'same_path' };
+  }
+  const durablePath = path.join(dataDir, 'players.json');
+  if (!fs.existsSync(durablePath)) return { merged: false, reason: 'missing_file' };
+  try {
+    const { loadBundledVerifiedPlayers } = require('./recruiting-verified-commits');
+    const bundled = loadBundledVerifiedPlayers();
+    if (!bundled.size) return { merged: false, updated: 0 };
+    const durable = JSON.parse(fs.readFileSync(durablePath, 'utf8'));
+    if (!Array.isArray(durable)) return { merged: false, reason: 'not_array' };
+    let updated = 0;
+    for (let i = 0; i < durable.length; i += 1) {
+      const row = durable[i];
+      const slug = String(row?.slug || '').toLowerCase();
+      const src = bundled.get(slug);
+      if (!src || !looksFloridaCommitRow(src)) continue;
+      if (looksFloridaCommitRow(row) && row.commitDate === src.commitDate) continue;
+      durable[i] = {
+        ...row,
+        status: 'committed',
+        committedTo: 'Florida',
+        category: 'recruit',
+        commitDate: src.commitDate || row.commitDate || null,
+        skinny: src.skinny || row.skinny,
+        profileNote: src.profileNote || row.profileNote,
+        protected: true,
+        verifiedCommit: true,
+      };
+      updated += 1;
+    }
+    if (updated > 0) {
+      fs.writeFileSync(durablePath, JSON.stringify(durable, null, 2));
+    }
+    return { merged: updated > 0, updated };
+  } catch (err) {
+    console.warn('[recruiting-data-dir] verified commit merge skipped:', err.message);
+    return { merged: false, error: err.message };
+  }
+}
+
+function mergeBundledCommitIntelIfMissing(dataDir = resolveRecruitingDataDir()) {
+  if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
+    return { merged: false, reason: 'same_path' };
+  }
+  const durablePath = path.join(dataDir, 'intel.json');
+  const bundlePath = path.join(BUNDLE_DIR, 'intel.json');
+  if (!fs.existsSync(durablePath) || !fs.existsSync(bundlePath)) {
+    return { merged: false, reason: 'missing_file' };
+  }
+  try {
+    const { isVerifiedUfCommitAnyYear } = require('./recruiting-verified-commits');
+    const durable = JSON.parse(fs.readFileSync(durablePath, 'utf8'));
+    const bundled = JSON.parse(fs.readFileSync(bundlePath, 'utf8'));
+    const items = Array.isArray(durable.items) ? durable.items : [];
+    const seen = new Set(items.map((i) => i && i.fingerprint).filter(Boolean));
+    let updated = 0;
+    for (const row of bundled.items || []) {
+      if (!row || String(row.eventType || '') !== 'commit') continue;
+      const slug = String(row.playerSlug || '').toLowerCase();
+      if (!isVerifiedUfCommitAnyYear(slug)) continue;
+      if (!row.fingerprint || seen.has(row.fingerprint)) continue;
+      items.unshift(row);
+      seen.add(row.fingerprint);
+      updated += 1;
+    }
+    if (updated > 0) {
+      durable.items = items;
+      durable.updatedAt = new Date().toISOString();
+      fs.writeFileSync(durablePath, JSON.stringify(durable, null, 2));
+    }
+    return { merged: updated > 0, updated };
+  } catch (err) {
+    console.warn('[recruiting-data-dir] commit intel merge skipped:', err.message);
+    return { merged: false, error: err.message };
+  }
+}
+
 function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
   if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
     return { migrated: false, reason: 'same_path' };
@@ -312,6 +401,14 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
     const rankMerge = mergeBundledIndustryRanksIfFresher(dataDir);
     if (rankMerge.updated) {
       console.log('[recruiting-data-dir] merged Industry ranks from bundle', rankMerge.updated);
+    }
+    const commitMerge = mergeBundledVerifiedCommitsIfFresher(dataDir);
+    if (commitMerge.updated) {
+      console.log('[recruiting-data-dir] merged verified UF commits from bundle', commitMerge.updated);
+    }
+    const intelMerge = mergeBundledCommitIntelIfMissing(dataDir);
+    if (intelMerge.updated) {
+      console.log('[recruiting-data-dir] merged commit intel from bundle', intelMerge.updated);
     }
     // Denied visit stones (e.g. Tranard Auburn UV) must not survive on durable disk.
     let visitScrub = { healed: false };
@@ -367,4 +464,6 @@ module.exports = {
   migrateRecruitingBundleIfNeeded,
   mergeBundledIndustryRanksIfFresher,
   mergeBundledOn3BoardTruthIfFresher,
+  mergeBundledVerifiedCommitsIfFresher,
+  mergeBundledCommitIntelIfMissing,
 };
