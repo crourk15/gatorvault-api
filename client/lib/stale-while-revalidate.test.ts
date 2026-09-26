@@ -8,7 +8,12 @@ describe('shouldSkipSwrCache', () => {
     assert.equal(shouldSkipSwrCache('/api/recruiting/hub/ticker'), true);
   });
 
+  it('skips hub bundle and commits so a last-good Armani-only plate cannot hide Cyion', () => {
+    assert.equal(shouldSkipSwrCache('/api/recruiting/hub/bundle?year=2028'), true);
+    assert.equal(shouldSkipSwrCache('/api/recruiting/hub/commits?year=2028'), true);
+  });
+
   it('still caches other hub reads', () => {
-    assert.equal(shouldSkipSwrCache('/api/recruiting/hub/bundle?year=2027'), false);
+    assert.equal(shouldSkipSwrCache('/api/recruiting/hub/footprint?year=2027'), false);
   });
 });

@@ -29,3 +29,10 @@ export function recruitingHubBundleHasSignal(bundle: RhHubBundle | null | undefi
     (bundle.battleBoard?.length ?? 0) > 0
   );
 }
+
+/** Stale 2028 first-paint (Armani-only) must not block the live Cyion plate. */
+export function recruitingHubBundleIsCurrent(bundle: RhHubBundle | null | undefined, year?: number): boolean {
+  if (!recruitingHubBundleHasSignal(bundle)) return false;
+  if (Number(year ?? bundle?.year) !== 2028) return true;
+  return (bundle?.commits || []).some((row) => String(row?.id || '').toLowerCase() === 'cyion-smith');
+}

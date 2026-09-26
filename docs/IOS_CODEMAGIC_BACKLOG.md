@@ -176,6 +176,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-26 | 2028 commit class: skip SWR last-good on hub bundle/commits + `fetch cache: no-store` so Cyion is not stuck behind Armani-only | `stale-while-revalidate` + `api-fetch` in binary. **API + gatorvaultinsider.com already return Armani + Cyion after Render.** 1.0.29 still paints last-good. | this PR |
 | 2026-09-23 | Player profile hrefs use a trailing slash | `playerProfileRoute` in binary. **Edge 308 + `_redirects` 301 already fix the Netlify 500 after deploy.** Old binary still links `/player/:slug` without the slash. | this PR |
 | 2026-09-23 | Game Week Expected visitors: do not scroll-prefetch every profile (cap 2) | `ExpectedVisitorsPanel` `data-no-profile-prefetch` + `VaultNavigationProvider` skip + `PREFETCH_CONCURRENCY`. **Stamps + lite cook are API-live after Render.** Old binary still fires 20+ full-profile GETs when the list comes on screen. | #737 |
 | 2026-09-22 | Community hub last-good + `/api/community/page` client | Optional later bake. **Page cache + Closest 2028 prime are API-live after Render — no Codemagic for speed.** | #732 |
