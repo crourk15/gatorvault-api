@@ -4811,7 +4811,7 @@
       "school": "Blountstown (Blountstown, FL)",
       "commitSchool": null,
       "class": 2028,
-      "natlRank": 175,
+      "natlRank": 250,
       "patterns": [
         "4 star S Cyion",
         "4-star S Cyion",
@@ -4834,12 +4834,12 @@
         "2028 4-star S Cyion",
         "2028 four-star S Cyion",
         "2028 Cyion Smith",
-        "#175 Cyion",
-        "top 175 S Cyion",
-        "175 4 star S Cyion",
-        "175 four star S Cyion"
+        "#250 Cyion",
+        "top 250 S Cyion",
+        "250 4 star S Cyion",
+        "250 four star S Cyion"
       ],
-      "updatedAt": "2026-08-03T02:53:53.771Z"
+      "updatedAt": "2026-09-26T18:25:42.031Z"
     },
     "ridge-janes": {
       "slug": "ridge-janes",
@@ -5718,5 +5718,5 @@
       "updatedAt": "2026-09-23T19:43:05.593Z"
     }
   },
-  "updatedAt": "2026-09-23T19:49:57.792Z"
+  "updatedAt": "2026-09-26T18:25:42.031Z"
 }

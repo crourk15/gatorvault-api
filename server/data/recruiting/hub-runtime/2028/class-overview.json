@@ -1,17 +1,1 @@
-{
-  "classRank": "—",
-  "blueChip": "100%",
-  "commits": "1",
-  "commitLabel": "Commits",
-  "avgRating": "90.2",
-  "trendRank": "Stable",
-  "trendBlueChip": "Rising",
-  "trendCommits": "Rising",
-  "trendRating": "Rising",
-  "sparklines": {
-    "classRank": null,
-    "blueChip": null,
-    "commits": null,
-    "avgRating": null
-  }
-}
+{"ok":true,"status":"ready","meta":{"generatedAt":"2026-09-26T18:27:35.191Z","snapshot":true,"endpoint":"class-overview","year":2028,"source":"hub-runtime","cacheRev":"hs9"},"classRank":"—","blueChip":"100%","commits":"2","commitLabel":"Commits","avgRating":"89.8","trendRank":"Stable","trendBlueChip":"Rising","trendCommits":"Rising","trendRating":"Rising","sparklines":{"classRank":null,"blueChip":null,"commits":null,"avgRating":null}}

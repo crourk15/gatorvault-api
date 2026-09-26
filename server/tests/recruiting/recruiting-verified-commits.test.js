@@ -86,6 +86,31 @@ test('getHubCommits returns all Florida commits for hub class years', async () =
   delete require.cache[require.resolve('../../lib/recruiting-store')];
 });
 
+test('getHubCommits 2028 includes Armani Strong and Cyion Smith', async () => {
+  delete process.env.SUPABASE_URL;
+  delete process.env.DATABASE_URL;
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+  delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
+  delete require.cache[require.resolve('../../lib/recruiting-verified-commits')];
+  const jsonStore = require('../../lib/recruiting-store');
+  const commits = await jsonStore.getHubCommits(2028);
+  assert.equal(
+    commits.some((p) => String(p.slug || '').toLowerCase() === 'armani-strong'),
+    true,
+    'armani-strong must stay on the 2028 commit board'
+  );
+  assert.equal(
+    commits.some((p) => String(p.slug || '').toLowerCase() === 'cyion-smith'),
+    true,
+    'cyion-smith must appear as a 2028 UF commit'
+  );
+  const smith = commits.find((p) => String(p.slug || '').toLowerCase() === 'cyion-smith');
+  assert.equal(String(smith.committedTo || '').toLowerCase(), 'florida');
+  assert.equal(String(smith.status || '').toLowerCase(), 'committed');
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+  delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
+});
+
 test('getHubHsCommits 2026 excludes portal signees', async () => {
   delete process.env.SUPABASE_URL;
   delete process.env.DATABASE_URL;
