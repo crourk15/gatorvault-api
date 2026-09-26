@@ -402,6 +402,10 @@ services:
       # disk instance. Score alerts stay exempt (BOOT_HEAVY_EXEMPT_JOBS).
       - key: BOOT_HEAVY_MIN_UPTIME_SEC
         value: "480"
+      - key: API_POST_BOOT_DELAY_MS
+        value: "20000"
+      - key: API_WIRE_YIELD_MS
+        value: "50"
       - key: API_BOOT_DEFER_HEAVY_MS
         value: "90000"
       # Hub skip/disk-prime path — don't wait on light/sched defer (Admin Hub cold).
