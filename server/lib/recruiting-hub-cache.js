@@ -45,6 +45,59 @@ function footprintStateCommitCount(footprint) {
   return footprint.states.reduce((n, s) => n + (Number(s?.commits) || 0), 0);
 }
 
+function commitSnapshotSlugs(items) {
+  if (!Array.isArray(items)) return new Set();
+  return new Set(
+    items
+      .map((row) => String(row?.id || row?.slug || '').toLowerCase())
+      .filter(Boolean)
+  );
+}
+
+function verifiedCommitSlugsForYear(year) {
+  const y = Number(year);
+  if (!Number.isFinite(y)) return null;
+  try {
+    const { VERIFIED_UF_COMMITS_BY_YEAR } = require('./recruiting-verified-commits');
+    const set = VERIFIED_UF_COMMITS_BY_YEAR[y];
+    return set && set.size ? set : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Reject durable commit plates that predate a verified UF commit (e.g. Cyion after Armani-only c6). */
+function isUsableCommitsSnapshot(items, year) {
+  if (!Array.isArray(items) || !items.length) return false;
+  const required = verifiedCommitSlugsForYear(year);
+  if (!required) return true;
+  const have = commitSnapshotSlugs(items);
+  for (const slug of required) {
+    if (!have.has(slug)) return false;
+  }
+  return true;
+}
+
+function classOverviewCommitCount(value) {
+  return Number.parseInt(String(value?.commits ?? ''), 10) || 0;
+}
+
+function isUsableClassOverviewSnapshot(value, year) {
+  if (!value || typeof value !== 'object') return false;
+  const required = verifiedCommitSlugsForYear(year);
+  if (!required) return true;
+  return classOverviewCommitCount(value) >= required.size;
+}
+
+function isUsableClassOverviewAllSnapshot(value) {
+  if (!value || typeof value !== 'object') return false;
+  for (const year of [2027, 2028, 2029]) {
+    const nest = value[year] || value[String(year)];
+    if (nest && !isUsableClassOverviewSnapshot(nest, year)) return false;
+  }
+  return true;
+}
+
 /** Reject poisoned pre-fp3 runtime plates that zeroed HS signees (e.g. Armani Strong). */
 function isUsableFootprintSnapshot(value, year) {
   if (!value || typeof value !== 'object') return false;
@@ -163,7 +216,7 @@ function snapshotFileCandidates(endpoint, year) {
   return paths;
 }
 
-function parseHubSnapshotDoc(endpoint, doc) {
+function parseHubSnapshotDoc(endpoint, doc, year) {
   if (!doc || doc.ok === false) return null;
   const { ok, status, meta, items, ...spreadRest } = doc;
   if (endpoint === 'footprint') {
@@ -179,7 +232,10 @@ function parseHubSnapshotDoc(endpoint, doc) {
     // Reject pre-c5 durable/hub-snapshot plates so On3 rank syncs on players.json
     // are not masked by stale commit-card metaLines until the next warm cron.
     if (rev !== COMMITS_CACHE_REV) return null;
-    return Array.isArray(items) ? items : null;
+    if (!Array.isArray(items)) return null;
+    const y = Number(year ?? meta?.year ?? doc.year);
+    if (Number.isFinite(y) && !isUsableCommitsSnapshot(items, y)) return null;
+    return items;
   }
   if (endpoint === 'ticker') {
     const { scrubHubTickerLines } = require('./recruiting-visit-scrub');
@@ -204,6 +260,13 @@ function parseHubSnapshotDoc(endpoint, doc) {
     endpoint === 'hero'
   ) {
     if (!Object.keys(spreadRest).length) return null;
+    if (endpoint === 'class-overview' || endpoint === 'class-metrics') {
+      const y = Number(year ?? meta?.year ?? doc.year);
+      if (Number.isFinite(y) && !isUsableClassOverviewSnapshot(spreadRest, y)) return null;
+    }
+    if (endpoint === 'class-overview-all' && !isUsableClassOverviewAllSnapshot(spreadRest)) {
+      return null;
+    }
     // Durable bundle/hero can outlive visit scrubs — strip denied UV stones on read.
     if (endpoint === 'bundle' || endpoint === 'hero') {
       const { scrubHubPayload } = require('./recruiting-visit-scrub');
@@ -221,7 +284,7 @@ function readHubDiskSnapshot(endpoint, year) {
     try {
       if (!fs.existsSync(filePath)) continue;
       const doc = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-      const value = parseHubSnapshotDoc(endpoint, doc);
+      const value = parseHubSnapshotDoc(endpoint, doc, year);
       if (value != null) return value;
     } catch {
       /* try next */
@@ -352,12 +415,63 @@ function healBundleFootprintNest(value, year) {
   return value;
 }
 
+/**
+ * Open-cycle Class of 2028 prefers bundle.commits. Dedicated /hub/commits can be
+ * complete (Armani + Cyion) while a stale nest stays Armani-only — heal nest
+ * from the dedicated plate before we serve or persist the bundle.
+ */
+function healBundleCommitsNest(value, year) {
+  if (!value || typeof value !== 'object') return value;
+  const y = Number(year);
+  if (!Number.isFinite(y)) return value;
+  const nest = value.commits;
+  if (isUsableCommitsSnapshot(nest, y)) return value;
+
+  let healthy = null;
+  try {
+    healthy = hubCache.get(hubCommitsCacheKey(y));
+  } catch {
+    healthy = null;
+  }
+  if (!isUsableCommitsSnapshot(healthy, y)) {
+    try {
+      healthy = hubCache.getStale(hubCommitsCacheKey(y));
+    } catch {
+      /* optional */
+    }
+  }
+  if (!isUsableCommitsSnapshot(healthy, y)) {
+    try {
+      healthy = readHubDiskSnapshot('commits', y);
+    } catch {
+      healthy = null;
+    }
+  }
+  if (!isUsableCommitsSnapshot(healthy, y)) return value;
+
+  const before = Array.isArray(nest) ? nest.length : 0;
+  value.commits = healthy;
+  if (value.classOverview && typeof value.classOverview === 'object') {
+    value.classOverview.commits = String(healthy.length);
+  }
+  console.warn(
+    `[recruiting-hub-cache] healed bundle.commits nest for ${y} (was ${before} → ${healthy.length})`
+  );
+  return value;
+}
+
+function healBundleNests(value, year) {
+  healBundleFootprintNest(value, year);
+  healBundleCommitsNest(value, year);
+  return value;
+}
+
 /** When a hub bundle is in hand, keep dedicated footprint GETs warm for Class tabs. */
 function seedFootprintFromBundle(cacheKey, value) {
   const m = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
   if (!m || !value || typeof value !== 'object') return;
   const year = Number(m[1]);
-  healBundleFootprintNest(value, year);
+  healBundleNests(value, year);
   const footprint = value.footprint;
   if (!footprint || typeof footprint !== 'object') return;
   if (!Array.isArray(footprint.states) || !footprint.states.length) return;
@@ -371,7 +485,7 @@ function seedFootprintFromBundle(cacheKey, value) {
 function cacheHubValue(cacheKey, value) {
   if (!cacheKey || value == null) return;
   const m = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
-  if (m) healBundleFootprintNest(value, Number(m[1]));
+  if (m) healBundleNests(value, Number(m[1]));
   hubCache.set(cacheKey, value);
   persistDurableCacheValue(cacheKey, value);
   seedFootprintFromBundle(cacheKey, value);
@@ -789,7 +903,7 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     // Also heal poisoned nest (0 commits while dedicated footprint is healthy).
     const bundleYearHit = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
     if (bundleYearHit) {
-      healBundleFootprintNest(hit, Number(bundleYearHit[1]));
+      healBundleNests(hit, Number(bundleYearHit[1]));
       persistDurableCacheValue(cacheKey, hit);
     }
     seedFootprintFromBundle(cacheKey, hit);
@@ -805,7 +919,7 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   if (stale != null) {
     const bundleYearStale = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
     if (bundleYearStale) {
-      healBundleFootprintNest(stale, Number(bundleYearStale[1]));
+      healBundleNests(stale, Number(bundleYearStale[1]));
       persistDurableCacheValue(cacheKey, stale);
     }
     seedFootprintFromBundle(cacheKey, stale);
@@ -825,12 +939,14 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     const diskOk =
       diskValue != null &&
       (diskFallback.endpoint !== 'footprint' ||
-        isUsableFootprintSnapshot(diskValue, diskFallback.year));
+        isUsableFootprintSnapshot(diskValue, diskFallback.year)) &&
+      (diskFallback.endpoint !== 'commits' ||
+        isUsableCommitsSnapshot(diskValue, diskFallback.year));
     if (diskOk) {
       // Seed memory so the next request is a hot hit. Cron warm-memory refreshes later.
       // Bundle disk hits also seed dedicated footprint keys for Class year tabs.
       if (diskFallback.endpoint === 'bundle') {
-        healBundleFootprintNest(diskValue, diskFallback.year);
+        healBundleNests(diskValue, diskFallback.year);
       }
       cacheHubValue(cacheKey, diskValue);
       ready = true;
@@ -1132,7 +1248,7 @@ function primeHubBundleFromDisk(year) {
   const value = readHubDiskSnapshot('bundle', year);
   if (!value) return false;
   const key = eliteBundleCacheKey(year);
-  healBundleFootprintNest(value, year);
+  healBundleNests(value, year);
   hubCache.set(key, value);
   persistDurableCacheValue(key, value);
   seedFootprintFromBundle(key, value);
@@ -1169,10 +1285,11 @@ function primeLiteKeysFromDisk(years, options = {}) {
     const value = readHubDiskSnapshot(endpoint, year);
     if (value == null) return;
     if (endpoint === 'footprint' && !isUsableFootprintSnapshot(value, year)) return;
+    if (endpoint === 'commits' && !isUsableCommitsSnapshot(value, year)) return;
     if (persist) {
       cacheHubValue(cacheKey, value);
     } else {
-      if (endpoint === 'bundle') healBundleFootprintNest(value, year);
+      if (endpoint === 'bundle') healBundleNests(value, year);
       hubCache.set(cacheKey, value);
       seedFootprintFromBundle(cacheKey, value);
     }
@@ -1234,11 +1351,15 @@ async function primeLiteKeysFromDiskAsync(years, options = {}) {
 
   for (const [, cacheKey, endpoint, year] of steps) {
     const value = readHubDiskSnapshot(endpoint, year);
-    if (value != null && !(endpoint === 'footprint' && !isUsableFootprintSnapshot(value, year))) {
+    if (
+      value != null &&
+      !(endpoint === 'footprint' && !isUsableFootprintSnapshot(value, year)) &&
+      !(endpoint === 'commits' && !isUsableCommitsSnapshot(value, year))
+    ) {
       if (persist) {
         cacheHubValue(cacheKey, value);
       } else {
-        if (endpoint === 'bundle') healBundleFootprintNest(value, year);
+        if (endpoint === 'bundle') healBundleNests(value, year);
         hubCache.set(cacheKey, value);
         seedFootprintFromBundle(cacheKey, value);
       }
@@ -1737,7 +1858,10 @@ module.exports = {
   recruitingFootprintCacheKey,
   footprintStateCommitCount,
   isUsableFootprintSnapshot,
+  isUsableCommitsSnapshot,
   healBundleFootprintNest,
+  healBundleCommitsNest,
+  healBundleNests,
   clearHubCache,
   removeHubCacheKeys,
   warmEliteHubCaches,

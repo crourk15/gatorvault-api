@@ -313,6 +313,160 @@ function mergeBundledVerifiedCommitsIfFresher(dataDir = resolveRecruitingDataDir
   }
 }
 
+function commitItemsFromDoc(doc) {
+  if (!doc) return [];
+  if (Array.isArray(doc.items)) return doc.items;
+  if (Array.isArray(doc.commits)) return doc.commits;
+  return [];
+}
+
+function commitSlugsFromItems(items) {
+  return new Set(
+    (items || []).map((row) => String(row?.id || row?.slug || '').toLowerCase()).filter(Boolean)
+  );
+}
+
+function missingVerifiedCommitSlugs(items, year) {
+  let required = null;
+  try {
+    required = require('./recruiting-verified-commits').VERIFIED_UF_COMMITS_BY_YEAR[Number(year)];
+  } catch {
+    required = null;
+  }
+  if (!required || !required.size) return [];
+  const have = commitSlugsFromItems(items);
+  return [...required].filter((slug) => !have.has(slug));
+}
+
+/**
+ * Durable hub-runtime commits/bundle can stay Armani-only (copyJsonIfMissing
+ * never overwrites). Git bundle with the new verified commit must win.
+ */
+function mergeBundledHubRuntimeCommitsIfRicher(dataDir = resolveRecruitingDataDir()) {
+  if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
+    return { merged: false, reason: 'same_path' };
+  }
+  const years = [2027, 2028, 2029];
+  let updated = 0;
+  const details = [];
+  for (const year of years) {
+    const bundleFile = path.join(BUNDLE_DIR, 'hub-runtime', String(year), 'commits.json');
+    const durableFile = path.join(dataDir, 'hub-runtime', String(year), 'commits.json');
+    if (!fs.existsSync(bundleFile)) continue;
+    let bundledDoc;
+    try {
+      bundledDoc = JSON.parse(fs.readFileSync(bundleFile, 'utf8'));
+    } catch {
+      continue;
+    }
+    const bundledItems = commitItemsFromDoc(bundledDoc);
+    if (!bundledItems.length) continue;
+    let durableItems = [];
+    if (fs.existsSync(durableFile)) {
+      try {
+        durableItems = commitItemsFromDoc(JSON.parse(fs.readFileSync(durableFile, 'utf8')));
+      } catch {
+        durableItems = [];
+      }
+    }
+    const missing = missingVerifiedCommitSlugs(durableItems, year);
+    if (!missing.length) continue;
+    const bundleHasMissing = missing.some((slug) => commitSlugsFromItems(bundledItems).has(slug));
+    if (!bundleHasMissing) continue;
+    try {
+      fs.mkdirSync(path.dirname(durableFile), { recursive: true });
+      fs.writeFileSync(durableFile, JSON.stringify(bundledDoc));
+    } catch (err) {
+      console.warn('[recruiting-data-dir] hub-runtime commits merge failed', year, err.message);
+      continue;
+    }
+
+    const durableBundlePath = path.join(dataDir, 'hub-runtime', String(year), 'bundle.json');
+    const bundledBundlePath = path.join(BUNDLE_DIR, 'hub-runtime', String(year), 'bundle.json');
+    if (fs.existsSync(durableBundlePath) && fs.existsSync(bundledBundlePath)) {
+      try {
+        const durableBundle = JSON.parse(fs.readFileSync(durableBundlePath, 'utf8'));
+        const bundledBundle = JSON.parse(fs.readFileSync(bundledBundlePath, 'utf8'));
+        if (
+          Array.isArray(bundledBundle.commits) &&
+          missingVerifiedCommitSlugs(durableBundle.commits, year).length
+        ) {
+          durableBundle.commits = bundledBundle.commits;
+          if (durableBundle.classOverview && bundledBundle.classOverview) {
+            durableBundle.classOverview.commits = bundledBundle.classOverview.commits;
+          }
+          fs.writeFileSync(durableBundlePath, JSON.stringify(durableBundle));
+        }
+      } catch (err) {
+        console.warn('[recruiting-data-dir] hub-runtime bundle nest merge failed', year, err.message);
+      }
+    }
+
+    const durableOv = path.join(dataDir, 'hub-runtime', String(year), 'class-overview.json');
+    const bundledOv = path.join(BUNDLE_DIR, 'hub-runtime', String(year), 'class-overview.json');
+    if (fs.existsSync(bundledOv)) {
+      try {
+        const bOv = JSON.parse(fs.readFileSync(bundledOv, 'utf8'));
+        let dCount = 0;
+        if (fs.existsSync(durableOv)) {
+          const dOv = JSON.parse(fs.readFileSync(durableOv, 'utf8'));
+          dCount = Number.parseInt(String(dOv.commits ?? ''), 10) || 0;
+        }
+        const bCount = Number.parseInt(String(bOv.commits ?? ''), 10) || 0;
+        if (bCount > dCount) {
+          fs.mkdirSync(path.dirname(durableOv), { recursive: true });
+          fs.writeFileSync(durableOv, JSON.stringify(bOv));
+        }
+      } catch (err) {
+        console.warn('[recruiting-data-dir] hub-runtime class-overview merge failed', year, err.message);
+      }
+    }
+
+    updated += 1;
+    details.push({ year, missing });
+  }
+  return { merged: updated > 0, updated, details };
+}
+
+/** Drop verified UF commits from durable FutureCast HP so Chase cannot keep them. */
+function stripVerifiedCommitsFromDurableHp(dataDir = resolveRecruitingDataDir()) {
+  if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
+    return { merged: false, reason: 'same_path' };
+  }
+  let isVerified = () => false;
+  try {
+    isVerified = require('./recruiting-verified-commits').isVerifiedUfCommitAnyYear;
+  } catch {
+    return { merged: false, reason: 'no_verified' };
+  }
+  const runtime = path.join(dataDir, 'futurecast-runtime');
+  if (!fs.existsSync(runtime)) return { merged: false, reason: 'missing' };
+  let updated = 0;
+  const removed = [];
+  for (const name of fs.readdirSync(runtime)) {
+    if (!/^high-priority-\d+\.json$/.test(name)) continue;
+    const filePath = path.join(runtime, name);
+    try {
+      const doc = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      if (!Array.isArray(doc.players)) continue;
+      const next = doc.players.filter((row) => {
+        const slug = String(row?.slug || row?.id || '').toLowerCase();
+        return !slug || !isVerified(slug);
+      });
+      if (next.length === doc.players.length) continue;
+      removed.push({ file: name, dropped: doc.players.length - next.length });
+      doc.players = next;
+      doc.count = next.length;
+      doc.updatedAt = new Date().toISOString();
+      fs.writeFileSync(filePath, JSON.stringify(doc));
+      updated += 1;
+    } catch (err) {
+      console.warn('[recruiting-data-dir] HP commit strip failed', name, err.message);
+    }
+  }
+  return { merged: updated > 0, updated, removed };
+}
+
 function mergeBundledCommitIntelIfMissing(dataDir = resolveRecruitingDataDir()) {
   if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
     return { merged: false, reason: 'same_path' };
@@ -410,6 +564,14 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
     if (intelMerge.updated) {
       console.log('[recruiting-data-dir] merged commit intel from bundle', intelMerge.updated);
     }
+    const hubRuntimeMerge = mergeBundledHubRuntimeCommitsIfRicher(dataDir);
+    if (hubRuntimeMerge.updated) {
+      console.log('[recruiting-data-dir] merged hub-runtime commits from bundle', hubRuntimeMerge.details);
+    }
+    const hpStrip = stripVerifiedCommitsFromDurableHp(dataDir);
+    if (hpStrip.updated) {
+      console.log('[recruiting-data-dir] stripped verified UF commits from durable HP', hpStrip.removed);
+    }
     // Denied visit stones (e.g. Tranard Auburn UV) must not survive on durable disk.
     let visitScrub = { healed: false };
     try {
@@ -444,10 +606,17 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
       }
     }, 45_000);
     return {
-      migrated: copied > 0 || !!rankMerge.updated || !!visitScrub.healed,
+      migrated:
+        copied > 0 ||
+        !!rankMerge.updated ||
+        !!visitScrub.healed ||
+        !!hubRuntimeMerge.updated ||
+        !!hpStrip.updated,
       copied,
       rankMerge,
       visitScrub,
+      hubRuntimeMerge,
+      hpStrip,
       boardMerge: { merged: false, deferred: true },
       to: dataDir,
     };
@@ -466,4 +635,6 @@ module.exports = {
   mergeBundledOn3BoardTruthIfFresher,
   mergeBundledVerifiedCommitsIfFresher,
   mergeBundledCommitIntelIfMissing,
+  mergeBundledHubRuntimeCommitsIfRicher,
+  stripVerifiedCommitsFromDurableHp,
 };

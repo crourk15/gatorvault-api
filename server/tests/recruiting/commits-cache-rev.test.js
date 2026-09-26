@@ -70,6 +70,36 @@ describe('commits cache rev', () => {
     assert.equal(raw.meta.cacheRev, cache.COMMITS_CACHE_REV);
   });
 
+  it('rejects 2028 Armani-only plates and heals Cyion onto the bundle nest', () => {
+    const yearDir = path.join(tmpRoot, 'hub-runtime', '2028');
+    fs.mkdirSync(yearDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(yearDir, 'commits.json'),
+      JSON.stringify({
+        ok: true,
+        status: 'ready',
+        meta: { endpoint: 'commits', year: 2028, cacheRev: cache.COMMITS_CACHE_REV },
+        items: [{ id: 'armani-strong', name: 'Armani Strong' }],
+      })
+    );
+    assert.equal(cache.isUsableCommitsSnapshot([{ id: 'armani-strong' }], 2028), false);
+    const full = cache.readHubDiskSnapshot('commits', 2028);
+    assert.ok(Array.isArray(full), 'bundled 2028 commits must win over Armani-only runtime');
+    assert.ok(
+      full.some((p) => /cyion-smith/i.test(String(p.id || p.slug || ''))),
+      'Cyion Smith must be on the 2028 commit plate'
+    );
+    const bundle = {
+      year: 2028,
+      commits: [{ id: 'armani-strong', name: 'Armani Strong' }],
+      classOverview: { commits: '1' },
+    };
+    cache.healBundleCommitsNest(bundle, 2028);
+    assert.ok(bundle.commits.length >= 2);
+    assert.ok(bundle.commits.some((p) => /cyion-smith/i.test(String(p.id || p.slug || ''))));
+    assert.equal(bundle.classOverview.commits, String(bundle.commits.length));
+  });
+
   it('hub-runtime 2027 commits are c6 with Pearl #17/#12', () => {
     const snap = path.join(__dirname, '../../data/recruiting/hub-runtime/2027/commits.json');
     const doc = JSON.parse(fs.readFileSync(snap, 'utf8'));
