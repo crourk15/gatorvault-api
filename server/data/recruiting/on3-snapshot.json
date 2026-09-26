@@ -1795,6 +1795,29 @@
           "category": "recruit",
           "skinny": "",
           "sourceStatus": "Committed"
+        },
+        "on3:242617": {
+          "on3Id": "242617",
+          "name": "Cyion Smith",
+          "pos": "S",
+          "classYear": 2028,
+          "school": "Blountstown (Blountstown, FL)",
+          "hometownCity": "Blountstown",
+          "hometownState": "FL",
+          "state": "FL",
+          "htWt": "6-2 / 175",
+          "stars": 4,
+          "rating": 89.51231884057971,
+          "natlRank": 250,
+          "posRank": 25,
+          "stateRank": 29,
+          "inState": true,
+          "status": "committed",
+          "commitDate": "2026-09-26",
+          "committedTo": "Florida",
+          "category": "recruit",
+          "skinny": "S · 4★ · Blountstown · #250 natl",
+          "sourceStatus": "Committed"
         }
       },
       "rankings": {
@@ -4931,6 +4954,11 @@
       "commitDate": null,
       "registeredAt": "2026-07-11T11:28:04.878Z",
       "source": "players"
+    },
+    "cyion-smith|florida|2026-09-26": {
+      "commitDate": "2026-09-26",
+      "registeredAt": "2026-09-26T18:25:41.711Z",
+      "source": "charles_editorial"
     }
   },
   "firedAlerts": {

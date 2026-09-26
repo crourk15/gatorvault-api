@@ -86,18 +86,21 @@ describe('footprint cache rev and heal', () => {
     assert.equal(raw.meta.cacheRev, cache.FOOTPRINT_CACHE_REV);
   });
 
-  it('bundled hub-runtime 2028 footprint is fp3 with Armani commit', () => {
+  it('bundled hub-runtime 2028 footprint is fp4 with Armani and Cyion commits', () => {
     const snap = path.join(__dirname, '../../data/recruiting/hub-runtime/2028/footprint.json');
     const doc = JSON.parse(fs.readFileSync(snap, 'utf8'));
-    assert.equal(doc.meta.cacheRev, 'fp3');
+    assert.equal(doc.meta.cacheRev, 'fp4');
     const commits = (doc.states || []).reduce((n, s) => n + (s.commits || 0), 0);
-    assert.ok(commits >= 1, '2028 footprint seed must count HS commits');
+    assert.ok(commits >= 2, '2028 footprint seed must count HS commits');
     const armani = (doc.pins || []).find((p) => p.id === 'armani-strong');
     assert.ok(armani, 'Armani Strong must pin');
     assert.equal(armani.pinType, 'commit');
+    const cyion = (doc.pins || []).find((p) => p.id === 'cyion-smith');
+    assert.ok(cyion, 'Cyion Smith must pin');
+    assert.equal(cyion.pinType, 'commit');
   });
 
-  it('skips poisoned durable runtime and falls back to bundled fp3 seed', () => {
+  it('skips poisoned durable runtime and falls back to bundled fp4 seed', () => {
     const yearDir = path.join(tmpRoot, 'hub-runtime', '2028');
     fs.mkdirSync(yearDir, { recursive: true });
     fs.writeFileSync(
@@ -113,7 +116,7 @@ describe('footprint cache rev and heal', () => {
     );
     const read = cache.readHubDiskSnapshot('footprint', 2028);
     assert.ok(read, 'bundled seed must win over poisoned durable disk');
-    assert.equal(cache.footprintStateCommitCount(read), 1);
+    assert.equal(cache.footprintStateCommitCount(read), 2);
   });
 
   it('heals poisoned bundle.footprint nest from dedicated footprint disk', () => {

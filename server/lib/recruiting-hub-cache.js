@@ -10,16 +10,16 @@ const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
 const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 
 /** Bump when HS-only class commit metrics logic changes. */
-const HUB_METRICS_CACHE_REV = 'hs8';
+const HUB_METRICS_CACHE_REV = 'hs9';
 
 /** Bump when footprint commit/target tallies logic changes. */
-const FOOTPRINT_CACHE_REV = 'fp3';
+const FOOTPRINT_CACHE_REV = 'fp4';
 
 /**
  * Bump when commit card meta (On3 ranks / rating plate) must invalidate durable
  * /var/data hub-runtime + deploy hub-snapshot that outlive players.json syncs.
  */
-const COMMITS_CACHE_REV = 'c5';
+const COMMITS_CACHE_REV = 'c6';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
 const TICKER_CACHE_REV = 't16';
@@ -261,8 +261,12 @@ function writeHubDiskSnapshot(endpoint, year, value) {
         ? { cacheRev: HUB_METRICS_CACHE_REV }
         : {}),
     };
+    const valueMeta =
+      value && typeof value === 'object' && value.meta && typeof value.meta === 'object' ? value.meta : {};
+    const rest = isSpread && value && typeof value === 'object' ? { ...value } : value;
+    if (isSpread && rest && typeof rest === 'object') delete rest.meta;
     const doc = isSpread
-      ? { ok: true, status: 'ready', meta, ...value }
+      ? { ok: true, status: 'ready', ...rest, meta: { ...valueMeta, ...meta } }
       : { ok: true, status: 'ready', meta, items: value };
     fs.writeFileSync(filePath, JSON.stringify(doc), 'utf8');
     return true;

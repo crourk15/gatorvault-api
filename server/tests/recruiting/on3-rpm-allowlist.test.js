@@ -90,10 +90,15 @@ describe('on3-rpm inventory sync (Pass 4)', () => {
     const { collectSyncTargets } = require('../../lib/on3-rpm-allowlist');
     const all = collectSyncTargets({ scope: 'all', classYears: [2028], maxInventory: 200 });
     assert.ok(all.targets.length > 0);
-    const cyion = all.targets.find((t) => t.slug === 'cyion-smith');
-    assert.ok(cyion, 'cyion-smith should be in inventory sync set');
-    assert.match(String(cyion.sourceBucket), /inventory|allowlist/);
-    assert.ok(cyion.on3Slug || cyion.on3Id);
+    const payne = all.targets.find((t) => t.slug === 'dominick-harris-payne');
+    assert.ok(payne, 'dominick-harris-payne should be in inventory sync set');
+    assert.match(String(payne.sourceBucket), /inventory|allowlist/);
+    assert.ok(payne.on3Slug || payne.on3Id);
+    assert.equal(
+      all.targets.some((t) => t.slug === 'cyion-smith'),
+      false,
+      'UF commits must drop out of RPM inventory sync'
+    );
 
     const allowOnly = collectSyncTargets({ scope: 'allowlist', classYears: [2028] });
     assert.ok(allowOnly.targets.every((t) => String(t.sourceBucket).includes('allowlist')));

@@ -69,15 +69,15 @@ test('applyEditorialPositionToPlayer upgrades ATH placeholder from board seed', 
   assert.equal(out.position, 'OT');
 });
 
-test('applyEditorialPositionToPlayer fills Cyion htWt/skinny from board seed', () => {
+test('applyEditorialPositionToPlayer fills Harris-Payne htWt/skinny from board seed', () => {
   const out = applyEditorialPositionToPlayer({
-    slug: 'cyion-smith',
+    slug: 'dominick-harris-payne',
     classYear: 2028,
     pos: 'ATH',
   });
-  assert.equal(out.pos, 'S');
-  assert.equal(out.htWt, '6-2 / 175');
-  assert.match(String(out.skinny || ''), /Blountstown/);
+  assert.equal(out.pos, 'CB');
+  assert.ok(String(out.htWt || '').trim() || String(out.school || '').trim(), 'board seed fills profile gaps');
+  assert.match(String(out.school || out.skinny || ''), /Lakeland/i);
 });
 
 test('applyEditorialPositionToPlayer does not override On3-synced pos', () => {

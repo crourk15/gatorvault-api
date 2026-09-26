@@ -68,7 +68,7 @@ const ALLOWLIST_2028 = [
   'tristin-gaines',
   'tristian-henderson',
   'dominick-harris-payne',
-  'cyion-smith',
+  // cyion-smith — UF commit (2026-09-26); removed from active 2028 targets
   'brady-quinn',
   'john-matthews',
   'bryce-willingham',

@@ -22,6 +22,7 @@ const VERIFIED_UF_COMMITS_BY_YEAR = {
   ]),
   2028: new Set([
     'armani-strong',
+    'cyion-smith',
   ]),
   2029: new Set(),
 };

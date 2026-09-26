@@ -2594,6 +2594,38 @@
   },
   {
     "id": null,
+    "full_name": "Cyion Smith",
+    "slug": "cyion-smith",
+    "class_year": 2028,
+    "position": "S",
+    "status": "HS",
+    "height": null,
+    "weight": null,
+    "hometown": "Blountstown",
+    "state": "FL",
+    "high_school": "Blountstown",
+    "stars": 4,
+    "composite_rating": 0.9,
+    "ranking_national": 250,
+    "ranking_position": 25,
+    "ranking_state": 29,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [],
+      "stats": {
+        "stars": 4,
+        "rating": 90,
+        "natl_rank": 250,
+        "pos_rank": 25,
+        "state_rank": 29,
+        "on3_id": "cyion-smith"
+      },
+      "recruiting_notes": null,
+      "discovery_score": null
+    }
+  },
+  {
+    "id": null,
     "full_name": "Dominick Harris-Payne",
     "slug": "dominick-harris-payne",
     "class_year": 2028,
