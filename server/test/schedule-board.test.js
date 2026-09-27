@@ -240,31 +240,33 @@ describe('schedule-board', () => {
   it('Missouri 3 Keys come from their boxes, not the Ole Miss jobs', () => {
     const board = scheduleBoard.getScheduleBoard(2026);
     const missouri = board.games.find((g) => g.id === 'missouri');
-    assert.equal(missouri.keys[0], 'Take Away the Clean Throw');
-    assert.equal(missouri.keys[1], 'Fit Roberts When It Dies');
-    assert.equal(missouri.keys[2], 'Cover the Return at Faurot');
+    assert.equal(missouri.keys[0], 'Take Away the Clean Throw & Shrink the Hitch');
+    assert.equal(missouri.keys[1], 'Fit Roberts When It Dies & Plug the Gaps');
+    assert.equal(missouri.keys[2], 'Eliminate Hidden Yardage & Force Fair Catches');
     assert.equal(
       missouri.howUFWins[0],
-      'Do not let Austin Simmons get the first throw. He is 17-of-19 and four scores when it is clean, and 10-of-19 for 91 when it is taken away. Defensive backs must stay over Cayden Lee\'s vertical stems and wrap Donovan Olugbode at the catch so the hitch does not become the chain.'
+      "Do not let Austin Simmons comfortably sit in the pocket or find a rhythm on schedule. He is 17-of-19 with four scores when it is clean, and drops to 10-of-19 for 91 yards when it is taken away. Defensive backs must maintain depth over Cayden Lee's vertical stems and aggressively wrap Donovan Olugbode at the catch point so the hitch does not become the chain."
     );
     assert.equal(
       missouri.howUFWins[1],
-      'Do not treat a dead passing game as the win. Troy already sat Simmons and still handed Jamal Roberts 22 carries for 128. Linebackers must fill the A and B gaps and play his near hip—do not scrape over the top and lose the bounce. Xai\'Shaun Edwards punches it from the 10.'
+      "Do not treat a stagnant Missouri passing game as the win. When Troy bottled up Simmons' aerial attack, Missouri adjusted by handing Jamal Roberts 22 carries for 128 yards. Myles Graham and the linebacker room must fill the A and B gaps and play his near hip—do not scrape over the top and lose the bounce on outside zone. Stay heavy on the interior from the 10-yard line to deny Xai'Shaun Edwards."
     );
     assert.equal(
       missouri.howUFWins[2],
-      'Do not let hidden yardage decide Faurot. DaMarion Fowlkes returned a punt 68 yards to get them out of a 10-0 hole. Kansas scored first the other way on an 88-yard blocked field-goal return. Cover the punt. Protect the kick. Make them beat you from scrimmage.'
+      "Do not let special teams execution decide the outcome at Faurot Field. Missouri relies on explosive special teams swings, highlighted by DaMarion Fowlkes' 68-yard punt return and Kansas' 88-yard blocked field-goal return. Alec Clark must prioritize maximum hang time to completely neutralize Fowlkes, while the field-goal unit locks down interior protection. Protect the kick, cover the punt, and force them to beat you strictly from scrimmage."
     );
-    assert.ok(!missouri.keys.some((k) => /Crowd Roberts|Force the Extra Hat|Stay Over Lee|Crowd Chambliss|Cap the Vertical|Downhill Run/i.test(k)));
+    assert.ok(!missouri.keys.some((k) => /Crowd Roberts|Force the Extra Hat|Crowd Chambliss|Cap the Vertical|Downhill Run/i.test(k)));
     const graham = missouri.swing.find((s) => /graham/i.test(s.name));
     const mcclain = missouri.swing.find((s) => /mcclain/i.test(s.name));
+    const clark = missouri.swing.find((s) => /alec clark/i.test(s.name));
     const baugh = missouri.swing.find((s) => /baugh/i.test(s.name));
-    assert.match(mcclain?.role || '', /first throw/);
-    assert.match(graham?.role || '', /dead passing game/);
+    assert.match(mcclain?.role || '', /rhythm on schedule/);
+    assert.match(graham?.role || '', /outside zone/);
+    assert.match(clark?.role || '', /maximum hang time/);
     assert.match(baugh?.role || '', /eight-man front/);
     assert.equal(baugh?.impact, 95);
     assert.equal(missouri.filmWatched, false);
-    assert.match(missouri.scoutingReport, /Cover the Return at Faurot/);
+    assert.match(missouri.scoutingReport, /Force Fair Catches/);
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

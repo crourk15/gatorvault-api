@@ -12,18 +12,16 @@ no Starkville sit.
 
 This is not a Chambliss team. Clean Simmons throws it all over you. Cold Simmons becomes Roberts and the return game — and they still won Troy.
 
-## 3 Keys (from their boxes)
+## 3 Keys (Charles copy, from their boxes)
 
-1. **Take Away the Clean Throw**
-   Do not let Austin Simmons get the first throw. He is 17-of-19 and four scores when it is clean, and 10-of-19 for 91 when it is taken away. Defensive backs must stay over Cayden Lee's vertical stems and wrap Donovan Olugbode at the catch so the hitch does not become the chain.
+1. **Take Away the Clean Throw & Shrink the Hitch**
+   Do not let Austin Simmons comfortably sit in the pocket or find a rhythm on schedule. He is 17-of-19 with four scores when it is clean, and drops to 10-of-19 for 91 yards when it is taken away. Defensive backs must maintain depth over Cayden Lee's vertical stems and aggressively wrap Donovan Olugbode at the catch point so the hitch does not become the chain.
 
-2. **Fit Roberts When It Dies**
-   Do not treat a dead passing game as the win. Troy already sat Simmons and still handed Jamal Roberts 22 carries for 128. Linebackers must fill the A and B gaps and play his near hip—do not scrape over the top and lose the bounce. Xai'Shaun Edwards punches it from the 10.
+2. **Fit Roberts When It Dies & Plug the Gaps**
+   Do not treat a stagnant Missouri passing game as the win. When Troy bottled up Simmons' aerial attack, Missouri adjusted by handing Jamal Roberts 22 carries for 128 yards. Myles Graham and the linebacker room must fill the A and B gaps and play his near hip—do not scrape over the top and lose the bounce on outside zone. Stay heavy on the interior from the 10-yard line to deny Xai'Shaun Edwards.
 
-3. **Cover the Return at Faurot**
-   Do not let hidden yardage decide Faurot. DaMarion Fowlkes returned a punt 68 yards to get them out of a 10-0 hole. Kansas scored first the other way on an 88-yard blocked field-goal return. Cover the punt. Protect the kick. Make them beat you from scrimmage.
-
-Ole Miss was Crowd Chambliss / Cap the Vertical / Run a soft front. That is not this game. Their front sat Kansas and Troy. The shot they give lives on the scout rail and the Baugh swing, not as a cloned third key.
+3. **Eliminate Hidden Yardage & Force Fair Catches**
+   Do not let special teams execution decide the outcome at Faurot Field. Missouri relies on explosive special teams swings, highlighted by DaMarion Fowlkes' 68-yard punt return and Kansas' 88-yard blocked field-goal return. Alec Clark must prioritize maximum hang time to completely neutralize Fowlkes, while the field-goal unit locks down interior protection. Protect the kick, cover the punt, and force them to beat you strictly from scrimmage.
 
 ## Held
 
