@@ -9,13 +9,14 @@ import type { FlipWatchRow, MovementNarrativeRow, VisitRecapRow } from '@/lib/fu
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { movementDelta7d } from '@/lib/movement-intel-types';
 import { getFeaturedUfGame, parseScheduleKickoff } from '@/lib/gators-live';
-import { SCHEDULE_GAMES } from '@/lib/schedule-data';
+import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 
 /** Same as the schedule board — Cocktail Party + Doak. Not every SEC road game. */
 const RIVAL_OPPONENT_IDS = new Set(['fsu', 'uga']);
 
-function nextHomeGame(now = new Date()) {
-  return getFeaturedUfGame(now) || SCHEDULE_GAMES.find((g) => g.kind !== 'bye') || SCHEDULE_GAMES[0];
+function nextHomeGame(now = new Date(), games?: ScheduleGame[]) {
+  const pool = games?.length ? games : SCHEDULE_GAMES;
+  return getFeaturedUfGame(now, pool) || pool.find((g) => g.kind !== 'bye') || pool[0];
 }
 
 function kickoffIsoForGame(dateStr: string): string {
@@ -155,8 +156,8 @@ export function avatarInitials(name: string): string {
     .join('');
 }
 
-export function buildGameDayView(now = new Date()): HomeGameDayView {
-  const game = nextHomeGame(now);
+export function buildGameDayView(now = new Date(), games?: ScheduleGame[]): HomeGameDayView {
+  const game = nextHomeGame(now, games);
   return {
     gameId: game.id,
     opponent: game.opp,

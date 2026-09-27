@@ -101,15 +101,15 @@ export function getUfScheduleGames(): ScheduleGame[] {
 }
 
 /** Next upcoming game, or the current game if we're inside its live window. */
-export function getFeaturedUfGame(now = new Date()): ScheduleGame | null {
-  const games = getUfScheduleGames();
-  if (!games.length) return null;
+export function getFeaturedUfGame(now = new Date(), games?: ScheduleGame[]): ScheduleGame | null {
+  const pool = games?.length ? games : getUfScheduleGames();
+  if (!pool.length) return null;
 
   let current: ScheduleGame | null = null;
   let next: ScheduleGame | null = null;
   let nextTs = Infinity;
 
-  for (const g of games) {
+  for (const g of pool) {
     if (g.kind === 'bye' || String(g.id || '').startsWith('bye')) continue;
     const kick = parseScheduleKickoff(g.date);
     if (!kick) continue;
@@ -131,7 +131,7 @@ export function getFeaturedUfGame(now = new Date()): ScheduleGame | null {
     }
   }
 
-  return current || next || games[0] || null;
+  return current || next || pool[0] || null;
 }
 
 /** True when UF is in pregame → final window — only then should we hit score/odds APIs. */

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Home Game Week kickoff: `/api/schedule` already serves Missouri **3:30 PM ET / ESPN**. Current App Store still paints the baked **3:30–8:00** seed on the home card. This PR reads live/last-good schedule for that card — bake row below.
 - [x] 2028 hero Commits 2 + drop Cyion from Biggest Battles: heal battleBoard/heat/battles of verified UF commits, pin 2028 hero on edge 502, skip hero SWR last-good. API + Netlify edge after deploy — no Codemagic. Hero last-good skip is the bake row.
 - [x] Game Week Missouri win chance: restamp **65% / UF 28 · Missouri 21** after the Ole Miss 52–28 (was leftover 52% coin-flip → Low / Flat). API `ufPct` after Render — current App Store gauge already live-fetches the %. Conviction stamp + “+13% this week” copy is the bake row.
 - [x] Game Week Missouri window: official **ESPN / 3:30 p.m. ET** (GatorsFB Sep 21) on `/api/schedule` after Render. Heal `date` + `tv` from the git board so Render durable cannot keep **TBD**. API — current App Store Game Week already live-fetches. Home countdown seed is already 3:30; TV badge waits on this API stamp.
@@ -181,6 +182,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-27 | Home Game Week card reads live `/api/schedule` so Missouri cannot stick at 3:30–8:00 | `HomePremiumPage` + `buildGameDayView` in binary. **API already serves 3:30 PM ET / ESPN.** 1.0.29 still paints the baked window. | this PR |
 | 2026-09-27 | Recruiting hero skip SWR last-good so 2028 cannot stick at 1 commit after Cyion | `stale-while-revalidate.ts` in binary. **API + edge already pin 2 commits / drop Cyion battles after deploy.** 1.0.29 still paints last-good hero. | this PR |
 | 2026-09-27 | Game Week win-chance conviction: stop mapping closeness-to-50 onto Low; show stamped `+13% this week` after Ole Miss | `game-week-data.ts` + gauge widget in binary. **API already serves 65% / UF 28–21 after Render.** Old formula still paints Low until 65% lands, and still says `+2% this week`. | this PR |
 | 2026-09-27 | Game Week Missouri first-paint seed: Charles 3 Keys + howUFWins (no dummy “Establish run on road”) | `schedule-data.ts` in binary. **`/api/schedule` already serves the paste after Render.** 1.0.29 last-good still has the dummy road keys if the API 502s. | this PR |
