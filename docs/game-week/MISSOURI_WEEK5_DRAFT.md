@@ -12,16 +12,18 @@ no Starkville sit.
 
 This is not a Chambliss team. Clean Simmons throws it all over you. Cold Simmons becomes Roberts and the return game — and they still won Troy.
 
-## 3 Keys (coaching jobs from their games)
+## 3 Keys (from their boxes)
 
-1. **Set the Edge & Crowd Roberts**
-   Do not allow Jamal Roberts to bounce once the throw is taken away. Linebackers must fill the A and B gaps and play his near hip—do not scrape over the top and lose the cutback. The edge defenders must stay parallel to the line of scrimmage; if they crash upfield, Roberts is gone.
+1. **Take Away the Clean Throw**
+   Do not let Austin Simmons get the first throw. He is 17-of-19 and four scores when it is clean, and 10-of-19 for 91 when it is taken away. Defensive backs must stay over Cayden Lee's vertical stems and wrap Donovan Olugbode at the catch so the hitch does not become the chain.
 
-2. **Stay Over Lee & Wrap Olugbode**
-   Take away the isolated shot. Do not jump the hitch on Cayden Lee. Defensive backs must maintain depth over his vertical stems and wrap Donovan Olugbode at the catch so the short throw does not become a long run.
+2. **Fit Roberts When It Dies**
+   Do not treat a dead passing game as the win. Troy already sat Simmons and still handed Jamal Roberts 22 carries for 128. Linebackers must fill the A and B gaps and play his near hip—do not scrape over the top and lose the bounce. Xai'Shaun Edwards punches it from the 10.
 
-3. **Force the Extra Hat Down**
-   Missouri's front seven has sat the run, holding Kansas to 81 and Troy to 93. Start Baugh to establish physical dominance early and force the extra hat into the box. Once a safety walks down, unleash Philo to attack the vacated window over the top.
+3. **Cover the Return at Faurot**
+   Do not let hidden yardage decide Faurot. DaMarion Fowlkes returned a punt 68 yards to get them out of a 10-0 hole. Kansas scored first the other way on an 88-yard blocked field-goal return. Cover the punt. Protect the kick. Make them beat you from scrimmage.
+
+Ole Miss was Crowd Chambliss / Cap the Vertical / Run a soft front. That is not this game. Their front sat Kansas and Troy. The shot they give lives on the scout rail and the Baugh swing, not as a cloned third key.
 
 ## Held
 

@@ -237,35 +237,34 @@ describe('schedule-board', () => {
     assert.equal(liveBaugh?.trend, 'up');
   });
 
-  it('Missouri 3 Keys are coaching jobs, not recap headlines', () => {
+  it('Missouri 3 Keys come from their boxes, not the Ole Miss jobs', () => {
     const board = scheduleBoard.getScheduleBoard(2026);
     const missouri = board.games.find((g) => g.id === 'missouri');
-    assert.equal(missouri.keys[0], 'Set the Edge & Crowd Roberts');
-    assert.equal(missouri.keys[1], 'Stay Over Lee & Wrap Olugbode');
-    assert.equal(missouri.keys[2], 'Force the Extra Hat Down');
+    assert.equal(missouri.keys[0], 'Take Away the Clean Throw');
+    assert.equal(missouri.keys[1], 'Fit Roberts When It Dies');
+    assert.equal(missouri.keys[2], 'Cover the Return at Faurot');
     assert.equal(
       missouri.howUFWins[0],
-      'Do not allow Jamal Roberts to bounce once the throw is taken away. Linebackers must fill the A and B gaps and play his near hip—do not scrape over the top and lose the cutback. The edge defenders must stay parallel to the line of scrimmage; if they crash upfield, Roberts is gone.'
+      'Do not let Austin Simmons get the first throw. He is 17-of-19 and four scores when it is clean, and 10-of-19 for 91 when it is taken away. Defensive backs must stay over Cayden Lee\'s vertical stems and wrap Donovan Olugbode at the catch so the hitch does not become the chain.'
     );
     assert.equal(
       missouri.howUFWins[1],
-      'Take away the isolated shot. Do not jump the hitch on Cayden Lee. Defensive backs must maintain depth over his vertical stems and wrap Donovan Olugbode at the catch so the short throw does not become a long run.'
+      'Do not treat a dead passing game as the win. Troy already sat Simmons and still handed Jamal Roberts 22 carries for 128. Linebackers must fill the A and B gaps and play his near hip—do not scrape over the top and lose the bounce. Xai\'Shaun Edwards punches it from the 10.'
     );
     assert.equal(
       missouri.howUFWins[2],
-      "Missouri's front seven has sat the run, holding Kansas to 81 and Troy to 93. Start Baugh to establish physical dominance early and force the extra hat into the box. Once a safety walks down, unleash Philo to attack the vacated window over the top."
+      'Do not let hidden yardage decide Faurot. DaMarion Fowlkes returned a punt 68 yards to get them out of a 10-0 hole. Kansas scored first the other way on an 88-yard blocked field-goal return. Cover the punt. Protect the kick. Make them beat you from scrimmage.'
     );
-    assert.ok(!missouri.keys.some((k) => /after Simmons cools|two different problems|kicking game at Faurot/i.test(k)));
-    assert.ok(!missouri.howUFWins.some((n) => /27-17|10-of-19|88-yard/i.test(n)));
+    assert.ok(!missouri.keys.some((k) => /Crowd Roberts|Force the Extra Hat|Stay Over Lee|Crowd Chambliss|Cap the Vertical|Downhill Run/i.test(k)));
     const graham = missouri.swing.find((s) => /graham/i.test(s.name));
     const mcclain = missouri.swing.find((s) => /mcclain/i.test(s.name));
     const baugh = missouri.swing.find((s) => /baugh/i.test(s.name));
-    assert.match(graham?.role || '', /near hip/);
-    assert.match(mcclain?.role || '', /vertical stems/);
-    assert.match(baugh?.role || '', /force the extra hat/);
+    assert.match(mcclain?.role || '', /first throw/);
+    assert.match(graham?.role || '', /dead passing game/);
+    assert.match(baugh?.role || '', /eight-man front/);
     assert.equal(baugh?.impact, 95);
     assert.equal(missouri.filmWatched, false);
-    assert.match(missouri.scoutingReport, /Force the Extra Hat Down/);
+    assert.match(missouri.scoutingReport, /Cover the Return at Faurot/);
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {
