@@ -12,12 +12,12 @@ const TICKER_FALLBACK = {
   ok: true,
   status: 'ready',
   items: [
-    'Game — Missouri at Faurot Field',
+    'Game — Missouri at Faurot Field · ESPN',
     'Road — on the road this Saturday',
     `Season — ${SEASON_STANDING}`,
   ],
   nowWeek: [
-    { key: 'game', label: 'Game', items: ['Missouri at Faurot Field'] },
+    { key: 'game', label: 'Game', items: ['Missouri at Faurot Field · ESPN'] },
     { key: 'road', label: 'Road', items: ['on the road this Saturday'] },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],

@@ -48,10 +48,10 @@ export const TICKET_GAMES: TicketGame[] = [
   },
   {
     game: '🐊 UF @ Missouri',
-    date: 'October 3, 2026 · 3:30–8:00 PM ET',
+    date: 'October 3, 2026 · 3:30 PM ET',
     venue: 'Faurot Field, Columbia MO',
     type: 'AWAY',
-    note: 'TV TBD · window 3:30–8:00 PM ET',
+    note: 'ESPN · 3:30 PM ET',
   },
   {
     game: '🐊 UF vs South Carolina (HC)',

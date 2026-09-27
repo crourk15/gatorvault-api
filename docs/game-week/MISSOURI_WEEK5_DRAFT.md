@@ -1,7 +1,7 @@
 # Missouri Game Week — detail pass
 
 Mississippi State still live / not sat.
-Oct 3 · 3:30 PM ET · TV TBD · @ Faurot Field
+Oct 3 · 3:30 PM ET · ESPN · @ Faurot Field
 Florida 4-0 (52–28 last week). Missouri 3-0 (54–14 UAPB, 38–21 Kansas, 27–17 Troy). #19.
 
 filmWatched: false.
