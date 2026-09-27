@@ -237,6 +237,37 @@ describe('schedule-board', () => {
     assert.equal(liveBaugh?.trend, 'up');
   });
 
+  it('Missouri 3 Keys are coaching jobs, not recap headlines', () => {
+    const board = scheduleBoard.getScheduleBoard(2026);
+    const missouri = board.games.find((g) => g.id === 'missouri');
+    assert.equal(missouri.keys[0], 'Set the Edge & Crowd Roberts');
+    assert.equal(missouri.keys[1], 'Stay Over Lee & Wrap Olugbode');
+    assert.equal(missouri.keys[2], 'Force the Extra Hat Down');
+    assert.equal(
+      missouri.howUFWins[0],
+      'Do not allow Jamal Roberts to bounce once the throw is taken away. Linebackers must fill the A and B gaps and play his near hip—do not scrape over the top and lose the cutback. The edge defenders must stay parallel to the line of scrimmage; if they crash upfield, Roberts is gone.'
+    );
+    assert.equal(
+      missouri.howUFWins[1],
+      'Take away the isolated shot. Do not jump the hitch on Cayden Lee. Defensive backs must maintain depth over his vertical stems and wrap Donovan Olugbode at the catch so the short throw does not become a long run.'
+    );
+    assert.equal(
+      missouri.howUFWins[2],
+      "Missouri's front seven has sat the run, holding Kansas to 81 and Troy to 93. Start Baugh to establish physical dominance early and force the extra hat into the box. Once a safety walks down, unleash Philo to attack the vacated window over the top."
+    );
+    assert.ok(!missouri.keys.some((k) => /after Simmons cools|two different problems|kicking game at Faurot/i.test(k)));
+    assert.ok(!missouri.howUFWins.some((n) => /27-17|10-of-19|88-yard/i.test(n)));
+    const graham = missouri.swing.find((s) => /graham/i.test(s.name));
+    const mcclain = missouri.swing.find((s) => /mcclain/i.test(s.name));
+    const baugh = missouri.swing.find((s) => /baugh/i.test(s.name));
+    assert.match(graham?.role || '', /near hip/);
+    assert.match(mcclain?.role || '', /vertical stems/);
+    assert.match(baugh?.role || '', /force the extra hat/);
+    assert.equal(baugh?.impact, 95);
+    assert.equal(missouri.filmWatched, false);
+    assert.match(missouri.scoutingReport, /Force the Extra Hat Down/);
+  });
+
   it('Swing Impact restamps from official box form + this opponent', () => {
     const payload = scheduleBoard.toApiPayload();
     const baughOn = (id) => payload.games.find((g) => g.id === id)?.swing.find((s) => /baugh/i.test(s.name));

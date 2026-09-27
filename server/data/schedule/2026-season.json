@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-09-27T01:50:00.000Z",
+  "updatedAt": "2026-09-27T02:50:00.000Z",
   "label": "2026 Florida football schedule",
   "source": "vault-schedule-board",
   "predThrough": "2026-W4",
@@ -467,23 +467,23 @@
       "ufPct": 52,
       "tv": "TBD",
       "keys": [
-        "Stop Roberts after Simmons cools",
-        "Play Olugbode and Lee as two different problems",
-        "Don't lose the kicking game at Faurot"
+        "Set the Edge & Crowd Roberts",
+        "Stay Over Lee & Wrap Olugbode",
+        "Force the Extra Hat Down"
       ],
       "swing": [
         {
           "name": "Myles Graham",
-          "role": "Roberts is the closer when Simmons is dead. Troy sat the QB and still gave up 22 carries for 128. Graham has to fit the run after the throw is gone."
+          "role": "Do not allow Jamal Roberts to bounce once the throw is taken away. Linebackers must fill the A and B gaps and play his near hip\u2014do not scrape over the top and lose the cutback. The edge defenders must stay parallel to the line of scrimmage; if they crash upfield, Roberts is gone."
         },
         {
           "name": "Cormani McClain",
-          "role": "Lee is the isolated shot (47 vs UAPB, 27 at Kansas). Olugbode is the volume guy underneath. Do not play them with one answer."
+          "role": "Take away the isolated shot. Do not jump the hitch on Cayden Lee. Defensive backs must maintain depth over his vertical stems and wrap Donovan Olugbode at the catch so the short throw does not become a long run."
         },
         {
           "name": "Jadan Baugh",
           "impact": 95,
-          "role": "They held Kansas to 81 and Troy to 93 on the ground. They will stack it. Baugh still starts \u2014 the play after they commit is Philo."
+          "role": "Missouri's front seven has sat the run, holding Kansas to 81 and Troy to 93. Start Baugh to establish physical dominance early and force the extra hat into the box."
         }
       ],
       "film": "This is not a Chambliss team. When Austin Simmons is clean he lights it up \u2014 17-of-19 and four scores on Pine Bluff, 292 yards and three at Kansas, zero picks in three games. When he is not, they become Jamal Roberts and the return game, and they still beat Troy 27-17. Sit the throw and lose the back and you lose. Sit the throw and lose the punt and you lose. Mississippi State is still live; this is three boxes, not a sit.",
@@ -585,11 +585,11 @@
         "Mississippi State live \u2014 not sat."
       ],
       "howUFWins": [
-        "Sitting Austin Simmons is only the first half of the job. Troy already did that \u2014 10-of-19, 91 yards \u2014 and Missouri still ran Jamal Roberts 22 times for 128 and scored on a 68-yard punt return. If Graham and the linebackers do not fit Roberts after the throw is dead, you have played 30 minutes to lose 27-17. Hardy is not the back. Roberts is. Edwards will punch it from the 10.",
-        "Olugbode and Lee are two different football players. Olugbode had eight for 116 and two scores against Pine Bluff and six for 121 at Kansas; he still scored on three catches when Simmons had 91 yards. Lee is the isolated shot \u2014 47 yards vs UAPB, 27 at Kansas. Norfleet is the 13-yard closer. If McClain and the safety play them like one receiver group, you give up the chain and the shot in the same series.",
-        "Their closest night was decided in the kicking game. Fowlkes returned a punt 68 yards to get them out of a 10-0 hole. Kansas scored first on an 88-yard blocked field-goal return. Craig is 32, 32, 35, 36. If we shank a punt or get a kick blocked at Faurot we are playing their script. Cover the return, protect the kick, and make them beat us from scrimmage."
+        "Do not allow Jamal Roberts to bounce once the throw is taken away. Linebackers must fill the A and B gaps and play his near hip\u2014do not scrape over the top and lose the cutback. The edge defenders must stay parallel to the line of scrimmage; if they crash upfield, Roberts is gone.",
+        "Take away the isolated shot. Do not jump the hitch on Cayden Lee. Defensive backs must maintain depth over his vertical stems and wrap Donovan Olugbode at the catch so the short throw does not become a long run.",
+        "Missouri's front seven has sat the run, holding Kansas to 81 and Troy to 93. Start Baugh to establish physical dominance early and force the extra hat into the box. Once a safety walks down, unleash Philo to attack the vacated window over the top."
       ],
-      "scoutingReport": "MISSOURI through three (UAPB 54-14, Kansas 38-21, Troy 27-17). Mississippi State was live when this was written \u2014 not folded in. Simmons is two different quarterbacks: 17/19 for 252 and four vs UAPB, 19/29 for 292 and three at Kansas, then 10/19 for 91 vs Troy with zero picks on the season (47/68, 652, 8 TD). When the throw dies they do not go home. Roberts 22-128 and a 68-yard Fowlkes punt return won Troy after a 10-0 hole (Keyes 76 on play two, then a 19-play field goal). Olugbode is the chain (8-116-2, 6-121-1). Lee is the shot (47, 27). Norfleet the 13-yard closer. Edwards the 10-yard punch. Hardy is not on the boxes. Batoon's front has sat the run (81, 93, 89) and given up the shot (76, 55). Hidden yardage is real \u2014 they also handed Kansas an 88-yard blocked field goal. UF wins by stopping Roberts after the throw is dead, playing Olugbode and Lee as two problems, and not losing the kicking game. filmWatched: false.",
+      "scoutingReport": "MISSOURI through three (UAPB 54-14, Kansas 38-21, Troy 27-17). Mississippi State was live when this was written \u2014 not folded in. Simmons is two different quarterbacks: 17/19 for 252 and four vs UAPB, 19/29 for 292 and three at Kansas, then 10/19 for 91 vs Troy with zero picks on the season (47/68, 652, 8 TD). When the throw dies they do not go home. Roberts 22-128 and a 68-yard Fowlkes punt return won Troy after a 10-0 hole (Keyes 76 on play two, then a 19-play field goal). Olugbode is the chain (8-116-2, 6-121-1). Lee is the shot (47, 27). Norfleet the 13-yard closer. Edwards the 10-yard punch. Hardy is not on the boxes. Batoon's front has sat the run (81, 93, 89) and given up the shot (76, 55). Hidden yardage is real \u2014 they also handed Kansas an 88-yard blocked field goal. UF wins: Set the Edge & Crowd Roberts / Stay Over Lee & Wrap Olugbode / Force the Extra Hat Down. filmWatched: false.",
       "specialTeams": [
         "DaMarion Fowlkes returned a punt 68 yards for a touchdown against Troy after Missouri had gone down 10-0. That is the play that put them back in their only close game.",
         "Kansas scored first on an 88-yard return of a blocked Missouri field goal. Protect the kick at Faurot. Cover the return.",
