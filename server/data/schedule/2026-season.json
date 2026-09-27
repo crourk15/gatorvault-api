@@ -467,26 +467,26 @@
       "ufPct": 52,
       "tv": "TBD",
       "keys": [
-        "Crowd Simmons Before the First Read",
-        "Cap the Shot After the Short Throw",
-        "Run the Front at Faurot"
+        "Stop Roberts after Simmons cools",
+        "Play Olugbode and Lee as two different problems",
+        "Don't lose the kicking game at Faurot"
       ],
       "swing": [
         {
+          "name": "Myles Graham",
+          "role": "Roberts is the closer when Simmons is dead. Troy sat the QB and still gave up 22 carries for 128. Graham has to fit the run after the throw is gone."
+        },
+        {
+          "name": "Cormani McClain",
+          "role": "Lee is the isolated shot (47 vs UAPB, 27 at Kansas). Olugbode is the volume guy underneath. Do not play them with one answer."
+        },
+        {
           "name": "Jadan Baugh",
           "impact": 95,
-          "role": "We just ran a top-five front for 303. Start Baugh. If they load the box to stop him, that is Philo's throw."
-        },
-        {
-          "name": "Jayden Woods",
-          "role": "Crowd Simmons before the first read. Troy sat him to 91. Do not let him play the UAPB game."
-        },
-        {
-          "name": "Aaron Philo",
-          "role": "If they sit on Baugh, throw it over them. Same job as the Auburn front."
+          "role": "They held Kansas to 81 and Troy to 93 on the ground. They will stack it. Baugh still starts \u2014 the play after they commit is Philo."
         }
       ],
-      "film": "Missouri goes as Austin Simmons goes \u2014 until somebody sits him down. He threw it all over UAPB and Kansas. Troy held him to 91 and they still won it with Roberts and a punt return. Crowd him, wrap the catch, and run the front so you are not playing from behind in their house.",
+      "film": "This is not a Chambliss team. When Austin Simmons is clean he lights it up \u2014 17-of-19 and four scores on Pine Bluff, 292 yards and three at Kansas, zero picks in three games. When he is not, they become Jamal Roberts and the return game, and they still beat Troy 27-17. Sit the throw and lose the back and you lose. Sit the throw and lose the punt and you lose. Mississippi State is still live; this is three boxes, not a sit.",
       "pred": "UF 27 \u00b7 Missouri 24",
       "predUF": 27,
       "predOpp": 24,
@@ -536,62 +536,64 @@
         }
       ],
       "filmNotes": [
-        "Missouri goes as Austin Simmons goes \u2014 until somebody sits him down. He threw it all over UAPB and Kansas. Troy held him to 91 and they still won it with Roberts and a punt return. Crowd him, wrap the catch, and run the front so you are not playing from behind in their house.",
-        "Schematic Identity: Chip Lindsey spread under Eli Drinkwitz. They will throw it early when Simmons is clean, then hand it to Jamal Roberts when the throw cools.",
-        "Efficiency Metrics: Averaging 39.7 PPG and 420 YPG (247 pass / 174 rush) through three.",
-        "Situational Success: They will take the shot \u2014 Cayden Lee 47 vs UAPB and 27 at Kansas. They also give shots up: Troy hit them for 76 and 55.",
-        "QB Austin Simmons: Ole Miss transfer. 47-of-68, 652 yards, 8 TD, 0 INT through three. 17-of-19 for 252 and 4 TD vs UAPB. 19-of-29 for 292 and 3 TD at Kansas. Troy sat him down (10-of-19, 91 yards, 1 TD). Crowd him before the first read.",
-        "Wide Receivers: Donovan Olugbode is the volume guy (8-116-2 vs UAPB, 6-121-1 at Kansas). Cayden Lee is the isolated shot (47 and 27). Brett Norfleet the tight-end closer (13-yard TD at Kansas). DaMarion Fowlkes flipped Troy with a 68-yard punt return.",
-        "Ground Game: Jamal Roberts is the back on the boxes we have (63-300-3). 64-yarder at Kansas. 22-128 vs Troy when Simmons cooled. Xai'Shaun Edwards the punch (10-yard TD at Kansas). Ahmad Hardy (preseason All-American) is not on these boxes \u2014 May injury, return unknown.",
-        "Schematic Identity: Corey Batoon base 4-2-5. Drinkwitz is still the head coach. Coverage calls are not on the boxes we have.",
-        "Front Seven: They sat the run against Kansas (81) and Troy (93). If they load the box, that is the throw. Do not assume the front you just ran through Ole Miss will come cheap at Faurot.",
-        "Secondary: Proven they can get chunked over the top. Troy 76 and 55. Cap the shot after the short throw.",
-        "Kicker Blake Craig: 32 vs UAPB, 32 at Kansas, 35 and 36 vs Troy. Special teams will flip a game \u2014 Fowlkes 68 punt return; Kansas blocked a field goal and took it 88 the other way."
+        "This is not a Chambliss team. When Simmons is clean he lights it up. When he is not, they become Roberts and the return game and they still won Troy 27-17.",
+        "UAPB (54-14, Columbia): 78 plays, 562 yards, 33 first downs, 26-of-33 passing, 45 rushes for 205. Simmons 17-of-19, 252, four touchdowns. Opening drive 11 plays, 70 yards \u2014 Shaun Terry II 25-yard catch. Olugbode scored from 14 and 35. Lee finished a two-play 57-yard drive with a 47-yard ball. Roberts punched from a yard. They took a safety, then scored again in eight seconds. Matt Zollers and Preston Hatfield closed it. Time of possession 33:58.",
+        "Kansas (38-21, Lawrence): Kansas scored first on an 88-yard blocked field-goal return. Roberts answered with a 64-yard run. Lee 27-yard ball tied it 14-14. Olugbode 8-yard score, then Xai'Shaun Edwards 10 yards on a two-play, 12-yard short field. Norfleet 13-yard closer. Simmons 19-of-29, 292, three scores. Roberts 28 carries, 125 yards. Olugbode 6-121-1. Kansas ran 36 for 81 and threw two picks.",
+        "Troy (27-17, Columbia): Goose Crowder hit TK Keyes for 76 yards on the second play. Troy then ground 19 plays, 81 yards, 10:32 off the clock for a field goal and a 10-0 lead. Simmons finished 10-of-19 for 91 yards. They did not throw their way back. DaMarion Fowlkes returned a punt 68 yards to tie it. Olugbode scored from 12 on a three-play, 18-yard drive. Roberts scored from 13 on the next snap they touched it. Crowder hit Howard Kinchen for 55. Blake Craig 35 and 36. Missouri ran 47 plays for 230 yards and still won.",
+        "Austin Simmons (Ole Miss transfer, Chip Lindsey calling it): 47-of-68, 652 yards, 8 TD, 0 INT through three. Clean vs UAPB and Kansas. Dead vs Troy. Matt Zollers is the backup \u2014 five-yard rush touchdown in the UAPB mop-up, not a package we have seen on a real down.",
+        "Donovan Olugbode is the chain. Eight catches, 116 yards, two scores vs UAPB. Six for 121 and a score at Kansas. Three for 31 and a score vs Troy when everything else died. He is who they look for when they need a first down.",
+        "Cayden Lee is not Olugbode. He is the isolated shot \u2014 47-yard touchdown vs UAPB, 27-yard touchdown at Kansas. Play him like a volume guy and he runs by you. Play everyone like Lee and Olugbode eats the middle.",
+        "Brett Norfleet is the closer inside the 15. Thirteen-yard touchdown at Kansas after they had already taken the lead. Shaun Terry II moved the chains on the opening UAPB drive (25).",
+        "Jamal Roberts is the back. Ahmad Hardy is not on these boxes. Roberts: 13-47-1 vs UAPB, 28-125-1 (64-yarder) at Kansas, 22-128-1 vs Troy. Season 63-300-3. When Simmons had 91 yards they handed it to Roberts 22 times and won. Xai'Shaun Edwards is the short-yardage punch \u2014 10-yard touchdown on a two-play drive at Kansas.",
+        "Corey Batoon's front sat the run against people who could not run. Kansas 81. Troy 93. UAPB 89. That is 87.7 rush yards allowed a game. They will load it after what we just did to Ole Miss (303, six rushing scores). The snap after they commit is the one that scores.",
+        "They give up the shot. Troy: Keyes 76 on play two, Kinchen 55 before half. 323 yards allowed, 18-of-32. The 19-play field-goal drive shows they will bend for 10 minutes and still make you kick it. Finish if you get there.",
+        "The kicking game is how they stay alive. Fowlkes 68-yard punt return tied Troy after they had gone down 10-0. Kansas scored first on an 88-yard blocked field-goal return the other way. Blake Craig is 32, 32, 35, 36. Hidden yardage is part of this team, not a footnote."
       ],
       "filmWatched": false,
       "opponentTendencies": [
-        "Schematic Identity: Chip Lindsey spread under Eli Drinkwitz. They will throw it early when Simmons is clean, then hand it to Jamal Roberts when the throw cools.",
-        "Efficiency Metrics: Averaging 39.7 PPG and 420 YPG (247 pass / 174 rush) through three.",
-        "Situational Success: They will take the shot \u2014 Cayden Lee 47 vs UAPB and 27 at Kansas. They also give shots up: Troy hit them for 76 and 55.",
-        "QB Austin Simmons: Ole Miss transfer. 47-of-68, 652 yards, 8 TD, 0 INT through three. 17-of-19 for 252 and 4 TD vs UAPB. 19-of-29 for 292 and 3 TD at Kansas. Troy sat him down (10-of-19, 91 yards, 1 TD). Crowd him before the first read.",
-        "Wide Receivers: Donovan Olugbode is the volume guy (8-116-2 vs UAPB, 6-121-1 at Kansas). Cayden Lee is the isolated shot (47 and 27). Brett Norfleet the tight-end closer (13-yard TD at Kansas). DaMarion Fowlkes flipped Troy with a 68-yard punt return.",
-        "Ground Game: Jamal Roberts is the back on the boxes we have (63-300-3). 64-yarder at Kansas. 22-128 vs Troy when Simmons cooled. Xai'Shaun Edwards the punch (10-yard TD at Kansas). Ahmad Hardy (preseason All-American) is not on these boxes \u2014 May injury, return unknown."
+        "UAPB they threw it until the lights went out: 78 plays, 562 yards, 33 first downs, 26-of-33, Simmons 17-of-19 for 252 and four scores. Opening drive was 11 plays and 70 yards. Lee ended a two-play drive from 47 yards out. That is the clean version.",
+        "Kansas they were balanced because they had to be. Kansas scored first on an 88-yard blocked field-goal return. Roberts ripped a 64-yarder. Simmons still threw for 292 and three, Olugbode 6-121, Lee 27, Norfleet 13. Edwards punched a 10-yarder on a two-play short field. 41 rushes, 177 yards.",
+        "Troy is the tell. Crowder hit Keyes for 76 on the second snap and Troy led 10-0 after a 19-play field-goal drive. Simmons: 10-of-19, 91 yards, one score. They won it anyway \u2014 Fowlkes 68-yard punt return, Olugbode from 12, Roberts from 13 on the next touch, Craig 35 and 36. Forty-seven plays. 230 yards. 27-17.",
+        "Austin Simmons is an Ole Miss transfer in Chip Lindsey's first year calling this. 47-of-68, 652, eight touchdowns, zero picks through three. He has not been sacked into a bad night on these boxes \u2014 he has been taken away. Zollers is mop-up (five-yard rush TD vs UAPB), not a change-of-pace package we can confirm.",
+        "Olugbode and Lee are not the same problem. Olugbode is the volume chain (8-116-2, 6-121-1, still a touchdown on three catches vs Troy). Lee is the isolated shot (47, 27). Norfleet finishes from 13. Terry II moved the first UAPB drive. One coverage does not hold all four.",
+        "Jamal Roberts is the back on every box we have. 63 carries, 300 yards, three scores. The 64-yarder at Kansas and the 22-128 vs Troy are the same player in two different games. Hardy was the preseason name; he is not in these lines. Edwards is the short-yardage punch (10-yard TD, two-play drive)."
       ],
       "defenseTendencies": [
-        "Schematic Identity: Corey Batoon base 4-2-5. Drinkwitz is still the head coach. Coverage calls are not on the boxes we have.",
-        "Pass Rush: Methodical rather than overwhelming on the three boxes we have. The takeaway is the run sit \u2014 Kansas 81, Troy 93.",
-        "Defensive Metrics: Allowing 17.3 PPG through three (14, 21, 17) and 198 / 255 / 323 yards.",
-        "Red Zone Defense: Troy drove 19 plays and settled for a field goal. They will bend. Finish the drive if you get there.",
-        "Front Seven: They sat the run against Kansas (81) and Troy (93). If they load the box, that is the throw. Do not assume the front you just ran through Ole Miss will come cheap at Faurot.",
-        "Secondary: Proven they can get chunked over the top. Troy 76 and 55. Cap the shot after the short throw."
+        "They sit the run against people who cannot run through them. Kansas 36-81. Troy 40-93. UAPB 29-89. That is 17.3 points a game allowed (14, 21, 17) and it is built on stuffing the line, not on a sit we have of the coverage.",
+        "They give the shot. Troy scored from 76 and 55 and still only got 17. The 19-play, 10:32 field-goal drive is who they are in the red area \u2014 they will let you live down there and make you kick it. Finish.",
+        "Batoon is the coordinator, Drinkwitz is still the head coach, 4-2-5 is the listed front. We do not have shells or pressure packages on these boxes. Do not invent them.",
+        "Special teams is a defensive problem too. Kansas scored first on an 88-yard blocked field-goal return. Fowlkes can flip the field the other way (68-yard punt return TD). If the offense is the Troy version, this is how they stay in the game.",
+        "UAPB they let have 198 and 14. Kansas 255 and 21 with two takeaways. Troy 323 and 17. The jump is the shot plays, not a sudden inability to stop the run."
       ],
       "offenseScout": [
-        "Official 3-game: 39.7 PPG, 420 YPG (247 pass / 174 rush). Chip Lindsey is OC / play-caller (spread). Eli Drinkwitz is HC. Do not write Kirby Moore as the 2026 Missouri identity (Washington State).",
-        "Box-confirmed Week 1 (UAPB, Columbia, Sep 3): Missouri 54, UAPB 14. Simmons 17/19, 252, 4 TD. Roberts 13-47-1. Olugbode 8-116-2. Lee 47 TD. 78-562, 33 first downs, 0 INT.",
-        "Box-confirmed Week 2 (at Kansas, Sep 11): Missouri 38, Kansas 21. Simmons 19/29, 292, 3 TD. Roberts 28-125-1 (64-yarder). Olugbode 6-121-1. Lee 27 TD. Norfleet 13 TD. Edwards 10-yard rush TD. Kansas 81 rush, 2 INT.",
-        "Box-confirmed Week 3 (Troy, Columbia, Sep 19): Missouri 27, Troy 17. Simmons 10/19, 91, 1 TD. Roberts 22-128-1. Olugbode 3-31-1. Fowlkes 68 punt-return TD. Allowed 76 and 55 shot plays.",
-        "Season Simmons 47/68, 652, 8 TD, 0 INT. Season Roberts 63-300-3. Matt Zollers is the backup (5-yard rush TD vs UAPB).",
-        "Ahmad Hardy: preseason All-American, May gunshot, return unknown. Not on the three boxes. Do not write him as the feature.",
-        "Mississippi State (Sep 26, Starkville, SECN): LIVE / not sat. Do not fold Kitchen, Graves, or a score into the fan rail.",
+        "Official 3-game: 39.7 PPG, 420 YPG (247 pass / 174 rush). Chip Lindsey OC (spread, first year; Kirby Moore is at Washington State). Eli Drinkwitz HC. Corey Batoon DC. Mississippi State Sep 26 is LIVE \u2014 not in these lines.",
+        "UAPB PBP/box (Sep 3, Faurot, SECN): 54-14. 78-562, 33 first downs, 26/33 pass, 45-205 rush, TOP 33:58, 0 INT. Scoring: Terry II 25 (11-70), Olugbode 14, Roberts 1, team safety, Olugbode 35 (one play after the safety), Lee 47 (2-57), Craig 32, Zollers rush 5, Hatfield rush 9. Simmons 17/19, 252, 4 TD. Roberts 13-47-1. Olugbode 8-116-2.",
+        "Kansas PBP/box (Sep 11, Lawrence, FOX): 38-21. 71-469, 41-177 rush, 19/30 pass, TOP 31:21. Kansas scored first: 88-yard blocked FG return. Roberts 64-yard run. Lee 27 TD. Olugbode 8 TD. Edwards 10-yard rush on 2-12 short field. Craig 32. Norfleet 13 TD. Simmons 19/29, 292, 3 TD. Roberts 28-125-1. Olugbode 6-121-1. Kansas 36-81 rush, 14/31, 2 INT.",
+        "Troy PBP/box (Sep 19, Faurot, SECN+): 27-17. 47-230, 13 first downs, 28-139 rush, 10/19 for 91, TOP 22:37. Troy: Keyes 76 on play two; 19-play, 81-yard, 10:32 FG for 10-0; Kinchen 55. Missouri answer was not the throw \u2014 Fowlkes 68 PR TD, Olugbode 12 (3-18), Roberts 13 (1-13), Craig 35 and 36. Simmons 10/19, 91, 1 TD. Roberts 22-128-1. Olugbode 3-31-1.",
+        "Season: Simmons 47/68, 652, 8 TD, 0 INT. Roberts 63-300-3. Olugbode is the volume WR on all three boxes. Lee is the shot. Norfleet the red-zone closer. Zollers mop-up only.",
+        "Ahmad Hardy: preseason All-American, May gunshot, return unknown. Zero carries on these three boxes. Do not write him as the feature.",
+        "Mississippi State (Sep 26, Starkville, 6:45 p.m. CT, SECN): live / not sat. No score, no Kitchen, no Graves on the fan rail.",
         "filmWatched: false. watchStandard: box-confirmed-3. No broadcast sit."
       ],
       "defenseScout": [
-        "Corey Batoon is DC. Base 4-2-5. Coverage shells (Cover 2/3/man) + pressure packages: NOT confirmed on the boxes.",
-        "Official 3-game allowed: 17.3 PPG (14 / 21 / 17). UAPB 198, Kansas 255, Troy 323.",
-        "Run sit: Kansas 81, Troy 93. If they load it vs Baugh, throw it over them.",
-        "Shot problem: Troy 76 (Keyes) and 55 (Kinchen). Cap the shot after the short throw.",
-        "ST: Fowlkes 68 PR TD vs Troy. Kansas blocked FG returned 88. Blake Craig 32 / 32 / 35 / 36.",
-        "Mississippi State live \u2014 not sat. Do not invent a Kitchen or Graves injury as scout fact."
+        "Batoon DC, listed 4-2-5. Coverage shells and pressure packages NOT on the boxes. Do not invent them.",
+        "Allowed 17.3 PPG (14 / 21 / 17). Yards: UAPB 198, Kansas 255, Troy 323. Rush allowed: 89 / 81 / 93.",
+        "Shot problem is Troy: Keyes 76 (play two), Kinchen 55. That is how 17 points became 323 yards.",
+        "Red area: Troy 19 plays, 81 yards, 10:32, field goal. They will bend. Finish.",
+        "ST is on the defense too: Kansas 88-yard blocked FG return (first score). Fowlkes 68 PR TD the other way.",
+        "Craig: 32 UAPB, 32 Kansas, 35 and 36 Troy.",
+        "Mississippi State live \u2014 not sat."
       ],
       "howUFWins": [
-        "Do not let Austin Simmons get comfortable. He was 17-of-19 for 252 and four scores against Pine Bluff and 19-of-29 for 292 and three at Kansas \u2014 zero interceptions through three. Troy sat him down (10-of-19, 91 yards). Get to him before the first read so the night is Roberts and checkdowns, not Olugbode and Lee over the top.",
-        "The chunk throws are the ones that finish. Cayden Lee 47 against Pine Bluff and 27 at Kansas. Donovan Olugbode 8-116-2 and 6-121-1. Brett Norfleet the 13-yard closer. Do not bite on the first look and lose Lee over the top. Wrap the catch \u2014 they will run after it.",
-        "We just ran Ole Miss for 303 yards and six rushing scores. Batoon's front sat Kansas (81 rush) and Troy (93). Start Baugh anyway. If they load the box to stop him, that is Philo's throw. Do not play from behind in their building."
+        "Sitting Austin Simmons is only the first half of the job. Troy already did that \u2014 10-of-19, 91 yards \u2014 and Missouri still ran Jamal Roberts 22 times for 128 and scored on a 68-yard punt return. If Graham and the linebackers do not fit Roberts after the throw is dead, you have played 30 minutes to lose 27-17. Hardy is not the back. Roberts is. Edwards will punch it from the 10.",
+        "Olugbode and Lee are two different football players. Olugbode had eight for 116 and two scores against Pine Bluff and six for 121 at Kansas; he still scored on three catches when Simmons had 91 yards. Lee is the isolated shot \u2014 47 yards vs UAPB, 27 at Kansas. Norfleet is the 13-yard closer. If McClain and the safety play them like one receiver group, you give up the chain and the shot in the same series.",
+        "Their closest night was decided in the kicking game. Fowlkes returned a punt 68 yards to get them out of a 10-0 hole. Kansas scored first on an 88-yard blocked field-goal return. Craig is 32, 32, 35, 36. If we shank a punt or get a kick blocked at Faurot we are playing their script. Cover the return, protect the kick, and make them beat us from scrimmage."
       ],
-      "scoutingReport": "MISSOURI OFFENSE (official 3-game boxes; Mississippi State live / not sat): Chip Lindsey spread. 39.7 PPG, 420 YPG (247 pass / 174 rush). Austin Simmons is the engine (47/68, 652, 8 TD, 0 INT) until somebody sits him (Troy 10/19, 91). Olugbode volume, Lee the shot, Norfleet the closer. Jamal Roberts 63-300-3 is the back on the boxes \u2014 Hardy is not. MISSOURI DEFENSE (Corey Batoon 4-2-5): 17.3 PPG. Run sit vs Kansas/Troy (81 / 93). Shot problem vs Troy (76 / 55). ST will flip one (Fowlkes 68 PR; Kansas 88 blocked FG). Coverage shells NOT confirmed. UF wins: Crowd Simmons Before the First Read / Cap the Shot After the Short Throw / Run the Front at Faurot. filmWatched: false.",
+      "scoutingReport": "MISSOURI through three (UAPB 54-14, Kansas 38-21, Troy 27-17). Mississippi State was live when this was written \u2014 not folded in. Simmons is two different quarterbacks: 17/19 for 252 and four vs UAPB, 19/29 for 292 and three at Kansas, then 10/19 for 91 vs Troy with zero picks on the season (47/68, 652, 8 TD). When the throw dies they do not go home. Roberts 22-128 and a 68-yard Fowlkes punt return won Troy after a 10-0 hole (Keyes 76 on play two, then a 19-play field goal). Olugbode is the chain (8-116-2, 6-121-1). Lee is the shot (47, 27). Norfleet the 13-yard closer. Edwards the 10-yard punch. Hardy is not on the boxes. Batoon's front has sat the run (81, 93, 89) and given up the shot (76, 55). Hidden yardage is real \u2014 they also handed Kansas an 88-yard blocked field goal. UF wins by stopping Roberts after the throw is dead, playing Olugbode and Lee as two problems, and not losing the kicking game. filmWatched: false.",
       "specialTeams": [
-        "Kicker Blake Craig: 32 vs UAPB, 32 at Kansas, 35 and 36 vs Troy. Range is there. They will kick it.",
-        "DaMarion Fowlkes: 68-yard punt return touchdown vs Troy. Kansas blocked a Missouri field goal and took it 88 the other way. Special teams will flip a possession."
+        "DaMarion Fowlkes returned a punt 68 yards for a touchdown against Troy after Missouri had gone down 10-0. That is the play that put them back in their only close game.",
+        "Kansas scored first on an 88-yard return of a blocked Missouri field goal. Protect the kick at Faurot. Cover the return.",
+        "Blake Craig: 32 vs UAPB, 32 at Kansas, 35 and 36 vs Troy. He will try it from there."
       ]
     },
     {
