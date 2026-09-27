@@ -26,8 +26,8 @@ describe('schedule-board', () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
-    assert.equal(payload.predThrough, '2026-W3');
-    assert.equal(payload.currentGameId, 'olemiss');
+    assert.equal(payload.predThrough, '2026-W4');
+    assert.equal(payload.currentGameId, 'missouri');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);
     assert.equal(campbell.finalOpp, 3);
@@ -78,7 +78,7 @@ describe('schedule-board', () => {
   it('game-week meta games also hide desk scout', () => {
     const feed = require('../lib/game-week-feed');
     const payload = feed.buildGameWeekPayload();
-    assert.equal(payload.currentGameId, 'olemiss');
+    assert.equal(payload.currentGameId, 'missouri');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.deepEqual(campbell.offenseScout, []);
     assert.equal(campbell.scoutingReport, undefined);
@@ -235,6 +235,51 @@ describe('schedule-board', () => {
     const liveBaugh = fan.swing.find((s) => /baugh/i.test(s.name));
     assert.equal(liveBaugh?.impact, 95);
     assert.equal(liveBaugh?.trend, 'up');
+  });
+
+  it('Missouri 3 Keys come from their boxes, not the Ole Miss jobs', () => {
+    const board = scheduleBoard.getScheduleBoard(2026);
+    const missouri = board.games.find((g) => g.id === 'missouri');
+    assert.equal(missouri.keys[0], 'Take Away the Clean Throw & Shrink the Hitch');
+    assert.equal(missouri.keys[1], 'Fit Roberts When It Dies & Plug the Gaps');
+    assert.equal(missouri.keys[2], 'Eliminate Hidden Yardage & Force Fair Catches');
+    assert.equal(
+      missouri.howUFWins[0],
+      "Do not let Austin Simmons comfortably sit in the pocket or find a rhythm on schedule. He is 17-of-19 with four scores when it is clean, and drops to 10-of-19 for 91 yards when it is taken away. Defensive backs must maintain depth over Cayden Lee's vertical stems and aggressively wrap Donovan Olugbode at the catch point so the hitch does not become the chain."
+    );
+    assert.equal(
+      missouri.howUFWins[1],
+      "Do not treat a stagnant Missouri passing game as the win. When Troy bottled up Simmons' aerial attack, Missouri adjusted by handing Jamal Roberts 22 carries for 128 yards. Myles Graham and the linebacker room must fill the A and B gaps and play his near hip—do not scrape over the top and lose the bounce on outside zone. Stay heavy on the interior from the 10-yard line to deny Xai'Shaun Edwards."
+    );
+    assert.equal(
+      missouri.howUFWins[2],
+      "Do not let special teams execution decide the outcome at Faurot Field. Missouri relies on explosive special teams swings, highlighted by DaMarion Fowlkes' 68-yard punt return and Kansas' 88-yard blocked field-goal return. Alec Clark must prioritize maximum hang time to completely neutralize Fowlkes, while the field-goal unit locks down interior protection. Protect the kick, cover the punt, and force them to beat you strictly from scrimmage."
+    );
+    assert.ok(!missouri.keys.some((k) => /Crowd Roberts|Force the Extra Hat|Cap the Vertical|Downhill Run/i.test(k)));
+    const missouriDump = [
+      missouri.film,
+      ...(missouri.filmNotes || []),
+      ...(missouri.opponentTendencies || []),
+      ...(missouri.defenseTendencies || []),
+      ...(missouri.howUFWins || []),
+      missouri.scoutingReport,
+    ].join(' ');
+    assert.ok(!/chambliss/i.test(missouriDump));
+    const graham = missouri.swing.find((s) => /graham/i.test(s.name));
+    const mcclain = missouri.swing.find((s) => /mcclain/i.test(s.name));
+    const clark = missouri.swing.find((s) => /alec clark/i.test(s.name));
+    assert.equal(mcclain?.role, missouri.howUFWins[0]);
+    assert.equal(graham?.role, missouri.howUFWins[1]);
+    assert.equal(clark?.role, missouri.howUFWins[2]);
+    assert.equal(missouri.filmWatched, false);
+    assert.match(missouri.scoutingReport, /Force Fair Catches/);
+    assert.equal(missouri.radar.find((a) => a.label === 'Run Game')?.uf, 74);
+    assert.equal(missouri.radar.find((a) => a.label === 'Run Game')?.opp, 64);
+    assert.equal(missouri.radar.find((a) => a.label === 'Pass Efficiency')?.opp, 74);
+    assert.equal(missouri.radar.find((a) => a.label === 'Front 7')?.opp, 72);
+    assert.equal(missouri.radar.find((a) => a.label === 'Secondary')?.opp, 52);
+    assert.equal(missouri.radar.find((a) => a.label === 'Special Teams')?.opp, 66);
+    assert.equal(missouri.radar.find((a) => a.label === 'Coaching Edge')?.uf, 52);
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

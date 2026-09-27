@@ -179,6 +179,19 @@ describe('Game Week Film Notes', () => {
     );
   });
 
+  it('Missouri Matchup Edge is the sat stamp, not the 52% formula', () => {
+    const missouri = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
+    assert.ok(missouri);
+    const radar = buildRadar(missouri);
+    assert.deepEqual(radar, missouri.radar);
+    assert.equal(radar.find((a) => a.label === 'Front 7')?.opp, 72);
+    assert.equal(radar.find((a) => a.label === 'Special Teams')?.opp, 66);
+    assert.notDeepEqual(
+      radar.find((a) => a.label === 'Run Game'),
+      { label: 'Run Game', uf: 78, opp: 58 },
+    );
+  });
+
   it('defaults Game Week to the next upcoming kickoff', () => {
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-04T18:00:00-04:00')), 'fau');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-06T12:00:00-04:00')), 'campbell');

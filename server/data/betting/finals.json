@@ -25,5 +25,14 @@
     "opp": 39,
     "source": "official",
     "completedAt": "2026-09-20T03:15:00.000Z"
+  },
+  "uf-olemiss-2026-w4": {
+    "gameKey": "uf-olemiss-2026-w4",
+    "scheduleId": "olemiss",
+    "opponent": "Ole Miss",
+    "uf": 52,
+    "opp": 28,
+    "source": "official",
+    "completedAt": "2026-09-27T00:15:00.000Z"
   }
 }

@@ -197,6 +197,7 @@ function buildSwing(game: ScheduleGame): SwingPlayerIntel[] {
     'Jadan Baugh': 'RB',
     'Cormani McClain': 'CB',
     'Myles Graham': 'LB',
+    'Alec Clark': 'P',
     'QB1': 'QB',
     DL: 'DL',
     OL: 'OL',
@@ -218,6 +219,7 @@ function buildSwing(game: ScheduleGame): SwingPlayerIntel[] {
     'Jadan Baugh': 'jadan-baugh',
     'Cormani McClain': 'cormani-mcclain',
     'Myles Graham': 'myles-graham',
+    'Alec Clark': 'alec-clark',
     QB1: 'aaron-philo',
   };
   return game.swing.map((s, i) => {
