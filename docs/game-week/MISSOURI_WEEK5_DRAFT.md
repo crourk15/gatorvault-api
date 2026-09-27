@@ -2,6 +2,7 @@
 
 Mississippi State still live / not sat.
 Oct 3 · 3:30 PM ET · ESPN · @ Faurot Field
+Win chance 65% · UF 28 · Missouri 21 · +13 after Ole Miss 52–28 (not the leftover 52% Low/Flat coin-flip).
 Florida 4-0 (52–28 last week). Missouri 3-0 (54–14 UAPB, 38–21 Kansas, 27–17 Troy). #19.
 
 filmWatched: false.

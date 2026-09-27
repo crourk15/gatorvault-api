@@ -6,7 +6,7 @@ const scheduleBoard = require('../lib/schedule-board');
 
 /** Week 4 remaining-season board — restamp after Ole Miss from how teams looked. */
 const WEEK4_REMAINING = {
-  missouri: { ufPct: 52, pred: 'UF 27 · Missouri 24', predUF: 27, predOpp: 24 },
+  missouri: { ufPct: 65, pred: 'UF 28 · Missouri 21', predUF: 28, predOpp: 21 },
   scar: { ufPct: 68, pred: 'UF 31 · South Carolina 20', predUF: 31, predOpp: 20 },
   texas: { ufPct: 36, pred: 'UF 20 · Texas 31', predUF: 20, predOpp: 31 },
   uga: { ufPct: 37, pred: 'UF 20 · Georgia 28', predUF: 20, predOpp: 28 },

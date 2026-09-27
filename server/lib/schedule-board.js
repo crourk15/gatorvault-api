@@ -141,6 +141,9 @@ const BUNDLE_INTEL_KEYS = [
   'howUFWins',
   'scoutingReport',
   'filmWatched',
+  'predConfidence',
+  'predMovement',
+  'ufPctDelta',
 ];
 
 /** Discovery fields — overlay from bundle only when the bundle stamp is newer/equal. */
@@ -320,6 +323,15 @@ function normalizeGame(row) {
     pred: String(row.pred || '').trim(),
     predUF: Number.isFinite(Number(row.predUF)) ? Number(row.predUF) : 0,
     predOpp: Number.isFinite(Number(row.predOpp)) ? Number(row.predOpp) : 0,
+    ...(Number.isFinite(Number(row.predConfidence))
+      ? { predConfidence: Math.max(0, Math.min(100, Math.round(Number(row.predConfidence)))) }
+      : {}),
+    ...(row.predMovement === 'up' || row.predMovement === 'down' || row.predMovement === 'flat'
+      ? { predMovement: row.predMovement }
+      : {}),
+    ...(Number.isFinite(Number(row.ufPctDelta))
+      ? { ufPctDelta: Math.round(Number(row.ufPctDelta)) }
+      : {}),
     ...(Number.isFinite(Number(row.finalUF)) && Number.isFinite(Number(row.finalOpp))
       ? {
           finalUF: Number(row.finalUF),

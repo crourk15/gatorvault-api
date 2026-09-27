@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-09-27T03:40:00.000Z",
+  "updatedAt": "2026-09-27T04:00:00.000Z",
   "label": "2026 Florida football schedule",
   "source": "vault-schedule-board",
   "predThrough": "2026-W4",
@@ -464,7 +464,7 @@
       "opp": "Missouri Tigers",
       "date": "October 3, 2026 \u00b7 3:30 PM ET",
       "venue": "Faurot Field, Columbia MO",
-      "ufPct": 52,
+      "ufPct": 65,
       "tv": "ESPN",
       "keys": [
         "Take Away the Clean Throw & Shrink the Hitch",
@@ -486,9 +486,12 @@
         }
       ],
       "film": "When Austin Simmons is clean he lights it up \u2014 17-of-19 and four scores on Pine Bluff, 292 yards and three at Kansas, zero picks in three games. When he is not, they become Jamal Roberts and the return game, and they still beat Troy 27-17. Sit the throw and lose the back and you lose. Sit the throw and lose the punt and you lose. Mississippi State is still live; this is three boxes, not a sit.",
-      "pred": "UF 27 \u00b7 Missouri 24",
-      "predUF": 27,
-      "predOpp": 24,
+      "pred": "UF 28 \u00b7 Missouri 21",
+      "predUF": 28,
+      "predOpp": 21,
+      "predConfidence": 74,
+      "predMovement": "up",
+      "ufPctDelta": 13,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27907",
         "official": "https://www.ticketmaster.com/2026-mizzou-football-v-florida-columbia-missouri-10-03-2026/event/060064A9DD1A37BC",

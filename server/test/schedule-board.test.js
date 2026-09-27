@@ -275,6 +275,11 @@ describe('schedule-board', () => {
     assert.equal(missouri.filmWatched, false);
     assert.equal(missouri.date, 'October 3, 2026 · 3:30 PM ET');
     assert.equal(missouri.tv, 'ESPN');
+    assert.equal(missouri.ufPct, 65);
+    assert.equal(missouri.pred, 'UF 28 · Missouri 21');
+    assert.equal(missouri.predConfidence, 74);
+    assert.equal(missouri.predMovement, 'up');
+    assert.equal(missouri.ufPctDelta, 13);
     assert.match(missouri.scoutingReport, /Force Fair Catches/);
     assert.equal(missouri.radar.find((a) => a.label === 'Run Game')?.uf, 74);
     assert.equal(missouri.radar.find((a) => a.label === 'Run Game')?.opp, 64);

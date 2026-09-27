@@ -14,9 +14,20 @@ function confidenceLabel(confidence: number): string {
   return 'Low';
 }
 
-function movementText(movement: PredictionIntel['movement'], ufPct: number): string {
-  if (movement === 'up') return `+${Math.max(1, Math.round(ufPct / 30))}% this week`;
-  if (movement === 'down') return `-${Math.max(1, Math.round((100 - ufPct) / 30))}% this week`;
+function movementText(
+  movement: PredictionIntel['movement'],
+  ufPct: number,
+  delta?: number
+): string {
+  const stamped = Number(delta);
+  if (movement === 'up') {
+    const n = Number.isFinite(stamped) && stamped > 0 ? Math.round(stamped) : Math.max(1, Math.round(ufPct / 30));
+    return `+${n}% this week`;
+  }
+  if (movement === 'down') {
+    const n = Number.isFinite(stamped) && stamped < 0 ? Math.abs(Math.round(stamped)) : Math.max(1, Math.round((100 - ufPct) / 30));
+    return `-${n}% this week`;
+  }
   return 'Flat this week';
 }
 
@@ -87,7 +98,7 @@ export function WinProbabilityGaugeWidget({ ufPct, prediction }: Props): React.R
         </svg>
       </div>
       <span className={`gv-gw-wp-gauge__movement gv-gw-wp-gauge__movement--${prediction.movement}`}>
-        {movementText(prediction.movement, pct)}
+        {movementText(prediction.movement, pct, prediction.ufPctDelta)}
       </span>
       <span className="gv-gw-wp-gauge__confidence">Confidence: {confidenceLabel(prediction.confidence)}</span>
     </div>

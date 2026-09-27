@@ -179,6 +179,20 @@ describe('Game Week Film Notes', () => {
     );
   });
 
+  it('Missouri win chance restamps after the Ole Miss 52–28, not a Low coin-flip', () => {
+    const missouri = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
+    assert.ok(missouri);
+    assert.equal(missouri.ufPct, 65);
+    assert.equal(missouri.pred, 'UF 28 · Missouri 21');
+    const bundle = getGameWeekBundle('missouri');
+    assert.equal(bundle.prediction.fanUfPct, 65);
+    assert.equal(bundle.prediction.movement, 'up');
+    assert.equal(bundle.prediction.ufPctDelta, 13);
+    assert.equal(bundle.prediction.confidence, 74);
+    assert.ok(bundle.prediction.confidence >= 55, 'statement win is not Low confidence');
+    assert.equal(bundle.prediction.scoreLine, 'UF 28 · Missouri 21');
+  });
+
   it('Missouri Matchup Edge is the sat stamp, not the 52% formula', () => {
     const missouri = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
     assert.ok(missouri);
