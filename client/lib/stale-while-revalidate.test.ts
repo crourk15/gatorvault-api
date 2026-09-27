@@ -11,6 +11,7 @@ describe('shouldSkipSwrCache', () => {
   it('skips hub bundle and commits so a last-good Armani-only plate cannot hide Cyion', () => {
     assert.equal(shouldSkipSwrCache('/api/recruiting/hub/bundle?year=2028'), true);
     assert.equal(shouldSkipSwrCache('/api/recruiting/hub/commits?year=2028'), true);
+    assert.equal(shouldSkipSwrCache('/api/recruiting/hub/hero?year=2028'), true);
   });
 
   it('still caches other hub reads', () => {

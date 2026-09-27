@@ -335,7 +335,19 @@ async function loadHubDatasetOnce(options = {}) {
     const slug = String(raw.slug || '').toLowerCase();
     if (!slug || seen.has(slug) || isRosterPlayer(raw)) return;
     seen.add(slug);
-    const merged = { ...rawMap.get(slug), ...raw, ...meta, slug };
+    let flags = { ...meta };
+    try {
+      const verified = require('./recruiting-verified-commits');
+      if (
+        verified.isVerifiedUfCommitAnyYear(slug) ||
+        verified.looksLikeFloridaCommit({ ...rawMap.get(slug), ...raw, slug })
+      ) {
+        flags = { ...flags, isCommit: true, isTarget: false, isCommittedToUF: true };
+      }
+    } catch {
+      /* optional */
+    }
+    const merged = { ...rawMap.get(slug), ...raw, ...flags, slug };
     const slugIntel = intelRows.filter(
       (r) => String(r.playerSlug || r.player_slug || '').toLowerCase() === slug
     );
@@ -465,6 +477,13 @@ function buildBattleBoardRows(enrichedPlayers) {
   const rows = [];
 
   for (const player of enrichedPlayers) {
+    try {
+      if (require('./recruiting-verified-commits').isVerifiedUfCommitAnyYear(player.slug || player.id)) {
+        continue;
+      }
+    } catch {
+      /* optional */
+    }
     if ((player.isCommit || player.isCommittedToUF) && !isHuntListBattleEligible(player)) continue;
     if (!isHuntListBattleEligible(player)) continue;
     // Only confirmed On3 RPM numbers — never offer-list text / HS names / heat-as-RPM.
@@ -1462,9 +1481,18 @@ async function buildHubBattleBoard(year = 2027) {
   const focusYear = Number(year) || 2027;
   const dataset = await loadHubDataset({ classYears: [focusYear] });
   return buildBattleBoardRows(
-    [...dataset.players.values()].filter(
-      (p) => !p.isCommit && Number(p.classYear) === focusYear
-    )
+    [...dataset.players.values()].filter((p) => {
+      if (Number(p.classYear) !== focusYear) return false;
+      if (p.isCommit || p.isCommittedToUF) return false;
+      try {
+        if (require('./recruiting-verified-commits').isVerifiedUfCommitAnyYear(p.slug || p.id)) {
+          return false;
+        }
+      } catch {
+        /* optional */
+      }
+      return true;
+    })
   );
 }
 

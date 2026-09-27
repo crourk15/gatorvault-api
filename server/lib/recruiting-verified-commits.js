@@ -109,6 +109,31 @@ function isVerifiedUfCommitAnyYear(slug) {
   return verifiedClassYearForSlug(slug) != null;
 }
 
+function hubRowSlug(row) {
+  return String(row?.slug || row?.id || '').toLowerCase();
+}
+
+/** Drop verified UF commits from chase / battle plates after they lock. */
+function stripVerifiedUfCommitsFromRows(rows) {
+  if (!Array.isArray(rows)) return rows;
+  return rows.filter((row) => !isVerifiedUfCommitAnyYear(hubRowSlug(row)));
+}
+
+function stripVerifiedUfCommitsFromHubPayload(value) {
+  if (!value || typeof value !== 'object') return { value, changed: false };
+  let changed = false;
+  const out = { ...value };
+  for (const key of ['battleBoard', 'heatIndex', 'battles']) {
+    if (!Array.isArray(out[key])) continue;
+    const next = stripVerifiedUfCommitsFromRows(out[key]);
+    if (next.length !== out[key].length) {
+      out[key] = next;
+      changed = true;
+    }
+  }
+  return { value: out, changed };
+}
+
 /**
  * True when player is an editorially verified UF commit for a hub class year.
  * For non-hub years (e.g. enrolled 2026), callers should use raw commit flags instead.
@@ -291,6 +316,8 @@ module.exports = {
   isVerifiedUfCommitSlug,
   verifiedClassYearForSlug,
   isVerifiedUfCommitAnyYear,
+  stripVerifiedUfCommitsFromRows,
+  stripVerifiedUfCommitsFromHubPayload,
   isVerifiedHubCommit,
   looksLikeFloridaCommit,
   isHubExternalCommitFlipTarget,
