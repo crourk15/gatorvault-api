@@ -549,7 +549,10 @@ export function buildHomeNowGameStory(now = new Date()): string | null {
   const where = home ? 'in the Swamp' : venue ? `at ${venue.split(',')[0].trim()}` : '';
   const tvRaw = String(game.tv || '').trim();
   const tv = tvRaw && !/^(TBD|—|-)$/i.test(tvRaw) ? tvRaw : '';
-  const clockMatch = String(game.date || '').match(/(\d{1,2}:\d{2})\s*(AM|PM)/i);
+  const dateRaw = String(game.date || '');
+  const clockMatch = /\d{1,2}:\d{2}\s*[-–]\s*\d{1,2}:\d{2}/.test(dateRaw)
+    ? null
+    : dateRaw.match(/(\d{1,2}:\d{2})\s*(AM|PM)/i);
   const clock = clockMatch ? `${clockMatch[1]} ${clockMatch[2].toUpperCase()}` : '';
   const weekday = kick.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -568,7 +571,10 @@ export function buildHomeNowGameStory(now = new Date()): string | null {
   }
   if (days <= 7) {
     const loc = where ? ` ${where}` : '';
-    return tv ? `Game — ${opp}${loc} · ${tv}` : `Game — ${opp}${loc}`.trim();
+    let line = `Game — ${opp}${loc}`.trim();
+    if (clock) line += ` — ${clock}`;
+    if (tv) line += ` · ${tv}`;
+    return line;
   }
   if (days <= 14) {
     const loc = where ? ` ${where}` : '';

@@ -13,7 +13,7 @@ test('Ole Miss week NOW is three pillars — Game owns ABC', () => {
   const now = new Date('2026-09-21T18:00:00.000Z');
   const lines = buildWeeklyHomeNowLines(now);
   assert.ok(lines.length >= 3);
-  assert.match(lines[0], /^Game — Ole Miss in the Swamp · ABC$/);
+  assert.match(lines[0], /^Game — Ole Miss in the Swamp — 3:30 PM · ABC$/);
   const visitors = lines.filter((s) => /^Visitors — /.test(s));
   assert.ok(visitors.length >= 3);
   assert.match(visitors[0], /^Visitors — \S+\s+\S+/);
@@ -36,6 +36,15 @@ test('Ole Miss week categories tick visitor names under Visitors, not ABC', () =
   assert.ok(cats[1].items.every((s) => !/ABC/i.test(s)));
   assert.equal(cats[2].label, 'Season');
   assert.deepEqual(cats[2].items, ['3-0 · first SEC home Saturday']);
+});
+
+test('Missouri week NOW Game is 3:30 PM · ESPN, not a 3:30–8:00 window', () => {
+  const cats = buildWeeklyHomeNowCategories(new Date('2026-09-27T16:00:00.000Z'));
+  assert.equal(cats[0].label, 'Game');
+  assert.match(cats[0].items[0], /Missouri/);
+  assert.match(cats[0].items[0], /3:30 PM/);
+  assert.match(cats[0].items[0], /ESPN/);
+  assert.doesNotMatch(cats[0].items[0], /3:30\s*[-–]\s*8:00/);
 });
 
 test('season record after Auburn is 3-0', () => {
@@ -218,7 +227,7 @@ test('this-week Cyion Smith commit breaks into Home NOW News', () => {
 test('after the Ole Miss final NOW points at Missouri road week', () => {
   const now = new Date('2026-09-27T12:00:00.000Z');
   const lines = buildWeeklyHomeNowLines(now);
-  assert.match(lines[0], /^Game — Missouri at Faurot Field · ESPN$/);
+  assert.match(lines[0], /^Game — Missouri at Faurot Field — 3:30 PM · ESPN$/);
   const rec = seasonRecord(now, getScheduleBoard(2026).games);
   assert.deepEqual(rec, { wins: 4, losses: 0 });
   assert.ok(lines.some((s) => /^Season — 4-0 heading into Saturday$/.test(s)));

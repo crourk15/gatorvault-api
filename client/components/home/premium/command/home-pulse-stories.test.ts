@@ -360,7 +360,7 @@ describe('buildHomePulseStories', () => {
 describe('buildHomeNowGameStory', () => {
   it('stamps Ole Miss Game Week the Monday after Auburn', () => {
     const line = buildHomeNowGameStory(OLE_MISS_WEEK);
-    assert.equal(line, 'Game — Ole Miss in the Swamp · ABC');
+    assert.equal(line, 'Game — Ole Miss in the Swamp — 3:30 PM · ABC');
   });
 
   it('names Saturday kick inside 3 days', () => {
@@ -378,7 +378,7 @@ describe('buildLocalWeeklyNowWeek', () => {
     const pillars = buildLocalWeeklyNowWeek(OLE_MISS_WEEK);
     assert.equal(pillars.length, 3);
     assert.equal(pillars[0].label, 'Game');
-    assert.ok(pillars[0].items.some((s) => /Ole Miss in the Swamp · ABC/.test(s)));
+    assert.ok(pillars[0].items.some((s) => /Ole Miss in the Swamp — 3:30 PM · ABC/.test(s)));
     assert.ok(!pillars[0].items.some((s) => /^Game\s+[—-]/.test(s)));
     assert.equal(pillars[1].label, 'Visitors');
     assert.ok(pillars[1].items.includes('Easton Royal'));
@@ -398,7 +398,7 @@ describe('resolveHomeNowWeekPillars', () => {
   it('does not keep the TestFlight Game ABC list when nowWeek is empty', () => {
     __resetLastGoodNowWeekForTest();
     const stories = [buildHomeNowGameStory(OLE_MISS_WEEK) || ''];
-    assert.equal(stories[0], 'Game — Ole Miss in the Swamp · ABC');
+    assert.equal(stories[0], 'Game — Ole Miss in the Swamp — 3:30 PM · ABC');
     assert.equal(parseWeeklyNowPillars(stories).length, 1);
     const pillars = resolveHomeNowWeekPillars([], stories, OLE_MISS_WEEK);
     assert.equal(pillars.length, 3);
