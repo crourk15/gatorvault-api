@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-09-27T03:15:00.000Z",
+  "updatedAt": "2026-09-27T03:25:00.000Z",
   "label": "2026 Florida football schedule",
   "source": "vault-schedule-board",
   "predThrough": "2026-W4",
@@ -505,32 +505,32 @@
       "radar": [
         {
           "label": "Run Game",
-          "uf": 78,
-          "opp": 60
+          "uf": 74,
+          "opp": 64
         },
         {
           "label": "Pass Efficiency",
+          "uf": 68,
+          "opp": 74
+        },
+        {
+          "label": "Front 7",
           "uf": 70,
           "opp": 72
         },
         {
-          "label": "Front 7",
-          "uf": 74,
-          "opp": 62
-        },
-        {
           "label": "Secondary",
           "uf": 66,
-          "opp": 56
+          "opp": 52
         },
         {
           "label": "Special Teams",
-          "uf": 58,
-          "opp": 60
+          "uf": 56,
+          "opp": 66
         },
         {
           "label": "Coaching Edge",
-          "uf": 54,
+          "uf": 52,
           "opp": 52
         }
       ],
@@ -544,7 +544,7 @@
         "Cayden Lee is not Olugbode. He is the isolated shot \u2014 47-yard touchdown vs UAPB, 27-yard touchdown at Kansas. Play him like a volume guy and he runs by you. Play everyone like Lee and Olugbode eats the middle.",
         "Brett Norfleet is the closer inside the 15. Thirteen-yard touchdown at Kansas after they had already taken the lead. Shaun Terry II moved the chains on the opening UAPB drive (25).",
         "Jamal Roberts is the back. Ahmad Hardy is not on these boxes. Roberts: 13-47-1 vs UAPB, 28-125-1 (64-yarder) at Kansas, 22-128-1 vs Troy. Season 63-300-3. When Simmons had 91 yards they handed it to Roberts 22 times and won. Xai'Shaun Edwards is the short-yardage punch \u2014 10-yard touchdown on a two-play drive at Kansas.",
-        "Corey Batoon's front sat the run against people who could not run. Kansas 81. Troy 93. UAPB 89. That is 87.7 rush yards allowed a game. They will load it after what we just did to Ole Miss (303, six rushing scores). The snap after they commit is the one that scores.",
+        "Corey Batoon's front sat the run against people who could not run. Kansas 81. Troy 93. UAPB 89. That is 87.7 rush yards allowed a game. They will load it after what we just did to Ole Miss (302, six rushing scores). The snap after they commit is the one that scores.",
         "They give up the shot. Troy: Keyes 76 on play two, Kinchen 55 before half. 323 yards allowed, 18-of-32. The 19-play field-goal drive shows they will bend for 10 minutes and still make you kick it. Finish if you get there.",
         "The kicking game is how they stay alive. Fowlkes 68-yard punt return tied Troy after they had gone down 10-0. Kansas scored first on an 88-yard blocked field-goal return the other way. Blake Craig is 32, 32, 35, 36. Hidden yardage is part of this team, not a footnote."
       ],

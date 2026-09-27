@@ -12,20 +12,30 @@ no Starkville sit.
 
 This is not a Chambliss team. Clean Simmons throws it all over you. Cold Simmons becomes Roberts and the return game — and they still won Troy.
 
-## 3 Keys (Charles copy, from their boxes)
+## 3 Keys (Charles paste)
 
 1. **Take Away the Clean Throw & Shrink the Hitch**
-   Do not let Austin Simmons comfortably sit in the pocket or find a rhythm on schedule. He is 17-of-19 with four scores when it is clean, and drops to 10-of-19 for 91 yards when it is taken away. Defensive backs must maintain depth over Cayden Lee's vertical stems and aggressively wrap Donovan Olugbode at the catch point so the hitch does not become the chain.
-
 2. **Fit Roberts When It Dies & Plug the Gaps**
-   Do not treat a stagnant Missouri passing game as the win. When Troy bottled up Simmons' aerial attack, Missouri adjusted by handing Jamal Roberts 22 carries for 128 yards. Myles Graham and the linebacker room must fill the A and B gaps and play his near hip—do not scrape over the top and lose the bounce on outside zone. Stay heavy on the interior from the 10-yard line to deny Xai'Shaun Edwards.
-
 3. **Eliminate Hidden Yardage & Force Fair Catches**
-   Do not let special teams execution decide the outcome at Faurot Field. Missouri relies on explosive special teams swings, highlighted by DaMarion Fowlkes' 68-yard punt return and Kansas' 88-yard blocked field-goal return. Alec Clark must prioritize maximum hang time to completely neutralize Fowlkes, while the field-goal unit locks down interior protection. Protect the kick, cover the punt, and force them to beat you strictly from scrimmage.
+
+## Matchup Edge (sat stamp — not the 52% formula)
+
+| Axis | UF | MIZ | Receipt |
+|---|---|---|---|
+| Run Game | 74 | 64 | UF ran 302 / 6 TDs on Ole Miss. Their front sat Kansas 81 and Troy 93 — not a 78. Roberts 63-300-3. |
+| Pass Efficiency | 68 | 74 | Simmons 47/68, 652, 8 TD, 0 INT. Clean is Kansas (292, 3). Dead is Troy (10/19, 91). |
+| Front 7 | 70 | 72 | Batoon sat the run (89/81/93). This is not Ole Miss giving up 172. |
+| Secondary | 66 | 52 | Troy 76 and 55. 323 yards and still 17. The jump is the shot. |
+| Special Teams | 56 | 66 | Fowlkes 68 tied Troy. Kansas scored first on an 88-yard blocked FG. Hidden yardage is a key. |
+| Coaching Edge | 52 | 52 | Road Saturday. 52 board. Not sat beyond the boxes. |
 
 ## Held
 
 Mississippi State live. Hardy not on the boxes. No coverage shells.
+
+## Number check
+
+Ole Miss rush is 302, not 303. Simmons season 47/68, 652 is the published 3-game line; Troy athletics box is 10-of-19 for 91 (the key). Those two do not add — we keep both sources and do not invent a third total.
 
 ## Shipped
 

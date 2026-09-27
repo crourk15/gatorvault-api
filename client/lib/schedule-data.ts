@@ -472,6 +472,14 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     pred: "UF 27 · Missouri 24",
     predUF: 27,
     predOpp: 24,
+    radar: [
+      { label: "Run Game", uf: 74, opp: 64 },
+      { label: "Pass Efficiency", uf: 68, opp: 74 },
+      { label: "Front 7", uf: 70, opp: 72 },
+      { label: "Secondary", uf: 66, opp: 52 },
+      { label: "Special Teams", uf: 56, opp: 66 },
+      { label: "Coaching Edge", uf: 52, opp: 52 },
+    ],
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27907",
       official: "https://www.ticketmaster.com/2026-mizzou-football-v-florida-columbia-missouri-10-03-2026/event/060064A9DD1A37BC",

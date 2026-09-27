@@ -264,6 +264,13 @@ describe('schedule-board', () => {
     assert.equal(clark?.role, missouri.howUFWins[2]);
     assert.equal(missouri.filmWatched, false);
     assert.match(missouri.scoutingReport, /Force Fair Catches/);
+    assert.equal(missouri.radar.find((a) => a.label === 'Run Game')?.uf, 74);
+    assert.equal(missouri.radar.find((a) => a.label === 'Run Game')?.opp, 64);
+    assert.equal(missouri.radar.find((a) => a.label === 'Pass Efficiency')?.opp, 74);
+    assert.equal(missouri.radar.find((a) => a.label === 'Front 7')?.opp, 72);
+    assert.equal(missouri.radar.find((a) => a.label === 'Secondary')?.opp, 52);
+    assert.equal(missouri.radar.find((a) => a.label === 'Special Teams')?.opp, 66);
+    assert.equal(missouri.radar.find((a) => a.label === 'Coaching Edge')?.uf, 52);
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {
