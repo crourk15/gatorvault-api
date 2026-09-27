@@ -45,6 +45,7 @@ const NO_CACHE_PREFIXES = [
   // 2028 commit class — last-good Armani-only hid Cyion Smith on iOS revisit.
   '/api/recruiting/hub/bundle',
   '/api/recruiting/hub/commits',
+  '/api/recruiting/hub/hero',
 ];
 
 type CacheEnvelope<T> = { at: number; data: T };

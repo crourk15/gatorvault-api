@@ -588,6 +588,13 @@ function healBundleNests(value, year) {
   healBundleFootprintNest(value, year);
   healBundleCommitsNest(value, year);
   healOverviewNests(value, year);
+  try {
+    const { stripVerifiedUfCommitsFromHubPayload } = require('./recruiting-verified-commits');
+    const stripped = stripVerifiedUfCommitsFromHubPayload(value);
+    if (stripped.changed) Object.assign(value, stripped.value);
+  } catch {
+    /* optional */
+  }
   return value;
 }
 

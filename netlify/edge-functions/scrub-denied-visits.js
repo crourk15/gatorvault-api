@@ -108,6 +108,14 @@ function heal2028CommitPayload(data, year) {
       changed = true;
     }
   }
+  for (const key of ['battleBoard', 'heatIndex', 'battles']) {
+    if (!Array.isArray(out[key])) continue;
+    const next = out[key].filter((row) => String(row?.slug || row?.id || '').toLowerCase() !== 'cyion-smith');
+    if (next.length !== out[key].length) {
+      out[key] = next;
+      changed = true;
+    }
+  }
   if (Number(year) === 2028 && out.classOverview) {
     const pinned = pin2028Overview(out.classOverview);
     if (pinned !== out.classOverview) {
@@ -367,6 +375,27 @@ function scrubPayload(data, pathname) {
   return { data: out, changed };
 }
 
+const HERO_2028_FALLBACK = {
+  ok: true,
+  year: 2028,
+  title: 'Florida Recruiting',
+  subtitle: 'Who Florida is chasing — movement, board, and beat intel.',
+  classYears: [2026, 2027, 2028],
+  classOverview: { ...OV_2028 },
+  classOverviewAll: { 2028: { ...OV_2028 } },
+  ticker: ['2 commits locked for 2028'],
+  meta: { endpoint: 'hero', cacheReason: 'hero-edge-fallback' },
+};
+
+function heroFallbackResponse() {
+  const headers = new Headers();
+  headers.set('content-type', 'application/json; charset=utf-8');
+  headers.set('cache-control', 'no-store, must-revalidate');
+  headers.set('pragma', 'no-cache');
+  headers.set('x-gv-visit-scrub', 'hero-edge-fallback');
+  return new Response(JSON.stringify(HERO_2028_FALLBACK), { status: 200, headers });
+}
+
 function tickerFallbackResponse() {
   const headers = new Headers();
   headers.set('content-type', 'application/json; charset=utf-8');
@@ -392,16 +421,21 @@ export default async (request, context) => {
     });
   } catch {
     if (isTickerPath(url.pathname)) return tickerFallbackResponse();
+    if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return context.next();
   }
 
   const contentType = upstream.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) {
     if (isTickerPath(url.pathname)) return tickerFallbackResponse();
+    if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return upstream;
   }
   if (isTickerPath(url.pathname) && !upstream.ok) {
     return tickerFallbackResponse();
+  }
+  if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028 && !upstream.ok) {
+    return heroFallbackResponse();
   }
 
   let payload;
@@ -409,6 +443,7 @@ export default async (request, context) => {
     payload = await upstream.json();
   } catch {
     if (isTickerPath(url.pathname)) return tickerFallbackResponse();
+    if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return upstream;
   }
 

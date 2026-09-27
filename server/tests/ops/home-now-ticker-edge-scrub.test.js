@@ -18,3 +18,10 @@ test('ticker edge strips the 1.0.29 App Store line and falls back when origin 50
   assert.match(src, /if \(isTickerPath\(url\.pathname\) && !upstream\.ok\)/);
   assert.equal(/1\.0\.29 is live/.test(src), false);
 });
+
+test('hub edge pins 2028 hero at 2 commits and drops Cyion from battles', () => {
+  assert.match(src, /hero-edge-fallback/);
+  assert.match(src, /2 commits locked for 2028/);
+  assert.match(src, /battleBoard/);
+  assert.match(src, /cyion-smith/);
+});

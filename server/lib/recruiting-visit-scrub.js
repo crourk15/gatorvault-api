@@ -161,6 +161,13 @@ function scrubHubPayload(value) {
   if (Array.isArray(out.heatIndex)) out.heatIndex = out.heatIndex.map(scrubHeatOrBattleRow);
   if (Array.isArray(out.battleBoard)) out.battleBoard = out.battleBoard.map(scrubHeatOrBattleRow);
   if (Array.isArray(out.battles)) out.battles = out.battles.map(scrubHeatOrBattleRow);
+  try {
+    const { stripVerifiedUfCommitsFromHubPayload } = require('./recruiting-verified-commits');
+    const stripped = stripVerifiedUfCommitsFromHubPayload(out);
+    if (stripped.changed) Object.assign(out, stripped.value);
+  } catch {
+    /* optional */
+  }
   if (out.hero && typeof out.hero === 'object') {
     out.hero = scrubHubPayload(out.hero);
   }
