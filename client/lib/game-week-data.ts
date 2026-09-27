@@ -47,6 +47,8 @@ export type PredictionIntel = {
   fanUfPct: number;
   confidence: number;
   movement: 'up' | 'down' | 'flat';
+  /** Week-over-week win-chance points when the board restamped. */
+  ufPctDelta?: number;
   modelPick: string;
 };
 
@@ -376,11 +378,47 @@ function buildScouting(game: ScheduleGame): ScoutingReportIntel {
   };
 }
 
+function clampPct(value: number, fallback: number): number {
+  if (!Number.isFinite(value)) return fallback;
+  return Math.max(0, Math.min(92, Math.round(value)));
+}
+
+/**
+ * Conviction in the lean — not how close the win% sits to 50.
+ * A 4-0 team off a ranked blowout is not Low just because Faurot is a one-score card.
+ */
+function predictionConviction(game: ScheduleGame): {
+  confidence: number;
+  movement: PredictionIntel['movement'];
+} {
+  const lean = Math.abs(Number(game.ufPct) - 50);
+  const stamped = Number(game.predConfidence);
+  const confidence = Number.isFinite(stamped)
+    ? clampPct(stamped, 64)
+    : lean < 4
+      ? 48
+      : lean < 10
+        ? 64
+        : lean < 20
+          ? 72
+          : Math.min(90, 76 + (lean - 20));
+  const stampedMove = game.predMovement;
+  const movement =
+    stampedMove === 'up' || stampedMove === 'down' || stampedMove === 'flat'
+      ? stampedMove
+      : game.ufPct >= 55
+        ? 'up'
+        : game.ufPct <= 45
+          ? 'down'
+          : 'flat';
+  return { confidence, movement };
+}
+
 function buildPrediction(
   game: ScheduleGame,
   betting?: GameWeekBettingLine | null
 ): PredictionIntel {
-  const movement = game.ufPct >= 55 ? 'up' : game.ufPct <= 45 ? 'down' : 'flat';
+  const { confidence, movement } = predictionConviction(game);
   const spread = formatSpreadLine(betting) || 'Line pending';
   const total = formatTotalLine(betting) || 'O/U pending';
   const expertPicks: PredictionIntel['expertPicks'] = [
@@ -389,14 +427,16 @@ function buildPrediction(
   if (formatSpreadLine(betting)) {
     expertPicks.push({ source: 'Vegas consensus', pick: spread });
   }
+  const delta = Number(game.ufPctDelta);
   return {
     scoreLine: game.pred,
     spread,
     total,
     expertPicks,
     fanUfPct: game.ufPct,
-    confidence: Math.min(92, Math.abs(game.ufPct - 50) + 40),
+    confidence,
     movement,
+    ...(Number.isFinite(delta) ? { ufPctDelta: Math.round(delta) } : {}),
     modelPick: game.pred.split('·')[0]?.trim() ?? 'UF',
   };
 }

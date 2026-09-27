@@ -87,12 +87,20 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
       if (!id || !opp || !date) return null;
       const uniform = mergeUniform(g.uniform, seed?.uniform);
       const tv = preferTv(g.tv, seed?.tv);
+      const predConfidence = Number(g.predConfidence ?? seed?.predConfidence);
+      const predMovement = g.predMovement || seed?.predMovement;
+      const ufPctDelta = Number(g.ufPctDelta ?? seed?.ufPctDelta);
       return {
         ...g,
         id,
         opp,
         date,
         ...(tv ? { tv } : {}),
+        ...(Number.isFinite(predConfidence) ? { predConfidence } : {}),
+        ...(predMovement === 'up' || predMovement === 'down' || predMovement === 'flat'
+          ? { predMovement }
+          : {}),
+        ...(Number.isFinite(ufPctDelta) ? { ufPctDelta } : {}),
         label: String(g.label || id).trim(),
         venue: String(g.venue || '').trim(),
         ufPct: Number.isFinite(Number(g.ufPct)) ? Number(g.ufPct) : 50,

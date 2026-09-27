@@ -33,6 +33,11 @@ export type ScheduleGame = {
   /** Explicit projected score — prefer over parsing `pred`. */
   predUF: number;
   predOpp: number;
+  /** Conviction in the lean (0–100). Not “distance from 50%.” */
+  predConfidence?: number;
+  predMovement?: 'up' | 'down' | 'flat';
+  /** Week-over-week win-chance points after the last restamp. */
+  ufPctDelta?: number;
   /** Season week the remaining-game prediction last restamped (e.g. 2026-W2). */
   predThrough?: string;
   /** Official final after the whistle — Game Zone grades tickets from this. */
@@ -442,7 +447,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Missouri Tigers",
     date: "October 3, 2026 · 3:30 PM ET",
     venue: "Faurot Field, Columbia MO",
-    ufPct: 52,
+    ufPct: 65,
     tv: "ESPN",
     keys: [
       "Take Away the Clean Throw & Shrink the Hitch",
@@ -469,9 +474,12 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       },
     ],
     film: "When Austin Simmons is clean he lights it up — 17-of-19 and four scores on Pine Bluff, 292 yards and three at Kansas, zero picks in three games. When he is not, they become Jamal Roberts and the return game, and they still beat Troy 27-17. Sit the throw and lose the back and you lose. Sit the throw and lose the punt and you lose. Mississippi State is still live; this is three boxes, not a sit.",
-    pred: "UF 27 · Missouri 24",
-    predUF: 27,
-    predOpp: 24,
+    pred: "UF 28 · Missouri 21",
+    predUF: 28,
+    predOpp: 21,
+    predConfidence: 74,
+    predMovement: "up",
+    ufPctDelta: 13,
     radar: [
       { label: "Run Game", uf: 74, opp: 64 },
       { label: "Pass Efficiency", uf: 68, opp: 74 },
