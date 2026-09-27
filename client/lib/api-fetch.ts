@@ -77,7 +77,7 @@ async function apiFetchOnce<T>(url: string, init: RequestInit, timeoutMs: number
   }
 
   try {
-    const res = await fetch(url, { ...init, signal: controller.signal });
+    const res = await fetch(url, { cache: 'no-store', ...init, signal: controller.signal });
     const text = await res.text();
     let body: (T & { status?: string; error?: string; unavailable?: boolean }) | null = null;
     if (text) {

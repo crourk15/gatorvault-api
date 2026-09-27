@@ -28,6 +28,115 @@ function isTickerPath(pathname) {
   return String(pathname || '').startsWith('/api/recruiting/hub/ticker');
 }
 
+function isHubBundlePath(pathname) {
+  return String(pathname || '').startsWith('/api/recruiting/hub/bundle');
+}
+
+function isHubCommitsPath(pathname) {
+  return String(pathname || '').startsWith('/api/recruiting/hub/commits');
+}
+
+function isHubHeroPath(pathname) {
+  return String(pathname || '').startsWith('/api/recruiting/hub/hero');
+}
+
+const OV_2028 = {
+  classRank: '—',
+  blueChip: '100%',
+  commits: '2',
+  commitLabel: 'Commits',
+  avgRating: '89.8',
+};
+
+function pin2028Overview(ov) {
+  const base = ov && typeof ov === 'object' ? ov : {};
+  const count = Number.parseInt(String(base.commits ?? ''), 10) || 0;
+  if (count >= 2 && String(base.avgRating || '') === OV_2028.avgRating) return base;
+  return { ...base, ...OV_2028 };
+}
+
+/** iOS last-good / URLCache can keep the Armani-only 2028 plate. Pin Cyion on the wire. */
+const CYION_2028_COMMIT = {
+  id: 'cyion-smith',
+  name: 'Cyion Smith',
+  position: 'S',
+  rating: '89.5',
+  rankNote: '4★ S · Blountstown, FL · #250 natl · #25 S · #29 FL',
+  metaLine: '4★ S · Blountstown, FL · #250 natl · #25 S · #29 FL',
+  skinny:
+    'Cyion Smith committed to Florida as a 4-star S out of Blountstown, FL. Listed at 6-2 / 175 · #250 nationally · #25 among Ss · In-state get.',
+  commitDate: 'Sep 26, 2026',
+  statusBadge: 'Committed',
+  profileUrl: '/vault/recruiting/player/cyion-smith',
+  inState: true,
+  stars: 4,
+};
+
+function commitListHasSlug(items, slug) {
+  if (!Array.isArray(items)) return false;
+  const key = String(slug || '').toLowerCase();
+  return items.some((row) => String(row?.id || row?.slug || '').toLowerCase() === key);
+}
+
+function yearFromRequest(url) {
+  const raw = url?.searchParams?.get('year') || url?.searchParams?.get('class_year');
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+}
+
+function heal2028CommitPayload(data, year) {
+  if (!data || typeof data !== 'object') return { data, changed: false };
+  if (Number(year) !== 2028) return { data, changed: false };
+  let changed = false;
+  const out = { ...data };
+  if (Array.isArray(out.items) && !commitListHasSlug(out.items, 'cyion-smith')) {
+    out.items = [...out.items, CYION_2028_COMMIT];
+    changed = true;
+  }
+  if (Array.isArray(out.commits) && !commitListHasSlug(out.commits, 'cyion-smith')) {
+    out.commits = [...out.commits, CYION_2028_COMMIT];
+    changed = true;
+    if (out.classOverview && typeof out.classOverview === 'object') {
+      out.classOverview = { ...out.classOverview, commits: String(out.commits.length) };
+    }
+  }
+  if (Array.isArray(out.players)) {
+    const next = out.players.filter((row) => String(row?.slug || row?.id || '').toLowerCase() !== 'cyion-smith');
+    if (next.length !== out.players.length) {
+      out.players = next;
+      out.count = next.length;
+      changed = true;
+    }
+  }
+  if (Number(year) === 2028 && out.classOverview) {
+    const pinned = pin2028Overview(out.classOverview);
+    if (pinned !== out.classOverview) {
+      out.classOverview = pinned;
+      changed = true;
+    }
+  }
+  if (out.classOverviewAll && typeof out.classOverviewAll === 'object') {
+    const key = out.classOverviewAll[2028] != null ? 2028 : '2028';
+    if (out.classOverviewAll[key]) {
+      const pinned = pin2028Overview(out.classOverviewAll[key]);
+      if (pinned !== out.classOverviewAll[key]) {
+        out.classOverviewAll = { ...out.classOverviewAll, [key]: pinned };
+        changed = true;
+      }
+    }
+  }
+  if (Array.isArray(out.ticker)) {
+    const next = out.ticker.map((line) =>
+      typeof line === 'string' ? line.replace(/\d+ commits locked for 2028/, '2 commits locked for 2028') : line
+    );
+    if (next.some((line, i) => line !== out.ticker[i])) {
+      out.ticker = next;
+      changed = true;
+    }
+  }
+  return { data: out, changed };
+}
+
 function isAppStoreUpdateLine(text) {
   return APP_STORE_UPDATE_RE.test(String(text || ''));
 }
@@ -303,7 +412,14 @@ export default async (request, context) => {
     return upstream;
   }
 
-  const { data, changed } = scrubPayload(payload, url.pathname);
+  let { data, changed } = scrubPayload(payload, url.pathname);
+  if (isHubBundlePath(url.pathname) || isHubCommitsPath(url.pathname) || isHubHeroPath(url.pathname)) {
+    const healed = heal2028CommitPayload(data, yearFromRequest(url));
+    if (healed.changed) {
+      data = healed.data;
+      changed = true;
+    }
+  }
   const body = JSON.stringify(data);
   const headers = new Headers(upstream.headers);
   headers.set('content-type', 'application/json; charset=utf-8');
