@@ -443,7 +443,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     date: "October 3, 2026 · 3:30 PM ET",
     venue: "Faurot Field, Columbia MO",
     ufPct: 52,
-    tv: "TBD",
+    tv: "ESPN",
     keys: [
       "Take Away the Clean Throw & Shrink the Hitch",
       "Fit Roberts When It Dies & Plug the Gaps",

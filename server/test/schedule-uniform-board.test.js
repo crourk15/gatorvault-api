@@ -101,6 +101,41 @@ describe('schedule uniform board', () => {
     }
   });
 
+  it('getScheduleBoard heals a stale Missouri kickoff window at the same stamp', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-sched-mizzou-kickoff-'));
+    const file = path.join(tmp, '2026-season.json');
+    const seed = JSON.parse(
+      fs.readFileSync(path.join(__dirname, '..', 'data/schedule/2026-season.json'), 'utf8')
+    );
+    seed.games = seed.games.map((g) => {
+      if (g.id !== 'missouri') return g;
+      return {
+        ...g,
+        date: 'October 3, 2026 · 3:30–8:00 PM ET',
+        tv: 'TBD',
+      };
+    });
+    fs.writeFileSync(file, JSON.stringify(seed));
+    const prev = process.env.GV_SCHEDULE_PATH;
+    process.env.GV_SCHEDULE_PATH = file;
+    try {
+      delete require.cache[require.resolve('../lib/schedule-board')];
+      const fresh = require('../lib/schedule-board');
+      const board = fresh.getScheduleBoard(2026);
+      const missouri = board.games.find((g) => g.id === 'missouri');
+      assert.equal(missouri.date, 'October 3, 2026 · 3:30 PM ET');
+      assert.equal(missouri.tv, 'ESPN');
+      const rewritten = JSON.parse(fs.readFileSync(file, 'utf8'));
+      const rewrittenMiz = rewritten.games.find((g) => g.id === 'missouri');
+      assert.equal(rewrittenMiz.date, 'October 3, 2026 · 3:30 PM ET');
+      assert.equal(rewrittenMiz.tv, 'ESPN');
+    } finally {
+      if (prev == null) delete process.env.GV_SCHEDULE_PATH;
+      else process.env.GV_SCHEDULE_PATH = prev;
+      delete require.cache[require.resolve('../lib/schedule-board')];
+    }
+  });
+
   it('getScheduleBoard heals a stale Ole Miss kickoff window at the same stamp', () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-sched-kickoff-'));
     const file = path.join(tmp, '2026-season.json');

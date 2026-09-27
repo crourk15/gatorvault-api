@@ -218,7 +218,7 @@ test('this-week Cyion Smith commit breaks into Home NOW News', () => {
 test('after the Ole Miss final NOW points at Missouri road week', () => {
   const now = new Date('2026-09-27T12:00:00.000Z');
   const lines = buildWeeklyHomeNowLines(now);
-  assert.match(lines[0], /^Game — Missouri at Faurot Field$/);
+  assert.match(lines[0], /^Game — Missouri at Faurot Field · ESPN$/);
   const rec = seasonRecord(now, getScheduleBoard(2026).games);
   assert.deepEqual(rec, { wins: 4, losses: 0 });
   assert.ok(lines.some((s) => /^Season — 4-0 heading into Saturday$/.test(s)));

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Missouri window: official **ESPN / 3:30 p.m. ET** (GatorsFB Sep 21) on `/api/schedule` after Render. Heal `date` + `tv` from the git board so Render durable cannot keep **TBD**. API — current App Store Game Week already live-fetches. Home countdown seed is already 3:30; TV badge waits on this API stamp.
 - [x] Game Week Missouri: pointer + Ole Miss 52–28 official + keys from their boxes (Take Away the Clean Throw & Shrink the Hitch / Fit Roberts When It Dies & Plug the Gaps / Eliminate Hidden Yardage & Force Fair Catches). `filmWatched: false`; Mississippi State live, not sat. NOW Game / Road / Season 4-0. Vegas Line pending. API after Render — no Codemagic.
 - [x] 2028 hero Commits 2 / 89.8: reject 1-commit hero plates, heal classOverviewAll on 2026/2027 bundles, edge-pin `/hub/hero`. API + Netlify edge after deploy — no Codemagic.
 - [x] Cyion Smith 2028 commit board + chase: reject Armani-only hub-runtime plates, heal bundle.commits, drop verified UF commits from HP/Chase on serve. API after Render — no Codemagic.

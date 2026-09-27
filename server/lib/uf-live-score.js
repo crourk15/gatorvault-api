@@ -36,7 +36,7 @@ const UF_2026_GAMES = [
   { id: 'campbell', opp: 'Campbell Camels', date: 'September 12, 2026 5:30 PM ET' },
   { id: 'auburn', opp: 'Auburn Tigers', date: 'September 19, 2026 7:00 PM ET' },
   { id: 'ole-miss', opp: 'Ole Miss Rebels', date: 'September 26, 2026 3:30 PM ET' },
-  { id: 'missouri', opp: 'Missouri Tigers', date: 'October 3, 2026 TBA' },
+  { id: 'missouri', opp: 'Missouri Tigers', date: 'October 3, 2026 3:30 PM ET' },
   { id: 'south-carolina', opp: 'South Carolina Gamecocks', date: 'October 10, 2026 TBA' },
   { id: 'texas', opp: 'Texas Longhorns', date: 'October 17, 2026 TBA' },
   { id: 'georgia', opp: 'Georgia Bulldogs', date: 'October 31, 2026 3:30 PM ET' },
