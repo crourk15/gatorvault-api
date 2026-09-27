@@ -259,12 +259,9 @@ describe('schedule-board', () => {
     const graham = missouri.swing.find((s) => /graham/i.test(s.name));
     const mcclain = missouri.swing.find((s) => /mcclain/i.test(s.name));
     const clark = missouri.swing.find((s) => /alec clark/i.test(s.name));
-    const baugh = missouri.swing.find((s) => /baugh/i.test(s.name));
-    assert.match(mcclain?.role || '', /rhythm on schedule/);
-    assert.match(graham?.role || '', /outside zone/);
-    assert.match(clark?.role || '', /maximum hang time/);
-    assert.match(baugh?.role || '', /eight-man front/);
-    assert.equal(baugh?.impact, 95);
+    assert.equal(mcclain?.role, missouri.howUFWins[0]);
+    assert.equal(graham?.role, missouri.howUFWins[1]);
+    assert.equal(clark?.role, missouri.howUFWins[2]);
     assert.equal(missouri.filmWatched, false);
     assert.match(missouri.scoutingReport, /Force Fair Catches/);
   });

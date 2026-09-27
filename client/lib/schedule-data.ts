@@ -440,19 +440,38 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     id: "missouri",
     label: "Oct 3 @ Missouri",
     opp: "Missouri Tigers",
-    date: "October 3, 2026 · 3:30–8:00 PM ET",
+    date: "October 3, 2026 · 3:30 PM ET",
     venue: "Faurot Field, Columbia MO",
-    ufPct: 48,
+    ufPct: 52,
     tv: "TBD",
-    keys: ["Establish run on road", "Win turnover battle", "Execute red zone"],
-    swing: [
-      { name: "Jaden Baugh", impact: 95, role: "Physical run game" },
-      { name: "Secondary", role: "Limit deep shots" },
+    keys: [
+      "Take Away the Clean Throw & Shrink the Hitch",
+      "Fit Roberts When It Dies & Plug the Gaps",
+      "Eliminate Hidden Yardage & Force Fair Catches",
     ],
-    film: "Missouri uses RPO and play-action.",
-    pred: "UF 24 · Missouri 27",
-    predUF: 24,
-    predOpp: 27,
+    howUFWins: [
+      "Do not let Austin Simmons comfortably sit in the pocket or find a rhythm on schedule. He is 17-of-19 with four scores when it is clean, and drops to 10-of-19 for 91 yards when it is taken away. Defensive backs must maintain depth over Cayden Lee's vertical stems and aggressively wrap Donovan Olugbode at the catch point so the hitch does not become the chain.",
+      "Do not treat a stagnant Missouri passing game as the win. When Troy bottled up Simmons' aerial attack, Missouri adjusted by handing Jamal Roberts 22 carries for 128 yards. Myles Graham and the linebacker room must fill the A and B gaps and play his near hip—do not scrape over the top and lose the bounce on outside zone. Stay heavy on the interior from the 10-yard line to deny Xai'Shaun Edwards.",
+      "Do not let special teams execution decide the outcome at Faurot Field. Missouri relies on explosive special teams swings, highlighted by DaMarion Fowlkes' 68-yard punt return and Kansas' 88-yard blocked field-goal return. Alec Clark must prioritize maximum hang time to completely neutralize Fowlkes, while the field-goal unit locks down interior protection. Protect the kick, cover the punt, and force them to beat you strictly from scrimmage.",
+    ],
+    swing: [
+      {
+        name: "Cormani McClain",
+        role: "Do not let Austin Simmons comfortably sit in the pocket or find a rhythm on schedule. He is 17-of-19 with four scores when it is clean, and drops to 10-of-19 for 91 yards when it is taken away. Defensive backs must maintain depth over Cayden Lee's vertical stems and aggressively wrap Donovan Olugbode at the catch point so the hitch does not become the chain.",
+      },
+      {
+        name: "Myles Graham",
+        role: "Do not treat a stagnant Missouri passing game as the win. When Troy bottled up Simmons' aerial attack, Missouri adjusted by handing Jamal Roberts 22 carries for 128 yards. Myles Graham and the linebacker room must fill the A and B gaps and play his near hip—do not scrape over the top and lose the bounce on outside zone. Stay heavy on the interior from the 10-yard line to deny Xai'Shaun Edwards.",
+      },
+      {
+        name: "Alec Clark",
+        role: "Do not let special teams execution decide the outcome at Faurot Field. Missouri relies on explosive special teams swings, highlighted by DaMarion Fowlkes' 68-yard punt return and Kansas' 88-yard blocked field-goal return. Alec Clark must prioritize maximum hang time to completely neutralize Fowlkes, while the field-goal unit locks down interior protection. Protect the kick, cover the punt, and force them to beat you strictly from scrimmage.",
+      },
+    ],
+    film: "This is not a Chambliss team. When Austin Simmons is clean he lights it up — 17-of-19 and four scores on Pine Bluff, 292 yards and three at Kansas, zero picks in three games. When he is not, they become Jamal Roberts and the return game, and they still beat Troy 27-17. Sit the throw and lose the back and you lose. Sit the throw and lose the punt and you lose. Mississippi State is still live; this is three boxes, not a sit.",
+    pred: "UF 27 · Missouri 24",
+    predUF: 27,
+    predOpp: 24,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27907",
       official: "https://www.ticketmaster.com/2026-mizzou-football-v-florida-columbia-missouri-10-03-2026/event/060064A9DD1A37BC",
