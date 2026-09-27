@@ -468,7 +468,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
         role: "Do not let special teams execution decide the outcome at Faurot Field. Missouri relies on explosive special teams swings, highlighted by DaMarion Fowlkes' 68-yard punt return and Kansas' 88-yard blocked field-goal return. Alec Clark must prioritize maximum hang time to completely neutralize Fowlkes, while the field-goal unit locks down interior protection. Protect the kick, cover the punt, and force them to beat you strictly from scrimmage.",
       },
     ],
-    film: "This is not a Chambliss team. When Austin Simmons is clean he lights it up — 17-of-19 and four scores on Pine Bluff, 292 yards and three at Kansas, zero picks in three games. When he is not, they become Jamal Roberts and the return game, and they still beat Troy 27-17. Sit the throw and lose the back and you lose. Sit the throw and lose the punt and you lose. Mississippi State is still live; this is three boxes, not a sit.",
+    film: "When Austin Simmons is clean he lights it up — 17-of-19 and four scores on Pine Bluff, 292 yards and three at Kansas, zero picks in three games. When he is not, they become Jamal Roberts and the return game, and they still beat Troy 27-17. Sit the throw and lose the back and you lose. Sit the throw and lose the punt and you lose. Mississippi State is still live; this is three boxes, not a sit.",
     pred: "UF 27 · Missouri 24",
     predUF: 27,
     predOpp: 24,

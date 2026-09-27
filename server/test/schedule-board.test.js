@@ -255,7 +255,16 @@ describe('schedule-board', () => {
       missouri.howUFWins[2],
       "Do not let special teams execution decide the outcome at Faurot Field. Missouri relies on explosive special teams swings, highlighted by DaMarion Fowlkes' 68-yard punt return and Kansas' 88-yard blocked field-goal return. Alec Clark must prioritize maximum hang time to completely neutralize Fowlkes, while the field-goal unit locks down interior protection. Protect the kick, cover the punt, and force them to beat you strictly from scrimmage."
     );
-    assert.ok(!missouri.keys.some((k) => /Crowd Roberts|Force the Extra Hat|Crowd Chambliss|Cap the Vertical|Downhill Run/i.test(k)));
+    assert.ok(!missouri.keys.some((k) => /Crowd Roberts|Force the Extra Hat|Cap the Vertical|Downhill Run/i.test(k)));
+    const missouriDump = [
+      missouri.film,
+      ...(missouri.filmNotes || []),
+      ...(missouri.opponentTendencies || []),
+      ...(missouri.defenseTendencies || []),
+      ...(missouri.howUFWins || []),
+      missouri.scoutingReport,
+    ].join(' ');
+    assert.ok(!/chambliss/i.test(missouriDump));
     const graham = missouri.swing.find((s) => /graham/i.test(s.name));
     const mcclain = missouri.swing.find((s) => /mcclain/i.test(s.name));
     const clark = missouri.swing.find((s) => /alec clark/i.test(s.name));
