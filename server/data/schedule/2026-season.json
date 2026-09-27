@@ -1,9 +1,9 @@
 {
   "season": 2026,
-  "updatedAt": "2026-09-22T15:50:00.000Z",
+  "updatedAt": "2026-09-27T01:50:00.000Z",
   "label": "2026 Florida football schedule",
   "source": "vault-schedule-board",
-  "predThrough": "2026-W3",
+  "predThrough": "2026-W4",
   "games": [
     {
       "id": "fau",
@@ -451,37 +451,45 @@
       "specialTeams": [
         "Kicker Lucas Carneiro: 5-for-7 on field goals this season. Displays range but lacks elite consistency (hit from 37, missed from 53), though he converted a clutch 48-yard walk-off winner against Louisville.",
         "Note: Expect Ole Miss to aggressively chase 2-point conversions following Chambliss run-keeps."
-      ]
+      ],
+      "finalUF": 52,
+      "finalOpp": 28,
+      "finalSource": "official",
+      "boxScoreUrl": "https://floridagators.com/sports/football/stats/2026/ole-miss/boxscore/27906"
     },
     {
       "id": "missouri",
       "kind": "game",
       "label": "Oct 3 @ Missouri",
       "opp": "Missouri Tigers",
-      "date": "October 3, 2026 \u00b7 3:30\u20138:00 PM ET",
+      "date": "October 3, 2026 \u00b7 3:30 PM ET",
       "venue": "Faurot Field, Columbia MO",
-      "ufPct": 48,
+      "ufPct": 52,
       "tv": "TBD",
       "keys": [
-        "Establish run on road",
-        "Win turnover battle",
-        "Execute red zone"
+        "Crowd Simmons Before the First Read",
+        "Cap the Shot After the Short Throw",
+        "Run the Front at Faurot"
       ],
       "swing": [
         {
-          "name": "Jaden Baugh",
+          "name": "Jadan Baugh",
           "impact": 95,
-          "role": "Physical run game"
+          "role": "We just ran a top-five front for 303. Start Baugh. If they load the box to stop him, that is Philo's throw."
         },
         {
-          "name": "Secondary",
-          "role": "Limit deep shots"
+          "name": "Jayden Woods",
+          "role": "Crowd Simmons before the first read. Troy sat him to 91. Do not let him play the UAPB game."
+        },
+        {
+          "name": "Aaron Philo",
+          "role": "If they sit on Baugh, throw it over them. Same job as the Auburn front."
         }
       ],
-      "film": "Missouri uses RPO and play-action.",
-      "pred": "UF 24 \u00b7 Missouri 27",
-      "predUF": 24,
-      "predOpp": 27,
+      "film": "Missouri goes as Austin Simmons goes \u2014 until somebody sits him down. He threw it all over UAPB and Kansas. Troy held him to 91 and they still won it with Roberts and a punt return. Crowd him, wrap the catch, and run the front so you are not playing from behind in their house.",
+      "pred": "UF 27 \u00b7 Missouri 24",
+      "predUF": 27,
+      "predOpp": 24,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27907",
         "official": "https://www.ticketmaster.com/2026-mizzou-football-v-florida-columbia-missouri-10-03-2026/event/060064A9DD1A37BC",
@@ -494,7 +502,97 @@
         "pants": "Blue",
         "label": "Orange / White / Blue",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
-      }
+      },
+      "radar": [
+        {
+          "label": "Run Game",
+          "uf": 78,
+          "opp": 60
+        },
+        {
+          "label": "Pass Efficiency",
+          "uf": 70,
+          "opp": 72
+        },
+        {
+          "label": "Front 7",
+          "uf": 74,
+          "opp": 62
+        },
+        {
+          "label": "Secondary",
+          "uf": 66,
+          "opp": 56
+        },
+        {
+          "label": "Special Teams",
+          "uf": 58,
+          "opp": 60
+        },
+        {
+          "label": "Coaching Edge",
+          "uf": 54,
+          "opp": 52
+        }
+      ],
+      "filmNotes": [
+        "Missouri goes as Austin Simmons goes \u2014 until somebody sits him down. He threw it all over UAPB and Kansas. Troy held him to 91 and they still won it with Roberts and a punt return. Crowd him, wrap the catch, and run the front so you are not playing from behind in their house.",
+        "Schematic Identity: Chip Lindsey spread under Eli Drinkwitz. They will throw it early when Simmons is clean, then hand it to Jamal Roberts when the throw cools.",
+        "Efficiency Metrics: Averaging 39.7 PPG and 420 YPG (247 pass / 174 rush) through three.",
+        "Situational Success: They will take the shot \u2014 Cayden Lee 47 vs UAPB and 27 at Kansas. They also give shots up: Troy hit them for 76 and 55.",
+        "QB Austin Simmons: Ole Miss transfer. 47-of-68, 652 yards, 8 TD, 0 INT through three. 17-of-19 for 252 and 4 TD vs UAPB. 19-of-29 for 292 and 3 TD at Kansas. Troy sat him down (10-of-19, 91 yards, 1 TD). Crowd him before the first read.",
+        "Wide Receivers: Donovan Olugbode is the volume guy (8-116-2 vs UAPB, 6-121-1 at Kansas). Cayden Lee is the isolated shot (47 and 27). Brett Norfleet the tight-end closer (13-yard TD at Kansas). DaMarion Fowlkes flipped Troy with a 68-yard punt return.",
+        "Ground Game: Jamal Roberts is the back on the boxes we have (63-300-3). 64-yarder at Kansas. 22-128 vs Troy when Simmons cooled. Xai'Shaun Edwards the punch (10-yard TD at Kansas). Ahmad Hardy (preseason All-American) is not on these boxes \u2014 May injury, return unknown.",
+        "Schematic Identity: Corey Batoon base 4-2-5. Drinkwitz is still the head coach. Coverage calls are not on the boxes we have.",
+        "Front Seven: They sat the run against Kansas (81) and Troy (93). If they load the box, that is the throw. Do not assume the front you just ran through Ole Miss will come cheap at Faurot.",
+        "Secondary: Proven they can get chunked over the top. Troy 76 and 55. Cap the shot after the short throw.",
+        "Kicker Blake Craig: 32 vs UAPB, 32 at Kansas, 35 and 36 vs Troy. Special teams will flip a game \u2014 Fowlkes 68 punt return; Kansas blocked a field goal and took it 88 the other way."
+      ],
+      "filmWatched": false,
+      "opponentTendencies": [
+        "Schematic Identity: Chip Lindsey spread under Eli Drinkwitz. They will throw it early when Simmons is clean, then hand it to Jamal Roberts when the throw cools.",
+        "Efficiency Metrics: Averaging 39.7 PPG and 420 YPG (247 pass / 174 rush) through three.",
+        "Situational Success: They will take the shot \u2014 Cayden Lee 47 vs UAPB and 27 at Kansas. They also give shots up: Troy hit them for 76 and 55.",
+        "QB Austin Simmons: Ole Miss transfer. 47-of-68, 652 yards, 8 TD, 0 INT through three. 17-of-19 for 252 and 4 TD vs UAPB. 19-of-29 for 292 and 3 TD at Kansas. Troy sat him down (10-of-19, 91 yards, 1 TD). Crowd him before the first read.",
+        "Wide Receivers: Donovan Olugbode is the volume guy (8-116-2 vs UAPB, 6-121-1 at Kansas). Cayden Lee is the isolated shot (47 and 27). Brett Norfleet the tight-end closer (13-yard TD at Kansas). DaMarion Fowlkes flipped Troy with a 68-yard punt return.",
+        "Ground Game: Jamal Roberts is the back on the boxes we have (63-300-3). 64-yarder at Kansas. 22-128 vs Troy when Simmons cooled. Xai'Shaun Edwards the punch (10-yard TD at Kansas). Ahmad Hardy (preseason All-American) is not on these boxes \u2014 May injury, return unknown."
+      ],
+      "defenseTendencies": [
+        "Schematic Identity: Corey Batoon base 4-2-5. Drinkwitz is still the head coach. Coverage calls are not on the boxes we have.",
+        "Pass Rush: Methodical rather than overwhelming on the three boxes we have. The takeaway is the run sit \u2014 Kansas 81, Troy 93.",
+        "Defensive Metrics: Allowing 17.3 PPG through three (14, 21, 17) and 198 / 255 / 323 yards.",
+        "Red Zone Defense: Troy drove 19 plays and settled for a field goal. They will bend. Finish the drive if you get there.",
+        "Front Seven: They sat the run against Kansas (81) and Troy (93). If they load the box, that is the throw. Do not assume the front you just ran through Ole Miss will come cheap at Faurot.",
+        "Secondary: Proven they can get chunked over the top. Troy 76 and 55. Cap the shot after the short throw."
+      ],
+      "offenseScout": [
+        "Official 3-game: 39.7 PPG, 420 YPG (247 pass / 174 rush). Chip Lindsey is OC / play-caller (spread). Eli Drinkwitz is HC. Do not write Kirby Moore as the 2026 Missouri identity (Washington State).",
+        "Box-confirmed Week 1 (UAPB, Columbia, Sep 3): Missouri 54, UAPB 14. Simmons 17/19, 252, 4 TD. Roberts 13-47-1. Olugbode 8-116-2. Lee 47 TD. 78-562, 33 first downs, 0 INT.",
+        "Box-confirmed Week 2 (at Kansas, Sep 11): Missouri 38, Kansas 21. Simmons 19/29, 292, 3 TD. Roberts 28-125-1 (64-yarder). Olugbode 6-121-1. Lee 27 TD. Norfleet 13 TD. Edwards 10-yard rush TD. Kansas 81 rush, 2 INT.",
+        "Box-confirmed Week 3 (Troy, Columbia, Sep 19): Missouri 27, Troy 17. Simmons 10/19, 91, 1 TD. Roberts 22-128-1. Olugbode 3-31-1. Fowlkes 68 punt-return TD. Allowed 76 and 55 shot plays.",
+        "Season Simmons 47/68, 652, 8 TD, 0 INT. Season Roberts 63-300-3. Matt Zollers is the backup (5-yard rush TD vs UAPB).",
+        "Ahmad Hardy: preseason All-American, May gunshot, return unknown. Not on the three boxes. Do not write him as the feature.",
+        "Mississippi State (Sep 26, Starkville, SECN): LIVE / not sat. Do not fold Kitchen, Graves, or a score into the fan rail.",
+        "filmWatched: false. watchStandard: box-confirmed-3. No broadcast sit."
+      ],
+      "defenseScout": [
+        "Corey Batoon is DC. Base 4-2-5. Coverage shells (Cover 2/3/man) + pressure packages: NOT confirmed on the boxes.",
+        "Official 3-game allowed: 17.3 PPG (14 / 21 / 17). UAPB 198, Kansas 255, Troy 323.",
+        "Run sit: Kansas 81, Troy 93. If they load it vs Baugh, throw it over them.",
+        "Shot problem: Troy 76 (Keyes) and 55 (Kinchen). Cap the shot after the short throw.",
+        "ST: Fowlkes 68 PR TD vs Troy. Kansas blocked FG returned 88. Blake Craig 32 / 32 / 35 / 36.",
+        "Mississippi State live \u2014 not sat. Do not invent a Kitchen or Graves injury as scout fact."
+      ],
+      "howUFWins": [
+        "Do not let Austin Simmons get comfortable. He was 17-of-19 for 252 and four scores against Pine Bluff and 19-of-29 for 292 and three at Kansas \u2014 zero interceptions through three. Troy sat him down (10-of-19, 91 yards). Get to him before the first read so the night is Roberts and checkdowns, not Olugbode and Lee over the top.",
+        "The chunk throws are the ones that finish. Cayden Lee 47 against Pine Bluff and 27 at Kansas. Donovan Olugbode 8-116-2 and 6-121-1. Brett Norfleet the 13-yard closer. Do not bite on the first look and lose Lee over the top. Wrap the catch \u2014 they will run after it.",
+        "We just ran Ole Miss for 303 yards and six rushing scores. Batoon's front sat Kansas (81 rush) and Troy (93). Start Baugh anyway. If they load the box to stop him, that is Philo's throw. Do not play from behind in their building."
+      ],
+      "scoutingReport": "MISSOURI OFFENSE (official 3-game boxes; Mississippi State live / not sat): Chip Lindsey spread. 39.7 PPG, 420 YPG (247 pass / 174 rush). Austin Simmons is the engine (47/68, 652, 8 TD, 0 INT) until somebody sits him (Troy 10/19, 91). Olugbode volume, Lee the shot, Norfleet the closer. Jamal Roberts 63-300-3 is the back on the boxes \u2014 Hardy is not. MISSOURI DEFENSE (Corey Batoon 4-2-5): 17.3 PPG. Run sit vs Kansas/Troy (81 / 93). Shot problem vs Troy (76 / 55). ST will flip one (Fowlkes 68 PR; Kansas 88 blocked FG). Coverage shells NOT confirmed. UF wins: Crowd Simmons Before the First Read / Cap the Shot After the Short Throw / Run the Front at Faurot. filmWatched: false.",
+      "specialTeams": [
+        "Kicker Blake Craig: 32 vs UAPB, 32 at Kansas, 35 and 36 vs Troy. Range is there. They will kick it.",
+        "DaMarion Fowlkes: 68-yard punt return touchdown vs Troy. Kansas blocked a Missouri field goal and took it 88 the other way. Special teams will flip a possession."
+      ]
     },
     {
       "id": "scar",

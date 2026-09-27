@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Missouri: pointer + Ole Miss 52–28 official + 3 keys / scout / prediction from UAPB–Kansas–Troy boxes (`filmWatched: false`; Mississippi State live, not sat). NOW Game / Road / Season 4-0. Vegas Line pending. API after Render — no Codemagic.
 - [x] 2028 hero Commits 2 / 89.8: reject 1-commit hero plates, heal classOverviewAll on 2026/2027 bundles, edge-pin `/hub/hero`. API + Netlify edge after deploy — no Codemagic.
 - [x] Cyion Smith 2028 commit board + chase: reject Armani-only hub-runtime plates, heal bundle.commits, drop verified UF commits from HP/Chase on serve. API after Render — no Codemagic.
 - [x] API listen-first boot: `/ready` binds before heavy route/store requires so Render does not HTML-502 the only disk instance. API after Render — no Codemagic.

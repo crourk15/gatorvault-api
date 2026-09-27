@@ -107,6 +107,21 @@ const STATIC_LINES = [
     source: 'schedule'
   },
   {
+    id: 'uf-missouri-2026-w5',
+    week: 5,
+    game: 'Florida at Missouri',
+    opponent: 'Missouri',
+    date: '2026-10-03T19:30:00.000Z',
+    venue: 'Faurot Field',
+    // No clean market stamp after the Ole Miss final — Prediction stays Line pending.
+    spread: { line: 'Line pending', uf: null },
+    total: null,
+    moneyline: null,
+    sportsbookUrl: FANDUEL_AFFILIATE,
+    sportsbookLinks: SPORTSBOOKS,
+    source: 'schedule'
+  },
+  {
     id: 'uf-fsu-2026',
     week: null,
     game: 'Florida vs Florida State',

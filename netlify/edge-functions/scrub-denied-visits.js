@@ -7,18 +7,18 @@
 const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolRe: /auburn/i }];
 
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
-const SEASON_STANDING = '3-0 · first SEC home Saturday';
+const SEASON_STANDING = '4-0 heading into Saturday';
 const TICKER_FALLBACK = {
   ok: true,
   status: 'ready',
   items: [
-    'Game — Ole Miss Saturday — 3:30 PM · ABC',
-    'Visitors — Easton Royal',
+    'Game — Missouri at Faurot Field',
+    'Road — on the road this Saturday',
     `Season — ${SEASON_STANDING}`,
   ],
   nowWeek: [
-    { key: 'game', label: 'Game', items: ['Ole Miss Saturday — 3:30 PM · ABC'] },
-    { key: 'visitors', label: 'Visitors', items: ['Easton Royal'] },
+    { key: 'game', label: 'Game', items: ['Missouri at Faurot Field'] },
+    { key: 'road', label: 'Road', items: ['on the road this Saturday'] },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],
   meta: { endpoint: 'ticker', cacheReason: 'now-edge-fallback' },

@@ -187,7 +187,7 @@ test('attachLiveNowWeek fills standing Season when ticker items are empty', () =
   const body = attachLiveNowWeek({ ok: true, status: 'building', items: [] });
   const season = (body.nowWeek || []).find((c) => c.key === 'season');
   assert.ok(season);
-  assert.deepEqual(season.items, ['3-0 · first SEC home Saturday']);
+  assert.ok(season.items.some((s) => /^\d-\d/.test(s)));
 });
 
 test('empty seasonTicks leaves only the standing line', () => {
@@ -213,6 +213,16 @@ test('this-week Cyion Smith commit breaks into Home NOW News', () => {
   const news = cats.find((c) => c.key === 'news');
   assert.ok(news, 'News pillar must replace Visitors this week');
   assert.match(String(news.items[0] || ''), /Cyion Smith commits to Florida/i);
-  const season = cats.find((c) => c.key === 'season');
-  assert.deepEqual(season.items, ['3-0 · first SEC home Saturday']);
+});
+
+test('after the Ole Miss final NOW points at Missouri road week', () => {
+  const now = new Date('2026-09-27T12:00:00.000Z');
+  const lines = buildWeeklyHomeNowLines(now);
+  assert.match(lines[0], /^Game — Missouri at Faurot Field$/);
+  const rec = seasonRecord(now, getScheduleBoard(2026).games);
+  assert.deepEqual(rec, { wins: 4, losses: 0 });
+  assert.ok(lines.some((s) => /^Season — 4-0 heading into Saturday$/.test(s)));
+  const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [] });
+  assert.equal(cats[1].label, 'Road');
+  assert.match(cats[1].items[0], /on the road this Saturday/i);
 });

@@ -26,8 +26,8 @@ describe('schedule-board', () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
-    assert.equal(payload.predThrough, '2026-W3');
-    assert.equal(payload.currentGameId, 'olemiss');
+    assert.equal(payload.predThrough, '2026-W4');
+    assert.equal(payload.currentGameId, 'missouri');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);
     assert.equal(campbell.finalOpp, 3);
@@ -78,7 +78,7 @@ describe('schedule-board', () => {
   it('game-week meta games also hide desk scout', () => {
     const feed = require('../lib/game-week-feed');
     const payload = feed.buildGameWeekPayload();
-    assert.equal(payload.currentGameId, 'olemiss');
+    assert.equal(payload.currentGameId, 'missouri');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.deepEqual(campbell.offenseScout, []);
     assert.equal(campbell.scoutingReport, undefined);
