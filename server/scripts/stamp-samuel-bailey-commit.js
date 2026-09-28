@@ -226,6 +226,11 @@ async function main() {
   cache.writeHubDiskSnapshot('bundle', 2028, bundle);
   const overview = await elite.buildHubClassOverview(2028);
   cache.writeHubDiskSnapshot('class-overview', 2028, overview);
+  const allOverview = {};
+  for (const year of [2026, 2027, 2028]) {
+    allOverview[year] = await elite.buildHubClassOverview(year);
+  }
+  cache.writeHubDiskSnapshot('class-overview-all', null, allOverview);
   const hero = await elite.buildHubHero(2028);
   cache.writeHubDiskSnapshot('hero', 2028, hero);
   const ticker = await elite.buildHubTicker(2028);
