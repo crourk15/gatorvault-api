@@ -52,18 +52,81 @@ function emptyCache() {
   return { auto: normalizeAuto({}), meta: { version: 1 } };
 }
 
-function loadFilmRoomCache() {
-  const target = resolveCachePath();
-  if (target !== REPO_CACHE_PATH && fs.existsSync(target)) {
-    const durable = readJson(target, null);
-    if (durable && durable.auto) {
-      durable.auto = normalizeAuto(durable.auto);
-      return durable;
+const AUTO_BUCKETS = ['gnfp', 'pressers', 'highlights', 'filmGuy', 'tengwall'];
+
+function youtubeKey(row) {
+  return String(row?.youtubeId || '').trim() || String(row?.id || '').trim();
+}
+
+/**
+ * Render durable cache wins on disk, but a stale file can hide videos that
+ * already landed in git (manual ingest / cron miss after deploy). Union repo
+ * youtubeIds into durable so Film Room catalog can show them before the next
+ * YouTube sync.
+ */
+function mergeRepoIntoDurable(durable, repo) {
+  const out = {
+    ...(durable && typeof durable === 'object' ? durable : {}),
+    auto: normalizeAuto(durable?.auto),
+    meta: { ...((durable && durable.meta) || {}) },
+  };
+  let added = 0;
+  for (const bucket of AUTO_BUCKETS) {
+    const durableRows = Array.isArray(out.auto[bucket]) ? out.auto[bucket] : [];
+    const repoRows = Array.isArray(repo?.auto?.[bucket]) ? repo.auto[bucket] : [];
+    const seen = new Set(durableRows.map(youtubeKey).filter(Boolean));
+    const extra = [];
+    for (const row of repoRows) {
+      const key = youtubeKey(row);
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      extra.push(row);
+      added += 1;
     }
+    if (!extra.length) continue;
+    const merged = durableRows.concat(extra);
+    merged.sort((a, b) => {
+      const ta = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+      const tb = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+      return tb - ta;
+    });
+    out.auto[bucket] = merged;
   }
+  if (added > 0) {
+    out.meta = {
+      ...out.meta,
+      version: 1,
+      repoHealAdded: added,
+      repoHealedAt: new Date().toISOString(),
+    };
+  }
+  return { cache: out, added };
+}
+
+function loadFilmRoomCache() {
   const seeded = readJson(REPO_CACHE_PATH, emptyCache());
   seeded.auto = normalizeAuto(seeded.auto);
-  return seeded;
+
+  const target = resolveCachePath();
+  if (target === REPO_CACHE_PATH || !fs.existsSync(target)) {
+    return seeded;
+  }
+
+  const durable = readJson(target, null);
+  if (!durable || !durable.auto) {
+    return seeded;
+  }
+
+  durable.auto = normalizeAuto(durable.auto);
+  const { cache, added } = mergeRepoIntoDurable(durable, seeded);
+  if (added > 0) {
+    try {
+      saveFilmRoomCache(cache);
+    } catch {
+      // Serve the union even if the durable write fails.
+    }
+  }
+  return cache;
 }
 
 function saveFilmRoomCache(cache) {
@@ -150,6 +213,7 @@ module.exports = {
   resolveCatalogStampPath,
   loadFilmRoomCache,
   saveFilmRoomCache,
+  mergeRepoIntoDurable,
   loadCatalogStamp,
   saveCatalogStamp,
 };

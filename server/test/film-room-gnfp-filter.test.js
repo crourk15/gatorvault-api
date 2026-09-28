@@ -290,6 +290,28 @@ describe('Tengwall UF 2026 run-game film only', () => {
     );
   });
 
+  it('drops commitment / 2028 recruit sits', () => {
+    assert.equal(
+      isTengwallUfFilmReview({
+        title: 'BREAKING: Florida Lands Commitment From ELITE 2028 OL Samuel Bailey | Samuel Bailey Film Study',
+        youtubeId: '0Ld6jeGS3P0',
+        publishedAt: '2026-09-28T19:18:53.000Z',
+      }),
+      false
+    );
+    assert.equal(
+      shouldKeepEntry(
+        {
+          title: 'BREAKING: Florida Lands Commitment From ELITE 2028 OL Samuel Bailey | Samuel Bailey Film Study',
+          youtubeId: '0Ld6jeGS3P0',
+          publishedAt: '2026-09-28T19:18:53.000Z',
+        },
+        TENGWALL_SOURCE
+      ),
+      false
+    );
+  });
+
   it('prunes non-UF Tengwall rows from the merge bucket', () => {
     const existing = [
       {
@@ -317,6 +339,23 @@ describe('Tengwall UF 2026 run-game film only', () => {
     assert.match(String(row.source || ''), /Tengwall/i);
     assert.match(String(row.title || ''), /Auburn/i);
     assert.ok(!items.some((i) => i.youtubeId === 'UXOweKkBadI'));
+    assert.ok(!items.some((i) => i.youtubeId === '0Ld6jeGS3P0'));
+  });
+});
+
+describe('UF pressers include the 9/28 Sumrall weekly', () => {
+  it('surfaces Coach Sumrall 9-28-26 ahead of the 9/26 postgame', () => {
+    const items = loadLegacyVideoCatalog();
+    const weekly = items.find((i) => i.youtubeId === 'asXiHSFj7S8');
+    assert.ok(weekly, 'asXiHSFj7S8 missing from Film Room catalog');
+    assert.match(String(weekly.title || ''), /9-28-26/);
+    assert.match(String(weekly.category || weekly.source || ''), /Press/i);
+    const postgame = items.find((i) => i.youtubeId === 'VVguTPt-Te8');
+    if (postgame && weekly.publishedAt && postgame.publishedAt) {
+      assert.ok(
+        new Date(weekly.publishedAt).getTime() > new Date(postgame.publishedAt).getTime()
+      );
+    }
   });
 });
 
