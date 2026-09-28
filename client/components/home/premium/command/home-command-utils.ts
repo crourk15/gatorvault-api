@@ -423,11 +423,15 @@ export function resolveHomeNowWeekPillars(
 
 const LAST_GOOD_NOW_WEEK_KEY = 'gv-home-now-week-last-good';
 const RETIRED_NOW_TICK_RE = /1\.0\.29|update in the App Store/i;
+/** Cyion's Sep 26 pledge must not stick on NOW News after Bailey (Sep 28). */
+const STALE_NOW_NEWS_RE = /cyion\s+smith/i;
 
 let lastGoodNowWeekMemory: HomeNowWeekPillar[] | null = null;
 
 export function isRetiredHomeNowTick(text: string): boolean {
-  return RETIRED_NOW_TICK_RE.test(String(text || ''));
+  const t = String(text || '');
+  if (RETIRED_NOW_TICK_RE.test(t)) return true;
+  return STALE_NOW_NEWS_RE.test(t);
 }
 
 export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNowWeekPillar[] {

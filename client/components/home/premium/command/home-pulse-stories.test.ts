@@ -421,6 +421,18 @@ describe('resolveHomeNowWeekPillars', () => {
 });
 
 describe('usableHomeNowWeek drops the retired App Store tick', () => {
+  it('drops leftover Cyion News so last-good cannot hide Bailey', () => {
+    const rows = usableHomeNowWeek([
+      { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },
+      { key: 'news', label: 'News', items: ['Cyion Smith commits to Florida'] },
+      { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
+    ]);
+    assert.equal(rows.length, 2);
+    assert.equal(rows[0].label, 'Game');
+    assert.equal(rows[1].label, 'Season');
+    assert.ok(!rows.some((row) => row.items.some((s) => /cyion/i.test(s))));
+  });
+
   it('strips 1.0.29 update copy and keeps the standing Season line', () => {
     const rows = usableHomeNowWeek([
       { key: 'game', label: 'Game', items: ['Ole Miss Saturday — 3:30 PM · ABC'] },

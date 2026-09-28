@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Home NOW News: pin **Samuel Bailey commits to Florida · No. 36** on the ticker edge and drop leftover Cyion last-good News. API + Netlify edge after deploy — 1.0.29 already live-fetches `/api/recruiting/hub/ticker`. Last-good Cyion strip in `usableHomeNowWeek` is the bake row.
 - [x] Samuel Bailey 2028 OT commit (On3 C 09/28/26): verified slug + hub commits 3 + drop from Chase/Biggest Battles + Home NOW News. API + Netlify edge after Render — no Codemagic.
 - [x] Home Game Week kickoff: `/api/schedule` + NOW Game already serve Missouri **3:30 PM ET / ESPN** (not 3:30–8:00). 1.0.29 already live-fetches both. API after Render — no Codemagic.
 - [x] 2028 hero Commits 2 + drop Cyion from Biggest Battles: heal battleBoard/heat/battles of verified UF commits, pin 2028 hero on edge 502, skip hero SWR last-good. API + Netlify edge after deploy — no Codemagic. Hero last-good skip is the bake row.

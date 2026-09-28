@@ -8,17 +8,20 @@ const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolR
 
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '4-0 heading into Saturday';
+const BAILEY_NEWS_LINE = 'Samuel Bailey commits to Florida · No. 36';
+const STALE_NOW_NEWS_RE = /cyion\s+smith/i;
+
 const TICKER_FALLBACK = {
   ok: true,
   status: 'ready',
   items: [
     'Game — Missouri at Faurot Field — 3:30 PM · ESPN',
-    'Road — on the road this Saturday',
+    `News — ${BAILEY_NEWS_LINE}`,
     `Season — ${SEASON_STANDING}`,
   ],
   nowWeek: [
     { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },
-    { key: 'road', label: 'Road', items: ['on the road this Saturday'] },
+    { key: 'news', label: 'News', items: [BAILEY_NEWS_LINE] },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],
   meta: { endpoint: 'ticker', cacheReason: 'now-edge-fallback' },
@@ -26,6 +29,59 @@ const TICKER_FALLBACK = {
 
 function isTickerPath(pathname) {
   return String(pathname || '').startsWith('/api/recruiting/hub/ticker');
+}
+
+/** iOS last-good / URLCache can keep Cyion on NOW News after Bailey pledged. */
+function pinBaileyNowNews(data) {
+  if (!data || typeof data !== 'object') return { data, changed: false };
+  const out = { ...data };
+  let changed = false;
+
+  if (Array.isArray(out.items)) {
+    const next = out.items.map((line) => {
+      if (typeof line !== 'string') return line;
+      if (/^News — /i.test(line) && STALE_NOW_NEWS_RE.test(line)) {
+        return `News — ${BAILEY_NEWS_LINE}`;
+      }
+      return line;
+    });
+    if (next.some((line, i) => line !== out.items[i])) {
+      out.items = next;
+      changed = true;
+    }
+  }
+
+  if (Array.isArray(out.nowWeek)) {
+    const next = out.nowWeek.map((row) => {
+      if (!row || typeof row !== 'object') return row;
+      const key = String(row.key || row.label || '').toLowerCase();
+      const items = Array.isArray(row.items) ? row.items.map((s) => String(s || '')) : [];
+      if ((key === 'news' || String(row.label || '') === 'News') && items.some((s) => STALE_NOW_NEWS_RE.test(s))) {
+        return { ...row, key: 'news', label: 'News', items: [BAILEY_NEWS_LINE] };
+      }
+      return row;
+    });
+    if (JSON.stringify(next) !== JSON.stringify(out.nowWeek)) {
+      out.nowWeek = next;
+      changed = true;
+    }
+  }
+
+  if (Array.isArray(out.ticker)) {
+    const next = out.ticker.map((line) => {
+      if (typeof line !== 'string') return line;
+      if (/^News — /i.test(line) && STALE_NOW_NEWS_RE.test(line)) {
+        return `News — ${BAILEY_NEWS_LINE}`;
+      }
+      return line;
+    });
+    if (next.some((line, i) => line !== out.ticker[i])) {
+      out.ticker = next;
+      changed = true;
+    }
+  }
+
+  return { data: out, changed };
 }
 
 function isHubBundlePath(pathname) {
@@ -438,7 +494,7 @@ function tickerFallbackResponse() {
 export default async (request, context) => {
   const url = new URL(request.url);
   const origin = new URL(`https://gatorvault-api.onrender.com${url.pathname}${url.search}`);
-  origin.searchParams.set('gvScrub', 't11');
+  origin.searchParams.set('gvScrub', 't12');
 
   let upstream;
   try {
@@ -478,6 +534,13 @@ export default async (request, context) => {
   }
 
   let { data, changed } = scrubPayload(payload, url.pathname);
+  if (isTickerPath(url.pathname) || isHubBundlePath(url.pathname) || isHubHeroPath(url.pathname)) {
+    const news = pinBaileyNowNews(data);
+    if (news.changed) {
+      data = news.data;
+      changed = true;
+    }
+  }
   if (isHubBundlePath(url.pathname) || isHubCommitsPath(url.pathname) || isHubHeroPath(url.pathname)) {
     const healed = heal2028CommitPayload(data, yearFromRequest(url));
     if (healed.changed) {
