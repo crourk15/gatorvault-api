@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Film Room: Sumrall weekly presser 9/28 (`asXiHSFj7S8` / Coach Sumrall 9-28-26) on `/api/film-room/catalog` after Render. Repo cache unions into stale durable so a cron miss after deploy cannot keep the 9/26 postgame on top. Drop Tengwall Samuel Bailey commitment sit. API — no Codemagic.
 - [x] Home NOW News: pin **Samuel Bailey commits to Florida · No. 36** on the ticker edge and drop leftover Cyion last-good News. API + Netlify edge after deploy — 1.0.29 already live-fetches `/api/recruiting/hub/ticker`. Last-good Cyion strip in `usableHomeNowWeek` is the bake row.
 - [x] Samuel Bailey 2028 OT commit (On3 C 09/28/26): verified slug + hub commits 3 + drop from Chase/Biggest Battles + Home NOW News. API + Netlify edge after Render — no Codemagic.
 - [x] Home Game Week kickoff: `/api/schedule` + NOW Game already serve Missouri **3:30 PM ET / ESPN** (not 3:30–8:00). 1.0.29 already live-fetches both. API after Render — no Codemagic.

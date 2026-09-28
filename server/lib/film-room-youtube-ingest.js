@@ -120,13 +120,22 @@ const TENGWALL_PASS_GAME =
 const TENGWALL_NOT_BREAKDOWN =
   /\b(live\s+postgame|postgame\s+show|pregame\s+show|kickoff\s+show|interviewing|press conference)\b/i;
 
+/** Recruit commitment sits are not UF 2026 run-game film. */
+const TENGWALL_NOT_RECRUIT =
+  /\b(commitment|commits?\b|recruit(?:ing)?|20(?:28|29|30)\b)/i;
+
+const TENGWALL_BLOCKED_YOUTUBE_IDS = new Set([
+  '0Ld6jeGS3P0', // Samuel Bailey commitment film study
+]);
+
 function isTengwallPassGameTitle(title) {
   return TENGWALL_PASS_GAME.test(String(title || ''));
 }
 
 /**
  * Landon Tengwall UF 2026 film studies only — Auburn run tape and later.
- * Drops other teams, FSU, FAU-only, pass-game sits, live/postgame, and Week 1 FAU.
+ * Drops other teams, FSU, FAU-only, pass-game sits, live/postgame,
+ * commitment/2028 recruit sits, and Week 1 FAU.
  */
 function isTengwallUfFilmReview(entryOrTitle) {
   const entry =
@@ -138,9 +147,11 @@ function isTengwallUfFilmReview(entryOrTitle) {
   if (!TENGWALL_FILM_SIGNAL.test(title)) return false;
   if (isTengwallPassGameTitle(title)) return false;
   if (TENGWALL_NOT_BREAKDOWN.test(title)) return false;
+  if (TENGWALL_NOT_RECRUIT.test(title)) return false;
   if (!titleHasUfFootball(title)) return false;
 
   const youtubeId = String(entry.youtubeId || '').trim();
+  if (TENGWALL_BLOCKED_YOUTUBE_IDS.has(youtubeId)) return false;
   if (youtubeId === TENGWALL_UF_START_YOUTUBE_ID) return true;
 
   const publishedAt = entry.publishedAt || null;
@@ -768,6 +779,7 @@ module.exports = {
   BLOCKED_FILM_YOUTUBE_IDS,
   isTengwallUfFilmReview,
   isTengwallPassGameTitle,
+  TENGWALL_BLOCKED_YOUTUBE_IDS,
   TENGWALL_UF_START_YOUTUBE_ID,
   TENGWALL_UF_START_AT,
   TENGWALL_UF_SEASON,
