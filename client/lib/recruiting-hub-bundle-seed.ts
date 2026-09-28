@@ -30,9 +30,9 @@ export function recruitingHubBundleHasSignal(bundle: RhHubBundle | null | undefi
   );
 }
 
-/** Stale 2028 first-paint (Armani-only) must not block the live Cyion plate. */
+/** Stale 2028 first-paint (Armani/Cyion-only) must not block the live Bailey plate. */
 export function recruitingHubBundleIsCurrent(bundle: RhHubBundle | null | undefined, year?: number): boolean {
   if (!recruitingHubBundleHasSignal(bundle)) return false;
   if (Number(year ?? bundle?.year) !== 2028) return true;
-  return (bundle?.commits || []).some((row) => String(row?.id || '').toLowerCase() === 'cyion-smith');
+  return (bundle?.commits || []).some((row) => String(row?.id || '').toLowerCase() === 'samuel-bailey');
 }

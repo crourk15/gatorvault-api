@@ -19,9 +19,10 @@ test('ticker edge strips the 1.0.29 App Store line and falls back when origin 50
   assert.equal(/1\.0\.29 is live/.test(src), false);
 });
 
-test('hub edge pins 2028 hero at 2 commits and drops Cyion from battles', () => {
+test('hub edge pins 2028 hero at 3 commits and drops verified commits from battles', () => {
   assert.match(src, /hero-edge-fallback/);
-  assert.match(src, /2 commits locked for 2028/);
+  assert.match(src, /3 commits locked for 2028/);
   assert.match(src, /battleBoard/);
   assert.match(src, /cyion-smith/);
+  assert.match(src, /samuel-bailey/);
 });

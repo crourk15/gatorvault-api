@@ -1818,6 +1818,29 @@
           "category": "recruit",
           "skinny": "S · 4★ · Blountstown · #250 natl",
           "sourceStatus": "Committed"
+        },
+        "on3:283076": {
+          "on3Id": "283076",
+          "name": "Samuel Bailey",
+          "pos": "OT",
+          "classYear": 2028,
+          "school": "Jemison (AL)",
+          "hometownCity": "Huntsville",
+          "hometownState": "AL",
+          "state": "AL",
+          "htWt": "6-5.5 / 300",
+          "stars": 4,
+          "rating": 92.8086956521739,
+          "natlRank": 49,
+          "posRank": 8,
+          "stateRank": 3,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-09-28",
+          "committedTo": "Florida",
+          "category": "recruit",
+          "skinny": "OT · 4★ · Jemison · #49 natl",
+          "sourceStatus": "Committed"
         }
       },
       "rankings": {
@@ -4958,6 +4981,11 @@
     "cyion-smith|florida|2026-09-26": {
       "commitDate": "2026-09-26",
       "registeredAt": "2026-09-26T18:25:41.711Z",
+      "source": "charles_editorial"
+    },
+    "samuel-bailey|florida|2026-09-28": {
+      "commitDate": "2026-09-28",
+      "registeredAt": "2026-09-28T17:42:37.312Z",
       "source": "charles_editorial"
     }
   },

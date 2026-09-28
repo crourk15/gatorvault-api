@@ -1,17 +1,1 @@
-{
-  "ok": true,
-  "status": "ready",
-  "meta": {
-    "generatedAt": "2026-09-21T20:55:00.000Z",
-    "snapshot": true,
-    "endpoint": "ticker",
-    "year": 2028,
-    "source": "hub-runtime",
-    "cacheRev": "t15"
-  },
-  "items": [
-    "Game \u2014 Ole Miss in the Swamp \u00b7 ABC",
-    "Visitors \u2014 Easton Royal",
-    "Season \u2014 3-0 \u00b7 first SEC home Saturday"
-  ]
-}
+{"ok":true,"status":"ready","meta":{"generatedAt":"2026-09-28T17:45:52.657Z","snapshot":true,"endpoint":"ticker","year":2028,"source":"hub-runtime","cacheRev":"t17"},"items":["Game — Missouri at Faurot Field — 3:30 PM · ESPN","News — Samuel Bailey commits to Florida · No. 49","Season — 4-0 heading into Saturday"]}

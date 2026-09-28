@@ -43,19 +43,19 @@ function isHubHeroPath(pathname) {
 const OV_2028 = {
   classRank: '—',
   blueChip: '100%',
-  commits: '2',
+  commits: '3',
   commitLabel: 'Commits',
-  avgRating: '89.8',
+  avgRating: '90.8',
 };
 
 function pin2028Overview(ov) {
   const base = ov && typeof ov === 'object' ? ov : {};
   const count = Number.parseInt(String(base.commits ?? ''), 10) || 0;
-  if (count >= 2 && String(base.avgRating || '') === OV_2028.avgRating) return base;
+  if (count >= 3) return base;
   return { ...base, ...OV_2028 };
 }
 
-/** iOS last-good / URLCache can keep the Armani-only 2028 plate. Pin Cyion on the wire. */
+/** iOS last-good / URLCache can keep the Armani-only 2028 plate. Pin Cyion + Bailey on the wire. */
 const CYION_2028_COMMIT = {
   id: 'cyion-smith',
   name: 'Cyion Smith',
@@ -71,6 +71,24 @@ const CYION_2028_COMMIT = {
   inState: true,
   stars: 4,
 };
+
+const BAILEY_2028_COMMIT = {
+  id: 'samuel-bailey',
+  name: 'Samuel Bailey',
+  position: 'OT',
+  rating: '92.8',
+  rankNote: '4★ OT · Huntsville, AL · #49 natl · #8 OT · #3 AL',
+  metaLine: '4★ OT · Huntsville, AL · #49 natl · #8 OT · #3 AL',
+  skinny:
+    'Samuel Bailey committed to Florida as a 4-star OT out of Jemison (Huntsville, AL). Listed at 6-5.5 / 300 · #49 nationally · #8 among OTs.',
+  commitDate: 'Sep 28, 2026',
+  statusBadge: 'Committed',
+  profileUrl: '/vault/recruiting/player/samuel-bailey',
+  inState: false,
+  stars: 4,
+};
+
+const VERIFIED_2028_BATTLE_SLUGS = new Set(['armani-strong', 'cyion-smith', 'samuel-bailey']);
 
 function commitListHasSlug(items, slug) {
   if (!Array.isArray(items)) return false;
@@ -89,19 +107,31 @@ function heal2028CommitPayload(data, year) {
   if (Number(year) !== 2028) return { data, changed: false };
   let changed = false;
   const out = { ...data };
-  if (Array.isArray(out.items) && !commitListHasSlug(out.items, 'cyion-smith')) {
-    out.items = [...out.items, CYION_2028_COMMIT];
-    changed = true;
+  if (Array.isArray(out.items)) {
+    if (!commitListHasSlug(out.items, 'cyion-smith')) {
+      out.items = [...out.items, CYION_2028_COMMIT];
+      changed = true;
+    }
+    if (!commitListHasSlug(out.items, 'samuel-bailey')) {
+      out.items = [...out.items, BAILEY_2028_COMMIT];
+      changed = true;
+    }
   }
-  if (Array.isArray(out.commits) && !commitListHasSlug(out.commits, 'cyion-smith')) {
-    out.commits = [...out.commits, CYION_2028_COMMIT];
-    changed = true;
+  if (Array.isArray(out.commits)) {
+    if (!commitListHasSlug(out.commits, 'cyion-smith')) {
+      out.commits = [...out.commits, CYION_2028_COMMIT];
+      changed = true;
+    }
+    if (!commitListHasSlug(out.commits, 'samuel-bailey')) {
+      out.commits = [...out.commits, BAILEY_2028_COMMIT];
+      changed = true;
+    }
     if (out.classOverview && typeof out.classOverview === 'object') {
       out.classOverview = { ...out.classOverview, commits: String(out.commits.length) };
     }
   }
   if (Array.isArray(out.players)) {
-    const next = out.players.filter((row) => String(row?.slug || row?.id || '').toLowerCase() !== 'cyion-smith');
+    const next = out.players.filter((row) => !VERIFIED_2028_BATTLE_SLUGS.has(String(row?.slug || row?.id || '').toLowerCase()));
     if (next.length !== out.players.length) {
       out.players = next;
       out.count = next.length;
@@ -110,7 +140,7 @@ function heal2028CommitPayload(data, year) {
   }
   for (const key of ['battleBoard', 'heatIndex', 'battles']) {
     if (!Array.isArray(out[key])) continue;
-    const next = out[key].filter((row) => String(row?.slug || row?.id || '').toLowerCase() !== 'cyion-smith');
+    const next = out[key].filter((row) => !VERIFIED_2028_BATTLE_SLUGS.has(String(row?.slug || row?.id || '').toLowerCase()));
     if (next.length !== out[key].length) {
       out[key] = next;
       changed = true;
@@ -135,7 +165,7 @@ function heal2028CommitPayload(data, year) {
   }
   if (Array.isArray(out.ticker)) {
     const next = out.ticker.map((line) =>
-      typeof line === 'string' ? line.replace(/\d+ commits locked for 2028/, '2 commits locked for 2028') : line
+      typeof line === 'string' ? line.replace(/\d+ commits locked for 2028/, '3 commits locked for 2028') : line
     );
     if (next.some((line, i) => line !== out.ticker[i])) {
       out.ticker = next;
@@ -383,7 +413,7 @@ const HERO_2028_FALLBACK = {
   classYears: [2026, 2027, 2028],
   classOverview: { ...OV_2028 },
   classOverviewAll: { 2028: { ...OV_2028 } },
-  ticker: ['2 commits locked for 2028'],
+  ticker: ['3 commits locked for 2028'],
   meta: { endpoint: 'hero', cacheReason: 'hero-edge-fallback' },
 };
 

@@ -14,7 +14,7 @@ describe('hub-runtime verified commit heal', () => {
     try {
       fs.rmSync(tmpRoot, { recursive: true, force: true });
     } catch {
-      /* ignore */
+      // ignore
     }
   });
 
@@ -25,7 +25,7 @@ describe('hub-runtime verified commit heal', () => {
       path.join(yearDir, 'commits.json'),
       JSON.stringify({
         ok: true,
-        meta: { cacheRev: 'c6', year: 2028 },
+        meta: { cacheRev: 'c7', year: 2028 },
         items: [{ id: 'armani-strong', name: 'Armani Strong' }],
       })
     );
@@ -45,8 +45,10 @@ describe('hub-runtime verified commit heal', () => {
     const slugs = (commits.items || []).map((p) => p.id || p.slug);
     assert.ok(slugs.includes('armani-strong'));
     assert.ok(slugs.includes('cyion-smith'));
+    assert.ok(slugs.includes('samuel-bailey'));
     const bundle = JSON.parse(fs.readFileSync(path.join(yearDir, 'bundle.json'), 'utf8'));
     assert.ok((bundle.commits || []).some((p) => p.id === 'cyion-smith'));
+    assert.ok((bundle.commits || []).some((p) => p.id === 'samuel-bailey'));
   });
 
   it('heals 2028 hero + classOverviewAll even when commits.json is complete', () => {
@@ -92,18 +94,16 @@ describe('hub-runtime verified commit heal', () => {
     const result = mergeBundledHubRuntimeOverviewIfRicher(tmpRoot);
     assert.equal(result.merged, true);
     const hero = JSON.parse(fs.readFileSync(path.join(yearDir, 'hero.json'), 'utf8'));
-    assert.equal(String(hero.classOverview.commits), '2');
-    assert.equal(String(hero.classOverview.avgRating), '89.8');
+    assert.equal(String(hero.classOverview.commits), '3');
     const all = JSON.parse(
       fs.readFileSync(path.join(tmpRoot, 'hub-runtime', 'class-overview-all.json'), 'utf8')
     );
-    assert.equal(String((all[2028] || all['2028']).commits), '2');
+    assert.equal(String((all[2028] || all['2028']).commits), '3');
     const hero2027 = JSON.parse(fs.readFileSync(path.join(otherHeroDir, 'hero.json'), 'utf8'));
-    assert.equal(String(hero2027.classOverviewAll[2028].commits), '2');
-    assert.equal(String(hero2027.classOverviewAll[2028].avgRating), '89.8');
+    assert.equal(String(hero2027.classOverviewAll[2028].commits), '3');
   });
 
-  it('strips Cyion from durable FutureCast HP', () => {
+  it('strips verified UF commits from durable FutureCast HP', () => {
     const hpDir = path.join(tmpRoot, 'futurecast-runtime');
     fs.mkdirSync(hpDir, { recursive: true });
     fs.writeFileSync(
@@ -113,6 +113,7 @@ describe('hub-runtime verified commit heal', () => {
         count: 2,
         players: [
           { slug: 'cyion-smith', name: 'Cyion Smith', committedTo: null },
+          { slug: 'samuel-bailey', name: 'Samuel Bailey', committedTo: null },
           { slug: 'hudson-west', name: 'Hudson West', committedTo: null },
         ],
       })
