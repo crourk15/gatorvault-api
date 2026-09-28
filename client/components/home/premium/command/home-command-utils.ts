@@ -9,13 +9,14 @@ import type { FlipWatchRow, MovementNarrativeRow, VisitRecapRow } from '@/lib/fu
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { movementDelta7d } from '@/lib/movement-intel-types';
 import { getFeaturedUfGame, parseScheduleKickoff } from '@/lib/gators-live';
-import { SCHEDULE_GAMES } from '@/lib/schedule-data';
+import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 
 /** Same as the schedule board — Cocktail Party + Doak. Not every SEC road game. */
 const RIVAL_OPPONENT_IDS = new Set(['fsu', 'uga']);
 
-function nextHomeGame(now = new Date()) {
-  return getFeaturedUfGame(now) || SCHEDULE_GAMES.find((g) => g.kind !== 'bye') || SCHEDULE_GAMES[0];
+function nextHomeGame(now = new Date(), games?: ScheduleGame[]) {
+  const pool = games?.length ? games : SCHEDULE_GAMES;
+  return getFeaturedUfGame(now, pool) || pool.find((g) => g.kind !== 'bye') || pool[0];
 }
 
 function kickoffIsoForGame(dateStr: string): string {
@@ -155,8 +156,8 @@ export function avatarInitials(name: string): string {
     .join('');
 }
 
-export function buildGameDayView(now = new Date()): HomeGameDayView {
-  const game = nextHomeGame(now);
+export function buildGameDayView(now = new Date(), games?: ScheduleGame[]): HomeGameDayView {
+  const game = nextHomeGame(now, games);
   return {
     gameId: game.id,
     opponent: game.opp,
@@ -548,7 +549,10 @@ export function buildHomeNowGameStory(now = new Date()): string | null {
   const where = home ? 'in the Swamp' : venue ? `at ${venue.split(',')[0].trim()}` : '';
   const tvRaw = String(game.tv || '').trim();
   const tv = tvRaw && !/^(TBD|—|-)$/i.test(tvRaw) ? tvRaw : '';
-  const clockMatch = String(game.date || '').match(/(\d{1,2}:\d{2})\s*(AM|PM)/i);
+  const dateRaw = String(game.date || '');
+  const clockMatch = /\d{1,2}:\d{2}\s*[-–]\s*\d{1,2}:\d{2}/.test(dateRaw)
+    ? null
+    : dateRaw.match(/(\d{1,2}:\d{2})\s*(AM|PM)/i);
   const clock = clockMatch ? `${clockMatch[1]} ${clockMatch[2].toUpperCase()}` : '';
   const weekday = kick.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -567,7 +571,10 @@ export function buildHomeNowGameStory(now = new Date()): string | null {
   }
   if (days <= 7) {
     const loc = where ? ` ${where}` : '';
-    return tv ? `Game — ${opp}${loc} · ${tv}` : `Game — ${opp}${loc}`.trim();
+    let line = `Game — ${opp}${loc}`.trim();
+    if (clock) line += ` — ${clock}`;
+    if (tv) line += ` · ${tv}`;
+    return line;
   }
   if (days <= 14) {
     const loc = where ? ` ${where}` : '';

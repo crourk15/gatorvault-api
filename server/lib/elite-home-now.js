@@ -381,7 +381,10 @@ function shortenOpponentName(opp) {
 }
 
 function formatKickClock(dateStr) {
-  const m = String(dateStr || '').match(/(\d{1,2}:\d{2})\s*(AM|PM)/i);
+  const raw = String(dateStr || '');
+  // Leftover SEC windows (3:30–8:00) are not a kickoff. Do not paint them.
+  if (/\d{1,2}:\d{2}\s*[-–]\s*\d{1,2}:\d{2}/.test(raw)) return '';
+  const m = raw.match(/(\d{1,2}:\d{2})\s*(AM|PM)/i);
   if (!m) return '';
   return `${m[1]} ${m[2].toUpperCase()}`;
 }
@@ -454,7 +457,10 @@ function buildHomeNowGameStory(now = new Date(), games) {
   }
   if (days <= 7) {
     const loc = where ? ` ${where}` : '';
-    return tv ? `Game Week — ${opp}${loc} · ${tv}` : `Game Week — ${opp}${loc}`.trim();
+    let line = `Game Week — ${opp}${loc}`.trim();
+    if (clock) line += ` — ${clock}`;
+    if (tv) line += ` · ${tv}`;
+    return line;
   }
   if (days <= 14) {
     const loc = where ? ` ${where}` : '';

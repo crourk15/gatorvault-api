@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Home Game Week kickoff: `/api/schedule` + NOW Game already serve Missouri **3:30 PM ET / ESPN** (not 3:30–8:00). 1.0.29 already live-fetches both. API after Render — no Codemagic.
 - [x] 2028 hero Commits 2 + drop Cyion from Biggest Battles: heal battleBoard/heat/battles of verified UF commits, pin 2028 hero on edge 502, skip hero SWR last-good. API + Netlify edge after deploy — no Codemagic. Hero last-good skip is the bake row.
 - [x] Game Week Missouri win chance: restamp **65% / UF 28 · Missouri 21** after the Ole Miss 52–28 (was leftover 52% coin-flip → Low / Flat). API `ufPct` after Render — current App Store gauge already live-fetches the %. Conviction stamp + “+13% this week” copy is the bake row.
 - [x] Game Week Missouri window: official **ESPN / 3:30 p.m. ET** (GatorsFB Sep 21) on `/api/schedule` after Render. Heal `date` + `tv` from the git board so Render durable cannot keep **TBD**. API — current App Store Game Week already live-fetches. Home countdown seed is already 3:30; TV badge waits on this API stamp.
