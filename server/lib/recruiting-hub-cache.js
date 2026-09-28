@@ -13,16 +13,16 @@ const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 const HUB_METRICS_CACHE_REV = 'hs10';
 
 /** Bump when footprint commit/target tallies logic changes. */
-const FOOTPRINT_CACHE_REV = 'fp4';
+const FOOTPRINT_CACHE_REV = 'fp5';
 
 /**
  * Bump when commit card meta (On3 ranks / rating plate) must invalidate durable
  * /var/data hub-runtime + deploy hub-snapshot that outlive players.json syncs.
  */
-const COMMITS_CACHE_REV = 'c6';
+const COMMITS_CACHE_REV = 'c7';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
-const TICKER_CACHE_REV = 't16';
+const TICKER_CACHE_REV = 't17';
 
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
@@ -66,7 +66,7 @@ function verifiedCommitSlugsForYear(year) {
   }
 }
 
-/** Reject durable commit plates that predate a verified UF commit (e.g. Cyion after Armani-only c6). */
+/** Reject durable commit plates that predate a verified UF commit (e.g. Bailey after Cyion-only c6). */
 function isUsableCommitsSnapshot(items, year) {
   if (!Array.isArray(items) || !items.length) return false;
   const required = verifiedCommitSlugsForYear(year);
@@ -522,8 +522,8 @@ function readHealthyClassOverview(year) {
 
 /**
  * Hero strip + year tabs read classOverview / classOverviewAll. Dedicated
- * /hub/class-overview can already be 2 / 89.8 while a 2026/2027 plate still
- * paints 2028 as 1 commit — heal those nests before serve.
+ * /hub/class-overview can already be 3 / 90.8 while a 2026/2027 plate still
+ * paints 2028 as 1–2 commits — heal those nests before serve.
  */
 function healOverviewNests(value, year) {
   if (!value || typeof value !== 'object') return value;

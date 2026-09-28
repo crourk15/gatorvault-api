@@ -678,23 +678,6 @@
       "stateRank": 2
     },
     {
-      "slug": "samuel-bailey",
-      "name": "Samuel Bailey",
-      "pos": "OT",
-      "school": "Jemison (AL)",
-      "state": "AL",
-      "stars": 4,
-      "natlRank": 49,
-      "committedTo": null,
-      "ufProbability": 0.2,
-      "ufRpmPct": 20,
-      "notes": "Alderman board lock.",
-      "inState": false,
-      "rating": 92.8086956521739,
-      "posRank": 8,
-      "stateRank": 3
-    },
-    {
       "slug": "derrell-hines-jr",
       "name": "Derrell Hines Jr.",
       "pos": null,

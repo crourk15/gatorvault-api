@@ -37,6 +37,11 @@ test('isActiveUfTarget excludes UF commits and elsewhere commits', () => {
     'Cyion Smith is a verified 2028 UF commit — never an active chase target'
   );
   assert.equal(
+    isActiveUfTarget({ slug: 'samuel-bailey', committedTo: null, status: 'uncommitted', classYear: 2028 }),
+    false,
+    'Samuel Bailey is a verified 2028 UF commit — never an active chase target'
+  );
+  assert.equal(
     isActiveUfTarget({ slug: 'adryan-cole', committedTo: null, status: 'uncommitted', category: 'target' }),
     false,
     'forced elsewhere-commit (Cole → Georgia) never counts as an active target'

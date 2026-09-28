@@ -10,10 +10,11 @@ const { isUfCommitRow } = require('../../api/futurecast/eligibility.ts');
 const { getAllowlistSet } = require('../../lib/recruiting-target-allowlist');
 
 describe('FutureCast Top Targets excludes UF commits', () => {
-  it('getUfCommitSlugSet includes Armani Strong and Cyion Smith for 2028', async () => {
+  it('getUfCommitSlugSet includes Armani Strong, Cyion Smith, and Samuel Bailey for 2028', async () => {
     const slugs = await getUfCommitSlugSet(2028);
     assert.ok(slugs.has('armani-strong'), 'Armani Strong must be treated as a 2028 UF commit');
     assert.ok(slugs.has('cyion-smith'), 'Cyion Smith must be treated as a 2028 UF commit');
+    assert.ok(slugs.has('samuel-bailey'), 'Samuel Bailey must be treated as a 2028 UF commit');
   });
 
   it('isUfCommitRow recognizes Florida HS commits', () => {
@@ -35,12 +36,13 @@ describe('FutureCast Top Targets excludes UF commits', () => {
     );
   });
 
-  it('Armani Strong and Cyion Smith are not active 2028 allowlist targets', () => {
+  it('Armani Strong, Cyion Smith, and Samuel Bailey are not active 2028 allowlist targets', () => {
     assert.equal(getAllowlistSet(2028).has('armani-strong'), false);
     assert.equal(getAllowlistSet(2028).has('cyion-smith'), false);
+    assert.equal(getAllowlistSet(2028).has('samuel-bailey'), false);
   });
 
-  it('FutureCast players seed marks Armani Strong and Cyion Smith committed to Florida', () => {
+  it('FutureCast players seed marks Armani Strong, Cyion Smith, and Samuel Bailey committed to Florida', () => {
     const playersPath = path.join(__dirname, '..', '..', 'data', 'players.json');
     const players = JSON.parse(fs.readFileSync(playersPath, 'utf8'));
     const armani = players.find((p) => String(p.slug || '').toLowerCase() === 'armani-strong');
@@ -49,6 +51,9 @@ describe('FutureCast Top Targets excludes UF commits', () => {
     const cyion = players.find((p) => String(p.slug || '').toLowerCase() === 'cyion-smith');
     assert.ok(cyion, 'cyion-smith row exists in FutureCast players seed');
     assert.match(String(cyion.committed_to || ''), /florida/i);
+    const bailey = players.find((p) => String(p.slug || '').toLowerCase() === 'samuel-bailey');
+    assert.ok(bailey, 'samuel-bailey row exists in FutureCast players seed');
+    assert.match(String(bailey.committed_to || ''), /florida/i);
   });
 
   it('watchlist API filters recruiting-store commits before card render', () => {

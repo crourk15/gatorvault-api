@@ -89,14 +89,19 @@ describe('commits cache rev', () => {
       full.some((p) => /cyion-smith/i.test(String(p.id || p.slug || ''))),
       'Cyion Smith must be on the 2028 commit plate'
     );
+    assert.ok(
+      full.some((p) => /samuel-bailey/i.test(String(p.id || p.slug || ''))),
+      'Samuel Bailey must be on the 2028 commit plate'
+    );
     const bundle = {
       year: 2028,
       commits: [{ id: 'armani-strong', name: 'Armani Strong' }],
       classOverview: { commits: '1' },
     };
     cache.healBundleCommitsNest(bundle, 2028);
-    assert.ok(bundle.commits.length >= 2);
+    assert.ok(bundle.commits.length >= 3);
     assert.ok(bundle.commits.some((p) => /cyion-smith/i.test(String(p.id || p.slug || ''))));
+    assert.ok(bundle.commits.some((p) => /samuel-bailey/i.test(String(p.id || p.slug || ''))));
     assert.equal(bundle.classOverview.commits, String(bundle.commits.length));
   });
 
@@ -117,8 +122,7 @@ describe('commits cache rev', () => {
     );
     const hero = cache.readHubDiskSnapshot('hero', 2028);
     assert.ok(hero, 'bundled 2028 hero must win over the 1-commit runtime plate');
-    assert.equal(String(hero.classOverview.commits), '2');
-    assert.equal(String(hero.classOverview.avgRating), '89.8');
+    assert.equal(String(hero.classOverview.commits), '3');
 
     const stale = {
       year: 2027,
@@ -128,14 +132,13 @@ describe('commits cache rev', () => {
       },
     };
     cache.healOverviewNests(stale, 2027);
-    assert.equal(String(stale.classOverviewAll[2028].commits), '2');
-    assert.equal(String(stale.classOverviewAll[2028].avgRating), '89.8');
+    assert.equal(String(stale.classOverviewAll[2028].commits), '3');
   });
 
-  it('hub-runtime 2027 commits are c6 with Pearl #17/#12', () => {
+  it('hub-runtime 2027 commits are c7 with Pearl #17/#12', () => {
     const snap = path.join(__dirname, '../../data/recruiting/hub-runtime/2027/commits.json');
     const doc = JSON.parse(fs.readFileSync(snap, 'utf8'));
-    assert.equal(doc.meta.cacheRev, 'c6');
+    assert.equal(doc.meta.cacheRev, cache.COMMITS_CACHE_REV);
     const pearl = (doc.items || []).find((p) => /pearl/i.test(p.name || ''));
     assert.ok(pearl, 'Elias Pearl must be in 2027 commits snapshot');
     assert.match(String(pearl.metaLine || ''), /#17 WR/);

@@ -2,37 +2,50 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-
 const {
   stripVerifiedUfCommitsFromRows,
   stripVerifiedUfCommitsFromHubPayload,
 } = require('../../lib/recruiting-verified-commits');
 const { buildBattleBoardRows } = require('../../lib/recruiting-hub-data');
 
-test('stripVerifiedUfCommitsFromRows drops Cyion from chase plates', () => {
+test('stripVerifiedUfCommitsFromRows drops verified 2028 commits from chase plates', () => {
   const rows = [
     { slug: 'cyion-smith', name: 'Cyion Smith' },
+    { slug: 'samuel-bailey', name: 'Samuel Bailey' },
     { id: 'hudson-west', name: 'Hudson West' },
   ];
   const next = stripVerifiedUfCommitsFromRows(rows);
-  assert.deepEqual(next.map((row) => row.slug || row.id), ['hudson-west']);
+  assert.deepEqual(
+    next.map((row) => row.slug || row.id),
+    ['hudson-west']
+  );
 });
 
-test('stripVerifiedUfCommitsFromHubPayload drops Cyion from battle/heat nests', () => {
+test('stripVerifiedUfCommitsFromHubPayload drops verified commits from battle/heat nests', () => {
   const { value, changed } = stripVerifiedUfCommitsFromHubPayload({
     battleBoard: [
       { slug: 'cyion-smith', name: 'Cyion Smith' },
+      { slug: 'samuel-bailey', name: 'Samuel Bailey' },
       { slug: 'hudson-west', name: 'Hudson West' },
     ],
-    heatIndex: [{ id: 'cyion-smith', name: 'Cyion Smith' }],
+    heatIndex: [
+      { id: 'cyion-smith', name: 'Cyion Smith' },
+      { id: 'samuel-bailey', name: 'Samuel Bailey' },
+    ],
     battles: [{ slug: 'armani-strong', name: 'Armani Strong' }],
-    commits: [{ id: 'cyion-smith', name: 'Cyion Smith' }],
+    commits: [
+      { id: 'cyion-smith', name: 'Cyion Smith' },
+      { id: 'samuel-bailey', name: 'Samuel Bailey' },
+    ],
   });
   assert.equal(changed, true);
-  assert.deepEqual(value.battleBoard.map((row) => row.slug), ['hudson-west']);
+  assert.deepEqual(
+    value.battleBoard.map((row) => row.slug),
+    ['hudson-west']
+  );
   assert.equal(value.heatIndex.length, 0);
   assert.equal(value.battles.length, 0);
-  assert.equal(value.commits.length, 1);
+  assert.equal(value.commits.length, 2);
 });
 
 test('buildBattleBoardRows skips verified UF commits even with RPM', () => {
@@ -46,7 +59,19 @@ test('buildBattleBoardRows skips verified UF commits even with RPM', () => {
       isCommittedToUF: false,
       ufScore: 91,
       competitors: [{ school: 'Miami', score: 88 }],
-      battleDifficulty: 'tossup',
+      battleDifficulty: 'toss-up',
+      battleColor: 'amber',
+    },
+    {
+      slug: 'samuel-bailey',
+      name: 'Samuel Bailey',
+      classYear: 2028,
+      position: 'OT',
+      isCommit: false,
+      isCommittedToUF: false,
+      ufScore: 90,
+      competitors: [{ school: 'Alabama', score: 80 }],
+      battleDifficulty: 'toss-up',
       battleColor: 'amber',
     },
     {
@@ -57,10 +82,11 @@ test('buildBattleBoardRows skips verified UF commits even with RPM', () => {
       isCommit: false,
       ufScore: 88,
       competitors: [{ school: 'Georgia', score: 86 }],
-      battleDifficulty: 'tossup',
+      battleDifficulty: 'toss-up',
       battleColor: 'amber',
     },
   ]);
   assert.equal(rows.some((row) => row.id === 'cyion-smith'), false);
+  assert.equal(rows.some((row) => row.id === 'samuel-bailey'), false);
   assert.equal(rows.some((row) => row.id === 'hudson-west'), true);
 });

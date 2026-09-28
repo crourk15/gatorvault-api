@@ -95,7 +95,7 @@ const ALLOWLIST_2028 = [
   // Blake Alderman “12 UF likes standing” — lock missing board names
   'antijuan-wilkes-jr',
   'nehemiah-mccary',
-  'samuel-bailey',
+  // samuel-bailey — UF commit (2026-09-28); removed from active 2028 targets
   'derrell-hines-jr',
   // Film-desk / Chatman DL — keep on locked chase (was admin-only; player shell can drop)
   'jamarcus-johnson',

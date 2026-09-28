@@ -231517,25 +231517,25 @@
     "posRank": 8,
     "stateRank": 3,
     "inState": false,
-    "category": "target",
-    "status": "uncommitted",
-    "committedTo": null,
+    "category": "recruit",
+    "status": "committed",
+    "committedTo": "Florida",
     "fromSchool": null,
-    "commitDate": null,
-    "skinny": "4★ OT · #49 natl · Jemison, AL",
-    "profileNote": "",
+    "commitDate": "2026-09-28",
+    "skinny": "OT · 4★ · Jemison · #49 natl",
+    "profileNote": "Samuel Bailey committed to Florida on September 28, 2026.",
     "on3Id": "283076",
     "on3Slug": "samuel-bailey-283076",
     "on3ProfileUrl": "https://www.on3.com/rivals/samuel-bailey-283076/",
     "on3Source": "on3-board-sync",
     "boardSource": null,
-    "protected": false,
-    "verifiedCommit": false,
+    "protected": true,
+    "verifiedCommit": true,
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
     "rivalsArticleUrl": null,
-    "ufOvStatus": "completed",
+    "ufOvStatus": null,
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
@@ -231558,22 +231558,34 @@
       {
         "school": "Alabama",
         "score": 26.586102719033235,
-        "pct": 26.586102719033235
+        "pct": 26.586102719033235,
+        "source": "legacy",
+        "updatedAt": "2026-09-28T17:42:37.450Z",
+        "trend": "flat"
       },
       {
         "school": "Ohio State",
         "score": 23.262839879154075,
-        "pct": 23.262839879154075
+        "pct": 23.262839879154075,
+        "source": "legacy",
+        "updatedAt": "2026-09-28T17:42:37.450Z",
+        "trend": "flat"
       },
       {
         "school": "Auburn",
         "score": 9.06344410876133,
-        "pct": 9.06344410876133
+        "pct": 9.06344410876133,
+        "source": "legacy",
+        "updatedAt": "2026-09-28T17:42:37.450Z",
+        "trend": "flat"
       },
       {
         "school": "USF Bulls",
         "score": 8.308157099697885,
-        "pct": 8.308157099697885
+        "pct": 8.308157099697885,
+        "source": "legacy",
+        "updatedAt": "2026-09-28T17:42:37.450Z",
+        "trend": "flat"
       }
     ],
     "offers": [
@@ -233679,10 +233691,13 @@
     "height": "6-5.5",
     "weight": 300,
     "ufRpmPct": 20,
-    "updatedAt": "2026-08-14T00:14:54.015Z",
+    "updatedAt": "2026-09-28T17:42:37.582Z",
     "state": "AL",
     "displayRating": 92.8086956521739,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "lifecycle": "commit",
+    "pipelineState": "committed",
+    "evaluationSummary": "4★ OT · #49 natl · Jemison (AL)"
   },
   {
     "id": "tristin-gaines",

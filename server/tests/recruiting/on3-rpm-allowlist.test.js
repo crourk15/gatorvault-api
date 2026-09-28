@@ -99,6 +99,11 @@ describe('on3-rpm inventory sync (Pass 4)', () => {
       false,
       'UF commits must drop out of RPM inventory sync'
     );
+    assert.equal(
+      all.targets.some((t) => t.slug === 'samuel-bailey'),
+      false,
+      'Samuel Bailey must drop out of RPM inventory sync after the UF commit'
+    );
 
     const allowOnly = collectSyncTargets({ scope: 'allowlist', classYears: [2028] });
     assert.ok(allowOnly.targets.every((t) => String(t.sourceBucket).includes('allowlist')));

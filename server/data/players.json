@@ -2626,6 +2626,38 @@
   },
   {
     "id": null,
+    "full_name": "Samuel Bailey",
+    "slug": "samuel-bailey",
+    "class_year": 2028,
+    "position": "OT",
+    "status": "HS",
+    "height": null,
+    "weight": null,
+    "hometown": "Huntsville",
+    "state": "AL",
+    "high_school": "Jemison",
+    "stars": 4,
+    "composite_rating": 0.928,
+    "ranking_national": 49,
+    "ranking_position": 8,
+    "ranking_state": 3,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [],
+      "stats": {
+        "stars": 4,
+        "rating": 93,
+        "natl_rank": 49,
+        "pos_rank": 8,
+        "state_rank": 3,
+        "on3_id": "samuel-bailey"
+      },
+      "recruiting_notes": null,
+      "discovery_score": null
+    }
+  },
+  {
+    "id": null,
     "full_name": "Dominick Harris-Payne",
     "slug": "dominick-harris-payne",
     "class_year": 2028,

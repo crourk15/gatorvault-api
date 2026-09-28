@@ -1,4 +1,4 @@
-﻿const test = require('node:test');
+const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
   isVerifiedHubCommit,
@@ -86,7 +86,7 @@ test('getHubCommits returns all Florida commits for hub class years', async () =
   delete require.cache[require.resolve('../../lib/recruiting-store')];
 });
 
-test('getHubCommits 2028 includes Armani Strong and Cyion Smith', async () => {
+test('getHubCommits 2028 includes Armani Strong, Cyion Smith, and Samuel Bailey', async () => {
   delete process.env.SUPABASE_URL;
   delete process.env.DATABASE_URL;
   delete require.cache[require.resolve('../../lib/recruiting-store')];
@@ -107,6 +107,14 @@ test('getHubCommits 2028 includes Armani Strong and Cyion Smith', async () => {
   const smith = commits.find((p) => String(p.slug || '').toLowerCase() === 'cyion-smith');
   assert.equal(String(smith.committedTo || '').toLowerCase(), 'florida');
   assert.equal(String(smith.status || '').toLowerCase(), 'committed');
+  assert.equal(
+    commits.some((p) => String(p.slug || '').toLowerCase() === 'samuel-bailey'),
+    true,
+    'samuel-bailey must appear as a 2028 UF commit'
+  );
+  const bailey = commits.find((p) => String(p.slug || '').toLowerCase() === 'samuel-bailey');
+  assert.equal(String(bailey.committedTo || '').toLowerCase(), 'florida');
+  assert.equal(String(bailey.status || '').toLowerCase(), 'committed');
   delete require.cache[require.resolve('../../lib/recruiting-store')];
   delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
 });
@@ -319,6 +327,23 @@ test('applyVerifiedHubCommit overlays Cyion Smith from the git bundle onto a dur
   assert.equal(restored.category, 'recruit');
   assert.equal(restored.commitDate, '2026-09-26');
   assert.match(String(restored.profileNote || ''), /Cyion Smith committed to Florida/i);
+});
+
+test('applyVerifiedHubCommit overlays Samuel Bailey from the git bundle onto a durable target shell', () => {
+  const restored = applyVerifiedHubCommit({
+    slug: 'samuel-bailey',
+    name: 'Samuel Bailey',
+    classYear: 2028,
+    category: 'target',
+    status: 'uncommitted',
+    committedTo: null,
+    commitDate: null,
+  });
+  assert.equal(restored.status, 'committed');
+  assert.equal(restored.committedTo, 'Florida');
+  assert.equal(restored.category, 'recruit');
+  assert.equal(restored.commitDate, '2026-09-28');
+  assert.match(String(restored.profileNote || ''), /Samuel Bailey committed to Florida/i);
 });
 
 test('applyVerifiedHubCommit restores demoted verified slug', () => {

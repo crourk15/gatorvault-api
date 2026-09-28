@@ -35,7 +35,7 @@ function meta(endpoint, year) {
       const { COMMITS_CACHE_REV } = require('../lib/recruiting-hub-cache');
       base.cacheRev = COMMITS_CACHE_REV;
     } catch {
-      base.cacheRev = 'c6';
+      base.cacheRev = 'c7';
     }
   }
   if (endpoint === 'footprint') {
@@ -43,7 +43,7 @@ function meta(endpoint, year) {
       const { FOOTPRINT_CACHE_REV } = require('../lib/recruiting-hub-cache');
       base.cacheRev = FOOTPRINT_CACHE_REV;
     } catch {
-      base.cacheRev = 'fp4';
+      base.cacheRev = 'fp5';
     }
   }
   return base;

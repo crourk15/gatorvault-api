@@ -1,14 +1,14 @@
 {
   "year": 2026,
   "title": "Florida Recruiting",
-  "subtitle": "Who Florida is chasing — movement, board, and beat intel.",
+  "subtitle": "Who Florida is chasing \u2014 movement, board, and beat intel.",
   "classYears": [
     2026,
     2027,
     2028
   ],
   "ticker": [
-    "2026 class trending nationally — UF at #15",
+    "2026 class trending nationally \u2014 UF at #15",
     "Blue chip % at 59%",
     "22 signees locked for 2026"
   ],
@@ -65,11 +65,11 @@
       }
     },
     "2028": {
-      "classRank": "—",
+      "classRank": "\u2014",
       "blueChip": "100%",
-      "commits": "2",
+      "commits": "3",
       "commitLabel": "Commits",
-      "avgRating": "89.8",
+      "avgRating": "90.8",
       "trendRank": "Stable",
       "trendBlueChip": "Rising",
       "trendCommits": "Rising",

@@ -2,6 +2,28 @@
   "version": 1,
   "events": [
     {
+      "id": "gm2_1790617357637_pfd9a",
+      "at": "2026-09-28T17:42:37.637Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "samuel-bailey",
+      "fingerprint": "samuel-bailey|commit|2026-09-28",
+      "source": "manual",
+      "eventType": "commit"
+    },
+    {
+      "id": "gm2_1790617357316_74vit",
+      "at": "2026-09-28T17:42:37.316Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "samuel-bailey",
+      "fingerprint": "manual_commit_samuel-bailey_2026-09-28",
+      "source": "manual",
+      "eventType": "commit"
+    },
+    {
       "id": "gm2_1790447142033_17h3d",
       "at": "2026-09-26T18:25:42.033Z",
       "layer": "sil",
@@ -5244,28 +5266,7 @@
       "playerSlug": "stafford-willis",
       "reason": "invalid_player_on_write",
       "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1783769292448_dq9eo",
-      "at": "2026-07-11T11:28:12.448Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "stafford-willis",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1783769292446_22wgr",
-      "at": "2026-07-11T11:28:12.446Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "stafford-willis",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
     }
   ],
-  "updatedAt": "2026-09-26T18:25:42.033Z"
+  "updatedAt": "2026-09-28T17:42:37.637Z"
 }

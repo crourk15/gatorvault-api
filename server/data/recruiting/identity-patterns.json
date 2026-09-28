@@ -4770,7 +4770,7 @@
       "name": "Samuel Bailey",
       "stars": 4,
       "position": "OT",
-      "school": "Jemison (Jemison, AL)",
+      "school": "Jemison (AL)",
       "commitSchool": null,
       "class": 2028,
       "natlRank": 49,
@@ -4783,15 +4783,15 @@
         "4-star OT Bailey",
         "four star OT Bailey",
         "four-star OT Bailey",
-        "Jemison (Jemison, AL) 4 star",
-        "Jemison (Jemison, AL) four star",
-        "Jemison (Jemison, AL) OT",
+        "Jemison (AL) 4 star",
+        "Jemison (AL) four star",
+        "Jemison (AL) OT",
         "Samuel Bailey",
         "Bailey",
         "OT Samuel",
         "OT Bailey",
-        "4 star Jemison (Jemison, AL) commit",
-        "four star Jemison (Jemison, AL) commit",
+        "4 star Jemison (AL) commit",
+        "four star Jemison (AL) commit",
         "2028 OT Samuel",
         "2028 4-star OT Samuel",
         "2028 four-star OT Samuel",
@@ -4801,7 +4801,7 @@
         "49 4 star OT Samuel",
         "49 four star OT Samuel"
       ],
-      "updatedAt": "2026-08-10T17:20:45.985Z"
+      "updatedAt": "2026-09-28T17:42:37.635Z"
     },
     "cyion-smith": {
       "slug": "cyion-smith",
@@ -5718,5 +5718,5 @@
       "updatedAt": "2026-09-23T19:43:05.593Z"
     }
   },
-  "updatedAt": "2026-09-26T18:25:42.031Z"
+  "updatedAt": "2026-09-28T17:42:37.635Z"
 }
