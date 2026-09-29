@@ -7,10 +7,8 @@ OUT = Path(__file__).resolve().parent
 NAVY = (8, 18, 48)
 WHITE = (255, 255, 255)
 ROW = (255, 255, 255)
-GOLD = (212, 175, 55)
 
 BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-REG = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
 
 def font(path, size):
@@ -53,7 +51,7 @@ def render(path, title_lines, rows):
         y += 88
     y += 40
     for kind, label in rows:
-        d.line([(70, y - 28), (w - 70, y - 28)], fill=(255, 255, 255, 40), width=1)
+        d.line([(70, y - 28), (w - 70, y - 28)], fill=(40, 50, 80), width=1)
         draw_icon(d, kind, 120, y + 18)
         d.text((190, y), label, font=row_font, fill=ROW)
         y += 150
@@ -77,10 +75,10 @@ def main():
         OUT / "phone-game-week.png",
         ["GAME WEEK"],
         [
-            ("cal", "MISSOURI  SAT  3:30"),
-            ("radio", "ESPN"),
-            ("chart", "WIN THE LINE"),
+            ("cal", "THIS WEEK'S KEYS"),
             ("clapper", "FILM ROOM"),
+            ("radio", "LIVE BEAT"),
+            ("chart", "FUTURECAST"),
             ("people", "TEAM"),
         ],
     )

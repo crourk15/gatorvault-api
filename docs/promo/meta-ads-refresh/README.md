@@ -1,5 +1,7 @@
 # Meta ads — keep the last ad look
 
+This flight is at least 15 days. Do **not** put Missouri, 3:30, ESPN, or any one Saturday on the art. That goes stale in a week.
+
 Do **not** replace the woman + phone + FLORIDA FOOTBALL UNLOCKED image with the vault pictures. That ad is the winner. It got tired from running too long, not because it looks cheap.
 
 ## Tonight
@@ -26,7 +28,7 @@ FILM ROOM
 GAME WEEK
 ```
 
-### Phone text — version C (Game Week)
+### Phone text — version C (Game Week — evergreen)
 
 Headline:
 ```
@@ -35,12 +37,14 @@ GAME WEEK
 
 Rows:
 ```
-MISSOURI  SAT  3:30
-ESPN
-WIN THE LINE
+THIS WEEK'S KEYS
 FILM ROOM
+LIVE BEAT
+FUTURECAST
 TEAM
 ```
+
+No opponent. No kickoff time. No TV network.
 
 5. Export two new squares (1080×1080).
 6. Ads Manager → **Gator Vault Insider 2.0** → **New App promotion Ad Set** → **New App promotion Ad** → Duplicate.
