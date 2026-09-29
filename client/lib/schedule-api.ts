@@ -26,59 +26,32 @@ export type ScheduleBoardLive = {
   predThrough?: string;
 };
 
-export function predThroughRank(value?: string | null): number {
-  const match = String(value || '')
-    .trim()
-    .match(/^(\d{4})-W(\d+)$/i);
-  if (!match) return 0;
-  return Number(match[1]) * 100 + Number(match[2]);
-}
-
 function hasPostedFinal(game: ScheduleGame): boolean {
   return Number.isFinite(Number(game.finalUF)) && Number.isFinite(Number(game.finalOpp));
 }
 
-function remainingPredsMatch(live: ScheduleGame, seed: ScheduleGame): boolean {
-  return (
-    String(live.pred || '') === String(seed.pred || '') &&
-    Number(live.predUF) === Number(seed.predUF) &&
-    Number(live.predOpp) === Number(seed.predOpp) &&
-    Number(live.ufPct) === Number(seed.ufPct)
-  );
-}
-
-/** Overlay leftover last-good remaining scores when the bundled seed is a newer week. */
-export function overlaySeedRemainingPreds(
-  games: ScheduleGame[],
-  seedGames: ScheduleGame[] = SCHEDULE_GAMES
-): ScheduleGame[] {
-  const seedById = new Map(seedGames.map((game) => [game.id, game]));
+/** Remaining-game leans are live-only. Do not first-paint last-good or seed scores. */
+export function stripRemainingPreds(games: ScheduleGame[]): ScheduleGame[] {
   return games.map((game) => {
-    const seed = seedById.get(game.id);
-    if (!seed || hasPostedFinal(game) || hasPostedFinal(seed)) return game;
-    if (remainingPredsMatch(game, seed)) return game;
+    if (hasPostedFinal(game)) return game;
     return {
       ...game,
-      pred: seed.pred,
-      predUF: seed.predUF,
-      predOpp: seed.predOpp,
-      ufPct: seed.ufPct,
-      ...(seed.predConfidence != null ? { predConfidence: seed.predConfidence } : {}),
-      ...(seed.predMovement ? { predMovement: seed.predMovement } : {}),
-      ...(seed.ufPctDelta != null ? { ufPctDelta: seed.ufPctDelta } : {}),
-      predThrough: seed.predThrough || SCHEDULE_SEED_PRED_THROUGH,
+      pred: '',
+      predUF: 0,
+      predOpp: 0,
+      ufPct: 0,
+      predPending: true,
+      predConfidence: undefined,
+      predMovement: undefined,
+      ufPctDelta: undefined,
     };
   });
 }
 
-function healLastGoodPreds(last: ScheduleBoardLive, seed: ScheduleBoardLive): ScheduleBoardLive {
-  const lastRank = predThroughRank(last.predThrough);
-  const seedRank = predThroughRank(seed.predThrough || SCHEDULE_SEED_PRED_THROUGH);
-  if (last.predThrough && lastRank >= seedRank) return last;
+function seedBoard(): ScheduleBoardLive {
   return {
-    ...last,
-    games: overlaySeedRemainingPreds(last.games, seed.games),
-    predThrough: seed.predThrough || SCHEDULE_SEED_PRED_THROUGH,
+    games: SCHEDULE_GAMES.slice(),
+    predThrough: SCHEDULE_SEED_PRED_THROUGH,
   };
 }
 
@@ -229,6 +202,8 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
 const LAST_GOOD_PREFIX = 'gv-schedule-board-last-good:';
 
 let lastGoodMemory: Record<number, ScheduleBoardLive> = {};
+/** This JS session already applied a live `/api/schedule` board — remaining preds are safe to paint. */
+const sessionLive: Record<number, boolean> = {};
 
 function lastGoodKey(season: number): string {
   return `${LAST_GOOD_PREFIX}${season}`;
@@ -253,8 +228,9 @@ function readLastGood(season: number): ScheduleBoardLive | null {
   }
 }
 
-function writeLastGood(season: number, board: ScheduleBoardLive): void {
+function writeLastGood(season: number, board: ScheduleBoardLive, opts?: { fromLive?: boolean }): void {
   lastGoodMemory[season] = board;
+  if (opts?.fromLive) sessionLive[season] = true;
   if (typeof window === 'undefined' || !window.localStorage) return;
   try {
     window.localStorage.setItem(lastGoodKey(season), JSON.stringify(board));
@@ -265,6 +241,7 @@ function writeLastGood(season: number, board: ScheduleBoardLive): void {
 
 function clearLastGood(season = 2026): void {
   delete lastGoodMemory[season];
+  delete sessionLive[season];
   if (typeof window === 'undefined' || !window.localStorage) return;
   try {
     window.localStorage.removeItem(lastGoodKey(season));
@@ -277,15 +254,12 @@ export function fallbackScheduleGames(): ScheduleGame[] {
   return SCHEDULE_GAMES.slice();
 }
 
-/** Sync first paint — last live board, healed when the bundled seed is a newer pred week. */
+/** Sync first paint — intel from last-good/seed; remaining scores wait for this-session live. */
 export function peekScheduleBoard(season = 2026): ScheduleBoardLive {
-  const seed: ScheduleBoardLive = {
-    games: fallbackScheduleGames(),
-    predThrough: SCHEDULE_SEED_PRED_THROUGH,
-  };
   const last = readLastGood(season);
-  if (!last) return seed;
-  return healLastGoodPreds(last, seed);
+  const base = last || seedBoard();
+  if (sessionLive[season]) return base;
+  return { ...base, games: stripRemainingPreds(base.games) };
 }
 
 export async function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLive> {
@@ -301,21 +275,19 @@ export async function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLi
     const predThrough = String(data?.predThrough || '').trim() || undefined;
     if (live.length) {
       const board = { games: live, currentGameId, ...(predThrough ? { predThrough } : {}) };
-      writeLastGood(season, board);
+      writeLastGood(season, board, { fromLive: true });
       return board;
     }
   } catch {
     /* fall through */
   }
-  // 502 / flap: keep the last live board. Do not snap back to the baked seed
-  // (1.0.28 still has the Sep 21 Ole Miss keys). Heal leftover remaining scores
-  // so a 502 cannot put yesterday's 28–21 back on screen.
-  const seed: ScheduleBoardLive = {
-    games: fallbackScheduleGames(),
-    predThrough: SCHEDULE_SEED_PRED_THROUGH,
-  };
+  // 502 / flap: keep this-session live board. Do not paint durable leftover scores.
+  if (sessionLive[season] && lastGoodMemory[season]?.games?.length) {
+    return lastGoodMemory[season];
+  }
   const last = readLastGood(season);
-  return last ? healLastGoodPreds(last, seed) : seed;
+  const base = last || seedBoard();
+  return { ...base, games: stripRemainingPreds(base.games) };
 }
 
 export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]> {
@@ -338,7 +310,5 @@ export const __scheduleApiTest = {
   readLastGood,
   clearLastGood,
   lastGoodKey,
-  overlaySeedRemainingPreds,
-  healLastGoodPreds,
-  predThroughRank,
+  stripRemainingPreds,
 };

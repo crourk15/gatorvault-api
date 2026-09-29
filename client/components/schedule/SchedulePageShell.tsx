@@ -11,6 +11,7 @@ import {
   getScheduleGameStatus,
   getSeasonModelSummary,
   groupGamesBySection,
+  hasPostedFinal,
   toPremiumScheduleGame,
   type PremiumScheduleGame,
   type ScheduleGameStatus,
@@ -65,7 +66,13 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
   const grouped = useMemo(() => groupGamesBySection(games), [games]);
   const nextGame = useMemo(() => getNextScheduleGame(games), [games]);
   const nextId = nextGame?.id ?? null;
-  const seasonModel = useMemo(() => (games.length ? getSeasonModelSummary(games) : null), [games]);
+  const seasonModel = useMemo(() => {
+    if (!games.length) return null;
+    if (games.some((game) => !game.isBye && !hasPostedFinal(game) && game.predPending)) {
+      return null;
+    }
+    return getSeasonModelSummary(games);
+  }, [games]);
 
   const statusById = useMemo(() => {
     const map: Record<string, ScheduleGameStatus> = {};

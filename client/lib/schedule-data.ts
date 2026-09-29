@@ -33,6 +33,8 @@ export type ScheduleGame = {
   /** Explicit projected score — prefer over parsing `pred`. */
   predUF: number;
   predOpp: number;
+  /** True when remaining-game lean is waiting on live `/api/schedule` — do not paint last-good/seed. */
+  predPending?: boolean;
   /** Conviction in the lean (0–100). Not “distance from 50%.” */
   predConfidence?: number;
   predMovement?: 'up' | 'down' | 'flat';

@@ -33,6 +33,7 @@ export function GameCard(props: Props): React.ReactElement {
     winProbability,
     predictedScoreUF,
     predictedScoreOpp,
+    predPending,
     intelUrl,
     ticketVendors,
     status = 'upcoming',
@@ -117,7 +118,7 @@ export function GameCard(props: Props): React.ReactElement {
           ) : (
             <>
               <TVNetworkBadge network={tvNetwork} />
-              {status !== 'past' ? (
+              {status !== 'past' && !predPending ? (
                 <>
                   <WinProbabilityBar winProbability={winProbability} />
                   <PredictedScoreBlock
@@ -128,7 +129,7 @@ export function GameCard(props: Props): React.ReactElement {
                     gameId={id}
                   />
                 </>
-              ) : postedFinal && finalUF != null && finalOpp != null ? (
+              ) : status !== 'past' && predPending ? null : postedFinal && finalUF != null && finalOpp != null ? (
                 <PredictedScoreBlock
                   ufScore={finalUF}
                   oppScore={finalOpp}

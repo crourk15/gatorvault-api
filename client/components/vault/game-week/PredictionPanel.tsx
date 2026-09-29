@@ -12,17 +12,23 @@ export function PredictionPanel({ prediction }: Props): React.ReactElement {
     <div className="gv-gw-pred-panel" data-testid="gw-prediction-panel">
       <div className="gv-gw-pred-panel__hero">
         <span className="gv-gw-pred-panel__badge">FutureCast pick</span>
-        <p className="gv-gw-pred-panel__score">{prediction.scoreLine}</p>
+        {prediction.scoreLine ? (
+          <p className="gv-gw-pred-panel__score">{prediction.scoreLine}</p>
+        ) : null}
       </div>
       <div className="gv-gw-pred-panel__lines">
         <span className="gv-gw-pred-panel__spread">{prediction.spread}</span>
         <span>{prediction.total}</span>
       </div>
-      <p className="gv-gw-pred-panel__poll-label">Fan poll — UF win</p>
-      <div className="gv-gw-pred-panel__fan-bar">
-        <div className="gv-gw-pred-panel__fan-fill" style={{ width: `${prediction.fanUfPct}%` }} />
-      </div>
-      <p className="gv-gw-pred-panel__poll-meta">{prediction.fanUfPct}% Gator Nation</p>
+      {prediction.scoreLine ? (
+        <>
+          <p className="gv-gw-pred-panel__poll-label">Fan poll — UF win</p>
+          <div className="gv-gw-pred-panel__fan-bar">
+            <div className="gv-gw-pred-panel__fan-fill" style={{ width: `${prediction.fanUfPct}%` }} />
+          </div>
+          <p className="gv-gw-pred-panel__poll-meta">{prediction.fanUfPct}% Gator Nation</p>
+        </>
+      ) : null}
       <ul className="gv-gw-pred-panel__experts">
         {prediction.expertPicks.map((e) => (
           <li key={e.source}>
