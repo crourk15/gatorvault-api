@@ -47,6 +47,9 @@ describe('api stay-green lockdown', () => {
     assert.equal(mod.stayGreenSkipPayload('gators-score-alerts'), null);
     assert.equal(mod.stayGreenSkipPayload('ops:gators-score-alerts'), null);
     assert.equal(mod.shouldBlockOpsJob('gators-score-alerts'), false);
+    assert.equal(mod.stayGreenSkipPayload('film-room-youtube-sync'), null);
+    assert.equal(mod.stayGreenSkipPayload('ops:film-room-youtube-sync'), null);
+    assert.equal(mod.shouldBlockOpsJob('film-room-youtube-sync'), false);
   });
 
   it('can be forced on for lockdown', () => {

@@ -399,9 +399,11 @@ services:
       # Pro 4GB: keep heavy warm well after listen so /ready stays cheap.
       # Soft-skip On3/beat/allowlist/hub refresh until /ready has been cheap
       # for 8 minutes. Stops recruiting-light at :00 from 502-looping a fresh
-      # disk instance. Score alerts stay exempt (BOOT_HEAVY_EXEMPT_JOBS).
+      # disk instance. Score alerts + Film Room YouTube sync stay exempt.
       - key: BOOT_HEAVY_MIN_UPTIME_SEC
         value: "480"
+      - key: BOOT_HEAVY_EXEMPT_JOBS
+        value: "gators-score-alerts,film-room-youtube-sync"
       - key: API_POST_BOOT_DELAY_MS
         value: "20000"
       - key: API_WIRE_YIELD_MS
@@ -631,7 +633,7 @@ services:
   # Film Room YouTube auto-ingest — Florida Gators football pressers + GNFP reviews.
   - type: cron
     name: gatorvault-api-film-room-youtube-sync
-    schedule: "45 */3 * * *"
+    schedule: "45 * * * *"
     runtime: node
     region: oregon
     rootDir: server
