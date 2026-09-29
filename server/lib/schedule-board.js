@@ -452,6 +452,12 @@ function getScheduleBoard(season = 2026) {
   } catch {
     /* optional */
   }
+  try {
+    const { applyFormPredictions } = require('./schedule-form-preds');
+    doc = applyFormPredictions(doc);
+  } catch {
+    /* optional — keep stamped preds if the form module fails */
+  }
   return doc;
 }
 

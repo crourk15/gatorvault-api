@@ -26,7 +26,7 @@ describe('schedule-board', () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
-    assert.equal(payload.predThrough, '2026-W4');
+    assert.equal(payload.predThrough, '2026-W5');
     assert.equal(payload.currentGameId, 'missouri');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);
@@ -275,11 +275,11 @@ describe('schedule-board', () => {
     assert.equal(missouri.filmWatched, false);
     assert.equal(missouri.date, 'October 3, 2026 · 3:30 PM ET');
     assert.equal(missouri.tv, 'ESPN');
-    assert.equal(missouri.ufPct, 65);
-    assert.equal(missouri.pred, 'UF 28 · Missouri 21');
-    assert.equal(missouri.predConfidence, 74);
+    assert.equal(missouri.ufPct, 71);
+    assert.equal(missouri.pred, 'UF 34 · Missouri 24');
+    assert.equal(missouri.predConfidence, 78);
     assert.equal(missouri.predMovement, 'up');
-    assert.equal(missouri.ufPctDelta, 13);
+    assert.equal(missouri.ufPctDelta, 6);
     assert.match(missouri.scoutingReport, /Force Fair Catches/);
     assert.equal(missouri.radar.find((a) => a.label === 'Run Game')?.uf, 74);
     assert.equal(missouri.radar.find((a) => a.label === 'Run Game')?.opp, 64);
