@@ -1,24 +1,42 @@
-# Meta ads — product only
+# Meta ads — what to upload tonight
 
-Paid ads never use a recruit or player name. No Bailey. No Smith. No likeness. The app can name them. The ad cannot.
+Keep **New App promotion Ad** on. Add the Open the Vault square and the reel. No player names. No Missouri. No 3:30.
 
-This flight is at least 15 days. No Missouri. No 3:30. No Home NOW screenshot. No fake iPhone menu.
+## Files (already in the repo)
 
-## Upload
+- Square: `docs/promo/open-the-vault/PRIMARY-elite-vault-square-app-install.png`
+- Video: `docs/promo/open-the-vault/OPEN-THE-VAULT-elite-reel.mp4`
 
-`elite-two-commits.png` is the GatorVault board square (1080×1080): **The board is live.** Product only.
+If they are not on this computer: GitHub → `crourk15/gatorvault-api` → those two paths → Download.
 
-1. Leave **New App promotion Ad** on.
-2. Ads Manager → **Gator Vault Insider 2.0** → **New App promotion Ad Set** → Duplicate the current ad.
-3. Name it `The board is live`.
-4. Upload `docs/promo/meta-ads-refresh/elite-two-commits.png`.
-5. Primary text:
+## Ads Manager
+
+1. Go to https://www.facebook.com/adsmanager
+2. Open campaign **Gator Vault Insider 2.0**
+3. Open ad set **New App promotion Ad Set**
+4. Find the ad **New App promotion Ad**
+5. Click **•••** → **Duplicate**
+6. Name it `Open the Vault — image`
+7. Remove the old picture. Upload the square file above.
+8. Replace the text with the copy below.
+9. Destination stays **App Store / Gator Vault Insider**. Do not switch to a website.
+10. Click **Publish**
+11. **•••** on the new ad (or the original) → **Duplicate** again
+12. Name it `Open the Vault — video`
+13. Upload the reel. Same copy.
+14. **Publish**
+15. Leave the original **New App promotion Ad** on.
+
+## Copy (both new ads)
+
+Primary text:
 
 ```
-The board is live.
+Open the Vault.
 Recruiting, Film Room, Game Week — Florida football in one app.
 Download Gator Vault Insider on the App Store.
 ```
 
-Headline: `The board is live.`
+Headline: `Open the Vault.`
+
 Description: `Florida football in one app.`
