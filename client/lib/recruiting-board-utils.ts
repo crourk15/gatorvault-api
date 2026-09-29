@@ -67,7 +67,11 @@ export function sortBoardPlayers(
 
 export function selectHeadliner(commits: RecruitingBoardPlayer[]): RecruitingBoardPlayer | null {
   if (!commits.length) return null;
-  const flagged = commits.find((p) => p.headliner);
-  if (flagged) return flagged;
-  return sortBoardPlayers(commits, 'rating')[0] ?? null;
+  const ranked = [...commits].sort((a, b) => {
+    const ra = Number(a.natlRank ?? a.natl) || 9999;
+    const rb = Number(b.natlRank ?? b.natl) || 9999;
+    if (ra !== rb) return ra - rb;
+    return playerRating(b) - playerRating(a);
+  });
+  return ranked[0] ?? null;
 }

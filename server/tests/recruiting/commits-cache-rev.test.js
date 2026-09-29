@@ -135,7 +135,56 @@ describe('commits cache rev', () => {
     assert.equal(String(stale.classOverviewAll[2028].commits), '3');
   });
 
-  it('hub-runtime 2027 commits are c7 with Pearl #17/#12', () => {
+  it('heals Headliner onto Bailey when the 2028 nest is already complete', () => {
+    const bundle = {
+      year: 2028,
+      commits: [
+        {
+          id: 'samuel-bailey',
+          name: 'Samuel Bailey',
+          statusBadge: 'Committed',
+          skinny: 'Samuel Bailey committed to Florida.',
+          metaLine: '4★ OT · #49 natl',
+        },
+        {
+          id: 'armani-strong',
+          name: 'Armani Strong',
+          statusBadge: 'Headliner',
+          skinny: 'Armani Strong committed to Florida · Class headliner.',
+          metaLine: '4★ WR · #215 natl',
+        },
+        {
+          id: 'cyion-smith',
+          name: 'Cyion Smith',
+          statusBadge: 'Committed',
+          metaLine: '4★ S · #250 natl',
+        },
+      ],
+    };
+    cache.healBundleCommitsNest(bundle, 2028);
+    const bailey = bundle.commits.find((p) => p.id === 'samuel-bailey');
+    const armani = bundle.commits.find((p) => p.id === 'armani-strong');
+    assert.equal(bailey.statusBadge, 'Headliner');
+    assert.match(String(bailey.skinny), /Class headliner/i);
+    assert.equal(armani.statusBadge, 'Committed');
+    assert.doesNotMatch(String(armani.skinny), /Class headliner/i);
+  });
+
+  it('hub-runtime 2028 headliner is Bailey not Armani', () => {
+    const snap = path.join(__dirname, '../../data/recruiting/hub-runtime/2028/commits.json');
+    const doc = JSON.parse(fs.readFileSync(snap, 'utf8'));
+    assert.equal(doc.meta.cacheRev, cache.COMMITS_CACHE_REV);
+    const bailey = (doc.items || []).find((p) => /samuel-bailey/i.test(p.id || ''));
+    const armani = (doc.items || []).find((p) => /armani-strong/i.test(p.id || ''));
+    assert.ok(bailey, 'Samuel Bailey must be in 2028 commits snapshot');
+    assert.equal(bailey.statusBadge, 'Headliner');
+    assert.match(String(bailey.skinny || ''), /Class headliner/i);
+    assert.ok(armani);
+    assert.notEqual(armani.statusBadge, 'Headliner');
+    assert.doesNotMatch(String(armani.skinny || ''), /Class headliner/i);
+  });
+
+  it('hub-runtime 2027 commits are c8 with Pearl #17/#12', () => {
     const snap = path.join(__dirname, '../../data/recruiting/hub-runtime/2027/commits.json');
     const doc = JSON.parse(fs.readFileSync(snap, 'utf8'));
     assert.equal(doc.meta.cacheRev, cache.COMMITS_CACHE_REV);

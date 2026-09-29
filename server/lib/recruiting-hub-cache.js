@@ -19,7 +19,7 @@ const FOOTPRINT_CACHE_REV = 'fp5';
  * Bump when commit card meta (On3 ranks / rating plate) must invalidate durable
  * /var/data hub-runtime + deploy hub-snapshot that outlive players.json syncs.
  */
-const COMMITS_CACHE_REV = 'c7';
+const COMMITS_CACHE_REV = 'c8';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
 const TICKER_CACHE_REV = 't17';
@@ -235,7 +235,8 @@ function parseHubSnapshotDoc(endpoint, doc, year) {
     if (!Array.isArray(items)) return null;
     const y = Number(year ?? meta?.year ?? doc.year);
     if (Number.isFinite(y) && !isUsableCommitsSnapshot(items, y)) return null;
-    return items;
+    const { healCommitHeadlinerBadges } = require('./pick-class-headliner');
+    return healCommitHeadlinerBadges(items, y);
   }
   if (endpoint === 'ticker') {
     const { scrubHubTickerLines } = require('./recruiting-visit-scrub');
@@ -438,7 +439,12 @@ function healBundleCommitsNest(value, year) {
   const y = Number(year);
   if (!Number.isFinite(y)) return value;
   const nest = value.commits;
-  if (isUsableCommitsSnapshot(nest, y)) return value;
+  if (isUsableCommitsSnapshot(nest, y)) {
+    const { healCommitHeadlinerBadges } = require('./pick-class-headliner');
+    const healed = healCommitHeadlinerBadges(nest, y);
+    if (healed !== nest) value.commits = healed;
+    return value;
+  }
 
   let healthy = null;
   try {
@@ -463,7 +469,8 @@ function healBundleCommitsNest(value, year) {
   if (!isUsableCommitsSnapshot(healthy, y)) return value;
 
   const before = Array.isArray(nest) ? nest.length : 0;
-  value.commits = healthy;
+  const { healCommitHeadlinerBadges } = require('./pick-class-headliner');
+  value.commits = healCommitHeadlinerBadges(healthy, y);
   if (value.classOverview && typeof value.classOverview === 'object') {
     value.classOverview.commits = String(healthy.length);
   }

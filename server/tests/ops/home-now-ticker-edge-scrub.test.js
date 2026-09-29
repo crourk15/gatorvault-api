@@ -33,3 +33,9 @@ test('hub edge pins 2028 hero at 3 commits and drops verified commits from battl
   assert.match(src, /cyion-smith/);
   assert.match(src, /samuel-bailey/);
 });
+
+test('hub edge restamps 2028 Headliner onto highest rank (Bailey) not first-commit', () => {
+  assert.match(src, /restamp2028Headliner/);
+  assert.match(src, /Highest rank \(lowest national number\) is the 2028 class headliner/);
+  assert.match(src, /statusBadge: 'Headliner'/);
+});

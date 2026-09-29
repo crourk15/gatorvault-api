@@ -211,7 +211,7 @@ function buildCommitFanSkinny(player) {
   if (natl != null) facts.push(`#${natl} nationally`);
   if (posRank != null && pos && pos !== '—') facts.push(`#${posRank} among ${pos}s`);
   if (player.inState) facts.push('In-state get');
-  if (player.headliner) facts.push('Class headliner');
+  if (player.isClassHeadliner) facts.push('Class headliner');
   if (facts.length) sentences.push(`${facts.join(' · ')}.`);
 
   if (sentences.length < 2) {
@@ -591,11 +591,11 @@ function formatWeaknesses(player) {
   return cleaned.length ? cleaned.slice(0, 2).join(' · ') : null;
 }
 
-function mapHubCommit(player, classYear) {
+function mapHubCommit(player, classYear, { isClassHeadliner = false } = {}) {
   const pct = parseUfPct(player.ufProbability);
   const slug = player.slug || player.name;
   const metaLine = buildCommitMetaLine(player);
-  const skinny = buildCommitFanSkinny(player);
+  const skinny = buildCommitFanSkinny({ ...player, isClassHeadliner });
   // Card surface = untitled brief only (same as 2028). Vault Comp / Projection /
   // strengths live on the player profile Vault Scouting section.
   const strengths = null;
@@ -607,7 +607,7 @@ function mapHubCommit(player, classYear) {
   // Headliner stays as an accent badge; stars live on the card mark/meta chips.
   const badge = !isFutureCommit
     ? 'Enrolled'
-    : player.headliner
+    : isClassHeadliner
       ? 'Headliner'
       : 'Committed';
   return {
@@ -643,7 +643,13 @@ function mapHubCommit(player, classYear) {
 async function buildHubCommits(year = 2027) {
   // Match class-overview / ticker counts (HS signing class only — portal has its own board).
   const { commits } = await loadHubHsClassCommits(year);
-  return commits.map((player) => mapHubCommit(player, year));
+  const { pickClassHeadlinerId } = require('./pick-class-headliner');
+  const headlinerId = Number(year) >= 2028 ? pickClassHeadlinerId(commits) : null;
+  return commits.map((player) =>
+    mapHubCommit(player, year, {
+      isClassHeadliner: Boolean(headlinerId) && String(player.slug || player.id || '').toLowerCase() === headlinerId,
+    })
+  );
 }
 
 async function buildHubClassOverviewAll() {
