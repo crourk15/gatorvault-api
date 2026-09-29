@@ -17,7 +17,9 @@ Cache: repo seed `server/data/film-room/cache.json` + durable overlay `/var/data
 ## Automatic sync
 
 - Endpoint: `POST /api/film-room/admin/sync-youtube` (cron secret or admin PIN)
-- Render cron: `gatorvault-api-film-room-youtube-sync` every **3 hours**
+- Render cron: `gatorvault-api-film-room-youtube-sync` every **hour** at `:45`
+- Boot guard does **not** skip this job (`BOOT_HEAVY_EXEMPT_JOBS` includes `film-room-youtube-sync`)
+- Catalog catch-up: `GET /api/film-room/catalog` kicks a background RSS-only sync when the last YouTube ingest is older than 15 minutes (keepalive already hits this path)
 - Local/on-demand: `node server/scripts/weekly/weekly-pressers-ingest.js`
 
 ## Filters

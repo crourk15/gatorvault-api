@@ -11,6 +11,8 @@
  * while /ready is still the 5s Render probe — HTML 502 for 2+ minutes. Soft-skip
  * those jobs until uptime >= BOOT_HEAVY_MIN_UPTIME_SEC (Render sets 480).
  * Score alerts stay exempt so a Saturday kickoff is not dropped.
+ * Film Room YouTube sync stays exempt so a deploy cannot hide a same-day
+ * GNFP film review the way the 3-hour cron + boot skip hid Ole Miss.
  */
 'use strict';
 
@@ -34,7 +36,7 @@ function isBootGuardExempt(label) {
     .toLowerCase();
   if (!id) return false;
   const exempt = new Set(
-    String(process.env.BOOT_HEAVY_EXEMPT_JOBS || 'gators-score-alerts')
+    String(process.env.BOOT_HEAVY_EXEMPT_JOBS || 'gators-score-alerts,film-room-youtube-sync')
       .split(',')
       .map((s) => s.trim().toLowerCase())
       .filter(Boolean)

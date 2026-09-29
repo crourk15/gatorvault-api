@@ -661,7 +661,7 @@ async function syncFilmRoomYouTube(opts = {}) {
   return runHeavyJob('film-room-youtube-sync', () => syncFilmRoomYouTubeInner(opts));
 }
 
-async function syncFilmRoomYouTubeInner({ sources } = {}) {
+async function syncFilmRoomYouTubeInner({ sources, skipSearch } = {}) {
   const list = Array.isArray(sources) && sources.length ? sources : parseSourcesFromEnv();
   const cache = loadFilmRoomCache();
   const details = [];
@@ -717,26 +717,31 @@ async function syncFilmRoomYouTubeInner({ sources } = {}) {
   }
 
   // Search ingest catches coach/player pressers posted off the official channel (Media Days, etc.).
-  try {
-    const search = await syncYouTubeSearchPressers();
-    if (search.enabled) {
-      const { rows, added, updated } = mergeBucket(cache.auto.pressers || [], search.rows || []);
-      cache.auto.pressers = rows;
-      totalAdded += added;
-      details.push({
-        channelId: 'youtube-search',
-        label: 'YouTube search (Florida football pressers)',
-        bucket: 'pressers',
-        scanned: search.scanned,
-        matched: search.matched,
-        added,
-        updated,
-      });
-    } else {
-      details.push({ channelId: 'youtube-search', label: 'YouTube search', enabled: false });
+  // Catalog catch-up skips search so a keepalive hit stays RSS-only.
+  if (skipSearch) {
+    details.push({ channelId: 'youtube-search', label: 'YouTube search', skipped: true });
+  } else {
+    try {
+      const search = await syncYouTubeSearchPressers();
+      if (search.enabled) {
+        const { rows, added, updated } = mergeBucket(cache.auto.pressers || [], search.rows || []);
+        cache.auto.pressers = rows;
+        totalAdded += added;
+        details.push({
+          channelId: 'youtube-search',
+          label: 'YouTube search (Florida football pressers)',
+          bucket: 'pressers',
+          scanned: search.scanned,
+          matched: search.matched,
+          added,
+          updated,
+        });
+      } else {
+        details.push({ channelId: 'youtube-search', label: 'YouTube search', enabled: false });
+      }
+    } catch (err) {
+      details.push({ channelId: 'youtube-search', label: 'YouTube search', error: err.message });
     }
-  } catch (err) {
-    details.push({ channelId: 'youtube-search', label: 'YouTube search', error: err.message });
   }
 
   // Same-day Sumrall / coach re-uploads + search mirrors must not double the hub rail.
@@ -751,6 +756,10 @@ async function syncFilmRoomYouTubeInner({ sources } = {}) {
     });
   }
 
+  cache.meta = {
+    ...(cache.meta || {}),
+    youtubeSyncedAt: new Date().toISOString(),
+  };
   const saved = saveFilmRoomCache(cache);
   return {
     ok: true,

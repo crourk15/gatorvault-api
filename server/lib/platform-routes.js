@@ -102,6 +102,11 @@ function mountPlatformRoutes(app) {
           console.warn('[film-room] knowledge reload skipped:', reloadErr.message);
         }
       }
+      try {
+        require('./film-room-youtube-catchup').scheduleFilmRoomYoutubeCatchUp();
+      } catch (catchUpErr) {
+        console.warn('[film-room] youtube catch-up schedule skipped:', catchUpErr.message);
+      }
       const catalog = filmRoom.buildFilmRoomCatalog();
       const session = getSessionFromReq(req);
       const unlocked = sessionHasTier(session, 'film');
