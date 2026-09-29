@@ -1,44 +1,24 @@
-# Meta ads — keep the last ad look
+# Meta ads — product only
 
-This flight is at least 15 days.
+Paid ads never use a recruit or player name. No Bailey. No Smith. No likeness. The app can name them. The ad cannot.
 
-Do **not** put Missouri, 3:30, ESPN, or any one Saturday on the art.
-Do **not** screenshot Home NOW for this flight — that screen carries this week's game and will rot.
-Do **not** fake a Game Week menu on the phone. That is the same ad they already have, weaker.
+This flight is at least 15 days. No Missouri. No 3:30. No Home NOW screenshot. No fake iPhone menu.
 
-If you have a real **FutureCast / 2028 board** screenshot (not Home), use that on the phone. Otherwise use the phone text below.
+## Upload
 
-Do **not** replace the woman + phone + FLORIDA FOOTBALL UNLOCKED image with vault pictures.
+`elite-two-commits.png` is the GatorVault board square (1080×1080): **The board is live.** Product only.
 
-## Tonight
+1. Leave **New App promotion Ad** on.
+2. Ads Manager → **Gator Vault Insider 2.0** → **New App promotion Ad Set** → Duplicate the current ad.
+3. Name it `The board is live`.
+4. Upload `docs/promo/meta-ads-refresh/elite-two-commits.png`.
+5. Primary text:
 
-1. Leave **New App promotion Ad** on. Same campaign. Same ad set. Same budget.
-2. Open the original file (Canva / Photoshop).
-3. Duplicate it **once**. Same woman, jersey, helmet, layout.
-4. Change only the words on the phone.
-
-### Phone text — the only new ad
-
-Headline:
 ```
-TWO COMMITS
-THIS WEEK
+The board is live.
+Recruiting, Film Room, Game Week — Florida football in one app.
+Download Gator Vault Insider on the App Store.
 ```
 
-Rows:
-```
-BAILEY  OT
-SMITH  DB
-THE BOARD
-FILM ROOM
-FUTURECAST
-```
-
-5. Export 1080×1080.
-6. Ads Manager → **Gator Vault Insider 2.0** → **New App promotion Ad Set** → **New App promotion Ad** → Duplicate.
-7. Name it `Two commits`. Upload. Publish.
-8. Leave the old ad on.
-
-One new ad. Not a fake home screen. Not this Saturday's kickoff.
-
-If you want brand-elite instead of the woman-and-phone ad, upload `elite-two-commits.png` (1080×1080). That is the GatorVault board — not a fake iPhone menu.
+Headline: `The board is live.`
+Description: `Florida football in one app.`
