@@ -47,6 +47,11 @@ export function warmVaultApi(): void {
   const ping = (apiPath: string) =>
     apiFetch(apiPath, { timeoutMs: 15_000, retries: 2, retryDelayMs: 2_000 }).catch(() => null);
 
+  // Schedule leans are live-only — start the board now, do not wait on /api/ping.
+  void import('./schedule-api')
+    .then((m) => m.prefetchScheduleBoard(2026))
+    .catch(() => {});
+
   // Ping first so Render wakes before the heavier hub bundle.
   void ping('/api/ping').then(() => {
     void ping(`/api/recruiting/hub/bundle?year=${hubYear}`);
@@ -81,15 +86,6 @@ export function warmVaultApi(): void {
       void ping('/api/live/ticker');
       void ping('/api/recruiting/movement-intel');
       void ping('/api/futurecast/high-priority?year=2028');
-    }
-    if (
-      path === '/vault' ||
-      path.startsWith('/vault/game-week') ||
-      path.startsWith('/vault/schedule')
-    ) {
-      void import('./schedule-api')
-        .then((m) => m.fetchScheduleBoard(2026))
-        .catch(() => {});
     }
   });
 

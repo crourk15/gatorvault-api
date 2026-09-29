@@ -281,6 +281,11 @@ describe('schedule-api uniforms', () => {
     assert.equal(row?.predPending, undefined);
   });
 
+  it('schedule live GET uses a short timeout so leftover scores do not sit 25s', () => {
+    assert.equal(__scheduleApiTest.SCHEDULE_FETCH_OPTS.timeoutMs, 8_000);
+    assert.equal(__scheduleApiTest.SCHEDULE_FETCH_OPTS.retries, 1);
+  });
+
   it('mergeUniform prefers live over seed', () => {
     const merged = mergeUniform(
       { helmet: 'Blue', jersey: 'Blue', pants: 'Blue', label: 'All-Blue' },

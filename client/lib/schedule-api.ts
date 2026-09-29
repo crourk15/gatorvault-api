@@ -262,13 +262,19 @@ export function peekScheduleBoard(season = 2026): ScheduleBoardLive {
   return { ...base, games: stripRemainingPreds(base.games) };
 }
 
-export async function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLive> {
+/** Fast GET — do not sit on the 25s hub timeout while leftover 28–21 stays on screen. */
+const SCHEDULE_FETCH_OPTS = { timeoutMs: 8_000, retries: 1, retryDelayMs: 400 } as const;
+
+const inflight = new Map<number, Promise<ScheduleBoardLive>>();
+
+async function loadScheduleBoard(season: number): Promise<ScheduleBoardLive> {
   try {
     // Always await live schedule — do not return a stale SWR cache hit. Game Week
     // keys (Expected visitors, film notes) update via API without Codemagic; a
     // cache-first paint left the UI on yesterday's slate until hard refresh.
     const data = await snapshotLiveFetch<ScheduleBoardResponse>(
-      `/api/schedule?year=${season}`
+      `/api/schedule?year=${season}`,
+      SCHEDULE_FETCH_OPTS
     );
     const live = normalizeGames(data?.games);
     const currentGameId = String(data?.currentGameId || '').trim() || undefined;
@@ -290,6 +296,16 @@ export async function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLi
   return { ...base, games: stripRemainingPreds(base.games) };
 }
 
+export function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLive> {
+  const existing = inflight.get(season);
+  if (existing) return existing;
+  const pending = loadScheduleBoard(season).finally(() => {
+    if (inflight.get(season) === pending) inflight.delete(season);
+  });
+  inflight.set(season, pending);
+  return pending;
+}
+
 export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]> {
   const board = await fetchScheduleBoard(season);
   return board.games;
@@ -299,6 +315,10 @@ export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]>
 export function prefetchScheduleBoard(season = 2026): void {
   if (typeof window === 'undefined') return;
   void fetchScheduleBoard(season).catch(() => {});
+}
+
+if (typeof window !== 'undefined') {
+  prefetchScheduleBoard(2026);
 }
 
 /** Test helpers */
@@ -311,4 +331,6 @@ export const __scheduleApiTest = {
   clearLastGood,
   lastGoodKey,
   stripRemainingPreds,
+  inflight,
+  SCHEDULE_FETCH_OPTS,
 };
