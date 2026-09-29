@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Missouri Vegas: stamp DraftKings via ESPN **UF -5.5 / O/U 56.5** on `/api/betting/lines` so Prediction is not Line pending (opened ~-2.5; jumped after Ole Miss). API — no Codemagic.
 - [x] Schedule remaining-season preds use official UF scoring form (53.5 PPG after four games). Missouri is **71% / UF 34 · Missouri 24**, not the leftover 28–21 grind. Texas / Georgia stay UF losses. API `/api/schedule` after Render — current App Store already live-fetches `ufPct` / `pred`. Seed fallback is the bake row.
 - [x] Film Room: Sumrall weekly presser 9/28 (`asXiHSFj7S8` / Coach Sumrall 9-28-26) on `/api/film-room/catalog` after Render. Repo cache unions into stale durable so a cron miss after deploy cannot keep the 9/26 postgame on top. Drop Tengwall Samuel Bailey commitment sit. API — no Codemagic.
 - [x] Home NOW News: pin **Samuel Bailey commits to Florida · No. 36** on the ticker edge and drop leftover Cyion last-good News. API + Netlify edge after deploy — 1.0.29 already live-fetches `/api/recruiting/hub/ticker`. Last-good Cyion strip in `usableHomeNowWeek` is the bake row.

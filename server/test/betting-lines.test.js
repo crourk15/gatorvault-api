@@ -97,11 +97,14 @@ describe('betting-lines next game', () => {
     assert.equal(last.id, 'uf-olemiss-2026-w4');
   });
 
-  it('serves Missouri as nextGame with Line pending on Sep 27', async () => {
+  it('serves Missouri as nextGame with UF -5.5 / 56.5 on Sep 27', async () => {
     const payload = await getBettingLines(new Date('2026-09-27T12:00:00.000Z'));
     assert.equal(payload.nextGame.id, 'uf-missouri-2026-w5');
-    assert.equal(payload.nextGame.spread.line, 'Line pending');
-    assert.equal(payload.nextGame.total, null);
+    assert.equal(payload.nextGame.spread.line, 'UF -5.5');
+    assert.equal(payload.nextGame.spread.uf, -5.5);
+    assert.equal(payload.nextGame.total, 56.5);
+    assert.equal(payload.nextGame.moneyline.uf, -205);
+    assert.equal(payload.nextGame.moneyline.opp, 170);
     assert.equal(payload.lastGame.id, 'uf-olemiss-2026-w4');
     assert.equal(payload.lastGame.homeScore, 52);
     assert.equal(payload.lastGame.awayScore, 28);

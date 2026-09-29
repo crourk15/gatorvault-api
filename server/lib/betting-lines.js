@@ -113,10 +113,10 @@ const STATIC_LINES = [
     opponent: 'Missouri',
     date: '2026-10-03T19:30:00.000Z',
     venue: 'Faurot Field',
-    // No clean market stamp after the Ole Miss final — Prediction stays Line pending.
-    spread: { line: 'Line pending', uf: null },
-    total: null,
-    moneyline: null,
+    // Market ~Sep 29 2026: DraftKings via ESPN FLA -5.5 / 56.5 (opened ~-2.5; jumped after Ole Miss 52–28)
+    spread: { line: 'UF -5.5', uf: -5.5 },
+    total: 56.5,
+    moneyline: { uf: -205, opp: +170 },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
     source: 'schedule'
