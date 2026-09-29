@@ -191,6 +191,14 @@ describe('Game Week Film Notes', () => {
     assert.equal(bundle.prediction.confidence, 78);
     assert.ok(bundle.prediction.confidence >= 55, 'statement win is not Low confidence');
     assert.equal(bundle.prediction.scoreLine, 'UF 34 · Missouri 24');
+    assert.equal(bundle.prediction.spread, 'Line pending');
+    const withVegas = getGameWeekBundle('missouri', SCHEDULE_GAMES, {
+      spreadLine: 'UF -5.5',
+      total: 56.5,
+    });
+    assert.equal(withVegas.prediction.spread, 'UF -5.5');
+    assert.equal(withVegas.prediction.total, 'O/U 56.5');
+    assert.equal(withVegas.prediction.expertPicks.some((p) => p.source === 'Vegas consensus' && p.pick === 'UF -5.5'), true);
   });
 
   it('Missouri Matchup Edge is the sat stamp, not the 52% formula', () => {

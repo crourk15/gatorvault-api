@@ -40,4 +40,4 @@ Last week rush is 302, not 303. Simmons season 47/68, 652 is the published 3-gam
 
 ## Shipped
 
-2026-season.json + game-week/meta.json. NOW 4-0. Line pending unchanged.
+2026-season.json + game-week/meta.json. NOW 4-0. Vegas **UF -5.5 / 56.5** (DraftKings via ESPN, Sep 29 — opened ~-2.5).
