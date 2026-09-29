@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Recruiting hub 2028 class headliner: Samuel Bailey (#49) not Armani Strong (#215). Commit cards read `statusBadge` from `/api/recruiting/hub/commits` after Render. Classic `selectHeadliner` bake is the row below. API — no Codemagic.
 - [x] Film Room: Sumrall weekly presser 9/28 (`asXiHSFj7S8` / Coach Sumrall 9-28-26) on `/api/film-room/catalog` after Render. Repo cache unions into stale durable so a cron miss after deploy cannot keep the 9/26 postgame on top. Drop Tengwall Samuel Bailey commitment sit. API — no Codemagic.
 - [x] Home NOW News: pin **Samuel Bailey commits to Florida · No. 36** on the ticker edge and drop leftover Cyion last-good News. API + Netlify edge after deploy — 1.0.29 already live-fetches `/api/recruiting/hub/ticker`. Last-good Cyion strip in `usableHomeNowWeek` is the bake row.
 - [x] Samuel Bailey 2028 OT commit (On3 C 09/28/26): verified slug + hub commits 3 + drop from Chase/Biggest Battles + Home NOW News. API + Netlify edge after Render — no Codemagic.
@@ -185,6 +186,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-09-29 | Recruiting class headliner is highest national rank (Bailey), not the first-commit flag | `selectHeadliner` in binary. **API already stamps `statusBadge: Headliner` on Bailey after Render.** Old binary still prefers `headliner: true` on Armani if it reads the board list. | this PR |
 | 2026-09-27 | Recruiting hero skip SWR last-good so 2028 cannot stick at 1 commit after Cyion | `stale-while-revalidate.ts` in binary. **API + edge already pin 2 commits / drop Cyion battles after deploy.** 1.0.29 still paints last-good hero. | this PR |
 | 2026-09-27 | Game Week win-chance conviction: stop mapping closeness-to-50 onto Low; show stamped `+13% this week` after Ole Miss | `game-week-data.ts` + gauge widget in binary. **API already serves 65% / UF 28–21 after Render.** Old formula still paints Low until 65% lands, and still says `+2% this week`. | this PR |
 | 2026-09-27 | Game Week Missouri first-paint seed: Charles 3 Keys + howUFWins (no dummy “Establish run on road”) | `schedule-data.ts` in binary. **`/api/schedule` already serves the paste after Render.** 1.0.29 last-good still has the dummy road keys if the API 502s. | this PR |

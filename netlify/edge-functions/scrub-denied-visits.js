@@ -136,9 +136,9 @@ const BAILEY_2028_COMMIT = {
   rankNote: '4★ OT · Huntsville, AL · #49 natl · #8 OT · #3 AL',
   metaLine: '4★ OT · Huntsville, AL · #49 natl · #8 OT · #3 AL',
   skinny:
-    'Samuel Bailey committed to Florida as a 4-star OT out of Jemison (Huntsville, AL). Listed at 6-5.5 / 300 · #49 nationally · #8 among OTs.',
+    'Samuel Bailey committed to Florida as a 4-star OT out of Jemison (Huntsville, AL). Listed at 6-5.5 / 300 · #49 nationally · #8 among OTs · Class headliner.',
   commitDate: 'Sep 28, 2026',
-  statusBadge: 'Committed',
+  statusBadge: 'Headliner',
   profileUrl: '/vault/recruiting/player/samuel-bailey',
   inState: false,
   stars: 4,
@@ -158,6 +158,57 @@ function yearFromRequest(url) {
   return Number.isFinite(n) ? n : null;
 }
 
+function nationalRankFromCommit(row) {
+  const n = Number(row?.nationalRank ?? row?.natlRank ?? row?.natl);
+  if (Number.isFinite(n) && n > 0) return n;
+  const m = String(row?.metaLine || row?.rankNote || '').match(/#(\d+)\s*natl/i);
+  return m ? Number(m[1]) : 9999;
+}
+
+/** Highest rank (lowest national number) is the 2028 class headliner — not first-commit. */
+function restamp2028Headliner(list) {
+  if (!Array.isArray(list) || list.length < 2) return { list, changed: false };
+  const ranked = [...list].sort((a, b) => nationalRankFromCommit(a) - nationalRankFromCommit(b));
+  const head = String(ranked[0]?.id || ranked[0]?.slug || '').toLowerCase();
+  if (!head) return { list, changed: false };
+  let changed = false;
+  const next = list.map((row) => {
+    if (!row || typeof row !== 'object') return row;
+    const mine = String(row.id || row.slug || '').toLowerCase() === head;
+    const badge = String(row.statusBadge || '');
+    const skinny = String(row.skinny || '');
+    let statusBadge = badge;
+    let nextSkinny = skinny;
+    if (mine) {
+      if (!/^headliner$/i.test(badge)) {
+        statusBadge = 'Headliner';
+        changed = true;
+      }
+      if (skinny && !/class headliner/i.test(skinny)) {
+        nextSkinny = skinny.replace(/\.\s*$/, ' · Class headliner.');
+        if (nextSkinny === skinny) nextSkinny = `${skinny.trim()} Class headliner.`;
+        changed = true;
+      }
+    } else {
+      if (/^headliner$/i.test(badge)) {
+        statusBadge = 'Committed';
+        changed = true;
+      }
+      if (/class headliner/i.test(skinny)) {
+        nextSkinny = skinny
+          .replace(/\s*·\s*Class headliner/gi, '')
+          .replace(/Class headliner\s*·\s*/gi, '')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
+        if (nextSkinny !== skinny) changed = true;
+      }
+    }
+    if (statusBadge === badge && nextSkinny === skinny) return row;
+    return { ...row, statusBadge, skinny: nextSkinny || row.skinny };
+  });
+  return { list: changed ? next : list, changed };
+}
+
 function heal2028CommitPayload(data, year) {
   if (!data || typeof data !== 'object') return { data, changed: false };
   if (Number(year) !== 2028) return { data, changed: false };
@@ -172,6 +223,9 @@ function heal2028CommitPayload(data, year) {
       out.items = [...out.items, BAILEY_2028_COMMIT];
       changed = true;
     }
+    const stamped = restamp2028Headliner(out.items);
+    out.items = stamped.list;
+    if (stamped.changed) changed = true;
   }
   if (Array.isArray(out.commits)) {
     if (!commitListHasSlug(out.commits, 'cyion-smith')) {
@@ -182,6 +236,9 @@ function heal2028CommitPayload(data, year) {
       out.commits = [...out.commits, BAILEY_2028_COMMIT];
       changed = true;
     }
+    const stamped = restamp2028Headliner(out.commits);
+    out.commits = stamped.list;
+    if (stamped.changed) changed = true;
     if (out.classOverview && typeof out.classOverview === 'object') {
       out.classOverview = { ...out.classOverview, commits: String(out.commits.length) };
     }
