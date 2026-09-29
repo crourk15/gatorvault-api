@@ -246,6 +246,20 @@
       "school": "IMG Academy (Bradenton, FL)",
       "stars": 3,
       "classYear": 2028
+    },
+    "asher-ghioto": {
+      "name": "Asher Ghioto",
+      "position": "EDGE",
+      "school": "The Bolles School (Jacksonville, FL)",
+      "stars": 5,
+      "classYear": 2028
+    },
+    "zaiden-jernigan": {
+      "name": "Zaiden Jernigan",
+      "position": "RB",
+      "school": "Louisville (Louisville, MS)",
+      "stars": 4,
+      "classYear": 2028
     }
   },
   "games": [

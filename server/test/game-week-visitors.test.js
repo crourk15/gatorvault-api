@@ -3,6 +3,8 @@
  */
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('fs');
+const path = require('path');
 const {
   expectedVisitLabelForSlug,
   mergeExpectedVisitHistory,
@@ -10,20 +12,22 @@ const {
   visitorsPanelForGameId,
   attachExpectedVisitorsToGames,
   isHomeVisitorGame,
+  resolveVisitorRow,
+  DOC_PATH,
 } = require('../lib/game-week-visitors');
 
 describe('game-week-visitors', () => {
   it('maps FAU and Ole Miss visitors to chase labels', () => {
     assert.equal(expectedVisitLabelForSlug('asher-ghioto'), 'FAU visit · Sep 5');
-    assert.equal(expectedVisitLabelForSlug('brysen-wright'), 'Expected Ole Miss visit · Sep 26');
-    assert.equal(expectedVisitLabelForSlug('hudson-west'), 'Expected Ole Miss visit · Sep 26');
+    assert.equal(expectedVisitLabelForSlug('brysen-wright'), 'Ole Miss visit · Sep 26');
+    assert.equal(expectedVisitLabelForSlug('hudson-west'), 'Ole Miss visit · Sep 26');
     assert.equal(expectedVisitLabelForSlug('not-a-real-slug'), null);
   });
 
   it('prepends Game Day badge with fan label', () => {
     const out = mergeExpectedVisitHistory('merrick-ham', [{ type: 'OV', label: 'OV' }]);
     assert.equal(out[0].type, 'Game Day');
-    assert.equal(out[0].label, 'Expected Ole Miss visit · Sep 26');
+    assert.equal(out[0].label, 'Ole Miss visit · Sep 26');
     assert.equal(out[1].label, 'OV');
   });
 
@@ -110,7 +114,7 @@ describe('game-week-visitors', () => {
     assert.ok(panel.visitors.some((v) => v.slug === 'josiah-taylor'));
     assert.equal(expectedVisitLabelForSlug('josiah-taylor'), 'FAU visit · Sep 5');
     assert.ok(panel.visitors.some((v) => v.slug === 'antonio-thomas-jr'));
-    assert.equal(expectedVisitLabelForSlug('antonio-thomas-jr'), 'Expected Ole Miss visit · Sep 26');
+    assert.equal(expectedVisitLabelForSlug('antonio-thomas-jr'), 'Ole Miss visit · Sep 26');
   });
 
   it('resolves Ole Miss identities and drops the Wessel alias', () => {
@@ -141,7 +145,7 @@ describe('game-week-visitors', () => {
     const vickers = panel.visitors.find((v) => v.slug === 'izayah-vickers');
     assert.ok(vickers);
     assert.equal(vickers.position, 'CB');
-    assert.equal(expectedVisitLabelForSlug('izayah-vickers'), 'Expected Ole Miss visit · Sep 26');
+    assert.equal(expectedVisitLabelForSlug('izayah-vickers'), 'Ole Miss visit · Sep 26');
 
     const turner = panel.visitors.find((v) => v.slug === 'anthony-turner');
     assert.equal(turner?.name, 'Anthony Turner');
@@ -155,7 +159,7 @@ describe('game-week-visitors', () => {
     assert.equal(williams.classYear, 2028);
     assert.equal(williams.stars, 4);
     assert.match(String(williams.school || ''), /Jacksonville/);
-    assert.equal(expectedVisitLabelForSlug('domonic-williams-jr'), 'Expected Ole Miss visit · Sep 26');
+    assert.equal(expectedVisitLabelForSlug('domonic-williams-jr'), 'Ole Miss visit · Sep 26');
   });
 
   it('gives every Ole Miss card the same pos / year / school line', () => {
@@ -178,6 +182,70 @@ describe('game-week-visitors', () => {
     assert.equal(cooper?.position, 'OT');
     assert.equal(cooper?.stars, 3);
     assert.match(String(cooper?.school || ''), /Marist/);
+  });
+
+  it('every listed visitor slug has editorial visitorMeta', () => {
+    const doc = JSON.parse(fs.readFileSync(DOC_PATH, 'utf8'));
+    const slugs = new Set();
+    for (const game of Array.isArray(doc.games) ? doc.games : []) {
+      for (const raw of Array.isArray(game.slugs) ? game.slugs : []) {
+        slugs.add(String(raw || '').trim().toLowerCase());
+      }
+    }
+    assert.ok(slugs.has('asher-ghioto'));
+    assert.ok(slugs.has('zaiden-jernigan'));
+    for (const slug of slugs) {
+      const meta = doc.visitorMeta?.[slug];
+      assert.ok(meta && String(meta.name || '').trim(), `missing visitorMeta for ${slug}`);
+    }
+  });
+
+  it('resolves FAU visitors from visitorMeta without players.json', () => {
+    const store = require('../lib/recruiting-store');
+    const orig = store.findBySlug;
+    let hits = 0;
+    store.findBySlug = () => {
+      hits += 1;
+      return null;
+    };
+    try {
+      const ghioto = resolveVisitorRow('asher-ghioto');
+      const jernigan = resolveVisitorRow('zaiden-jernigan');
+      assert.equal(ghioto.name, 'Asher Ghioto');
+      assert.equal(ghioto.position, 'EDGE');
+      assert.equal(ghioto.stars, 5);
+      assert.equal(ghioto.classYear, 2028);
+      assert.match(String(ghioto.school || ''), /Bolles/i);
+      assert.equal(jernigan.name, 'Zaiden Jernigan');
+      assert.equal(jernigan.position, 'RB');
+      assert.equal(jernigan.stars, 4);
+      assert.match(String(jernigan.school || ''), /Louisville/i);
+      assert.equal(hits, 0);
+    } finally {
+      store.findBySlug = orig;
+    }
+  });
+
+  it('attachExpectedVisitorsToGames stays under 150ms without a store parse', () => {
+    const store = require('../lib/recruiting-store');
+    const orig = store.findBySlug;
+    store.findBySlug = () => {
+      throw new Error('findBySlug should not run when visitorMeta is complete');
+    };
+    try {
+      const t0 = Date.now();
+      const games = attachExpectedVisitorsToGames([
+        { id: 'fau', opp: 'FAU Owls' },
+        { id: 'campbell', opp: 'Campbell' },
+        { id: 'olemiss', opp: 'Ole Miss' },
+        { id: 'missouri', opp: 'Missouri' },
+      ]);
+      const ms = Date.now() - t0;
+      assert.ok(games[0].expectedVisitors?.visitors?.some((v) => v.slug === 'asher-ghioto'));
+      assert.ok(ms < 150, `attach took ${ms}ms`);
+    } finally {
+      store.findBySlug = orig;
+    }
   });
 
   it('attaches expectedVisitors onto schedule games', () => {

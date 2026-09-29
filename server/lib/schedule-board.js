@@ -397,9 +397,37 @@ function normalizeDoc(raw, season) {
   };
 }
 
+const boardMemo = new Map();
+
+function clearScheduleBoardCache() {
+  boardMemo.clear();
+}
+
 function getScheduleBoard(season = 2026) {
   const year = String(season || 2026);
   const filePath = resolveReadPath(year);
+  let stamp = 0;
+  try {
+    stamp = fs.statSync(filePath).mtimeMs;
+  } catch {
+    /* missing durable */
+  }
+  const memoKey = `${year}:${stamp}`;
+  const hit = boardMemo.get(memoKey);
+  if (hit) return hit;
+  const doc = buildScheduleBoard(year, filePath);
+  let nextStamp = stamp;
+  try {
+    nextStamp = fs.statSync(filePath).mtimeMs;
+  } catch {
+    /* keep first stamp */
+  }
+  boardMemo.clear();
+  boardMemo.set(`${year}:${nextStamp}`, doc);
+  return doc;
+}
+
+function buildScheduleBoard(year, filePath) {
   let doc;
   try {
     doc = normalizeDoc(readJson(filePath), year);
@@ -528,6 +556,7 @@ function saveScheduleBoard(raw, season = 2026) {
   const filePath = resolveWritePath(year);
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, JSON.stringify(doc, null, 2) + '\n');
+  boardMemo.clear();
   return { ...doc, path: filePath };
 }
 
@@ -566,6 +595,7 @@ module.exports = {
   resolveReadPath,
   resolveWritePath,
   getScheduleBoard,
+  clearScheduleBoardCache,
   saveScheduleBoard,
   toApiPayload,
   toFanGame,

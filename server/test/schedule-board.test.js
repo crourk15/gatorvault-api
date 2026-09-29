@@ -305,4 +305,18 @@ describe('schedule-board', () => {
     const p = scheduleBoard.resolveReadPath(2026);
     assert.ok(p.includes(path.join('data', 'schedule', '2026-season.json')));
   });
+
+  it('memos getScheduleBoard so a second GET is cheap', () => {
+    scheduleBoard.clearScheduleBoardCache();
+    const first = scheduleBoard.getScheduleBoard(2026);
+    const t0 = Date.now();
+    const second = scheduleBoard.getScheduleBoard(2026);
+    const ms = Date.now() - t0;
+    assert.equal(second, first);
+    const missouri = second.games.find((g) => g.id === 'missouri');
+    assert.equal(missouri.ufPct, 71);
+    assert.equal(missouri.predUF, 34);
+    assert.equal(missouri.predOpp, 24);
+    assert.ok(ms < 50, `second getScheduleBoard took ${ms}ms`);
+  });
 });

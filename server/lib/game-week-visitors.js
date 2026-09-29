@@ -128,6 +128,20 @@ function resolveVisitorRow(slug) {
     .trim()
     .toLowerCase();
   if (!key) return null;
+  // Editorial visitorMeta is enough for the panel. Do not parse players.json
+  // on every GET /api/schedule — that was ~2s per iOS open.
+  const meta = metaFromDoc(key);
+  if (meta && String(meta.name || '').trim()) {
+    const classYear = meta.classYear != null ? Number(meta.classYear) : null;
+    return {
+      slug: key,
+      name: String(meta.name).trim(),
+      position: meta.position ? String(meta.position) : null,
+      school: meta.school ? String(meta.school).trim() || null : null,
+      stars: meta.stars != null && Number(meta.stars) > 0 ? Number(meta.stars) : null,
+      classYear: Number.isFinite(classYear) ? classYear : null,
+    };
+  }
   let name = titleCaseSlug(key);
   let position = null;
   let school = null;
@@ -145,15 +159,6 @@ function resolveVisitorRow(slug) {
     }
   } catch {
     /* optional */
-  }
-  // Editorial visitorMeta wins for panel display so every card has the same line.
-  const meta = metaFromDoc(key);
-  if (meta) {
-    if (meta.name) name = String(meta.name).trim() || name;
-    if (meta.position) position = meta.position;
-    if (meta.school) school = meta.school;
-    if (meta.stars != null && Number(meta.stars) > 0) stars = Number(meta.stars);
-    if (meta.classYear != null) classYear = Number(meta.classYear);
   }
   return {
     slug: key,
