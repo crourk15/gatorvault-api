@@ -130,7 +130,9 @@ export function GameWeekCommandCenter({
           <MatchupHeroWidget bundle={bundle} />
           <SeasonTimeline activeGameId={gameId} onSelect={handleGameSelect} games={games} />
           <div className="gv-gw-wow-hero__metrics">
-            <WinProbabilityGaugeWidget ufPct={bundle.game.ufPct} prediction={bundle.prediction} />
+            {bundle.game.predPending ? null : (
+              <WinProbabilityGaugeWidget ufPct={bundle.game.ufPct} prediction={bundle.prediction} />
+            )}
             <ScoutingRadarChart axes={bundle.radar} opponentName={bundle.game.opp} />
           </div>
         </div>

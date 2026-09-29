@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Container, Tabs } from '@/components/ui';
-import { fetchScheduleGames } from '@/lib/schedule-api';
+import { fetchScheduleGames, peekScheduleBoard } from '@/lib/schedule-api';
 import {
   SCHEDULE_SECTION_META,
   SCHEDULE_SEASONS,
@@ -11,6 +11,7 @@ import {
   getScheduleGameStatus,
   getSeasonModelSummary,
   groupGamesBySection,
+  hasPostedFinal,
   toPremiumScheduleGame,
   type PremiumScheduleGame,
   type ScheduleGameStatus,
@@ -29,7 +30,11 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
   const [season, setSeason] = useState<ScheduleSeason>(
     SCHEDULE_SEASONS.includes(defaultSeason) ? defaultSeason : '2026',
   );
-  const [liveGames, setLiveGames] = useState<PremiumScheduleGame[] | null>(null);
+  const [liveGames, setLiveGames] = useState<PremiumScheduleGame[] | null>(() =>
+    defaultSeason === '2026'
+      ? peekScheduleBoard(2026).games.map(toPremiumScheduleGame)
+      : null,
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -39,14 +44,14 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
         cancelled = true;
       };
     }
-    setLiveGames(null);
+    // Keep the healed peek on screen — do not null back to a leftover seed.
     fetchScheduleGames(2026)
       .then((raw) => {
         if (cancelled) return;
         setLiveGames(raw.map(toPremiumScheduleGame));
       })
       .catch(() => {
-        if (!cancelled) setLiveGames(null);
+        /* keep peek / seed */
       });
     return () => {
       cancelled = true;
@@ -61,7 +66,13 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
   const grouped = useMemo(() => groupGamesBySection(games), [games]);
   const nextGame = useMemo(() => getNextScheduleGame(games), [games]);
   const nextId = nextGame?.id ?? null;
-  const seasonModel = useMemo(() => (games.length ? getSeasonModelSummary(games) : null), [games]);
+  const seasonModel = useMemo(() => {
+    if (!games.length) return null;
+    if (games.some((game) => !game.isBye && !hasPostedFinal(game) && game.predPending)) {
+      return null;
+    }
+    return getSeasonModelSummary(games);
+  }, [games]);
 
   const statusById = useMemo(() => {
     const map: Record<string, ScheduleGameStatus> = {};

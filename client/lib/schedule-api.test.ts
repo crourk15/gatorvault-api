@@ -228,6 +228,64 @@ describe('schedule-api uniforms', () => {
     assert.equal(__scheduleApiTest.readLastGood(2026)?.currentGameId, 'olemiss');
   });
 
+  it('peekScheduleBoard does not first-paint durable leftover remaining scores', () => {
+    const missouri = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
+    assert.ok(missouri);
+    __scheduleApiTest.clearLastGood(2026);
+    __scheduleApiTest.writeLastGood(2026, {
+      games: [
+        {
+          ...missouri,
+          pred: 'UF 28 · Missouri 21',
+          predUF: 28,
+          predOpp: 21,
+          ufPct: 65,
+          keys: ['Take Away the Clean Throw & Shrink the Hitch'],
+        },
+      ],
+      currentGameId: 'missouri',
+    });
+    const peeked = peekScheduleBoard(2026);
+    const row = peeked.games.find((g) => g.id === 'missouri');
+    assert.equal(row?.pred, '');
+    assert.equal(row?.predUF, 0);
+    assert.equal(row?.predPending, true);
+    assert.equal(row?.keys?.[0], 'Take Away the Clean Throw & Shrink the Hitch');
+  });
+
+  it('peekScheduleBoard paints remaining scores after this-session live fetch', () => {
+    const missouri = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
+    assert.ok(missouri);
+    __scheduleApiTest.clearLastGood(2026);
+    __scheduleApiTest.writeLastGood(
+      2026,
+      {
+        games: [
+          {
+            ...missouri,
+            pred: 'UF 34 · Missouri 24',
+            predUF: 34,
+            predOpp: 24,
+            ufPct: 71,
+          },
+        ],
+        currentGameId: 'missouri',
+        predThrough: '2026-W5',
+      },
+      { fromLive: true }
+    );
+    const peeked = peekScheduleBoard(2026);
+    const row = peeked.games.find((g) => g.id === 'missouri');
+    assert.equal(row?.pred, 'UF 34 · Missouri 24');
+    assert.equal(row?.predUF, 34);
+    assert.equal(row?.predPending, undefined);
+  });
+
+  it('schedule live GET uses a short timeout so leftover scores do not sit 25s', () => {
+    assert.equal(__scheduleApiTest.SCHEDULE_FETCH_OPTS.timeoutMs, 8_000);
+    assert.equal(__scheduleApiTest.SCHEDULE_FETCH_OPTS.retries, 1);
+  });
+
   it('mergeUniform prefers live over seed', () => {
     const merged = mergeUniform(
       { helmet: 'Blue', jersey: 'Blue', pants: 'Blue', label: 'All-Blue' },

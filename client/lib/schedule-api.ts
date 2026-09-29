@@ -4,7 +4,7 @@
  * Do not refill desk scout (offenseScout / defenseScout / scoutingReport) from seed.
  */
 import { snapshotLiveFetch } from './snapshot-fetch';
-import { SCHEDULE_GAMES, type ScheduleGame } from './schedule-data';
+import { SCHEDULE_GAMES, SCHEDULE_SEED_PRED_THROUGH, type ScheduleGame } from './schedule-data';
 
 export type ScheduleBoardResponse = {
   ok?: boolean;
@@ -22,7 +22,38 @@ export type ScheduleBoardResponse = {
 export type ScheduleBoardLive = {
   games: ScheduleGame[];
   currentGameId?: string;
+  /** Remaining-season pred week from live `/api/schedule` (e.g. 2026-W5). */
+  predThrough?: string;
 };
+
+function hasPostedFinal(game: ScheduleGame): boolean {
+  return Number.isFinite(Number(game.finalUF)) && Number.isFinite(Number(game.finalOpp));
+}
+
+/** Remaining-game leans are live-only. Do not first-paint last-good or seed scores. */
+export function stripRemainingPreds(games: ScheduleGame[]): ScheduleGame[] {
+  return games.map((game) => {
+    if (hasPostedFinal(game)) return game;
+    return {
+      ...game,
+      pred: '',
+      predUF: 0,
+      predOpp: 0,
+      ufPct: 0,
+      predPending: true,
+      predConfidence: undefined,
+      predMovement: undefined,
+      ufPctDelta: undefined,
+    };
+  });
+}
+
+function seedBoard(): ScheduleBoardLive {
+  return {
+    games: SCHEDULE_GAMES.slice(),
+    predThrough: SCHEDULE_SEED_PRED_THROUGH,
+  };
+}
 
 function normalizeUniform(raw: ScheduleGame['uniform'] | null | undefined): ScheduleGame['uniform'] | undefined {
   if (!raw || typeof raw !== 'object') return undefined;
@@ -171,6 +202,8 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
 const LAST_GOOD_PREFIX = 'gv-schedule-board-last-good:';
 
 let lastGoodMemory: Record<number, ScheduleBoardLive> = {};
+/** This JS session already applied a live `/api/schedule` board — remaining preds are safe to paint. */
+const sessionLive: Record<number, boolean> = {};
 
 function lastGoodKey(season: number): string {
   return `${LAST_GOOD_PREFIX}${season}`;
@@ -186,7 +219,8 @@ function readLastGood(season: number): ScheduleBoardLive | null {
     const games = normalizeGames(parsed?.games);
     if (!games.length) return null;
     const currentGameId = String(parsed.currentGameId || '').trim() || undefined;
-    const board = { games, currentGameId };
+    const predThrough = String(parsed.predThrough || '').trim() || undefined;
+    const board = { games, currentGameId, ...(predThrough ? { predThrough } : {}) };
     lastGoodMemory[season] = board;
     return board;
   } catch {
@@ -194,11 +228,23 @@ function readLastGood(season: number): ScheduleBoardLive | null {
   }
 }
 
-function writeLastGood(season: number, board: ScheduleBoardLive): void {
+function writeLastGood(season: number, board: ScheduleBoardLive, opts?: { fromLive?: boolean }): void {
   lastGoodMemory[season] = board;
+  if (opts?.fromLive) sessionLive[season] = true;
   if (typeof window === 'undefined' || !window.localStorage) return;
   try {
     window.localStorage.setItem(lastGoodKey(season), JSON.stringify(board));
+  } catch {
+    /* quota / private mode */
+  }
+}
+
+function clearLastGood(season = 2026): void {
+  delete lastGoodMemory[season];
+  delete sessionLive[season];
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  try {
+    window.localStorage.removeItem(lastGoodKey(season));
   } catch {
     /* quota / private mode */
   }
@@ -208,32 +254,56 @@ export function fallbackScheduleGames(): ScheduleGame[] {
   return SCHEDULE_GAMES.slice();
 }
 
-/** Sync first paint — last live board, not the App Store seed. */
+/** Sync first paint — intel from last-good/seed; remaining scores wait for this-session live. */
 export function peekScheduleBoard(season = 2026): ScheduleBoardLive {
-  return readLastGood(season) || { games: fallbackScheduleGames() };
+  const last = readLastGood(season);
+  const base = last || seedBoard();
+  if (sessionLive[season]) return base;
+  return { ...base, games: stripRemainingPreds(base.games) };
 }
 
-export async function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLive> {
+/** Fast GET — do not sit on the 25s hub timeout while leftover 28–21 stays on screen. */
+const SCHEDULE_FETCH_OPTS = { timeoutMs: 8_000, retries: 1, retryDelayMs: 400 } as const;
+
+const inflight = new Map<number, Promise<ScheduleBoardLive>>();
+
+async function loadScheduleBoard(season: number): Promise<ScheduleBoardLive> {
   try {
     // Always await live schedule — do not return a stale SWR cache hit. Game Week
     // keys (Expected visitors, film notes) update via API without Codemagic; a
     // cache-first paint left the UI on yesterday's slate until hard refresh.
     const data = await snapshotLiveFetch<ScheduleBoardResponse>(
-      `/api/schedule?year=${season}`
+      `/api/schedule?year=${season}`,
+      SCHEDULE_FETCH_OPTS
     );
     const live = normalizeGames(data?.games);
     const currentGameId = String(data?.currentGameId || '').trim() || undefined;
+    const predThrough = String(data?.predThrough || '').trim() || undefined;
     if (live.length) {
-      const board = { games: live, currentGameId };
-      writeLastGood(season, board);
+      const board = { games: live, currentGameId, ...(predThrough ? { predThrough } : {}) };
+      writeLastGood(season, board, { fromLive: true });
       return board;
     }
   } catch {
     /* fall through */
   }
-  // 502 / flap: keep the last live board. Do not snap back to the baked seed
-  // (1.0.28 still has the Sep 21 Ole Miss keys).
-  return readLastGood(season) || { games: fallbackScheduleGames() };
+  // 502 / flap: keep this-session live board. Do not paint durable leftover scores.
+  if (sessionLive[season] && lastGoodMemory[season]?.games?.length) {
+    return lastGoodMemory[season];
+  }
+  const last = readLastGood(season);
+  const base = last || seedBoard();
+  return { ...base, games: stripRemainingPreds(base.games) };
+}
+
+export function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLive> {
+  const existing = inflight.get(season);
+  if (existing) return existing;
+  const pending = loadScheduleBoard(season).finally(() => {
+    if (inflight.get(season) === pending) inflight.delete(season);
+  });
+  inflight.set(season, pending);
+  return pending;
 }
 
 export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]> {
@@ -247,6 +317,10 @@ export function prefetchScheduleBoard(season = 2026): void {
   void fetchScheduleBoard(season).catch(() => {});
 }
 
+if (typeof window !== 'undefined') {
+  prefetchScheduleBoard(2026);
+}
+
 /** Test helpers */
 export const __scheduleApiTest = {
   normalizeGames,
@@ -254,5 +328,9 @@ export const __scheduleApiTest = {
   mergeUniform,
   writeLastGood,
   readLastGood,
+  clearLastGood,
   lastGoodKey,
+  stripRemainingPreds,
+  inflight,
+  SCHEDULE_FETCH_OPTS,
 };

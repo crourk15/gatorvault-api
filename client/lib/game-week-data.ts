@@ -418,9 +418,25 @@ function buildPrediction(
   game: ScheduleGame,
   betting?: GameWeekBettingLine | null
 ): PredictionIntel {
-  const { confidence, movement } = predictionConviction(game);
   const spread = formatSpreadLine(betting) || 'Line pending';
   const total = formatTotalLine(betting) || 'O/U pending';
+  if (game.predPending) {
+    const expertPicks: PredictionIntel['expertPicks'] = [];
+    if (formatSpreadLine(betting)) {
+      expertPicks.push({ source: 'Vegas consensus', pick: spread });
+    }
+    return {
+      scoreLine: '',
+      spread,
+      total,
+      expertPicks,
+      fanUfPct: 0,
+      confidence: 0,
+      movement: 'flat',
+      modelPick: 'UF',
+    };
+  }
+  const { confidence, movement } = predictionConviction(game);
   const expertPicks: PredictionIntel['expertPicks'] = [
     { source: 'FutureCast', pick: game.pred },
   ];

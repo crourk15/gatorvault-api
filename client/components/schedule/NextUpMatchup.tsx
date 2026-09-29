@@ -66,16 +66,18 @@ export function NextUpMatchup({ game }: Props): React.ReactElement {
 
         {game.keyTeaser ? <p className="gv-sched-next__teaser">{game.keyTeaser}</p> : null}
 
-        <div className="gv-sched-next__intel">
-          <WinProbabilityBar winProbability={game.winProbability} />
-          <PredictedScoreBlock
-            ufScore={game.predictedScoreUF}
-            oppScore={game.predictedScoreOpp}
-            oppName={game.opponentName}
-            oppShort={game.opponentShort}
-            gameId={game.id}
-          />
-        </div>
+        {game.predPending ? null : (
+          <div className="gv-sched-next__intel">
+            <WinProbabilityBar winProbability={game.winProbability} />
+            <PredictedScoreBlock
+              ufScore={game.predictedScoreUF}
+              oppScore={game.predictedScoreOpp}
+              oppName={game.opponentName}
+              oppShort={game.opponentShort}
+              gameId={game.id}
+            />
+          </div>
+        )}
 
         <span className="gv-sched-next__gw">
           Open Game Week

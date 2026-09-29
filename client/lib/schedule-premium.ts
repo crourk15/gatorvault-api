@@ -30,6 +30,8 @@ export type PremiumScheduleGame = {
   winProbability: number;
   predictedScoreUF: number;
   predictedScoreOpp: number;
+  /** Remaining lean is waiting on live `/api/schedule`. */
+  predPending?: boolean;
   intelUrl: string;
   ticketVendors: TicketVendor[];
   section: ScheduleSectionId;
@@ -207,6 +209,7 @@ export function toPremiumScheduleGame(game: ScheduleGame): PremiumScheduleGame {
     winProbability: bye ? 0 : game.ufPct,
     predictedScoreUF: bye ? 0 : uf,
     predictedScoreOpp: bye ? 0 : opp,
+    ...(game.predPending ? { predPending: true } : {}),
     intelUrl: bye ? '/vault/schedule/' : gameWeekRoute(game.id),
     ticketVendors: bye ? [] : ticketVendorsForGame(game),
     section: SECTION_BY_ID[game.id] ?? 'sec',

@@ -127,7 +127,17 @@ function VaultShellInner({ children }: { children: React.ReactNode }): React.Rea
   const coreNav = VAULT_PILLARS;
   const secondaryNav = VAULT_SECONDARY;
 
-  const toggleNav = useCallback(() => setNavOpen((v) => !v), []);
+  const toggleNav = useCallback(() => {
+    setNavOpen((open) => {
+      const next = !open;
+      if (next) {
+        void import('@/lib/schedule-api')
+          .then((m) => m.prefetchScheduleBoard(2026))
+          .catch(() => {});
+      }
+      return next;
+    });
+  }, []);
   const closeNav = useCallback(() => setNavOpen(false), []);
 
   useEffect(() => {
