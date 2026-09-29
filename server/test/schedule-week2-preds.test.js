@@ -4,27 +4,27 @@ const assert = require('assert');
 const { describe, it } = require('node:test');
 const scheduleBoard = require('../lib/schedule-board');
 
-/** Week 4 remaining-season board — restamp after Ole Miss from how teams looked. */
-const WEEK4_REMAINING = {
-  missouri: { ufPct: 65, pred: 'UF 28 · Missouri 21', predUF: 28, predOpp: 21 },
-  scar: { ufPct: 68, pred: 'UF 31 · South Carolina 20', predUF: 31, predOpp: 20 },
-  texas: { ufPct: 36, pred: 'UF 20 · Texas 31', predUF: 20, predOpp: 31 },
-  uga: { ufPct: 37, pred: 'UF 20 · Georgia 28', predUF: 20, predOpp: 28 },
-  oklahoma: { ufPct: 57, pred: 'UF 28 · Oklahoma 24', predUF: 28, predOpp: 24 },
-  kentucky: { ufPct: 56, pred: 'UF 27 · Kentucky 24', predUF: 27, predOpp: 24 },
-  vandy: { ufPct: 68, pred: 'UF 28 · Vanderbilt 24', predUF: 28, predOpp: 24 },
-  fsu: { ufPct: 63, pred: 'UF 30 · FSU 24', predUF: 30, predOpp: 24 },
+/** Week 5 remaining-season board — scoring form after four official finals. */
+const WEEK5_REMAINING = {
+  missouri: { ufPct: 71, pred: 'UF 34 · Missouri 24', predUF: 34, predOpp: 24 },
+  scar: { ufPct: 82, pred: 'UF 36 · South Carolina 21', predUF: 36, predOpp: 21 },
+  texas: { ufPct: 31, pred: 'UF 25 · Texas 34', predUF: 25, predOpp: 34 },
+  uga: { ufPct: 37, pred: 'UF 26 · Georgia 32', predUF: 26, predOpp: 32 },
+  oklahoma: { ufPct: 71, pred: 'UF 37 · Oklahoma 27', predUF: 37, predOpp: 27 },
+  kentucky: { ufPct: 71, pred: 'UF 33 · Kentucky 23', predUF: 33, predOpp: 23 },
+  vandy: { ufPct: 79, pred: 'UF 36 · Vanderbilt 22', predUF: 36, predOpp: 22 },
+  fsu: { ufPct: 71, pred: 'UF 34 · FSU 24', predUF: 34, predOpp: 24 },
 };
 
-describe('schedule remaining-season predictions (2026-W4)', () => {
-  it('serves Week 4 restamp on remaining games after the Ole Miss final', () => {
+describe('schedule remaining-season predictions (2026-W5)', () => {
+  it('serves Week 5 form restamp on remaining games (53.5 PPG, not 28–21)', () => {
     const payload = scheduleBoard.toApiPayload();
-    assert.equal(payload.predThrough, '2026-W4');
+    assert.equal(payload.predThrough, '2026-W5');
     assert.equal(payload.currentGameId, 'missouri');
     const olemiss = payload.games.find((g) => g.id === 'olemiss');
     assert.equal(olemiss.finalUF, 52);
     assert.equal(olemiss.finalOpp, 28);
-    for (const [id, expected] of Object.entries(WEEK4_REMAINING)) {
+    for (const [id, expected] of Object.entries(WEEK5_REMAINING)) {
       const game = payload.games.find((g) => g.id === id);
       assert.ok(game, `missing ${id}`);
       assert.equal(game.ufPct, expected.ufPct, `${id} ufPct`);
