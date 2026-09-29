@@ -187,7 +187,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-29 | Schedule / Home remaining scores are live-only: do not first-paint last-good or seed leans; apply `/api/schedule` immediately | `schedule-api.ts` + Schedule / Home / Game Week in binary. **One bake** so weekly restamps never need another. 1.0.29 still flashes leftover last-good until this bake. | this PR |
+| 2026-09-29 | Schedule / Home remaining scores are live-only: do not first-paint last-good or seed leans; apply `/api/schedule` immediately | **Charles hold (Sep 29):** batch with the next repair train — do **not** start Codemagic for this alone. After that one bake, weekly restamps are API-only. 1.0.29 still flashes leftover last-good. | #777 |
 | 2026-09-29 | Schedule / Game Week first-paint seed: Missouri **71% / UF 34 · 24** from scoring form | `schedule-data.ts` in binary. **`/api/schedule` already serves 34–24 after Render.** 1.0.29 last-good still paints 28–21 if the API 502s. | this PR |
 | 2026-09-27 | Recruiting hero skip SWR last-good so 2028 cannot stick at 1 commit after Cyion | `stale-while-revalidate.ts` in binary. **API + edge already pin 2 commits / drop Cyion battles after deploy.** 1.0.29 still paints last-good hero. | this PR |
 | 2026-09-27 | Game Week win-chance conviction: stop mapping closeness-to-50 onto Low; show stamped `+13% this week` after Ole Miss | `game-week-data.ts` + gauge widget in binary. **API already serves 65% / UF 28–21 after Render.** Old formula still paints Low until 65% lands, and still says `+2% this week`. | this PR |

@@ -28,3 +28,5 @@ I will not start Codemagic.
 Closest to commit and Community speed are **API after Render** — no Codemagic. Live HP stays no-store so Closest is never stuck on a baked list.
 
 Weekly visitor names / predictions stay API after this bake.
+
+**Hold — do not bake for this alone:** Schedule remaining-game scores live-only (no leftover last-good 28–21 on first paint). Charles: add in the next build when there is enough else to repair. PR `#777`. After that bake, Saturday restamps need no Codemagic.
