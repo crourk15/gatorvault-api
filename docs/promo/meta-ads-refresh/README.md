@@ -1,57 +1,42 @@
 # Meta ads — keep the last ad look
 
-This flight is at least 15 days. Do **not** put Missouri, 3:30, ESPN, or any one Saturday on the art. That goes stale in a week.
+This flight is at least 15 days.
 
-Do **not** replace the woman + phone + FLORIDA FOOTBALL UNLOCKED image with the vault pictures. That ad is the winner. It got tired from running too long, not because it looks cheap.
+Do **not** put Missouri, 3:30, ESPN, or any one Saturday on the art.
+Do **not** screenshot Home NOW for this flight — that screen carries this week's game and will rot.
+Do **not** fake a Game Week menu on the phone. That is the same ad they already have, weaker.
+
+If you have a real **FutureCast / 2028 board** screenshot (not Home), use that on the phone. Otherwise use the phone text below.
+
+Do **not** replace the woman + phone + FLORIDA FOOTBALL UNLOCKED image with vault pictures.
 
 ## Tonight
 
 1. Leave **New App promotion Ad** on. Same campaign. Same ad set. Same budget.
-2. Open the **original file** you made that ad in (Canva, Photoshop, or whatever you used).
-3. Duplicate the file twice. Do not start a new design.
-4. Change **only the words on the phone**. Same woman. Same jersey. Same helmet. Same layout.
+2. Open the original file (Canva / Photoshop).
+3. Duplicate it **once**. Same woman, jersey, helmet, layout.
+4. Change only the words on the phone.
 
-### Phone text — version B (2028)
+### Phone text — the only new ad
 
 Headline:
 ```
-2028 BOARD
-IS LIVE
+TWO COMMITS
+THIS WEEK
 ```
 
 Rows:
 ```
-BAILEY COMMIT
-SMITH COMMIT
-CHASE BOARD
+BAILEY  OT
+SMITH  DB
+THE BOARD
 FILM ROOM
-GAME WEEK
-```
-
-### Phone text — version C (Game Week — evergreen)
-
-Headline:
-```
-GAME WEEK
-```
-
-Rows:
-```
-THIS WEEK'S KEYS
-FILM ROOM
-LIVE BEAT
 FUTURECAST
-TEAM
 ```
 
-No opponent. No kickoff time. No TV network.
-
-5. Export two new squares (1080×1080).
+5. Export 1080×1080.
 6. Ads Manager → **Gator Vault Insider 2.0** → **New App promotion Ad Set** → **New App promotion Ad** → Duplicate.
-7. Name one `2028 board`. Upload version B. Publish.
-8. Duplicate again. Name it `Game Week`. Upload version C. Publish.
-9. Leave the old ad on for 4–5 days. Then turn it off if B or C is cheaper.
+7. Name it `Two commits`. Upload. Publish.
+8. Leave the old ad on.
 
-Do not add Illinois ads. Do not add a website audience tonight. Do not upload the vault-door images.
-
-Optional: `phone-2028-board.png` and `phone-game-week.png` in this folder are just the phone screen if you want to drop them onto the phone in Canva.
+One new ad. Not a fake home screen. Not this Saturday's kickoff.

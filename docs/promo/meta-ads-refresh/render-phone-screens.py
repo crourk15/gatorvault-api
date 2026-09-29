@@ -72,14 +72,14 @@ def main():
         ],
     )
     render(
-        OUT / "phone-game-week.png",
-        ["GAME WEEK"],
+        OUT / "phone-two-commits.png",
+        ["TWO COMMITS", "THIS WEEK"],
         [
-            ("cal", "THIS WEEK'S KEYS"),
+            ("star", "BAILEY  OT"),
+            ("star", "SMITH  DB"),
+            ("chart", "THE BOARD"),
             ("clapper", "FILM ROOM"),
-            ("radio", "LIVE BEAT"),
             ("chart", "FUTURECAST"),
-            ("people", "TEAM"),
         ],
     )
 
