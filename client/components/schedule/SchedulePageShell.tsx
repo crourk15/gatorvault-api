@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Container, Tabs } from '@/components/ui';
-import { fetchScheduleGames } from '@/lib/schedule-api';
+import { fetchScheduleGames, peekScheduleBoard } from '@/lib/schedule-api';
 import {
   SCHEDULE_SECTION_META,
   SCHEDULE_SEASONS,
@@ -29,7 +29,11 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
   const [season, setSeason] = useState<ScheduleSeason>(
     SCHEDULE_SEASONS.includes(defaultSeason) ? defaultSeason : '2026',
   );
-  const [liveGames, setLiveGames] = useState<PremiumScheduleGame[] | null>(null);
+  const [liveGames, setLiveGames] = useState<PremiumScheduleGame[] | null>(() =>
+    defaultSeason === '2026'
+      ? peekScheduleBoard(2026).games.map(toPremiumScheduleGame)
+      : null,
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -39,14 +43,14 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
         cancelled = true;
       };
     }
-    setLiveGames(null);
+    // Keep the healed peek on screen — do not null back to a leftover seed.
     fetchScheduleGames(2026)
       .then((raw) => {
         if (cancelled) return;
         setLiveGames(raw.map(toPremiumScheduleGame));
       })
       .catch(() => {
-        if (!cancelled) setLiveGames(null);
+        /* keep peek / seed */
       });
     return () => {
       cancelled = true;

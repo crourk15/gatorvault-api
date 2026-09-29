@@ -228,6 +228,55 @@ describe('schedule-api uniforms', () => {
     assert.equal(__scheduleApiTest.readLastGood(2026)?.currentGameId, 'olemiss');
   });
 
+  it('peekScheduleBoard overlays seed remaining preds when last-good is an older stamp', () => {
+    const missouri = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
+    assert.ok(missouri);
+    __scheduleApiTest.clearLastGood(2026);
+    __scheduleApiTest.writeLastGood(2026, {
+      games: [
+        {
+          ...missouri,
+          pred: 'UF 28 · Missouri 21',
+          predUF: 28,
+          predOpp: 21,
+          ufPct: 65,
+        },
+      ],
+      currentGameId: 'missouri',
+    });
+    const peeked = peekScheduleBoard(2026);
+    const row = peeked.games.find((g) => g.id === 'missouri');
+    assert.equal(row?.pred, 'UF 34 · Missouri 24');
+    assert.equal(row?.predUF, 34);
+    assert.equal(row?.predOpp, 24);
+    assert.equal(row?.ufPct, 71);
+    assert.equal(peeked.predThrough, '2026-W5');
+  });
+
+  it('peekScheduleBoard keeps a newer last-good predThrough than the seed', () => {
+    const missouri = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
+    assert.ok(missouri);
+    __scheduleApiTest.clearLastGood(2026);
+    __scheduleApiTest.writeLastGood(2026, {
+      games: [
+        {
+          ...missouri,
+          pred: 'UF 31 · Missouri 27',
+          predUF: 31,
+          predOpp: 27,
+          ufPct: 68,
+        },
+      ],
+      currentGameId: 'missouri',
+      predThrough: '2026-W6',
+    });
+    const peeked = peekScheduleBoard(2026);
+    const row = peeked.games.find((g) => g.id === 'missouri');
+    assert.equal(row?.pred, 'UF 31 · Missouri 27');
+    assert.equal(row?.predUF, 31);
+    assert.equal(peeked.predThrough, '2026-W6');
+  });
+
   it('mergeUniform prefers live over seed', () => {
     const merged = mergeUniform(
       { helmet: 'Blue', jersey: 'Blue', pants: 'Blue', label: 'All-Blue' },

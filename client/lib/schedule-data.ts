@@ -100,6 +100,9 @@ export type ScheduleGame = {
   };
 };
 
+/** Bundled remaining-season pred week. Peek drops a leftover last-good stamp older than this. */
+export const SCHEDULE_SEED_PRED_THROUGH = '2026-W5';
+
 export const SCHEDULE_GAMES: ScheduleGame[] = [
   {
     id: "fau",

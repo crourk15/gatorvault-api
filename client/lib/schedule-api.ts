@@ -4,7 +4,7 @@
  * Do not refill desk scout (offenseScout / defenseScout / scoutingReport) from seed.
  */
 import { snapshotLiveFetch } from './snapshot-fetch';
-import { SCHEDULE_GAMES, type ScheduleGame } from './schedule-data';
+import { SCHEDULE_GAMES, SCHEDULE_SEED_PRED_THROUGH, type ScheduleGame } from './schedule-data';
 
 export type ScheduleBoardResponse = {
   ok?: boolean;
@@ -22,7 +22,65 @@ export type ScheduleBoardResponse = {
 export type ScheduleBoardLive = {
   games: ScheduleGame[];
   currentGameId?: string;
+  /** Remaining-season pred week from live `/api/schedule` (e.g. 2026-W5). */
+  predThrough?: string;
 };
+
+export function predThroughRank(value?: string | null): number {
+  const match = String(value || '')
+    .trim()
+    .match(/^(\d{4})-W(\d+)$/i);
+  if (!match) return 0;
+  return Number(match[1]) * 100 + Number(match[2]);
+}
+
+function hasPostedFinal(game: ScheduleGame): boolean {
+  return Number.isFinite(Number(game.finalUF)) && Number.isFinite(Number(game.finalOpp));
+}
+
+function remainingPredsMatch(live: ScheduleGame, seed: ScheduleGame): boolean {
+  return (
+    String(live.pred || '') === String(seed.pred || '') &&
+    Number(live.predUF) === Number(seed.predUF) &&
+    Number(live.predOpp) === Number(seed.predOpp) &&
+    Number(live.ufPct) === Number(seed.ufPct)
+  );
+}
+
+/** Overlay leftover last-good remaining scores when the bundled seed is a newer week. */
+export function overlaySeedRemainingPreds(
+  games: ScheduleGame[],
+  seedGames: ScheduleGame[] = SCHEDULE_GAMES
+): ScheduleGame[] {
+  const seedById = new Map(seedGames.map((game) => [game.id, game]));
+  return games.map((game) => {
+    const seed = seedById.get(game.id);
+    if (!seed || hasPostedFinal(game) || hasPostedFinal(seed)) return game;
+    if (remainingPredsMatch(game, seed)) return game;
+    return {
+      ...game,
+      pred: seed.pred,
+      predUF: seed.predUF,
+      predOpp: seed.predOpp,
+      ufPct: seed.ufPct,
+      ...(seed.predConfidence != null ? { predConfidence: seed.predConfidence } : {}),
+      ...(seed.predMovement ? { predMovement: seed.predMovement } : {}),
+      ...(seed.ufPctDelta != null ? { ufPctDelta: seed.ufPctDelta } : {}),
+      predThrough: seed.predThrough || SCHEDULE_SEED_PRED_THROUGH,
+    };
+  });
+}
+
+function healLastGoodPreds(last: ScheduleBoardLive, seed: ScheduleBoardLive): ScheduleBoardLive {
+  const lastRank = predThroughRank(last.predThrough);
+  const seedRank = predThroughRank(seed.predThrough || SCHEDULE_SEED_PRED_THROUGH);
+  if (last.predThrough && lastRank >= seedRank) return last;
+  return {
+    ...last,
+    games: overlaySeedRemainingPreds(last.games, seed.games),
+    predThrough: seed.predThrough || SCHEDULE_SEED_PRED_THROUGH,
+  };
+}
 
 function normalizeUniform(raw: ScheduleGame['uniform'] | null | undefined): ScheduleGame['uniform'] | undefined {
   if (!raw || typeof raw !== 'object') return undefined;
@@ -186,7 +244,8 @@ function readLastGood(season: number): ScheduleBoardLive | null {
     const games = normalizeGames(parsed?.games);
     if (!games.length) return null;
     const currentGameId = String(parsed.currentGameId || '').trim() || undefined;
-    const board = { games, currentGameId };
+    const predThrough = String(parsed.predThrough || '').trim() || undefined;
+    const board = { games, currentGameId, ...(predThrough ? { predThrough } : {}) };
     lastGoodMemory[season] = board;
     return board;
   } catch {
@@ -204,13 +263,29 @@ function writeLastGood(season: number, board: ScheduleBoardLive): void {
   }
 }
 
+function clearLastGood(season = 2026): void {
+  delete lastGoodMemory[season];
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  try {
+    window.localStorage.removeItem(lastGoodKey(season));
+  } catch {
+    /* quota / private mode */
+  }
+}
+
 export function fallbackScheduleGames(): ScheduleGame[] {
   return SCHEDULE_GAMES.slice();
 }
 
-/** Sync first paint — last live board, not the App Store seed. */
+/** Sync first paint — last live board, healed when the bundled seed is a newer pred week. */
 export function peekScheduleBoard(season = 2026): ScheduleBoardLive {
-  return readLastGood(season) || { games: fallbackScheduleGames() };
+  const seed: ScheduleBoardLive = {
+    games: fallbackScheduleGames(),
+    predThrough: SCHEDULE_SEED_PRED_THROUGH,
+  };
+  const last = readLastGood(season);
+  if (!last) return seed;
+  return healLastGoodPreds(last, seed);
 }
 
 export async function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLive> {
@@ -223,8 +298,9 @@ export async function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLi
     );
     const live = normalizeGames(data?.games);
     const currentGameId = String(data?.currentGameId || '').trim() || undefined;
+    const predThrough = String(data?.predThrough || '').trim() || undefined;
     if (live.length) {
-      const board = { games: live, currentGameId };
+      const board = { games: live, currentGameId, ...(predThrough ? { predThrough } : {}) };
       writeLastGood(season, board);
       return board;
     }
@@ -232,8 +308,14 @@ export async function fetchScheduleBoard(season = 2026): Promise<ScheduleBoardLi
     /* fall through */
   }
   // 502 / flap: keep the last live board. Do not snap back to the baked seed
-  // (1.0.28 still has the Sep 21 Ole Miss keys).
-  return readLastGood(season) || { games: fallbackScheduleGames() };
+  // (1.0.28 still has the Sep 21 Ole Miss keys). Heal leftover remaining scores
+  // so a 502 cannot put yesterday's 28–21 back on screen.
+  const seed: ScheduleBoardLive = {
+    games: fallbackScheduleGames(),
+    predThrough: SCHEDULE_SEED_PRED_THROUGH,
+  };
+  const last = readLastGood(season);
+  return last ? healLastGoodPreds(last, seed) : seed;
 }
 
 export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]> {
@@ -254,5 +336,9 @@ export const __scheduleApiTest = {
   mergeUniform,
   writeLastGood,
   readLastGood,
+  clearLastGood,
   lastGoodKey,
+  overlaySeedRemainingPreds,
+  healLastGoodPreds,
+  predThroughRank,
 };

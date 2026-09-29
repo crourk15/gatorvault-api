@@ -14,7 +14,7 @@ import { RECRUITING_HUB_BUNDLE_SEED } from '@/lib/recruiting-hub-bundle-seed';
 import { useVaultDataReload } from '@/lib/vault-navigation';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
-import { fetchScheduleBoard, peekScheduleBoard, prefetchScheduleBoard } from '@/lib/schedule-api';
+import { fetchScheduleBoard, peekScheduleBoard } from '@/lib/schedule-api';
 import type { ScheduleGame } from '@/lib/schedule-data';
 import { prefetchCommunityPage } from '@/lib/community-api';
 import { HomeCommandCenter } from '@/components/home/premium/command/HomeCommandCenter';
@@ -186,14 +186,20 @@ export function HomePremiumPage(): React.ReactElement {
       setLoading(false);
     }
     const poll = warmPollProfile();
-    prefetchScheduleBoard(2026);
     prefetchHighPriorityTargets(primaryRecruitingClassYear());
     prefetchCommunityPage();
+    // Apply schedule as soon as it lands — do not wait on hub warm-poll (~30s)
+    // or first paint keeps yesterday's leftover predicted score.
+    void fetchScheduleBoard(2026)
+      .then((board) => {
+        if (board?.games?.length) setScheduleGames(board.games);
+      })
+      .catch(() => {});
     try {
       const year = ACTIVE_RECRUITING_CLASS_YEAR;
       // APIs that already warm-poll internally — do not nest another warm layer.
       const chaseYear = year + 1;
-      const [hubTickerPack, chaseTickerLive, hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets, scheduleBoard] =
+      const [hubTickerPack, chaseTickerLive, hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets] =
         await Promise.all([
           // Dedicated ticker — lighter than full bundle; keeps NOW live without Codemagic.
           fetchWithWarmPoll(() => fetchRecruitingHubTickerPack(year), poll).catch(() => ({
@@ -209,9 +215,7 @@ export function HomePremiumPage(): React.ReactElement {
           fetchWithWarmPoll(() => fetchRecruitingBoard(year), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchFutureCastHome(), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchHighPriorityTargets(year), poll).catch(() => null),
-          fetchScheduleBoard(2026).catch(() => peekScheduleBoard(2026)),
         ]);
-      if (scheduleBoard?.games?.length) setScheduleGames(scheduleBoard.games);
       // Cold API miss must NOT wipe build-time seeds — first-open chill was clearing
       // metrics/beat to null/[] and looking broken until a later warm revisit.
       const hubTickerLive = Array.isArray(hubTickerPack?.items) ? hubTickerPack.items : [];
