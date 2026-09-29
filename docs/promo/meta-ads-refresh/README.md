@@ -40,3 +40,21 @@ Download Gator Vault Insider on the App Store.
 Headline: `Open the Vault.`
 
 Description: `Florida football in one app.`
+
+
+## New product reel (use this)
+
+`docs/promo/meta-ads-refresh/open-the-vault-product-reel.mp4`
+
+16s vertical. Open the Vault → FutureCast → Game Week → Gators Live → Film Room → App Store.
+No recruit names on the cards. Upload this on the **video** duplicate. Leave the woman ad on.
+
+Primary text:
+
+```
+Open the Vault.
+Recruiting, Film Room, Game Week — Florida football in one app.
+Download Gator Vault Insider on the App Store.
+```
+
+Headline: `Open the Vault.`
