@@ -25,16 +25,22 @@ describe('player profile no-slash Netlify 500', () => {
     assert.match(src, /`\/vault\/players\/\$\{safe\}\/`/);
   });
 
-  it('redirect table 301s no-slash player paths', () => {
+  it('redirect table does not 301 :slug onto itself (Netlify slash loop)', () => {
     const src = fs.readFileSync(path.join(ROOT, 'client/lib/routes-vault.cjs'), 'utf8');
-    assert.match(
-      src,
-      /\/vault\/recruiting\/player\/:slug'\s*,\s*to:\s*'\/vault\/recruiting\/player\/:slug\//
-    );
+    assert.doesNotMatch(src, /player\/:slug'\s*,\s*to:\s*'\/vault\/(?:recruiting|futurecast)\/player\/:slug\//);
+    assert.doesNotMatch(src, /players\/:slug'\s*,\s*to:\s*'\/vault\/players\/:slug\//);
     const redirects = fs.readFileSync(path.join(ROOT, 'server/_redirects'), 'utf8');
-    assert.match(
+    assert.doesNotMatch(
       redirects,
       /\/vault\/recruiting\/player\/:slug\s+\/vault\/recruiting\/player\/:slug\/\s+301/
     );
+    assert.doesNotMatch(
+      redirects,
+      /\/vault\/futurecast\/player\/:slug\s+\/vault\/futurecast\/player\/:slug\/\s+301/
+    );
+    assert.doesNotMatch(redirects, /\/vault\/players\/:slug\s+\/vault\/players\/:slug\/\s+301/);
+    assert.match(redirects, /\/vault\/recruiting\/player\/\*\s+\/vault\/recruiting\/player\/index\.html\s+200/);
+    assert.match(redirects, /\/vault\/futurecast\/player\/\*\s+\/vault\/futurecast\/player\/index\.html\s+200/);
+    assert.match(redirects, /\/vault\/players\/\*\s+\/vault\/players\/index\.html\s+200/);
   });
 });
