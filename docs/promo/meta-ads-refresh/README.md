@@ -40,3 +40,5 @@ FUTURECAST
 8. Leave the old ad on.
 
 One new ad. Not a fake home screen. Not this Saturday's kickoff.
+
+If you want brand-elite instead of the woman-and-phone ad, upload `elite-two-commits.png` (1080×1080). That is the GatorVault board — not a fake iPhone menu.
