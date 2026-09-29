@@ -45,6 +45,14 @@ describe('GNFP Film Breakdown title filter', () => {
       ),
       true
     );
+    assert.equal(
+      isGnfpFilmBreakdownTitle('GNFP Film Review- 2026 Florida Gators Offense vs. Ole Miss'),
+      true
+    );
+    assert.equal(
+      isGnfpFilmBreakdownTitle('GNFP Film Review- 2026 Florida Gators Defense vs. Ole Miss'),
+      true
+    );
   });
 
   it('drops Talking Ball / Podcast Episode coach conversations', () => {
@@ -340,6 +348,29 @@ describe('Tengwall UF 2026 run-game film only', () => {
     assert.match(String(row.title || ''), /Auburn/i);
     assert.ok(!items.some((i) => i.youtubeId === 'UXOweKkBadI'));
     assert.ok(!items.some((i) => i.youtubeId === '0Ld6jeGS3P0'));
+  });
+});
+
+describe('GNFP Ole Miss Week 4 film reviews', () => {
+  it('surfaces offense and defense vs Ole Miss on Film Breakdowns', () => {
+    const items = loadLegacyVideoCatalog();
+    const offense = items.find((i) => i.youtubeId === '-7Q5Aerl9zU');
+    const defense = items.find((i) => i.youtubeId === 'GuAWJ4iekco');
+    assert.ok(offense, '-7Q5Aerl9zU missing from Film Room catalog');
+    assert.ok(defense, 'GuAWJ4iekco missing from Film Room catalog');
+    assert.match(String(offense.title || ''), /Offense vs\. Ole Miss/i);
+    assert.match(String(defense.title || ''), /Defense vs\. Ole Miss/i);
+    assert.match(String(offense.source || ''), /GNFP/i);
+    assert.match(String(defense.source || ''), /GNFP/i);
+    assert.ok(
+      shouldKeepEntry(
+        {
+          title: 'GNFP Film Review- 2026 Florida Gators Offense vs. Ole Miss',
+          publishedAt: '2026-09-29T14:51:00.000Z',
+        },
+        GNFP_SOURCE
+      )
+    );
   });
 });
 

@@ -2,6 +2,46 @@
   "auto": {
     "gnfp": [
       {
+        "id": "yt_GuAWJ4iekco",
+        "slug": "gnfp-film-review-2026-florida-gators-defense-vs-ole-miss",
+        "title": "GNFP Film Review- 2026 Florida Gators Defense vs. Ole Miss",
+        "dek": "",
+        "gameLine": "GNFP Film Review",
+        "season": "2026",
+        "category": "Film Breakdown",
+        "duration": "YouTube",
+        "thumbUrl": "https://i4.ytimg.com/vi/GuAWJ4iekco/hqdefault.jpg",
+        "videoUrl": "https://www.youtube.com/watch?v=GuAWJ4iekco",
+        "youtubeId": "GuAWJ4iekco",
+        "embedUrl": "https://www.youtube.com/embed/GuAWJ4iekco",
+        "source": "GNFP",
+        "autoUpdate": true,
+        "mediaReady": true,
+        "featured": true,
+        "publishedAt": "2026-09-29T14:53:28.000Z",
+        "ingestedAt": "2026-09-29T17:02:56.939Z"
+      },
+      {
+        "id": "yt_-7Q5Aerl9zU",
+        "slug": "gnfp-film-review-2026-florida-gators-offense-vs-ole-miss",
+        "title": "GNFP Film Review- 2026 Florida Gators Offense vs. Ole Miss",
+        "dek": "",
+        "gameLine": "GNFP Film Review",
+        "season": "2026",
+        "category": "Film Breakdown",
+        "duration": "YouTube",
+        "thumbUrl": "https://i2.ytimg.com/vi/-7Q5Aerl9zU/hqdefault.jpg",
+        "videoUrl": "https://www.youtube.com/watch?v=-7Q5Aerl9zU",
+        "youtubeId": "-7Q5Aerl9zU",
+        "embedUrl": "https://www.youtube.com/embed/-7Q5Aerl9zU",
+        "source": "GNFP",
+        "autoUpdate": true,
+        "mediaReady": true,
+        "featured": true,
+        "publishedAt": "2026-09-29T14:51:00.000Z",
+        "ingestedAt": "2026-09-29T17:02:56.939Z"
+      },
+      {
         "id": "yt_29xv3NyP7W0",
         "slug": "gnfp-film-review-2026-florida-gators-defense-vs-auburn-tigers",
         "title": "GNFP Film Review- 2026 Florida Gators Defense vs. Auburn Tigers",
@@ -146,7 +186,7 @@
         "slug": "gnfp-film-review-2026-buster-faulkner-offense-part-2-florida-gat",
         "title": "GNFP Film Review - 2026 Buster Faulkner Offense Part 2 | Florida Gators Offense",
         "dek": "",
-        "gameLine": "2026 · Buster Faulkner Offense",
+        "gameLine": "2026 \u00b7 Buster Faulkner Offense",
         "season": "2026",
         "category": "Film Breakdown",
         "duration": "YouTube",
@@ -186,7 +226,7 @@
         "slug": "gnfp-film-review-2026-buster-faulkner-offense-part-1-florida-gat",
         "title": "GNFP Film Review - 2026 Buster Faulkner Offense Part 1 | Florida Gators Offense",
         "dek": "",
-        "gameLine": "2026 · Buster Faulkner Offense",
+        "gameLine": "2026 \u00b7 Buster Faulkner Offense",
         "season": "2026",
         "category": "Film Breakdown",
         "duration": "YouTube",
@@ -544,7 +584,7 @@
       {
         "id": "yt_60NtGp4bTaY",
         "slug": "florida-football-sec-media-days-jadan-baugh",
-        "title": "Florida Football Press Conference | SEC Media Days — Jadan Baugh",
+        "title": "Florida Football Press Conference | SEC Media Days \u2014 Jadan Baugh",
         "dek": "Junior RB Jadan Baugh meets the media at 2026 SEC Media Days in Tampa.",
         "gameLine": "2026 SEC Media Days",
         "season": "2026",
@@ -563,7 +603,7 @@
       {
         "id": "yt_p7Lzgkb4SKc",
         "slug": "florida-football-sec-media-days-myles-graham",
-        "title": "Florida Football Press Conference | SEC Media Days — Myles Graham",
+        "title": "Florida Football Press Conference | SEC Media Days \u2014 Myles Graham",
         "dek": "Junior LB Myles Graham represents Florida at 2026 SEC Media Days.",
         "gameLine": "2026 SEC Media Days",
         "season": "2026",
@@ -582,7 +622,7 @@
       {
         "id": "yt_rMUz8NEXlVs",
         "slug": "florida-football-sec-media-days-vernell-brown-iii",
-        "title": "Florida Football Press Conference | SEC Media Days — Vernell Brown III",
+        "title": "Florida Football Press Conference | SEC Media Days \u2014 Vernell Brown III",
         "dek": "Sophomore WR Vernell Brown III at 2026 SEC Media Days in Tampa.",
         "gameLine": "2026 SEC Media Days",
         "season": "2026",
@@ -883,11 +923,11 @@
       }
     ]
   },
-  "updatedAt": "2026-09-28T21:53:47.052Z",
+  "updatedAt": "2026-09-29T17:02:56.939Z",
   "purgedAt": "2026-06-09T19:44:56.072Z",
   "meta": {
     "version": 1,
-    "updatedAt": "2026-09-28T21:53:47.052Z",
+    "updatedAt": "2026-09-29T17:02:56.939Z",
     "path": "/workspace/server/data/film-room/cache.json"
   }
 }
