@@ -1,81 +1,53 @@
-# Meta ads — what to do tonight
+# Meta ads — keep the last ad look
 
-You cannot publish from this repo. Open Ads Manager and follow these clicks. Paste the copy. Upload the files.
+Do **not** replace the woman + phone + FLORIDA FOOTBALL UNLOCKED image with the vault pictures. That ad is the winner. It got tired from running too long, not because it looks cheap.
 
-Campaign stays **Gator Vault Insider 2.0**. Do not make a new campaign. Do not change targeting. Do not raise budget.
+## Tonight
 
----
+1. Leave **New App promotion Ad** on. Same campaign. Same ad set. Same budget.
+2. Open the **original file** you made that ad in (Canva, Photoshop, or whatever you used).
+3. Duplicate the file twice. Do not start a new design.
+4. Change **only the words on the phone**. Same woman. Same jersey. Same helmet. Same layout.
 
-## Ad 1 — Open the Vault (image)
+### Phone text — version B (2028)
 
-**File (pick one):**
-- New: `docs/promo/meta-ads-refresh/ad-1-open-the-vault.png`
-- Already on disk: `docs/promo/open-the-vault/PRIMARY-elite-vault-square-app-install.png`
-
-**Primary text** (paste):
-
+Headline:
 ```
-Open the Vault.
-Recruiting, Film Room, Game Week, and the live board — Florida football in one app.
-Download Gator Vault Insider on the App Store.
+2028 BOARD
+IS LIVE
 ```
 
-**Headline:** Open the Vault.
-
-**Description:** Florida football in one app.
-
----
-
-## Ad 2 — 2028 board (image)
-
-**File:** `docs/promo/meta-ads-refresh/ad-2-2028-board.png`
-
-**Primary text** (paste):
-
+Rows:
 ```
-The 2028 board just moved.
-Samuel Bailey and Cyion Smith committed to Florida. See the board, the chases, and who is next.
-Download Gator Vault Insider on the App Store.
+BAILEY COMMIT
+SMITH COMMIT
+CHASE BOARD
+FILM ROOM
+GAME WEEK
 ```
 
-**Headline:** The 2028 board just moved.
+### Phone text — version C (Game Week)
 
-**Description:** See every chase in one app.
-
----
-
-## Ad 3 — Open the Vault (video)
-
-**File:** `docs/promo/open-the-vault/OPEN-THE-VAULT-elite-reel.mp4`
-
-**Primary text** (paste):
-
+Headline:
 ```
-Open the Vault.
-FutureCast. Recruiting. Team. Live. Game Week.
-Download Gator Vault Insider on the App Store.
+GAME WEEK
 ```
 
-**Headline:** Open the Vault.
+Rows:
+```
+MISSOURI  SAT  3:30
+ESPN
+WIN THE LINE
+FILM ROOM
+TEAM
+```
 
-**Description:** Everything Florida football. One app.
+5. Export two new squares (1080×1080).
+6. Ads Manager → **Gator Vault Insider 2.0** → **New App promotion Ad Set** → **New App promotion Ad** → Duplicate.
+7. Name one `2028 board`. Upload version B. Publish.
+8. Duplicate again. Name it `Game Week`. Upload version C. Publish.
+9. Leave the old ad on for 4–5 days. Then turn it off if B or C is cheaper.
 
----
+Do not add Illinois ads. Do not add a website audience tonight. Do not upload the vault-door images.
 
-## Ads Manager clicks
-
-1. Go to [facebook.com/adsmanager](https://www.facebook.com/adsmanager)
-2. Open campaign **Gator Vault Insider 2.0**
-3. Open ad set **New App promotion Ad Set**
-4. Find the ad named **New App promotion Ad**
-5. Click **Duplicate** (or the ••• menu → Duplicate)
-6. Name it **Open the Vault — image**
-7. Replace the image with Ad 1
-8. Replace Primary text / Headline / Description with Ad 1 copy
-9. Leave destination as the **App Store / Gator Vault Insider** app install (do not switch to a website)
-10. Click **Publish**
-11. Duplicate again. Name it **2028 board**. Use Ad 2 file + copy. Publish.
-12. Duplicate again. Name it **Open the Vault — video**. Upload the reel. Use Ad 3 copy. Publish.
-13. Leave the old **New App promotion Ad** on for 4–5 days. Then turn it off if the new ones are cheaper.
-
-Do not add Illinois/Michigan ads. Do not build a website-visitor audience tonight.
+Optional: `phone-2028-board.png` and `phone-game-week.png` in this folder are just the phone screen if you want to drop them onto the phone in Canva.
