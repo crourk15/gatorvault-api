@@ -21,6 +21,15 @@ function normalizeSlug(slug) {
   return String(slug || '').trim().toLowerCase();
 }
 
+function isFootballDeskCopy(text, post = null) {
+  try {
+    const sport = require('./x-autoposter-sport-classifier');
+    return sport.isFootballAutoposterEligible(text, post);
+  } catch {
+    return true;
+  }
+}
+
 function beatSnippet(row = {}, max = 200) {
   const text = String(row.detail || row.skinny || row.text || '').trim();
   if (!text) return '';
@@ -187,6 +196,8 @@ async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 }
     if (text.length < 24) continue;
     // Soft-sell only — team/staff/camp/program beats stay on the desk as hub topics.
     if (prefilter?.isSubscribePromoIntel?.(text)) continue;
+    // Football desk only — 5-star PG / PF hoops commits stay off Beat inbox.
+    if (!isFootballDeskCopy(text, p)) continue;
 
     const reportedAt = p.publishedAt || p.fetchedAt || fetchedAt || null;
     const ts = new Date(reportedAt || 0).getTime();
@@ -326,6 +337,8 @@ function recentBeatIntelRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS } = {}) {
       } catch {
         /* keep */
       }
+      const copy = String(row.detail || row.skinny || row.text || '');
+      if (copy && !isFootballDeskCopy(copy)) return false;
       return true;
     })
     .map((row) => {
@@ -588,5 +601,6 @@ module.exports = {
   inspectPlayer,
   isBeatIntel,
   BEAT_INTEL_SOURCES,
-  liveBeatInboxRows
+  liveBeatInboxRows,
+  isFootballDeskCopy
 };

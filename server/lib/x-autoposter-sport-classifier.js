@@ -47,6 +47,8 @@ const BASEBALL_SOFT_RES = [
 const BASKETBALL_RES = [
   /\bbasketball\b/i,
   /\bhoops\b/i,
+  /\bhooper\b/i,
+  /\bmbb\b/i,
   /\bsec basketball\b/i,
   /\bgators basketball\b/i,
   /\bflorida basketball\b/i,
@@ -61,7 +63,14 @@ const BASKETBALL_RES = [
   /\brebound(s)?\b/i,
   /\bncaa tournament\b/i,
   /\bsec tournament\b/i,
-  /\btip[- ]off\b/i
+  /\btip[- ]off\b/i,
+  // Hoops recruiting — 5-star / commit / OV language must not look like football.
+  /\bpoint guard\b/i,
+  /\bshooting guard\b/i,
+  /\bsmall forward\b/i,
+  /\bpower forward\b/i,
+  /\b[1-5][- ]star\s+(?:PG|SG|SF|PF)\b/i,
+  /\b(?:PG|SG|SF|PF)\s+[A-Z][a-z]+(?:\s+[A-Z][a-z'.-]+)+\b/
 ];
 
 const SOFTBALL_RES = [
