@@ -1,0 +1,9 @@
+# PrimeShine customer site (primeshinefl.com)
+# Deploy this folder as its own Netlify site. Do not publish with GatorVault.
+
+[build]
+  publish = "."
+  command = "true"
+
+[build.processing]
+  skip_processing = true
