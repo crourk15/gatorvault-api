@@ -1,8 +1,10 @@
-# Submit 1.0.29 (Build 97+) — new train after 1.0.28 accepted
+# 1.0.29 (Build 97+) — current App Store binary
 
-**Why:** Apple accepted **1.0.28** on Sep 21, 2026 (submission `3e6e63db-1028-4ca3-a71a-51584bf05f32`). That train is closed. Charles asked for **1.0.29** so iOS matches the live web: clean NOW, Game Week already there, Baugh 95.
+**1.0.29 is the live train.** Do **not** upload another 1.0.29 IPA.
 
-Do **not** upload another 1.0.28. Do **not** start Codemagic until this bump is on `main` and this agent says so.
+Next client bake is **1.0.30** (`docs/APP_STORE_1_0_30.md`) — schedule remaining scores live-only. Charles asked for that train Sep 30, 2026.
+
+**Why this train existed:** Apple accepted **1.0.28** on Sep 21, 2026 (submission `3e6e63db-1028-4ca3-a71a-51584bf05f32`). Charles asked for **1.0.29** so iOS matches the live web: clean NOW, Game Week already there, Baugh 95.
 
 ## iOS
 
@@ -29,4 +31,4 @@ Closest to commit and Community speed are **API after Render** — no Codemagic.
 
 Weekly visitor names / predictions stay API after this bake.
 
-**Hold — do not bake for this alone:** Schedule remaining-game scores live-only (no leftover last-good 28–21 on first paint). Charles: add in the next build when there is enough else to repair. PR `#777`. After that bake, Saturday restamps need no Codemagic.
+**Shipped in 1.0.30:** Schedule remaining-game scores live-only (no leftover last-good 28–21 on first paint). PR `#777`. After that bake, Saturday restamps need no Codemagic.
