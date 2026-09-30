@@ -37,6 +37,24 @@ describe('sport classifier - EDGE / visit soft recruiting (Bender path)', () => 
     assert.equal(gate.evaluateStrictRecruitingIngestGate(post, text).pass, true);
   });
 
+  it('blocks hoops recruiting that looks like a 5-star / commit beat', () => {
+    const daughtry =
+      'NEW: 5-star PG Cayden Daughtry broke down all four official visits with @JoeTipton — and he is down to Florida.';
+    const condon =
+      '4-star PF Ian Condon commits to the Florida Gators UF has their first commitment in the class.';
+    assert.equal(classifySport(daughtry).sport, 'basketball');
+    assert.equal(isFootballAutoposterEligible(daughtry), false);
+    assert.equal(classifySport(condon).sport, 'basketball');
+    assert.equal(isFootballAutoposterEligible(condon), false);
+  });
+
+  it('still treats football 4-star OT / CB commits as football', () => {
+    const bailey = '4-star Samuel Bailey is a Gator. Now the real work begins for Florida’s offensive line.';
+    const floyd = 'Florida is headed to Missouri this weekend, and 4-star CB commit Raheem Floyd will be there.';
+    assert.equal(classifySport(bailey).sport, 'football');
+    assert.equal(classifySport(floyd).sport, 'football');
+  });
+
   it('still blocks UF baseball', () => {
     const text = 'Florida baseball takes the series with a walk-off home run in Gainesville.';
     assert.equal(classifySport(text, { handle: 'corey_bender' }).sport, 'baseball');
