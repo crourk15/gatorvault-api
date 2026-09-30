@@ -7,7 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
-- [x] Schedule GET is fast on current App Store: visitor cards use editorial `visitorMeta` (no `players.json` parse per slug) and `/api/schedule` memos the board until the file stamp changes. Repeat iOS opens stay tens of ms. API after Render — no Codemagic. Client first-paint / live-only remaining preds stay on the next repair bake.
+- [x] Schedule GET is fast on current App Store: visitor cards use editorial `visitorMeta` (no `players.json` parse per slug) and `/api/schedule` memos the board until the file stamp changes. Repeat iOS opens stay tens of ms. API after Render — no Codemagic. Client first-paint / live-only remaining preds is the **1.0.30** bake.
 - [x] Game Week Missouri Vegas: stamp DraftKings via ESPN **UF -5.5 / O/U 56.5** on `/api/betting/lines` so Prediction is not Line pending (opened ~-2.5; jumped after Ole Miss). API — no Codemagic.
 - [x] Schedule remaining-season preds use official UF scoring form (53.5 PPG after four games). Missouri is **71% / UF 34 · Missouri 24**, not the leftover 28–21 grind. Texas / Georgia stay UF losses. API `/api/schedule` after Render — current App Store already live-fetches `ufPct` / `pred`. Seed fallback is the bake row.
 - [x] Film Room: Sumrall weekly presser 9/28 (`asXiHSFj7S8` / Coach Sumrall 9-28-26) on `/api/film-room/catalog` after Render. Repo cache unions into stale durable so a cron miss after deploy cannot keep the 9/26 postgame on top. Drop Tengwall Samuel Bailey commitment sit. API — no Codemagic.
@@ -182,13 +182,16 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 **1.0.28 is closed.** Apple accepted it Sep 21, 2026 (submission `3e6e63db-1028-4ca3-a71a-51584bf05f32`). Do not upload another 1.0.28.
 
-**Next bake target: App Store `1.0.29` / build `97`.** Charles asked for this train. See `docs/APP_STORE_1_0_29.md`. Merge to `main`, then Charles starts Codemagic **ios-release**. Do **not** start until this agent says the bump is on `main`.
+**1.0.29 is the current App Store binary.** Do not upload another 1.0.29.
+
+**Next bake target: App Store `1.0.30` / build `98`.** Charles asked for this train (Sep 30) so leftover schedule scores stop flashing. See `docs/APP_STORE_1_0_30.md`. Merge to `main`, then Charles starts Codemagic **ios-release**. Do **not** start until this agent says the bump is on `main`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-09-29 | Schedule remaining scores live-only + faster apply: prefetch on vault open / menu, 8s GET, Home does not wait on hub | **Charles hold (Sep 29):** batch with the next repair train — do **not** start Codemagic for this alone. After that bake, weekly restamps are API-only and should land in ~1s not ~30s. | #777 |
+| 2026-09-30 | App Store **1.0.30** / build **98** (schedule live-only scores). **1.0.29 is the live binary — do not re-upload.** | `MARKETING_VERSION` 1.0.30. Charles asked for this train. | this PR |
+| 2026-09-29 | Schedule remaining scores live-only + faster apply: prefetch on vault open / menu, 8s GET, Home does not wait on hub | **1.0.30 reason.** After this bake, weekly restamps are API-only and should land in ~1s not ~30s. No leftover 28–21 flash. | #777 |
 | 2026-09-29 | Schedule / Game Week first-paint seed: Missouri **71% / UF 34 · 24** from scoring form | `schedule-data.ts` in binary. **`/api/schedule` already serves 34–24 after Render.** 1.0.29 last-good still paints 28–21 if the API 502s. | this PR |
 | 2026-09-27 | Recruiting hero skip SWR last-good so 2028 cannot stick at 1 commit after Cyion | `stale-while-revalidate.ts` in binary. **API + edge already pin 2 commits / drop Cyion battles after deploy.** 1.0.29 still paints last-good hero. | this PR |
 | 2026-09-27 | Game Week win-chance conviction: stop mapping closeness-to-50 onto Low; show stamped `+13% this week` after Ole Miss | `game-week-data.ts` + gauge widget in binary. **API already serves 65% / UF 28–21 after Render.** Old formula still paints Low until 65% lands, and still says `+2% this week`. | this PR |
