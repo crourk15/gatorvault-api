@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Roster production stats rebuilt from all four official boxes (FAU / Campbell / Auburn / Ole Miss) for every player who recorded a line — including Brown 17–271 and Graham 28 tackles. API after Render — no Codemagic.
 - [x] Schedule GET is fast on current App Store: visitor cards use editorial `visitorMeta` (no `players.json` parse per slug) and `/api/schedule` memos the board until the file stamp changes. Repeat iOS opens stay tens of ms. API after Render — no Codemagic. Client first-paint / live-only remaining preds is the **1.0.30** bake.
 - [x] Game Week Missouri Vegas: stamp DraftKings via ESPN **UF -5.5 / O/U 56.5** on `/api/betting/lines` so Prediction is not Line pending (opened ~-2.5; jumped after Ole Miss). API — no Codemagic.
 - [x] Schedule remaining-season preds use official UF scoring form (53.5 PPG after four games). Missouri is **71% / UF 34 · Missouri 24**, not the leftover 28–21 grind. Texas / Georgia stay UF losses. API `/api/schedule` after Render — current App Store already live-fetches `ufPct` / `pred`. Seed fallback is the bake row.
@@ -190,6 +191,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-01 | Roster Stats tab: CMP/ATT · YDS · TD · INT + one card per game (pass + rush). **Season totals are API after Render.** | `RosterProfilePage` + `roster-production-stats.ts` in binary. Old binary still paints a lone CMP and duplicate week rows. | this PR |
 | 2026-09-30 | App Store **1.0.30** / build **98** (schedule live-only scores). **1.0.29 is the live binary — do not re-upload.** | `MARKETING_VERSION` 1.0.30. Charles asked for this train. | this PR |
 | 2026-09-29 | Schedule remaining scores live-only + faster apply: prefetch on vault open / menu, 8s GET, Home does not wait on hub | **1.0.30 reason.** After this bake, weekly restamps are API-only and should land in ~1s not ~30s. No leftover 28–21 flash. | #777 |
 | 2026-09-29 | Schedule / Game Week first-paint seed: Missouri **71% / UF 34 · 24** from scoring form | `schedule-data.ts` in binary. **`/api/schedule` already serves 34–24 after Render.** 1.0.29 last-good still paints 28–21 if the API 502s. | this PR |

@@ -8,9 +8,11 @@ import {
 } from '@/lib/roster-api';
 import {
   careerSeasonsForPos,
+  categoryLabel,
   formatGameStatLine,
   formatRecentGameHeadline,
   formatSyncedAt,
+  groupProductionGames,
   hasProductionStats,
   productionSourceLabel,
   pickPrimarySeason,
@@ -115,7 +117,7 @@ function ProductionStatsOverview({ player }: { player: RosterPlayer }): React.Re
   if (!hasProductionStats(player) || !player.productionStats) return null;
   const season = pickPrimarySeason(player.productionStats, player.pos || player.position);
   const strip = seasonStripItems(season);
-  const games = (player.productionStats.recentGames || []).slice(0, 5);
+  const games = groupProductionGames(player.productionStats.recentGames).slice(0, 4);
   const synced = formatSyncedAt(player.productionStats.syncedAt);
   if (!strip.length && !games.length) return null;
 
@@ -146,8 +148,12 @@ function ProductionStatsOverview({ player }: { player: RosterPlayer }): React.Re
           <ul>
             {games.map((g) => (
               <li key={`${g.season}-${g.week}-${g.opponent}-${g.date}`}>
-                <span className="gv-roster-prod__opp">{formatRecentGameHeadline(g)}</span>
-                <span className="gv-roster-prod__line">{formatGameStatLine(g)}</span>
+                <span className="gv-roster-prod__opp">{formatRecentGameHeadline(g.lines[0])}</span>
+                {g.lines.map((line) => (
+                  <span key={`${line.category}`} className="gv-roster-prod__line">
+                    {categoryLabel(line.category)} {formatGameStatLine(line)}
+                  </span>
+                ))}
               </li>
             ))}
           </ul>
@@ -168,7 +174,7 @@ function ProductionStatsTab({ player }: { player: RosterPlayer }): React.ReactEl
     return <p className="gv-roster-profile__empty">No confirmed production stats yet.</p>;
   }
   const career = careerSeasonsForPos(stats, player.pos || player.position);
-  const games = stats.recentGames || [];
+  const games = groupProductionGames(stats.recentGames);
   const synced = formatSyncedAt(stats.syncedAt);
 
   return (
@@ -204,14 +210,18 @@ function ProductionStatsTab({ player }: { player: RosterPlayer }): React.ReactEl
           <h3>Game log</h3>
           <ul>
             {games.map((g) => (
-              <li key={`${g.season}-${g.week}-${g.opponent}-full`}>
+              <li key={`${g.season}-${g.week}-${g.opponent}-${g.date}-full`}>
                 <span className="gv-roster-prod__opp">
                   {g.season}
                   {g.week != null ? ` W${g.week}` : ''}
                   {' · '}
-                  {formatRecentGameHeadline(g)}
+                  {formatRecentGameHeadline(g.lines[0])}
                 </span>
-                <span className="gv-roster-prod__line">{formatGameStatLine(g)}</span>
+                {g.lines.map((line) => (
+                  <span key={`${line.category}`} className="gv-roster-prod__line">
+                    {categoryLabel(line.category)} {formatGameStatLine(line)}
+                  </span>
+                ))}
               </li>
             ))}
           </ul>
