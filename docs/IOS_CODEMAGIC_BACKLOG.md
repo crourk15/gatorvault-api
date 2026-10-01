@@ -191,6 +191,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-01 | Roster Stats tab: CMP/ATT · YDS · TD · INT + one card per game (pass + rush). **Season totals are API after Render.** | `RosterProfilePage` + `roster-production-stats.ts` in binary. Old binary still paints a lone CMP and duplicate week rows. | this PR |
 | 2026-09-30 | App Store **1.0.30** / build **98** (schedule live-only scores). **1.0.29 is the live binary — do not re-upload.** | `MARKETING_VERSION` 1.0.30. Charles asked for this train. | this PR |
 | 2026-09-29 | Schedule remaining scores live-only + faster apply: prefetch on vault open / menu, 8s GET, Home does not wait on hub | **1.0.30 reason.** After this bake, weekly restamps are API-only and should land in ~1s not ~30s. No leftover 28–21 flash. | #777 |
 | 2026-09-29 | Schedule / Game Week first-paint seed: Missouri **71% / UF 34 · 24** from scoring form | `schedule-data.ts` in binary. **`/api/schedule` already serves 34–24 after Render.** 1.0.29 last-good still paints 28–21 if the API 502s. | this PR |

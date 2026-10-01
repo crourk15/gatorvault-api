@@ -4731,6 +4731,10 @@ a.gv-live-feed__row-title:hover {
   opacity: 0.75;
 }
 
+.gv-roster-prod__games li .gv-roster-prod__line + .gv-roster-prod__line {
+  margin-top: 0.1rem;
+}
+
 .gv-roster-prod__synced {
   margin: 0.85rem 0 0;
   font-size: 0.72rem;
