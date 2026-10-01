@@ -63,50 +63,32 @@ function preserveTrustedSource(existing) {
   return 'official';
 }
 
-/**
- * Apply one official game's category lines onto a player blob.
- * Idempotent on season|week|category.
- */
-function applyOfficialGameLines(existing, game, lines, syncedAt) {
-  const incoming = (lines || []).filter((l) => l && l.category && l.stats);
-  if (!incoming.length) return existing || null;
+const RECENT_GAMES_LIMIT = 64;
 
-  const nextGames = Array.isArray(existing?.recentGames) ? existing.recentGames.slice() : [];
-  const nextSeasons = Array.isArray(existing?.seasons) ? existing.seasons.slice() : [];
-  let changed = false;
+function statsFingerprint(stats) {
+  return Object.keys(stats || {})
+    .filter((key) => key !== 'avg')
+    .sort()
+    .map((key) => `${key}:${stats[key]}`)
+    .join('|');
+}
 
-  for (const line of incoming) {
-    const gameRow = attachGameMeta(line, game);
-    const gk = gameKey(gameRow);
-    if (nextGames.some((g) => gameKey(g) === gk)) continue;
-    nextGames.unshift(gameRow);
-    changed = true;
-
-    const sk = seasonKey({ season: game.season, category: line.category });
-    const idx = nextSeasons.findIndex((s) => seasonKey(s) === sk);
-    const priorSameSeasonGames = nextGames.filter(
-      (g) => gameKey(g) !== gk && seasonKey({ season: g.season, category: g.category }) === sk
-    ).length;
-    if (idx >= 0) {
-      // Season totals already include the first stamped week when the game row was omitted.
-      if (priorSameSeasonGames > 0) {
-        nextSeasons[idx] = {
-          ...nextSeasons[idx],
-          stats: addStatMaps(nextSeasons[idx].stats, line.stats),
-        };
-      }
-    } else {
-      nextSeasons.unshift({
-        ...attachSeasonMeta(line, game),
-        stats: { ...line.stats },
-      });
-    }
+function recomputeSeasonFromGames(nextSeasons, nextGames, season, category) {
+  const games = nextGames.filter((g) => g.season === season && g.category === category);
+  const sk = seasonKey({ season, category });
+  const idx = nextSeasons.findIndex((s) => seasonKey(s) === sk);
+  if (!games.length) {
+    if (idx >= 0) nextSeasons.splice(idx, 1);
+    return;
   }
+  let stats = {};
+  for (const game of games) stats = addStatMaps(stats, game.stats);
+  const row = { season, team: 'Florida', category, stats };
+  if (idx >= 0) nextSeasons[idx] = { ...nextSeasons[idx], ...row };
+  else nextSeasons.unshift(row);
+}
 
-  if (!changed && existing) {
-    return { ...existing, syncedAt: existing.syncedAt || syncedAt };
-  }
-
+function stampBlob(existing, nextSeasons, nextGames, syncedAt) {
   return {
     source: preserveTrustedSource(existing),
     syncedAt,
@@ -119,8 +101,70 @@ function applyOfficialGameLines(existing, game, lines, syncedAt) {
         ? existing.matchConfidence
         : null,
     seasons: nextSeasons,
-    recentGames: nextGames.slice(0, 8),
+    recentGames: nextGames.slice(0, RECENT_GAMES_LIMIT),
   };
+}
+
+/**
+ * Apply one official game's category lines onto a player blob.
+ * Upserts season|week|category and recomputes that season total from game rows.
+ */
+function applyOfficialGameLines(existing, game, lines, syncedAt) {
+  const incoming = (lines || []).filter((l) => l && l.category && l.stats);
+  if (!incoming.length) return existing || null;
+
+  const nextGames = Array.isArray(existing?.recentGames) ? existing.recentGames.slice() : [];
+  const nextSeasons = Array.isArray(existing?.seasons) ? existing.seasons.slice() : [];
+  let changed = false;
+
+  for (const line of incoming) {
+    const gameRow = attachGameMeta(line, game);
+    const gk = gameKey(gameRow);
+    const existingIdx = nextGames.findIndex((g) => gameKey(g) === gk);
+    if (existingIdx >= 0) {
+      if (statsFingerprint(nextGames[existingIdx].stats) === statsFingerprint(line.stats)) continue;
+      nextGames[existingIdx] = gameRow;
+      changed = true;
+    } else {
+      nextGames.unshift(gameRow);
+      changed = true;
+    }
+    recomputeSeasonFromGames(nextSeasons, nextGames, game.season, line.category);
+  }
+
+  if (!changed && existing) {
+    return { ...existing, syncedAt: existing.syncedAt || syncedAt };
+  }
+
+  return stampBlob(existing, nextSeasons, nextGames, syncedAt);
+}
+
+function stripSeasonProduction(existing, season) {
+  if (!existing) return null;
+  return {
+    ...existing,
+    seasons: (existing.seasons || []).filter((s) => s.season !== season),
+    recentGames: (existing.recentGames || []).filter((g) => g.season !== season),
+  };
+}
+
+function rebuildOfficialSeason(existing, season, packets, syncedAt) {
+  let next = stripSeasonProduction(existing, season);
+  const ordered = (packets || []).slice().sort((a, b) => (a.game?.week || 0) - (b.game?.week || 0));
+  for (const packet of ordered) {
+    next = applyOfficialGameLines(next, packet.game, packet.lines, syncedAt);
+  }
+  return next;
+}
+
+function productionFingerprint(blob) {
+  const games = (blob?.recentGames || [])
+    .map((g) => `${gameKey(g)}|${statsFingerprint(g.stats)}`)
+    .sort();
+  const seasons = (blob?.seasons || [])
+    .map((s) => `${seasonKey(s)}|${statsFingerprint(s.stats)}`)
+    .sort();
+  return `${games.join(';')}#${seasons.join(';')}`;
 }
 
 /**
@@ -161,6 +205,10 @@ module.exports = {
   attachGameMeta,
   attachSeasonMeta,
   applyOfficialGameLines,
+  rebuildOfficialSeason,
+  stripSeasonProduction,
+  productionFingerprint,
+  RECENT_GAMES_LIMIT,
   mergeExistingForward,
   preserveTrustedSource,
 };

@@ -8,7 +8,7 @@
 const rosterStore = require('./roster-store');
 const scheduleBoard = require('./schedule-board');
 const { parseOfficialBoxHtml, parseBoxMeta } = require('./roster-official-box-parse');
-const { applyOfficialGameLines } = require('./roster-production-merge');
+const { applyOfficialGameLines, rebuildOfficialSeason, productionFingerprint } = require('./roster-production-merge');
 
 const FETCH_UA =
   'Mozilla/5.0 (compatible; GatorVaultRosterStats/1.0; +https://gatorvaultinsider.com)';
@@ -186,7 +186,7 @@ function officialOpponentName(game, meta) {
 function addedOfficialLines(existing, next) {
   if (!next) return false;
   if (!existing) return true;
-  return (next.recentGames || []).length > (existing.recentGames || []).length;
+  return productionFingerprint(existing) !== productionFingerprint(next);
 }
 
 async function syncOfficialBoxForGame(game, board, opts = {}) {
@@ -241,7 +241,89 @@ async function syncOfficialBoxForGame(game, board, opts = {}) {
   };
 }
 
+async function rebuildRosterOfficialBoxes(opts = {}) {
+  const season = Number(opts.season || process.env.ROSTER_STATS_SEASON || 2026);
+  const board = scheduleBoard.getScheduleBoard(season);
+  const games = (opts.games || completedBoxes(board)).filter((g) => !opts.gameId || g.id === opts.gameId);
+  if (!games.length) {
+    return { ok: true, skipped: true, reason: 'no completed official boxes', season, games: 0, rebuild: true };
+  }
+
+  const roster = rosterStore.loadPlayersRaw();
+  const packetsBySlug = new Map();
+  const results = [];
+  const errors = [];
+
+  for (const game of games) {
+    try {
+      const url = opts.boxScoreUrl || (await resolveBoxScoreUrl(game, { ...opts, season }));
+      if (!url) {
+        results.push({ ok: true, skipped: true, gameId: game.id, reason: 'box not posted yet' });
+        continue;
+      }
+      const html = opts.htmlByGameId?.[game.id] || opts.html || (await fetchBoxHtml(url));
+      const parsed = parseOfficialBoxHtml(html, roster);
+      const meta = parseBoxMeta(html, {
+        opponent: officialOpponentName(game, {}),
+        homeAway: homeAwayForGame(game),
+      });
+      const gameMeta = {
+        season,
+        week: weekForGame(board, game),
+        date: gameDateIso(game),
+        opponent: officialOpponentName(game, meta),
+        homeAway: meta.homeAway,
+      };
+      for (const [slug, hit] of parsed) {
+        if (!packetsBySlug.has(slug)) packetsBySlug.set(slug, []);
+        packetsBySlug.get(slug).push({ game: gameMeta, lines: hit.lines });
+      }
+      results.push({
+        ok: true,
+        skipped: false,
+        gameId: game.id,
+        week: gameMeta.week,
+        opponent: gameMeta.opponent,
+        url,
+        matched: parsed.size,
+      });
+    } catch (err) {
+      errors.push(`${game.id}: ${err.message}`);
+    }
+  }
+
+  const syncedAt = opts.syncedAt || new Date().toISOString();
+  const updates = {};
+  for (const [slug, packets] of packetsBySlug) {
+    const player = roster.find((p) => p.slug === slug);
+    const next = rebuildOfficialSeason(player?.productionStats || null, season, packets, syncedAt);
+    if (addedOfficialLines(player?.productionStats || null, next)) updates[slug] = next;
+  }
+
+  const write = opts.dryRun
+    ? { changed: Object.keys(updates).length }
+    : Object.keys(updates).length
+      ? rosterStore.applyProductionStatsUpdates(updates)
+      : { changed: 0 };
+
+  return {
+    ok: errors.length === 0,
+    skipped: !packetsBySlug.size,
+    rebuild: true,
+    season,
+    games: results.length,
+    matched: [...packetsBySlug.keys()].length,
+    changed: write.changed || 0,
+    slugs: Object.keys(updates),
+    results,
+    errors: errors.length ? errors : undefined,
+  };
+}
+
 async function syncRosterOfficialBoxes(opts = {}) {
+  if (opts.rebuild !== false) {
+    return rebuildRosterOfficialBoxes(opts);
+  }
   const season = Number(opts.season || process.env.ROSTER_STATS_SEASON || 2026);
   const board = scheduleBoard.getScheduleBoard(season);
   const games = candidateGames(board, opts.now);
@@ -275,6 +357,7 @@ async function syncRosterOfficialBoxes(opts = {}) {
 
 module.exports = {
   syncRosterOfficialBoxes,
+  rebuildRosterOfficialBoxes,
   syncOfficialBoxForGame,
   completedBoxes,
   candidateGames,
