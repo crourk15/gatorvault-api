@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-21T02:20:00.000Z",
+  "updatedAt": "2026-10-01T17:30:00.000Z",
   "description": "Slim 2028 HP heal floors — UF boardRpm when full players.json warm is cold (HP_HEAL_BOOT=false).",
   "floors": {
     "kaleb-ballard": {
@@ -119,16 +119,12 @@
       ]
     },
     "bubba-brown": {
-      "boardRpm": 19,
-      "storeRpm": 19,
+      "boardRpm": 98,
+      "storeRpm": 98,
       "storeComps": [
         {
           "name": "Georgia",
-          "pct": 40.3
-        },
-        {
-          "name": "Auburn",
-          "pct": 16.5
+          "pct": 1
         }
       ]
     },
