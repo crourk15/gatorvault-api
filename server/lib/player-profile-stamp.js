@@ -321,6 +321,22 @@ function overlayLiveRpm(profile, recruiting) {
       }));
     }
   }
+  // Florida lock on live topTeams (Bubba 98) with only residual peers —
+  // do not keep a stale stamp board (Georgia 40 / Auburn 16).
+  const liveFl =
+    floridaShareFromTopTeams(recruiting?.topTeams || recruiting?.on3TopTeams) ||
+    parseRpmPct(recruiting?.ufRpmPct);
+  const stampRivalMax = Math.max(0, ...competingSchools.map((s) => Number(s?.pct) || 0));
+  if (liveFl != null && liveFl >= 70 && stampRivalMax + 40 < liveFl) {
+    competingSchools = livePeers.map((s, i) => ({
+      school: s.school,
+      rankNow: i + 1,
+      rankPrior: null,
+      delta: 0,
+      volatilityBoost: 0,
+      pct: s.pct,
+    }));
+  }
 
   const rpm = ufCommit ? 100 : resolveLiveRpmPct(recruiting, competingSchools);
 

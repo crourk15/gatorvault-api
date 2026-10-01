@@ -648,6 +648,11 @@ function pickHealRpm(warm: number | null | undefined, floor: number | null | und
   return w ?? f;
 }
 
+function isHealFloridaName(name: unknown): boolean {
+  const n = String(name || '');
+  return /\bflorida\b|\bgators\b/i.test(n) && !/florida state|south florida/i.test(n);
+}
+
 /** Merge slim floors over a hollow/poisoned warm players.json row. */
 export function mergeHealBoardTruth(
   warm: HealBoardTruth | null | undefined,
@@ -655,11 +660,23 @@ export function mergeHealBoardTruth(
 ): HealBoardTruth | null {
   if (!warm) return floor || null;
   if (!floor) return warm;
-  return {
-    storeRpm: pickHealRpm(warm.storeRpm, floor.storeRpm),
-    boardRpm: pickHealRpm(warm.boardRpm, floor.boardRpm),
-    storeComps: warm.storeComps?.length ? warm.storeComps : floor.storeComps || [],
-  };
+  const storeRpm = pickHealRpm(warm.storeRpm, floor.storeRpm);
+  const boardRpm = pickHealRpm(warm.boardRpm, floor.boardRpm);
+  let storeComps = warm.storeComps?.length ? warm.storeComps : floor.storeComps || [];
+  // Durable warm can keep a stale rival board (Bubba Georgia 40) after
+  // floors already hold a Florida lock. Prefer the floor peers then.
+  const warmTop = (warm.storeComps || [])
+    .filter((c) => c?.name && !isHealFloridaName(c.name))
+    .sort((a, b) => Number(b.pct) - Number(a.pct))[0];
+  if (
+    boardRpm != null &&
+    boardRpm >= 70 &&
+    warmTop &&
+    Number(warmTop.pct) + 40 < boardRpm
+  ) {
+    storeComps = floor.storeComps || [];
+  }
+  return { storeRpm, boardRpm, storeComps };
 }
 
 function lookupHealBoardTruth(slug: string): HealBoardTruth | null {

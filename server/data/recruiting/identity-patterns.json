@@ -3801,7 +3801,7 @@
       "school": "Lowndes (Valdosta, GA)",
       "commitSchool": null,
       "class": 2028,
-      "natlRank": 95,
+      "natlRank": 126,
       "patterns": [
         "4 star WR Bubba",
         "4-star WR Bubba",
@@ -3816,24 +3816,20 @@
         "Lowndes (Valdosta, GA) WR",
         "Bubba Brown",
         "Brown",
-        "4 star WR",
-        "4-star WR",
-        "four star WR",
-        "four-star WR",
         "WR Bubba",
         "WR Brown",
         "4 star Lowndes (Valdosta, GA) commit",
         "four star Lowndes (Valdosta, GA) commit",
         "2028 WR Bubba",
-        "2028 4-star WR",
-        "2028 four-star WR",
+        "2028 4-star WR Bubba",
+        "2028 four-star WR Bubba",
         "2028 Bubba Brown",
-        "#95 Bubba",
-        "top 95 WR Bubba",
-        "95 4 star WR",
-        "95 four star WR"
+        "#126 Bubba",
+        "top 126 WR Bubba",
+        "126 4 star WR Bubba",
+        "126 four star WR Bubba"
       ],
-      "updatedAt": "2026-07-12T18:57:08.858Z"
+      "updatedAt": "2026-10-01T17:31:08.089Z"
     },
     "xander-edwards": {
       "slug": "xander-edwards",
@@ -5718,5 +5714,5 @@
       "updatedAt": "2026-09-23T19:43:05.593Z"
     }
   },
-  "updatedAt": "2026-09-28T17:42:37.635Z"
+  "updatedAt": "2026-10-01T17:31:08.089Z"
 }

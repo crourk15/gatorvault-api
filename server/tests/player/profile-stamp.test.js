@@ -157,6 +157,38 @@ describe('player profile prepared-meal stamps', () => {
     assert.equal(live.futurecastSummary.predictedSchool, 'Florida');
   });
 
+  it('clears stale Georgia 40 stamp when live On3 has Florida 98 / Georgia 1', () => {
+    const live = stamp.overlayLiveRpm(
+      {
+        player: { slug: 'bubba-brown', committedTo: null, classYear: 2028, ufRpmPct: 19 },
+        competingSchools: [
+          { school: 'Georgia', pct: 40.3 },
+          { school: 'Auburn', pct: 16.5 },
+        ],
+        futurecastSummary: {
+          gvProbability: 33,
+          ufProbability: 19,
+          predictedSchool: 'Georgia',
+        },
+        vaultScouting: null,
+      },
+      {
+        ufRpmPct: 98,
+        topTeams: [
+          { team: { name: 'Florida' }, prediction: 97.7 },
+          { team: { name: 'Georgia' }, prediction: 1 },
+          { team: { name: 'Auburn' }, prediction: 0 },
+        ],
+      }
+    );
+    assert.equal(live.player.ufRpmPct, 98);
+    assert.equal(live.futurecastSummary.predictedSchool, 'Florida');
+    assert.ok(
+      !(live.competingSchools || []).some((c) => Number(c.pct) >= 15),
+      `comps=${JSON.stringify(live.competingSchools)}`
+    );
+  });
+
   it('does not treat On3 UF% / RPM as Scheme Fit (Josiah Taylor poison)', () => {
     const live = stamp.overlayLiveRpm(
       {

@@ -8,6 +8,7 @@ const path = require('node:path');
 
 const {
   mergeBundledOn3BoardTruthIfFresher,
+  shouldOverlayBundledOn3Board,
   BUNDLE_DIR,
 } = require('../lib/recruiting-data-dir');
 
@@ -42,6 +43,24 @@ describe('mergeBundledOn3BoardTruthIfFresher', () => {
             },
           ],
         },
+        {
+          slug: 'bubba-brown',
+          name: 'Bubba Brown',
+          ufRpmPct: 19,
+          topTeams: [
+            { team: { name: 'Georgia' }, prediction: 40.3 },
+            { team: { name: 'Florida' }, prediction: 19.2 },
+            { team: { name: 'Auburn' }, prediction: 16.5 },
+          ],
+          on3TopTeams: [
+            { team: { name: 'Georgia' }, prediction: 40.3 },
+            { team: { name: 'Florida' }, prediction: 19.2 },
+          ],
+          competitors: [
+            { school: 'Georgia', pct: 40.3 },
+            { school: 'Auburn', pct: 16.5 },
+          ],
+        },
       ]),
       'utf8'
     );
@@ -55,6 +74,32 @@ describe('mergeBundledOn3BoardTruthIfFresher', () => {
     } catch {
       /* ignore */
     }
+  });
+
+  it('overlays git Florida lock onto a stale-low durable board (Bubba 19→98)', () => {
+    const decision = shouldOverlayBundledOn3Board({
+      dstRpm: 19,
+      srcFl: 97.7,
+      dstFl: 19.2,
+      srcPeers: 0,
+      dstPeers: 1,
+      truthRpm: 97.7,
+    });
+    assert.equal(decision.staleLowLock, true);
+    assert.equal(decision.poisonedLock, false);
+    assert.equal(decision.rivalLedBundle, false);
+  });
+
+  it('does not lift Gabriel 0.80 Florida crumb as a stale-low lock', () => {
+    const decision = shouldOverlayBundledOn3Board({
+      dstRpm: 19,
+      srcFl: 0.8,
+      dstFl: 19,
+      srcPeers: 1,
+      dstPeers: 1,
+      truthRpm: 0.8,
+    });
+    assert.equal(decision.staleLowLock, false);
   });
 
   it('copies bundle On3 board into durable when disk has sole-board Florida poison', () => {
@@ -71,6 +116,17 @@ describe('mergeBundledOn3BoardTruthIfFresher', () => {
       (girton.topTeams || []).length > 0 || (girton.competitors || []).length > 0,
       'should restore peers'
     );
+  });
+
+  it('lifts durable Bubba Brown 19 / Georgia 40 to the git Florida lock', () => {
+    const durable = JSON.parse(fs.readFileSync(path.join(tmpDir, 'players.json'), 'utf8'));
+    const bubba = durable.find((p) => p.slug === 'bubba-brown');
+    assert.ok(bubba, 'bubba row required');
+    assert.ok(Number(bubba.ufRpmPct) >= 90, `rpm=${bubba.ufRpmPct}`);
+    const teams = bubba.topTeams || bubba.on3TopTeams || [];
+    const fl = teams.find((t) => /florida/i.test(String(t?.team?.name || t?.name || '')));
+    assert.ok(fl, 'Florida topTeam required');
+    assert.ok(Number(fl.prediction) >= 90, `fl=${fl.prediction}`);
   });
 });
 

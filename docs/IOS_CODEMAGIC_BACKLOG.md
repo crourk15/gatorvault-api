@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Bubba Brown 2028 WR: Chad Simmons On3 RPM to Florida (Journey 98% / Team Pred 97.7%, Georgia 1%). FutureCast Chase / profile overlay after Render — no Codemagic.
 - [x] Roster production stats rebuilt from all four official boxes (FAU / Campbell / Auburn / Ole Miss) for every player who recorded a line — including Brown 17–271 and Graham 28 tackles. API after Render — no Codemagic.
 - [x] Schedule GET is fast on current App Store: visitor cards use editorial `visitorMeta` (no `players.json` parse per slug) and `/api/schedule` memos the board until the file stamp changes. Repeat iOS opens stay tens of ms. API after Render — no Codemagic. Client first-paint / live-only remaining preds is the **1.0.30** bake.
 - [x] Game Week Missouri Vegas: stamp DraftKings via ESPN **UF -5.5 / O/U 56.5** on `/api/betting/lines` so Prediction is not Line pending (opened ~-2.5; jumped after Ole Miss). API — no Codemagic.
