@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Roster production stats now include official Auburn (W3) + Ole Miss (W4) boxes on `/api/roster/players/:slug` (Philo 63/87–917–7 TD, Baugh 83–600–11). API after Render — no Codemagic.
 - [x] Schedule GET is fast on current App Store: visitor cards use editorial `visitorMeta` (no `players.json` parse per slug) and `/api/schedule` memos the board until the file stamp changes. Repeat iOS opens stay tens of ms. API after Render — no Codemagic. Client first-paint / live-only remaining preds is the **1.0.30** bake.
 - [x] Game Week Missouri Vegas: stamp DraftKings via ESPN **UF -5.5 / O/U 56.5** on `/api/betting/lines` so Prediction is not Line pending (opened ~-2.5; jumped after Ole Miss). API — no Codemagic.
 - [x] Schedule remaining-season preds use official UF scoring form (53.5 PPG after four games). Missouri is **71% / UF 34 · Missouri 24**, not the leftover 28–21 grind. Texas / Georgia stay UF losses. API `/api/schedule` after Render — current App Store already live-fetches `ufPct` / `pred`. Seed fallback is the bake row.

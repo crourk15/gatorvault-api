@@ -45,7 +45,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5141766,
       "matchConfidence": "high",
       "seasons": [
@@ -54,11 +54,13 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 5,
-            "ast": 4,
-            "tot": 9,
-            "tfl": 0.5,
-            "sack": 0.5
+            "solo": 12,
+            "ast": 7,
+            "tot": 19,
+            "tfl": 6,
+            "sack": 4,
+            "qh": 1,
+            "ff": 1
           }
         },
         {
@@ -76,6 +78,38 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 2,
+            "tot": 4,
+            "tfl": 2,
+            "sack": 1,
+            "ff": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 5,
+            "ast": 1,
+            "tot": 6,
+            "tfl": 3.5,
+            "sack": 2.5,
+            "qh": 1
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -123,7 +157,7 @@
       ]
     },
     "cfbdPlayerId": 5141766,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -172,7 +206,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 4870995,
       "matchConfidence": "exact",
       "seasons": [
@@ -181,9 +215,9 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 3,
-            "ast": 1,
-            "tot": 4,
+            "solo": 10,
+            "ast": 4,
+            "tot": 14,
             "pd": 2
           }
         },
@@ -228,6 +262,32 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 1,
+            "tot": 4
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 4,
+            "ast": 2,
+            "tot": 6
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -306,7 +366,7 @@
       ]
     },
     "cfbdPlayerId": 4870995,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -355,7 +415,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:01.889Z",
       "cfbdPlayerId": 5295811,
       "matchConfidence": "exact",
       "seasons": [
@@ -364,8 +424,8 @@
           "team": "Florida",
           "category": "returning",
           "stats": {
-            "pr": 4,
-            "prYds": 173,
+            "pr": 5,
+            "prYds": 189,
             "kr": 0,
             "krYds": 0
           }
@@ -375,11 +435,11 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 9,
-            "yds": 160,
+            "rec": 14,
+            "yds": 246,
             "td": 2,
             "lng": 49,
-            "avg": 17.8
+            "avg": 17.6
           }
         },
         {
@@ -387,11 +447,11 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 1,
-            "yds": 14,
+            "car": 2,
+            "yds": 10,
             "td": 0,
             "lng": 14,
-            "avg": 14
+            "avg": 5
           }
         },
         {
@@ -445,6 +505,50 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "returning",
+          "stats": {
+            "pr": 1,
+            "prYds": 16,
+            "kr": 0,
+            "krYds": 0
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 5,
+            "yds": 86,
+            "td": 0,
+            "lng": 37,
+            "avg": 17.2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": -4,
+            "td": 0,
+            "lng": 0,
+            "avg": -4
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -522,7 +626,7 @@
       ]
     },
     "cfbdPlayerId": 5295811,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:01.891Z",
     "nilSource": "on3",
     "nilSourceLabel": "On3 value"
   },
@@ -569,7 +673,45 @@
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "nilSource": "on3",
-    "nilSourceLabel": "On3 value"
+    "nilSourceLabel": "On3 value",
+    "productionStats": {
+      "source": "official",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
+      "cfbdPlayerId": null,
+      "matchConfidence": null,
+      "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 38,
+            "td": 0,
+            "lng": 38,
+            "avg": 38
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 38,
+            "td": 0,
+            "lng": 38,
+            "avg": 38
+          }
+        }
+      ]
+    },
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "lagonza-hayward",
@@ -616,7 +758,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5195292,
       "matchConfidence": "exact",
       "seasons": [
@@ -625,11 +767,11 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "ast": 3,
-            "tot": 6,
-            "solo": 3,
+            "ast": 4,
+            "tot": 11,
+            "solo": 7,
             "tfl": 2,
-            "pd": 2
+            "pd": 3
           }
         },
         {
@@ -647,6 +789,32 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 1,
+            "tot": 3,
+            "pd": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "tot": 2
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -693,7 +861,7 @@
       ]
     },
     "cfbdPlayerId": 5195292,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -744,24 +912,106 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
         {
           "season": 2026,
           "team": "Florida",
+          "category": "returning",
+          "stats": {
+            "pr": 1,
+            "prYds": 16,
+            "kr": 0,
+            "krYds": 0
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": -2,
+            "td": 0,
+            "lng": 0,
+            "avg": -2
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 7,
-            "yds": 61,
+            "rec": 13,
+            "yds": 106,
             "td": 1,
             "lng": 24,
-            "avg": 8.7
+            "avg": 8.2
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "returning",
+          "stats": {
+            "pr": 1,
+            "prYds": 16,
+            "kr": 0,
+            "krYds": 0
+          }
+        },
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 4,
+            "yds": 33,
+            "td": 0,
+            "lng": 14,
+            "avg": 8.3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 12,
+            "td": 0,
+            "lng": 6,
+            "avg": 6
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": -2,
+            "td": 0,
+            "lng": 0,
+            "avg": -2
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -794,7 +1044,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-13T04:27:22.810Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "onis-konanbanny",
@@ -889,7 +1139,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -898,15 +1148,30 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 4,
-            "yds": 96,
+            "rec": 5,
+            "yds": 111,
             "td": 0,
             "lng": 63,
-            "avg": 24
+            "avg": 22.2
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 15,
+            "td": 0,
+            "lng": 15,
+            "avg": 15
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -939,7 +1204,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-13T04:27:22.810Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "micah-mays-jr",
@@ -1085,7 +1350,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5079480,
       "matchConfidence": "exact",
       "seasons": [
@@ -1094,12 +1359,13 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 9,
-            "ast": 8,
-            "tot": 17,
+            "solo": 17,
+            "ast": 12,
+            "tot": 29,
             "tfl": 1.5,
             "sack": 0.5,
-            "ff": 1
+            "ff": 1,
+            "fr": 1
           }
         },
         {
@@ -1130,6 +1396,33 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 5,
+            "ast": 3,
+            "tot": 8,
+            "fr": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 1,
+            "tot": 4
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -1195,7 +1488,7 @@
       ]
     },
     "cfbdPlayerId": 5079480,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -1244,20 +1537,32 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5141723,
       "matchConfidence": "exact",
       "seasons": [
         {
           "season": 2026,
           "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": 6,
+            "td": 1,
+            "lng": 6,
+            "avg": 6
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 8,
-            "yds": 151,
-            "td": 1,
+            "rec": 14,
+            "yds": 236,
+            "td": 2,
             "lng": 40,
-            "avg": 18.9
+            "avg": 16.9
           }
         },
         {
@@ -1274,6 +1579,51 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 11,
+            "td": 0,
+            "lng": 7,
+            "avg": 5.5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": 6,
+            "td": 1,
+            "lng": 6,
+            "avg": 6
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 4,
+            "yds": 74,
+            "td": 1,
+            "lng": 22,
+            "avg": 18.5
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -1322,7 +1672,7 @@
       ]
     },
     "cfbdPlayerId": 5141723,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -1371,18 +1721,29 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5161809,
       "matchConfidence": "exact",
       "seasons": [
         {
           "season": 2026,
           "team": "Florida",
+          "category": "returning",
+          "stats": {
+            "pr": 0,
+            "prYds": 0,
+            "kr": 1,
+            "krYds": 23
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 2,
+            "solo": 4,
             "ast": 4,
-            "tot": 6,
+            "tot": 8,
             "tfl": 0.5
           }
         },
@@ -1401,6 +1762,44 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "returning",
+          "stats": {
+            "pr": 0,
+            "prYds": 0,
+            "kr": 1,
+            "krYds": 23
+          }
+        },
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -1434,7 +1833,7 @@
       ]
     },
     "cfbdPlayerId": 5161809,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -1483,7 +1882,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5139093,
       "matchConfidence": "exact",
       "seasons": [
@@ -1492,11 +1891,11 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 1,
-            "yds": 14,
-            "td": 0,
-            "lng": 14,
-            "avg": 14
+            "rec": 4,
+            "yds": 90,
+            "td": 1,
+            "lng": 48,
+            "avg": 22.5
           }
         },
         {
@@ -1539,6 +1938,36 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 28,
+            "td": 1,
+            "lng": 23,
+            "avg": 14
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 48,
+            "td": 0,
+            "lng": 48,
+            "avg": 48
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -1586,7 +2015,7 @@
       ]
     },
     "cfbdPlayerId": 5139093,
-    "updatedAt": "2026-09-13T04:27:22.810Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "ty-jackson",
@@ -1743,7 +2172,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5079340,
       "matchConfidence": "exact",
       "seasons": [
@@ -1752,12 +2181,14 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 3,
-            "ast": 3,
-            "tot": 6,
+            "solo": 10,
+            "ast": 8,
+            "tot": 18,
             "pd": 2,
             "qh": 1,
-            "fr": 1
+            "fr": 1,
+            "tfl": 1,
+            "ff": 1
           }
         },
         {
@@ -1788,6 +2219,34 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 4,
+            "tot": 7,
+            "tfl": 1,
+            "ff": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 4,
+            "ast": 1,
+            "tot": 5
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -1852,7 +2311,7 @@
       ]
     },
     "cfbdPlayerId": 5079340,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -1901,7 +2360,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5295812,
       "matchConfidence": "exact",
       "seasons": [
@@ -1910,9 +2369,9 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 2,
+            "solo": 4,
             "ast": 1,
-            "tot": 3,
+            "tot": 5,
             "ff": 1
           }
         },
@@ -1931,6 +2390,18 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "tot": 2
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -1964,7 +2435,7 @@
       ]
     },
     "cfbdPlayerId": 5295812,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -2311,7 +2782,7 @@
     "nilSourceLabel": "On3 value",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:01.889Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -2320,8 +2791,8 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 4,
-            "tot": 4,
+            "solo": 5,
+            "tot": 5,
             "pd": 1,
             "tfl": 2,
             "sack": 1,
@@ -2330,6 +2801,18 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -2360,7 +2843,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-13T04:27:22.810Z"
+    "updatedAt": "2026-10-01T00:28:01.891Z"
   },
   {
     "slug": "will-griffin",
@@ -2453,7 +2936,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -2462,13 +2945,13 @@
           "team": "Florida",
           "category": "passing",
           "stats": {
-            "cmp": 32,
-            "att": 42,
-            "yds": 517,
-            "td": 5,
-            "int": 1,
+            "cmp": 63,
+            "att": 87,
+            "yds": 917,
+            "td": 7,
+            "int": 2,
             "lng": 63,
-            "avg": 12.3
+            "avg": 10.5
           }
         },
         {
@@ -2476,15 +2959,79 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 9,
-            "yds": 33,
-            "td": 2,
-            "lng": 9,
-            "avg": 3.7
+            "car": 24,
+            "yds": 69,
+            "td": 3,
+            "lng": 12,
+            "avg": 2.9
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 6,
+            "yds": 14,
+            "td": 1,
+            "lng": 6,
+            "avg": 2.3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "passing",
+          "stats": {
+            "cmp": 16,
+            "att": 23,
+            "yds": 196,
+            "td": 1,
+            "int": 0,
+            "lng": 38,
+            "avg": 8.5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 9,
+            "yds": 22,
+            "td": 0,
+            "lng": 12,
+            "avg": 2.4
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "passing",
+          "stats": {
+            "cmp": 15,
+            "att": 22,
+            "yds": 204,
+            "td": 1,
+            "int": 1,
+            "lng": 37,
+            "avg": 9.3
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -2551,7 +3098,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-13T04:27:22.810Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "ben-hanks-iii",
@@ -2598,7 +3145,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5295813,
       "matchConfidence": "exact",
       "seasons": [
@@ -2607,9 +3154,11 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 7,
-            "tot": 7,
-            "pd": 1
+            "solo": 12,
+            "tot": 13,
+            "pd": 1,
+            "ast": 1,
+            "tfl": 1
           }
         },
         {
@@ -2627,6 +3176,32 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "tot": 2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 1,
+            "tot": 4,
+            "tfl": 1
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -2671,7 +3246,7 @@
       ]
     },
     "cfbdPlayerId": 5295813,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -2719,20 +3294,32 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5079322,
       "matchConfidence": "exact",
       "seasons": [
         {
           "season": 2026,
           "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 18,
+            "td": 0,
+            "lng": 12,
+            "avg": 9
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 28,
-            "yds": 296,
-            "td": 5,
+            "car": 83,
+            "yds": 600,
+            "td": 11,
             "lng": 75,
-            "avg": 10.6
+            "avg": 7.2
           }
         },
         {
@@ -2824,6 +3411,66 @@
       "recentGames": [
         {
           "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 12,
+            "td": 0,
+            "lng": 12,
+            "avg": 12
+          }
+        },
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 29,
+            "yds": 142,
+            "td": 3,
+            "lng": 23,
+            "avg": 4.9
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 6,
+            "td": 0,
+            "lng": 6,
+            "avg": 6
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 26,
+            "yds": 162,
+            "td": 3,
+            "lng": 53,
+            "avg": 6.2
+          }
+        },
+        {
+          "season": 2026,
           "week": 2,
           "date": "2026-09-12T23:55:00.000Z",
           "opponent": "Campbell",
@@ -2885,7 +3532,7 @@
       ]
     },
     "cfbdPlayerId": 5079322,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "on3",
     "nilSourceLabel": "On3 value"
   },
@@ -3056,7 +3703,41 @@
     "nilValuation": 15000,
     "recruitingBackground": "Dallas, Texas Duncanville",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "official",
+      "syncedAt": "2026-10-01T00:28:01.104Z",
+      "cfbdPlayerId": null,
+      "matchConfidence": null,
+      "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1,
+            "ff": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1,
+            "ff": 1
+          }
+        }
+      ]
+    },
+    "updatedAt": "2026-10-01T00:28:01.106Z"
   },
   {
     "slug": "cj-bronaugh",
@@ -3149,7 +3830,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -3158,15 +3839,45 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 4,
-            "yds": 52,
+            "rec": 7,
+            "yds": 97,
             "td": 0,
             "lng": 22,
-            "avg": 13
+            "avg": 13.9
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 34,
+            "td": 0,
+            "lng": 21,
+            "avg": 17
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 11,
+            "td": 0,
+            "lng": 11,
+            "avg": 11
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -3199,7 +3910,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-13T04:27:22.810Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "aidan-warner",
@@ -3661,7 +4372,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5295815,
       "matchConfidence": "exact",
       "seasons": [
@@ -3679,11 +4390,11 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 13,
-            "yds": 83,
-            "td": 1,
-            "lng": 28,
-            "avg": 6.4
+            "car": 32,
+            "yds": 259,
+            "td": 3,
+            "lng": 45,
+            "avg": 8.1
           }
         },
         {
@@ -3691,11 +4402,11 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 1,
-            "yds": 10,
+            "rec": 2,
+            "yds": 19,
             "td": 1,
             "lng": 10,
-            "avg": 10
+            "avg": 9.5
           }
         },
         {
@@ -3724,6 +4435,51 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 12,
+            "yds": 126,
+            "td": 1,
+            "lng": 45,
+            "avg": 10.5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 9,
+            "td": 0,
+            "lng": 9,
+            "avg": 9
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 7,
+            "yds": 50,
+            "td": 1,
+            "lng": 20,
+            "avg": 7.1
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -3799,7 +4555,7 @@
       ]
     },
     "cfbdPlayerId": 5295815,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -3850,7 +4606,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -3859,15 +4615,40 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 2,
-            "ast": 5,
-            "tot": 7,
+            "solo": 7,
+            "ast": 6,
+            "tot": 13,
             "pd": 1,
             "qh": 2
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 4,
+            "tot": 4
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 1,
+            "tot": 2
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -3885,7 +4666,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "cj-hester",
@@ -3978,7 +4759,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -3987,11 +4768,11 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 1,
-            "yds": 5,
+            "rec": 2,
+            "yds": 11,
             "td": 0,
-            "lng": 5,
-            "avg": 5
+            "lng": 6,
+            "avg": 5.5
           }
         },
         {
@@ -3999,15 +4780,60 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 1,
-            "yds": 4,
+            "car": 10,
+            "yds": 30,
             "td": 0,
-            "lng": 4,
-            "avg": 4
+            "lng": 11,
+            "avg": 3
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 2,
+            "yds": 6,
+            "td": 0,
+            "lng": 6,
+            "avg": 3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 6,
+            "td": 0,
+            "lng": 6,
+            "avg": 6
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 7,
+            "yds": 20,
+            "td": 0,
+            "lng": 11,
+            "avg": 2.9
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -4040,7 +4866,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-13T04:27:22.810Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "kahleil-jackson",
@@ -4087,10 +4913,33 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 4693740,
       "matchConfidence": "exact",
       "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "passing",
+          "stats": {
+            "cmp": 1,
+            "att": 1,
+            "yds": 48,
+            "td": 0,
+            "int": 0,
+            "lng": 48,
+            "avg": 48
+          }
+        },
         {
           "season": 2026,
           "team": "Florida",
@@ -4182,6 +5031,35 @@
       "recentGames": [
         {
           "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "passing",
+          "stats": {
+            "cmp": 1,
+            "att": 1,
+            "yds": 48,
+            "td": 0,
+            "int": 0,
+            "lng": 48,
+            "avg": 48
+          }
+        },
+        {
+          "season": 2026,
           "week": 2,
           "date": "2026-09-12T23:55:00.000Z",
           "opponent": "Campbell",
@@ -4243,7 +5121,7 @@
       ]
     },
     "cfbdPlayerId": 4693740,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -4292,7 +5170,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 4912316,
       "matchConfidence": "high",
       "seasons": [
@@ -4301,9 +5179,9 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 3,
-            "ast": 2,
-            "tot": 5
+            "solo": 4,
+            "ast": 3,
+            "tot": 7
           }
         },
         {
@@ -4321,6 +5199,30 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -4353,7 +5255,7 @@
       ]
     },
     "cfbdPlayerId": 4912316,
-    "updatedAt": "2026-09-12T03:39:30.179Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -4431,7 +5333,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5083314,
       "matchConfidence": "exact",
       "seasons": [
@@ -4440,13 +5342,13 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 4,
-            "ast": 1,
-            "tot": 5,
+            "solo": 6,
+            "ast": 2,
+            "tot": 8,
             "tfl": 2,
             "sack": 1,
             "ff": 1,
-            "qh": 1
+            "qh": 2
           }
         },
         {
@@ -4490,6 +5392,32 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1,
+            "qh": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 1,
+            "tot": 2
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -4570,7 +5498,7 @@
       ]
     },
     "cfbdPlayerId": 5083314,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -4621,24 +5549,79 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
         {
           "season": 2026,
           "team": "Florida",
+          "category": "returning",
+          "stats": {
+            "pr": 0,
+            "prYds": 0,
+            "kr": 3,
+            "krYds": 128
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 6,
+            "car": 8,
             "yds": 19,
             "td": 0,
             "lng": 5,
-            "avg": 3.2
+            "avg": 2.4
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "returning",
+          "stats": {
+            "pr": 0,
+            "prYds": 0,
+            "kr": 3,
+            "krYds": 128
+          }
+        },
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": 3,
+            "td": 0,
+            "lng": 3,
+            "avg": 3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": -3,
+            "td": 0,
+            "lng": 0,
+            "avg": -3
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -4671,7 +5654,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-13T04:27:22.810Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "anthony-rubio",
@@ -4871,7 +5854,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 4870920,
       "matchConfidence": "exact",
       "seasons": [
@@ -4880,9 +5863,10 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 4,
+            "solo": 7,
             "ast": 1,
-            "tot": 5
+            "tot": 8,
+            "int": 1
           }
         },
         {
@@ -4913,6 +5897,31 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "tot": 2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1,
+            "int": 1
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -4973,7 +5982,7 @@
       ]
     },
     "cfbdPlayerId": 4870920,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "on3",
     "nilSourceLabel": "On3 value"
   },
@@ -5176,7 +6185,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 4899671,
       "matchConfidence": "exact",
       "seasons": [
@@ -5185,11 +6194,11 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 1,
-            "ast": 4,
-            "tot": 5,
+            "solo": 3,
+            "ast": 7,
+            "tot": 10,
             "int": 1,
-            "pd": 1
+            "pd": 3
           }
         },
         {
@@ -5233,6 +6242,33 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 2,
+            "tot": 4,
+            "pd": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1,
+            "pd": 1
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -5311,7 +6347,7 @@
       ]
     },
     "cfbdPlayerId": 4899671,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -5404,7 +6440,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 4870978,
       "matchConfidence": "exact",
       "seasons": [
@@ -5413,10 +6449,12 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 4,
-            "ast": 3,
-            "tot": 7,
-            "tfl": 1
+            "solo": 6,
+            "ast": 6,
+            "tot": 12,
+            "tfl": 2,
+            "sack": 1,
+            "qh": 1
           }
         },
         {
@@ -5460,6 +6498,33 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "ast": 3,
+            "tot": 3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "tot": 2,
+            "tfl": 1,
+            "sack": 1,
+            "qh": 1
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -5538,7 +6603,7 @@
       ]
     },
     "cfbdPlayerId": 4870978,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -5705,7 +6770,39 @@
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "nilSource": "sideline",
-    "nilSourceLabel": "Sideline model"
+    "nilSourceLabel": "Sideline model",
+    "productionStats": {
+      "source": "official",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
+      "cfbdPlayerId": null,
+      "matchConfidence": null,
+      "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        }
+      ]
+    },
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "dj-coleman",
@@ -5754,7 +6851,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -5763,14 +6860,43 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "ast": 2,
-            "tot": 2,
-            "int": 1,
-            "pd": 1
+            "ast": 5,
+            "tot": 7,
+            "int": 2,
+            "pd": 2,
+            "solo": 2
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 1,
+            "tot": 2,
+            "pd": 1,
+            "int": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 2,
+            "tot": 3
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -5787,7 +6913,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "kaiden-hall",
@@ -6204,7 +7330,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -6213,11 +7339,11 @@
           "team": "Florida",
           "category": "punting",
           "stats": {
-            "punts": 2,
-            "yds": 104,
+            "punts": 5,
+            "yds": 245,
             "avg": 52,
-            "lng": 55,
-            "in20": 1,
+            "lng": 70,
+            "in20": 3,
             "tb": 0
           }
         },
@@ -6235,6 +7361,38 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "punting",
+          "stats": {
+            "punts": 2,
+            "yds": 113,
+            "avg": 56.5,
+            "lng": 70,
+            "in20": 1,
+            "tb": 0
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "punting",
+          "stats": {
+            "punts": 1,
+            "yds": 28,
+            "avg": 28,
+            "lng": 28,
+            "in20": 1,
+            "tb": 0
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -6268,7 +7426,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-13T04:27:22.810Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "carter-milliron",
@@ -6559,7 +7717,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 4685238,
       "matchConfidence": "exact",
       "seasons": [
@@ -6568,9 +7726,9 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 2,
-            "ast": 3,
-            "tot": 5
+            "solo": 5,
+            "ast": 7,
+            "tot": 12
           }
         },
         {
@@ -6601,6 +7759,32 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 3,
+            "tot": 4
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 1,
+            "tot": 3
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -6662,7 +7846,7 @@
       ]
     },
     "cfbdPlayerId": 4685238,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -6711,7 +7895,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5149469,
       "matchConfidence": "exact",
       "seasons": [
@@ -6720,11 +7904,11 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 5,
-            "tot": 6,
+            "solo": 6,
+            "tot": 8,
             "tfl": 1,
             "fr": 2,
-            "ast": 1
+            "ast": 2
           }
         },
         {
@@ -6742,6 +7926,19 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 1,
+            "tot": 2
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -6789,7 +7986,7 @@
       ]
     },
     "cfbdPlayerId": 5149469,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -7307,7 +8504,39 @@
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "nilSource": "sideline",
-    "nilSourceLabel": "Sideline model"
+    "nilSourceLabel": "Sideline model",
+    "productionStats": {
+      "source": "official",
+      "syncedAt": "2026-10-01T00:28:01.889Z",
+      "cfbdPlayerId": null,
+      "matchConfidence": null,
+      "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        }
+      ]
+    },
+    "updatedAt": "2026-10-01T00:28:01.891Z"
   },
   {
     "slug": "javarii-luckas",
@@ -8564,7 +9793,43 @@
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "nilSource": "sideline",
-    "nilSourceLabel": "Sideline model"
+    "nilSourceLabel": "Sideline model",
+    "productionStats": {
+      "source": "official",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
+      "cfbdPlayerId": null,
+      "matchConfidence": null,
+      "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "rec": 0,
+            "yds": 0,
+            "td": 0,
+            "lng": 0
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 0,
+            "yds": 0,
+            "td": 0,
+            "lng": 0
+          }
+        }
+      ]
+    },
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "heze-kent",
@@ -8743,7 +10008,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5086808,
       "matchConfidence": "exact",
       "seasons": [
@@ -8752,9 +10017,9 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 3,
-            "ast": 2,
-            "tot": 5,
+            "solo": 4,
+            "ast": 4,
+            "tot": 8,
             "tfl": 2,
             "ff": 1,
             "qh": 2
@@ -8775,6 +10040,30 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "ast": 2,
+            "tot": 2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -8823,7 +10112,7 @@
       ]
     },
     "cfbdPlayerId": 5086808,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -8872,7 +10161,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": 5195951,
       "matchConfidence": "exact",
       "seasons": [
@@ -8881,12 +10170,12 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 4,
-            "ast": 8,
-            "tot": 12,
+            "solo": 6,
+            "ast": 9,
+            "tot": 15,
             "pd": 2,
-            "qh": 2,
-            "tfl": 0.5,
+            "qh": 3,
+            "tfl": 1.5,
             "sack": 0.5
           }
         },
@@ -8905,6 +10194,33 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1,
+            "tfl": 1,
+            "qh": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 1,
+            "tot": 2
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -8955,7 +10271,7 @@
       ]
     },
     "cfbdPlayerId": 5195951,
-    "updatedAt": "2026-09-13T04:27:22.810Z",
+    "updatedAt": "2026-10-01T00:28:02.508Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -9006,7 +10322,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -9015,16 +10331,48 @@
           "team": "Florida",
           "category": "kicking",
           "stats": {
-            "fgm": 2,
-            "fga": 2,
-            "xpm": 15,
-            "xpa": 15,
-            "pts": 21,
+            "fgm": 6,
+            "fga": 6,
+            "xpm": 27,
+            "xpa": 27,
+            "pts": 45,
             "lng": 53
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "kicking",
+          "stats": {
+            "fgm": 1,
+            "fga": 1,
+            "lng": 49,
+            "pts": 10,
+            "xpm": 7,
+            "xpa": 7
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "kicking",
+          "stats": {
+            "fgm": 3,
+            "fga": 3,
+            "lng": 40,
+            "pts": 14,
+            "xpm": 5,
+            "xpa": 5
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -9059,7 +10407,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-13T04:27:22.810Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "sebastian-scott",
@@ -9154,7 +10502,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -9163,12 +10511,58 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "ast": 2,
-            "tot": 2
+            "ast": 3,
+            "tot": 5,
+            "solo": 2,
+            "tfl": 2,
+            "ff": 1,
+            "qh": 1,
+            "sack": 1
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1,
+            "tfl": 1,
+            "sack": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 2,
+          "date": "2026-09-12T23:55:00.000Z",
+          "opponent": "Campbell",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1,
+            "tfl": 1,
+            "ff": 1,
+            "qh": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -9183,7 +10577,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   },
   {
     "slug": "kendall-guervil",
@@ -9670,7 +11064,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-12T03:39:30.175Z",
+      "syncedAt": "2026-10-01T00:28:02.506Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -9679,15 +11073,46 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 1,
-            "ast": 1,
-            "tot": 2,
-            "pd": 1,
-            "qh": 2
+            "solo": 3,
+            "ast": 4,
+            "tot": 7,
+            "pd": 2,
+            "qh": 3,
+            "tfl": 2.5,
+            "sack": 2.5
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 4,
+          "date": "2026-09-26T23:55:00.000Z",
+          "opponent": "Ole Miss",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "ast": 2,
+            "tot": 2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 3,
+          "date": "2026-09-19T23:55:00.000Z",
+          "opponent": "Auburn",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 1,
+            "tot": 3,
+            "tfl": 2.5,
+            "sack": 2.5,
+            "pd": 1,
+            "qh": 1
+          }
+        },
         {
           "season": 2026,
           "week": 1,
@@ -9705,6 +11130,6 @@
         }
       ]
     },
-    "updatedAt": "2026-09-12T03:39:30.179Z"
+    "updatedAt": "2026-10-01T00:28:02.508Z"
   }
 ]
