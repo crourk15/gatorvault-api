@@ -1,7 +1,65 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-15T22:12:25.883Z",
+  "updatedAt": "2026-08-18T02:43:19.280Z",
   "items": [
+    {
+      "id": "insider_1787020992118_d59gqs",
+      "title": "Heat Check: Sumrall after the first scrimmage — urgency, open QB, tackle still unfinished",
+      "slug": null,
+      "category": "summer_preview",
+      "categoryLabel": "Summer Preview / Camp Battles",
+      "articleType": "Summer Preview / Camp Battles",
+      "byline": "GatorVault Staff",
+      "status": "draft",
+      "summary": "After Florida’s first fall scrimmage, Sumrall hammered procedure, kept the QB job open between Philo and Jones, flagged tackle as unfinished, and started game-week install a week early ahead of FAU.",
+      "thesis": "The Aug. 17 podium was not a vibes presser — Sumrall is treating the next two weeks like dress rehearsal while QB and tackle remain live competitions.",
+      "body": "<p>Jon Sumrall took the podium Monday after Florida's first fall scrimmage — and the message was urgency with three weeks left before Florida Atlantic on Sept. 5, not a victory lap.</p>\n\n<p>The Gators ran <strong>127 plays</strong> Saturday (50 with the ones, 43 with the twos, 34 with the threes). Sumrall said the day went well overall, then immediately named what still has to clean up: <strong>procedure</strong> and <strong>space tackling</strong>. Three delay-of-game flags and a pair of receiver offsides calls are the kind of self-inflicted noise that dies in September if you leave it alone in August.</p>\n\n<p>“The two procedure penalties on receivers should never happen,” Sumrall said.</p>\n\n<p>That is the clean read from the Film Room presser — not “scrimmage vibes,” but a staff already treating the next two weeks like dress rehearsal for game week.</p>\n\n<h3>Game-week install starts now</h3>\n<p>Florida scrimmages again Saturday at <strong>7:45 p.m.</strong> — locked to FAU’s kick time — then shifts into a full game-week flow a week early: Monday run-through, Tuesday full gear, Wednesday shells, Thursday walk-through, Friday run-through, Saturday mock game.</p>\n\n<p>“It’s important to me that they understand the flow of the week and how you prepare and ramp up for the game,” Sumrall said. “I’m not comfortable game one going ‘alright, it’s game week, now here’s what we do.’ I want them a week ahead.”</p>\n\n<h3>QB room: still open, still honest</h3>\n<p>Aaron Philo took most of the first-team snaps and had ups and downs — including an interception to Cormani McClain. Tramell Jones Jr. had the cleaner overall outing by beat accounts, but Sumrall put the growth still owed on Jones’s plate at the line of scrimmage.</p>\n\n<p>“I think Tramell’s grown a ton. The biggest growth he’s got to continue to make is operating from the line of scrimmage, with shifts, motions, those kinds of things,” Sumrall said. “We can’t have a motion called and not bring a guy in motion. But he’s making plays… I know everybody thinks Philo is the starter because he came with Buster and all this. And yeah, he had a head start. Both guys are doing some good things and we need both of them to get ready.”</p>\n\n<p>Vault takeaway: the staff is not selling a coronation. Philo’s reps with the ones are real; Jones’s playmaking is real; the job is still being earned in pre-snap ops and ball security. Sumrall also said the quarterback group left three more interceptions on the field beyond McClain’s pick — a defensive standard as much as a QB note.</p>\n\n<h3>Tackle is still the question mark</h3>\n<p>Interior offensive line is the more comfortable room right now. Tackle is not. Sumrall pointed to steps from Eagan Boyer, flashes from Emeka Ugorji, and high-talent consistency asks for Bryce Lovett, plus TJ Dice Jr. and Caden Jones getting challenged to play like veterans every day.</p>\n\n<p>“We’ve got to figure out who we are,” Sumrall said. “I’m still not completely sure yet… until you go and do it against somebody else wearing a different colored jersey, you don’t ever really know.”</p>\n\n<h3>Injury board — caution over toughness theater</h3>\n<p>Vernell Brown III missed the scrimmage with a bruised foot from Thursday and was back Monday. Jadan Baugh and Dallas Wilson were on pitch counts. Soft-tissue for Jordy Lowery ended his Saturday early after about a dozen plays — Sumrall called the arrow up before the setback. Dijon Johnson was full go Monday and is expected for the next scrimmage. Kamran James, Jaylen Lloyd, Duke Clark, Kendall Guervil, Patrick Durkin, Javion Toombs and others remain in the caution bucket as staff refuses to force snaps.</p>\n\n<p>Bottom line from the Aug. 17 presser: Florida liked the first scrimmage enough to keep moving, disliked the procedure enough to hammer it, and is installing game week early because Sept. 5 is already on the clock. Watch the Film Room drop, then watch how the Saturday 7:45 mock game answers the two live fights — QB ops and the tackle room.</p>",
+      "insiderAngles": [
+        "127 plays Saturday (50/43/34 by units); three delay-of-game + receiver offsides are the procedure hammer.",
+        "Next scrimmage Saturday 7:45 p.m. to mirror FAU; full game-week flow starts a week early.",
+        "Philo most ones with ups/downs (McClain INT); Jones cleaner outing but must fix pre-snap shifts/motions — job still open.",
+        "Interior OL more comfortable; tackle still “who we are”; Vernell Brown back Mon after bruised foot; Lowery soft-tissue; Dijon Johnson full go."
+      ],
+      "readTimeMinutes": 4,
+      "sources": [
+        "Florida Gators Football — Florida Football Press Conference | Coach Sumrall (Aug 17, 2026) https://www.youtube.com/watch?v=RuGNhHA3Y7E",
+        "Independent Florida Alligator — Sumrall talks injuries, urgency following first fall scrimmage (Curan Ahern)",
+        "On3 / Pete Nakos via Yahoo — Florida QB battle scrimmage notes",
+        "GatorCountry quotes via Yahoo Sports roundup"
+      ],
+      "topicKey": "heat_check_sumrall_first_scrimmage_2026_08_17",
+      "angleKey": "urgency_open_qb_tackle_unfinished",
+      "qualityReasons": [
+        "hand_polished_presser_follow",
+        "beat_sourced_quotes",
+        "film_room_link"
+      ],
+      "triggerIntelFingerprints": [],
+      "triggerIdentityLog": [],
+      "createdAt": "2026-08-18T02:43:12.118Z",
+      "publishedAt": null,
+      "lastRefreshedAt": null,
+      "archivedAt": null,
+      "rejectedAt": null,
+      "rejectReason": null,
+      "generationSource": "hand_crafted_presser_follow",
+      "rosterUnits": [
+        "QB",
+        "OL",
+        "WR",
+        "DB"
+      ],
+      "recruitingTargets": [],
+      "schemeTags": [
+        "fall_camp",
+        "scrimmage",
+        "game_week_prep"
+      ],
+      "analyticsTags": [],
+      "scaffoldBody": null,
+      "editorialHeaders": null,
+      "battles": []
+    },
     {
       "id": "insider_1784153520097_7laq6c",
       "title": "Program Pulse: Florida's 2027 class after the July secondary surge",
