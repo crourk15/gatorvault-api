@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const {
   buildWeeklyHomeNowLines,
   buildWeeklyHomeNowCategories,
+  attachLiveNowWeek,
   seasonRecord,
 } = require('../../lib/weekly-home-now');
 const { getScheduleBoard } = require('../../lib/schedule-board');
@@ -235,6 +236,25 @@ test('unverified McMullen commit intel cannot take Home NOW News', () => {
   });
   const news = cats.find((c) => c.key === 'news');
   assert.ok(!news || !/mcmullen/i.test(String(news.items || '')), JSON.stringify(news));
+});
+
+test('cached ticker News cannot keep a false McMullen commit', () => {
+  const body = attachLiveNowWeek({
+    ok: true,
+    status: 'ready',
+    items: [
+      'Game — Missouri at Faurot Field — 3:30 PM · ESPN',
+      'News — Lorenzo McMullen Jr. commits to Florida · No. 25',
+      'Season — 4-0 heading into Saturday',
+    ],
+    nowWeek: [
+      { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },
+      { key: 'news', label: 'News', items: ['Lorenzo McMullen Jr. commits to Florida · No. 25'] },
+      { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
+    ],
+  });
+  assert.ok(!/mcmullen/i.test(JSON.stringify(body.items || [])));
+  assert.ok(!/mcmullen/i.test(JSON.stringify(body.nowWeek || [])));
 });
 
 test('this-week Cyion Smith commit breaks into Home NOW News', () => {

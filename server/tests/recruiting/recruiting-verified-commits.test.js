@@ -196,6 +196,34 @@ test('demoteUnverifiedHubCommit clears false UF commit on allowlist on3-board-sy
   assert.equal(demoted.category, 'target');
 });
 
+test('demoteUnverifiedHubCommit snaps hollow McMullen committed (no school) to uncommitted', () => {
+  const demoted = demoteUnverifiedHubCommit({
+    slug: 'lorenzo-mcmullen-jr',
+    name: 'Lorenzo McMullen Jr.',
+    classYear: 2028,
+    status: 'committed',
+    committedTo: null,
+    category: 'target',
+    on3Source: 'on3-live',
+  });
+  assert.equal(demoted.status, 'uncommitted');
+  assert.equal(demoted.committedTo, null);
+  assert.equal(demoted.verifiedCommit, false);
+});
+
+test('normalizePlayer demotes hollow McMullen committed on read', () => {
+  const p = store.normalizePlayer({
+    slug: 'lorenzo-mcmullen-jr',
+    name: 'Lorenzo McMullen Jr.',
+    classYear: 2028,
+    status: 'committed',
+    committedTo: null,
+    category: 'target',
+  });
+  assert.equal(p.status, 'uncommitted');
+  assert.equal(p.committedTo, null);
+});
+
 test('demoteUnverifiedHubCommit clears false commits', () => {
   const demoted = demoteUnverifiedHubCommit({
     slug: 'not-a-real-uf-commit',
@@ -371,4 +399,34 @@ test('applyVerifiedHubCommit repairs wrong-year verified commit (Floyd 2028 drif
   assert.equal(restored.status, 'committed');
   assert.equal(restored.committedTo, 'Florida');
   assert.equal(restored.category, 'recruit');
+});
+
+test('healDurableHollowCommits snaps McMullen on a durable players.json', () => {
+  const fs = require('fs');
+  const os = require('os');
+  const path = require('path');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-hollow-'));
+  fs.writeFileSync(
+    path.join(dir, 'players.json'),
+    JSON.stringify(
+      [
+        {
+          slug: 'lorenzo-mcmullen-jr',
+          name: 'Lorenzo McMullen Jr.',
+          classYear: 2028,
+          status: 'committed',
+          committedTo: null,
+          category: 'target',
+        },
+      ],
+      null,
+      2
+    )
+  );
+  const { healDurableHollowCommits } = require('../../lib/recruiting-data-dir');
+  const out = healDurableHollowCommits(dir);
+  assert.equal(out.updated, 1);
+  const saved = JSON.parse(fs.readFileSync(path.join(dir, 'players.json'), 'utf8'));
+  assert.equal(saved[0].status, 'uncommitted');
+  assert.equal(saved[0].committedTo, null);
 });

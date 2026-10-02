@@ -259,13 +259,43 @@ function buildWeeklyHomeNowLines(now = new Date(), games, opts = {}) {
   return lines;
 }
 
+/** Cached / last-good News must never keep a false McMullen pledge. */
+const FALSE_NOW_NEWS_RE = /lorenzo\s+mcmullen/i;
+
+function newsMentionsFalseCommit(text) {
+  return FALSE_NOW_NEWS_RE.test(String(text || ''));
+}
+
+function packHasFalseNowNews(body) {
+  if (!body || typeof body !== 'object') return false;
+  if (Array.isArray(body.items) && body.items.some((line) => newsMentionsFalseCommit(line))) {
+    return true;
+  }
+  if (!Array.isArray(body.nowWeek)) return false;
+  return body.nowWeek.some((row) => {
+    const key = String(row?.key || row?.label || '').toLowerCase();
+    if (key !== 'news' && String(row?.label || '') !== 'News') return false;
+    return (Array.isArray(row.items) ? row.items : []).some(newsMentionsFalseCommit);
+  });
+}
+
+function scrubFalseNowNews(payload) {
+  const body = payload && typeof payload === 'object' ? payload : {};
+  if (!packHasFalseNowNews(body)) return body;
+  const nowWeek = buildWeeklyHomeNowCategories();
+  const items = buildWeeklyHomeNowLines();
+  if (nowWeek.length) body.nowWeek = nowWeek;
+  if (items.length) body.items = items;
+  return body;
+}
+
 /** Home NOW pillars — attach even when hub ticker items are still warming. */
 function attachLiveNowWeek(payload) {
   const body = payload && typeof payload === 'object' ? payload : {};
-  if (Array.isArray(body.nowWeek) && body.nowWeek.length) return body;
+  if (Array.isArray(body.nowWeek) && body.nowWeek.length) return scrubFalseNowNews(body);
   const nowWeek = buildWeeklyHomeNowCategories();
   if (nowWeek.length) body.nowWeek = nowWeek;
-  return body;
+  return scrubFalseNowNews(body);
 }
 
 /**
@@ -293,6 +323,7 @@ module.exports = {
   buildWeeklyHomeNowLines,
   buildWeeklyHomeNowCategories,
   attachLiveNowWeek,
+  scrubFalseNowNews,
   buildHomeNowTickerPack,
   seasonRecord,
   autoPlaceLine,
