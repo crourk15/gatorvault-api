@@ -203,10 +203,10 @@ function resolveUncommittedMarketRpm({
   if (rpm == null) return null;
   if (committed) return rpm;
   if (rpm < 95) return rpm;
-  // Temper extreme market into GV prior — never copy 97/99, never Fit-only discard.
-  // topTeams/classYear kept for call-site corroboration helpers/tests.
-  void topTeams;
-  void classYear;
+  // Corroborated On3 Florida lock (Vickers 96 / Harris-Payne 99 / Bubba 98) —
+  // Lab "Florida chance" must match the industry board, not the 58–72 temper band.
+  // Missing / poison boards still temper so 0.99 crumbs cannot mint a 99% Field.
+  if (corroborateOn3UfRpm(rpm, topTeams, classYear)) return rpm;
   return temperExtremeUncommittedRpm(rpm, { committed: false });
 }
 
@@ -236,9 +236,13 @@ function resolveGatorVaultLikelihood({
   // Avoid double-counting store when it is already the On3 RPM value.
   if (store > 0 && rpm > 0 && Math.abs(store - rpm) <= 1) store = 0;
 
+  const crumbRpm = rpm > 0 && rpm < 8;
+  const staffLean = store >= 25;
   const marketParts = [];
   if (model > 0) marketParts.push({ v: model, w: 0.35, tag: "model" });
-  if (rpm > 0) marketParts.push({ v: rpm, w: 0.4, tag: "on3_rpm" });
+  // Residual On3 1% must not own the market core when staff already has a real lean
+  // (Josiah Taylor Alderman #1 / store 72 crushed to Field 11).
+  if (rpm > 0 && !(crumbRpm && staffLean)) marketParts.push({ v: rpm, w: 0.4, tag: "on3_rpm" });
   if (rivals > 0) marketParts.push({ v: rivals, w: 0.25, tag: "rivals_pm" });
   if (store > 0) marketParts.push({ v: store, w: 0.15, tag: "store" });
 
@@ -279,7 +283,8 @@ function resolveGatorVaultLikelihood({
   let value = Math.round(marketCore + fitNudge + deltaNudge);
 
   // Market anchor: keep GV editorial, but never drift far from confirmed On3 UF %.
-  if (rpm > 0) {
+  // Skip the tight rpm±12 clamp when RPM is a residual crumb and staff store is the real lean.
+  if (rpm > 0 && !(crumbRpm && staffLean)) {
     const bullRoom = Math.round(10 + 8 * Math.min(1, rpm / 35)); // more room when UF already competitive
     const bearRoom = 12;
     const lo = Math.max(1, rpm - bearRoom);

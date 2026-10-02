@@ -41,11 +41,21 @@ function explainEliteChaseProfile(player) {
   if (!player || typeof player !== 'object') return { ok: false, reasons: ['missing'] };
   const slug = String(player.slug || player.id || '').toLowerCase();
   const stars = Number(player.stars);
-  if (!(Number.isFinite(stars) && stars >= 1)) reasons.push('no_stars');
-  if (!hasRealSchool(player.school || player.highSchool)) reasons.push('no_school');
+  const starsOk = Number.isFinite(stars) && stars >= 1;
+  const schoolOk = hasRealSchool(player.school || player.highSchool);
+  if (!starsOk) reasons.push('no_stars');
+  if (!schoolOk) reasons.push('no_school');
   const fit = Number(player.fitScore ?? player.schemeFit ?? player.fit);
-  if (!(Number.isFinite(fit) && fit > 0)) reasons.push('no_fit');
-  if (!slug || !hasVaultScouting(slug)) reasons.push('no_vault_scouting');
+  const fitOk = Number.isFinite(fit) && fit > 0;
+  const vaultOk = Boolean(slug && hasVaultScouting(slug));
+  const rpm = Number(player.ufRpmPct ?? player.ufProbability);
+  const highRpm = Number.isFinite(rpm) && rpm >= 40;
+  // Fit is enrichment. Vault + identity is enough for Closest to see the name.
+  if (!fitOk && !(vaultOk && starsOk && schoolOk) && !highRpm) {
+    reasons.push('no_fit');
+  }
+  // High On3 Florida share is market identity — don't hide O'Dwyer 76 for missing film.
+  if (!vaultOk && !highRpm) reasons.push('no_vault_scouting');
   return { ok: reasons.length === 0, reasons };
 }
 

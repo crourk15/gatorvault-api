@@ -51,4 +51,30 @@ describe('elite chase profile bar', () => {
     const out = filterEliteChaseProfiles(rows);
     assert.ok(out.length <= 1);
   });
+
+  it('keeps a high On3 Florida lean without Vault Scouting (O\'Dwyer)', () => {
+    const row = {
+      slug: 'john-odwyer',
+      name: 'John Odwyer',
+      stars: 3,
+      school: 'Nease (Ponte Vedra Beach, FL)',
+      fitScore: null,
+      ufRpmPct: 76,
+    };
+    const e = explainEliteChaseProfile(row);
+    assert.equal(e.ok, true, e.reasons.join(','));
+  });
+
+  it('keeps vault-scouted identity when fit is still missing', () => {
+    const row = {
+      slug: 'madoxx-davis',
+      name: 'Madoxx Davis',
+      stars: 4,
+      school: 'Cartersville (Cartersville, GA)',
+      fitScore: null,
+    };
+    const e = explainEliteChaseProfile(row);
+    if (e.reasons.includes('no_vault_scouting')) return;
+    assert.equal(e.ok, true, e.reasons.join(','));
+  });
 });

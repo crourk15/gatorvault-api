@@ -81,31 +81,40 @@ describe('Florida odds sanitizers', () => {
     assert.notEqual(resolved.value, 99);
   });
 
-  it('tempers corroborated 95%+ On3 into GV strong-favorite band (not 97, not discard)', () => {
+  it('copies corroborated 95%+ On3 so Lab Florida chance matches the industry lock', () => {
     assert.equal(temperExtremeUncommittedRpm(97), 64);
     assert.equal(temperExtremeUncommittedRpm(95), 58);
     assert.equal(temperExtremeUncommittedRpm(75), 75);
 
-    const cyionTeams = [
-      { team: { name: 'Florida' }, status: 'Offered', prediction: 96.98, year: 2028 },
-      { team: { name: 'USF' }, status: 'Offered', prediction: 1.35, year: 2028 },
-      { team: { name: 'Auburn' }, status: 'Offered', prediction: 0.66, year: 2028 },
+    const vickersTeams = [
+      { team: { name: 'Florida' }, status: 'Offered', prediction: 95.74, year: 2028 },
+      { team: { name: 'Clemson' }, status: 'Offered', prediction: 1.39, year: 2028 },
+      { team: { name: 'Georgia Tech' }, status: 'Offered', prediction: 0.65, year: 2028 },
     ];
-    const tempered = resolveUncommittedMarketRpm({
-      rpmPct: 97,
+    const locked = resolveUncommittedMarketRpm({
+      rpmPct: 96,
       committed: false,
-      topTeams: cyionTeams,
+      topTeams: vickersTeams,
       classYear: 2028,
     });
-    assert.equal(tempered, 64);
+    assert.equal(locked, 96);
 
     const resolved = resolveGatorVaultLikelihood({
-      rpmPct: tempered,
-      fitScore: 76,
+      rpmPct: locked,
+      fitScore: 73,
     });
-    assert.ok(resolved.value >= 55 && resolved.value <= 80, `got ${resolved.value}`);
-    assert.notEqual(resolved.value, 97);
-    assert.ok(resolved.value > 40, 'must not collapse to Fit-only thin ~27');
+    assert.ok(resolved.value >= 84, `got ${resolved.value}`);
+    assert.ok(resolved.value <= 99, `got ${resolved.value}`);
+  });
+
+  it('crumb On3 RPM cannot crush a real staff store lean', () => {
+    const resolved = resolveGatorVaultLikelihood({
+      rpmPct: 1,
+      storePct: 72,
+      fitScore: 55,
+    });
+    assert.ok(resolved.value >= 50, `Taylor-style staff lean crushed to ${resolved.value}`);
+    assert.ok(resolved.value < 90, `got ${resolved.value}`);
   });
 
   it('missing topTeams still tempers 95%+ (prod Cyion rows) — never copies 99', () => {
