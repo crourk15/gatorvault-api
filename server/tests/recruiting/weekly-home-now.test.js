@@ -208,6 +208,14 @@ test('empty seasonTicks leaves only the standing line', () => {
   assert.deepEqual(cats[2].items, ['3-0 · first SEC home Saturday']);
 });
 
+test('South Carolina week Visitors opens on Easton Royal', () => {
+  const cats = buildWeeklyHomeNowCategories(new Date('2026-10-06T16:00:00.000Z'));
+  assert.equal(cats[0].label, 'Game');
+  assert.match(cats[0].items[0], /South Carolina/i);
+  assert.equal(cats[1].label, 'Visitors');
+  assert.equal(cats[1].items[0], 'Easton Royal');
+});
+
 test('Ole Miss visitors tick first and last names, not three last names', () => {
   const cats = buildWeeklyHomeNowCategories(new Date('2026-09-21T18:00:00.000Z'));
   assert.equal(cats[1].label, 'Visitors');

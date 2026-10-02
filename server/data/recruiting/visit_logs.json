@@ -1,7 +1,20 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T18:46:25.222Z",
+  "updatedAt": "2026-10-02T21:47:42.352Z",
   "items": [
+    {
+      "id": "vlog_easton-royal_unofficial_visit_2026-10-10",
+      "playerSlug": "easton-royal",
+      "playerId": "243862",
+      "playerName": "Easton Royal",
+      "school": "Florida",
+      "visitType": "unofficial_visit",
+      "date": "2026-10-10",
+      "source": "manual",
+      "fingerprint": "visit|easton-royal|florida|unofficial_visit|2026-10-10",
+      "reportedAt": "2026-10-02T21:38:00.000Z",
+      "detail": "Sam Spiegelman / Rivals: Texas 5-star WR commit Easton Royal will visit Florida again October 10 (South Carolina homecoming). Plans can change. Still committed to Texas."
+    },
     {
       "id": "vlog_domonic-williams-jr_unofficial_visit_2026-09-26",
       "playerSlug": "domonic-williams-jr",

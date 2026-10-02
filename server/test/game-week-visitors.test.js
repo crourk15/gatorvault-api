@@ -248,6 +248,20 @@ describe('game-week-visitors', () => {
     }
   });
 
+  it('lists Easton Royal as the South Carolina homecoming headliner and keeps Texas', () => {
+    const panel = visitorsPanelForGameId('scar');
+    assert.ok(panel);
+    assert.equal(panel.gameId, 'scar');
+    assert.equal(panel.visitors[0]?.slug, 'easton-royal');
+    assert.equal(panel.visitors[0]?.name, 'Easton Royal');
+    assert.equal(panel.visitors[0]?.classYear, 2027);
+    assert.match(String(panel.source || ''), /Texas commit/i);
+    assert.match(String(panel.source || ''), /Spiegelman|Rivals/i);
+    assert.equal(expectedVisitLabelForSlug('easton-royal'), 'Expected South Carolina visit · Oct 10');
+    const ole = visitorsPanelForGameId('olemiss');
+    assert.ok(ole.visitors.some((v) => v.slug === 'easton-royal'));
+  });
+
   it('attaches expectedVisitors onto schedule games', () => {
     const games = attachExpectedVisitorsToGames([
       { id: 'fau', opp: 'FAU Owls', date: 'September 5, 2026' },
