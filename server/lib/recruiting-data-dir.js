@@ -109,9 +109,37 @@ function mergeBundledIndustryRanksIfFresher(dataDir = resolveRecruitingDataDir()
  * Durable /var/data players.json keeps stale On3 boards across deploys
  * (copyJsonIfMissing never overwrites). That stranded Girton as empty
  * topTeams + fake Florida 96 on the HP plate while the git bundle had
- * Penn State 38 / Florida 9. Merge board-truth fields when the bundle
- * disagrees with a sole-board Florida lock or fills missing peers.
+ * Penn State 38 / Florida 9 — and later stranded Bubba Brown at Georgia
+ * 40 / Florida 19 after Chad Simmons logged a Florida 98% RPM.
+ * Merge board-truth fields when the bundle disagrees with a sole-board
+ * Florida lock, a stale-low Florida lock, or fills missing peers.
  */
+
+function shouldOverlayBundledOn3Board({ dstRpm, srcFl, dstFl, srcPeers, dstPeers, truthRpm }) {
+  const missingPeers = srcPeers > 0 && dstPeers === 0;
+  const poisonedLock =
+    Number.isFinite(dstRpm) &&
+    dstRpm >= 70 &&
+    truthRpm != null &&
+    truthRpm + 40 < dstRpm;
+  const rivalLedBundle =
+    srcPeers > 0 &&
+    truthRpm != null &&
+    Number.isFinite(dstRpm) &&
+    dstRpm >= 70 &&
+    (srcFl == null || srcFl + 15 < dstRpm);
+  // Git Florida lock (srcFl >= 70) stranded under a much lower durable
+  // board (Bubba 19 vs 98). Use topTeams Florida share, never bare
+  // ufRpmPct — Gabriel 0.80 on a percent board stays 0.80 (< 70).
+  const staleLowLock =
+    srcFl != null &&
+    Number.isFinite(srcFl) &&
+    srcFl >= 70 &&
+    ((Number.isFinite(dstRpm) && dstRpm + 40 < srcFl) ||
+      (dstFl != null && Number.isFinite(dstFl) && dstFl + 40 < srcFl));
+  return { missingPeers, poisonedLock, rivalLedBundle, staleLowLock };
+}
+
 function floridaShareFromTopTeams(teams) {
   if (!Array.isArray(teams) || !teams.length) return null;
   let scale = 'unknown';
@@ -207,20 +235,17 @@ function mergeBundledOn3BoardTruthIfFresher(dataDir = resolveRecruitingDataDir()
             ? srcRpm
             : null;
 
-      const missingPeers = srcPeers > 0 && dstPeers === 0;
-      const poisonedLock =
-        Number.isFinite(dstRpm) &&
-        dstRpm >= 70 &&
-        truthRpm != null &&
-        truthRpm + 40 < dstRpm;
-      const rivalLedBundle =
-        srcPeers > 0 &&
-        truthRpm != null &&
-        Number.isFinite(dstRpm) &&
-        dstRpm >= 70 &&
-        (srcFl == null || srcFl + 15 < dstRpm);
+      const { missingPeers, poisonedLock, rivalLedBundle, staleLowLock } =
+        shouldOverlayBundledOn3Board({
+          dstRpm,
+          srcFl,
+          dstFl,
+          srcPeers,
+          dstPeers,
+          truthRpm,
+        });
 
-      if (!missingPeers && !poisonedLock && !rivalLedBundle) continue;
+      if (!missingPeers && !poisonedLock && !rivalLedBundle && !staleLowLock) continue;
 
       let changed = false;
       for (const key of BOARD_KEYS) {
@@ -234,13 +259,21 @@ function mergeBundledOn3BoardTruthIfFresher(dataDir = resolveRecruitingDataDir()
       }
       // Bundle ufRpmPct can itself be the Gabriel poison (0.80% → stored 80).
       // Always write board Florida share when the durable lock disagrees.
+      const currentRpm = Number.isFinite(Number(row.ufRpmPct)) ? Number(row.ufRpmPct) : dstRpm;
       if (
         (poisonedLock || rivalLedBundle) &&
         truthRpm != null &&
         Number.isFinite(truthRpm) &&
-        truthRpm + 40 < (Number.isFinite(Number(row.ufRpmPct)) ? Number(row.ufRpmPct) : dstRpm)
+        truthRpm + 40 < currentRpm
       ) {
         const fixedRpm = truthRpm < 1 ? Math.max(1, Math.round(truthRpm)) : Math.round(truthRpm);
+        if (Number(row.ufRpmPct) !== fixedRpm) {
+          row.ufRpmPct = fixedRpm;
+          changed = true;
+        }
+      }
+      if (staleLowLock && srcFl != null && Number.isFinite(srcFl)) {
+        const fixedRpm = Math.round(srcFl);
         if (Number(row.ufRpmPct) !== fixedRpm) {
           row.ufRpmPct = fixedRpm;
           changed = true;
@@ -841,6 +874,7 @@ module.exports = {
   migrateRecruitingBundleIfNeeded,
   mergeBundledIndustryRanksIfFresher,
   mergeBundledOn3BoardTruthIfFresher,
+  shouldOverlayBundledOn3Board,
   mergeBundledVerifiedCommitsIfFresher,
   healDurableHollowCommits,
   mergeBundledCommitIntelIfMissing,

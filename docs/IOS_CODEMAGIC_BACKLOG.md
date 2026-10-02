@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] FutureCast Bubba Brown: Chad Simmons On3 RPM is Florida **98%** / Georgia 1% (Journey + Team Pred 97.7). Git stamp + HP floors + stale-low durable overlay so Render cannot keep August Georgia 40 / UF 19. API after Render — no Codemagic.
 - [x] Home NOW News: Lorenzo McMullen Jr. did **not** commit — On3 still OSU-led / Florida offered. Unverified commit intel cannot take News; cached ticker + edge strip a McMullen line; hollow `status: committed` (no school) snaps back to uncommitted on read and durable disk. API + Netlify edge after deploy — no Codemagic.
 - [x] Roster production stats rebuilt from all four official boxes (FAU / Campbell / Auburn / Ole Miss) for every player who recorded a line — including Brown 17–271 and Graham 28 tackles. API after Render — no Codemagic.
 - [x] Schedule GET is fast on current App Store: visitor cards use editorial `visitorMeta` (no `players.json` parse per slug) and `/api/schedule` memos the board until the file stamp changes. Repeat iOS opens stay tens of ms. API after Render — no Codemagic. Client first-paint / live-only remaining preds is the **1.0.30** bake.
