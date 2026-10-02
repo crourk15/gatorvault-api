@@ -270,6 +270,41 @@ function looksFloridaCommitRow(row) {
   );
 }
 
+/** Snap On3 hollow status=committed (no school) back to uncommitted on /var/data. */
+function healDurableHollowCommits(dataDir = resolveRecruitingDataDir()) {
+  if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
+    return { merged: false, reason: 'same_path' };
+  }
+  const durablePath = path.join(dataDir, 'players.json');
+  if (!fs.existsSync(durablePath)) return { merged: false, reason: 'missing_file' };
+  try {
+    const { demoteUnverifiedHubCommit } = require('./recruiting-verified-commits');
+    const durable = JSON.parse(fs.readFileSync(durablePath, 'utf8'));
+    if (!Array.isArray(durable)) return { merged: false, reason: 'not_array' };
+    let updated = 0;
+    for (let i = 0; i < durable.length; i += 1) {
+      const row = durable[i];
+      if (!row) continue;
+      const next = demoteUnverifiedHubCommit(row);
+      if (
+        next.status !== row.status ||
+        next.committedTo !== row.committedTo ||
+        next.category !== row.category
+      ) {
+        durable[i] = { ...row, ...next };
+        updated += 1;
+      }
+    }
+    if (updated > 0) {
+      fs.writeFileSync(durablePath, JSON.stringify(durable, null, 2));
+    }
+    return { merged: updated > 0, updated };
+  } catch (err) {
+    console.warn('[recruiting-data-dir] hollow-commit heal skipped:', err.message);
+    return { merged: false, error: err.message };
+  }
+}
+
 /** Git bundle commit stamps must win over durable /var/data target shells. */
 function mergeBundledVerifiedCommitsIfFresher(dataDir = resolveRecruitingDataDir()) {
   if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
@@ -767,6 +802,10 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
         if (boardMerge.updated) {
           console.log('[recruiting-data-dir] merged On3 board truth from bundle', boardMerge.updated);
         }
+        const hollow = healDurableHollowCommits(dataDir);
+        if (hollow.updated) {
+          console.log('[recruiting-data-dir] demoted hollow commits on durable disk', hollow.updated);
+        }
       } catch (err) {
         console.warn(
           '[recruiting-data-dir] deferred On3 board-truth merge failed:',
@@ -803,6 +842,7 @@ module.exports = {
   mergeBundledIndustryRanksIfFresher,
   mergeBundledOn3BoardTruthIfFresher,
   mergeBundledVerifiedCommitsIfFresher,
+  healDurableHollowCommits,
   mergeBundledCommitIntelIfMissing,
   mergeBundledHubRuntimeCommitsIfRicher,
   mergeBundledHubRuntimeOverviewIfRicher,

@@ -521,6 +521,13 @@ function normalizePlayer(raw) {
   const geoPatch = normalizePlayerGeo({ ...raw, ...player });
   Object.assign(player, geoPatch);
   require('./recruiting-visit-scrub').scrubPlayerSchoolFields(player);
+  try {
+    const { demoteUnverifiedHubCommit } = require('./recruiting-verified-commits');
+    const demoted = demoteUnverifiedHubCommit(player);
+    if (demoted && demoted !== player) Object.assign(player, demoted);
+  } catch {
+    /* optional */
+  }
   if (player.ratingOverride != null && player.ratingOverride !== '') {
     player.displayRating = Number(player.ratingOverride);
     player.ratingIsOverride = true;

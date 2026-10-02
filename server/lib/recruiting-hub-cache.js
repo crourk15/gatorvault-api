@@ -22,7 +22,7 @@ const FOOTPRINT_CACHE_REV = 'fp5';
 const COMMITS_CACHE_REV = 'c7';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
-const TICKER_CACHE_REV = 't17';
+const TICKER_CACHE_REV = 't18';
 
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;

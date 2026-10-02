@@ -136,6 +136,17 @@ function eventKind(row) {
   return '';
 }
 
+function isVerifiedNewsSlug(row) {
+  const slug = playerSlugOf(row);
+  if (!slug) return null;
+  try {
+    const { isVerifiedUfCommitAnyYear } = require('./recruiting-verified-commits');
+    return isVerifiedUfCommitAnyYear(slug);
+  } catch {
+    return false;
+  }
+}
+
 function isFloridaHeadline(row) {
   const kind = eventKind(row);
   if (!kind) return false;
@@ -143,6 +154,13 @@ function isFloridaHeadline(row) {
   if (school && !isFloridaSchool(school) && !/\bflorida\b/i.test(school)) return false;
   const blob = [row.text, row.title, row.summary, row.detail].map((s) => String(s || '')).join(' ');
   if (/\bcommits? to (?!Florida\b)[A-Z]/i.test(blob)) return false;
+  // Named board slugs must be verified UF commits. Hollow On3
+  // status=committed (McMullen, no school) cannot own Home NOW News.
+  const verified = isVerifiedNewsSlug(row);
+  if (verified === false) return false;
+  if (verified == null && school && !isFloridaSchool(school) && !/\bflorida\b/i.test(school)) {
+    return false;
+  }
   return true;
 }
 

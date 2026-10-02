@@ -127,9 +127,9 @@ function normalizeOn3Row(row, classYear) {
     posRank: pickNumber(rating.consensusPositionRank, rating.positionRank),
     stateRank: pickNumber(rating.consensusStateRank, rating.stateRank),
     inState: hometownState === 'FL' || /,\s*FL\b/i.test(school),
-    status: pickString(status.type, 'Committed').toLowerCase(),
+    status: (pickString(status.type) || 'uncommitted').toLowerCase(),
     commitDate: commitDateShort,
-    committedTo: pickString(status.committedAsset?.name, 'Florida'),
+    committedTo: pickString(status.committedAsset?.name) || null,
     category: 'recruit',
     skinny: '',
     sourceStatus: pickString(status.type)
@@ -160,9 +160,9 @@ function normalizeOn3Player(raw, classYear) {
     posRank: pickNumber(raw.posRank),
     stateRank: pickNumber(raw.stateRank),
     inState: !!(raw.inState ?? (hometownState === 'FL' || /,\s*FL\b/i.test(school))),
-    status: pickString(raw.status, 'committed').toLowerCase(),
+    status: (pickString(raw.status) || 'uncommitted').toLowerCase(),
     commitDate: pickString(raw.commitDate),
-    committedTo: pickString(raw.committedTo, 'Florida'),
+    committedTo: pickString(raw.committedTo) || null,
     skinny: pickString(raw.skinny),
     sourceStatus: pickString(raw.status)
   };

@@ -153,6 +153,26 @@ function looksLikeFloridaCommit(player) {
   return (status === 'committed' || status === 'commit') && /^florida$/i.test(committedTo);
 }
 
+/** On3 empty status used to default to committed with no school (McMullen). */
+function isHollowCommitted(player) {
+  if (!player) return false;
+  const status = String(player.status || '').toLowerCase();
+  if (status !== 'committed' && status !== 'commit') return false;
+  return !String(player.committedTo || player.committed_to || '').trim();
+}
+
+function applyHollowDemote(player) {
+  const out = { ...player };
+  out.status = 'uncommitted';
+  out.committedTo = null;
+  out.commitDate = null;
+  out.verifiedCommit = false;
+  if (out.category === 'recruit' || out.category === 'commit') out.category = 'target';
+  if (out.lifecycle === 'commit') out.lifecycle = 'target';
+  if (out.pipelineState === 'committed' || out.pipelineState === 'commit') out.pipelineState = 'target';
+  return out;
+}
+
 /** Flip targets who committed elsewhere — preserve external school when demoting false UF commits. */
 const HUB_EXTERNAL_COMMIT_BY_SLUG = {
   'easton-royal': 'Texas',
@@ -165,11 +185,21 @@ function isHubExternalCommitFlipTarget(player) {
 
 /** Demote unverified On3-style commits back to targets for hub classes. */
 function demoteUnverifiedHubCommit(player) {
-  if (!player || !looksLikeFloridaCommit(player)) return player;
+  if (!player) return player;
   const year = Number(player.classYear ?? player.class_year);
-  if (!isHubClassYear(year)) return player;
-
   const slug = playerSlug(player);
+
+  // Hollow committed (no school) is never a UF pledge. Restore verified
+  // slugs; snap everyone else in a hub class back to uncommitted.
+  if (isHollowCommitted(player) && isHubClassYear(year)) {
+    if (isVerifiedUfCommitSlug(slug, year) || isOn3SnapshotUfCommit(player)) {
+      return applyVerifiedHubCommit(player);
+    }
+    return applyHollowDemote(player);
+  }
+
+  if (!looksLikeFloridaCommit(player)) return player;
+  if (!isHubClassYear(year)) return player;
   if (isHubExternalCommitFlipTarget(player)) {
     const out = { ...player };
     out.status = 'uncommitted';
@@ -321,6 +351,7 @@ module.exports = {
   stripVerifiedUfCommitsFromHubPayload,
   isVerifiedHubCommit,
   looksLikeFloridaCommit,
+  isHollowCommitted,
   isHubExternalCommitFlipTarget,
   HUB_EXTERNAL_COMMIT_BY_SLUG,
   isOn3SnapshotUfCommit,
