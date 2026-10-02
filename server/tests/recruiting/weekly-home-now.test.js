@@ -217,6 +217,26 @@ test('Ole Miss visitors tick first and last names, not three last names', () => 
   assert.ok(!cats[1].items.some((n) => / · /.test(n)));
 });
 
+test('unverified McMullen commit intel cannot take Home NOW News', () => {
+  const now = new Date('2026-10-02T01:00:00.000Z');
+  const cats = buildWeeklyHomeNowCategories(now, undefined, {
+    breakInRows: [
+      {
+        eventType: 'commit',
+        playerSlug: 'lorenzo-mcmullen-jr',
+        playerName: 'Lorenzo McMullen Jr.',
+        committedTo: 'Florida',
+        natlRank: 25,
+        stars: 4,
+        timestamp: '2026-10-01T18:00:00.000Z',
+        text: 'Lorenzo McMullen Jr. commits to Florida',
+      },
+    ],
+  });
+  const news = cats.find((c) => c.key === 'news');
+  assert.ok(!news || !/mcmullen/i.test(String(news.items || '')), JSON.stringify(news));
+});
+
 test('this-week Cyion Smith commit breaks into Home NOW News', () => {
   const cats = buildWeeklyHomeNowCategories(new Date('2026-09-26T20:00:00.000Z'));
   const news = cats.find((c) => c.key === 'news');

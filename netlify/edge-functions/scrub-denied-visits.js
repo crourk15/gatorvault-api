@@ -9,7 +9,7 @@ const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolR
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '4-0 heading into Saturday';
 const BAILEY_NEWS_LINE = 'Samuel Bailey commits to Florida · No. 36';
-const STALE_NOW_NEWS_RE = /cyion\s+smith/i;
+const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen/i;
 
 const TICKER_FALLBACK = {
   ok: true,

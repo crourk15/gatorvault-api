@@ -24,6 +24,7 @@ test('ticker edge rewrites leftover Cyion NOW News to Samuel Bailey', () => {
   assert.match(src, /pinBaileyNowNews/);
   assert.match(src, /STALE_NOW_NEWS_RE/);
   assert.match(src, /cyion\\s\+smith/);
+  assert.match(src, /lorenzo\\s\+mcmullen/);
 });
 
 test('hub edge pins 2028 hero at 3 commits and drops verified commits from battles', () => {
