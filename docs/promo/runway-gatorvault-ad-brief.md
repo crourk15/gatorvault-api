@@ -1,32 +1,17 @@
-# GatorVault ad — Runway brief
+# GatorVault ad — Runway "Describe your image"
 
-15-second phone ad. Dark, simple, premium. Not a movie. Not recruiting-only.
+Keep the last cut. Replace the fake phone screen with the attached screen recording.
 
-## Look
-- Background: navy `#001A33`
-- Accent: orange `#FA4616`
-- Blue in the night sky: `#0021A5`
-- Type: white
-- Logo: **GATOR VAULT** (two words, white) with an orange bar under VAULT
-- No alligator. No official UF logo.
+## Describe your image (paste this)
 
-## The ad
-Black iPhone on a navy background. The screen shows the real GatorVault app — swipe through Home, Team, Recruiting, Game Week. End on the logo + Download on the App Store.
+A black iPhone floating in the center of a dark swamp-navy background (#001A33) with soft out-of-focus stadium lights. The phone screen is the attached GatorVault screen recording — real app UI only, do not generate or redraw anything on the screen. Clean white GATOR VAULT wordmark above the phone, two words, orange bar (#FA4616) under VAULT only. No alligator. No University of Florida logo. Premium, simple, cinematic product shot.
 
-**On screen**
-1. Florida football.
-2. One vault.
-3. GatorVault Insider
+## Video (if they ask for motion)
 
-**Tagline:** Florida Football, Unlocked.
-
-## What to send them
-A few real iPhone screenshots of the app. If they invent the screens, it will look fake.
-
-## Music
-Leave it quiet or put a simple dark beat under it. No fight song, no famous songs.
+15 seconds, 9:16, 1080x1920. Same navy studio as the last video. Phone stays in frame. Play the attached screen recording on the phone (Home, Team, Recruiting, Game Week). Do not invent menus, names, or text on the screen. White supers, spelled exactly: Florida football. / One vault. / GatorVault Insider. End: GATOR VAULT wordmark, orange bar under VAULT, official black Download on the App Store badge. No UF logo. No fake App Store badge.
 
 ## Caption
+
 Florida football, one vault.
 Roster. Recruiting. Game Week. Live.
 Download GatorVault Insider on the App Store.
