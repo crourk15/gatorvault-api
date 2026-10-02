@@ -764,17 +764,30 @@ function resolveUfRpmPctForRecruiting(
   );
   // topTeams wins when present — store 80/100 vs Miami board is poison.
   let candidate = fromTeams != null ? fromTeams : store;
-  if (fromTeams != null && store != null && store >= 70 && fromTeams + 40 < store) {
+  const topRival = [...(competingSchools || [])].sort((a, b) => Number(b.pct) - Number(a.pct))[0];
+  const rivalName = String(topRival?.name || '');
+  const rivalIsFlorida =
+    /\bflorida\b|\bgators\b/i.test(rivalName) && !/florida state|south florida/i.test(rivalName);
+  const rivalLeadsBoard = Boolean(topRival && !rivalIsFlorida && Number(topRival.pct) >= 12);
+  // Only trust a residual On3 crumb over a high store lean when a rival actually
+  // owns the industry board (Gabriel). Empty/crumb boards must not crush staff 72.
+  if (
+    fromTeams != null &&
+    store != null &&
+    store >= 70 &&
+    fromTeams + 40 < store &&
+    rivalLeadsBoard
+  ) {
     candidate = fromTeams;
   }
   if (
     residualFromTeams != null &&
+    rivalLeadsBoard &&
     (candidate == null || (candidate >= 70 && residualFromTeams + 40 < candidate))
   ) {
     candidate = residualFromTeams;
   }
   // Rival-led industry board: never keep a locked Florida RPM.
-  const topRival = [...(competingSchools || [])].sort((a, b) => Number(b.pct) - Number(a.pct))[0];
   if (
     candidate != null &&
     candidate >= 40 &&
@@ -1027,20 +1040,27 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   // Priority chase surfaces still re-sort by priorityScore and take top 10 client-side.
   const players = [...withCardIntel].sort(compareUnderclassmenHighPriority);
   const lastUpdated = new Date().toISOString();
-  const visitBoardSnapshot = getVisitIntelBoardSnapshot([]);
+  const visitLogStore = require('../../lib/recruiting-visit-log-store');
+  const visitLogs = visitLogStore.loadDoc().items || [];
+  const visitIntel = buildVerifiedVisitIntelRows(players, visitLogs);
+  const visitRecap = buildVerifiedVisitRecapRows(players, visitLogs, new Date(), {
+    limit: 12,
+    prioritySlugs: slugs,
+  });
+  const visitBoardSnapshot = getVisitIntelBoardSnapshot(visitLogs);
 
   return {
     classYear,
     count: players.length,
-    visitIntelCount: 0,
-    visitRecapCount: 0,
+    visitIntelCount: visitIntel.length,
+    visitRecapCount: visitRecap.length,
     flipWatchCount: 0,
     visitBoardSnapshot,
     updatedAt: lastUpdated,
     lastUpdated,
     players,
-    visitIntel: [],
-    visitRecap: [],
+    visitIntel,
+    visitRecap,
     flipWatch: [],
     movementNarratives: [],
   };

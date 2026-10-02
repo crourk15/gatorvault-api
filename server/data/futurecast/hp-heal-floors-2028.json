@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-21T02:20:00.000Z",
+  "updatedAt": "2026-10-02T02:00:00.000Z",
   "description": "Slim 2028 HP heal floors — UF boardRpm when full players.json warm is cold (HP_HEAL_BOOT=false).",
   "floors": {
     "kaleb-ballard": {
@@ -62,16 +62,16 @@
       ]
     },
     "antonio-thomas-jr": {
-      "boardRpm": 41,
-      "storeRpm": 41,
+      "boardRpm": 94,
+      "storeRpm": 94,
       "storeComps": [
         {
           "name": "Miami",
-          "pct": 13.4
+          "pct": 1
         },
         {
           "name": "Auburn",
-          "pct": 11.5
+          "pct": 1
         }
       ]
     },
@@ -420,8 +420,13 @@
     },
     "joey-fleming": {
       "boardRpm": 1,
-      "storeRpm": 47,
-      "storeComps": []
+      "storeRpm": 1,
+      "storeComps": [
+        {
+          "name": "Alabama",
+          "pct": 93
+        }
+      ]
     },
     "lorenzo-mcmullen-jr": {
       "boardRpm": 6,
@@ -451,16 +456,16 @@
       "storeComps": []
     },
     "nikolay-petrushev": {
-      "boardRpm": 70,
-      "storeRpm": 70,
+      "boardRpm": 81,
+      "storeRpm": 81,
       "storeComps": [
         {
           "name": "UCF",
-          "pct": 10.2
+          "pct": 6
         },
         {
           "name": "Georgia Tech",
-          "pct": 8.8
+          "pct": 6
         }
       ]
     },
@@ -581,23 +586,19 @@
     },
     "antijuan-wilkes-jr": {
       "boardRpm": 1,
-      "storeRpm": 84,
+      "storeRpm": 1,
       "storeComps": [
         {
           "name": "Michigan",
-          "pct": 28.1
+          "pct": 29
         },
         {
           "name": "Michigan State",
-          "pct": 24.6
+          "pct": 26
         },
         {
           "name": "Ohio State",
-          "pct": 11
-        },
-        {
-          "name": "Missouri",
-          "pct": 5
+          "pct": 12
         }
       ]
     },
@@ -672,6 +673,44 @@
         {
           "name": "Virginia Tech",
           "pct": 10.6
+        }
+      ]
+    },
+    "jaxon-flowers": {
+      "boardRpm": 72,
+      "storeRpm": 72,
+      "storeComps": [
+        {
+          "name": "Miami",
+          "pct": 24
+        },
+        {
+          "name": "Florida State",
+          "pct": 3
+        }
+      ]
+    },
+    "john-odwyer": {
+      "boardRpm": 76,
+      "storeRpm": 76,
+      "storeComps": [
+        {
+          "name": "Florida State",
+          "pct": 6
+        },
+        {
+          "name": "Pittsburgh",
+          "pct": 5
+        }
+      ]
+    },
+    "tromon-isaac": {
+      "boardRpm": 2,
+      "storeRpm": 2,
+      "storeComps": [
+        {
+          "name": "Miami",
+          "pct": 96
         }
       ]
     }

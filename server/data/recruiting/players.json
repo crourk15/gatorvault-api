@@ -116397,8 +116397,8 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "4★ EDGE · Carrollwood Day · Florida RPM pick on the board · Ole Miss return Sep 26",
-    "profileNote": "Third Gainesville trip (FAU). Florida RPM pick on the board — no published %. Setting the pace at JACK. Expected back Sep 26 vs Ole Miss. Leaning 2028; reclass not dismissed. Priority either class.",
+    "skinny": "4★ EDGE · Carrollwood Day · On3 Florida 94%",
+    "profileNote": "On3 Journey 10/2: Florida 94% / Miami 1% / Auburn 1%. Third Gainesville trip is in; JACK still setting the pace.",
     "on3Id": "251059",
     "on3Slug": "antonio-thomas-jr-251059",
     "on3ProfileUrl": "https://www.on3.com/rivals/antonio-thomas-jr-251059/",
@@ -116417,7 +116417,7 @@
     "visitEnd": "2026-09-27",
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": 41,
+    "ufProbability": 94,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -116432,34 +116432,18 @@
     "competitors": [
       {
         "school": "Miami",
-        "score": 13.397129186602868,
-        "pct": 13.397129186602868,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:39:10.356Z",
+        "score": 1,
+        "pct": 1,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
         "trend": "flat"
       },
       {
         "school": "Auburn",
-        "score": 11.483253588516746,
-        "pct": 11.483253588516746,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:39:10.356Z",
-        "trend": "flat"
-      },
-      {
-        "school": "Penn State",
-        "score": 1.5948963317384368,
-        "pct": 1.5948963317384368,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:39:10.356Z",
-        "trend": "flat"
-      },
-      {
-        "school": "Notre Dame",
-        "score": 1.5948963317384368,
-        "pct": 1.5948963317384368,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:39:10.356Z",
+        "score": 1,
+        "pct": 1,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
         "trend": "flat"
       }
     ],
@@ -119956,8 +119940,8 @@
     ],
     "height": "6-3",
     "weight": 235,
-    "ufRpmPct": 41,
-    "updatedAt": "2026-08-14T01:39:10.401Z",
+    "ufRpmPct": 94,
+    "updatedAt": "2026-10-02T02:00:00.000Z",
     "state": "FL",
     "displayRating": 94.95618279569892,
     "ratingIsOverride": false
@@ -123587,13 +123571,13 @@
     "posRank": 14,
     "stateRank": 11,
     "inState": true,
-    "category": "target",
+    "category": "recruit",
     "status": "uncommitted",
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "4★ WR · #92 natl · Chaminade-Madonna Prep, FL",
-    "profileNote": "",
+    "skinny": "4★ WR · Chaminade-Madonna · On3 Miami 96%",
+    "profileNote": "On3 Journey 10/2: Miami 96% / Florida 2%. Git 80 was residual poison — do not treat Isaac as a Florida lock.",
     "on3Id": "239621",
     "on3Slug": "tromon-isaac-239621",
     "on3ProfileUrl": "https://www.on3.com/rivals/tromon-isaac-239621/",
@@ -123612,7 +123596,7 @@
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 2,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -123627,23 +123611,19 @@
     "competitors": [
       {
         "school": "Miami",
-        "score": 96.9881814715974,
-        "pct": 96.9881814715974
+        "score": 96,
+        "pct": 96,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
+        "trend": "flat"
       },
       {
         "school": "Nebraska",
-        "score": 0.6862371330537551,
-        "pct": 0.6862371330537551
-      },
-      {
-        "school": "Notre Dame",
-        "score": 0.09531071292413267,
-        "pct": 0.09531071292413267
-      },
-      {
-        "school": "Georgia",
-        "score": 0.09531071292413267,
-        "pct": 0.09531071292413267
+        "score": 1,
+        "pct": 1,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
+        "trend": "flat"
       }
     ],
     "offers": [
@@ -126834,8 +126814,8 @@
     ],
     "height": "5-10.5",
     "weight": 177,
-    "ufRpmPct": 80,
-    "updatedAt": "2026-08-14T00:15:14.842Z",
+    "ufRpmPct": 2,
+    "updatedAt": "2026-10-02T02:00:00.000Z",
     "state": "FL",
     "displayRating": 91.96413043478263,
     "ratingIsOverride": false
@@ -153065,7 +153045,7 @@
     "classYear": 2028,
     "school": "East Lake (Tarpon Springs, FL)",
     "htWt": "6-6 / 285",
-    "stars": 0,
+    "stars": 3,
     "rating": null,
     "ratingOverride": null,
     "vaultGrade": null,
@@ -153079,7 +153059,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "OT · 6-6 / 285 · East Lake · UF offer June 2026",
+    "skinny": "3★ OT · East Lake · On3 Florida 81%",
     "profileNote": "East Lake OT — Florida offered June after FNL; also UM/FSU/Auburn/GT interest.",
     "on3Id": "290300",
     "on3Slug": "nikolay-petrushev-290300",
@@ -153097,9 +153077,9 @@
     "nextVisitSchool": null,
     "visitStart": null,
     "visitEnd": null,
-    "starsDisplay": null,
+    "starsDisplay": 3,
     "headliner": false,
-    "ufProbability": 70,
+    "ufProbability": 81,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -153114,23 +153094,19 @@
     "competitors": [
       {
         "school": "UCF",
-        "score": 10.21897810218978,
-        "pct": 10.21897810218978
+        "score": 6,
+        "pct": 6,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
+        "trend": "flat"
       },
       {
         "school": "Georgia Tech",
-        "score": 8.759124087591239,
-        "pct": 8.759124087591239
-      },
-      {
-        "school": "Coastal Carolina Chanticleers",
-        "score": 3.64963503649635,
-        "pct": 3.64963503649635
-      },
-      {
-        "school": "USF Bulls",
-        "score": 3.64963503649635,
-        "pct": 3.64963503649635
+        "score": 6,
+        "pct": 6,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
+        "trend": "flat"
       }
     ],
     "offers": [
@@ -153993,8 +153969,8 @@
     ],
     "height": "6-6",
     "weight": 285,
-    "ufRpmPct": 70,
-    "updatedAt": "2026-08-14T00:19:35.183Z",
+    "ufRpmPct": 81,
+    "updatedAt": "2026-10-02T02:00:00.000Z",
     "state": "FL",
     "displayRating": null,
     "ratingIsOverride": false
@@ -154005,9 +153981,9 @@
     "name": "John Odwyer",
     "pos": "OT",
     "classYear": 2028,
-    "school": "Nease (Beach, FL)",
+    "school": "Nease (Ponte Vedra Beach, FL)",
     "htWt": "6-5 / 260",
-    "stars": 0,
+    "stars": 3,
     "rating": null,
     "ratingOverride": null,
     "vaultGrade": null,
@@ -154021,8 +153997,8 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
-    "profileNote": "",
+    "skinny": "3★ IOL · Nease · On3 Florida 76%",
+    "profileNote": "On3 Journey 10/2: Florida 76% / FSU 6% / Pittsburgh 5%. In-state OT/IOL with a Florida offer and a real UF board lead.",
     "on3Id": "284631",
     "on3Slug": "john-odwyer-284631",
     "on3ProfileUrl": "https://www.on3.com/rivals/john-odwyer-284631/",
@@ -154039,9 +154015,9 @@
     "nextVisitSchool": null,
     "visitStart": null,
     "visitEnd": null,
-    "starsDisplay": null,
+    "starsDisplay": 3,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 76,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -154055,35 +154031,19 @@
     "nilSource": null,
     "competitors": [
       {
-        "school": "USF Bulls",
-        "score": 4.255319148936169,
-        "pct": 4.255319148936169,
-        "source": "legacy",
-        "updatedAt": "2026-09-10T03:42:55.789Z",
+        "school": "Florida State",
+        "score": 6,
+        "pct": 6,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
         "trend": "flat"
       },
       {
-        "school": "Western Kentucky Hilltoppers",
-        "score": 3.546099290780141,
-        "pct": 3.546099290780141,
-        "source": "legacy",
-        "updatedAt": "2026-09-10T03:42:55.789Z",
-        "trend": "flat"
-      },
-      {
-        "school": "Tulane Green Wave",
-        "score": 3.546099290780141,
-        "pct": 3.546099290780141,
-        "source": "legacy",
-        "updatedAt": "2026-09-10T03:42:55.789Z",
-        "trend": "flat"
-      },
-      {
-        "school": "East Carolina Pirates",
-        "score": 3.546099290780141,
-        "pct": 3.546099290780141,
-        "source": "legacy",
-        "updatedAt": "2026-09-10T03:42:55.789Z",
+        "school": "Pittsburgh",
+        "score": 5,
+        "pct": 5,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
         "trend": "flat"
       }
     ],
@@ -155239,8 +155199,8 @@
     ],
     "height": "6-5",
     "weight": 260,
-    "ufRpmPct": 68,
-    "updatedAt": "2026-09-10T03:42:55.840Z",
+    "ufRpmPct": 76,
+    "updatedAt": "2026-10-02T02:00:00.000Z",
     "state": "FL",
     "displayRating": null,
     "ratingIsOverride": false
@@ -266721,7 +266681,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "4★ IOL · #22 natl · Huntsville, AL",
+    "skinny": "4★ IOL · Huntsville · On3 Alabama 93%",
     "profileNote": "",
     "on3Id": "259645",
     "on3Slug": "joey-fleming-259645",
@@ -266741,7 +266701,7 @@
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 1,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -266756,34 +266716,18 @@
     "competitors": [
       {
         "school": "Alabama",
-        "score": 94.92476806735792,
-        "pct": 94.92476806735792,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:57:33.075Z",
+        "score": 93,
+        "pct": 93,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
         "trend": "flat"
       },
       {
-        "school": "Auburn",
-        "score": 1.200592500194901,
-        "pct": 1.200592500194901,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:57:33.075Z",
-        "trend": "flat"
-      },
-      {
-        "school": "Oklahoma",
-        "score": 1.0290792858813438,
-        "pct": 1.0290792858813438,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:57:33.075Z",
-        "trend": "flat"
-      },
-      {
-        "school": "Ohio State",
-        "score": 0.4677633117642472,
-        "pct": 0.4677633117642472,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:57:33.075Z",
+        "school": "Clemson",
+        "score": 2,
+        "pct": 2,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
         "trend": "flat"
       }
     ],
@@ -269945,8 +269889,8 @@
     ],
     "height": "6-5",
     "weight": 275,
-    "ufRpmPct": 47,
-    "updatedAt": "2026-08-14T01:57:33.128Z",
+    "ufRpmPct": 1,
+    "updatedAt": "2026-10-02T02:00:00.000Z",
     "state": "AL",
     "displayRating": 93.98622019635343,
     "ratingIsOverride": false
@@ -311909,7 +311853,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "4★ OT · #16 natl · Cass Technical (Detroit, MI)",
+    "skinny": "5★ OT · Cass Tech · On3 Michigan-led",
     "profileNote": "",
     "on3Id": "261623",
     "on3Slug": "antijuan-wilkes-jr-261623",
@@ -311929,7 +311873,7 @@
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 1,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -311944,34 +311888,26 @@
     "competitors": [
       {
         "school": "Michigan",
-        "score": 28.07017543859649,
-        "pct": 28.07017543859649,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:49:32.894Z",
+        "score": 29,
+        "pct": 29,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
         "trend": "flat"
       },
       {
         "school": "Michigan State",
-        "score": 24.561403508771928,
-        "pct": 24.561403508771928,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:49:32.894Z",
+        "score": 26,
+        "pct": 26,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
         "trend": "flat"
       },
       {
         "school": "Ohio State",
-        "score": 11.027568922305765,
-        "pct": 11.027568922305765,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:49:32.894Z",
-        "trend": "flat"
-      },
-      {
-        "school": "Missouri",
-        "score": 5.012531328320802,
-        "pct": 5.012531328320802,
-        "source": "legacy",
-        "updatedAt": "2026-08-14T01:49:32.894Z",
+        "score": 12,
+        "pct": 12,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
         "trend": "flat"
       }
     ],
@@ -315539,8 +315475,8 @@
     ],
     "height": "6-5",
     "weight": 265,
-    "ufRpmPct": 84,
-    "updatedAt": "2026-08-14T01:49:32.929Z",
+    "ufRpmPct": 1,
+    "updatedAt": "2026-10-02T02:00:00.000Z",
     "state": "MI",
     "displayRating": 95.41344086021505,
     "ratingIsOverride": false
@@ -325715,8 +325651,8 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
-    "profileNote": "Bender 09/10: Flowers said Florida is already number one and pushing the hardest. First Swamp gameday is in. Ole Miss return Sep 26. Only school with multiple fall visits set. Bender is close to a UF RPM pick — he has not posted it.",
+    "skinny": "4★ ATH/S · Bolles · On3 Florida 72%",
+    "profileNote": "On3 Journey 10/2: Florida 72% / Miami 24% / FSU 3%. Bender already had Florida number one and pushing the hardest.",
     "on3Id": "281921",
     "on3Slug": "jaxon-flowers-281921",
     "on3ProfileUrl": "https://www.on3.com/rivals/jaxon-flowers-281921/",
@@ -325735,7 +325671,7 @@
     "visitEnd": null,
     "starsDisplay": 4,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 72,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -325747,9 +325683,26 @@
     "nilValue": null,
     "nilEstimate": null,
     "nilSource": null,
-    "competitors": [],
-    "ufRpmPct": null,
-    "updatedAt": "2026-09-23T19:43:05.110Z",
+    "competitors": [
+      {
+        "school": "Miami",
+        "score": 24,
+        "pct": 24,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Florida State",
+        "score": 3,
+        "pct": 3,
+        "source": "on3-public-rpm",
+        "updatedAt": "2026-10-02T02:00:00.000Z",
+        "trend": "flat"
+      }
+    ],
+    "ufRpmPct": 72,
+    "updatedAt": "2026-10-02T02:00:00.000Z",
     "state": "FL",
     "displayRating": 88.46,
     "ratingIsOverride": false,
