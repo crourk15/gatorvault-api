@@ -71,8 +71,14 @@ function loadDoc() {
 function buildSlugLabelMap(doc = loadDoc()) {
   const map = new Map();
   const games = Array.isArray(doc?.games) ? doc.games : [];
+  const upcoming = [];
+  const past = [];
   for (const game of games) {
     if (!isHomeVisitorGame(game)) continue;
+    if (gameHasBeenPlayed(game)) past.push(game);
+    else upcoming.push(game);
+  }
+  for (const game of [...upcoming, ...past]) {
     const label = fanChaseLabel(game);
     if (!label) continue;
     const slugs = Array.isArray(game?.slugs) ? game.slugs : [];

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Easton Royal (Texas 5★ WR, Flip Watch #2): Spiegelman / Rivals return Florida trip **Oct 10** South Carolina homecoming. Visit log + Game Week visitors + Chase label. Still Texas — not a UF commit. API after Render — no Codemagic.
 - [x] FutureCast 2028 deep audit (10/2 On3): Antonio Thomas Jr. **94%** (was 41), Jaxon Flowers **72%** (was 1), John O'Dwyer **76%** now on Closest, Tromon Isaac Miami-led residual (git 80 was poison). Corroborated Florida locks no longer temper Lab Florida chance into the 58–72 band. API after Render — no Codemagic.
 - [x] FutureCast Bubba Brown: Chad Simmons On3 RPM is Florida **98%** / Georgia 1% (Journey + Team Pred 97.7). Git stamp + HP floors + stale-low durable overlay so Render cannot keep August Georgia 40 / UF 19. API after Render — no Codemagic.
 - [x] Home NOW News: Lorenzo McMullen Jr. did **not** commit — On3 still OSU-led / Florida offered. Unverified commit intel cannot take News; cached ticker + edge strip a McMullen line; hollow `status: committed` (no school) snaps back to uncommitted on read and durable disk. API + Netlify edge after deploy — no Codemagic.

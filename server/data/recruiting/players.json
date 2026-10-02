@@ -82888,7 +82888,7 @@
     "fromSchool": null,
     "commitDate": "2025-11-29T10:43:00",
     "skinny": "5★ WR · #5 natl · Brother Martin, LA",
-    "profileNote": "5★ WR committed to Texas — Closing Class Flip Watch #2.",
+    "profileNote": "5★ WR committed to Texas — Closing Class Flip Watch #2. Return Florida trip Oct 10 (South Carolina homecoming).",
     "on3Id": "243862",
     "on3Slug": "easton-royal-243862",
     "on3ProfileUrl": "https://www.on3.com/rivals/easton-royal-243862/",
@@ -82902,9 +82902,9 @@
     "rivalsArticleUrl": null,
     "ufOvStatus": "completed",
     "ufOvCancelledAt": null,
-    "nextVisitSchool": null,
-    "visitStart": null,
-    "visitEnd": null,
+    "nextVisitSchool": "Florida",
+    "visitStart": "2026-10-10",
+    "visitEnd": "2026-10-10",
     "starsDisplay": null,
     "headliner": false,
     "ufProbability": null,
@@ -83323,6 +83323,12 @@
         "visitType": "unofficial_visit",
         "date": "2024-06-08",
         "source": "on3"
+      },
+      {
+        "school": "Florida",
+        "visitType": "unofficial_visit",
+        "date": "2026-10-10",
+        "source": "manual"
       }
     ],
     "on3TopTeams": [
@@ -86748,7 +86754,7 @@
     "height": "5-11",
     "weight": 200,
     "ufRpmPct": 1,
-    "updatedAt": "2026-08-14T00:05:06.367Z",
+    "updatedAt": "2026-10-02T21:47:42.688Z",
     "state": "LA",
     "displayRating": 98.42634408602152,
     "ratingIsOverride": false
