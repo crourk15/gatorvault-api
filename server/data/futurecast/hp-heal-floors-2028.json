@@ -119,16 +119,12 @@
       ]
     },
     "bubba-brown": {
-      "boardRpm": 19,
-      "storeRpm": 19,
+      "boardRpm": 98,
+      "storeRpm": 98,
       "storeComps": [
         {
           "name": "Georgia",
-          "pct": 40.3
-        },
-        {
-          "name": "Auburn",
-          "pct": 16.5
+          "pct": 1
         }
       ]
     },
