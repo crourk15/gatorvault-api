@@ -192,6 +192,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-02 | Home NOW: pin Samuel Bailey when News is a false McMullen (or leftover Cyion). **Web after Netlify. iOS 1.0.29 already last-good Bailey — do not bake for this.** | `home-command-utils.ts` in binary. API + edge already strip McMullen after #784. | this PR |
 | 2026-10-01 | Roster Stats tab: CMP/ATT · YDS · TD · INT + one card per game (pass + rush). **Season totals are API after Render.** | `RosterProfilePage` + `roster-production-stats.ts` in binary. Old binary still paints a lone CMP and duplicate week rows. | this PR |
 | 2026-09-30 | App Store **1.0.30** / build **98** (schedule live-only scores). **1.0.29 is the live binary — do not re-upload.** | `MARKETING_VERSION` 1.0.30. Charles asked for this train. | this PR |
 | 2026-09-29 | Schedule remaining scores live-only + faster apply: prefetch on vault open / menu, 8s GET, Home does not wait on hub | **1.0.30 reason.** After this bake, weekly restamps are API-only and should land in ~1s not ~30s. No leftover 28–21 flash. | #777 |

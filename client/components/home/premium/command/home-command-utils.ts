@@ -423,8 +423,9 @@ export function resolveHomeNowWeekPillars(
 
 const LAST_GOOD_NOW_WEEK_KEY = 'gv-home-now-week-last-good';
 const RETIRED_NOW_TICK_RE = /1\.0\.29|update in the App Store/i;
-/** Cyion's Sep 26 pledge must not stick on NOW News after Bailey (Sep 28). */
-const STALE_NOW_NEWS_RE = /cyion\s+smith/i;
+/** Cyion Sep 26 / false McMullen must not beat Bailey (Sep 28) on NOW News. */
+const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen/i;
+const BAILEY_NEWS_LINE = 'Samuel Bailey commits to Florida · No. 36';
 
 let lastGoodNowWeekMemory: HomeNowWeekPillar[] | null = null;
 
@@ -434,17 +435,37 @@ export function isRetiredHomeNowTick(text: string): boolean {
   return STALE_NOW_NEWS_RE.test(t);
 }
 
+function pinBaileyNowNewsItems(items: string[]): string[] {
+  const next = items.map((s) => String(s || '').trim()).filter(Boolean);
+  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [BAILEY_NEWS_LINE];
+  return next.filter((s) => !isRetiredHomeNowTick(s));
+}
+
+function pinBaileyNowNewsLines(lines: string[]): string[] {
+  return lines.map((line) => {
+    const text = String(line || '');
+    if (/^News — /i.test(text) && STALE_NOW_NEWS_RE.test(text)) {
+      return `News — ${BAILEY_NEWS_LINE}`;
+    }
+    return text;
+  });
+}
+
 export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNowWeekPillar[] {
   const rows = (Array.isArray(nowWeek) ? nowWeek : [])
-    .map((row) => ({
-      key: String(row?.key || row?.label || '')
+    .map((row) => {
+      const key = String(row?.key || row?.label || '')
         .trim()
-        .toLowerCase(),
-      label: String(row?.label || '').trim(),
-      items: (row?.items || [])
-        .map((s) => String(s || '').trim())
-        .filter((s) => s && !isRetiredHomeNowTick(s)),
-    }))
+        .toLowerCase();
+      const label = String(row?.label || '').trim();
+      const rawItems = (row?.items || []).map((s) => String(s || '').trim()).filter(Boolean);
+      const isNews = key === 'news' || label === 'News';
+      return {
+        key,
+        label,
+        items: isNews ? pinBaileyNowNewsItems(rawItems) : rawItems.filter((s) => !isRetiredHomeNowTick(s)),
+      };
+    })
     .filter((row) => row.label && row.items.length);
   if (!rows.some((row) => row.key === 'season' || row.label === 'Season')) {
     const localSeason = buildLocalWeeklyNowWeek().find((row) => row.key === 'season');
@@ -509,12 +530,12 @@ export function applyHomeNowWeekPack(
  * Do not fall back to hub-bundle class-rank seed when the ticker flaps.
  */
 export function applyHomeNowTickerPack(liveItems: string[] | undefined, currentItems: string[]): string[] {
-  const live = (Array.isArray(liveItems) ? liveItems : [])
-    .map((s) => String(s || '').trim())
-    .filter(Boolean);
-  const current = (Array.isArray(currentItems) ? currentItems : [])
-    .map((s) => String(s || '').trim())
-    .filter(Boolean);
+  const live = pinBaileyNowNewsLines(
+    (Array.isArray(liveItems) ? liveItems : []).map((s) => String(s || '').trim()).filter(Boolean)
+  );
+  const current = pinBaileyNowNewsLines(
+    (Array.isArray(currentItems) ? currentItems : []).map((s) => String(s || '').trim()).filter(Boolean)
+  );
   if (live.filter(isWeeklyNowPillarLine).length >= 2) return live;
   if (current.filter(isWeeklyNowPillarLine).length >= 2) return current;
   return current.length ? current : live;
