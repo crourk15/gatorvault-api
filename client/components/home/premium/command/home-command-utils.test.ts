@@ -51,7 +51,7 @@ describe('home Game Week badge', () => {
         id: 'missouri',
         opp: 'Missouri Tigers',
         date: 'October 3, 2026 · 3:30 PM ET',
-        tv: 'ESPN',
+        tv: 'ABC',
       }),
     ]);
     assert.equal(view.gameId, 'missouri');

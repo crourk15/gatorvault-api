@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Missouri kick is **3:30 PM ET / ABC** (SEC lock Sep 27; floridagators.com broadcast card). Community game-day open + Home NOW + `/api/schedule` `tv` heal off the leftover Sep 21 ESPN window. Billy Moody called it in Locker. API + Netlify ticker edge after deploy — current App Store already live-fetches TV. Seed `schedule-data.ts` is the bake row.
 - [x] FutureCast 2028 deep audit (10/2 On3): Antonio Thomas Jr. **94%** (was 41), Jaxon Flowers **72%** (was 1), John O'Dwyer **76%** now on Closest, Tromon Isaac Miami-led residual (git 80 was poison). Corroborated Florida locks no longer temper Lab Florida chance into the 58–72 band. API after Render — no Codemagic.
 - [x] FutureCast Bubba Brown: Chad Simmons On3 RPM is Florida **98%** / Georgia 1% (Journey + Team Pred 97.7). Git stamp + HP floors + stale-low durable overlay so Render cannot keep August Georgia 40 / UF 19. API after Render — no Codemagic.
 - [x] Home NOW News: Lorenzo McMullen Jr. did **not** commit — On3 still OSU-led / Florida offered. Unverified commit intel cannot take News; cached ticker + edge strip a McMullen line; hollow `status: committed` (no school) snaps back to uncommitted on read and durable disk. API + Netlify edge after deploy — no Codemagic.
@@ -194,6 +195,8 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-03 | Home NOW last-good: rewrite leftover Missouri **ESPN → ABC**. **Ticker edge + `/api/schedule` already ABC after deploy.** | `home-command-utils.ts` in binary. 1.0.29 last-good can keep ESPN until a live pack lands. | this PR |
+| 2026-10-03 | Schedule first-paint seed: Missouri TV **ABC** (not leftover ESPN). **`/api/schedule` + ticker already ABC after Render.** | `schedule-data.ts` in binary. 1.0.29 last-good still paints ESPN if the API 502s. | this PR |
 | 2026-10-02 | Home NOW: pin Samuel Bailey when News is a false McMullen (or leftover Cyion). **Web after Netlify. iOS 1.0.29 already last-good Bailey — do not bake for this.** | `home-command-utils.ts` in binary. API + edge already strip McMullen after #784. | this PR |
 | 2026-10-01 | Roster Stats tab: CMP/ATT · YDS · TD · INT + one card per game (pass + rush). **Season totals are API after Render.** | `RosterProfilePage` + `roster-production-stats.ts` in binary. Old binary still paints a lone CMP and duplicate week rows. | this PR |
 | 2026-09-30 | App Store **1.0.30** / build **98** (schedule live-only scores). **1.0.29 is the live binary — do not re-upload.** | `MARKETING_VERSION` 1.0.30. Charles asked for this train. | this PR |

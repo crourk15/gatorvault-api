@@ -96,7 +96,7 @@ describe('schedule-board', () => {
     const mizzou = board.games.find((g) => g.id === 'missouri');
     assert.match(mizzou.venue, /Faurot/i);
     assert.equal(mizzou.date, 'October 3, 2026 · 3:30 PM ET');
-    assert.equal(mizzou.tv, 'ESPN');
+    assert.equal(mizzou.tv, 'ABC');
     const bye = board.games.find((g) => g.id === 'bye-oct24');
     assert.equal(bye.kind, 'bye');
     assert.match(bye.date, /OFF/i);
@@ -274,7 +274,7 @@ describe('schedule-board', () => {
     assert.equal(clark?.role, missouri.howUFWins[2]);
     assert.equal(missouri.filmWatched, false);
     assert.equal(missouri.date, 'October 3, 2026 · 3:30 PM ET');
-    assert.equal(missouri.tv, 'ESPN');
+    assert.equal(missouri.tv, 'ABC');
     assert.equal(missouri.ufPct, 71);
     assert.equal(missouri.pred, 'UF 34 · Missouri 24');
     assert.equal(missouri.predConfidence, 78);

@@ -124,11 +124,11 @@ describe('schedule uniform board', () => {
       const board = fresh.getScheduleBoard(2026);
       const missouri = board.games.find((g) => g.id === 'missouri');
       assert.equal(missouri.date, 'October 3, 2026 · 3:30 PM ET');
-      assert.equal(missouri.tv, 'ESPN');
+      assert.equal(missouri.tv, 'ABC');
       const rewritten = JSON.parse(fs.readFileSync(file, 'utf8'));
       const rewrittenMiz = rewritten.games.find((g) => g.id === 'missouri');
       assert.equal(rewrittenMiz.date, 'October 3, 2026 · 3:30 PM ET');
-      assert.equal(rewrittenMiz.tv, 'ESPN');
+      assert.equal(rewrittenMiz.tv, 'ABC');
     } finally {
       if (prev == null) delete process.env.GV_SCHEDULE_PATH;
       else process.env.GV_SCHEDULE_PATH = prev;
@@ -246,6 +246,30 @@ describe('schedule uniform board', () => {
       assert.match(olemiss.howUFWins[0], /contain equity/);
       assert.match(olemiss.film, /goes as Trinidad Chambliss goes/i);
       assert.equal(olemiss.boxScoreUrl, 'https://example.com/kept-box');
+    } finally {
+      if (prev == null) delete process.env.GV_SCHEDULE_PATH;
+      else process.env.GV_SCHEDULE_PATH = prev;
+      delete require.cache[require.resolve('../lib/schedule-board')];
+    }
+  });
+
+  it('getScheduleBoard heals durable Missouri ESPN to the ABC lock', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-sched-miz-tv-'));
+    const file = path.join(tmp, '2026-season.json');
+    const seed = JSON.parse(
+      fs.readFileSync(path.join(__dirname, '..', 'data/schedule/2026-season.json'), 'utf8')
+    );
+    seed.updatedAt = '2099-01-01T00:00:00.000Z';
+    seed.games = seed.games.map((g) => (g.id === 'missouri' ? { ...g, tv: 'ESPN' } : g));
+    fs.writeFileSync(file, JSON.stringify(seed));
+    const prev = process.env.GV_SCHEDULE_PATH;
+    process.env.GV_SCHEDULE_PATH = file;
+    try {
+      delete require.cache[require.resolve('../lib/schedule-board')];
+      const fresh = require('../lib/schedule-board');
+      const board = fresh.getScheduleBoard(2026);
+      const missouri = board.games.find((g) => g.id === 'missouri');
+      assert.equal(missouri.tv, 'ABC');
     } finally {
       if (prev == null) delete process.env.GV_SCHEDULE_PATH;
       else process.env.GV_SCHEDULE_PATH = prev;

@@ -28,6 +28,15 @@ describe('community gameday open', () => {
     assert.equal(prompt.categorySlug, 'locker');
   });
 
+  it('Missouri Saturday open says 3:30 on ABC, not ESPN', () => {
+    const prompt = pickGamedayOpen({ asOf: '2026-10-03T16:00:00.000Z' });
+    assert.ok(prompt);
+    assert.equal(prompt.title, 'Game day talk: Florida vs Missouri');
+    assert.match(prompt.body, /3:30 PM ET on ABC/);
+    assert.doesNotMatch(prompt.body, /ESPN/);
+    assert.match(prompt.body, /Faurot/);
+  });
+
   it('returns null on a non-game ET day', () => {
     assert.equal(pickGamedayOpen({ asOf: '2026-09-06T16:00:00.000Z' }), null);
   });

@@ -59,10 +59,11 @@ test('buildHomeNowGameStory stamps Ole Miss Game Week from the slate', () => {
   assert.equal(buildHomeNowGameStory(new Date('2026-07-15T16:00:00.000Z')), null);
 });
 
-test('buildHomeNowGameStory stamps Missouri 3:30 PM · ESPN, not a 3:30–8:00 window', () => {
+test('buildHomeNowGameStory stamps Missouri 3:30 PM · ABC, not a 3:30–8:00 window', () => {
   const line = buildHomeNowGameStory(new Date('2026-09-27T16:00:00.000Z'));
   assert.match(String(line), /Missouri/);
   assert.match(String(line), /3:30 PM/);
-  assert.match(String(line), /ESPN/);
+  assert.match(String(line), /ABC/);
+  assert.doesNotMatch(String(line), /ESPN/);
   assert.doesNotMatch(String(line), /3:30\s*[-–]\s*8:00/);
 });
