@@ -10,6 +10,50 @@ const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '4-0 heading into Saturday';
 const BAILEY_NEWS_LINE = 'Samuel Bailey commits to Florida · No. 36';
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen/i;
+/** Sep 21 was ABC-or-ESPN. SEC locked ABC Sep 27. Git ESPN overlay snapped NOW back. */
+const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri/i;
+
+function pinMissouriAbcLine(line) {
+  const text = String(line || '');
+  if (!MISSOURI_ESPN_NOW_RE.test(text) && !(/3:30/i.test(text) && /espn/i.test(text) && /faurot|missouri/i.test(text))) {
+    return text;
+  }
+  return text.replace(/\bESPN\b/g, 'ABC');
+}
+
+function pinMissouriAbcNow(data) {
+  if (!data || typeof data !== 'object') return { data, changed: false };
+  const out = { ...data };
+  let changed = false;
+
+  if (Array.isArray(out.items)) {
+    const next = out.items.map((line) => (typeof line === 'string' ? pinMissouriAbcLine(line) : line));
+    if (next.some((line, i) => line !== out.items[i])) {
+      out.items = next;
+      changed = true;
+    }
+  }
+  if (Array.isArray(out.nowWeek)) {
+    const next = out.nowWeek.map((row) => {
+      if (!row || typeof row !== 'object') return row;
+      const items = Array.isArray(row.items) ? row.items.map((s) => pinMissouriAbcLine(String(s || ''))) : row.items;
+      if (JSON.stringify(items) !== JSON.stringify(row.items)) return { ...row, items };
+      return row;
+    });
+    if (JSON.stringify(next) !== JSON.stringify(out.nowWeek)) {
+      out.nowWeek = next;
+      changed = true;
+    }
+  }
+  if (Array.isArray(out.ticker)) {
+    const next = out.ticker.map((line) => (typeof line === 'string' ? pinMissouriAbcLine(line) : line));
+    if (next.some((line, i) => line !== out.ticker[i])) {
+      out.ticker = next;
+      changed = true;
+    }
+  }
+  return { data: out, changed };
+}
 
 const TICKER_FALLBACK = {
   ok: true,
@@ -538,6 +582,11 @@ export default async (request, context) => {
     const news = pinBaileyNowNews(data);
     if (news.changed) {
       data = news.data;
+      changed = true;
+    }
+    const abc = pinMissouriAbcNow(data);
+    if (abc.changed) {
+      data = abc.data;
       changed = true;
     }
   }

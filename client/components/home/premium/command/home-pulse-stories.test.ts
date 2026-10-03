@@ -421,6 +421,14 @@ describe('resolveHomeNowWeekPillars', () => {
 });
 
 describe('usableHomeNowWeek drops the retired App Store tick', () => {
+  it('rewrites leftover Missouri ESPN to ABC on last-good', () => {
+    const rows = usableHomeNowWeek([
+      { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },
+      { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
+    ]);
+    assert.equal(rows[0].items[0], 'Missouri at Faurot Field — 3:30 PM · ABC');
+  });
+
   it('pins leftover Cyion News to Samuel Bailey', () => {
     const rows = usableHomeNowWeek([
       { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ABC'] },

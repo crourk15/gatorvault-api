@@ -20,6 +20,12 @@ test('ticker edge strips the 1.0.29 App Store line and falls back when origin 50
   assert.equal(/1\.0\.29 is live/.test(src), false);
 });
 
+test('ticker edge rewrites leftover Missouri ESPN to ABC', () => {
+  assert.match(src, /pinMissouriAbcNow/);
+  assert.match(src, /MISSOURI_ESPN_NOW_RE/);
+  assert.match(src, /replace\(\/\\bESPN\\b\/g, 'ABC'\)/);
+});
+
 test('ticker edge rewrites leftover Cyion NOW News to Samuel Bailey', () => {
   assert.match(src, /pinBaileyNowNews/);
   assert.match(src, /STALE_NOW_NEWS_RE/);

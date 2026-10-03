@@ -426,6 +426,13 @@ const RETIRED_NOW_TICK_RE = /1\.0\.29|update in the App Store/i;
 /** Cyion Sep 26 / false McMullen must not beat Bailey (Sep 28) on NOW News. */
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen/i;
 const BAILEY_NEWS_LINE = 'Samuel Bailey commits to Florida · No. 36';
+const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri|faurot[\s\S]{0,40}espn/i;
+
+function pinMissouriAbcTick(text: string): string {
+  const t = String(text || '');
+  if (!MISSOURI_ESPN_NOW_RE.test(t)) return t;
+  return t.replace(/\bESPN\b/g, 'ABC');
+}
 
 let lastGoodNowWeekMemory: HomeNowWeekPillar[] | null = null;
 
@@ -463,7 +470,9 @@ export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNow
       return {
         key,
         label,
-        items: isNews ? pinBaileyNowNewsItems(rawItems) : rawItems.filter((s) => !isRetiredHomeNowTick(s)),
+        items: (isNews ? pinBaileyNowNewsItems(rawItems) : rawItems.filter((s) => !isRetiredHomeNowTick(s))).map(
+          pinMissouriAbcTick
+        ),
       };
     })
     .filter((row) => row.label && row.items.length);
