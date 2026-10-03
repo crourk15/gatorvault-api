@@ -39,12 +39,13 @@ test('Ole Miss week categories tick visitor names under Visitors, not ABC', () =
   assert.deepEqual(cats[2].items, ['3-0 · first SEC home Saturday']);
 });
 
-test('Missouri week NOW Game is 3:30 PM · ESPN, not a 3:30–8:00 window', () => {
+test('Missouri week NOW Game is 3:30 PM · ABC, not a 3:30–8:00 window', () => {
   const cats = buildWeeklyHomeNowCategories(new Date('2026-09-27T16:00:00.000Z'));
   assert.equal(cats[0].label, 'Game');
   assert.match(cats[0].items[0], /Missouri/);
   assert.match(cats[0].items[0], /3:30 PM/);
-  assert.match(cats[0].items[0], /ESPN/);
+  assert.match(cats[0].items[0], /ABC/);
+  assert.doesNotMatch(cats[0].items[0], /ESPN/);
   assert.doesNotMatch(cats[0].items[0], /3:30\s*[-–]\s*8:00/);
 });
 
@@ -243,12 +244,12 @@ test('cached ticker News cannot keep a false McMullen commit', () => {
     ok: true,
     status: 'ready',
     items: [
-      'Game — Missouri at Faurot Field — 3:30 PM · ESPN',
+      'Game — Missouri at Faurot Field — 3:30 PM · ABC',
       'News — Lorenzo McMullen Jr. commits to Florida · No. 25',
       'Season — 4-0 heading into Saturday',
     ],
     nowWeek: [
-      { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },
+      { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ABC'] },
       { key: 'news', label: 'News', items: ['Lorenzo McMullen Jr. commits to Florida · No. 25'] },
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ],
@@ -267,7 +268,7 @@ test('this-week Cyion Smith commit breaks into Home NOW News', () => {
 test('after the Ole Miss final NOW points at Missouri road week', () => {
   const now = new Date('2026-09-27T12:00:00.000Z');
   const lines = buildWeeklyHomeNowLines(now);
-  assert.match(lines[0], /^Game — Missouri at Faurot Field — 3:30 PM · ESPN$/);
+  assert.match(lines[0], /^Game — Missouri at Faurot Field — 3:30 PM · ABC$/);
   const rec = seasonRecord(now, getScheduleBoard(2026).games);
   assert.deepEqual(rec, { wins: 4, losses: 0 });
   assert.ok(lines.some((s) => /^Season — 4-0 heading into Saturday$/.test(s)));

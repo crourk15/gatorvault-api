@@ -423,7 +423,7 @@ describe('resolveHomeNowWeekPillars', () => {
 describe('usableHomeNowWeek drops the retired App Store tick', () => {
   it('pins leftover Cyion News to Samuel Bailey', () => {
     const rows = usableHomeNowWeek([
-      { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },
+      { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ABC'] },
       { key: 'news', label: 'News', items: ['Cyion Smith commits to Florida'] },
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
@@ -435,7 +435,7 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
 
   it('pins a false McMullen News line to Samuel Bailey so web matches iOS', () => {
     const rows = usableHomeNowWeek([
-      { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },
+      { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ABC'] },
       { key: 'news', label: 'News', items: ['Lorenzo McMullen Jr. commits to Florida · No. 25'] },
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
@@ -504,7 +504,7 @@ describe('applyHomeNowTickerPack', () => {
   it('rewrites a false McMullen News ticker line to Samuel Bailey', () => {
     const next = applyHomeNowTickerPack(
       [
-        'Game — Missouri at Faurot Field — 3:30 PM · ESPN',
+        'Game — Missouri at Faurot Field — 3:30 PM · ABC',
         'News — Lorenzo McMullen Jr. commits to Florida · No. 25',
         'Season — 4-0 heading into Saturday',
       ],

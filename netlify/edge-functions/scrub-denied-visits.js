@@ -15,12 +15,12 @@ const TICKER_FALLBACK = {
   ok: true,
   status: 'ready',
   items: [
-    'Game — Missouri at Faurot Field — 3:30 PM · ESPN',
+    'Game — Missouri at Faurot Field — 3:30 PM · ABC',
     `News — ${BAILEY_NEWS_LINE}`,
     `Season — ${SEASON_STANDING}`,
   ],
   nowWeek: [
-    { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },
+    { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ABC'] },
     { key: 'news', label: 'News', items: [BAILEY_NEWS_LINE] },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],
