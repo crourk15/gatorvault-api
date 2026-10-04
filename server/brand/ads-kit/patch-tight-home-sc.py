@@ -41,28 +41,103 @@ LABEL = (138, 146, 160)
 # 5.38-7.48 FutureCast core — leave alone.
 # 7.48-11.50 stadium Home (Home is back before the old 7.80 cut).
 # 11.50-15.04 end card — warp glass only, keep GATOR VAULT / App Store.
-FC_T0, FC_T1 = 5.38, 7.48
+FC_T0, FC_T1 = 5.36, 7.48
 CLOSEUP_T1 = 1.80
 END_T0 = 11.50
 
 
-def font(size: int, bold: bool = True) -> ImageFont.FreeTypeFont:
-    path = (
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-        if bold
-        else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-    )
+def font(size: int, weight: str = "bold") -> ImageFont.FreeTypeFont:
+    files = {
+        "bold": "/usr/share/fonts/truetype/macos/Inter-Bold.ttf",
+        "semi": "/usr/share/fonts/truetype/macos/Inter-SemiBold.ttf",
+        "med": "/usr/share/fonts/truetype/macos/Inter-Medium.ttf",
+        "reg": "/usr/share/fonts/truetype/macos/Inter-Regular.ttf",
+    }
+    path = files.get(weight) or files["reg"]
+    if not Path(path).exists():
+        path = (
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+            if weight in ("bold", "semi")
+            else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+        )
     return ImageFont.truetype(path, max(8, int(size)))
 
 
+def _rounded(d: ImageDraw.ImageDraw, box, radius: int, fill, outline=None, width: int = 2) -> None:
+    d.rounded_rectangle(box, radius=radius, fill=fill, outline=outline, width=width)
+
+
 def patch_home_plate() -> Image.Image:
-    """This-week Home from Charles's screen recording — Game Week + GatorNation Live."""
-    src = GNL_PLATE if GNL_PLATE.exists() else HOME_SRC
-    im = Image.open(src).convert("RGB")
-    src_w, src_h = im.size
-    s = 1080 / src_w
-    im = im.resize((1080, int(src_h * s)), Image.Resampling.LANCZOS)
-    return im.filter(ImageFilter.UnsharpMask(radius=1.1, percent=105, threshold=2))
+    """Phone-aspect Home: header + NOW + real Game Week + GNL peek.
+
+    Matches the live cut's original glass (top of Home), not a scrolled crop.
+    """
+    rec = Image.open(GNL_PLATE).convert("RGB") if GNL_PLATE.exists() else None
+    pw, ph = 1080, 2340
+    bg = (13, 17, 29)
+    im = Image.new("RGB", (pw, ph), bg)
+    d = ImageDraw.Draw(im)
+
+    pad = 48
+    d.text((pad, 56), "GATORVAULT", font=font(54, "bold"), fill=WHITE)
+    d.text(
+        (pad, 128),
+        "Only Gators get a live — recruiting, FutureCast,",
+        font=font(20, "reg"),
+        fill=(196, 202, 212),
+    )
+    d.text(
+        (pad, 156),
+        "team, and GNL in one vault.",
+        font=font(20, "reg"),
+        fill=(196, 202, 212),
+    )
+
+    pill_y, pill_h = 214, 56
+    gap = 14
+    pill_w = (pw - pad * 2 - gap * 2) // 3
+    pills = [
+        (pad, "RECRUITING", True),
+        (pad + pill_w + gap, "FUTURECAST", True),
+        (pad + 2 * (pill_w + gap), "GNL LIVE", False),
+    ]
+    for x, label, filled in pills:
+        box = (x, pill_y, x + pill_w, pill_y + pill_h)
+        if filled:
+            _rounded(d, box, 28, ORANGE)
+            d.text((x + pill_w / 2, pill_y + pill_h / 2), label, font=font(15, "semi"), fill=WHITE, anchor="mm")
+        else:
+            _rounded(d, box, 28, bg, outline=(210, 214, 222), width=3)
+            d.text((x + pill_w / 2, pill_y + pill_h / 2), label, font=font(15, "semi"), fill=WHITE, anchor="mm")
+
+    now_y = 310
+    d.text((pad, now_y), "NOW", font=font(22, "bold"), fill=ORANGE)
+    rows = [
+        ("GAME", "South Carolina  ·  12:45 PM  ·  SECN"),
+        ("VISITORS", "Easton Royal"),
+        ("SEASON", "4-1  ·  SEC home Saturday"),
+    ]
+    y = now_y + 48
+    for lab, val in rows:
+        d.text((pad, y), lab, font=font(20, "semi"), fill=LABEL)
+        d.text((pad + 200, y), val, font=font(22, "reg"), fill=WHITE)
+        y += 46
+
+    # Real Game Week + GNL from Charles's recording, fitted under the header.
+    if rec is not None:
+        rw, rh = rec.size
+        # 0–1680 = Game Week through Open the vault; 1680–2000 = GNL card.
+        gw = rec.crop((0, 0, rw, min(rh, 1680)))
+        gnl = rec.crop((0, min(rh, 1680), rw, rh))
+        scale = pw / rw
+        gw = gw.resize((pw, max(1, int(gw.size[1] * scale))), Image.Resampling.LANCZOS)
+        gnl = gnl.resize((pw, max(1, int(gnl.size[1] * scale))), Image.Resampling.LANCZOS)
+        y_gw = 510
+        im.paste(gw, (0, y_gw))
+        y_gnl = min(ph - gnl.size[1], y_gw + gw.size[1])
+        im.paste(gnl, (0, y_gnl))
+        # If there's a gap, fill with navy (already the canvas).
+    return im.filter(ImageFilter.UnsharpMask(radius=1.0, percent=90, threshold=2))
 
 
 def classify(sec: float, yel: int, white: int, orange: int) -> str:
@@ -147,21 +222,24 @@ def pill_cluster(bars: list[tuple[int, int, int, int]]) -> tuple[int, int, int, 
     return (x0, y0, x1 - x0, y1 - y0)
 
 
-def valid_quad(q: np.ndarray | None) -> bool:
+def valid_quad(q: np.ndarray | None, closeup: bool = False) -> bool:
     if q is None:
         return False
     xs, ys = q[:, 0], q[:, 1]
     w = float(xs.max() - xs.min())
     h = float(ys.max() - ys.min())
     cx = float((xs.min() + xs.max()) / 2)
-    if w < 260 or w > 860:
+    max_w = 1040 if closeup else 860
+    max_h = 1820 if closeup else 1760
+    min_w = 240 if closeup else 260
+    if w < min_w or w > max_w:
         return False
-    if h < 500 or h > 1760:
+    if h < 500 or h > max_h:
         return False
-    if abs(cx - W / 2) > 170:
+    if abs(cx - W / 2) > (220 if closeup else 170):
         return False
     ar = h / max(w, 1)
-    if ar < 1.50 or ar > 2.75:
+    if ar < 1.45 or ar > (2.95 if closeup else 2.75):
         return False
     return True
 
@@ -182,10 +260,16 @@ def inset_quad(quad: np.ndarray, fx: float = 0.06, fy: float = 0.05) -> np.ndarr
 def quad_from_cta(cta: tuple[int, int, int, int], width_div: float = 0.86) -> np.ndarray:
     x, y, bw, bh = cta
     aspect = 19.5 / 9.0
-    if bw >= 520:
-        # Pull-back: CTA is wide. Do not let the plate cover the silver bezel.
-        width_div = 0.97
-        aspect = 2.22
+    if bw >= 500:
+        # Large phone: fill glass from under the island to the Open Game Week bar.
+        width_div = 0.90
+        sw = bw / width_div
+        bottom = min(H - 4.0, y + bh + 8.0)
+        top = max(150.0, bottom - min(sw * 2.35, bottom - 150.0))
+        cx = x + bw / 2.0
+        left = cx - sw / 2.0
+        right = cx + sw / 2.0
+        return np.array([[left, top], [right, top], [right, bottom], [left, bottom]], dtype=np.float32)
     sw = bw / width_div
     sh = sw * aspect
     cx = x + bw / 2.0
@@ -228,7 +312,24 @@ def rim_phone(bgr: np.ndarray) -> np.ndarray | None:
     return best if valid_quad(best) else None
 
 
+def closeup_quad(bgr: np.ndarray) -> np.ndarray | None:
+    """Full glass on the opening crop — keep the island and side chrome."""
+    bars = orange_bars(bgr)
+    cta = best_cta(bars)
+    if cta is None:
+        return None
+    q = quad_from_cta(cta)
+    q[:, 0] = np.clip(q[:, 0], 42, W - 43)
+    q[0, 1] = max(float(q[0, 1]), 208.0)
+    q[1, 1] = max(float(q[1, 1]), 208.0)
+    q[2, 1] = float(H - 6)
+    q[3, 1] = float(H - 6)
+    return q if valid_quad(q, closeup=True) else None
+
+
 def find_screen_quad(bgr: np.ndarray, kind: str) -> np.ndarray | None:
+    if kind == "closeup":
+        return closeup_quad(bgr)
     bars = orange_bars(bgr)
     cta = best_cta(bars)
     if kind == "endcard":
@@ -244,14 +345,17 @@ def find_screen_quad(bgr: np.ndarray, kind: str) -> np.ndarray | None:
         # Rim must roughly match the CTA width. Otherwise it is the bezel+fog blob.
         rim_w = float(rim[:, 0].max() - rim[:, 0].min())
         if 0.85 * cta[2] < rim_w < 1.55 * cta[2]:
-            glass = inset_quad(rim, 0.058, 0.052)
-            bottom = float(cta[1] + cta[3] + 7)
+            glass = inset_quad(rim, 0.078, 0.062)
+            bottom = float(cta[1] + cta[3] + 4)
             glass[2, 1] = bottom
             glass[3, 1] = bottom
+            # Pull-back phones: keep the plate inside the black glass, not the silver rim.
+            if float(glass[:, 0].max() - glass[:, 0].min()) > 600:
+                glass = inset_quad(glass, 0.045, 0.012)
             if valid_quad(glass):
                 return glass
     if rim is not None and valid_quad(inset_quad(rim)):
-        return inset_quad(rim, 0.058, 0.052)
+        return inset_quad(rim, 0.078, 0.062)
     if cta is not None:
         q = quad_from_cta(cta)
         q[:, 0] = np.clip(q[:, 0], 0, W - 1)
@@ -276,55 +380,38 @@ def sample_bg_rgb(bgr: np.ndarray, box: tuple[int, int, int, int]) -> tuple[int,
     return (int(med[2]), int(med[1]), int(med[0]))
 
 
-def paint_now_rows(rgb: Image.Image, bgr: np.ndarray) -> Image.Image:
-    """In-place NOW rewrite. No stuck-on card. Covers leftover 4-0."""
+def closeup_now_patch(rgb: Image.Image, bgr: np.ndarray, plate: Image.Image) -> Image.Image:
+    """Drop the clean NOW block from the plate onto the close-up glass. Soft edges."""
     bars = orange_bars(bgr)
     pills = pill_cluster(bars)
-    if pills is None:
-        x0, y_pills_bot, x1 = 56, 1110, 1024
-        pw = x1 - x0
-    else:
-        px, py, pw, ph = pills
-        x0 = max(28, px - 8)
-        x1 = min(W - 28, px + int(pw * 1.55))
-        if x1 - x0 < 720:
-            x1 = min(W - 28, x0 + max(pw + 80, 860))
-        y_pills_bot = py + ph
-    # Only use a nearby Game Week rule — the close-up bottom rail is too far down.
-    thin = [
+    y_pills_bot = pills[1] + pills[3] if pills else 1110
+    x0 = max(20, pills[0] - 8) if pills else 36
+    x1 = min(W - 20, pills[0] + int(pills[2] * 1.62)) if pills else 1040
+    if x1 - x0 < 720:
+        x1 = min(W - 20, x0 + 940)
+    now_marks = [
         b
         for b in bars
-        if b[3] <= 24 and y_pills_bot + 80 < b[1] < y_pills_bot + 520
+        if 16 <= b[3] <= 55 and 40 <= b[2] <= 140 and y_pills_bot + 40 < b[1] < y_pills_bot + 320
     ]
-    if thin:
-        y1 = thin[0][1] - 18
-    else:
-        y1 = min(H - 180, y_pills_bot + max(470, int((x1 - x0) * 0.50)))
-    y0 = y_pills_bot + 20
-    if y1 - y0 < 200:
-        y1 = y0 + 420
-    bg = sample_bg_rgb(bgr, (x0, max(0, y_pills_bot - 12), x1, y_pills_bot + 18))
-    im = rgb.copy()
-    d = ImageDraw.Draw(im)
-    # Opaque — leftover Missouri / Bailey cannot show through.
-    d.rectangle((x0, y0, x1, y1), fill=bg)
-    scale = (x1 - x0) / 960.0
-    fs_lab = max(15, int(26 * scale))
-    fs_val = max(16, int(29 * scale))
-    lx = x0 + int(22 * scale)
-    vx = x0 + int(200 * scale)
-    d.text((lx, y0 + int(8 * scale)), "NOW", font=font(max(14, int(24 * scale))), fill=ORANGE)
-    rows = [
-        ("GAME", "South Carolina  ·  12:45 PM  ·  SECN", WHITE),
-        ("VISITORS", "Easton Royal", WHITE),
-        ("SEASON", "4-1  ·  SEC home Saturday", WHITE),
-    ]
-    y = y0 + int(48 * scale)
-    for lab, val, col in rows:
-        d.text((lx, y), lab, font=font(fs_lab), fill=LABEL)
-        d.text((vx, y), val, font=font(fs_val, False), fill=col)
-        y += int(50 * scale)
-    return im
+    ny = min(now_marks, key=lambda b: b[1])[1] if now_marks else y_pills_bot + 170
+    # Stop above Game Week — keep the 3D Game Week title.
+    thin = [b for b in bars if b[3] <= 22 and ny + 200 < b[1] < ny + 560]
+    y1 = (thin[0][1] - 18) if thin else min(H - 190, ny + 390)
+
+    # Plate NOW lives under the pills (y≈300–500 on the 2340 plate).
+    src = plate.crop((0, 292, plate.size[0], 508))
+    dest_w, dest_h = max(8, x1 - x0), max(8, y1 - ny)
+    src = src.resize((dest_w, dest_h), Image.Resampling.LANCZOS)
+
+    overlay = Image.new("RGBA", rgb.size, (0, 0, 0, 0))
+    overlay.paste(src.convert("RGBA"), (x0, ny))
+    mask = Image.new("L", rgb.size, 0)
+    md = ImageDraw.Draw(mask)
+    md.rectangle((x0, ny, x1, y1), fill=255)
+    mask = mask.filter(ImageFilter.GaussianBlur(radius=7))
+    base = rgb.convert("RGBA")
+    return Image.composite(overlay, base, mask).convert("RGB")
 
 
 def rounded_quad_mask(quad: np.ndarray) -> np.ndarray:
@@ -356,7 +443,8 @@ def smooth_quads(quads: list[np.ndarray | None], kinds: list[str]) -> list[np.nd
     prev = None
     prev_kind = None
     for q, kind in zip(quads, kinds):
-        if q is None or not valid_quad(q):
+        close = kind == "closeup"
+        if q is None or not valid_quad(q, closeup=close):
             out.append(None)
             prev = None
             prev_kind = kind
@@ -366,8 +454,8 @@ def smooth_quads(quads: list[np.ndarray | None], kinds: list[str]) -> list[np.nd
             prev = q
         else:
             sm = (0.78 * q + 0.22 * prev).astype(np.float32)
-            out.append(sm if valid_quad(sm) else q)
-            prev = sm if valid_quad(sm) else q
+            out.append(sm if valid_quad(sm, closeup=close) else q)
+            prev = sm if valid_quad(sm, closeup=close) else q
         prev_kind = kind
     return out
 
@@ -401,29 +489,37 @@ def main() -> None:
         yel, white, orange = frame_stats(bgr)
         kind = classify(sec, yel, white, orange)
         kinds.append(kind)
-        if kind in ("stadium", "endcard"):
+        if kind in ("stadium", "endcard", "closeup"):
             quads.append(find_screen_quad(bgr, kind))
         else:
             quads.append(None)
     quads = smooth_quads(quads, kinds)
 
+    last_q = None
+    last_kind = None
     for i, p in enumerate(paths):
         sec = i / FPS
         bgr = cv2.imread(str(p))
         kind = kinds[i]
         if kind == "futurecast":
             out = bgr
+            last_q = None
         elif kind == "closeup":
-            rgb = Image.fromarray(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))
-            rgb = paint_now_rows(rgb, bgr)
-            out = cv2.cvtColor(np.array(rgb), cv2.COLOR_RGB2BGR)
-        else:
             q = quads[i]
             if q is not None:
                 out = warp_home(bgr, plate_bgr, q)
+                last_q, last_kind = q, kind
+            else:
+                rgb = Image.fromarray(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))
+                out = cv2.cvtColor(np.array(closeup_now_patch(rgb, bgr, plate)), cv2.COLOR_RGB2BGR)
+        else:
+            q = quads[i] if quads[i] is not None else (last_q if last_kind == kind else None)
+            if q is not None:
+                out = warp_home(bgr, plate_bgr, q)
+                last_q, last_kind = q, kind
             elif sec < 2.35:
                 rgb = Image.fromarray(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))
-                out = cv2.cvtColor(np.array(paint_now_rows(rgb, bgr)), cv2.COLOR_RGB2BGR)
+                out = cv2.cvtColor(np.array(closeup_now_patch(rgb, bgr, plate)), cv2.COLOR_RGB2BGR)
             else:
                 out = bgr
         cv2.imwrite(str(FRAMES_OUT / f"f{i:04d}.jpg"), out, [int(cv2.IMWRITE_JPEG_QUALITY), 93])

@@ -14,16 +14,14 @@ Do not run this as a website-traffic campaign. Destination is the App Store.
 
 Keep the live ad **App screen — live cut**. Do not remake it. Do not send it back through Runway.
 
-This file is that same 15s 9:16 cut with **only the homepage** swapped to this week. Stadium / end-card glass now shows Game Week (Florida vs South Carolina) plus **GatorNation Live / Open GNL** from Charles's Oct 4 Home recording.
+This file is that same 15s 9:16 cut with the homepage rebuilt so it looks like the real iOS Home on the glass: header, NOW (South Carolina week), Game Week (Florida vs South Carolina), and **GatorNation Live / Open GNL**.
 
 | File | Role |
 |---|---|
-| `creatives/fb-tight-home-sc-15s.mp4` | **The ad.** Same phone, stadium, FutureCast, end card, audio. Home is South Carolina week + GNL. |
+| `creatives/fb-tight-home-sc-15s.mp4` | **The ad.** Same phone, stadium, FutureCast, end card, audio. Home is this week + GNL. |
 | `creatives/fb-tight-home-sc-still.jpg` | Optional 9:16 static if you want a cheap second format. |
 
 Upload `fb-tight-home-sc-15s.mp4` into the same App Install ad. Replace the creative. Do not pause the winner and start a new ad.
-
-Do not upload `fb-ugc-sc-week-15s.mp4` (white hand). The elite poster is a lookbook, not the install primary.
 
 Rebuild:
 
@@ -31,8 +29,8 @@ Rebuild:
 python3 server/brand/ads-kit/patch-tight-home-sc.py
 ```
 
-Source cut (the one that is already converting): `source/gatorvault-ad-tight-15s.mp4`
-Home plate (Charles recording): `source/home-sc-gnl.png`
+Source cut: `source/gatorvault-ad-tight-15s.mp4`
+Home plate: `source/home-sc-look.png` (built from Charles's Oct 4 recording)
 
 ---
 
@@ -54,8 +52,8 @@ CTA: **Install now**
 - GAME — South Carolina · 12:45 PM · SECN
 - VISITORS — Easton Royal
 - SEASON — 4-1 · SEC home Saturday
-- Game Week card — Florida vs South Carolina, Oct 10, 12:45 ET, Ben Hill Griffin
-- **GatorNation Live** card — Open GNL → (from the Oct 4 Home recording)
+- Game Week — Florida vs South Carolina, Oct 10, 12:45 ET, Ben Hill Griffin
+- GatorNation Live — Open GNL →
 
 Bailey stays off. Missouri stays off. ABC-or-SECN stays off.
 
@@ -65,7 +63,6 @@ Bailey stays off. Missouri stays off. ABC-or-SECN stays off.
 
 - Do not remake the 3D phone / stadium / FutureCast / end card
 - Do not run Runway on this cut
-- Do not upload the raw Home screenshots
 - Do not run the white-hand UGC
 - Do not send traffic to gatorvaultinsider.com
 - Do not start Codemagic
