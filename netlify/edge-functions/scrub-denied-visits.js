@@ -9,7 +9,10 @@ const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolR
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '4-1 · SEC home Saturday';
 const BAILEY_NEWS_LINE = 'Samuel Bailey commits to Florida · No. 36';
+const SC_NOW_GAME = 'South Carolina in the Swamp · ABC or SEC Network';
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen/i;
+/** Posted Missouri final — last-good Faurot / 4-0 must not beat South Carolina week. */
+const LEFTOVER_MISSOURI_NOW_RE = /missouri|faurot|4-0 heading into saturday/i;
 /** Sep 21 was ABC-or-ESPN. SEC locked ABC Sep 27. Git ESPN overlay snapped NOW back. */
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri/i;
 
@@ -19,6 +22,48 @@ function pinMissouriAbcLine(line) {
     return text;
   }
   return text.replace(/\bESPN\b/g, 'ABC');
+}
+
+function leftoverMissouriBlob(data) {
+  const parts = [];
+  if (Array.isArray(data?.items)) parts.push(data.items.join(' '));
+  if (Array.isArray(data?.ticker)) parts.push(data.ticker.join(' '));
+  if (Array.isArray(data?.nowWeek)) {
+    for (const row of data.nowWeek) {
+      if (!row || typeof row !== 'object') continue;
+      parts.push(`${row.key || ''} ${row.label || ''} ${(row.items || []).join(' ')}`);
+    }
+  }
+  return parts.join(' ');
+}
+
+function pinLeftoverMissouriNow(data) {
+  if (!data || typeof data !== 'object') return { data, changed: false };
+  if (!LEFTOVER_MISSOURI_NOW_RE.test(leftoverMissouriBlob(data))) return { data, changed: false };
+  const newsRow = Array.isArray(data.nowWeek)
+    ? data.nowWeek.find((row) => row && (row.key === 'news' || row.label === 'News'))
+    : null;
+  const newsItems = Array.isArray(newsRow?.items)
+    ? newsRow.items.map((s) => String(s || '').trim()).filter(Boolean)
+    : [];
+  const news = newsItems.some((s) => STALE_NOW_NEWS_RE.test(s)) || !newsItems.length
+    ? [BAILEY_NEWS_LINE]
+    : newsItems;
+  return {
+    data: {
+      ...data,
+      items: [`Game — ${SC_NOW_GAME}`, `News — ${news[0]}`, `Season — ${SEASON_STANDING}`],
+      nowWeek: [
+        { key: 'game', label: 'Game', items: [SC_NOW_GAME] },
+        { key: 'news', label: 'News', items: news },
+        { key: 'season', label: 'Season', items: [SEASON_STANDING] },
+      ],
+      ...(Array.isArray(data.ticker)
+        ? { ticker: [`Game — ${SC_NOW_GAME}`, `News — ${news[0]}`, `Season — ${SEASON_STANDING}`] }
+        : {}),
+    },
+    changed: true,
+  };
 }
 
 function pinMissouriAbcNow(data) {
@@ -582,6 +627,11 @@ export default async (request, context) => {
     const news = pinBaileyNowNews(data);
     if (news.changed) {
       data = news.data;
+      changed = true;
+    }
+    const week = pinLeftoverMissouriNow(data);
+    if (week.changed) {
+      data = week.data;
       changed = true;
     }
     const abc = pinMissouriAbcNow(data);

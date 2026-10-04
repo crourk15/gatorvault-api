@@ -427,11 +427,42 @@ const RETIRED_NOW_TICK_RE = /1\.0\.29|update in the App Store/i;
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen/i;
 const BAILEY_NEWS_LINE = 'Samuel Bailey commits to Florida · No. 36';
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri|faurot[\s\S]{0,40}espn/i;
+/** Posted Missouri final — last-good Faurot / 4-0 must not beat South Carolina week. */
+const LEFTOVER_MISSOURI_NOW_RE = /missouri|faurot|4-0 heading into saturday/i;
+const SOUTH_CAROLINA_NOW_GAME = 'South Carolina in the Swamp · ABC or SEC Network';
+const SOUTH_CAROLINA_NOW_SEASON = '4-1 · SEC home Saturday';
 
 function pinMissouriAbcTick(text: string): string {
   const t = String(text || '');
   if (!MISSOURI_ESPN_NOW_RE.test(t)) return t;
   return t.replace(/\bESPN\b/g, 'ABC');
+}
+
+function nowWeekBlob(rows: HomeNowWeekPillar[]): string {
+  return rows
+    .map((row) => `${row.key} ${row.label} ${(row.items || []).join(' ')}`)
+    .join(' ');
+}
+
+function pinLeftoverMissouriNowWeek(rows: HomeNowWeekPillar[]): HomeNowWeekPillar[] {
+  if (!rows.length || !LEFTOVER_MISSOURI_NOW_RE.test(nowWeekBlob(rows))) return rows;
+  const news = rows.find((row) => row.key === 'news' || row.label === 'News');
+  const newsItems = pinBaileyNowNewsItems(news?.items || []);
+  return [
+    { key: 'game', label: 'Game', items: [SOUTH_CAROLINA_NOW_GAME] },
+    { key: 'news', label: 'News', items: newsItems.length ? newsItems : [BAILEY_NEWS_LINE] },
+    { key: 'season', label: 'Season', items: [SOUTH_CAROLINA_NOW_SEASON] },
+  ];
+}
+
+function pinLeftoverMissouriTickerLines(lines: string[]): string[] {
+  const next = (Array.isArray(lines) ? lines : []).map((s) => String(s || '').trim()).filter(Boolean);
+  if (!next.length || !LEFTOVER_MISSOURI_NOW_RE.test(next.join(' '))) return next;
+  return [
+    `Game — ${SOUTH_CAROLINA_NOW_GAME}`,
+    `News — ${BAILEY_NEWS_LINE}`,
+    `Season — ${SOUTH_CAROLINA_NOW_SEASON}`,
+  ];
 }
 
 let lastGoodNowWeekMemory: HomeNowWeekPillar[] | null = null;
@@ -480,7 +511,7 @@ export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNow
     const localSeason = buildLocalWeeklyNowWeek().find((row) => row.key === 'season');
     if (localSeason) rows.push(localSeason);
   }
-  return rows.slice(0, 3);
+  return pinLeftoverMissouriNowWeek(rows.slice(0, 3));
 }
 
 export function peekLastGoodNowWeek(): HomeNowWeekPillar[] {
@@ -539,11 +570,15 @@ export function applyHomeNowWeekPack(
  * Do not fall back to hub-bundle class-rank seed when the ticker flaps.
  */
 export function applyHomeNowTickerPack(liveItems: string[] | undefined, currentItems: string[]): string[] {
-  const live = pinBaileyNowNewsLines(
-    (Array.isArray(liveItems) ? liveItems : []).map((s) => String(s || '').trim()).filter(Boolean)
+  const live = pinLeftoverMissouriTickerLines(
+    pinBaileyNowNewsLines(
+      (Array.isArray(liveItems) ? liveItems : []).map((s) => String(s || '').trim()).filter(Boolean)
+    )
   );
-  const current = pinBaileyNowNewsLines(
-    (Array.isArray(currentItems) ? currentItems : []).map((s) => String(s || '').trim()).filter(Boolean)
+  const current = pinLeftoverMissouriTickerLines(
+    pinBaileyNowNewsLines(
+      (Array.isArray(currentItems) ? currentItems : []).map((s) => String(s || '').trim()).filter(Boolean)
+    )
   );
   if (live.filter(isWeeklyNowPillarLine).length >= 2) return live;
   if (current.filter(isWeeklyNowPillarLine).length >= 2) return current;

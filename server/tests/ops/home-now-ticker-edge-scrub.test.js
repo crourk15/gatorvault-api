@@ -26,6 +26,13 @@ test('ticker edge rewrites leftover Missouri ESPN to ABC', () => {
   assert.match(src, /replace\(\/\\bESPN\\b\/g, 'ABC'\)/);
 });
 
+test('ticker edge rewrites leftover Missouri week to South Carolina', () => {
+  assert.match(src, /pinLeftoverMissouriNow/);
+  assert.match(src, /LEFTOVER_MISSOURI_NOW_RE/);
+  assert.match(src, /4-0 heading into saturday/);
+  assert.match(src, /South Carolina in the Swamp · ABC or SEC Network/);
+});
+
 test('ticker edge rewrites leftover Cyion NOW News to Samuel Bailey', () => {
   assert.match(src, /pinBaileyNowNews/);
   assert.match(src, /STALE_NOW_NEWS_RE/);

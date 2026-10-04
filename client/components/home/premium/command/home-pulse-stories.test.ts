@@ -421,12 +421,14 @@ describe('resolveHomeNowWeekPillars', () => {
 });
 
 describe('usableHomeNowWeek drops the retired App Store tick', () => {
-  it('rewrites leftover Missouri ESPN to ABC on last-good', () => {
+  it('rewrites leftover Missouri last-good to South Carolina week', () => {
     const rows = usableHomeNowWeek([
       { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
-    assert.equal(rows[0].items[0], 'Missouri at Faurot Field — 3:30 PM · ABC');
+    assert.equal(rows[0].items[0], 'South Carolina in the Swamp · ABC or SEC Network');
+    assert.equal(rows[2].items[0], '4-1 · SEC home Saturday');
+    assert.ok(!rows.some((row) => row.items.some((s) => /missouri|faurot|4-0 heading/i.test(s))));
   });
 
   it('pins leftover Cyion News to Samuel Bailey', () => {
@@ -436,6 +438,7 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
     assert.equal(rows.length, 3);
+    assert.equal(rows[0].items[0], 'South Carolina in the Swamp · ABC or SEC Network');
     assert.equal(rows[1].label, 'News');
     assert.match(rows[1].items[0], /Samuel Bailey commits to Florida/i);
     assert.ok(!rows.some((row) => row.items.some((s) => /cyion/i.test(s))));
@@ -493,6 +496,21 @@ describe('applyHomeNowWeekPack', () => {
     assert.equal(remount[0].items[0], 'Ole Miss in the Swamp · ABC');
     assert.ok(remount[1].items.includes('Easton Royal'));
   });
+
+  it('does not remount leftover Missouri 4-0 after the posted final', () => {
+    __resetLastGoodNowWeekForTest();
+    applyHomeNowWeekPack(
+      [
+        { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ABC'] },
+        { key: 'news', label: 'News', items: ['Samuel Bailey commits to Florida · No. 36'] },
+        { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
+      ],
+      []
+    );
+    const remount = applyHomeNowWeekPack([], []);
+    assert.equal(remount[0].items[0], 'South Carolina in the Swamp · ABC or SEC Network');
+    assert.equal(remount[2].items[0], '4-1 · SEC home Saturday');
+  });
 });
 
 describe('applyHomeNowTickerPack', () => {
@@ -520,5 +538,7 @@ describe('applyHomeNowTickerPack', () => {
     );
     assert.ok(next.some((line) => /News — Samuel Bailey commits to Florida/i.test(line)));
     assert.ok(!next.some((line) => /mcmullen/i.test(line)));
+    assert.ok(next.some((line) => /South Carolina in the Swamp/i.test(line)));
+    assert.ok(!next.some((line) => /missouri|faurot|4-0 heading/i.test(line)));
   });
 });
