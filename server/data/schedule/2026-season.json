@@ -1,8 +1,8 @@
 {
   "season": 2026,
-  "updatedAt": "2026-10-04T00:40:00.000Z",
+  "updatedAt": "2026-10-04T03:38:00.000Z",
   "label": "2026 Florida football schedule",
-  "source": "vault-schedule-board + Missouri 17-45 official + SC 5-game recap",
+  "source": "vault-schedule-board + Missouri 17-45 official + SEC 12:45 SECN lock",
   "predThrough": "2026-W6",
   "games": [
     {
@@ -607,10 +607,10 @@
       "kind": "game",
       "label": "Oct 10 vs South Carolina (HC)",
       "opp": "South Carolina Gamecocks",
-      "date": "October 10, 2026 · 12:00–1:00 PM ET",
+      "date": "October 10, 2026 · 12:45 PM ET",
       "venue": "Ben Hill Griffin Stadium, Gainesville FL",
       "ufPct": 73,
-      "tv": "ABC or SEC Network",
+      "tv": "SEC Network",
       "keys": [
         "Take Away the Fast Start & Crowd Sellers",
         "Close When Carolina Fades & Finish the Lead",
@@ -660,7 +660,7 @@
         "LaNorris Sellers is the quarterback. Kendal Briles calls a hurry-up. When Sellers is clean they jump you.",
         "DJ Black caught the go-ahead fourth-quarter ball against Kentucky. Then Sellers fumbled and Kentucky won it in overtime.",
         "Clayton White still calls the defense. Coverage shells are not on a sit we have. Do not invent them.",
-        "Homecoming. Retro whites. TV is still ABC or SEC Network until the SEC locks the window."
+        "Homecoming. Retro whites. SEC locked 12:45 PM ET on SEC Network."
       ],
       "opponentTendencies": [
         "Kent State they threw the lights out: 57-0 in Columbia. Towson 45-9. That is the non-conference version.",

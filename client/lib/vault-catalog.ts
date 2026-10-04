@@ -55,10 +55,10 @@ export const TICKET_GAMES: TicketGame[] = [
   },
   {
     game: '🐊 UF vs South Carolina (HC)',
-    date: 'October 10, 2026 · 12:00–1:00 PM ET',
+    date: 'October 10, 2026 · 12:45 PM ET',
     venue: 'Ben Hill Griffin Stadium, Gainesville FL',
     type: 'HOME',
-    note: 'Homecoming · TV TBD · early window',
+    note: 'Homecoming · SEC Network · 12:45 PM ET',
   },
   {
     game: '🐊 UF @ Texas',

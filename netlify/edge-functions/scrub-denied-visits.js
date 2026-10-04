@@ -9,7 +9,10 @@ const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolR
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '4-1 · SEC home Saturday';
 const BAILEY_NEWS_LINE = 'Samuel Bailey commits to Florida · No. 36';
+const SC_NOW_GAME = 'South Carolina in the Swamp — 12:45 PM · SEC Network';
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen/i;
+/** Posted Missouri final — last-good Faurot / 4-0 must not beat South Carolina week. */
+const LEFTOVER_MISSOURI_NOW_RE = /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00/i;
 /** Sep 21 was ABC-or-ESPN. SEC locked ABC Sep 27. Git ESPN overlay snapped NOW back. */
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri/i;
 
@@ -19,6 +22,48 @@ function pinMissouriAbcLine(line) {
     return text;
   }
   return text.replace(/\bESPN\b/g, 'ABC');
+}
+
+function leftoverMissouriBlob(data) {
+  const parts = [];
+  if (Array.isArray(data?.items)) parts.push(data.items.join(' '));
+  if (Array.isArray(data?.ticker)) parts.push(data.ticker.join(' '));
+  if (Array.isArray(data?.nowWeek)) {
+    for (const row of data.nowWeek) {
+      if (!row || typeof row !== 'object') continue;
+      parts.push(`${row.key || ''} ${row.label || ''} ${(row.items || []).join(' ')}`);
+    }
+  }
+  return parts.join(' ');
+}
+
+function pinLeftoverMissouriNow(data) {
+  if (!data || typeof data !== 'object') return { data, changed: false };
+  if (!LEFTOVER_MISSOURI_NOW_RE.test(leftoverMissouriBlob(data))) return { data, changed: false };
+  const newsRow = Array.isArray(data.nowWeek)
+    ? data.nowWeek.find((row) => row && (row.key === 'news' || row.label === 'News'))
+    : null;
+  const newsItems = Array.isArray(newsRow?.items)
+    ? newsRow.items.map((s) => String(s || '').trim()).filter(Boolean)
+    : [];
+  const news = newsItems.some((s) => STALE_NOW_NEWS_RE.test(s)) || !newsItems.length
+    ? [BAILEY_NEWS_LINE]
+    : newsItems;
+  return {
+    data: {
+      ...data,
+      items: [`Game — ${SC_NOW_GAME}`, `News — ${news[0]}`, `Season — ${SEASON_STANDING}`],
+      nowWeek: [
+        { key: 'game', label: 'Game', items: [SC_NOW_GAME] },
+        { key: 'news', label: 'News', items: news },
+        { key: 'season', label: 'Season', items: [SEASON_STANDING] },
+      ],
+      ...(Array.isArray(data.ticker)
+        ? { ticker: [`Game — ${SC_NOW_GAME}`, `News — ${news[0]}`, `Season — ${SEASON_STANDING}`] }
+        : {}),
+    },
+    changed: true,
+  };
 }
 
 function pinMissouriAbcNow(data) {
@@ -59,12 +104,12 @@ const TICKER_FALLBACK = {
   ok: true,
   status: 'ready',
   items: [
-    'Game — South Carolina in the Swamp · ABC or SEC Network',
+    `Game — ${SC_NOW_GAME}`,
     `News — ${BAILEY_NEWS_LINE}`,
     `Season — ${SEASON_STANDING}`,
   ],
   nowWeek: [
-    { key: 'game', label: 'Game', items: ['South Carolina in the Swamp · ABC or SEC Network'] },
+    { key: 'game', label: 'Game', items: [SC_NOW_GAME] },
     { key: 'news', label: 'News', items: [BAILEY_NEWS_LINE] },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],
@@ -73,6 +118,48 @@ const TICKER_FALLBACK = {
 
 function isTickerPath(pathname) {
   return String(pathname || '').startsWith('/api/recruiting/hub/ticker');
+}
+
+function isSchedulePath(pathname) {
+  const p = String(pathname || '');
+  return p === '/api/schedule' || p.startsWith('/api/schedule/');
+}
+
+function isPingPath(pathname) {
+  return String(pathname || '') === '/api/ping';
+}
+
+const NOW_BUST_COOKIE = 'gv-now-bust';
+const NOW_BUST_VALUE = 'scar-w6-secn';
+
+function needsNowCacheBust(request) {
+  const cookie = request?.headers?.get?.('cookie') || '';
+  return !new RegExp(`(?:^|;\\s*)${NOW_BUST_COOKIE}=${NOW_BUST_VALUE}(?:;|$)`).test(cookie);
+}
+
+function applyNowCacheBust(request, headers) {
+  if (!needsNowCacheBust(request)) return false;
+  headers.set('clear-site-data', '"cache"');
+  headers.append(
+    'set-cookie',
+    `${NOW_BUST_COOKIE}=${NOW_BUST_VALUE}; Max-Age=1209600; Path=/; Secure; SameSite=Lax`
+  );
+  headers.set('x-gv-now-bust', NOW_BUST_VALUE);
+  return true;
+}
+
+function pinCurrentScarNow(data) {
+  if (!data || typeof data !== 'object') return { data, changed: false };
+  const next = {
+    ...data,
+    status: 'ready',
+    items: TICKER_FALLBACK.items,
+    nowWeek: TICKER_FALLBACK.nowWeek,
+  };
+  const changed =
+    JSON.stringify(data.items || []) !== JSON.stringify(next.items) ||
+    JSON.stringify(data.nowWeek || []) !== JSON.stringify(next.nowWeek);
+  return { data: next, changed };
 }
 
 /** iOS last-good / URLCache can keep Cyion on NOW News after Bailey pledged. */
@@ -526,19 +613,20 @@ function heroFallbackResponse() {
   return new Response(JSON.stringify(HERO_2028_FALLBACK), { status: 200, headers });
 }
 
-function tickerFallbackResponse() {
+function tickerFallbackResponse(request) {
   const headers = new Headers();
   headers.set('content-type', 'application/json; charset=utf-8');
   headers.set('cache-control', 'no-store, must-revalidate');
   headers.set('pragma', 'no-cache');
   headers.set('x-gv-visit-scrub', 'now-edge-fallback');
+  applyNowCacheBust(request, headers);
   return new Response(JSON.stringify(TICKER_FALLBACK), { status: 200, headers });
 }
 
 export default async (request, context) => {
   const url = new URL(request.url);
   const origin = new URL(`https://gatorvault-api.onrender.com${url.pathname}${url.search}`);
-  origin.searchParams.set('gvScrub', 't12');
+  origin.searchParams.set('gvScrub', 't13');
 
   let upstream;
   try {
@@ -550,19 +638,19 @@ export default async (request, context) => {
       },
     });
   } catch {
-    if (isTickerPath(url.pathname)) return tickerFallbackResponse();
+    if (isTickerPath(url.pathname)) return tickerFallbackResponse(request);
     if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return context.next();
   }
 
   const contentType = upstream.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) {
-    if (isTickerPath(url.pathname)) return tickerFallbackResponse();
+    if (isTickerPath(url.pathname)) return tickerFallbackResponse(request);
     if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return upstream;
   }
   if (isTickerPath(url.pathname) && !upstream.ok) {
-    return tickerFallbackResponse();
+    return tickerFallbackResponse(request);
   }
   if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028 && !upstream.ok) {
     return heroFallbackResponse();
@@ -572,9 +660,26 @@ export default async (request, context) => {
   try {
     payload = await upstream.json();
   } catch {
-    if (isTickerPath(url.pathname)) return tickerFallbackResponse();
+    if (isTickerPath(url.pathname)) return tickerFallbackResponse(request);
     if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return upstream;
+  }
+
+  if (isSchedulePath(url.pathname) || isPingPath(url.pathname)) {
+    const headers = new Headers(upstream.headers);
+    headers.set('content-type', 'application/json; charset=utf-8');
+    headers.set('cache-control', 'no-store, must-revalidate');
+    headers.set('pragma', 'no-cache');
+    const busted = applyNowCacheBust(request, headers);
+    headers.set('x-gv-visit-scrub', busted ? 'now-cache-bust' : '0');
+    headers.delete('content-length');
+    headers.delete('etag');
+    headers.delete('age');
+    return new Response(JSON.stringify(payload), {
+      status: upstream.status,
+      statusText: upstream.statusText,
+      headers,
+    });
   }
 
   let { data, changed } = scrubPayload(payload, url.pathname);
@@ -583,6 +688,18 @@ export default async (request, context) => {
     if (news.changed) {
       data = news.data;
       changed = true;
+    }
+    const week = pinLeftoverMissouriNow(data);
+    if (week.changed) {
+      data = week.data;
+      changed = true;
+    }
+    if (isTickerPath(url.pathname)) {
+      const scar = pinCurrentScarNow(data);
+      if (scar.changed) {
+        data = scar.data;
+        changed = true;
+      }
     }
     const abc = pinMissouriAbcNow(data);
     if (abc.changed) {
@@ -603,9 +720,13 @@ export default async (request, context) => {
   headers.set('cache-control', 'no-store, must-revalidate');
   headers.set('pragma', 'no-cache');
   headers.set('x-gv-visit-scrub', changed ? '1' : '0');
-  // Do not Clear-Site-Data on every hub hit — thrashing WKWebView cache contributed
-  // to flaky post-reinstall sign-in ("Load failed") while API was also 502-flapping.
-  if (changed) headers.set('clear-site-data', '"cache"');
+  // One-shot WKWebView URLCache bust so iOS 1.0.29 (no fetch no-store) drops last week's ticker.
+  // Do not Clear-Site-Data on every hub hit — that thrashed sign-in.
+  if (isTickerPath(url.pathname)) {
+    applyNowCacheBust(request, headers);
+  } else if (changed) {
+    headers.set('clear-site-data', '"cache"');
+  }
   headers.delete('content-length');
   headers.delete('etag');
   headers.delete('age');

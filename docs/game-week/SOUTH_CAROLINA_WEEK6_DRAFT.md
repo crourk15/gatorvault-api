@@ -3,8 +3,7 @@
 Missouri is final: **Florida 17, Missouri 45** (official, Faurot, ABC).
 Record **4-1 (1-1 SEC)**. Next: **Oct 10 vs South Carolina (Homecoming)**.
 
-TV is still a window: **12:00–1:00 PM ET · ABC or SEC Network**.
-SEC said the lock comes after the Oct 3 games. Do not invent noon ABC.
+TV lock (@SEC Oct 4): **12:45 PM ET · SEC Network**.
 
 filmWatched: false.
 five recaps (Kent State 57-0, Towson 45-9, Mississippi State 34-41, Alabama 18-49, Kentucky 35-34 OT).
@@ -33,6 +32,6 @@ Easton Royal (Texas commit) returning for Homecoming. Expected / planning.
 
 ## NOW
 
-Game — South Carolina in the Swamp · ABC or SEC Network
+Game — South Carolina in the Swamp — 12:45 PM · SEC Network
 Season — 4-1 · SEC home Saturday
 News still Bailey if the break-in window is live; otherwise Royal on Visitors.

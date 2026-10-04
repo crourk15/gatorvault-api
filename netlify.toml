@@ -94,6 +94,18 @@
 
 [[edge_functions]]
   function = "scrub-denied-visits"
+  path = "/api/schedule"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/schedule/*"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/ping"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
   path = "/api/recruiting/hub/bundle"
 
 [[edge_functions]]
