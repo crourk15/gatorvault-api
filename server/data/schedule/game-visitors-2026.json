@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-23T19:50:00.000Z",
+  "updatedAt": "2026-10-04T00:40:00.000Z",
   "source": "Home-game visitor look only \u2014 plans can change. Away games do not get a visitor panel.",
   "visitorMeta": {
     "zylen-little": {
@@ -331,6 +331,18 @@
         "cooper-martenson",
         "josiah-taylor",
         "domonic-williams-jr"
+      ]
+    },
+    {
+      "gameId": "scar",
+      "home": true,
+      "opponent": "South Carolina",
+      "date": "2026-10-10",
+      "dateLabel": "Oct 10",
+      "chaseLabel": "Expected South Carolina visit · Oct 10",
+      "source": "Expected / planning, not confirmed on campus. Plans can change. Royal is a Texas commit returning to Florida (Rivals / Spiegelman). Homecoming.",
+      "slugs": [
+        "easton-royal"
       ]
     }
   ]

@@ -10,19 +10,25 @@ const {
 } = require('../lib/schedule-form-preds');
 const scheduleBoard = require('../lib/schedule-board');
 
-const FORM_2026 = {
+const FORM_2026_W5 = {
   n: 4,
   ufPpg: (66 + 52 + 44 + 52) / 4,
   allowed: (21 + 3 + 39 + 28) / 4,
 };
 
+const FORM_2026 = {
+  n: 5,
+  ufPpg: (66 + 52 + 44 + 52 + 17) / 5,
+  allowed: (21 + 3 + 39 + 28 + 45) / 5,
+};
+
 describe('schedule form predictions', () => {
-  it('reads 53.5 PPG from the official 2026 finals', () => {
+  it('reads 46.2 PPG from the official 2026 finals after Missouri', () => {
     const board = scheduleBoard.getScheduleBoard(2026);
     const form = measureUfScoringForm(board.games);
-    assert.equal(form.n, 4);
+    assert.equal(form.n, 5);
     assert.equal(form.ufPpg, FORM_2026.ufPpg);
-    assert.ok(form.ufPpg >= 50, 'Florida is averaging ~50 a game');
+    assert.ok(form.ufPpg < 50, 'Missouri 17 pulls season scoring off 50+');
   });
 
   it('regresses pace so remaining cards are not 50 every week', () => {
@@ -35,7 +41,7 @@ describe('schedule form predictions', () => {
   it('Missouri is a 30s road win, not 28-21', () => {
     const next = projectRemainingGame(
       { id: 'missouri', venue: 'Faurot Field, Columbia MO' },
-      FORM_2026
+      FORM_2026_W5
     );
     assert.ok(next);
     assert.ok(next.predUF >= 33 && next.predUF <= 38, `predUF ${next.predUF}`);

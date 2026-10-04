@@ -220,6 +220,8 @@ describe('Game Week Film Notes', () => {
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-12T22:18:00-04:00')), 'auburn');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-13T12:00:00-04:00')), 'auburn');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-20T00:30:00-04:00')), 'olemiss');
+    assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-27T12:00:00-04:00')), 'missouri');
+    assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-10-04T00:40:00.000Z')), 'scar');
     assert.equal(resolveGameWeekId(SCHEDULE_GAMES, new Date('2026-09-06T12:00:00-04:00'), 'auburn'), 'auburn');
     assert.equal(resolveGameWeekId(SCHEDULE_GAMES, new Date('2026-09-20T00:30:00-04:00'), 'olemiss'), 'olemiss');
     assert.equal(getFeaturedUfGame(new Date('2026-09-04T18:00:00-04:00'))?.id, 'fau');

@@ -26,8 +26,8 @@ describe('schedule-board', () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
-    assert.equal(payload.predThrough, '2026-W5');
-    assert.equal(payload.currentGameId, 'missouri');
+    assert.equal(payload.predThrough, '2026-W6');
+    assert.equal(payload.currentGameId, 'scar');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);
     assert.equal(campbell.finalOpp, 3);
@@ -78,7 +78,7 @@ describe('schedule-board', () => {
   it('game-week meta games also hide desk scout', () => {
     const feed = require('../lib/game-week-feed');
     const payload = feed.buildGameWeekPayload();
-    assert.equal(payload.currentGameId, 'missouri');
+    assert.equal(payload.currentGameId, 'scar');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.deepEqual(campbell.offenseScout, []);
     assert.equal(campbell.scoutingReport, undefined);
@@ -275,6 +275,8 @@ describe('schedule-board', () => {
     assert.equal(missouri.filmWatched, false);
     assert.equal(missouri.date, 'October 3, 2026 · 3:30 PM ET');
     assert.equal(missouri.tv, 'ABC');
+    assert.equal(missouri.finalUF, 17);
+    assert.equal(missouri.finalOpp, 45);
     assert.equal(missouri.ufPct, 71);
     assert.equal(missouri.pred, 'UF 34 · Missouri 24');
     assert.equal(missouri.predConfidence, 78);
@@ -288,6 +290,33 @@ describe('schedule-board', () => {
     assert.equal(missouri.radar.find((a) => a.label === 'Secondary')?.opp, 52);
     assert.equal(missouri.radar.find((a) => a.label === 'Special Teams')?.opp, 66);
     assert.equal(missouri.radar.find((a) => a.label === 'Coaching Edge')?.uf, 52);
+  });
+
+  it('South Carolina 3 Keys come from the five recaps, not leftover rivalry copy', () => {
+    const board = scheduleBoard.getScheduleBoard(2026);
+    const scar = board.games.find((g) => g.id === 'scar');
+    assert.equal(scar.keys[0], 'Take Away the Fast Start & Crowd Sellers');
+    assert.equal(scar.keys[1], 'Close When Carolina Fades & Finish the Lead');
+    assert.equal(scar.keys[2], 'Cap DJ Black Late & Own the Fourth');
+    assert.ok(!scar.keys.some((k) => /Win rivalry week|Control clock|Limit their QB run/i.test(k)));
+    assert.equal(scar.filmWatched, false);
+    assert.equal(scar.tv, 'ABC or SEC Network');
+    assert.equal(scar.date, 'October 10, 2026 · 12:00–1:00 PM ET');
+    assert.equal(scar.pred, 'UF 32 · South Carolina 21');
+    assert.equal(scar.ufPct, 73);
+    assert.match(scar.scoutingReport, /Own the Fourth/);
+    assert.ok(!/rpo-heavy/i.test(scar.film));
+    const dump = [
+      scar.film,
+      ...(scar.filmNotes || []),
+      ...(scar.opponentTendencies || []),
+      ...(scar.defenseTendencies || []),
+      ...(scar.howUFWins || []),
+      scar.scoutingReport,
+    ].join(' ');
+    assert.match(dump, /Sellers/);
+    assert.match(dump, /Baugh/);
+    assert.ok(!/chambliss|simmons|roberts/i.test(dump));
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

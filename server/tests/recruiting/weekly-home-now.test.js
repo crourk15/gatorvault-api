@@ -276,3 +276,15 @@ test('after the Ole Miss final NOW points at Missouri road week', () => {
   assert.equal(cats[1].label, 'Road');
   assert.match(cats[1].items[0], /on the road this Saturday/i);
 });
+
+test('after the Missouri final NOW points at South Carolina homecoming', () => {
+  const now = new Date('2026-10-04T00:40:00.000Z');
+  const lines = buildWeeklyHomeNowLines(now, undefined, { breakInRows: [] });
+  assert.match(lines[0], /^Game — South Carolina in the Swamp · ABC or SEC Network$/);
+  const rec = seasonRecord(now, getScheduleBoard(2026).games);
+  assert.deepEqual(rec, { wins: 4, losses: 1 });
+  assert.ok(lines.some((s) => /^Season — 4-1 · SEC home Saturday$/.test(s)));
+  const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [] });
+  assert.equal(cats[1].label, 'Visitors');
+  assert.match(String(cats[1].items[0] || ''), /Easton Royal/i);
+});

@@ -48,12 +48,22 @@ describe('schedule-premium finals', () => {
   });
 
   it('leaves upcoming games without a posted final', () => {
-    const raw = SCHEDULE_GAMES.find((g) => g.id === 'olemiss');
+    const raw = SCHEDULE_GAMES.find((g) => g.id === 'scar');
     assert.ok(raw);
     const game = toPremiumScheduleGame(raw);
     assert.equal(game.finalUF, undefined);
     assert.equal(game.finalOpp, undefined);
     assert.equal(hasPostedFinal(game), false);
+  });
+
+  it('maps the official Missouri final onto the schedule card', () => {
+    const raw = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
+    assert.ok(raw);
+    const game = toPremiumScheduleGame(raw);
+    assert.equal(game.finalUF, 17);
+    assert.equal(game.finalOpp, 45);
+    assert.equal(game.finalSource, 'official');
+    assert.equal(hasPostedFinal(game), true);
   });
 
   it('opens Auburn Game Week once Campbell has a posted final after kick', () => {

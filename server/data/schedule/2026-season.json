@@ -1,9 +1,9 @@
 {
   "season": 2026,
-  "updatedAt": "2026-10-03T20:10:00.000Z",
+  "updatedAt": "2026-10-04T00:40:00.000Z",
   "label": "2026 Florida football schedule",
-  "source": "vault-schedule-board",
-  "predThrough": "2026-W5",
+  "source": "vault-schedule-board + Missouri 17-45 official + SC 5-game recap",
+  "predThrough": "2026-W6",
   "games": [
     {
       "id": "fau",
@@ -596,7 +596,11 @@
         "DaMarion Fowlkes returned a punt 68 yards for a touchdown against Troy after Missouri had gone down 10-0. That is the play that put them back in their only close game.",
         "Kansas scored first on an 88-yard return of a blocked Missouri field goal. Protect the kick at Faurot. Cover the return.",
         "Blake Craig: 32 vs UAPB, 32 at Kansas, 35 and 36 vs Troy. He will try it from there."
-      ]
+      ],
+      "finalUF": 17,
+      "finalOpp": 45,
+      "finalSource": "official",
+      "boxScoreUrl": "https://floridagators.com/sports/football/stats/2026/missouri/boxscore/27907"
     },
     {
       "id": "scar",
@@ -605,26 +609,30 @@
       "opp": "South Carolina Gamecocks",
       "date": "October 10, 2026 · 12:00–1:00 PM ET",
       "venue": "Ben Hill Griffin Stadium, Gainesville FL",
-      "ufPct": 82,
-      "tv": "TBD",
+      "ufPct": 73,
+      "tv": "ABC or SEC Network",
       "keys": [
-        "Win rivalry week",
-        "Control clock",
-        "Limit their QB run game"
+        "Take Away the Fast Start & Crowd Sellers",
+        "Close When Carolina Fades & Finish the Lead",
+        "Cap DJ Black Late & Own the Fourth"
       ],
       "swing": [
         {
-          "name": "Edge defenders",
-          "role": "Contain QB run"
+          "name": "Jayden Woods",
+          "role": "Do not let LaNorris Sellers jump the Swamp. South Carolina led 17-0 against Kentucky and 16-0 against Mississippi State. Woods and the edge must stay in the running lane on the keep and rush with contain so Sellers cannot start this one the way he starts their SEC games."
         },
         {
-          "name": "Singleton Jr.",
-          "role": "Win one-on-ones"
+          "name": "Jadan Baugh",
+          "role": "Do not treat a 2-3 South Carolina team as a bye after Faurot. Baugh had 13 yards on 12 carries against Missouri. Homecoming is where the run has to come back. Wear Clayton White's front early so Philo is not throwing from behind again."
+        },
+        {
+          "name": "Aaron Philo",
+          "role": "South Carolina just gave Mississippi State 41 and Alabama 49. When they fade, finish. Sellers hit DJ Black for the go-ahead score in the fourth against Kentucky and then fumbled. Philo has to make the fourth quarter the Gators' possession, not another Carolina escape."
         }
       ],
-      "film": "Homecoming vs South Carolina. RPO-heavy.",
-      "pred": "UF 36 · South Carolina 21",
-      "predUF": 36,
+      "film": "South Carolina is 2-3 and 0-3 in the SEC. They blow people out when it is Kent State (57-0) and Towson (45-9), then jump Mississippi State 16-0 and Kentucky 17-0 and lose both. LaNorris Sellers is the show in Kendal Briles' hurry-up. Clayton White still calls a 4-2-5. This is five recaps, not a sit.",
+      "pred": "UF 32 · South Carolina 21",
+      "predUF": 32,
       "predOpp": 21,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27908",
@@ -640,9 +648,56 @@
         "note": "Retro whites — Homecoming",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
       },
-      "predConfidence": 83,
-      "predMovement": "up",
-      "ufPctDelta": 14
+      "predConfidence": 79,
+      "predMovement": "down",
+      "ufPctDelta": -9,
+      "filmWatched": false,
+      "filmNotes": [
+        "South Carolina is 2-3 and 0-3 in the league. They look like a different team before the first punch lands.",
+        "Kent State 57-0 and Towson 45-9 is the clean version. Mississippi State 34-41 and Alabama 18-49 is the SEC version.",
+        "They jumped Kentucky 17-0 and led 20-10 at the half. They lost it in overtime 35-34.",
+        "They jumped Mississippi State 16-0 and still lost 41-34. That is eight straight SEC losses.",
+        "LaNorris Sellers is the quarterback. Kendal Briles calls a hurry-up. When Sellers is clean they jump you.",
+        "DJ Black caught the go-ahead fourth-quarter ball against Kentucky. Then Sellers fumbled and Kentucky won it in overtime.",
+        "Clayton White still calls the defense. Coverage shells are not on a sit we have. Do not invent them.",
+        "Homecoming. Retro whites. TV is still ABC or SEC Network until the SEC locks the window."
+      ],
+      "opponentTendencies": [
+        "Kent State they threw the lights out: 57-0 in Columbia. Towson 45-9. That is the non-conference version.",
+        "Mississippi State they jumped 16-0 and lost 41-34. Kentucky they jumped 17-0, led 20-10 at half, and lost 35-34 in overtime.",
+        "LaNorris Sellers is Shane Beamer's quarterback in Kendal Briles' first year calling it. Hurry-up, no-huddle spread. He can throw it and he can keep it.",
+        "DJ Black is who they look for late. Go-ahead touchdown against Kentucky in the fourth. Sellers fumbled the next drive.",
+        "Alabama was the lifeless one: 18-49 in Tuscaloosa. They have not won an SEC game this year."
+      ],
+      "defenseTendencies": [
+        "Clayton White is still the coordinator. Listed 4-2-5. Coverage shells and pressure packages are not on a sit. Do not invent them.",
+        "They gave Kent State 0 and Towson 9. Then Mississippi State 41 and Alabama 49. The jump is the SEC opponent, not a sudden inability to stop the run on a box we sat.",
+        "Beamer is in year six. They have lost eight straight conference games dating to a 2025 Kentucky win.",
+        "Special teams and hidden yardage are not confirmed on these recaps. Do not write them in."
+      ],
+      "offenseScout": [
+        "Official 5-game: 2-3, 0-3 SEC. Kent State W 57-0, Towson W 45-9, Mississippi State L 34-41, Alabama L 18-49, Kentucky L 35-34 OT.",
+        "Shane Beamer HC year 6. Kendal Briles OC / hurry-up no-huddle spread (first year). LaNorris Sellers is the quarterback.",
+        "They start fast in the league and do not finish. Mississippi State: led 16-0, lost 41-34. Kentucky: led 17-0 and 20-10 HT, lost 35-34 in overtime.",
+        "Kentucky (Oct 3, Columbia, SECN): Sellers hit DJ Black for a go-ahead fourth-quarter touchdown, then fumbled just outside the red zone. Kentucky recovered, tied it, and won on a 2-point conversion in overtime.",
+        "Alabama (Sep 26, Tuscaloosa, ESPN): 18-49. The lifeless response Beamer said they would not have.",
+        "filmWatched: false. watchStandard: recap-confirmed-5. No broadcast sit. No invented PBP lines."
+      ],
+      "defenseScout": [
+        "Clayton White DC, listed 4-2-5. Coverage shells and pressure packages NOT on a sit. Do not invent them.",
+        "Allowed 0 and 9 to Kent State and Towson. Allowed 41 to Mississippi State and 49 to Alabama.",
+        "Kentucky recap does not give a full allowed-yard line we will stamp. Do not invent one.",
+        "filmWatched: false."
+      ],
+      "howUFWins": [
+        "Do not let LaNorris Sellers jump the Swamp. South Carolina led 17-0 against Kentucky and 16-0 against Mississippi State. Edge rushers must stay in the running lane on the keep and rush with contain so the first fifteen minutes are not already a hole.",
+        "Do not treat a stagnant South Carolina start as the win. They fade. They have lost eight straight SEC games. When the lead is there, finish it. Jadan Baugh has to get the run going after 13 yards on 12 carries at Faurot.",
+        "Do not let DJ Black and a late Sellers throw steal the fourth. He hit Black for the go-ahead score against Kentucky and then put the ball on the ground. Own the extra possession. Make them beat you for 60 minutes, not 17."
+      ],
+      "scoutingReport": "SOUTH CAROLINA through five (Kent State 57-0, Towson 45-9, Mississippi State 34-41, Alabama 18-49, Kentucky 35-34 OT). 2-3, 0-3 SEC, eight straight conference losses. Sellers is the engine in Briles' hurry-up. They jump you (16-0, 17-0) and they do not close. Black is the late-game look. White still calls a 4-2-5 — shells not sat. UF wins: Take Away the Fast Start & Crowd Sellers / Close When Carolina Fades & Finish the Lead / Cap DJ Black Late & Own the Fourth. filmWatched: false.",
+      "specialTeams": [
+        "No confirmed return or blocked-kick play on these five recaps. Do not invent hidden yardage for South Carolina."
+      ]
     },
     {
       "id": "texas",
@@ -651,7 +706,7 @@
       "opp": "Texas Longhorns",
       "date": "October 17, 2026 · 12:00–1:00 PM ET",
       "venue": "DKR-Texas Memorial Stadium, Austin TX",
-      "ufPct": 31,
+      "ufPct": 25,
       "tv": "TBD",
       "keys": [
         "Protect the football",
@@ -669,8 +724,8 @@
         }
       ],
       "film": "Texas balanced attack with elite skill.",
-      "pred": "UF 25 · Texas 34",
-      "predUF": 25,
+      "pred": "UF 22 · Texas 34",
+      "predUF": 22,
       "predOpp": 34,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27909",
@@ -683,9 +738,9 @@
         "label": "Orange / White / Blue",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
       },
-      "predConfidence": 77,
+      "predConfidence": 80,
       "predMovement": "down",
-      "ufPctDelta": -5
+      "ufPctDelta": -6
     },
     {
       "id": "bye-oct24",
@@ -711,7 +766,7 @@
       "opp": "Georgia Bulldogs",
       "date": "October 31, 2026 · 3:30 PM ET",
       "venue": "Mercedes-Benz Stadium, Atlanta GA",
-      "ufPct": 37,
+      "ufPct": 31,
       "tv": "ABC",
       "keys": [
         "Control time of possession",
@@ -730,8 +785,8 @@
         }
       ],
       "film": "Neutral-site Cocktail Party at Mercedes-Benz Stadium in Atlanta for 2026.",
-      "pred": "UF 26 · Georgia 32",
-      "predUF": 26,
+      "pred": "UF 23 · Georgia 32",
+      "predUF": 23,
       "predOpp": 32,
       "scoutingReport": "Georgia series moves to Atlanta in 2026 (Mercedes-Benz). UF path is controlling the ball and limiting explosives in a neutral-site environment.",
       "tickets": {
@@ -748,9 +803,9 @@
         "note": "Neutral site — Atlanta",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
       },
-      "predConfidence": 74,
-      "predMovement": "flat",
-      "ufPctDelta": 0
+      "predConfidence": 77,
+      "predMovement": "down",
+      "ufPctDelta": -6
     },
     {
       "id": "oklahoma",
@@ -759,7 +814,7 @@
       "opp": "Oklahoma Sooners",
       "date": "November 7, 2026 · 3:30–8:00 PM ET",
       "venue": "Ben Hill Griffin Stadium, Gainesville FL",
-      "ufPct": 71,
+      "ufPct": 63,
       "tv": "TBD",
       "keys": [
         "Win early downs",
@@ -777,8 +832,8 @@
         }
       ],
       "film": "Oklahoma brings tempo and skill. Swamp night energy matters.",
-      "pred": "UF 37 · Oklahoma 27",
-      "predUF": 37,
+      "pred": "UF 33 · Oklahoma 27",
+      "predUF": 33,
       "predOpp": 27,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27911",
@@ -794,9 +849,9 @@
         "note": "All-Blue in The Swamp",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
       },
-      "predConfidence": 78,
-      "predMovement": "up",
-      "ufPctDelta": 14
+      "predConfidence": 74,
+      "predMovement": "down",
+      "ufPctDelta": -8
     },
     {
       "id": "kentucky",
@@ -805,7 +860,7 @@
       "opp": "Kentucky Wildcats",
       "date": "November 14, 2026 · 6:00–8:00 PM ET",
       "venue": "Kroger Field, Lexington KY",
-      "ufPct": 71,
+      "ufPct": 63,
       "tv": "TBD",
       "keys": [
         "Physical run fits",
@@ -824,8 +879,8 @@
         }
       ],
       "film": "Kentucky power run and play-action on the road.",
-      "pred": "UF 33 · Kentucky 23",
-      "predUF": 33,
+      "pred": "UF 29 · Kentucky 23",
+      "predUF": 29,
       "predOpp": 23,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27912",
@@ -840,9 +895,9 @@
         "label": "Orange / White / Orange",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
       },
-      "predConfidence": 78,
-      "predMovement": "up",
-      "ufPctDelta": 15
+      "predConfidence": 74,
+      "predMovement": "down",
+      "ufPctDelta": -8
     },
     {
       "id": "vandy",
@@ -851,7 +906,7 @@
       "opp": "Vanderbilt Commodores",
       "date": "November 21, 2026 · 12:00–1:00 PM ET",
       "venue": "Ben Hill Griffin Stadium, Gainesville FL",
-      "ufPct": 79,
+      "ufPct": 71,
       "tv": "TBD",
       "keys": [
         "Execute early",
@@ -869,8 +924,8 @@
         }
       ],
       "film": "Vanderbilt improving — treat as SEC test.",
-      "pred": "UF 36 · Vanderbilt 22",
-      "predUF": 36,
+      "pred": "UF 32 · Vanderbilt 22",
+      "predUF": 32,
       "predOpp": 22,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27913",
@@ -885,9 +940,9 @@
         "label": "Orange / Blue / White",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
       },
-      "predConfidence": 82,
-      "predMovement": "up",
-      "ufPctDelta": 11
+      "predConfidence": 78,
+      "predMovement": "down",
+      "ufPctDelta": -8
     },
     {
       "id": "fsu",
@@ -896,7 +951,7 @@
       "opp": "Florida State Seminoles",
       "date": "November 27, 2026 · 3:30 PM ET",
       "venue": "Doak Campbell Stadium, Tallahassee FL",
-      "ufPct": 71,
+      "ufPct": 63,
       "tv": "ABC",
       "keys": [
         "Win field position battle",
@@ -914,8 +969,8 @@
         }
       ],
       "film": "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
-      "pred": "UF 34 · FSU 24",
-      "predUF": 34,
+      "pred": "UF 30 · FSU 24",
+      "predUF": 30,
       "predOpp": 24,
       "filmLessonId": "frl00010-0000-4000-8000-00000000000a",
       "opponentTendencies": [
@@ -941,9 +996,9 @@
         "label": "Blue / White / White",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
       },
-      "predConfidence": 78,
-      "predMovement": "up",
-      "ufPctDelta": 8
+      "predConfidence": 74,
+      "predMovement": "down",
+      "ufPctDelta": -8
     }
   ],
   "predModel": "uf-form-v1"

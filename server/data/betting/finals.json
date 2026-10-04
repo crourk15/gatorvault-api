@@ -34,5 +34,14 @@
     "opp": 28,
     "source": "official",
     "completedAt": "2026-09-27T00:15:00.000Z"
+  },
+  "uf-missouri-2026-w5": {
+    "gameKey": "uf-missouri-2026-w5",
+    "scheduleId": "missouri",
+    "opponent": "Missouri",
+    "uf": 17,
+    "opp": 45,
+    "source": "official",
+    "completedAt": "2026-10-03T23:50:00.000Z"
   }
 }
