@@ -33,6 +33,18 @@ test('ticker edge rewrites leftover Missouri week to South Carolina', () => {
   assert.match(src, /South Carolina in the Swamp · ABC or SEC Network/);
 });
 
+test('ticker edge one-shot busts iOS URLCache and pins the SC week pack', () => {
+  assert.match(src, /pinCurrentScarNow/);
+  assert.match(src, /applyNowCacheBust/);
+  assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
+  assert.match(src, /NOW_BUST_VALUE = 'scar-w6'/);
+  assert.match(src, /isSchedulePath/);
+  assert.match(src, /isPingPath/);
+  const toml = fs.readFileSync(path.join(__dirname, '../../../netlify.toml'), 'utf8');
+  assert.match(toml, /path = "\/api\/schedule"/);
+  assert.match(toml, /path = "\/api\/ping"/);
+});
+
 test('ticker edge rewrites leftover Cyion NOW News to Samuel Bailey', () => {
   assert.match(src, /pinBaileyNowNews/);
   assert.match(src, /STALE_NOW_NEWS_RE/);

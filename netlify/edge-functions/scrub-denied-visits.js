@@ -120,6 +120,48 @@ function isTickerPath(pathname) {
   return String(pathname || '').startsWith('/api/recruiting/hub/ticker');
 }
 
+function isSchedulePath(pathname) {
+  const p = String(pathname || '');
+  return p === '/api/schedule' || p.startsWith('/api/schedule/');
+}
+
+function isPingPath(pathname) {
+  return String(pathname || '') === '/api/ping';
+}
+
+const NOW_BUST_COOKIE = 'gv-now-bust';
+const NOW_BUST_VALUE = 'scar-w6';
+
+function needsNowCacheBust(request) {
+  const cookie = request?.headers?.get?.('cookie') || '';
+  return !new RegExp(`(?:^|;\\s*)${NOW_BUST_COOKIE}=${NOW_BUST_VALUE}(?:;|$)`).test(cookie);
+}
+
+function applyNowCacheBust(request, headers) {
+  if (!needsNowCacheBust(request)) return false;
+  headers.set('clear-site-data', '"cache"');
+  headers.append(
+    'set-cookie',
+    `${NOW_BUST_COOKIE}=${NOW_BUST_VALUE}; Max-Age=1209600; Path=/; Secure; SameSite=Lax`
+  );
+  headers.set('x-gv-now-bust', NOW_BUST_VALUE);
+  return true;
+}
+
+function pinCurrentScarNow(data) {
+  if (!data || typeof data !== 'object') return { data, changed: false };
+  const next = {
+    ...data,
+    status: 'ready',
+    items: TICKER_FALLBACK.items,
+    nowWeek: TICKER_FALLBACK.nowWeek,
+  };
+  const changed =
+    JSON.stringify(data.items || []) !== JSON.stringify(next.items) ||
+    JSON.stringify(data.nowWeek || []) !== JSON.stringify(next.nowWeek);
+  return { data: next, changed };
+}
+
 /** iOS last-good / URLCache can keep Cyion on NOW News after Bailey pledged. */
 function pinBaileyNowNews(data) {
   if (!data || typeof data !== 'object') return { data, changed: false };
@@ -571,19 +613,20 @@ function heroFallbackResponse() {
   return new Response(JSON.stringify(HERO_2028_FALLBACK), { status: 200, headers });
 }
 
-function tickerFallbackResponse() {
+function tickerFallbackResponse(request) {
   const headers = new Headers();
   headers.set('content-type', 'application/json; charset=utf-8');
   headers.set('cache-control', 'no-store, must-revalidate');
   headers.set('pragma', 'no-cache');
   headers.set('x-gv-visit-scrub', 'now-edge-fallback');
+  applyNowCacheBust(request, headers);
   return new Response(JSON.stringify(TICKER_FALLBACK), { status: 200, headers });
 }
 
 export default async (request, context) => {
   const url = new URL(request.url);
   const origin = new URL(`https://gatorvault-api.onrender.com${url.pathname}${url.search}`);
-  origin.searchParams.set('gvScrub', 't12');
+  origin.searchParams.set('gvScrub', 't13');
 
   let upstream;
   try {
@@ -595,19 +638,19 @@ export default async (request, context) => {
       },
     });
   } catch {
-    if (isTickerPath(url.pathname)) return tickerFallbackResponse();
+    if (isTickerPath(url.pathname)) return tickerFallbackResponse(request);
     if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return context.next();
   }
 
   const contentType = upstream.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) {
-    if (isTickerPath(url.pathname)) return tickerFallbackResponse();
+    if (isTickerPath(url.pathname)) return tickerFallbackResponse(request);
     if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return upstream;
   }
   if (isTickerPath(url.pathname) && !upstream.ok) {
-    return tickerFallbackResponse();
+    return tickerFallbackResponse(request);
   }
   if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028 && !upstream.ok) {
     return heroFallbackResponse();
@@ -617,9 +660,26 @@ export default async (request, context) => {
   try {
     payload = await upstream.json();
   } catch {
-    if (isTickerPath(url.pathname)) return tickerFallbackResponse();
+    if (isTickerPath(url.pathname)) return tickerFallbackResponse(request);
     if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return upstream;
+  }
+
+  if (isSchedulePath(url.pathname) || isPingPath(url.pathname)) {
+    const headers = new Headers(upstream.headers);
+    headers.set('content-type', 'application/json; charset=utf-8');
+    headers.set('cache-control', 'no-store, must-revalidate');
+    headers.set('pragma', 'no-cache');
+    const busted = applyNowCacheBust(request, headers);
+    headers.set('x-gv-visit-scrub', busted ? 'now-cache-bust' : '0');
+    headers.delete('content-length');
+    headers.delete('etag');
+    headers.delete('age');
+    return new Response(JSON.stringify(payload), {
+      status: upstream.status,
+      statusText: upstream.statusText,
+      headers,
+    });
   }
 
   let { data, changed } = scrubPayload(payload, url.pathname);
@@ -633,6 +693,13 @@ export default async (request, context) => {
     if (week.changed) {
       data = week.data;
       changed = true;
+    }
+    if (isTickerPath(url.pathname)) {
+      const scar = pinCurrentScarNow(data);
+      if (scar.changed) {
+        data = scar.data;
+        changed = true;
+      }
     }
     const abc = pinMissouriAbcNow(data);
     if (abc.changed) {
@@ -653,9 +720,13 @@ export default async (request, context) => {
   headers.set('cache-control', 'no-store, must-revalidate');
   headers.set('pragma', 'no-cache');
   headers.set('x-gv-visit-scrub', changed ? '1' : '0');
-  // Do not Clear-Site-Data on every hub hit — thrashing WKWebView cache contributed
-  // to flaky post-reinstall sign-in ("Load failed") while API was also 502-flapping.
-  if (changed) headers.set('clear-site-data', '"cache"');
+  // One-shot WKWebView URLCache bust so iOS 1.0.29 (no fetch no-store) drops last week's ticker.
+  // Do not Clear-Site-Data on every hub hit — that thrashed sign-in.
+  if (isTickerPath(url.pathname)) {
+    applyNowCacheBust(request, headers);
+  } else if (changed) {
+    headers.set('clear-site-data', '"cache"');
+  }
   headers.delete('content-length');
   headers.delete('etag');
   headers.delete('age');
