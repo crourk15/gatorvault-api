@@ -300,8 +300,8 @@ describe('schedule-board', () => {
     assert.equal(scar.keys[2], 'Cap DJ Black Late & Own the Fourth');
     assert.ok(!scar.keys.some((k) => /Win rivalry week|Control clock|Limit their QB run/i.test(k)));
     assert.equal(scar.filmWatched, false);
-    assert.equal(scar.tv, 'ABC or SEC Network');
-    assert.equal(scar.date, 'October 10, 2026 · 12:00–1:00 PM ET');
+    assert.equal(scar.tv, 'SEC Network');
+    assert.equal(scar.date, 'October 10, 2026 · 12:45 PM ET');
     assert.equal(scar.pred, 'UF 32 · South Carolina 21');
     assert.equal(scar.ufPct, 73);
     assert.match(scar.scoutingReport, /Own the Fourth/);

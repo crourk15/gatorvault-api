@@ -14,7 +14,7 @@ test('ticker edge strips the 1.0.29 App Store line and falls back when origin 50
   assert.match(src, /APP_STORE_UPDATE_RE/);
   assert.match(src, /now-edge-fallback/);
   assert.match(src, /4-1 · SEC home Saturday/);
-  assert.match(src, /South Carolina in the Swamp · ABC or SEC Network/);
+  assert.match(src, /South Carolina in the Swamp — 12:45 PM · SEC Network/);
   assert.match(src, /Samuel Bailey commits to Florida/);
   assert.match(src, /if \(isTickerPath\(url\.pathname\) && !upstream\.ok\)/);
   assert.equal(/1\.0\.29 is live/.test(src), false);
@@ -30,14 +30,14 @@ test('ticker edge rewrites leftover Missouri week to South Carolina', () => {
   assert.match(src, /pinLeftoverMissouriNow/);
   assert.match(src, /LEFTOVER_MISSOURI_NOW_RE/);
   assert.match(src, /4-0 heading into saturday/);
-  assert.match(src, /South Carolina in the Swamp · ABC or SEC Network/);
+  assert.match(src, /South Carolina in the Swamp — 12:45 PM · SEC Network/);
 });
 
 test('ticker edge one-shot busts iOS URLCache and pins the SC week pack', () => {
   assert.match(src, /pinCurrentScarNow/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'scar-w6'/);
+  assert.match(src, /NOW_BUST_VALUE = 'scar-w6-secn'/);
   assert.match(src, /isSchedulePath/);
   assert.match(src, /isPingPath/);
   const toml = fs.readFileSync(path.join(__dirname, '../../../netlify.toml'), 'utf8');

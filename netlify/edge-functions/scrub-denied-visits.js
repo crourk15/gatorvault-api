@@ -9,10 +9,10 @@ const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolR
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '4-1 · SEC home Saturday';
 const BAILEY_NEWS_LINE = 'Samuel Bailey commits to Florida · No. 36';
-const SC_NOW_GAME = 'South Carolina in the Swamp · ABC or SEC Network';
+const SC_NOW_GAME = 'South Carolina in the Swamp — 12:45 PM · SEC Network';
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen/i;
 /** Posted Missouri final — last-good Faurot / 4-0 must not beat South Carolina week. */
-const LEFTOVER_MISSOURI_NOW_RE = /missouri|faurot|4-0 heading into saturday/i;
+const LEFTOVER_MISSOURI_NOW_RE = /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00/i;
 /** Sep 21 was ABC-or-ESPN. SEC locked ABC Sep 27. Git ESPN overlay snapped NOW back. */
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri/i;
 
@@ -104,12 +104,12 @@ const TICKER_FALLBACK = {
   ok: true,
   status: 'ready',
   items: [
-    'Game — South Carolina in the Swamp · ABC or SEC Network',
+    `Game — ${SC_NOW_GAME}`,
     `News — ${BAILEY_NEWS_LINE}`,
     `Season — ${SEASON_STANDING}`,
   ],
   nowWeek: [
-    { key: 'game', label: 'Game', items: ['South Carolina in the Swamp · ABC or SEC Network'] },
+    { key: 'game', label: 'Game', items: [SC_NOW_GAME] },
     { key: 'news', label: 'News', items: [BAILEY_NEWS_LINE] },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],
@@ -130,7 +130,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'scar-w6';
+const NOW_BUST_VALUE = 'scar-w6-secn';
 
 function needsNowCacheBust(request) {
   const cookie = request?.headers?.get?.('cookie') || '';

@@ -519,10 +519,10 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     id: "scar",
     label: "Oct 10 vs South Carolina (HC)",
     opp: "South Carolina Gamecocks",
-    date: "October 10, 2026 · 12:00–1:00 PM ET",
+    date: "October 10, 2026 · 12:45 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
     ufPct: 73,
-    tv: "ABC or SEC Network",
+    tv: "SEC Network",
     keys: [
       "Take Away the Fast Start & Crowd Sellers",
       "Close When Carolina Fades & Finish the Lead",

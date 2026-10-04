@@ -426,7 +426,7 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
       { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
-    assert.equal(rows[0].items[0], 'South Carolina in the Swamp · ABC or SEC Network');
+    assert.equal(rows[0].items[0], 'South Carolina in the Swamp — 12:45 PM · SEC Network');
     assert.equal(rows[2].items[0], '4-1 · SEC home Saturday');
     assert.ok(!rows.some((row) => row.items.some((s) => /missouri|faurot|4-0 heading/i.test(s))));
   });
@@ -438,7 +438,7 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
     assert.equal(rows.length, 3);
-    assert.equal(rows[0].items[0], 'South Carolina in the Swamp · ABC or SEC Network');
+    assert.equal(rows[0].items[0], 'South Carolina in the Swamp — 12:45 PM · SEC Network');
     assert.equal(rows[1].label, 'News');
     assert.match(rows[1].items[0], /Samuel Bailey commits to Florida/i);
     assert.ok(!rows.some((row) => row.items.some((s) => /cyion/i.test(s))));
@@ -508,7 +508,7 @@ describe('applyHomeNowWeekPack', () => {
       []
     );
     const remount = applyHomeNowWeekPack([], []);
-    assert.equal(remount[0].items[0], 'South Carolina in the Swamp · ABC or SEC Network');
+    assert.equal(remount[0].items[0], 'South Carolina in the Swamp — 12:45 PM · SEC Network');
     assert.equal(remount[2].items[0], '4-1 · SEC home Saturday');
   });
 });

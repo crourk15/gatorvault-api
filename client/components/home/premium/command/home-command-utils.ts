@@ -429,7 +429,8 @@ const BAILEY_NEWS_LINE = 'Samuel Bailey commits to Florida · No. 36';
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri|faurot[\s\S]{0,40}espn/i;
 /** Posted Missouri final — last-good Faurot / 4-0 must not beat South Carolina week. */
 const LEFTOVER_MISSOURI_NOW_RE = /missouri|faurot|4-0 heading into saturday/i;
-const SOUTH_CAROLINA_NOW_GAME = 'South Carolina in the Swamp · ABC or SEC Network';
+const SOUTH_CAROLINA_NOW_GAME = 'South Carolina in the Swamp — 12:45 PM · SEC Network';
+const LEFTOVER_SC_WINDOW_RE = /abc or sec network|12:00\s*[–-]\s*1:00/i;
 const SOUTH_CAROLINA_NOW_SEASON = '4-1 · SEC home Saturday';
 
 function pinMissouriAbcTick(text: string): string {
@@ -445,7 +446,10 @@ function nowWeekBlob(rows: HomeNowWeekPillar[]): string {
 }
 
 function pinLeftoverMissouriNowWeek(rows: HomeNowWeekPillar[]): HomeNowWeekPillar[] {
-  if (!rows.length || !LEFTOVER_MISSOURI_NOW_RE.test(nowWeekBlob(rows))) return rows;
+  const blob = nowWeekBlob(rows);
+  if (!rows.length || !(LEFTOVER_MISSOURI_NOW_RE.test(blob) || LEFTOVER_SC_WINDOW_RE.test(blob))) {
+    return rows;
+  }
   const news = rows.find((row) => row.key === 'news' || row.label === 'News');
   const newsItems = pinBaileyNowNewsItems(news?.items || []);
   return [
@@ -457,7 +461,10 @@ function pinLeftoverMissouriNowWeek(rows: HomeNowWeekPillar[]): HomeNowWeekPilla
 
 function pinLeftoverMissouriTickerLines(lines: string[]): string[] {
   const next = (Array.isArray(lines) ? lines : []).map((s) => String(s || '').trim()).filter(Boolean);
-  if (!next.length || !LEFTOVER_MISSOURI_NOW_RE.test(next.join(' '))) return next;
+  const text = next.join(' ');
+  if (!next.length || !(LEFTOVER_MISSOURI_NOW_RE.test(text) || LEFTOVER_SC_WINDOW_RE.test(text))) {
+    return next;
+  }
   return [
     `Game — ${SOUTH_CAROLINA_NOW_GAME}`,
     `News — ${BAILEY_NEWS_LINE}`,
