@@ -259,8 +259,8 @@ function buildWeeklyHomeNowLines(now = new Date(), games, opts = {}) {
   return lines;
 }
 
-/** Cached / last-good News must never keep a false McMullen pledge. */
-const FALSE_NOW_NEWS_RE = /lorenzo\s+mcmullen/i;
+/** Cached / last-good News cannot keep a false or last-week pledge. */
+const FALSE_NOW_NEWS_RE = /lorenzo\s+mcmullen|samuel\s+bailey/i;
 
 function newsMentionsFalseCommit(text) {
   return FALSE_NOW_NEWS_RE.test(String(text || ''));

@@ -164,10 +164,34 @@ function isFloridaHeadline(row) {
   return true;
 }
 
-function scoreBreakIn(row, nowMs, biggerThanVisitors, commitDateFor) {
+function etYmd(ms) {
+  return new Date(ms).toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+}
+
+function lastPostedKickMs(nowMs) {
+  try {
+    const { getScheduleBoard } = require('./schedule-board');
+    const { parseScheduleKickoffMs } = require('./elite-home-now');
+    let last = NaN;
+    for (const g of getScheduleBoard(2026).games || []) {
+      if (!g || g.kind === 'bye') continue;
+      if (!Number.isFinite(Number(g.finalUF)) || !Number.isFinite(Number(g.finalOpp))) continue;
+      const kick = parseScheduleKickoffMs(g.date);
+      if (!Number.isFinite(kick) || kick > nowMs) continue;
+      if (!Number.isFinite(last) || kick > last) last = kick;
+    }
+    return last;
+  } catch {
+    return NaN;
+  }
+}
+
+function scoreBreakIn(row, nowMs, biggerThanVisitors, commitDateFor, lastKickMs) {
   if (!isFloridaHeadline(row)) return 0;
   const ts = commitWhenMs(row, nowMs, commitDateFor);
   if (!Number.isFinite(ts) || nowMs - ts > WEEK_MS || ts > nowMs + DAY_MS) return 0;
+  // Last week's pledge cannot own this game week's News (Bailey Sep 28 after Missouri).
+  if (Number.isFinite(lastKickMs) && etYmd(ts) < etYmd(lastKickMs)) return 0;
   const rank = natlRankOf(row);
   const stars = starsOf(row);
   const kind = eventKind(row);
@@ -240,9 +264,10 @@ function pickWeeklyNowBreakIn(now, opts) {
   const biggerThanVisitors = Boolean(opts.biggerThanVisitors);
   const rows = Array.isArray(opts.rows) ? opts.rows : loadIntelRows(nowMs);
   const commitDateFor = makeCommitDateLookup();
+  const lastKickMs = lastPostedKickMs(nowMs);
   let best = null;
   for (const row of rows) {
-    const score = scoreBreakIn(row, nowMs, biggerThanVisitors, commitDateFor);
+    const score = scoreBreakIn(row, nowMs, biggerThanVisitors, commitDateFor, lastKickMs);
     if (score <= 0) continue;
     const text = formatBreakInLine(row);
     if (!text) continue;

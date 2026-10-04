@@ -8,11 +8,12 @@ const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolR
 
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '4-1 · SEC home Saturday';
-const BAILEY_NEWS_LINE = 'Samuel Bailey commits to Florida · No. 36';
 const SC_NOW_GAME = 'South Carolina in the Swamp — 12:45 PM · SEC Network';
-const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen/i;
+const SC_VISITOR_LINE = 'Easton Royal';
+const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
 /** Posted Missouri final — last-good Faurot / 4-0 must not beat South Carolina week. */
-const LEFTOVER_MISSOURI_NOW_RE = /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00/i;
+const LEFTOVER_MISSOURI_NOW_RE =
+  /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00|samuel\s+bailey/i;
 /** Sep 21 was ABC-or-ESPN. SEC locked ABC Sep 27. Git ESPN overlay snapped NOW back. */
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri/i;
 
@@ -46,20 +47,17 @@ function pinLeftoverMissouriNow(data) {
   const newsItems = Array.isArray(newsRow?.items)
     ? newsRow.items.map((s) => String(s || '').trim()).filter(Boolean)
     : [];
-  const news = newsItems.some((s) => STALE_NOW_NEWS_RE.test(s)) || !newsItems.length
-    ? [BAILEY_NEWS_LINE]
-    : newsItems;
   return {
     data: {
       ...data,
-      items: [`Game — ${SC_NOW_GAME}`, `News — ${news[0]}`, `Season — ${SEASON_STANDING}`],
+      items: [`Game — ${SC_NOW_GAME}`, `Visitors — ${SC_VISITOR_LINE}`, `Season — ${SEASON_STANDING}`],
       nowWeek: [
         { key: 'game', label: 'Game', items: [SC_NOW_GAME] },
-        { key: 'news', label: 'News', items: news },
+        { key: 'visitors', label: 'Visitors', items: [SC_VISITOR_LINE] },
         { key: 'season', label: 'Season', items: [SEASON_STANDING] },
       ],
       ...(Array.isArray(data.ticker)
-        ? { ticker: [`Game — ${SC_NOW_GAME}`, `News — ${news[0]}`, `Season — ${SEASON_STANDING}`] }
+        ? { ticker: [`Game — ${SC_NOW_GAME}`, `Visitors — ${SC_VISITOR_LINE}`, `Season — ${SEASON_STANDING}`] }
         : {}),
     },
     changed: true,
@@ -105,12 +103,12 @@ const TICKER_FALLBACK = {
   status: 'ready',
   items: [
     `Game — ${SC_NOW_GAME}`,
-    `News — ${BAILEY_NEWS_LINE}`,
+    `Visitors — ${SC_VISITOR_LINE}`,
     `Season — ${SEASON_STANDING}`,
   ],
   nowWeek: [
     { key: 'game', label: 'Game', items: [SC_NOW_GAME] },
-    { key: 'news', label: 'News', items: [BAILEY_NEWS_LINE] },
+    { key: 'visitors', label: 'Visitors', items: [SC_VISITOR_LINE] },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],
   meta: { endpoint: 'ticker', cacheReason: 'now-edge-fallback' },
@@ -130,7 +128,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'scar-w6-secn';
+const NOW_BUST_VALUE = 'scar-w6-visit';
 
 function needsNowCacheBust(request) {
   const cookie = request?.headers?.get?.('cookie') || '';
@@ -162,7 +160,7 @@ function pinCurrentScarNow(data) {
   return { data: next, changed };
 }
 
-/** iOS last-good / URLCache can keep Cyion on NOW News after Bailey pledged. */
+/** iOS last-good / URLCache cannot keep last week's pledge on NOW News. */
 function pinBaileyNowNews(data) {
   if (!data || typeof data !== 'object') return { data, changed: false };
   const out = { ...data };
@@ -172,7 +170,7 @@ function pinBaileyNowNews(data) {
     const next = out.items.map((line) => {
       if (typeof line !== 'string') return line;
       if (/^News — /i.test(line) && STALE_NOW_NEWS_RE.test(line)) {
-        return `News — ${BAILEY_NEWS_LINE}`;
+        return `Visitors — ${SC_VISITOR_LINE}`;
       }
       return line;
     });
@@ -188,7 +186,7 @@ function pinBaileyNowNews(data) {
       const key = String(row.key || row.label || '').toLowerCase();
       const items = Array.isArray(row.items) ? row.items.map((s) => String(s || '')) : [];
       if ((key === 'news' || String(row.label || '') === 'News') && items.some((s) => STALE_NOW_NEWS_RE.test(s))) {
-        return { ...row, key: 'news', label: 'News', items: [BAILEY_NEWS_LINE] };
+        return { ...row, key: 'visitors', label: 'Visitors', items: [SC_VISITOR_LINE] };
       }
       return row;
     });
@@ -202,7 +200,7 @@ function pinBaileyNowNews(data) {
     const next = out.ticker.map((line) => {
       if (typeof line !== 'string') return line;
       if (/^News — /i.test(line) && STALE_NOW_NEWS_RE.test(line)) {
-        return `News — ${BAILEY_NEWS_LINE}`;
+        return `Visitors — ${SC_VISITOR_LINE}`;
       }
       return line;
     });
