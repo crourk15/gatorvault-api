@@ -195,6 +195,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-04 | Schedule first-paint seed: Missouri **17-45 final** + South Carolina Homecoming current. **`/api/schedule` + NOW ticker already SC after Render.** | `schedule-data.ts` in binary. 1.0.29 last-good still paints Missouri 4-0 if the API 502s. | this PR |
 | 2026-10-03 | Home NOW last-good: rewrite leftover Missouri **ESPN → ABC**. **Ticker edge + `/api/schedule` already ABC after deploy.** | `home-command-utils.ts` in binary. 1.0.29 last-good can keep ESPN until a live pack lands. | this PR |
 | 2026-10-03 | Schedule first-paint seed: Missouri TV **ABC** (not leftover ESPN). **`/api/schedule` + ticker already ABC after Render.** | `schedule-data.ts` in binary. 1.0.29 last-good still paints ESPN if the API 502s. | this PR |
 | 2026-10-02 | Home NOW: pin Samuel Bailey when News is a false McMullen (or leftover Cyion). **Web after Netlify. iOS 1.0.29 already last-good Bailey — do not bake for this.** | `home-command-utils.ts` in binary. API + edge already strip McMullen after #784. | this PR |

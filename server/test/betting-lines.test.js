@@ -109,4 +109,22 @@ describe('betting-lines next game', () => {
     assert.equal(payload.lastGame.homeScore, 52);
     assert.equal(payload.lastGame.awayScore, 28);
   });
+
+  it('advances to South Carolina after the Missouri postgame window', () => {
+    const next = pickNextGame(STATIC_LINES, new Date('2026-10-04T12:00:00.000Z'));
+    assert.equal(next.id, 'uf-scar-2026-w6');
+    const last = pickLastCompleted(STATIC_LINES, new Date('2026-10-04T12:00:00.000Z'));
+    assert.equal(last.id, 'uf-missouri-2026-w5');
+  });
+
+  it('serves South Carolina as nextGame with UF -14.5 / 57.5 on Oct 4', async () => {
+    const payload = await getBettingLines(new Date('2026-10-04T12:00:00.000Z'));
+    assert.equal(payload.nextGame.id, 'uf-scar-2026-w6');
+    assert.equal(payload.nextGame.spread.line, 'UF -14.5');
+    assert.equal(payload.nextGame.spread.uf, -14.5);
+    assert.equal(payload.nextGame.total, 57.5);
+    assert.equal(payload.lastGame.id, 'uf-missouri-2026-w5');
+    assert.equal(payload.lastGame.homeScore, 17);
+    assert.equal(payload.lastGame.awayScore, 45);
+  });
 });

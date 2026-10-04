@@ -122,6 +122,21 @@ const STATIC_LINES = [
     source: 'schedule'
   },
   {
+    id: 'uf-scar-2026-w6',
+    week: 6,
+    game: 'Florida vs South Carolina',
+    opponent: 'South Carolina',
+    date: '2026-10-10T16:00:00.000Z',
+    venue: 'Ben Hill Griffin Stadium',
+    // Market ~Oct 3 2026: DraftKings FLA -14.5 / 57.5 (Blue Chip / weather.football). Pre-Missouri number — expect movement after 17-45.
+    spread: { line: 'UF -14.5', uf: -14.5 },
+    total: 57.5,
+    moneyline: null,
+    sportsbookUrl: FANDUEL_AFFILIATE,
+    sportsbookLinks: SPORTSBOOKS,
+    source: 'schedule'
+  },
+  {
     id: 'uf-fsu-2026',
     week: null,
     game: 'Florida vs Florida State',

@@ -132,7 +132,7 @@ function applyFormPredictions(doc) {
   return {
     ...doc,
     games,
-    predThrough: '2026-W5',
+    predThrough: '2026-W6',
     predModel: PRED_MODEL,
   };
 }

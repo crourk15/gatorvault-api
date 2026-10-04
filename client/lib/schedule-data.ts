@@ -103,7 +103,7 @@ export type ScheduleGame = {
 };
 
 /** Bundled remaining-season pred week. Peek drops a leftover last-good stamp older than this. */
-export const SCHEDULE_SEED_PRED_THROUGH = '2026-W5';
+export const SCHEDULE_SEED_PRED_THROUGH = '2026-W6';
 
 export const SCHEDULE_GAMES: ScheduleGame[] = [
   {
@@ -405,6 +405,10 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     pred: "UF 28 · Ole Miss 27",
     predUF: 28,
     predOpp: 27,
+    finalUF: 52,
+    finalOpp: 28,
+    finalSource: "official",
+    boxScoreUrl: "https://floridagators.com/sports/football/stats/2026/ole-miss/boxscore/27906",
     opponentTendencies: [
       "Schematic Identity: Pure no-huddle, shotgun-only attack. High-velocity tempo designed to score quickly rather than bleed the clock (TOP: 27:11).",
       "Efficiency Metrics: Averaging 38.0 PPG and 445.0 YPG (331.0 pass / 114.0 rush).",
@@ -482,6 +486,10 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     pred: "UF 34 · Missouri 24",
     predUF: 34,
     predOpp: 24,
+    finalUF: 17,
+    finalOpp: 45,
+    finalSource: "official",
+    boxScoreUrl: "https://floridagators.com/sports/football/stats/2026/missouri/boxscore/27907",
     predConfidence: 78,
     predMovement: "up",
     ufPctDelta: 6,
@@ -513,17 +521,40 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "South Carolina Gamecocks",
     date: "October 10, 2026 · 12:00–1:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 82,
-    tv: "TBD",
-    keys: ["Win rivalry week", "Control clock", "Limit their QB run game"],
-    swing: [
-      { name: "Edge defenders", role: "Contain QB run" },
-      { name: "Singleton Jr.", role: "Win one-on-ones" },
+    ufPct: 73,
+    tv: "ABC or SEC Network",
+    keys: [
+      "Take Away the Fast Start & Crowd Sellers",
+      "Close When Carolina Fades & Finish the Lead",
+      "Cap DJ Black Late & Own the Fourth",
     ],
-    film: "Homecoming vs South Carolina. RPO-heavy.",
-    pred: "UF 36 · South Carolina 21",
-    predUF: 36,
+    howUFWins: [
+      "Do not let LaNorris Sellers jump the Swamp. South Carolina led 17-0 against Kentucky and 16-0 against Mississippi State. Edge rushers must stay in the running lane on the keep and rush with contain so the first fifteen minutes are not already a hole.",
+      "Do not treat a stagnant South Carolina start as the win. They fade. They have lost eight straight SEC games. When the lead is there, finish it. Jadan Baugh has to get the run going after 13 yards on 12 carries at Faurot.",
+      "Do not let DJ Black and a late Sellers throw steal the fourth. He hit Black for the go-ahead score against Kentucky and then put the ball on the ground. Own the extra possession. Make them beat you for 60 minutes, not 17.",
+    ],
+    swing: [
+      {
+        name: "Jayden Woods",
+        role: "Do not let LaNorris Sellers jump the Swamp. South Carolina led 17-0 against Kentucky and 16-0 against Mississippi State. Woods and the edge must stay in the running lane on the keep and rush with contain so Sellers cannot start this one the way he starts their SEC games.",
+      },
+      {
+        name: "Jadan Baugh",
+        role: "Do not treat a 2-3 South Carolina team as a bye after Faurot. Baugh had 13 yards on 12 carries against Missouri. Homecoming is where the run has to come back. Wear Clayton White's front early so Philo is not throwing from behind again.",
+      },
+      {
+        name: "Aaron Philo",
+        role: "South Carolina just gave Mississippi State 41 and Alabama 49. When they fade, finish. Sellers hit DJ Black for the go-ahead score in the fourth against Kentucky and then fumbled. Philo has to make the fourth quarter the Gators' possession, not another Carolina escape.",
+      },
+    ],
+    film: "South Carolina is 2-3 and 0-3 in the SEC. They blow people out when it is Kent State (57-0) and Towson (45-9), then jump Mississippi State 16-0 and Kentucky 17-0 and lose both. LaNorris Sellers is the show in Kendal Briles' hurry-up. Clayton White still calls a 4-2-5. This is five recaps, not a sit.",
+    filmWatched: false,
+    pred: "UF 32 · South Carolina 21",
+    predUF: 32,
     predOpp: 21,
+    predConfidence: 79,
+    predMovement: "down",
+    ufPctDelta: -9,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27908",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-univ-of-gainesville-florida-10-10-2026/event/2200645C21920948",
@@ -545,7 +576,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Texas Longhorns",
     date: "October 17, 2026 · 12:00–1:00 PM ET",
     venue: "DKR-Texas Memorial Stadium, Austin TX",
-    ufPct: 31,
+    ufPct: 25,
     tv: "TBD",
     keys: ["Protect the football", "Win early downs", "Limit explosives"],
     swing: [
@@ -553,8 +584,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "OL", role: "Road pass protection" },
     ],
     film: "Texas balanced attack with elite skill.",
-    pred: "UF 25 · Texas 34",
-    predUF: 25,
+    pred: "UF 22 · Texas 34",
+    predUF: 22,
     predOpp: 34,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27909",
@@ -592,7 +623,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Georgia Bulldogs",
     date: "October 31, 2026 · 3:30 PM ET",
     venue: "Mercedes-Benz Stadium, Atlanta GA",
-    ufPct: 37,
+    ufPct: 31,
     tv: "ABC",
     keys: ["Control time of possession", "Get pressure on their QB", "Establish run before going downfield"],
     swing: [
@@ -600,8 +631,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Jayden Woods", role: "Must generate pressure" },
     ],
     film: "Neutral-site Cocktail Party at Mercedes-Benz Stadium in Atlanta for 2026.",
-    pred: "UF 26 · Georgia 32",
-    predUF: 26,
+    pred: "UF 23 · Georgia 32",
+    predUF: 23,
     predOpp: 32,
     scoutingReport:
       "Georgia series moves to Atlanta in 2026 (Mercedes-Benz). UF path is controlling the ball and limiting explosives in a neutral-site environment.",
@@ -626,7 +657,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Oklahoma Sooners",
     date: "November 7, 2026 · 3:30–8:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 71,
+    ufPct: 63,
     tv: "TBD",
     keys: ["Win early downs", "Protect the football", "Limit explosives"],
     swing: [
@@ -634,8 +665,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Secondary", role: "Match skill in space" },
     ],
     film: "Oklahoma brings tempo and skill. Swamp night energy matters.",
-    pred: "UF 37 · Oklahoma 27",
-    predUF: 37,
+    pred: "UF 33 · Oklahoma 27",
+    predUF: 33,
     predOpp: 27,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27911",
@@ -658,7 +689,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Kentucky Wildcats",
     date: "November 14, 2026 · 6:00–8:00 PM ET",
     venue: "Kroger Field, Lexington KY",
-    ufPct: 71,
+    ufPct: 63,
     tv: "TBD",
     keys: ["Physical run fits", "Win the trenches", "Finish in red zone"],
     swing: [
@@ -666,8 +697,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "WR room", role: "Explosive plays" },
     ],
     film: "Kentucky power run and play-action on the road.",
-    pred: "UF 33 · Kentucky 23",
-    predUF: 33,
+    pred: "UF 29 · Kentucky 23",
+    predUF: 29,
     predOpp: 23,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27912",
@@ -689,7 +720,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Vanderbilt Commodores",
     date: "November 21, 2026 · 12:00–1:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 79,
+    ufPct: 71,
     tv: "TBD",
     keys: ["Execute early", "Avoid complacency", "Develop depth"],
     swing: [
@@ -697,8 +728,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "QB1", role: "Efficient scoring drives" },
     ],
     film: "Vanderbilt improving — treat as SEC test.",
-    pred: "UF 36 · Vanderbilt 22",
-    predUF: 36,
+    pred: "UF 32 · Vanderbilt 22",
+    predUF: 32,
     predOpp: 22,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27913",
@@ -720,7 +751,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Florida State Seminoles",
     date: "November 27, 2026 · 3:30 PM ET",
     venue: "Doak Campbell Stadium, Tallahassee FL",
-    ufPct: 71,
+    ufPct: 63,
     tv: "ABC",
     keys: ["Win field position battle", "Avoid penalties", "Win turnover margin"],
     swing: [
@@ -728,8 +759,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Myles Graham", role: "Contain their TE weapon" },
     ],
     film: "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
-    pred: "UF 34 · FSU 24",
-    predUF: 34,
+    pred: "UF 30 · FSU 24",
+    predUF: 30,
     predOpp: 24,
     filmLessonId: "frl00010-0000-4000-8000-00000000000a",
     opponentTendencies: ["RPO and quick game in rivalry setting", "TE usage in red zone", "Tempo spikes in critical moments"],

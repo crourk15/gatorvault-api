@@ -16,7 +16,7 @@ function readJson(filePath, fallback) {
 }
 
 function buildGameWeekPayload() {
-  const meta = readJson(META_PATH, { season: 2026, currentGameId: 'missouri' });
+  const meta = readJson(META_PATH, { season: 2026, currentGameId: 'scar' });
   let games = [];
   let scheduleUpdatedAt = null;
   try {
@@ -31,7 +31,7 @@ function buildGameWeekPayload() {
   return {
     ok: true,
     season: meta.season || 2026,
-    currentGameId: meta.currentGameId || 'missouri',
+    currentGameId: meta.currentGameId || 'scar',
     updatedAt: meta.updatedAt || new Date().toISOString(),
     scheduleUpdatedAt,
     games,

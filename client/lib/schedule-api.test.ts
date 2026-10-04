@@ -229,55 +229,55 @@ describe('schedule-api uniforms', () => {
   });
 
   it('peekScheduleBoard does not first-paint durable leftover remaining scores', () => {
-    const missouri = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
-    assert.ok(missouri);
+    const scar = SCHEDULE_GAMES.find((g) => g.id === 'scar');
+    assert.ok(scar);
     __scheduleApiTest.clearLastGood(2026);
     __scheduleApiTest.writeLastGood(2026, {
       games: [
         {
-          ...missouri,
-          pred: 'UF 28 · Missouri 21',
-          predUF: 28,
+          ...scar,
+          pred: 'UF 36 · South Carolina 21',
+          predUF: 36,
           predOpp: 21,
-          ufPct: 65,
-          keys: ['Take Away the Clean Throw & Shrink the Hitch'],
+          ufPct: 82,
+          keys: ['Take Away the Fast Start & Crowd Sellers'],
         },
       ],
-      currentGameId: 'missouri',
+      currentGameId: 'scar',
     });
     const peeked = peekScheduleBoard(2026);
-    const row = peeked.games.find((g) => g.id === 'missouri');
+    const row = peeked.games.find((g) => g.id === 'scar');
     assert.equal(row?.pred, '');
     assert.equal(row?.predUF, 0);
     assert.equal(row?.predPending, true);
-    assert.equal(row?.keys?.[0], 'Take Away the Clean Throw & Shrink the Hitch');
+    assert.equal(row?.keys?.[0], 'Take Away the Fast Start & Crowd Sellers');
   });
 
   it('peekScheduleBoard paints remaining scores after this-session live fetch', () => {
-    const missouri = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
-    assert.ok(missouri);
+    const scar = SCHEDULE_GAMES.find((g) => g.id === 'scar');
+    assert.ok(scar);
     __scheduleApiTest.clearLastGood(2026);
     __scheduleApiTest.writeLastGood(
       2026,
       {
         games: [
           {
-            ...missouri,
-            pred: 'UF 34 · Missouri 24',
-            predUF: 34,
-            predOpp: 24,
-            ufPct: 71,
+            ...scar,
+            pred: 'UF 32 · South Carolina 21',
+            predUF: 32,
+            predOpp: 21,
+            ufPct: 73,
           },
         ],
-        currentGameId: 'missouri',
-        predThrough: '2026-W5',
+        currentGameId: 'scar',
+        predThrough: '2026-W6',
       },
       { fromLive: true }
     );
     const peeked = peekScheduleBoard(2026);
-    const row = peeked.games.find((g) => g.id === 'missouri');
-    assert.equal(row?.pred, 'UF 34 · Missouri 24');
-    assert.equal(row?.predUF, 34);
+    const row = peeked.games.find((g) => g.id === 'scar');
+    assert.equal(row?.pred, 'UF 32 · South Carolina 21');
+    assert.equal(row?.predUF, 32);
     assert.equal(row?.predPending, undefined);
   });
 
