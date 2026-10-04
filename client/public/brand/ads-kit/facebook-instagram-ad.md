@@ -1,13 +1,21 @@
-# Facebook / Instagram Ad
+# Facebook / Instagram Ad — live flight
 
-**Headline:** Florida Football, Unlocked.
+**Oct 2026 App Install (South Carolina week)** is the live pack:
 
-**Body:**
+- Brief: [facebook-app-install-oct2026.md](./facebook-app-install-oct2026.md)
+- Creatives: [creatives/](./creatives/)
 
-GatorVault is the first-ever Florida football intelligence platform.
+**Headline:** The Gator week. One vault.
 
-Real recruiting movement. Real film breakdowns. Real NIL insights.
+**Primary text:**
 
-No rumors. No noise. Just truth.
+South Carolina week is already live in GatorVault.
 
-👉 Join today at GatorVault.com
+Home is the kickoff — Florida vs the Gamecocks, Oct 10, 12:45 ET, Ben Hill Griffin.
+
+Then the rest of the vault is in the same app: FutureCast, Film Room, GatorNation Live, the class.
+
+If you live this program, this is the app.
+
+**CTA:** Install now  
+**Destination:** https://apps.apple.com/app/gatorvault-insider/id6783848215
