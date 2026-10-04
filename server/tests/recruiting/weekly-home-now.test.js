@@ -288,3 +288,34 @@ test('after the Missouri final NOW points at South Carolina homecoming', () => {
   assert.equal(cats[1].label, 'Visitors');
   assert.match(String(cats[1].items[0] || ''), /Easton Royal/i);
 });
+
+test('Samuel Bailey is last week after Missouri — Visitors Easton Royal', () => {
+  const now = new Date('2026-10-04T03:58:00.000Z');
+  const cats = buildWeeklyHomeNowCategories(now);
+  assert.equal(cats[0].label, 'Game');
+  assert.match(cats[0].items[0], /South Carolina in the Swamp — 12:45 PM · SEC Network/);
+  assert.equal(cats[1].label, 'Visitors');
+  assert.match(String(cats[1].items[0] || ''), /Easton Royal/i);
+  assert.ok(!cats.some((c) => c.label === 'News'));
+  assert.ok(!/bailey/i.test(JSON.stringify(cats)));
+});
+
+test('cached ticker News cannot keep last-week Samuel Bailey', () => {
+  const body = attachLiveNowWeek({
+    ok: true,
+    status: 'ready',
+    items: [
+      'Game — South Carolina in the Swamp — 12:45 PM · SEC Network',
+      'News — Samuel Bailey commits to Florida · No. 36',
+      'Season — 4-1 · SEC home Saturday',
+    ],
+    nowWeek: [
+      { key: 'game', label: 'Game', items: ['South Carolina in the Swamp — 12:45 PM · SEC Network'] },
+      { key: 'news', label: 'News', items: ['Samuel Bailey commits to Florida · No. 36'] },
+      { key: 'season', label: 'Season', items: ['4-1 · SEC home Saturday'] },
+    ],
+  });
+  assert.ok(!/bailey/i.test(JSON.stringify(body.items || [])));
+  assert.ok(!/bailey/i.test(JSON.stringify(body.nowWeek || [])));
+  assert.ok(/Easton Royal/i.test(JSON.stringify(body.nowWeek || [])));
+});

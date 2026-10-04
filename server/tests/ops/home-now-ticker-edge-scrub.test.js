@@ -15,7 +15,7 @@ test('ticker edge strips the 1.0.29 App Store line and falls back when origin 50
   assert.match(src, /now-edge-fallback/);
   assert.match(src, /4-1 · SEC home Saturday/);
   assert.match(src, /South Carolina in the Swamp — 12:45 PM · SEC Network/);
-  assert.match(src, /Samuel Bailey commits to Florida/);
+  assert.match(src, /Easton Royal/);
   assert.match(src, /if \(isTickerPath\(url\.pathname\) && !upstream\.ok\)/);
   assert.equal(/1\.0\.29 is live/.test(src), false);
 });
@@ -37,7 +37,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the SC week pack', () => 
   assert.match(src, /pinCurrentScarNow/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'scar-w6-secn'/);
+  assert.match(src, /NOW_BUST_VALUE = 'scar-w6-visit'/);
   assert.match(src, /isSchedulePath/);
   assert.match(src, /isPingPath/);
   const toml = fs.readFileSync(path.join(__dirname, '../../../netlify.toml'), 'utf8');
@@ -45,11 +45,14 @@ test('ticker edge one-shot busts iOS URLCache and pins the SC week pack', () => 
   assert.match(toml, /path = "\/api\/ping"/);
 });
 
-test('ticker edge rewrites leftover Cyion NOW News to Samuel Bailey', () => {
+test('ticker edge rewrites leftover Cyion / Bailey NOW News to Visitors', () => {
   assert.match(src, /pinBaileyNowNews/);
   assert.match(src, /STALE_NOW_NEWS_RE/);
   assert.match(src, /cyion\\s\+smith/);
   assert.match(src, /lorenzo\\s\+mcmullen/);
+  assert.match(src, /samuel\\s\+bailey/);
+  assert.match(src, /Visitors — \$\{SC_VISITOR_LINE\}/);
+  assert.match(src, /NOW_BUST_VALUE = 'scar-w6-visit'/);
 });
 
 test('hub edge pins 2028 hero at 3 commits and drops verified commits from battles', () => {

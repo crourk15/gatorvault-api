@@ -431,7 +431,20 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
     assert.ok(!rows.some((row) => row.items.some((s) => /missouri|faurot|4-0 heading/i.test(s))));
   });
 
-  it('pins leftover Cyion News to Samuel Bailey', () => {
+  it('rewrites leftover ABC-or-SECN and Bailey News to 12:45 Visitors', () => {
+    const rows = usableHomeNowWeek([
+      { key: 'game', label: 'Game', items: ['South Carolina in the Swamp · ABC or SEC Network'] },
+      { key: 'news', label: 'News', items: ['Samuel Bailey commits to Florida · No. 36'] },
+      { key: 'season', label: 'Season', items: ['4-1 · SEC home Saturday'] },
+    ]);
+    assert.equal(rows[0].items[0], 'South Carolina in the Swamp — 12:45 PM · SEC Network');
+    assert.equal(rows[1].label, 'Visitors');
+    assert.equal(rows[1].items[0], 'Easton Royal');
+    assert.equal(rows[2].items[0], '4-1 · SEC home Saturday');
+    assert.ok(!rows.some((row) => row.items.some((s) => /bailey|abc or sec network/i.test(s))));
+  });
+
+  it('pins leftover Cyion News to Visitors Easton Royal', () => {
     const rows = usableHomeNowWeek([
       { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ABC'] },
       { key: 'news', label: 'News', items: ['Cyion Smith commits to Florida'] },
@@ -439,20 +452,20 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
     ]);
     assert.equal(rows.length, 3);
     assert.equal(rows[0].items[0], 'South Carolina in the Swamp — 12:45 PM · SEC Network');
-    assert.equal(rows[1].label, 'News');
-    assert.match(rows[1].items[0], /Samuel Bailey commits to Florida/i);
-    assert.ok(!rows.some((row) => row.items.some((s) => /cyion/i.test(s))));
+    assert.equal(rows[1].label, 'Visitors');
+    assert.equal(rows[1].items[0], 'Easton Royal');
+    assert.ok(!rows.some((row) => row.items.some((s) => /cyion|bailey/i.test(s))));
   });
 
-  it('pins a false McMullen News line to Samuel Bailey so web matches iOS', () => {
+  it('pins a false McMullen News line off NOW so web matches iOS', () => {
     const rows = usableHomeNowWeek([
       { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ABC'] },
       { key: 'news', label: 'News', items: ['Lorenzo McMullen Jr. commits to Florida · No. 25'] },
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
-    assert.equal(rows[1].label, 'News');
-    assert.match(rows[1].items[0], /Samuel Bailey commits to Florida/i);
-    assert.ok(!rows.some((row) => row.items.some((s) => /mcmullen/i.test(s))));
+    assert.equal(rows[1].label, 'Visitors');
+    assert.equal(rows[1].items[0], 'Easton Royal');
+    assert.ok(!rows.some((row) => row.items.some((s) => /mcmullen|bailey/i.test(s))));
   });
 
   it('strips 1.0.29 update copy and keeps the standing Season line', () => {
@@ -509,7 +522,10 @@ describe('applyHomeNowWeekPack', () => {
     );
     const remount = applyHomeNowWeekPack([], []);
     assert.equal(remount[0].items[0], 'South Carolina in the Swamp — 12:45 PM · SEC Network');
+    assert.equal(remount[1].label, 'Visitors');
+    assert.equal(remount[1].items[0], 'Easton Royal');
     assert.equal(remount[2].items[0], '4-1 · SEC home Saturday');
+    assert.ok(!remount.some((row) => row.items.some((s) => /bailey/i.test(s))));
   });
 });
 
@@ -527,7 +543,7 @@ describe('applyHomeNowTickerPack', () => {
     assert.deepEqual(applyHomeNowTickerPack([], current), current);
   });
 
-  it('rewrites a false McMullen News ticker line to Samuel Bailey', () => {
+  it('rewrites a false McMullen News ticker line to Visitors Easton Royal', () => {
     const next = applyHomeNowTickerPack(
       [
         'Game — Missouri at Faurot Field — 3:30 PM · ABC',
@@ -536,9 +552,9 @@ describe('applyHomeNowTickerPack', () => {
       ],
       []
     );
-    assert.ok(next.some((line) => /News — Samuel Bailey commits to Florida/i.test(line)));
-    assert.ok(!next.some((line) => /mcmullen/i.test(line)));
-    assert.ok(next.some((line) => /South Carolina in the Swamp/i.test(line)));
-    assert.ok(!next.some((line) => /missouri|faurot|4-0 heading/i.test(line)));
+    assert.ok(next.some((line) => /Visitors — Easton Royal/i.test(line)));
+    assert.ok(!next.some((line) => /mcmullen|bailey/i.test(line)));
+    assert.ok(next.some((line) => /South Carolina in the Swamp — 12:45 PM · SEC Network/i.test(line)));
+    assert.ok(!next.some((line) => /missouri|faurot|4-0 heading|abc or sec network/i.test(line)));
   });
 });

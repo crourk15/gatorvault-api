@@ -7,7 +7,8 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
-- [x] Home NOW leftover Missouri week: ticker edge rewrites Faurot / 4-0 last-good to **South Carolina 12:45 SECN / 4-1**, pins the SC pack on every ticker hit, and one-shot `Clear-Site-Data: cache` via schedule/ping (`gv-now-bust=scar-w6-secn`) so iOS 1.0.29 URLCache cannot keep last week. API already serves SC after Render. Client last-good strip is the bake row.
+- [x] Home NOW leftover Bailey News: ticker edge + origin drop last week's **Samuel Bailey** pledge so the middle slot is **Visitors — Easton Royal**. Game stays **12:45 PM · SEC Network**. One-shot `Clear-Site-Data: cache` via `gv-now-bust=scar-w6-visit` so iOS 1.0.29 URLCache cannot keep Bailey / ABC-or-SECN. API + Netlify edge after deploy — no Codemagic. Client last-good strip is the bake row.
+- [x] Home NOW leftover Missouri week: ticker edge rewrites Faurot / 4-0 last-good to **South Carolina 12:45 SECN / 4-1**, pins the SC pack on every ticker hit, and one-shot `Clear-Site-Data: cache` via schedule/ping (`gv-now-bust=scar-w6-visit`) so iOS 1.0.29 URLCache cannot keep last week. API already serves SC after Render. Client last-good strip is the bake row.
 - [x] Missouri kick is **3:30 PM ET / ABC** (SEC lock Sep 27; floridagators.com broadcast card). Community game-day open + Home NOW + `/api/schedule` `tv` heal off the leftover Sep 21 ESPN window. Billy Moody called it in Locker. API + Netlify ticker edge after deploy — current App Store already live-fetches TV. Seed `schedule-data.ts` is the bake row.
 - [x] FutureCast 2028 deep audit (10/2 On3): Antonio Thomas Jr. **94%** (was 41), Jaxon Flowers **72%** (was 1), John O'Dwyer **76%** now on Closest, Tromon Isaac Miami-led residual (git 80 was poison). Corroborated Florida locks no longer temper Lab Florida chance into the 58–72 band. API after Render — no Codemagic.
 - [x] FutureCast Bubba Brown: Chad Simmons On3 RPM is Florida **98%** / Georgia 1% (Journey + Team Pred 97.7). Git stamp + HP floors + stale-low durable overlay so Render cannot keep August Georgia 40 / UF 19. API after Render — no Codemagic.
@@ -196,6 +197,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-04 | Home NOW last-good: rewrite leftover **Samuel Bailey News** + ABC-or-SECN to **Visitors — Easton Royal** / **12:45 SECN**. **Ticker edge + schedule/ping cache bust already Visitors after deploy.** | `home-command-utils.ts` in binary. 1.0.29 last-good still first-paints Bailey until the live pack overwrites it. | this PR |
 | 2026-10-04 | Home NOW last-good: rewrite leftover Missouri **Faurot / 4-0** to South Carolina **4-1**. **Ticker edge + schedule/ping cache bust already SC after deploy.** | `home-command-utils.ts` in binary. 1.0.29 last-good still first-paints Missouri until the live pack overwrites it. | this PR |
 | 2026-10-04 | Schedule first-paint seed: Missouri **17-45 final** + South Carolina Homecoming current. **`/api/schedule` + NOW ticker already SC after Render.** | `schedule-data.ts` in binary. 1.0.29 last-good still paints Missouri 4-0 if the API 502s. | this PR |
 | 2026-10-03 | Home NOW last-good: rewrite leftover Missouri **ESPN → ABC**. **Ticker edge + `/api/schedule` already ABC after deploy.** | `home-command-utils.ts` in binary. 1.0.29 last-good can keep ESPN until a live pack lands. | this PR |
