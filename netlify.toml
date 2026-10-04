@@ -104,6 +104,20 @@
   function = "scrub-denied-visits"
   path = "/api/ping"
 
+# iOS 1.0.29 launch POSTs (no-store / uncached) so Clear-Site-Data can
+# drop leftover NOW URLCache the ticker GET never reaches.
+[[edge_functions]]
+  function = "now-ios-bust"
+  path = "/api/push/device"
+
+[[edge_functions]]
+  function = "now-ios-bust"
+  path = "/api/push/config"
+
+[[edge_functions]]
+  function = "now-ios-bust"
+  path = "/api/member-activity/ping"
+
 [[edge_functions]]
   function = "scrub-denied-visits"
   path = "/api/recruiting/hub/bundle"
