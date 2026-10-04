@@ -1,5 +1,4 @@
 # Facebook / Instagram — App Install (Oct 2026)
-
 **Campaign:** GatorVault Insider — South Carolina homecoming week
 **Objective:** App installs (iOS). Not website traffic.
 **Account:** GatorVault Ads (1173230622539087)
@@ -15,11 +14,11 @@ Do not run this as a website-traffic campaign. Destination is the App Store.
 
 Keep the live ad **App screen — live cut**. Do not remake it. Do not send it back through Runway.
 
-This file is that same 15s 9:16 cut with **only the homepage** swapped to this week.
+This file is that same 15s 9:16 cut with **only the homepage** swapped to this week. Stadium / end-card glass now shows Game Week (Florida vs South Carolina) plus **GatorNation Live / Open GNL** from Charles's Oct 4 Home recording.
 
 | File | Role |
 |---|---|
-| `creatives/fb-tight-home-sc-15s.mp4` | **The ad.** Same phone, stadium, FutureCast, end card, audio. Home is South Carolina week. |
+| `creatives/fb-tight-home-sc-15s.mp4` | **The ad.** Same phone, stadium, FutureCast, end card, audio. Home is South Carolina week + GNL. |
 | `creatives/fb-tight-home-sc-still.jpg` | Optional 9:16 static if you want a cheap second format. |
 
 Upload `fb-tight-home-sc-15s.mp4` into the same App Install ad. Replace the creative. Do not pause the winner and start a new ad.
@@ -33,6 +32,7 @@ python3 server/brand/ads-kit/patch-tight-home-sc.py
 ```
 
 Source cut (the one that is already converting): `source/gatorvault-ad-tight-15s.mp4`
+Home plate (Charles recording): `source/home-sc-gnl.png`
 
 ---
 
@@ -55,6 +55,7 @@ CTA: **Install now**
 - VISITORS — Easton Royal
 - SEASON — 4-1 · SEC home Saturday
 - Game Week card — Florida vs South Carolina, Oct 10, 12:45 ET, Ben Hill Griffin
+- **GatorNation Live** card — Open GNL → (from the Oct 4 Home recording)
 
 Bailey stays off. Missouri stays off. ABC-or-SECN stays off.
 
@@ -64,7 +65,7 @@ Bailey stays off. Missouri stays off. ABC-or-SECN stays off.
 
 - Do not remake the 3D phone / stadium / FutureCast / end card
 - Do not run Runway on this cut
-- Do not upload the raw Home screenshot
+- Do not upload the raw Home screenshots
 - Do not run the white-hand UGC
 - Do not send traffic to gatorvaultinsider.com
 - Do not start Codemagic

@@ -21,6 +21,7 @@ SOURCE = HERE / "source" / "gatorvault-ad-tight-15s.mp4"
 UPLOAD = Path("/home/ubuntu/.cursor/projects/workspace/uploads/gatorvault_ad_tight_15s_b733.mp4")
 ASSETS = Path("/home/ubuntu/.cursor/projects/workspace/assets")
 HOME_SRC = ASSETS / "e6189363-5c7c-45cc-8e52-323065e8c458.png"
+GNL_PLATE = HERE / "source" / "home-sc-gnl.png"
 FRAMES_IN = Path("/tmp/tight-frames")
 FRAMES_OUT = Path("/tmp/tight-home-sc")
 QA = Path("/tmp/tight-home-qa")
@@ -35,11 +36,12 @@ LABEL = (138, 146, 160)
 
 # Uploaded cut at 24 fps / 361 frames.
 # 0.00-1.80 close-up Home — paint NOW rows in place (no 295px warp).
-# 1.80-5.30 stadium Home — warp this-week plate onto the glass.
-# 5.30-7.80 FutureCast + orange dissolve — leave alone.
-# 7.80-11.50 stadium Home
+# 1.80-5.38 stadium Home — warp this-week plate onto the glass
+#   (includes the orange dissolve so Missouri cannot flash).
+# 5.38-7.48 FutureCast core — leave alone.
+# 7.48-11.50 stadium Home (Home is back before the old 7.80 cut).
 # 11.50-15.04 end card — warp glass only, keep GATOR VAULT / App Store.
-FC_T0, FC_T1 = 5.30, 7.80
+FC_T0, FC_T1 = 5.38, 7.48
 CLOSEUP_T1 = 1.80
 END_T0 = 11.50
 
@@ -54,40 +56,21 @@ def font(size: int, bold: bool = True) -> ImageFont.FreeTypeFont:
 
 
 def patch_home_plate() -> Image.Image:
-    """Real Home at width 1080. NOW rows this week. No iOS chrome."""
-    im = Image.open(HOME_SRC).convert("RGB")
+    """This-week Home from Charles's screen recording — Game Week + GatorNation Live."""
+    src = GNL_PLATE if GNL_PLATE.exists() else HOME_SRC
+    im = Image.open(src).convert("RGB")
     src_w, src_h = im.size
     s = 1080 / src_w
     im = im.resize((1080, int(src_h * s)), Image.Resampling.LANCZOS)
-    im = im.filter(ImageFilter.UnsharpMask(radius=1.2, percent=110, threshold=2))
-    d = ImageDraw.Draw(im)
-    y0, y1 = int(174 * s), int(278 * s)
-    x0, x1 = int(6 * s), int(289 * s)
-    d.rectangle((x0, y0, x1, y1), fill=NAVY)
-    lx = x0 + int(14 * s)
-    vx = x0 + int(92 * s)
-    d.text((lx, y0 + int(6 * s)), "NOW", font=font(11 * s), fill=ORANGE)
-    rows = [
-        ("GAME", "South Carolina  ·  12:45 PM  ·  SECN", WHITE),
-        ("VISITORS", "Easton Royal", WHITE),
-        ("SEASON", "4-1  ·  SEC home Saturday", WHITE),
-    ]
-    y = y0 + int(28 * s)
-    for lab, val, col in rows:
-        d.text((lx, y), lab, font=font(10 * s), fill=LABEL)
-        d.text((vx, y), val, font=font(11.5 * s, False), fill=col)
-        y += int(22 * s)
-    top = int(26 * s)
-    bot = int(562 * s)
-    return im.crop((0, top, 1080, min(bot, im.size[1])))
+    return im.filter(ImageFilter.UnsharpMask(radius=1.1, percent=105, threshold=2))
 
 
 def classify(sec: float, yel: int, white: int, orange: int) -> str:
     if FC_T0 <= sec <= FC_T1:
         return "futurecast"
-    if white > 150000 and yel > 1500:
-        return "futurecast"
-    if orange > 200000:
+    # Yellow ring + white card = FutureCast still on glass (swipe overlap).
+    # Do not treat the orange dissolve as FutureCast — that is still Home.
+    if 5.30 <= sec <= 7.55 and white > 120000 and yel > 1500:
         return "futurecast"
     if sec < CLOSEUP_T1:
         return "closeup"
@@ -445,7 +428,7 @@ def main() -> None:
                 out = bgr
         cv2.imwrite(str(FRAMES_OUT / f"f{i:04d}.jpg"), out, [int(cv2.IMWRITE_JPEG_QUALITY), 93])
 
-    for t in (0.0, 1.0, 1.5, 2.0, 2.5, 4.0, 5.5, 6.5, 8.0, 10.0, 11.5, 12.0, 13.5, 14.0):
+    for t in (0.0, 1.0, 1.5, 2.0, 2.5, 4.0, 5.2, 5.3, 5.5, 6.5, 7.5, 7.6, 7.7, 8.0, 10.0, 11.5, 12.0, 13.5, 14.0):
         idx = min(int(round(t * FPS)), len(paths) - 1)
         shutil.copy(FRAMES_OUT / f"f{idx:04d}.jpg", QA / f"q{t:04.1f}.jpg")
 
