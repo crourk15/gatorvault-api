@@ -7,6 +7,7 @@ function isFloridaSchool(value) {
     .replace(/\s+/g, ' ')
     .trim();
   if (!v) return false;
+  if (/\bflorida\s*state\b|\bseminoles\b|\bfsu\b/i.test(v)) return false;
   return /\bflorida\b|\bgators\b/i.test(v);
 }
 
@@ -119,6 +120,7 @@ module.exports = {
   isFloridaSchool,
   resolveCommittedTo,
   isCommittedElsewhere,
+  isForcedElsewhereCommitSlug,
   isActiveUfTarget,
   filterActiveUfTargets,
   effectiveStars,

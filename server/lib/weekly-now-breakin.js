@@ -18,7 +18,9 @@ function isFloridaSchool(value) {
   try {
     return require('./recruiting-hub-scoring').isFloridaSchool(value);
   } catch {
-    return /\bflorida\b|\bgators\b/i.test(String(value || ''));
+    const v = String(value || '');
+    if (/\bflorida\s*state\b|\bseminoles\b|\bfsu\b/i.test(v)) return false;
+    return /\bflorida\b|\bgators\b/i.test(v);
   }
 }
 

@@ -233,21 +233,6 @@
       "ufProbability": 0.07
     },
     {
-      "slug": "man-robinson",
-      "name": "Man Robinson",
-      "pos": "ATH",
-      "school": "IMG Academy, KY",
-      "state": "KY",
-      "stars": 3,
-      "rating": 85.66666666666667,
-      "natlRank": 391,
-      "posRank": 40,
-      "stateRank": 49,
-      "inState": false,
-      "committedTo": null,
-      "ufProbability": 0.2
-    },
-    {
       "slug": "ryan-drakeford",
       "name": "Ryan Drakeford",
       "pos": "S",

@@ -128,10 +128,10 @@
       "name": "Man Robinson",
       "stars": 3,
       "position": "CB",
-      "school": "IMG Academy, FL",
+      "school": "IMG Academy, KY",
       "commitSchool": null,
       "class": 2028,
-      "natlRank": 364,
+      "natlRank": 391,
       "patterns": [
         "3 star CB Man",
         "3-star CB Man",
@@ -141,29 +141,25 @@
         "3-star CB Robinson",
         "three star CB Robinson",
         "three-star CB Robinson",
-        "IMG Academy, FL 3 star",
-        "IMG Academy, FL three star",
-        "IMG Academy, FL CB",
+        "IMG Academy, KY 3 star",
+        "IMG Academy, KY three star",
+        "IMG Academy, KY CB",
         "Man Robinson",
         "Robinson",
-        "3 star CB",
-        "3-star CB",
-        "three star CB",
-        "three-star CB",
         "CB Man",
         "CB Robinson",
-        "3 star IMG Academy, FL commit",
-        "three star IMG Academy, FL commit",
+        "3 star IMG Academy, KY commit",
+        "three star IMG Academy, KY commit",
         "2028 CB Man",
-        "2028 3-star CB",
-        "2028 three-star CB",
+        "2028 3-star CB Man",
+        "2028 three-star CB Man",
         "2028 Man Robinson",
-        "#364 Man",
-        "top 364 CB Man",
-        "364 3 star CB",
-        "364 three star CB"
+        "#391 Man",
+        "top 391 CB Man",
+        "391 3 star CB Man",
+        "391 three star CB Man"
       ],
-      "updatedAt": "2026-07-11T11:30:19.371Z"
+      "updatedAt": "2026-10-05T18:00:32.102Z"
     },
     "merrick-ham": {
       "slug": "merrick-ham",
@@ -5718,5 +5714,5 @@
       "updatedAt": "2026-09-23T19:43:05.593Z"
     }
   },
-  "updatedAt": "2026-09-28T17:42:37.635Z"
+  "updatedAt": "2026-10-05T18:00:32.102Z"
 }
