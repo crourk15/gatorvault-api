@@ -309,7 +309,7 @@ describe('schedule-board', () => {
     );
     assert.equal(
       scar.howUFWins[2],
-      'Do not get cute. Hand it to Baugh first — 6.5 yards per carry, 613 yards, 11 touchdowns. Florida runs it on 58 percent of plays. That is what has been winning. When they load the box, throw it. Philo averages 9.2 yards per pass attempt — 1,114 yards on 121 throws, yards gained per throw, not how far he throws it. SEC quarterbacks are getting 9.4 yards per pass attempt, 12 passing touchdowns, and a 190.3 passer rating against this secondary (cfbstats through October 3; 71.6 percent completions). Alabama: 13.5 yards per attempt, 365 yards, four scores. Twenty-eight completions of 15-plus yards and ten of 25-plus in five games. When Carolina leads by 8 to 14 they have allowed 17-of-23, 268 yards, three scores, ten of those 23 going 15-plus.'
+      'Do not get cute. Hand it to Baugh first — 6.5 yards per carry, 11 touchdowns. Florida runs it on 58 percent of plays. That is what has been winning. When they load the box, throw it. Philo is already 9.2 yards per pass attempt against a secondary giving SEC quarterbacks 9.4, 12 scores, and a 190.3 rating. Alabama: 13.5 yards per attempt, four scores.'
     );
     assert.equal(scar.filmWatched, false);
     assert.equal(scar.tv, 'SEC Network');
