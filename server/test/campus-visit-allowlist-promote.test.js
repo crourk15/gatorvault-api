@@ -64,6 +64,34 @@ function main() {
   // Closing class never soft-expands.
   assert.ok(!shouldPromoteToFutureCast({ ...scheduled, classYear: 2027 }, 2027));
 
+  // Elsewhere-commit cannot bounce back onto Chase via leftover UF visit fields.
+  const robinsonFsu = {
+    name: 'Man Robinson',
+    slug: 'man-robinson',
+    classYear: 2028,
+    on3Slug: 'man-robinson-260972',
+    status: 'committed',
+    committedTo: 'Florida State',
+    ufOvStatus: 'scheduled',
+    visitStart: '2026-09-12',
+  };
+  assert.ok(floridaCampusVisitSetUp(robinsonFsu));
+  assert.ok(!shouldPromoteOnCampusVisit(robinsonFsu, 2028));
+  assert.ok(
+    !shouldPromoteOnCampusVisit(
+      {
+        name: 'Man Robinson',
+        slug: 'man-robinson',
+        classYear: 2028,
+        on3Slug: 'man-robinson-260972',
+        ufOvStatus: 'scheduled',
+        visitStart: '2026-09-12',
+      },
+      2028
+    ),
+    'forced FSU slug stays off allowlist even if the store still looks open'
+  );
+
   // Offer + On3 UV counts (Nick-shaped) — visit side promotes.
   const nickShaped = {
     name: 'Nick Carroll',

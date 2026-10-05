@@ -9,7 +9,7 @@
  */
 'use strict';
 
-const { isFloridaSchool } = require('./recruiting-target-filters');
+const { isFloridaSchool, isCommittedElsewhere, isActiveUfTarget } = require('./recruiting-target-filters');
 const { isAllowlistedTarget, canonicalTargetSlug } = require('./recruiting-target-allowlist');
 
 function floridaCampusVisitSetUp(player) {
@@ -60,6 +60,9 @@ function shouldPromoteOnCampusVisit(player, classYear) {
   // Prefer On3 identity; still allow when visit intel stamped a real slug.
   const slug = canonicalTargetSlug(player.slug || player.on3Slug || '');
   if (!slug && !player.on3Slug) return false;
+  // Dead elsewhere-commits (Robinson → FSU) must not bounce back onto Chase.
+  if (isCommittedElsewhere(player)) return false;
+  if (!isActiveUfTarget({ ...player, slug: slug || player.slug })) return false;
   return true;
 }
 

@@ -12,12 +12,15 @@ test('isFloridaSchool matches Gators variants', () => {
   assert.equal(isFloridaSchool('Florida'), true);
   assert.equal(isFloridaSchool('Florida Gators'), true);
   assert.equal(isFloridaSchool('Miami'), false);
+  assert.equal(isFloridaSchool('Florida State'), false);
+  assert.equal(isFloridaSchool('FSU'), false);
 });
 
 test('isCommittedElsewhere excludes non-UF commits', () => {
   assert.equal(isCommittedElsewhere({ committedTo: 'Miami' }), true);
   assert.equal(isCommittedElsewhere({ committedTo: 'Texas' }), true);
   assert.equal(isCommittedElsewhere({ committedTo: 'Florida' }), false);
+  assert.equal(isCommittedElsewhere({ committedTo: 'Florida State' }), true);
   assert.equal(isCommittedElsewhere({ committedTo: null }), false);
 });
 
@@ -45,6 +48,11 @@ test('isActiveUfTarget excludes UF commits and elsewhere commits', () => {
     isActiveUfTarget({ slug: 'adryan-cole', committedTo: null, status: 'uncommitted', category: 'target' }),
     false,
     'forced elsewhere-commit (Cole → Georgia) never counts as an active target'
+  );
+  assert.equal(
+    isActiveUfTarget({ slug: 'man-robinson', committedTo: null, status: 'uncommitted', category: 'target' }),
+    false,
+    'Robinson → Florida State must never count as an active 2028 chase target'
   );
 });
 

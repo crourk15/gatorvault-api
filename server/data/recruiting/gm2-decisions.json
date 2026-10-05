@@ -2,6 +2,17 @@
   "version": 1,
   "events": [
     {
+      "id": "gm2_1791223232254_2g74u",
+      "at": "2026-10-05T18:00:32.254Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "man-robinson",
+      "fingerprint": "manual_commit_man-robinson_2026-10-04",
+      "source": "manual",
+      "eventType": "commit"
+    },
+    {
       "id": "gm2_1790617357637_pfd9a",
       "at": "2026-09-28T17:42:37.637Z",
       "layer": "sil",
@@ -5257,16 +5268,7 @@
       "errors": [
         "invalid_school"
       ]
-    },
-    {
-      "id": "gm2_1783769292476_7zre3",
-      "at": "2026-07-11T11:28:12.476Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "stafford-willis",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
     }
   ],
-  "updatedAt": "2026-09-28T17:42:37.637Z"
+  "updatedAt": "2026-10-05T18:00:32.254Z"
 }

@@ -102,7 +102,9 @@ function shortInsiderNote(player) {
 }
 
 function isFloridaSchool(value) {
-  return /florida|gators|\buf\b/i.test(String(value || ''));
+  const v = String(value || '');
+  if (/\bflorida\s*state\b|\bseminoles\b|\bfsu\b/i.test(v)) return false;
+  return /florida|gators|\buf\b/i.test(v);
 }
 
 function isRosterPlayer(player) {
