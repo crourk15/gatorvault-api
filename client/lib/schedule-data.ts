@@ -524,30 +524,30 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ufPct: 73,
     tv: "SEC Network",
     keys: [
-      "Take Away the Fast Start & Crowd Sellers",
-      "Close When Carolina Fades & Finish the Lead",
-      "Cap DJ Black Late & Own the Fourth",
+      "Crowd the Keep & Win Early Downs",
+      "Take the Extra Possession & Don't Donate",
+      "Stay on Schedule & Take the Shot They Give",
     ],
     howUFWins: [
-      "Do not let LaNorris Sellers jump the Swamp. South Carolina led 17-0 against Kentucky and 16-0 against Mississippi State. Edge rushers must stay in the running lane on the keep and rush with contain so the first fifteen minutes are not already a hole.",
-      "Do not treat a stagnant South Carolina start as the win. They fade. They have lost eight straight SEC games. When the lead is there, finish it. Jadan Baugh has to get the run going after 13 yards on 12 carries at Faurot.",
-      "Do not let DJ Black and a late Sellers throw steal the fourth. He hit Black for the go-ahead score against Kentucky and then put the ball on the ground. Own the extra possession. Make them beat you for 60 minutes, not 17.",
+      "Do not let Sellers stay on schedule. South Carolina is seventh in the country on the ground at 256 rush yards per game, and they live on first-down success at 48 percent, not explosives — explosiveness ranks 87th. Sellers is 7.4 yards per carry. PFF has him at 88 forced missed tackles since 2024, most among Power Four quarterbacks. Woods and the edge stay in the running lane on the keep. Make it second-and-8.",
+      "Do not donate the extra possession. South Carolina is minus-6 in turnovers, 130th in the country. Florida is plus-4. Kentucky and Mississippi State already came back that way. One extra possession is the game. Graham and the front force Sellers to put it on the ground or in the air late. Do not hand them one back.",
+      "Do not get cute. Hand it to Baugh first — 6.5 yards per carry, 11 touchdowns. Florida runs it on 58 percent of plays. That is what has been winning. When they load the box, throw it. Philo is already 9.2 yards per pass attempt against a secondary giving SEC quarterbacks 9.4, 12 scores, and a 190.3 rating. Alabama: 13.5 yards per attempt, four scores.",
     ],
     swing: [
       {
         name: "Jayden Woods",
-        role: "Do not let LaNorris Sellers jump the Swamp. South Carolina led 17-0 against Kentucky and 16-0 against Mississippi State. Woods and the edge must stay in the running lane on the keep and rush with contain so Sellers cannot start this one the way he starts their SEC games.",
+        role: "Do not let Sellers stay on schedule. South Carolina is seventh in the country on the ground at 256 rush yards per game, and they live on first-down success at 48 percent, not explosives — explosiveness ranks 87th. Sellers is 7.4 yards per carry. PFF has him at 88 forced missed tackles since 2024, most among Power Four quarterbacks. Woods and the edge stay in the running lane on the keep. Make it second-and-8.",
+      },
+      {
+        name: "Myles Graham",
+        role: "Do not donate the extra possession. South Carolina is minus-6 in turnovers, 130th in the country. Florida is plus-4. Kentucky and Mississippi State already came back that way. One extra possession is the game. Graham and the front force Sellers to put it on the ground or in the air late. Do not hand them one back.",
       },
       {
         name: "Jadan Baugh",
-        role: "Do not treat a 2-3 South Carolina team as a bye after Faurot. Baugh had 13 yards on 12 carries against Missouri. Homecoming is where the run has to come back. Wear Clayton White's front early so Philo is not throwing from behind again.",
-      },
-      {
-        name: "Aaron Philo",
-        role: "South Carolina just gave Mississippi State 41 and Alabama 49. When they fade, finish. Sellers hit DJ Black for the go-ahead score in the fourth against Kentucky and then fumbled. Philo has to make the fourth quarter the Gators' possession, not another Carolina escape.",
+        role: "Do not get cute. Hand it to Baugh first — 6.5 yards per carry, 11 touchdowns. Florida runs it on 58 percent of plays. That is what has been winning. When they load the box, throw it. Philo is already 9.2 yards per pass attempt against a secondary giving SEC quarterbacks 9.4, 12 scores, and a 190.3 rating. Alabama: 13.5 yards per attempt, four scores.",
       },
     ],
-    film: "South Carolina is 2-3 and 0-3 in the SEC. They blow people out when it is Kent State (57-0) and Towson (45-9), then jump Mississippi State 16-0 and Kentucky 17-0 and lose both. LaNorris Sellers is the show in Kendal Briles' hurry-up. Clayton White still calls a 4-2-5. This is five recaps, not a sit.",
+    film: "South Carolina is 2-3 and 0-3 in the SEC. They blow people out when it is Kent State (57-0) and Towson (45-9), then jump Mississippi State 16-0 and Kentucky 17-0 and lose both. LaNorris Sellers is the show in Kendal Briles' hurry-up — 256 rush yards per game, 7.4 yards per carry. Clayton White still calls a 4-2-5. Crowd the keep, take the extra possession, stay on schedule and take the shot they give. This is five recaps plus the board, not a sit.",
     filmWatched: false,
     pred: "UF 32 · South Carolina 21",
     predUF: 32,

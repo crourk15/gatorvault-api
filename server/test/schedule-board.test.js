@@ -292,20 +292,41 @@ describe('schedule-board', () => {
     assert.equal(missouri.radar.find((a) => a.label === 'Coaching Edge')?.uf, 52);
   });
 
-  it('South Carolina 3 Keys come from the five recaps, not leftover rivalry copy', () => {
+  it('South Carolina 3 Keys come from the board, not leftover recap titles', () => {
     const board = scheduleBoard.getScheduleBoard(2026);
     const scar = board.games.find((g) => g.id === 'scar');
-    assert.equal(scar.keys[0], 'Take Away the Fast Start & Crowd Sellers');
-    assert.equal(scar.keys[1], 'Close When Carolina Fades & Finish the Lead');
-    assert.equal(scar.keys[2], 'Cap DJ Black Late & Own the Fourth');
-    assert.ok(!scar.keys.some((k) => /Win rivalry week|Control clock|Limit their QB run/i.test(k)));
+    assert.equal(scar.keys[0], 'Crowd the Keep & Win Early Downs');
+    assert.equal(scar.keys[1], "Take the Extra Possession & Don't Donate");
+    assert.equal(scar.keys[2], 'Stay on Schedule & Take the Shot They Give');
+    assert.ok(!scar.keys.some((k) => /Win rivalry week|Control clock|Limit their QB run|Own the Fourth|Fast Start/i.test(k)));
+    assert.equal(
+      scar.howUFWins[0],
+      'Do not let Sellers stay on schedule. South Carolina is seventh in the country on the ground at 256 rush yards per game, and they live on first-down success at 48 percent, not explosives — explosiveness ranks 87th. Sellers is 7.4 yards per carry. PFF has him at 88 forced missed tackles since 2024, most among Power Four quarterbacks. Woods and the edge stay in the running lane on the keep. Make it second-and-8.'
+    );
+    assert.equal(
+      scar.howUFWins[1],
+      'Do not donate the extra possession. South Carolina is minus-6 in turnovers, 130th in the country. Florida is plus-4. Kentucky and Mississippi State already came back that way. One extra possession is the game. Graham and the front force Sellers to put it on the ground or in the air late. Do not hand them one back.'
+    );
+    assert.equal(
+      scar.howUFWins[2],
+      'Do not get cute. Hand it to Baugh first — 6.5 yards per carry, 11 touchdowns. Florida runs it on 58 percent of plays. That is what has been winning. When they load the box, throw it. Philo is already 9.2 yards per pass attempt against a secondary giving SEC quarterbacks 9.4, 12 scores, and a 190.3 rating. Alabama: 13.5 yards per attempt, four scores.'
+    );
     assert.equal(scar.filmWatched, false);
     assert.equal(scar.tv, 'SEC Network');
     assert.equal(scar.date, 'October 10, 2026 · 12:45 PM ET');
     assert.equal(scar.pred, 'UF 32 · South Carolina 21');
     assert.equal(scar.ufPct, 73);
-    assert.match(scar.scoutingReport, /Own the Fourth/);
+    assert.match(scar.scoutingReport, /Crowd the Keep/);
+    assert.match(scar.scoutingReport, /9\.4 yards per pass attempt/);
+    assert.ok(scar.defenseScout?.some((n) => /190\.3 passer rating/i.test(n)));
+    assert.ok(scar.defenseScout?.some((n) => /27 PPG/i.test(n)));
     assert.ok(!/rpo-heavy/i.test(scar.film));
+    const woods = scar.swing.find((s) => /woods/i.test(s.name));
+    const graham = scar.swing.find((s) => /graham/i.test(s.name));
+    const baugh = scar.swing.find((s) => /baugh/i.test(s.name));
+    assert.equal(woods?.role, scar.howUFWins[0]);
+    assert.equal(graham?.role, scar.howUFWins[1]);
+    assert.equal(baugh?.role, scar.howUFWins[2]);
     const dump = [
       scar.film,
       ...(scar.filmNotes || []),
@@ -316,6 +337,7 @@ describe('schedule-board', () => {
     ].join(' ');
     assert.match(dump, /Sellers/);
     assert.match(dump, /Baugh/);
+    assert.match(dump, /256 rush yards/);
     assert.ok(!/chambliss|simmons|roberts/i.test(dump));
   });
 

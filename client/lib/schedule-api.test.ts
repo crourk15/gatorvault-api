@@ -240,7 +240,7 @@ describe('schedule-api uniforms', () => {
           predUF: 36,
           predOpp: 21,
           ufPct: 82,
-          keys: ['Take Away the Fast Start & Crowd Sellers'],
+          keys: ['Crowd the Keep & Win Early Downs'],
         },
       ],
       currentGameId: 'scar',
@@ -250,7 +250,7 @@ describe('schedule-api uniforms', () => {
     assert.equal(row?.pred, '');
     assert.equal(row?.predUF, 0);
     assert.equal(row?.predPending, true);
-    assert.equal(row?.keys?.[0], 'Take Away the Fast Start & Crowd Sellers');
+    assert.equal(row?.keys?.[0], 'Crowd the Keep & Win Early Downs');
   });
 
   it('peekScheduleBoard paints remaining scores after this-session live fetch', () => {
