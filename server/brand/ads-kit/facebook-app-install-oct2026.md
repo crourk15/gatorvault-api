@@ -12,25 +12,26 @@ Do not run this as a website-traffic campaign. Destination is the App Store.
 
 ## What to run
 
-Keep the live ad **App screen — live cut**. Do not remake it. Do not send it back through Runway.
+Charles's elite 10s 9:16 cut with only the end-card pill rewritten. The rest of the video is untouched.
 
-This file is that same 15s 9:16 cut with the homepage rebuilt so it looks like the real iOS Home on the glass: header, NOW (South Carolina week), Game Week (Florida vs South Carolina), and **GatorNation Live / Open GNL**.
+The uploaded export had a real Apple mark and then AI garbage (`Capplnonh Pipp` / `DOWNLOAD NOWW`). That text is now the official App Store line. Apple logo and outline stay.
 
 | File | Role |
 |---|---|
-| `creatives/fb-tight-home-sc-15s.mp4` | **The ad.** Same phone, stadium, FutureCast, end card, audio. Home is this week + GNL. |
-| `creatives/fb-tight-home-sc-still.jpg` | Optional 9:16 static if you want a cheap second format. |
+| `creatives/fb-elite-appstore-10s.mp4` | **The ad.** 10s, 1080x1920, H.264 + original AAC. Replace the live Facebook creative with this. |
+| `creatives/fb-elite-appstore-still.jpg` | Optional 9:16 static of the fixed end card. |
 
-Upload `fb-tight-home-sc-15s.mp4` into the same App Install ad. Replace the creative. Do not pause the winner and start a new ad.
+Upload `fb-elite-appstore-10s.mp4` into the same App Install ad. Replace the creative. Do not pause the winner and start a new ad.
 
 Rebuild:
 
 ```bash
-python3 server/brand/ads-kit/patch-tight-home-sc.py
+python3 server/brand/ads-kit/patch-elite-endcard.py
 ```
 
-Source cut: `source/gatorvault-ad-tight-15s.mp4`
-Home plate: `source/home-sc-look.png` (built from Charles's Oct 4 recording)
+Source cut: `source/gatorvault-ad-elite-export.mp4` (Charles Oct 5 export)
+
+Previous 15s home-patch cut stays on disk as `creatives/fb-tight-home-sc-15s.mp4`. Do not upload that one if this 10s cut is the replace.
 
 ---
 
@@ -45,23 +46,13 @@ One vault. Only Gators.
 Headline: **The Gator week. One vault.**
 CTA: **Install now**
 
----
-
-## Home on the glass (this week)
-
-- GAME — South Carolina · 12:45 PM · SECN
-- VISITORS — Easton Royal
-- SEASON — 4-1 · SEC home Saturday
-- Game Week — Florida vs South Carolina, Oct 10, 12:45 ET, Ben Hill Griffin
-- GatorNation Live — Open GNL →
-
-Bailey stays off. Missouri stays off. ABC-or-SECN stays off.
+End-card badge (on tape): **Download on the / App Store**
 
 ---
 
 ## Do not
 
-- Do not remake the 3D phone / stadium / FutureCast / end card
+- Do not remake the rest of this 10s cut
 - Do not run Runway on this cut
 - Do not run the white-hand UGC
 - Do not send traffic to gatorvaultinsider.com
