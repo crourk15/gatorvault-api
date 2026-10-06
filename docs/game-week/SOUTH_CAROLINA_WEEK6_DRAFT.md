@@ -31,7 +31,7 @@ filmWatched stays false. No invented coverage shells. Do not use 27 points a gam
 Missouri 17 pulls season scoring to 46.2 PPG.
 Homecoming card: **UF 32 · South Carolina 21 · 73%**.
 
-Vegas stamp: **UF -14.5 / 57.5** (DraftKings market Oct 3 — pre-Missouri; expect movement).
+Vegas stamp: **UF -13.5 / 62.5** (DraftKings via Covers Oct 6 — opened -14.5 / 57.5 pre-Missouri; market came off a point and the total jumped after 17–45). ML **-550 / +410**. Consensus board -13.5 / 61.5.
 
 ## Visitors
 

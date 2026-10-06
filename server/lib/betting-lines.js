@@ -128,10 +128,10 @@ const STATIC_LINES = [
     opponent: 'South Carolina',
     date: '2026-10-10T16:00:00.000Z',
     venue: 'Ben Hill Griffin Stadium',
-    // Market ~Oct 3 2026: DraftKings FLA -14.5 / 57.5 (Blue Chip / weather.football). Pre-Missouri number — expect movement after 17-45.
-    spread: { line: 'UF -14.5', uf: -14.5 },
-    total: 57.5,
-    moneyline: null,
+    // Market ~Oct 6 2026: DraftKings via Covers FLA -13.5 / 62.5, ML -550 / +410 (opened -14.5 / 57.5 pre-Missouri). Consensus board -13.5 / 61.5; ESPN scoreboard blocked.
+    spread: { line: 'UF -13.5', uf: -13.5 },
+    total: 62.5,
+    moneyline: { uf: -550, opp: +410 },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
     source: 'schedule'

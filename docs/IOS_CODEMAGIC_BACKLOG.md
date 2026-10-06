@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week South Carolina Vegas: stamp DraftKings via Covers **UF -13.5 / O/U 62.5** (ML -550 / +410) on `/api/betting/lines`. Opened -14.5 / 57.5 pre-Missouri; market came off a point and the total jumped after 17–45. API after Render — no Codemagic.
 - [x] Man Robinson 2028 CB committed to Florida State (On3/247 10/4). Profile stamp + drop from 2028 allowlist / Chase / Closest. Forced elsewhere so leftover Campbell visit cannot re-promote. API after Render — no Codemagic.
 - [x] Game Week South Carolina keys: Crowd the Keep & Win Early Downs / Take the Extra Possession & Don't Donate / Stay on Schedule & Take the Shot They Give. Sentence bodies stamp the rush board (256 YPG, Sellers 7.4, PFF 88 missed tackles), turnover margin (minus-6 / plus-4), and cfbstats SEC pass splits (9.4 YPA, 12 TD, 190.3). `filmWatched: false`. API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.
 - [x] Home NOW iOS leftover pack: 1.0.29 has no `cache: no-store`, so URLCache can keep **Bailey News** after web is already Visitors. One-shot `gv-now-bust=scar-w6-ios` on ticker/ping/schedule **and** launch POST `/api/push/device` (always network) so WKWebView drops last week. Edge still pins Game **12:45 SECN** / Visitors **Easton Royal** / Season **4-1**. API + Netlify after deploy — no Codemagic. Client last-good strip is the bake row.
