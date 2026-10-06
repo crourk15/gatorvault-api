@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Nikolay Petrushev 2028 OT: Hudl sophomore watch + War Room eval. Comp **Wyatt Milum** (6-6 length mold). Projection Year 1 develop / Year 2–3 rotation OT, starter ceiling. Replaces leftover Joe Alt board-bio card. API after Render — no Codemagic.
 - [x] Game Week South Carolina Vegas: stamp DraftKings via Covers **UF -13.5 / O/U 62.5** (ML -550 / +410) on `/api/betting/lines`. Opened -14.5 / 57.5 pre-Missouri; market came off a point and the total jumped after 17–45. API after Render — no Codemagic.
 - [x] Man Robinson 2028 CB committed to Florida State (On3/247 10/4). Profile stamp + drop from 2028 allowlist / Chase / Closest. Forced elsewhere so leftover Campbell visit cannot re-promote. API after Render — no Codemagic.
 - [x] Game Week South Carolina keys: Crowd the Keep & Win Early Downs / Take the Extra Possession & Don't Donate / Stay on Schedule & Take the Shot They Give. Sentence bodies stamp the rush board (256 YPG, Sellers 7.4, PFF 88 missed tackles), turnover margin (minus-6 / plus-4), and cfbstats SEC pass splits (9.4 YPA, 12 TD, 190.3). `filmWatched: false`. API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.
