@@ -5,7 +5,7 @@ export const FALLBACK_APPLE_TIERS: SubscriptionCatalogTier[] = [
   {
     id: 'locker',
     name: 'Locker Room',
-    icon: '🏟️',
+    icon: '\u26fa\ufe0f',
     monthlyUsd: 4.99,
     annualUsd: 47.88,
     products: {
@@ -16,7 +16,7 @@ export const FALLBACK_APPLE_TIERS: SubscriptionCatalogTier[] = [
   {
     id: 'film',
     name: 'Film Room',
-    icon: '🎬',
+    icon: '\U0001f3ac',
     monthlyUsd: 9.99,
     annualUsd: 95.88,
     popular: true,
@@ -28,7 +28,7 @@ export const FALLBACK_APPLE_TIERS: SubscriptionCatalogTier[] = [
   {
     id: 'war',
     name: 'War Room',
-    icon: '⚔️',
+    icon: '\u2694\ufe0f',
     monthlyUsd: 19.99,
     annualUsd: 191.88,
     products: {
@@ -52,6 +52,92 @@ export function membershipIapUnlocked(input: {
   billingReady: boolean;
 }): boolean {
   return Boolean(input.native && input.billingReady);
+}
+
+export function shouldShowMembershipLoadError(input: {
+  statusOk: boolean;
+  authError: boolean;
+  transportError: boolean;
+  hasLocalEmail: boolean;
+}): boolean {
+  if (input.statusOk) return false;
+  if (input.authError) return true;
+  if (input.transportError && input.hasLocalEmail) return false;
+  return true;
+}
+
+export function statusFromLocalSession(session: {
+  email: string;
+  tier?: string;
+  paid?: boolean;
+  accessActive?: boolean;
+  trialEnd?: string;
+  trialEndISO?: string;
+  daysLeft?: number | null;
+  subscription?: {
+    source?: string | null;
+    status?: string | null;
+    productId?: string | null;
+    expiresAt?: string | null;
+  } | null;
+}): {
+  ok: true;
+  email: string;
+  tier: string;
+  paid: boolean;
+  accessActive: boolean;
+  trial: {
+    trialEndISO: string | null;
+    trialEndFormatted: string | null;
+    daysLeft: number | null;
+    expired: boolean;
+  };
+  subscription: {
+    source: string | null;
+    status: string | null;
+    productId: string | null;
+    tier: string | null;
+    expiresAt: string | null;
+    updatedAt: string | null;
+  } | null;
+  billing: {
+    webCheckoutEnabled: false;
+    manageInAppHint: string;
+    supportEmail: string;
+  };
+} {
+  const trialEndISO = session.trialEndISO || session.trialEnd || null;
+  const paid = Boolean(session.paid);
+  const daysLeft = session.daysLeft ?? null;
+  return {
+    ok: true,
+    email: session.email,
+    tier: session.tier || 'locker',
+    paid,
+    accessActive: session.accessActive ?? (paid || daysLeft == null || daysLeft > 0),
+    trial: {
+      trialEndISO,
+      trialEndFormatted: null,
+      daysLeft,
+      expired: !paid && daysLeft === 0,
+    },
+    subscription: session.subscription
+      ? {
+          source: session.subscription.source || null,
+          status: session.subscription.status || null,
+          productId: session.subscription.productId || null,
+          tier: null,
+          expiresAt: session.subscription.expiresAt || null,
+          updatedAt: null,
+        }
+      : null,
+    billing: {
+      webCheckoutEnabled: false,
+      manageInAppHint:
+        'Subscriptions purchased in the iOS app are managed in Settings \u2192 Apple ID \u2192 Subscriptions.',
+      supportEmail: 'gatorvaultinsider@gmail.com',
+    },
+  };
 }
 
 export function membershipBillingNotice(input: {
