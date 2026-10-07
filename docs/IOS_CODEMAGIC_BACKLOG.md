@@ -193,14 +193,15 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 **1.0.28 is closed.** Apple accepted it Sep 21, 2026 (submission `3e6e63db-1028-4ca3-a71a-51584bf05f32`). Do not upload another 1.0.28.
 
-**1.0.29 is the current App Store binary.** Do not upload another 1.0.29.
+**1.0.30 is the current App Store binary.** Do not upload another 1.0.30.
 
-**Next bake target: App Store `1.0.30` / build `98`.** Charles asked for this train (Sep 30) so leftover schedule scores stop flashing. See `docs/APP_STORE_1_0_30.md`. Merge to `main`, then Charles starts Codemagic **ios-release**. Do **not** start until this agent says the bump is on `main`.
+**Next bake target: App Store `1.0.31` / build `99`.** Membership Subscribe is stuck behind a catalog flag the 1.0.30 binary never treats as live. See `docs/APP_STORE_1_0_31.md`. Merge to `main`, then Charles starts Codemagic **ios-release**. Do **not** start until this agent says the bump is on `main`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-07 | Membership Subscribe on native StoreKit even when `/api/subscription/catalog` never sets `iosPurchaseReady`. Hardcoded Locker/Film/War product IDs. **Apple IAP verify is already live on Render.** | `AccountMembershipPage` + `membership-billing.ts` in binary. 1.0.30 still shows **Billing is temporarily unavailable** after reinstall. | this PR |
 | 2026-10-04 | Home NOW last-good: rewrite leftover **Samuel Bailey News** + ABC-or-SECN to **Visitors — Easton Royal** / **12:45 SECN**. **Ticker edge + iOS launch POST cache bust already Visitors after deploy.** | `home-command-utils.ts` in binary. 1.0.29 last-good still first-paints Bailey until the live pack overwrites it. | this PR |
 | 2026-10-04 | Home NOW last-good: rewrite leftover Missouri **Faurot / 4-0** to South Carolina **4-1**. **Ticker edge + schedule/ping cache bust already SC after deploy.** | `home-command-utils.ts` in binary. 1.0.29 last-good still first-paints Missouri until the live pack overwrites it. | this PR |
 | 2026-10-04 | Schedule first-paint seed: Missouri **17-45 final** + South Carolina Homecoming current. **`/api/schedule` + NOW ticker already SC after Render.** | `schedule-data.ts` in binary. 1.0.29 last-good still paints Missouri 4-0 if the API 502s. | this PR |
