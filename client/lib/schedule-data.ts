@@ -555,6 +555,14 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     predConfidence: 79,
     predMovement: "down",
     ufPctDelta: -9,
+    radar: [
+      { label: "Run Game", uf: 68, opp: 74 },
+      { label: "Pass Efficiency", uf: 72, opp: 64 },
+      { label: "Front 7", uf: 58, opp: 62 },
+      { label: "Secondary", uf: 64, opp: 44 },
+      { label: "Special Teams", uf: 56, opp: 58 },
+      { label: "Coaching Edge", uf: 54, opp: 50 },
+    ],
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27908",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-univ-of-gainesville-florida-10-10-2026/event/2200645C21920948",
