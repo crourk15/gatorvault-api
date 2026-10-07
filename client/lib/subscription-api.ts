@@ -41,7 +41,7 @@ export type SubscriptionStatus = {
     updatedAt: string | null;
   } | null;
   billing: {
-    appleIapEnabled: boolean;
+    appleIapEnabled?: boolean;
     webCheckoutEnabled: boolean;
     appStoreUrl?: string;
     manageInAppHint: string;
@@ -113,7 +113,7 @@ async function readJsonSafe<T>(res: Response): Promise<T> {
 export async function fetchSubscriptionCatalog(): Promise<SubscriptionCatalog> {
   let res: Response;
   try {
-    res = await fetch(`${getApiBase()}/api/subscription/catalog`, { cache: 'no-store' });
+    res = await fetch(`${getApiBase()}/api/subscription/catalog?iap=1`, { cache: 'no-store' });
   } catch (err) {
     throw new Error(membershipLoadErrorMessage(err));
   }

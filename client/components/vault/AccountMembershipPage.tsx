@@ -27,6 +27,11 @@ import {
 } from '@/lib/ios-iap';
 import { AccountDeletePanel } from '@/components/vault/AccountDeletePanel';
 import { publicPricingTiers } from '@/lib/pricing-tiers';
+import {
+  membershipBillingNotice,
+  membershipIapUnlocked,
+  resolveMembershipTiers,
+} from '@/lib/membership-billing';
 import '@/lib/membership.css';
 
 const LOAD_ATTEMPTS = 3;
@@ -144,16 +149,18 @@ export function AccountMembershipPage(): React.ReactElement {
         return;
       }
 
-      const [catalogResult, statusResult] = await Promise.allSettled([
+      const [catalogResult, statusResult, billingResult] = await Promise.allSettled([
         withTransientRetries(() => fetchSubscriptionCatalog()),
         withTransientRetries(() => fetchSubscriptionStatus()),
+        native ? isIosBillingAvailable() : Promise.resolve(false),
       ]);
+
+      if (billingResult.status === 'fulfilled') {
+        setBillingReady(Boolean(billingResult.value));
+      }
 
       if (catalogResult.status === 'fulfilled') {
         setCatalog(catalogResult.value);
-        if (native && catalogResult.value.iosPurchaseReady) {
-          setBillingReady(await isIosBillingAvailable());
-        }
       }
 
       if (statusResult.status === 'fulfilled') {
@@ -350,6 +357,17 @@ export function AccountMembershipPage(): React.ReactElement {
   }
 
   const supportEmail = status?.billing.supportEmail || 'support@gatorvaultinsider.com';
+  const appleIapLive = Boolean(catalog?.iosPurchaseReady || status?.billing.appleIapEnabled);
+  const iapUnlocked = membershipIapUnlocked({ native, billingReady });
+  const billingNotice = membershipBillingNotice({
+    native,
+    billingReady,
+    iosPurchaseReady: Boolean(catalog?.iosPurchaseReady),
+    appleIapEnabled: Boolean(status?.billing.appleIapEnabled),
+    webCheckoutReady,
+    loaded: !refreshing,
+  });
+  const planTiers = resolveMembershipTiers(catalog);
 
   return (
     <div className="gv-membership" data-testid="vault-membership">
@@ -484,7 +502,7 @@ export function AccountMembershipPage(): React.ReactElement {
                 >
                   Manage in App Store
                 </button>
-                {catalog?.iosPurchaseReady ? (
+                {iapUnlocked || appleIapLive ? (
                   <button
                     type="button"
                     className="gv-membership__secondary-btn"
@@ -538,19 +556,25 @@ export function AccountMembershipPage(): React.ReactElement {
             </p>
           </>
         )}
-        {catalog?.iosPurchaseReady && native && billingReady ? (
+        {billingNotice === 'iap' ? (
           <p className="gv-membership__meta">
             Subscribe below with Apple In-App Purchase. Purchases are verified with GatorVault before
             access unlocks.
           </p>
-        ) : catalog?.iosPurchaseReady ? (
+        ) : billingNotice === 'open-app' ? (
           <p className="gv-membership__meta">
             Apple billing is live. Open the iOS app, sign in with this email, then Subscribe or Restore
             purchases — web access unlocks automatically.
           </p>
-        ) : webCheckoutReady ? (
+        ) : billingNotice === 'web' ? (
           <p className="gv-membership__meta">
             Web checkout is available below. On iPhone, open the GatorVault app to subscribe with Apple In-App Purchase.
+          </p>
+        ) : billingNotice === 'loading' ? (
+          <p className="gv-membership__meta">Checking Apple billing…</p>
+        ) : billingNotice === 'storekit-down' ? (
+          <p className="gv-membership__meta">
+            Apple billing did not load on this device. Close the app and try again, or email support.
           </p>
         ) : (
           <p className="gv-membership__meta">
@@ -559,13 +583,13 @@ export function AccountMembershipPage(): React.ReactElement {
         )}
       </section>
 
-      {!(catalog?.tiers || []).length ? <MembershipTierMarketing currentTier={status?.tier} /> : null}
+      {!planTiers.length ? <MembershipTierMarketing currentTier={status?.tier} /> : null}
 
       <section className="gv-membership__cards" aria-label="Available plans">
-        {(catalog?.tiers || []).length ? (
+        {planTiers.length ? (
           <h2 className="gv-membership__section-title">Insider tiers</h2>
         ) : null}
-        {(catalog?.tiers || [])
+        {planTiers
           .filter((tier) => tier.id !== 'war' || status?.tier === 'war')
           .map((tier) => {
           const marketing = PUBLIC_TIERS.find((t) => t.id === tier.id);
@@ -600,7 +624,7 @@ export function AccountMembershipPage(): React.ReactElement {
               App Store product: {tier.products.monthly}
               {status?.tier === tier.id ? ' · Your current tier' : ''}
             </p>
-            {native && catalog?.iosPurchaseReady && billingReady && status?.tier !== tier.id ? (
+            {iapUnlocked && status?.tier !== tier.id ? (
               <div className="gv-membership__subscribe-row">
                 <button
                   type="button"
