@@ -26,6 +26,19 @@ South Carolina jumps people and does not close. 2-3, 0-3 SEC, eight straight con
 
 filmWatched stays false. No invented coverage shells. Do not use 27 points a game / 101st as the pass proof.
 
+## Matchup Edge (sat stamp — not the 73% formula)
+
+Axes are 0–100. cfbstats through Oct 6 + the PFF missed-tackle receipt already on the keys. No 2026 PFF team grades sat. Stewart is out — do not use the preseason No. 9 DL.
+
+| Axis | UF | SC | Receipt |
+|---|---|---|---|
+| Run Game | 68 | 74 | UF 216 rush YPG, Baugh 6.5 / 11 TD — and 42 rush yards at Missouri. SC 256 YPG (7th), 6.53 YPC, 12 rush TD. Sellers 7.4 YPC. **PFF: 88 missed tackles since 2024.** |
+| Pass Efficiency | 72 | 64 | UF 170.9 rating, Philo 9.2 YPA, 71%. SC 132.2 rating, 9 TD / 4 INT. The run is the show. |
+| Front 7 | 58 | 62 | UF just gave 45 at Faurot. SC season box is 3.24 YPC allowed — Kent State / Towson inflate it. Stewart is out. Not an 80 and not a 35. |
+| Secondary | 64 | 44 | Their hole. Opp 155.3 rating, 13 pass TD. SEC: 9.4 YPA, 190.3, Alabama 13.5 / 4 scores. |
+| Special Teams | 56 | 58 | cfbstats has 2 punt-return TDs. Not on a sit. Keep it even. |
+| Coaching Edge | 54 | 50 | Homecoming after a punch. They jump and do not close (0–3 SEC). Not 76–27. |
+
 ## Form restamp (2026-W6)
 
 Missouri 17 pulls season scoring to 46.2 PPG.

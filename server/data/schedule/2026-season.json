@@ -1,8 +1,8 @@
 {
   "season": 2026,
-  "updatedAt": "2026-10-04T03:38:00.000Z",
+  "updatedAt": "2026-10-07T20:35:00.000Z",
   "label": "2026 Florida football schedule",
-  "source": "vault-schedule-board + Missouri 17-45 official + SEC 12:45 SECN lock",
+  "source": "vault-schedule-board + South Carolina Matchup Edge sat stamp (not the 73% formula)",
   "predThrough": "2026-W6",
   "games": [
     {
@@ -708,6 +708,14 @@
         "Do not get cute. Hand it to Baugh first — 6.5 yards per carry, 11 touchdowns. Florida runs it on 58 percent of plays. That is what has been winning. When they load the box, throw it. Philo is already 9.2 yards per pass attempt against a secondary giving SEC quarterbacks 9.4, 12 scores, and a 190.3 rating. Alabama: 13.5 yards per attempt, four scores."
       ],
       "scoutingReport": "SOUTH CAROLINA through five (Kent State 57-0, Towson 45-9, Mississippi State 34-41, Alabama 18-49, Kentucky 35-34 OT). 2-3, 0-3 SEC, eight straight conference losses. Sellers is the engine in Briles' hurry-up — 256 rush yards per game (7th), 7.4 yards per carry, 88 forced missed tackles since 2024 (PFF). They live on first-down success (48 percent), not explosives (87th). Turnover margin minus-6 (130th). White still calls a 4-2-5 — shells not sat. SEC passers: 9.4 yards per pass attempt, 12 scores, 190.3 rating through October 3 (cfbstats). UF wins: Crowd the Keep & Win Early Downs / Take the Extra Possession & Don't Donate / Stay on Schedule & Take the Shot They Give. filmWatched: false.",
+      "radar": [
+        { "label": "Run Game", "uf": 68, "opp": 74 },
+        { "label": "Pass Efficiency", "uf": 72, "opp": 64 },
+        { "label": "Front 7", "uf": 58, "opp": 62 },
+        { "label": "Secondary", "uf": 64, "opp": 44 },
+        { "label": "Special Teams", "uf": 56, "opp": 58 },
+        { "label": "Coaching Edge", "uf": 54, "opp": 50 }
+      ],
       "specialTeams": [
         "No confirmed return or blocked-kick play on these five recaps. Do not invent hidden yardage for South Carolina."
       ]

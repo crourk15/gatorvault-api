@@ -201,6 +201,20 @@ describe('Game Week Film Notes', () => {
     assert.equal(withVegas.prediction.expertPicks.some((p) => p.source === 'Vegas consensus' && p.pick === 'UF -5.5'), true);
   });
 
+  it('South Carolina Matchup Edge is the sat stamp, not the 73% formula', () => {
+    const scar = SCHEDULE_GAMES.find((g) => g.id === 'scar');
+    assert.ok(scar);
+    const radar = buildRadar(scar);
+    assert.deepEqual(radar, scar.radar);
+    assert.equal(radar.find((a) => a.label === 'Run Game')?.opp, 74);
+    assert.equal(radar.find((a) => a.label === 'Secondary')?.opp, 44);
+    assert.equal(radar.find((a) => a.label === 'Front 7')?.uf, 58);
+    assert.notDeepEqual(
+      radar.find((a) => a.label === 'Run Game'),
+      { label: 'Run Game', uf: 78, opp: 37 },
+    );
+  });
+
   it('Missouri Matchup Edge is the sat stamp, not the 52% formula', () => {
     const missouri = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
     assert.ok(missouri);
