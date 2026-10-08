@@ -5,6 +5,8 @@ import {
   membershipBillingNotice,
   membershipIapUnlocked,
   resolveMembershipTiers,
+  shouldShowMembershipLoadError,
+  statusFromLocalSession,
 } from './membership-billing';
 
 describe('membership billing gates', () => {
@@ -46,6 +48,26 @@ describe('membership billing gates', () => {
       }),
       'open-app'
     );
+  });
+
+  it('does not paint waking-up when status flakes but the user is still signed in', () => {
+    assert.equal(
+      shouldShowMembershipLoadError({
+        statusOk: false,
+        authError: false,
+        transportError: true,
+        hasLocalEmail: true,
+      }),
+      false
+    );
+    const soft = statusFromLocalSession({
+      email: 'fan@example.com',
+      tier: 'film',
+      daysLeft: 12,
+    });
+    assert.equal(soft.email, 'fan@example.com');
+    assert.equal(soft.tier, 'film');
+    assert.equal(soft.trial.daysLeft, 12);
   });
 
   it('falls back to hardcoded Apple product IDs when the catalog never lands', () => {

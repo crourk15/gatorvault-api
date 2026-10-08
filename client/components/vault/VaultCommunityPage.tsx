@@ -30,6 +30,7 @@ import {
   type CommunityThread,
   type LiveRoom,
 } from '@/lib/community-api';
+import { withCommunityReplyMention } from '@/lib/community-reply';
 import {
   communityTimeAgo,
   loadCommunitySeen,
@@ -77,6 +78,12 @@ type EditTarget =
 type DeleteTarget =
   | { kind: 'thread'; thread: CommunityThread }
   | { kind: 'post'; post: CommunityPost };
+
+type ReplyTarget = {
+  id: string;
+  name: string;
+  mention: boolean;
+};
 
 const FALLBACK_TOPICS = ['2027 board', 'Portal watch', 'Game week keys', 'NIL pulse', 'Film Room'];
 
@@ -151,6 +158,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const [posting, setPosting] = useState(false);
   const [postError, setPostError] = useState<string | null>(null);
   const [replyBody, setReplyBody] = useState('');
+  const [replyTarget, setReplyTarget] = useState<ReplyTarget | null>(null);
   const [replyPosting, setReplyPosting] = useState(false);
   const [replyError, setReplyError] = useState<string | null>(null);
   const [blockedEmails, setBlockedEmails] = useState<string[]>([]);
@@ -242,6 +250,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     setSelectedId(threadId);
     setSelectedPosts([]);
     setReplyBody('');
+    setReplyTarget(null);
     setReplyError(null);
     setSelectedThread(fromList);
     setThreadLoading(true);
@@ -337,6 +346,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     try {
       await createCommunityReply(selectedThread.id, replyBody.trim());
       setReplyBody('');
+      setReplyTarget(null);
       await openThread(selectedThread.id);
       await load();
       try {
@@ -632,6 +642,81 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     if (!mine || typeof document === 'undefined') return;
     const el = document.getElementById(`community-post-${mine.id}`);
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const startReplyTo = (target: ReplyTarget) => {
+    if (!requireSignIn('Sign in to reply in Community.')) return;
+    const name = String(target.name || '').trim() || 'Member';
+    const next = { ...target, name };
+    setReplyTarget(next);
+    setReplyBody((prev) =>
+      next.mention ? withCommunityReplyMention(prev, name, replyTarget?.mention ? replyTarget.name : null) : prev,
+    );
+    setReplyError(null);
+    if (typeof window === 'undefined') return;
+    window.requestAnimationFrame(() => {
+      const el = document.getElementById('community-reply-body') as HTMLTextAreaElement | null;
+      if (!el) return;
+      el.focus();
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const len = el.value.length;
+      el.setSelectionRange(len, len);
+    });
+  };
+
+  const renderCommentReply = (target: ReplyTarget) => {
+    if (!viewerEmail || selectedThread?.locked) return null;
+    const open = replyTarget?.id === target.id;
+    return (
+      <div className="gv-community__comment-reply">
+        {open ? (
+          <div className="gv-community__form gv-community__inline-reply">
+            <label className="gv-community__reply-label" htmlFor="community-reply-body">
+              {target.mention ? `Reply to ${target.name}` : 'Reply'}
+            </label>
+            <textarea
+              id="community-reply-body"
+              className="gv-alert-input gv-community__textarea"
+              placeholder={target.mention ? `Write back to ${target.name}…` : 'Add your reply…'}
+              value={replyBody}
+              onChange={(e) => setReplyBody(e.target.value)}
+              maxLength={4000}
+              rows={3}
+            />
+            {replyError ? <p className="gv-community__post-error">{replyError}</p> : null}
+            <div className="gv-community__edit-actions">
+              <button
+                type="button"
+                className="gv-community__action-btn"
+                disabled={replyPosting}
+                onClick={() => {
+                  setReplyTarget(null);
+                  setReplyError(null);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="gv-community__new-btn"
+                disabled={replyPosting || !replyBody.trim()}
+                onClick={() => void submitReply()}
+              >
+                {replyPosting ? 'Posting…' : 'Post reply'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="gv-community__comment-reply-btn"
+            onClick={() => startReplyTo(target)}
+          >
+            Reply
+          </button>
+        )}
+      </div>
+    );
   };
 
   const renderActivityRow = (
@@ -1155,6 +1240,11 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                             {threadCategoryLabel(selectedThread)} · {timeAgo(selectedThread.createdAt)}
                             {selectedThread.editedAt ? ' · Edited' : ''}
                           </p>
+                          {renderCommentReply({
+                            id: `thread:${selectedThread.id}`,
+                            name: communityAuthorLabel(selectedThread),
+                            mention: !isOwnAuthor(selectedThread.authorEmail),
+                          })}
                         </>
                       )}
                     </>
@@ -1236,6 +1326,11 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                                 {timeAgo(p.createdAt)}
                                 {p.editedAt ? ' · Edited' : ''}
                               </p>
+                              {renderCommentReply({
+                                id: `post:${p.id}`,
+                                name: communityAuthorLabel(p),
+                                mention: !mine,
+                              })}
                             </>
                           )}
                         </>
@@ -1252,13 +1347,13 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
               </ul>
               {selectedThread.locked ? (
                 <p className="gv-community__reply-locked">This thread is locked — new replies are disabled.</p>
-              ) : viewerEmail ? (
+              ) : viewerEmail && !replyTarget ? (
                 <div className="gv-community__form gv-community__reply-form">
-                  <label className="gv-community__reply-label" htmlFor="community-reply-body">
-                    Reply to thread
+                  <label className="gv-community__reply-label" htmlFor="community-reply-thread">
+                    Add a reply
                   </label>
                   <textarea
-                    id="community-reply-body"
+                    id="community-reply-thread"
                     className="gv-alert-input gv-community__textarea"
                     placeholder="Add your reply…"
                     value={replyBody}
@@ -1276,7 +1371,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                     {replyPosting ? 'Posting…' : 'Post reply'}
                   </button>
                 </div>
-              ) : (
+              ) : viewerEmail ? null : (
                 <p className="gv-community__reply-signin">Sign in to reply to this thread.</p>
               )}
             </div>

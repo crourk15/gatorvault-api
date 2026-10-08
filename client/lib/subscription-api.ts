@@ -1,6 +1,7 @@
 import { getApiBase } from '@/lib/big-board-api';
 import { loadSession } from '@/lib/auth-api';
 import type { PaymentTierId } from '@/lib/auth-api';
+import { ApiFetchError, apiFetch } from '@/lib/api-fetch';
 
 export type SubscriptionCatalogTier = {
   id: PaymentTierId;
@@ -106,49 +107,39 @@ export class MembershipAuthError extends Error {
   }
 }
 
-async function readJsonSafe<T>(res: Response): Promise<T> {
-  return (await res.json().catch(() => ({}))) as T;
-}
-
 export async function fetchSubscriptionCatalog(): Promise<SubscriptionCatalog> {
-  let res: Response;
   try {
-    res = await fetch(`${getApiBase()}/api/subscription/catalog?iap=1`, { cache: 'no-store' });
+    return await apiFetch<SubscriptionCatalog>('/api/subscription/catalog?iap=1', {
+      timeoutMs: 15_000,
+      retries: 3,
+      retryDelayMs: 1_500,
+    });
   } catch (err) {
+    if (err instanceof ApiFetchError && err.status && err.status >= 400 && err.status < 500) {
+      throw new Error('Could not load membership catalog.');
+    }
     throw new Error(membershipLoadErrorMessage(err));
   }
-  if (!res.ok) {
-    if (res.status === 502 || res.status === 503 || res.status === 504) {
-      throw new Error('Membership service is waking up. Try again in a moment.');
-    }
-    throw new Error('Could not load membership catalog.');
-  }
-  return res.json() as Promise<SubscriptionCatalog>;
-}
-
-async function subscriptionStatusError(res: Response): Promise<Error> {
-  const data = await readJsonSafe<{ error?: string }>(res);
-  if (res.status === 401 || res.status === 403 || res.status === 404) {
-    return new MembershipAuthError(data.error || 'Sign in again to view membership.', res.status);
-  }
-  if (res.status === 502 || res.status === 503 || res.status === 504) {
-    return new Error('Membership service is waking up. Try again in a moment.');
-  }
-  return new Error(data.error || 'Could not load membership status.');
 }
 
 export async function fetchSubscriptionStatus(): Promise<SubscriptionStatus> {
-  let res: Response;
   try {
-    res = await fetch(`${getApiBase()}/api/subscription/status`, {
+    return await apiFetch<SubscriptionStatus>('/api/subscription/status', {
       headers: authHeaders(),
-      cache: 'no-store',
+      timeoutMs: 15_000,
+      retries: 3,
+      retryDelayMs: 1_500,
     });
   } catch (err) {
+    const status = err instanceof ApiFetchError ? err.status : undefined;
+    if (status === 401 || status === 403 || status === 404) {
+      throw new MembershipAuthError(
+        err instanceof Error ? err.message : 'Sign in again to view membership.',
+        status
+      );
+    }
     throw new Error(membershipLoadErrorMessage(err));
   }
-  if (!res.ok) throw await subscriptionStatusError(res);
-  return res.json() as Promise<SubscriptionStatus>;
 }
 
 export async function verifyApplePurchase(input: {

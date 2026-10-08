@@ -7,7 +7,7 @@ Do **not** upload another 1.0.30. Do **not** start Codemagic until this bump is 
 ## iOS
 
 - `MARKETING_VERSION = 1.0.31`
-- `CURRENT_PROJECT_VERSION = 99` (Codemagic may auto-bump above ASC latest)
+- `CURRENT_PROJECT_VERSION = 100` (Codemagic may auto-bump above ASC latest)
 
 ## App Store Connect (you)
 
@@ -24,6 +24,8 @@ I will not start Codemagic.
 - **Membership:** native Subscribe uses StoreKit readiness, not the catalog `iosPurchaseReady` kill switch.
 - Hardcoded Apple product IDs (Locker / Film / War) so the cards still render if `/api/subscription/catalog` never lands.
 - Probe StoreKit on every Membership load, even when the catalog fetch fails.
+- Build **100:** do not paint “Membership service is waking up” when `/api/subscription/status` flakes on iOS. Subscribe stays up.
+- Community: Reply on another member’s comment (focus the thread composer + `@Name`). Same bake so locker conversation is in the binary.
 - Web still says open the iOS app (Stripe stays off).
 
 ## Already live (no extra bake)

@@ -31,6 +31,8 @@ import {
   membershipBillingNotice,
   membershipIapUnlocked,
   resolveMembershipTiers,
+  shouldShowMembershipLoadError,
+  statusFromLocalSession,
 } from '@/lib/membership-billing';
 import '@/lib/membership.css';
 
@@ -169,18 +171,37 @@ export function AccountMembershipPage(): React.ReactElement {
       } else {
         const err = statusResult.reason;
         // Stay on Membership for soft failures — never wipe login or hard-navigate away.
-        if (err instanceof MembershipAuthError) {
+        const local = loadSession();
+        const authError = err instanceof MembershipAuthError;
+        const transportError = !authError && isMembershipTransportError(err);
+        if (authError) {
           setNeedsReauth(true);
-          setError('Could not refresh membership for this session. Sign in again if this continues.');
+        } else if (transportError && local?.email) {
+          setStatus((prev) => prev || (statusFromLocalSession(local) as SubscriptionStatus));
+        }
+        if (
+          shouldShowMembershipLoadError({
+            statusOk: false,
+            authError,
+            transportError,
+            hasLocalEmail: Boolean(local?.email),
+          })
+        ) {
+          setError(
+            authError
+              ? 'Could not refresh membership for this session. Sign in again if this continues.'
+              : membershipLoadErrorMessage(err)
+          );
         } else {
-          setError(membershipLoadErrorMessage(err));
+          setError(null);
         }
       }
 
       if (catalogResult.status === 'rejected' && statusResult.status === 'rejected') {
-        setError(membershipLoadErrorMessage(statusResult.reason));
-      } else if (catalogResult.status === 'rejected') {
-        setError((prev) => prev || 'Could not load subscription plans.');
+        const local = loadSession();
+        if (!local?.email) {
+          setError(membershipLoadErrorMessage(statusResult.reason));
+        }
       }
     } catch (err) {
       setError(membershipLoadErrorMessage(err));
