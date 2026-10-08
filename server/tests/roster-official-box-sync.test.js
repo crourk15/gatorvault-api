@@ -169,6 +169,15 @@ test('schedule helpers find the FAU official box as week 1', () => {
   assert.strictEqual(weekForGame(board, fau), 1);
 });
 
+test('completed official boxes include Missouri week 5', () => {
+  const board = require('../lib/schedule-board').getScheduleBoard(2026);
+  const boxes = completedBoxes(board);
+  const missouri = boxes.find((g) => g.id === 'missouri');
+  assert.ok(missouri);
+  assert.strictEqual(weekForGame(board, missouri), 5);
+  assert.match(String(missouri.boxScoreUrl || ''), /missouri\/boxscore\/27907/);
+});
+
 test('ops registry includes official box sync', () => {
   const { resolveJobId, JOBS } = require('../lib/ops-jobs');
   assert.strictEqual(resolveJobId('roster-official-box-sync'), 'roster-official-box-sync');
@@ -215,7 +224,8 @@ test('schedule helpers find completed official boxes as candidates', () => {
   // A posted box / final score is always a candidate, even on a frozen earlier date.
   assert.ok(candidates.some((g) => g.id === 'auburn'));
   assert.ok(candidates.some((g) => g.id === 'olemiss'));
-  assert.ok(!candidates.some((g) => g.id === 'missouri'));
+  // Posted box / final is always a candidate, even on a frozen earlier date.
+  assert.ok(candidates.some((g) => g.id === 'missouri'));
 });
 
 test('Campbell Week 2 official box is on Philo / Baugh / Wilson', () => {
@@ -254,30 +264,38 @@ test('Auburn Week 3 and Ole Miss Week 4 official boxes are on Philo / Baugh / Wi
   assert.equal(game('aaron-philo', 4, 'Ole Miss', 'passing')?.stats?.att, 23);
   assert.equal(game('aaron-philo', 4, 'Ole Miss', 'passing')?.stats?.td, 1);
   assert.equal(game('aaron-philo', 4, 'Ole Miss', 'passing')?.stats?.int, 0);
+  assert.equal(game('aaron-philo', 5, 'Missouri', 'passing')?.stats?.yds, 197);
+  assert.equal(game('aaron-philo', 5, 'Missouri', 'passing')?.stats?.cmp, 21);
+  assert.equal(game('aaron-philo', 5, 'Missouri', 'passing')?.stats?.att, 34);
+  assert.equal(game('aaron-philo', 5, 'Missouri', 'passing')?.stats?.td, 1);
   assert.deepEqual(season('aaron-philo', 'passing')?.stats, {
-    cmp: 63,
-    att: 87,
-    yds: 917,
-    td: 7,
+    cmp: 84,
+    att: 121,
+    yds: 1114,
+    td: 8,
     int: 2,
     lng: 63,
-    avg: 10.5,
+    avg: 9.2,
   });
 
   assert.equal(game('jadan-baugh', 3, 'Auburn', 'rushing')?.stats?.yds, 162);
   assert.equal(game('jadan-baugh', 3, 'Auburn', 'rushing')?.stats?.td, 3);
   assert.equal(game('jadan-baugh', 4, 'Ole Miss', 'rushing')?.stats?.yds, 142);
   assert.equal(game('jadan-baugh', 4, 'Ole Miss', 'rushing')?.stats?.td, 3);
-  assert.equal(season('jadan-baugh', 'rushing')?.stats?.car, 83);
-  assert.equal(season('jadan-baugh', 'rushing')?.stats?.yds, 600);
+  assert.equal(game('jadan-baugh', 5, 'Missouri', 'rushing')?.stats?.yds, 13);
+  assert.equal(game('jadan-baugh', 5, 'Missouri', 'rushing')?.stats?.car, 12);
+  assert.equal(season('jadan-baugh', 'rushing')?.stats?.car, 95);
+  assert.equal(season('jadan-baugh', 'rushing')?.stats?.yds, 613);
   assert.equal(season('jadan-baugh', 'rushing')?.stats?.td, 11);
 
   assert.equal(game('dallas-wilson', 3, 'Auburn', 'receiving')?.stats?.yds, 74);
   assert.equal(game('dallas-wilson', 3, 'Auburn', 'receiving')?.stats?.td, 1);
   assert.equal(game('dallas-wilson', 4, 'Ole Miss', 'receiving')?.stats?.yds, 11);
-  assert.equal(season('dallas-wilson', 'receiving')?.stats?.rec, 14);
-  assert.equal(season('dallas-wilson', 'receiving')?.stats?.yds, 236);
-  assert.equal(season('dallas-wilson', 'receiving')?.stats?.td, 2);
+  assert.equal(game('dallas-wilson', 5, 'Missouri', 'receiving')?.stats?.yds, 66);
+  assert.equal(game('dallas-wilson', 5, 'Missouri', 'receiving')?.stats?.td, 1);
+  assert.equal(season('dallas-wilson', 'receiving')?.stats?.rec, 18);
+  assert.equal(season('dallas-wilson', 'receiving')?.stats?.yds, 302);
+  assert.equal(season('dallas-wilson', 'receiving')?.stats?.td, 3);
 });
 
 test('every 2026 official week is on Brown / Graham after the full-box rebuild', () => {
@@ -302,8 +320,10 @@ test('every 2026 official week is on Brown / Graham after the full-box rebuild',
 
   assert.equal(game('myles-graham', 2, 'Campbell', 'defense')?.stats?.tot, 6);
   assert.equal(game('myles-graham', 2, 'Campbell', 'defense')?.stats?.solo, 4);
-  assert.equal(season('myles-graham', 'defense')?.stats?.tot, 28);
-  assert.equal(season('myles-graham', 'defense')?.stats?.solo, 16);
+  assert.equal(game('myles-graham', 5, 'Missouri', 'defense')?.stats?.tot, 5);
+  assert.equal(game('myles-graham', 5, 'Missouri', 'defense')?.stats?.solo, 1);
+  assert.equal(season('myles-graham', 'defense')?.stats?.tot, 33);
+  assert.equal(season('myles-graham', 'defense')?.stats?.solo, 17);
   assert.equal(game('drake-stubbs', 2, 'Campbell', 'defense')?.stats?.tot, 2);
 });
 
@@ -375,6 +395,26 @@ test('rebuild keeps every official week for a multi-category player', () => {
   assert.ok(
     rebuilt.recentGames.some((g) => g.week === 4 && g.category === 'receiving' && g.stats.yds === 25)
   );
+});
+
+test('durable production overlay wins when it has a newer week', () => {
+  const { preferProduction } = require('../lib/roster-store');
+  const git = {
+    source: 'official',
+    syncedAt: '2026-10-01T00:00:00.000Z',
+    recentGames: [{ season: 2026, week: 4, opponent: 'Ole Miss', stats: { yds: 25 } }],
+  };
+  const overlay = {
+    source: 'official',
+    syncedAt: '2026-10-08T13:37:42.000Z',
+    recentGames: [
+      { season: 2026, week: 5, opponent: 'Missouri', stats: { yds: 13 } },
+      { season: 2026, week: 4, opponent: 'Ole Miss', stats: { yds: 25 } },
+    ],
+  };
+  const picked = preferProduction(git, overlay);
+  assert.strictEqual(picked.recentGames[0].opponent, 'Missouri');
+  assert.strictEqual(picked.recentGames[0].week, 5);
 });
 
 console.log('all official box roster stats tests passed');

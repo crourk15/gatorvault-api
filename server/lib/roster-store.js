@@ -7,6 +7,7 @@ const DATA_DIR = path.join(__dirname, '..', 'data', 'roster');
 const PLAYERS_PATH = path.join(DATA_DIR, 'players.json');
 const HEADSHOTS_MAP_PATH = path.join(DATA_DIR, 'headshots.json');
 const HEADSHOTS_DIR = path.join(__dirname, '..', 'headshots');
+const RENDER_PRODUCTION_PATH = '/var/data/roster/production-stats.json';
 
 function readJson(filePath, fallback) {
   try {
@@ -141,13 +142,75 @@ function normalizeRosterPlayer(raw) {
   return player;
 }
 
-function loadPlayers() {
-  return readJson(PLAYERS_PATH, []).map(normalizeRosterPlayer);
+function resolveProductionOverlayPath() {
+  const fromEnv = String(process.env.GV_ROSTER_PRODUCTION_PATH || '').trim();
+  if (fromEnv) return fromEnv;
+  try {
+    if (process.env.NODE_ENV === 'production' && fs.existsSync('/var/data')) {
+      return RENDER_PRODUCTION_PATH;
+    }
+  } catch {
+    /* ignore */
+  }
+  return null;
 }
 
+function maxProductionWeek(ps) {
+  const games = Array.isArray(ps?.recentGames) ? ps.recentGames : [];
+  return games.reduce((n, g) => Math.max(n, Number(g.week) || 0), 0);
+}
+
+function preferProduction(fromGit, fromOverlay) {
+  if (!fromOverlay) return fromGit || null;
+  if (!fromGit) return fromOverlay;
+  if (maxProductionWeek(fromOverlay) > maxProductionWeek(fromGit)) return fromOverlay;
+  const overlayAt = Date.parse(fromOverlay.syncedAt || '');
+  const gitAt = Date.parse(fromGit.syncedAt || '');
+  if (Number.isFinite(overlayAt) && (!Number.isFinite(gitAt) || overlayAt > gitAt)) return fromOverlay;
+  return fromGit;
+}
+
+function readProductionOverlay() {
+  const dest = resolveProductionOverlayPath();
+  if (!dest) return { bySlug: {} };
+  try {
+    if (!fs.existsSync(dest)) return { bySlug: {} };
+    const raw = JSON.parse(fs.readFileSync(dest, 'utf8'));
+    if (!raw || typeof raw !== 'object' || !raw.bySlug || typeof raw.bySlug !== 'object') {
+      return { bySlug: {} };
+    }
+    return raw;
+  } catch {
+    return { bySlug: {} };
+  }
+}
+
+function writeProductionOverlay(bySlug) {
+  const dest = resolveProductionOverlayPath();
+  if (!dest) return;
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  const tmp = `${dest}.${process.pid}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify({ updatedAt: nowIso(), bySlug }));
+  fs.renameSync(tmp, dest);
+}
+
+function applyOverlayToPlayers(players) {
+  const bySlug = readProductionOverlay().bySlug || {};
+  if (!Object.keys(bySlug).length) return players;
+  return players.map((player) => {
+    const slug = player.slug || slugify(player.name || '');
+    const next = preferProduction(player.productionStats, bySlug[slug]);
+    if (!next || next === player.productionStats) return player;
+    return { ...player, productionStats: next };
+  });
+}
+
+function loadPlayers() {
+  return loadPlayersRaw().map(normalizeRosterPlayer);
+}
 
 function loadPlayersRaw() {
-  return readJson(PLAYERS_PATH, []);
+  return applyOverlayToPlayers(readJson(PLAYERS_PATH, []));
 }
 
 function applyProductionStatsUpdates(updatesBySlug) {
@@ -172,6 +235,16 @@ function applyProductionStatsUpdates(updatesBySlug) {
     changed += 1;
   }
   savePlayers(players);
+  const overlayDest = resolveProductionOverlayPath();
+  if (overlayDest) {
+    const overlay = readProductionOverlay();
+    const bySlug = { ...(overlay.bySlug || {}) };
+    for (const [slug, next] of Object.entries(updatesBySlug)) {
+      if (next == null) delete bySlug[slug];
+      else bySlug[slug] = next;
+    }
+    writeProductionOverlay(bySlug);
+  }
   try {
     require('./swing-impact').clearSwingProductionCache();
   } catch {
@@ -238,6 +311,9 @@ function setWarRoomFeatured(slug, featured = true) {
 module.exports = {
   DATA_DIR,
   PLAYERS_PATH,
+  RENDER_PRODUCTION_PATH,
+  resolveProductionOverlayPath,
+  preferProduction,
   HEADSHOTS_MAP_PATH,
   HEADSHOTS_DIR,
   displayRating,
