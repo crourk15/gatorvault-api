@@ -240,7 +240,7 @@ Do **not** ship a live Review from box score / play-by-play alone.
 
 Team profile Stats tabs read `productionStats` on `roster/players.json` via `/api/roster/players/:slug`. After the **one-time 1.0.25** bake (Stats tab accepts `source: official`), weekly numbers are **API-only**.
 
-1. **Official UF box cron** (`roster-official-box-sync`) — every ~3h after kickoff. Finds the floridagators.com box from the game-center link already on the schedule (`tickets.gameCenter`), parses every individual line, and upserts whoever recorded one. OL / P / LS / DNP still get no traditional box line (we do not invent zeros).
+1. **Official UF box cron** (`roster-official-box-sync`) — every ~3h after kickoff. Finds the floridagators.com box from the game-center link already on the schedule (`tickets.gameCenter`), parses every individual line, and upserts whoever recorded one. OL / P / LS / DNP still get no traditional box line (we do not invent zeros). Writes also land on Render `/var/data/roster/production-stats.json` so the next deploy cannot wipe the new week back to the last git stamp.
 2. **CFBD nightly** (`roster-stats-sync`) — career backfill. Official in-season weeks are merged forward so a late/empty CFBD pull cannot wipe Game 1+.
 3. Manual / dry-run:
 

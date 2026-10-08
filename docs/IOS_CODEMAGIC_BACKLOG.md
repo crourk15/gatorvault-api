@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Roster Stats Missouri week 5 official box (Philo 21/34 197 1 TD, Baugh 12–13, Graham on the card). Cron overlay on `/var/data/roster/production-stats.json` so the next deploy cannot snap Stats back to Ole Miss. API `/api/roster/players/:slug` after Render — no Codemagic.
 - [x] Game Week South Carolina Matchup Edge: sat `radar` stamp (Run 68/74, Pass 72/64, Front 7 58/62, Secondary 64/44, ST 56/58, Coaching 54/50). PFF 88 missed tackles sits on Run Game. Not the 73% formula hexagon. API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week South Carolina Vegas: stamp DraftKings via Covers **UF -13.5 / O/U 62.5** (ML -550 / +410) on `/api/betting/lines`. Opened -14.5 / 57.5 pre-Missouri; market came off a point and the total jumped after 17–45. API after Render — no Codemagic.
 - [x] Man Robinson 2028 CB committed to Florida State (On3/247 10/4). Profile stamp + drop from 2028 allowlist / Chase / Closest. Forced elsewhere so leftover Campbell visit cannot re-promote. API after Render — no Codemagic.
