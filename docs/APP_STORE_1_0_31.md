@@ -25,6 +25,7 @@ I will not start Codemagic.
 - Hardcoded Apple product IDs (Locker / Film / War) so the cards still render if `/api/subscription/catalog` never lands.
 - Probe StoreKit on every Membership load, even when the catalog fetch fails.
 - Build **100:** do not paint “Membership service is waking up” when `/api/subscription/status` flakes on iOS. Subscribe stays up.
+- Community: Reply on another member’s comment (focus the thread composer + `@Name`). Same bake so locker conversation is in the binary.
 - Web still says open the iOS app (Stripe stays off).
 
 ## Already live (no extra bake)
