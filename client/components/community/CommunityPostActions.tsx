@@ -7,6 +7,7 @@ type Props = {
   isOwnContent: boolean;
   isBlockedAuthor: boolean;
   flagged?: boolean;
+  onReply?: () => void;
   onReport: () => void;
   onBlock: () => void;
   onUnblock?: () => void;
@@ -19,15 +20,17 @@ export function CommunityPostActions({
   isOwnContent,
   isBlockedAuthor,
   flagged,
+  onReply,
   onReport,
   onBlock,
   onUnblock,
   onEdit,
   onDelete,
 }: Props): React.ReactElement | null {
+  const showReply = Boolean(onReply) && !isOwnContent && !isBlockedAuthor;
   const showOwnActions = isOwnContent && Boolean(onEdit || onDelete);
   const showModActions = canModerate && !isOwnContent;
-  if (!showOwnActions && !showModActions && !flagged) return null;
+  if (!showReply && !showOwnActions && !showModActions && !flagged) return null;
 
   return (
     <div className="gv-community__post-actions">
@@ -35,6 +38,11 @@ export function CommunityPostActions({
         <span className="gv-community__flag-badge" title="This content has been reported">
           Reported
         </span>
+      ) : null}
+      {showReply ? (
+        <button type="button" className="gv-community__action-btn" onClick={onReply}>
+          Reply
+        </button>
       ) : null}
       {showOwnActions ? (
         <>
