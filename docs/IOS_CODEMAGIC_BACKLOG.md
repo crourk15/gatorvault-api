@@ -203,6 +203,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-08 | Community: Reply on another member’s comment (focus thread composer + `@Name`). **Web after Netlify.** | `VaultCommunityPage` + `CommunityPostActions` in binary. Current iOS still only has Report/Block on Billy’s card. | this PR |
 | 2026-10-07 | Membership Subscribe on native StoreKit even when `/api/subscription/catalog` never sets `iosPurchaseReady`. Hardcoded Locker/Film/War product IDs. **Apple IAP verify is already live on Render.** | `AccountMembershipPage` + `membership-billing.ts` in binary. 1.0.30 still shows **Billing is temporarily unavailable** after reinstall. | this PR |
 | 2026-10-04 | Home NOW last-good: rewrite leftover **Samuel Bailey News** + ABC-or-SECN to **Visitors — Easton Royal** / **12:45 SECN**. **Ticker edge + iOS launch POST cache bust already Visitors after deploy.** | `home-command-utils.ts` in binary. 1.0.29 last-good still first-paints Bailey until the live pack overwrites it. | this PR |
 | 2026-10-04 | Home NOW last-good: rewrite leftover Missouri **Faurot / 4-0** to South Carolina **4-1**. **Ticker edge + schedule/ping cache bust already SC after deploy.** | `home-command-utils.ts` in binary. 1.0.29 last-good still first-paints Missouri until the live pack overwrites it. | this PR |

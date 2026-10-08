@@ -30,6 +30,7 @@ import {
   type CommunityThread,
   type LiveRoom,
 } from '@/lib/community-api';
+import { withCommunityReplyMention } from '@/lib/community-reply';
 import {
   communityTimeAgo,
   loadCommunitySeen,
@@ -151,6 +152,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const [posting, setPosting] = useState(false);
   const [postError, setPostError] = useState<string | null>(null);
   const [replyBody, setReplyBody] = useState('');
+  const [replyToName, setReplyToName] = useState<string | null>(null);
   const [replyPosting, setReplyPosting] = useState(false);
   const [replyError, setReplyError] = useState<string | null>(null);
   const [blockedEmails, setBlockedEmails] = useState<string[]>([]);
@@ -242,6 +244,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     setSelectedId(threadId);
     setSelectedPosts([]);
     setReplyBody('');
+    setReplyToName(null);
     setReplyError(null);
     setSelectedThread(fromList);
     setThreadLoading(true);
@@ -337,6 +340,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     try {
       await createCommunityReply(selectedThread.id, replyBody.trim());
       setReplyBody('');
+      setReplyToName(null);
       await openThread(selectedThread.id);
       await load();
       try {
@@ -632,6 +636,23 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     if (!mine || typeof document === 'undefined') return;
     const el = document.getElementById(`community-post-${mine.id}`);
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const startReplyTo = (displayName: string) => {
+    if (!requireSignIn('Sign in to reply in Community.')) return;
+    const name = String(displayName || '').trim() || 'Member';
+    setReplyToName(name);
+    setReplyBody((prev) => withCommunityReplyMention(prev, name, replyToName));
+    setReplyError(null);
+    if (typeof window === 'undefined') return;
+    window.requestAnimationFrame(() => {
+      const el = document.getElementById('community-reply-body') as HTMLTextAreaElement | null;
+      if (!el) return;
+      el.focus();
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const len = el.value.length;
+      el.setSelectionRange(len, len);
+    });
   };
 
   const renderActivityRow = (
@@ -1093,6 +1114,11 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                           isOwnContent={isOwnAuthor(selectedThread.authorEmail)}
                           isBlockedAuthor={isAuthorBlocked(selectedThread.authorEmail)}
                           flagged={selectedThread.flagged}
+                          onReply={
+                            viewerEmail && !selectedThread.locked
+                              ? () => startReplyTo(communityAuthorLabel(selectedThread))
+                              : undefined
+                          }
                           onReport={() => handleReportOpen({ kind: 'thread', thread: selectedThread })}
                           onBlock={() =>
                             handleBlockOpen({
@@ -1185,6 +1211,11 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                               isOwnContent={isOwnAuthor(p.authorEmail)}
                               isBlockedAuthor={blocked}
                               flagged={p.flagged}
+                              onReply={
+                                viewerEmail && !selectedThread.locked
+                                  ? () => startReplyTo(communityAuthorLabel(p))
+                                  : undefined
+                              }
                               onReport={() => handleReportOpen({ kind: 'post', post: p })}
                               onBlock={() =>
                                 handleBlockOpen({
@@ -1255,12 +1286,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
               ) : viewerEmail ? (
                 <div className="gv-community__form gv-community__reply-form">
                   <label className="gv-community__reply-label" htmlFor="community-reply-body">
-                    Reply to thread
+                    {replyToName ? `Reply to ${replyToName}` : 'Reply to thread'}
                   </label>
                   <textarea
                     id="community-reply-body"
                     className="gv-alert-input gv-community__textarea"
-                    placeholder="Add your reply…"
+                    placeholder={replyToName ? `Write back to ${replyToName}…` : 'Add your reply…'}
                     value={replyBody}
                     onChange={(e) => setReplyBody(e.target.value)}
                     maxLength={4000}

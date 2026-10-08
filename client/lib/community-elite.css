@@ -669,6 +669,14 @@
   margin-bottom: 0.35rem;
 }
 
+.gv-community-page .gv-community__post-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .gv-community-page .gv-community__action-btn {
   font-size: 0.6875rem;
   font-weight: 600;
