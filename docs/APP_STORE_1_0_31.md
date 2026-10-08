@@ -1,33 +1,12 @@
-# Submit 1.0.31 (Build 99+) — Apple Subscribe buttons after IAP flip
+# 1.0.31 — approved / closed train
 
-**Why:** Production Apple IAP verify is on (`iosPurchaseReady: true`). The **1.0.30** Membership screen still hides Subscribe until the live catalog flag arrives. After a fresh install that line stayed **Billing is temporarily unavailable**, so the current binary cannot take money.
+**1.0.31 is approved.** Do **not** upload another 1.0.31 IPA. Codemagic will reject it (version train closed).
 
-Do **not** upload another 1.0.30. Do **not** start Codemagic until this bump is on `main`.
+Next client bake is **1.0.32** (`docs/APP_STORE_1_0_32.md`) — Community Reply under each comment.
 
-## iOS
+## What shipped in 1.0.31
 
-- `MARKETING_VERSION = 1.0.31`
-- `CURRENT_PROJECT_VERSION = 100` (Codemagic may auto-bump above ASC latest)
+- Membership Subscribe from StoreKit (not the catalog `iosPurchaseReady` kill switch)
+- Hardcoded Apple product IDs (Locker / Film / War)
 
-## App Store Connect (you)
-
-1. **Apps → GatorVault Insider → + Version → 1.0.31** (if Connect does not auto-create it)
-2. Merge this bump to `main`
-3. Start Codemagic **iOS Release Build** on `main`
-4. Attach the processed build to **1.0.31** / TestFlight
-5. Buy Locker Room Monthly on device
-
-I will not start Codemagic.
-
-## Ships in this bake
-
-- **Membership:** native Subscribe uses StoreKit readiness, not the catalog `iosPurchaseReady` kill switch.
-- Hardcoded Apple product IDs (Locker / Film / War) so the cards still render if `/api/subscription/catalog` never lands.
-- Probe StoreKit on every Membership load, even when the catalog fetch fails.
-- Build **100:** do not paint “Membership service is waking up” when `/api/subscription/status` flakes on iOS. Subscribe stays up.
-- Community: Reply on another member’s comment (focus the thread composer + `@Name`). Same bake so locker conversation is in the binary.
-- Web still says open the iOS app (Stripe stays off).
-
-## Already live (no extra bake)
-
-Apple IAP env on Render, App Store Server Notifications, six Approved products. Verify + restore stay API.
+Community Reply and the wake-banner hide did **not** make this cut. They ride **1.0.32**.

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] App Store **1.0.31** approved (Subscribe from StoreKit). Do not upload another 1.0.31. Community Reply waits on **1.0.32**.
 - [x] Roster Stats Missouri week 5 official box (Philo 21/34 197 1 TD, Baugh 12–13, Graham on the card). Cron overlay on `/var/data/roster/production-stats.json` so the next deploy cannot snap Stats back to Ole Miss. API `/api/roster/players/:slug` after Render — no Codemagic.
 - [x] Game Week South Carolina Matchup Edge: sat `radar` stamp (Run 68/74, Pass 72/64, Front 7 58/62, Secondary 64/44, ST 56/58, Coaching 54/50). PFF 88 missed tackles sits on Run Game. Not the 73% formula hexagon. API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week South Carolina Vegas: stamp DraftKings via Covers **UF -13.5 / O/U 62.5** (ML -550 / +410) on `/api/betting/lines`. Opened -14.5 / 57.5 pre-Missouri; market came off a point and the total jumped after 17–45. API after Render — no Codemagic.
@@ -195,16 +196,17 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 **1.0.28 is closed.** Apple accepted it Sep 21, 2026 (submission `3e6e63db-1028-4ca3-a71a-51584bf05f32`). Do not upload another 1.0.28.
 
-**1.0.30 is the current App Store binary.** Do not upload another 1.0.30.
+**1.0.31 is closed.** Apple approved it. Do not upload another 1.0.31 — Codemagic cannot attach to a closed train.
 
-**Next bake target: App Store `1.0.31` / build `99`.** Membership Subscribe is stuck behind a catalog flag the 1.0.30 binary never treats as live. See `docs/APP_STORE_1_0_31.md`. Merge to `main`, then Charles starts Codemagic **ios-release**. Do **not** start until this agent says the bump is on `main`.
+**Next bake target: App Store `1.0.32` / build `101`.** Community Reply under each comment. See `docs/APP_STORE_1_0_32.md`. Merge to `main`, then Charles starts Codemagic **ios-release**. Do **not** start until this bump is on `main`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-10-08 | Community: Reply on another member’s comment (focus thread composer + `@Name`). Lands on this **1.0.31 / build 100** bake. **Web after Netlify.** | `VaultCommunityPage` + `CommunityPostActions` in binary. Current iOS still only has Report/Block on Billy’s card. | this PR |
-| 2026-10-07 | Membership: do not paint **Membership service is waking up** when `/api/subscription/status` flakes on iOS. Keep Subscribe + local session. **API is already live.** | `AccountMembershipPage` + `subscription-api.ts` in binary. 1.0.31 still shows the wake banner on a Load failed status GET. | this PR |
+| 2026-10-08 | App Store **1.0.32** / build **101**. **1.0.31 is approved — do not re-upload.** | `MARKETING_VERSION` 1.0.32. Charles asked for this train after the 1.0.31 Codemagic reject. | this PR |
+| 2026-10-08 | Community: Reply under each comment (inline composer + `@Name`). **1.0.32 / build 101.** 1.0.31 is approved — do not re-upload. **Web after Netlify.** | `VaultCommunityPage` in binary. Current 1.0.31 still only has the thread box at the top. | this PR |
+| 2026-10-07 | Membership: do not paint **Membership service is waking up** when `/api/subscription/status` flakes on iOS. Keep Subscribe + local session. Rides **1.0.32** (1.0.31 train is closed). | `AccountMembershipPage` + `subscription-api.ts` in binary. Approved 1.0.31 can still show the wake banner on a Load failed status GET. | this PR |
 | 2026-10-07 | Membership Subscribe on native StoreKit even when `/api/subscription/catalog` never sets `iosPurchaseReady`. Hardcoded Locker/Film/War product IDs. **Apple IAP verify is already live on Render.** | `AccountMembershipPage` + `membership-billing.ts` in binary. 1.0.30 still shows **Billing is temporarily unavailable** after reinstall. | this PR |
 | 2026-10-04 | Home NOW last-good: rewrite leftover **Samuel Bailey News** + ABC-or-SECN to **Visitors — Easton Royal** / **12:45 SECN**. **Ticker edge + iOS launch POST cache bust already Visitors after deploy.** | `home-command-utils.ts` in binary. 1.0.29 last-good still first-paints Bailey until the live pack overwrites it. | this PR |
 | 2026-10-04 | Home NOW last-good: rewrite leftover Missouri **Faurot / 4-0** to South Carolina **4-1**. **Ticker edge + schedule/ping cache bust already SC after deploy.** | `home-command-utils.ts` in binary. 1.0.29 last-good still first-paints Missouri until the live pack overwrites it. | this PR |
