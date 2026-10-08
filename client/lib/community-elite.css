@@ -387,6 +387,30 @@
   margin-top: 1rem;
 }
 
+.gv-community-page .gv-community__comment-reply {
+  margin-top: 0.35rem;
+}
+
+.gv-community-page .gv-community__comment-reply-btn {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0.2rem 0;
+  min-height: 32px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--cm-blue);
+  cursor: pointer;
+}
+
+.gv-community-page .gv-community__comment-reply-btn:hover {
+  color: #fa4616;
+}
+
+.gv-community-page .gv-community__inline-reply {
+  margin-top: 0.25rem;
+}
+
 .gv-community-page .gv-community__reply-label {
   font-size: 0.8125rem;
   font-weight: 600;
