@@ -17,6 +17,7 @@
   background: var(--cm-navy);
   color: #e2e8f0;
   padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+  overflow-x: clip;
 }
 
 .gv-community-page .gv-page-layout--navy {
@@ -35,7 +36,6 @@
   padding: clamp(1.5rem, 4vw, 2.25rem) clamp(1rem, 3vw, 1.5rem);
   border-radius: 0;
   background: linear-gradient(165deg, #0021a5 0%, #001656 55%, #001a33 100%);
-  animation: gv-community-hero-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .gv-community-page .gv-community__hero::before {
@@ -104,14 +104,27 @@
   background: var(--cm-orange);
 }
 
-@keyframes gv-community-hero-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Thread is its own screen — compact hero, no hub chrome leftover. */
+.gv-community-page.gv-community-page--thread .gv-community__hero {
+  margin-bottom: 0.75rem;
+  padding: 0.85rem 1rem 0.95rem;
 }
 
-@keyframes gv-community-rise {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+.gv-community-page.gv-community-page--thread .gv-community__hero-title {
+  font-size: 1.35rem;
+}
+
+.gv-community-page.gv-community-page--thread .gv-community__hero-sub,
+.gv-community-page.gv-community-page--thread .gv-community__hero-watermark {
+  display: none;
+}
+
+.gv-community-page.gv-community-page--thread .gv-community__layout {
+  grid-template-columns: 1fr;
+}
+
+.gv-community-page.gv-community-page--thread .gv-community__aside {
+  display: none;
 }
 
 /* ── Layout ── */
@@ -161,8 +174,7 @@
   box-shadow: var(--cm-shadow);
   cursor: pointer;
   min-height: 44px;
-  animation: gv-community-rise 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  transition: box-shadow 160ms ease, transform 160ms ease;
+  transition: box-shadow 160ms ease;
 }
 
 .gv-community-page .gv-community__today-card:hover {
@@ -323,7 +335,7 @@
 }
 
 .gv-community-page .gv-community__select {
-  font-size: 0.75rem;
+  font-size: 16px;
   min-height: 40px;
   padding: 0.5rem 0.75rem;
   background: #fff;
@@ -360,10 +372,14 @@
 }
 
 .gv-community-page .gv-community__form .gv-alert-input,
-.gv-community-page .gv-community__form .gv-community__select {
+.gv-community-page .gv-community__form .gv-community__select,
+.gv-community-page .gv-alert-input,
+.gv-community-page .gv-community__textarea {
   background: #fff;
   color: var(--cm-blue);
   border-color: rgba(0, 33, 165, 0.22);
+  /* iOS zooms inputs under 16px — keep the composer fitted. */
+  font-size: 16px;
 }
 
 .gv-community-page .gv-community__textarea {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Chip, PageLayout, PageSection } from '@/components/brand';
 import { CommunityConfirmModal } from '@/components/community/CommunityConfirmModal';
 import { CommunityPostActions } from '@/components/community/CommunityPostActions';
@@ -8,6 +8,7 @@ import { CommunityReportModal } from '@/components/community/CommunityReportModa
 import { CommunityToastProvider, useCommunityToast } from '@/components/community/CommunityToast';
 import { CommunityPageSkeleton, CommunityThreadSkeleton } from '@/components/community/CommunityPageSkeleton';
 import {
+  COMMUNITY_THREAD_POLL,
   communityAuthorLabel,
   createCommunityReply,
   createCommunityThread,
@@ -18,7 +19,9 @@ import {
   fetchCommunityPageData,
   fetchCommunityThread,
   fetchMyCommunity,
+  peekCachedCommunityThread,
   peekLastGoodCommunityPage,
+  prefetchCommunityThread,
   flagCommunityPost,
   flagCommunityThread,
   toggleCommunityFollow,
@@ -30,6 +33,7 @@ import {
   type CommunityThread,
   type LiveRoom,
 } from '@/lib/community-api';
+import { previewPostsFromThread, shouldShowEmptyReplies } from '@/lib/community-thread-paint';
 import { withCommunityReplyMention } from '@/lib/community-reply';
 import {
   communityTimeAgo,
@@ -40,7 +44,6 @@ import {
 } from '@/lib/community-locker';
 import { buildSeedCommunityPageData } from '@/lib/community-hub-seed';
 import { fetchWithWarmPoll, userFacingLoadError } from '@/lib/api-warm-poll';
-import { warmPollProfile } from '@/lib/warm-poll-profile';
 import {
   blockUserEmail,
   isEmailBlocked,
@@ -120,6 +123,24 @@ function threadIdFromLocation(): string | null {
   }
 }
 
+function communityHubPath(): string {
+  if (typeof window === 'undefined') return '/vault/community/';
+  return window.location.pathname.includes('/vault/') ? '/vault/community/' : '/community/';
+}
+
+function pushCommunityPath(path: string, notify = false): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const current = window.location.pathname.replace(/\/+$/, '');
+    const next = path.replace(/\/+$/, '');
+    if (current === next) return;
+    window.history.pushState(null, '', path);
+    if (notify) window.dispatchEvent(new Event('vault:navigation'));
+  } catch {
+    /* ignore */
+  }
+}
+
 function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string }): React.ReactElement {
   const { pushToast } = useCommunityToast();
   /** Recent first so new member threads are findable under pins (Trending buries 0-reply posts). */
@@ -147,6 +168,8 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedThread, setSelectedThread] = useState<CommunityThread | null>(null);
   const [selectedPosts, setSelectedPosts] = useState<CommunityPost[]>([]);
+  const selectedIdRef = useRef<string | null>(null);
+  selectedIdRef.current = selectedId;
   const [loading, setLoading] = useState(!HAS_COMMUNITY_SEED);
   const [warming, setWarming] = useState(false);
   const [threadLoading, setThreadLoading] = useState(false);
@@ -237,49 +260,69 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     }
   }, [sort, category, newCategory]);
 
+  const closeThread = useCallback(() => {
+    setSelectedId(null);
+    setSelectedThread(null);
+    setSelectedPosts([]);
+    setThreadLoading(false);
+    setReplyBody('');
+    setReplyTarget(null);
+    setReplyError(null);
+    setShowForm(false);
+    pushCommunityPath(communityHubPath(), true);
+  }, []);
+
   const openThread = useCallback(async (id: string) => {
     const threadId = String(id || '').trim();
     if (!threadId) return;
 
     // Prefer the already-rendered list/seed OP so daily cards never die on a blip.
+    const cached = peekCachedCommunityThread(threadId);
     const fromList =
+      cached?.thread ||
       threads.find((t) => t.id === threadId) ||
       SEED_COMMUNITY.threads.find((t) => t.id === threadId) ||
       null;
+    const sameThread = selectedIdRef.current === threadId;
+    const previewPosts = cached?.posts?.length
+      ? cached.posts
+      : previewPostsFromThread(fromList);
 
     setSelectedId(threadId);
-    setSelectedPosts([]);
-    setReplyBody('');
-    setReplyTarget(null);
-    setReplyError(null);
-    setSelectedThread(fromList);
-    setThreadLoading(true);
-    if (typeof window !== 'undefined') {
-      try {
-        const next = `/vault/community/thread/${encodeURIComponent(threadId)}/`;
-        if (!window.location.pathname.includes(`/community/thread/${threadId}`)) {
-          window.history.pushState(null, '', next);
-          window.dispatchEvent(new Event('vault:navigation'));
-        }
-      } catch {
-        /* ignore */
-      }
+    if (!sameThread && typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
     }
+    if (!sameThread) {
+      setReplyBody('');
+      setReplyTarget(null);
+      setReplyError(null);
+      setSelectedThread(fromList);
+      setSelectedPosts(previewPosts);
+      setFollowingThread(Boolean(cached?.following) || followedIds.includes(threadId));
+    } else if (previewPosts.length > 0) {
+      setSelectedThread(fromList || cached?.thread || null);
+      setSelectedPosts((prev) => (prev.length ? prev : previewPosts));
+    }
+    setThreadLoading(true);
+    const next = window.location.pathname.includes('/vault/')
+      ? `/vault/community/thread/${encodeURIComponent(threadId)}/`
+      : `/community/thread/${encodeURIComponent(threadId)}/`;
+    pushCommunityPath(next);
     try {
       const data = await fetchWithWarmPoll(
         () => fetchCommunityThread(threadId),
-        warmPollProfile(),
+        COMMUNITY_THREAD_POLL,
       );
       setSelectedThread(data.thread);
       setSelectedPosts(data.posts);
       setFollowingThread(Boolean(data.following) || followedIds.includes(threadId));
       if (viewerEmail) setSeenMap(markCommunitySeen(viewerEmail, threadId));
     } catch {
-      // Keep the list/seed OP when live detail fails (common for daily threads + native CORS blips).
+      // Keep the list/seed OP + last-reply preview when live detail fails.
       if (fromList) {
         setSelectedThread(fromList);
-        setSelectedPosts([]);
-      } else {
+        if (!sameThread) setSelectedPosts(previewPosts);
+      } else if (!sameThread) {
         setSelectedThread(null);
         setSelectedPosts([]);
       }
@@ -294,8 +337,28 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
 
   useEffect(() => {
     const id = initialThreadId || threadIdFromLocation();
-    if (id) void openThread(id);
+    if (!id) return;
+    if (selectedIdRef.current === id) return;
+    void openThread(id);
   }, [initialThreadId, openThread]);
+
+  useEffect(() => {
+    const onPop = () => {
+      const id = threadIdFromLocation();
+      if (id) {
+        if (selectedIdRef.current !== id) void openThread(id);
+        return;
+      }
+      if (selectedIdRef.current) {
+        setSelectedId(null);
+        setSelectedThread(null);
+        setSelectedPosts([]);
+        setThreadLoading(false);
+      }
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [openThread]);
 
   const submitThread = async () => {
     if (!newTitle.trim() || !newBody.trim()) return;
@@ -494,9 +557,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
       if (deleteTarget.kind === 'thread') {
         await deleteCommunityThread(deleteTarget.thread.id);
         setDeleteTarget(null);
-        setSelectedId(null);
-        setSelectedThread(null);
-        setSelectedPosts([]);
+        closeThread();
         cancelEdit();
         setThreads((prev) => prev.filter((t) => t.id !== deleteTarget.thread.id));
         pushToast({ kind: 'success', title: 'Thread deleted', body: 'Your thread was removed.' });
@@ -591,6 +652,11 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     const pinned = threads.find((t) => t.pinned || t.featured);
     return pinned || threads[0] || null;
   }, [threads]);
+
+  useEffect(() => {
+    if (selectedId || !todaysThread?.id) return;
+    prefetchCommunityThread(todaysThread.id);
+  }, [selectedId, todaysThread?.id]);
 
   const lockerThreads = me?.locker || [];
   const repliesOnYours = me?.repliesOnYours || [];
@@ -738,6 +804,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
           }${isJustPosted ? ' gv-community__thread-row--just-posted' : ''}${
             hasNew ? ' gv-community__thread-row--new' : ''
           }`}
+          onPointerDown={() => prefetchCommunityThread(t.id)}
           onClick={() => void openThread(t.id)}
         >
           <span className="gv-community__thread-author">{communityAuthorLabel(t)}</span>
@@ -848,7 +915,13 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const boardWarming = repliesToday === 0 && threadsWithReplies === 0;
 
   return (
-    <div className="rh-page rh-page--elite gv-community-page mobile-app gv-page" data-testid="vault-community-elite">
+    <div
+      className={`rh-page rh-page--elite gv-community-page mobile-app gv-page${
+        selectedId ? ' gv-community-page--thread' : ''
+      }`}
+      data-testid="vault-community-elite"
+      data-community-view={selectedId ? 'thread' : 'hub'}
+    >
     <PageLayout
       theme="navy"
       title=""
@@ -892,6 +965,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                 <button
                   type="button"
                   className="gv-community__today-card gv-community__locker-ping"
+                  onPointerDown={() => prefetchCommunityThread(repliesOnYours[0].threadId)}
                   onClick={() => void openThread(repliesOnYours[0].threadId)}
                 >
                   <Chip variant="orange">Someone replied</Chip>
@@ -967,6 +1041,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
               <button
                 type="button"
                 className="gv-community__today-card"
+                onPointerDown={() => prefetchCommunityThread(todaysThread.id)}
                 onClick={() => void openThread(todaysThread.id)}
               >
                 <Chip variant="staff">{isGamedayTalk ? 'Game day' : 'Today'}</Chip>
@@ -974,8 +1049,8 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                 <p className="gv-community__today-meta">
                   {todaysThread.authorDisplay || 'GatorVault Staff'} ·{' '}
                   {(todaysThread.replyCount ?? 0) === 0
-                    ? 'No replies yet — be the first →'
-                    : `${todaysThread.replyCount} replies · Open thread →`}
+                    ? 'Open comments →'
+                    : `${todaysThread.replyCount} replies · Open comments →`}
                 </p>
               </button>
             </PageSection>
@@ -993,6 +1068,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             </p>
           ) : null}
 
+          {!selectedId ? (
           <div className="gv-community__toolbar">
             <div className="gv-community__sort" role="group" aria-label="Sort threads">
               {(['recent', 'trending', 'active', 'replies'] as SortId[]).map((s) => (
@@ -1067,14 +1143,15 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
               </button>
             </div>
           )}
+          ) : null}
 
-          {loading && !HAS_COMMUNITY_SEED && (
+          {loading && !HAS_COMMUNITY_SEED && !selectedId && (
             <div className="gv-community__loading" role="status" aria-live="polite" aria-busy="true">
               {warming ? <UiWarming hint="Loading threads and community pulse." /> : null}
               <CommunityPageSkeleton />
             </div>
           )}
-          {error && !loading && !HAS_COMMUNITY_SEED && (
+          {error && !loading && !HAS_COMMUNITY_SEED && !selectedId && (
             <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
           )}
 
@@ -1086,11 +1163,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
               <button
                 type="button"
                 className="gv-film-back"
-                onClick={() => {
-                  setSelectedId(null);
-                  setSelectedPosts([]);
-                  setThreadLoading(false);
-                }}
+                onClick={closeThread}
               >
                 ← All threads
               </button>
@@ -1106,10 +1179,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
               <button
                 type="button"
                 className="gv-film-back"
-                onClick={() => {
-                  setSelectedId(null);
-                  setSelectedPosts([]);
-                }}
+                onClick={closeThread}
               >
                 ← All threads
               </button>
@@ -1123,12 +1193,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                 <button
                   type="button"
                   className="gv-film-back"
-                  onClick={() => {
-                    setSelectedId(null);
-                    setSelectedThread(null);
-                    setSelectedPosts([]);
-                    void load();
-                  }}
+                  onClick={closeThread}
                 >
                   ← All threads
                 </button>
@@ -1338,7 +1403,10 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                     </li>
                   );
                 })}
-                {selectedPosts.length === 0 ? (
+                {shouldShowEmptyReplies({
+                  postCount: selectedPosts.length,
+                  threadLoading,
+                }) ? (
                   <UiEmpty
                     message="No replies yet."
                     hint={viewerEmail ? 'Be the first reply and keep the board alive.' : 'Sign in to be the first reply.'}
@@ -1428,6 +1496,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                       key={t}
                       type="button"
                       className="gv-community__topic-chip-btn"
+                      onPointerDown={() => {
+                        const match = threads.find((th) =>
+                          th.title.toLowerCase().includes(t.toLowerCase().slice(0, 12))
+                        );
+                        if (match) prefetchCommunityThread(match.id);
+                      }}
                       onClick={() => {
                         const match = threads.find((th) =>
                           th.title.toLowerCase().includes(t.toLowerCase().slice(0, 12))
@@ -1453,6 +1527,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                         key={p.id}
                         type="button"
                         className="gv-community__staff-card"
+                        onPointerDown={() => prefetchCommunityThread(p.id)}
                         onClick={() => void openThread(p.id)}
                       >
                         <Chip variant="staff">Staff</Chip>
@@ -1467,6 +1542,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
           ) : null}
         </div>
 
+        {!selectedId ? (
         <aside className="gv-community__aside">
           {blockedEmails.length > 0 ? (
             <section className="gv-community__panel">
@@ -1525,6 +1601,9 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                   className={`gv-community__room gv-community__room--action${
                     existing ? ' gv-community__room--live' : ''
                   }${scheduled ? ' gv-community__room--scheduled' : ''}`}
+                  onPointerDown={() => {
+                    if (existing) prefetchCommunityThread(existing.id);
+                  }}
                   onClick={() => startRoomThread(r)}
                 >
                   <p className="gv-community__room-title">{r.title}</p>
@@ -1543,6 +1622,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             )}
           </section>
         </aside>
+        ) : null}
       </div>
 
       <CommunityReportModal

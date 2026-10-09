@@ -178,11 +178,49 @@ export async function fetchCommunityThreadsBundle(opts: {
   return { threads: data.threads ?? [], followed: data.followed ?? [] };
 }
 
-export async function fetchCommunityThread(id: string): Promise<{
+export type CommunityThreadDetail = {
   thread: CommunityThread;
   posts: CommunityPost[];
   following?: boolean;
-}> {
+};
+
+/** Short poll once the hub already painted — do not 10×2s on a thread tap. */
+export const COMMUNITY_THREAD_POLL = { maxAttempts: 3, delayMs: 650 } as const;
+
+const threadCache = new Map<string, { savedAt: number; payload: CommunityThreadDetail }>();
+const THREAD_CACHE_MAX_MS = 2 * 60_000;
+
+function threadCacheKey(id: string): string {
+  return String(id || '').trim();
+}
+
+export function peekCachedCommunityThread(id: string): CommunityThreadDetail | null {
+  const key = threadCacheKey(id);
+  if (!key) return null;
+  const hit = threadCache.get(key);
+  if (!hit) return null;
+  if (Date.now() - hit.savedAt > THREAD_CACHE_MAX_MS) {
+    threadCache.delete(key);
+    return null;
+  }
+  return hit.payload;
+}
+
+export function writeCachedCommunityThread(id: string, data: CommunityThreadDetail): void {
+  const key = threadCacheKey(id);
+  if (!key || !data?.thread) return;
+  threadCache.set(key, { savedAt: Date.now(), payload: data });
+}
+
+export function clearCachedCommunityThread(id?: string): void {
+  if (id) {
+    threadCache.delete(threadCacheKey(id));
+    return;
+  }
+  threadCache.clear();
+}
+
+export async function fetchCommunityThread(id: string): Promise<CommunityThreadDetail> {
   const data = await apiFetch<{
     thread?: CommunityThread;
     posts?: CommunityPost[];
@@ -198,7 +236,17 @@ export async function fetchCommunityThread(id: string): Promise<{
   } else if (!thread.authorDisplay && thread.author?.displayName) {
     thread.authorDisplay = thread.author.displayName;
   }
-  return { thread, posts: data.posts ?? [], following: Boolean(data.following) };
+  const detail = { thread, posts: data.posts ?? [], following: Boolean(data.following) };
+  writeCachedCommunityThread(id, detail);
+  return detail;
+}
+
+/** Warm a thread GET on pointer-down so the tap already has comments. */
+export function prefetchCommunityThread(id: string): void {
+  const key = threadCacheKey(id);
+  if (!key || typeof window === 'undefined') return;
+  if (peekCachedCommunityThread(key)) return;
+  void fetchCommunityThread(key).catch(() => {});
 }
 
 export async function fetchCommunityGameRooms(limit = 8): Promise<CommunityLockerThread[]> {
@@ -393,6 +441,7 @@ export async function createCommunityReply(threadId: string, body: string): Prom
     method: 'POST',
     body: JSON.stringify({ body }),
   });
+  clearCachedCommunityThread(threadId);
 }
 
 export async function editCommunityThread(
@@ -408,6 +457,7 @@ export async function editCommunityThread(
     },
   );
   if (!data?.thread?.id) throw new Error('Thread edit failed.');
+  clearCachedCommunityThread(threadId);
   return data.thread;
 }
 
@@ -421,6 +471,7 @@ export async function editCommunityPost(postId: string, body: string): Promise<C
     },
   );
   if (!data?.post?.id) throw new Error('Post edit failed.');
+  clearCachedCommunityThread();
   return data.post;
 }
 
@@ -429,6 +480,7 @@ export async function deleteCommunityThread(threadId: string): Promise<void> {
     ...communityFetchInit(true),
     method: 'DELETE',
   });
+  clearCachedCommunityThread(threadId);
 }
 
 export async function deleteCommunityPost(postId: string): Promise<void> {
@@ -436,6 +488,7 @@ export async function deleteCommunityPost(postId: string): Promise<void> {
     ...communityFetchInit(true),
     method: 'DELETE',
   });
+  clearCachedCommunityThread();
 }
 
 export async function flagCommunityPost(postId: string, reason: ReportReasonId): Promise<void> {
