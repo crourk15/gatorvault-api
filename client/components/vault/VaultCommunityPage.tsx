@@ -1069,6 +1069,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
           ) : null}
 
           {!selectedId ? (
+          <>
           <div className="gv-community__toolbar">
             <div className="gv-community__sort" role="group" aria-label="Sort threads">
               {(['recent', 'trending', 'active', 'replies'] as SortId[]).map((s) => (
@@ -1143,6 +1144,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
               </button>
             </div>
           )}
+          </>
           ) : null}
 
           {loading && !HAS_COMMUNITY_SEED && !selectedId && (
