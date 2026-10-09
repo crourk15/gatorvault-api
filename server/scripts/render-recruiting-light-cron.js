@@ -34,7 +34,12 @@ const STEPS = [
     summarize: (r) => ({
       createdCount: r?.createdCount ?? null,
       coveragePct: r?.coverage?.coveragePct ?? null,
+      recentCoveragePct: r?.coverage?.recentCoveragePct ?? null,
       missing: Array.isArray(r?.coverage?.missing) ? r.coverage.missing.length : null,
+      missingWithVisits: Array.isArray(r?.coverage?.missingWithVisits)
+        ? r.coverage.missingWithVisits.length
+        : null,
+      softFailure: r?.softFailure === true,
     }),
   },
   {
@@ -53,13 +58,23 @@ async function runIngest() {
     throw err;
   }
 
-  return runIngestSteps({
+  const summary = await runIngestSteps({
     apiBase: API_BASE,
     cronSecret: CRON_SECRET,
     steps: STEPS,
     warm: true,
     logPrefix: 'recruiting-light-cron',
   });
+  const intel = (summary.steps || []).find((s) => s.name === 'allowlist-intel');
+  const visitGaps = Number(intel?.result?.missingWithVisits);
+  if (Number.isFinite(visitGaps) && visitGaps > 0) {
+    summary.ok = false;
+    summary.failures = [
+      ...(summary.failures || []),
+      { name: 'allowlist-intel', error: `missing_with_visits:${visitGaps}` },
+    ];
+  }
+  return summary;
 }
 
 (async () => {

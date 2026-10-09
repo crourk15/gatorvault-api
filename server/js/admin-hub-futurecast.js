@@ -106,6 +106,25 @@
       var vfBeats = vf ? (vfs.beatsFetched != null ? vfs.beatsFetched : vf.beatsFetched) : null;
       var vfCands = vf ? (vfs.candidatesNamed != null ? vfs.candidatesNamed : vf.candidatesNamed) : null;
       var vfRunning = !!(vf && vf.status === 'running');
+      var cov = data.allowlistIntel || null;
+      var covMissingVisits = (cov && cov.missingWithVisits) || [];
+      var covMissing = (cov && cov.missing) || [];
+      var covHot = !!(cov && (Number(cov.recentCoveragePct) < 50 || covMissingVisits.length));
+      var covHtml = !cov
+        ? '<p class="hub-meta">Allowlist intel coverage not measured.</p>'
+        : '<p class="hub-meta">Live 2028 coverage (not the last vault-feed stamp): <strong style="color:#fff">'
+          + esc(cov.coveragePct) + '%</strong> any intel · <strong style="color:#fff">'
+          + esc(cov.recentCoveragePct) + '%</strong> last ' + esc(cov.windowDays || 30) + 'd'
+          + ' · missing ' + esc(covMissing.length)
+          + ' · visit gaps ' + esc(covMissingVisits.length) + '</p>'
+          + (covMissingVisits.length
+            ? '<p class="hub-meta" style="color:#fca5a5">Florida visit on file, zero intel: '
+              + esc(covMissingVisits.slice(0, 12).join(', ')) + '</p>'
+            : '')
+          + (covMissing.length && !covMissingVisits.length
+            ? '<p class="hub-meta">No intel yet: ' + esc(covMissing.slice(0, 12).join(', ')) + '</p>'
+            : '');
+
       var vfHtml = !vf
         ? '<p class="hub-meta">No vault-feed run yet — waits for 7am / 7pm ET cron (or Run now).</p>'
         : vfRunning
@@ -204,7 +223,11 @@
         + '</div>'
         + '<p class="hub-meta" style="margin:12px 0">' + esc((data.notes && data.notes.deskFeed) || '') + '</p>'
         + '<p class="hub-meta" style="margin:0 0 12px">' + esc((data.notes && data.notes.vaultFeed2028) || '') + '</p>'
-        + '<div class="hub-card" style="margin-bottom:12px">'
+        + '<div class="hub-card" style="margin-bottom:12px;' + (covHot ? 'border-color:#f87171' : '') + '">'
+        + '<h3 style="margin:0 0 6px">Allowlist intel (live)</h3>'
+        + covHtml
+        + '</div>'
+        + '<div class="hub-card" style="margin-bottom:12px' + ((vf && vf.status === 'error') ? ';border-color:#f87171' : '') + '">'
         + '<div class="hub-btn-row" style="justify-content:space-between;align-items:center;margin-bottom:8px">'
         + '<h3 style="margin:0">Vault feed 2028+ (7am / 7pm ET proof)</h3>'
         + '<button type="button" class="hub-btn secondary" id="hub-fc-vault-feed-run">Run now</button>'

@@ -202,6 +202,8 @@ const SLUG_ALIASES = {
   'kamaui-whifield': 'kamauri-whitfield',
   'kamauri-whitfield': 'kamauri-whitfield',
   't-k-cunningham': 'tk-cunningham',
+  // Beat ingest uses On3's hyphenated initials; board / visit logs use jc-wessel.
+  'j-c-wessel': 'jc-wessel',
 };
 
 function loadAdminAllowlistSlugs() {

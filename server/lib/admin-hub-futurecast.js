@@ -81,9 +81,18 @@ function buildFutureCastHubSummary() {
   let vaultFeed = null;
   try {
     const { readLastReport } = require('./vault-feed-2028-sweep');
-    vaultFeed = readLastReport();
+    vaultFeed = readLastReport({ healStale: true });
   } catch {
     vaultFeed = null;
+  }
+
+  let allowlistIntel = null;
+  try {
+    allowlistIntel = require('./allowlist-intel-sweep').measureAllowlistIntelCoverage(2028, {
+      days: 30,
+    });
+  } catch {
+    allowlistIntel = null;
   }
 
   return {
@@ -103,12 +112,13 @@ function buildFutureCastHubSummary() {
       deskFeed:
         'Beat Desk Open feeds FutureCast (board fields + UF% nudge / seed) when Florida involvement is real.',
       vaultFeed2028:
-        '7am/7pm ET vault feed: trusted beats → update existing 2028+ + monitor-provision new 2028/2029/2030+. Staff blocked. Proof = last report below.',
+        '7am/7pm ET vault feed: trusted beats → update existing 2028+ + monitor-provision new 2028/2029/2030+. Staff blocked. A dead/error stamp retries in the same 8–9am / 8–9pm window — it does not wait until the next 7pm. Proof = last report below.',
     },
     adminAllowlist2028: adminRows,
     board2028Sample: boardSample,
     earlyWatch: watch.slice(0, 40),
     vaultFeed2028LastReport: vaultFeed,
+    allowlistIntel,
   };
 }
 

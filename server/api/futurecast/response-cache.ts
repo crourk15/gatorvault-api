@@ -1432,6 +1432,52 @@ export function softTrendingBoardFromMaster(): {
   };
 }
 
+/** Soft FutureCast home from HP / master — never empty building after a bounce. */
+export function softHomeFromHighPriority(commitSort: 'fit' | 'stability' = 'fit'): unknown | null {
+  const master = loadMasterBoardCached() as {
+    players?: Array<Record<string, unknown>>;
+    updatedAt?: string;
+    heatmap?: { buckets?: unknown[]; windowDays?: number };
+  } | null;
+  const hp27 = loadHighPriorityCached(2027) as { players?: Array<Record<string, unknown>>; updatedAt?: string } | null;
+  const hp28 = loadHighPriorityCached(2028) as { players?: Array<Record<string, unknown>>; updatedAt?: string } | null;
+  const movement = softMovementIntelFromMaster(2028);
+  const rows = [
+    ...(Array.isArray(hp28?.players) ? hp28!.players! : []),
+    ...(Array.isArray(hp27?.players) ? hp27!.players! : []),
+    ...(Array.isArray(master?.players) ? master!.players! : []),
+  ];
+  const seen = new Set<string>();
+  const players = rows.filter((p) => {
+    const slug = String(p.slug || p.id || '').toLowerCase();
+    if (!slug || seen.has(slug)) return false;
+    seen.add(slug);
+    return true;
+  });
+  if (!players.length && !(movement.heatmap?.buckets || []).length) return null;
+  const topTargets = players.slice(0, 12);
+  return {
+    classYear: 2027,
+    commitSort,
+    heatmap: movement.heatmap || master?.heatmap || { buckets: [], windowDays: 7 },
+    commits: [],
+    commitTotal: 0,
+    topTargets,
+    trendingUp: movement.risers || [],
+    trendingDown: movement.fallers || [],
+    portalWatchlist: [],
+    portalWatchlistVisible: false,
+    players,
+    items: topTargets,
+    targets: topTargets,
+    alerts: [],
+    notes: [],
+    degraded: 'hp_soft_seed',
+    updatedAt: String(hp28?.updatedAt || hp27?.updatedAt || master?.updatedAt || movement.updatedAt),
+    meta: { cacheReason: 'soft_hp' },
+  };
+}
+
 /** Warm master-board alone — safer than full lab warm on Starter. */
 export async function warmFuturecastMasterBoard(): Promise<{ ok: true; key: string }> {
   const { buildMasterBoardPayload } = require('./allowlist-board');

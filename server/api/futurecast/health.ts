@@ -38,6 +38,36 @@ function loadFreshness() {
     } catch {
       labPromote = null;
     }
+    let allowlistIntel = null;
+    try {
+      const cov = require('../../lib/allowlist-intel-sweep').measureAllowlistIntelCoverage(2028, {
+        days: 30,
+      });
+      allowlistIntel = {
+        coveragePct: cov.coveragePct,
+        recentCoveragePct: cov.recentCoveragePct,
+        missingCount: Array.isArray(cov.missing) ? cov.missing.length : 0,
+        missingWithVisitsCount: Array.isArray(cov.missingWithVisits) ? cov.missingWithVisits.length : 0,
+        stale: Number(cov.recentCoveragePct) < 50 || (cov.missingWithVisits || []).length > 0,
+      };
+    } catch {
+      allowlistIntel = null;
+    }
+    let vaultFeed = null;
+    try {
+      const report = require('../../lib/vault-feed-2028-sweep').readLastReport({ healStale: true });
+      vaultFeed = report
+        ? {
+            status: report.status || null,
+            slotId: report.slotId || null,
+            ok: report.ok !== false && report.status !== 'error',
+            finishedAt: report.finishedAt || null,
+            needsRetry: report.status === 'error' || report.status === 'running',
+          }
+        : null;
+    } catch {
+      vaultFeed = null;
+    }
     return {
       ufTrend: {
         durable: trend.durable === true,
@@ -50,6 +80,8 @@ function loadFreshness() {
       },
       rivalsPmLastRun,
       labPromote,
+      allowlistIntel,
+      vaultFeed,
     };
   } catch (err) {
     return {

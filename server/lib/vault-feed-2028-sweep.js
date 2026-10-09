@@ -50,7 +50,8 @@ function healStaleRunningReport(report) {
     finishedAt: new Date().toISOString(),
     heartbeatAt: new Date().toISOString(),
     errors: [...(report.errors || []), { step: 'heartbeat', error: 'stale_running_no_heartbeat' }],
-    message: 'Vault feed started but did not finish — no heartbeat. Next 7am / 7pm slot will retry.',
+    message:
+      'Vault feed started but did not finish — no heartbeat. Same-window 8–9am / 8–9pm catch-up will retry this slot.',
   };
   try {
     writeReport(dead);
@@ -142,7 +143,9 @@ function isActiveVaultFeedRun(report, now = Date.now()) {
 }
 
 function alreadyFinishedThisSlot(report, date = new Date()) {
-  if (!report || report.status === 'running') return false;
+  // A crashed/healed error stamp must NOT count as done — 8am/9am catch-up
+  // retries the same 7am slot instead of waiting until 7pm.
+  if (!report || report.status === 'running' || report.status === 'error') return false;
   if (!report.finishedAt) return false;
   const slot = vaultFeedSlotId(date);
   if (!slot) return false;
