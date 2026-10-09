@@ -22,7 +22,14 @@ I will not start Codemagic.
 ## Ships in this bake
 
 - **Community:** Reply under the staff post and every comment. Tap Reply and the composer opens on that card (`@Name` when you write someone else). Approved 1.0.31 still only has the thread box at the top.
+- **Community:** thread is its own screen — comments paint immediately, no locker/filters leftover, no jump / iOS zoom.
 - Membership: do not paint “Membership service is waking up” when `/api/subscription/status` flakes on iOS. Subscribe stays up. (This missed the approved 1.0.31 cut.)
+
+## Whats New (paste)
+
+```
+Reply sits under every Community comment. Open a thread and the comments are already there. Subscribe stays on Membership.
+```
 
 ## Already live (no extra bake)
 
