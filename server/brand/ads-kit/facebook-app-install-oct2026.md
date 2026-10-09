@@ -31,6 +31,12 @@ python3 server/brand/ads-kit/patch-elite-endcard.py
 
 Source cut: `source/gatorvault-ad-elite-export.mp4` (Charles Oct 5 export)
 
+Phone chrome (time, battery, record dot, fantasy Live Activity) is cropped off the top. Rebuild that too:
+
+```bash
+python3 server/brand/ads-kit/patch-elite-hide-chrome.py
+```
+
 Previous 15s home-patch cut stays on disk as `creatives/fb-tight-home-sc-15s.mp4`. Do not upload that one if this 10s cut is the replace.
 
 ---
