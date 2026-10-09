@@ -16,6 +16,7 @@ describe('Allowlist continuous intel sweep', () => {
       'utf8'
     );
     assert.match(cron, /allowlist-intel\/sweep/);
+    assert.match(cron, /missingWithVisits/);
     const ops = fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'ops-jobs.js'), 'utf8');
     assert.match(ops, /allowlist-intel-sweep/);
     const routes = fs.readFileSync(
@@ -23,6 +24,16 @@ describe('Allowlist continuous intel sweep', () => {
       'utf8'
     );
     assert.match(routes, /allowlist-intel\/sweep/);
+    assert.match(routes, /allowlist-intel\/coverage/);
+  });
+
+  it('canonicalizes On3 hyphen aliases so Wessel intel counts', () => {
+    const { canonicalTargetSlug } = require('../../lib/recruiting-target-allowlist');
+    assert.equal(canonicalTargetSlug('j-c-wessel'), 'jc-wessel');
+    const { measureAllowlistIntelCoverage } = require('../../lib/allowlist-intel-sweep');
+    const cov = measureAllowlistIntelCoverage(2028, { days: 180 });
+    assert.equal(cov.missing.includes('jc-wessel'), false, 'Wessel beat rows must count under jc-wessel');
+    assert.ok(Array.isArray(cov.missingWithVisits));
   });
 
   it('dry-run sweep reports targets without requiring network', async () => {

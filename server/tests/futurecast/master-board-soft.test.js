@@ -66,6 +66,31 @@ describe('master-board soft serve for iOS Lab', () => {
   });
 
 
+  it('home GET uses HP soft so a bounce does not return empty building', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'api', 'futurecast', 'home.ts'),
+      'utf8'
+    );
+    assert.match(src, /softHomeFromHighPriority/);
+    assert.match(src, /softOnDeferred/);
+    const heat = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'api', 'futurecast', 'heatmap.ts'),
+      'utf8'
+    );
+    assert.match(heat, /softOnDeferred/);
+  });
+
+  it('softHomeFromHighPriority is fan-ready when HP seed exists', () => {
+    const { softHomeFromHighPriority } = require('../../api/futurecast/response-cache.ts');
+    const soft = softHomeFromHighPriority('fit');
+    if (!soft) return;
+    assert.notEqual(soft.status, 'building');
+    assert.notEqual(soft.unavailable, true);
+    assert.ok(Array.isArray(soft.topTargets));
+    assert.ok(Array.isArray(soft.trendingUp));
+    assert.ok(Array.isArray(soft.commits));
+  });
+
   it('softMovementIntelFromMaster always returns iterable movement arrays', () => {
     const { softMovementIntelFromMaster } = require('../../api/futurecast/response-cache.ts');
     const soft = softMovementIntelFromMaster(2028);

@@ -145,6 +145,39 @@ describe('vault-feed 7am / 7pm ET slots', () => {
     assert.match(vaultFeedSlotId(pm7), /T19$/);
   });
 
+  it('alreadyFinishedThisSlot does not treat an error stamp as done so 8am catch-up retries', () => {
+    const fs = require('fs');
+    const os = require('os');
+    const path = require('path');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vf-2028-'));
+    const prevEnv = process.env.GV_RECRUITING_DATA_DIR;
+    process.env.GV_RECRUITING_DATA_DIR = dir;
+    const am8 = new Date('2026-10-09T12:05:00.000Z'); // 8:05 AM EDT
+    const crashed = {
+      ok: false,
+      status: 'error',
+      slotId: '2026-10-09T07',
+      startedAt: '2026-10-09T13:05:30.973Z',
+      finishedAt: '2026-10-09T14:00:58.678Z',
+      errors: [{ step: 'heartbeat', error: 'stale_running_no_heartbeat' }],
+    };
+    fs.writeFileSync(path.join(dir, 'vault-feed-2028-last-report.json'), `${JSON.stringify(crashed)}\n`);
+    try {
+      assert.equal(alreadyFinishedThisSlot(crashed, am8), false);
+      const accepted = acceptVaultFeedSweep({
+        launch: false,
+        skipPersist: true,
+        now: am8,
+      });
+      assert.equal(accepted.alreadyDone, undefined);
+      assert.equal(accepted.started, true);
+      assert.equal(accepted.report.slotId, '2026-10-09T07');
+    } finally {
+      if (prevEnv == null) delete process.env.GV_RECRUITING_DATA_DIR;
+      else process.env.GV_RECRUITING_DATA_DIR = prevEnv;
+    }
+  });
+
   it('alreadyFinishedThisSlot is per 7am or 7pm, not the whole day', () => {
     const am = new Date('2026-09-22T11:05:00.000Z');
     const pm = new Date('2026-09-22T23:05:00.000Z');

@@ -12,7 +12,7 @@
 const visitLogStore = require('./recruiting-visit-log-store');
 const offerLogStore = require('./recruiting-offer-log-store');
 const intelStore = require('./recruiting-intel-store');
-const { getAllowlistSet, CANONICAL_TARGET_NAMES } = require('./recruiting-target-allowlist');
+const { getAllowlistSet, CANONICAL_TARGET_NAMES, canonicalTargetSlug } = require('./recruiting-target-allowlist');
 const { isFloridaSchool } = require('./recruiting-target-filters');
 const { getLiveBoardTargets } = require('./live-board-targets');
 const { syncPlayedGameVisitors } = require('./game-visitors-visit-sync');
@@ -21,7 +21,7 @@ const store = require('./recruiting-store');
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 function slugKey(value) {
-  return String(value || '').trim().toLowerCase();
+  return canonicalTargetSlug(String(value || '').trim().toLowerCase());
 }
 
 function isoDay(value) {
@@ -159,6 +159,17 @@ function measureAllowlistIntelCoverage(classYear = 2028, { days = 30 } = {}) {
     if (recent) withRecent += 1;
     else if (list.length) thin.push(key);
   }
+  const visitSlugs = new Set();
+  try {
+    for (const row of visitLogStore.listVisitLogs({ limit: 8000 })) {
+      if (!isFloridaVisit(row)) continue;
+      const visitKey = slugKey(row.playerSlug);
+      if (visitKey) visitSlugs.add(visitKey);
+    }
+  } catch {
+    /* visit log optional */
+  }
+  const missingWithVisits = missing.filter((s) => visitSlugs.has(s));
   return {
     classYear,
     allowlistSize: allow.length,
@@ -168,6 +179,7 @@ function measureAllowlistIntelCoverage(classYear = 2028, { days = 30 } = {}) {
     coveragePct: allow.length ? Math.round((withAny / allow.length) * 1000) / 10 : 0,
     recentCoveragePct: allow.length ? Math.round((withRecent / allow.length) * 1000) / 10 : 0,
     missing,
+    missingWithVisits,
     thin,
   };
 }
@@ -290,16 +302,22 @@ async function runAllowlistIntelSweepInner({
     });
   }
 
+  const coverageGap = measureAllowlistIntelCoverage(classYear, { days: 30 });
+  const missingSet = new Set(coverageGap.missing || []);
+
   const visits = visitLogStore.listVisitLogs({ limit: 8000 });
-  for (const row of visits) {
+  const offers = offerLogStore.listOfferLogs({ limit: 8000 });
+
+  async function writeVisitIntel(row, { ignoreBudget = false } = {}) {
     const slug = slugKey(row.playerSlug);
-    if (!slug || !slugSet.has(slug)) continue;
-    if (!isFloridaVisit(row)) continue;
+    if (!slug || !slugSet.has(slug)) return;
+    if (!isFloridaVisit(row)) return;
     const ts = new Date(row.date || row.reportedAt).getTime();
-    if (!Number.isFinite(ts) || ts < cutoffMs) continue;
+    if (!Number.isFinite(ts) || ts < cutoffMs) return;
     results.scannedVisits += 1;
     const day = isoDay(row.date || row.reportedAt) || isoDay(row.reportedAt);
-    if (!day) continue;
+    if (!day) return;
+    if (!ignoreBudget && results.created.length >= maxCreates) return;
     const vType = row.visitType || row.eventType || 'visit';
     const label = visitLabel(vType);
     const ctx = await loadPlayerContext(slug, row.playerName);
@@ -308,8 +326,6 @@ async function runAllowlistIntelSweepInner({
       String(row.detail || '').trim() || `${name} — Florida ${label} (${day}).`;
     const fp = `allowlist_sweep_visit_${slug}_${day}_${String(vType).toLowerCase().replace(/\s+/g, '_')}`;
     try {
-      if (results.created.length >= maxCreates) break;
-      // reportedAt = sweep time (signal confirmed on file now); visit day stays in detail/fp.
       const now = new Date().toISOString();
       const out = await ensureIntelRow(
         {
@@ -318,8 +334,6 @@ async function runAllowlistIntelSweepInner({
           playerName: name,
           classYear: ctx.classYear || classYear,
           pos: ctx.pos,
-          // target_update (not visit eventType) — avoids recruiting-store visit upsert side effects.
-          // Visit traction for chase still comes from visit-log-store.
           eventType: 'target_update',
           status: `Florida ${label}`,
           detail,
@@ -342,23 +356,22 @@ async function runAllowlistIntelSweepInner({
     }
   }
 
-  const offers = offerLogStore.listOfferLogs({ limit: 8000 });
-  for (const row of offers) {
+  async function writeOfferIntel(row, { ignoreBudget = false } = {}) {
     const slug = slugKey(row.playerSlug);
-    if (!slug || !slugSet.has(slug)) continue;
-    if (!isFloridaSchool(row.school || 'Florida')) continue;
+    if (!slug || !slugSet.has(slug)) return;
+    if (!isFloridaSchool(row.school || 'Florida')) return;
     const ts = new Date(row.date || row.reportedAt).getTime();
-    if (!Number.isFinite(ts) || ts < cutoffMs) continue;
+    if (!Number.isFinite(ts) || ts < cutoffMs) return;
     results.scannedOffers += 1;
     const day = isoDay(row.date || row.reportedAt) || isoDay(row.reportedAt);
-    if (!day) continue;
+    if (!day) return;
+    if (!ignoreBudget && results.created.length >= maxCreates) return;
     const ctx = await loadPlayerContext(slug, row.playerName);
     const name = ctx.playerName;
     const detail =
       String(row.detail || '').trim() || `${name} — Florida offer (${day}).`;
     const fp = `allowlist_sweep_offer_${slug}_${day}`;
     try {
-      if (results.created.length >= maxCreates) break;
       const now = new Date().toISOString();
       const out = await ensureIntelRow(
         {
@@ -390,13 +403,35 @@ async function runAllowlistIntelSweepInner({
     }
   }
 
+  // Zero-intel names first — do not spend the create budget on names that already have rows.
+  for (const row of visits) {
+    if (!missingSet.has(slugKey(row.playerSlug))) continue;
+    await writeVisitIntel(row, { ignoreBudget: true });
+  }
+  for (const row of offers) {
+    if (!missingSet.has(slugKey(row.playerSlug))) continue;
+    await writeOfferIntel(row, { ignoreBudget: true });
+  }
+
+  for (const row of visits) {
+    if (missingSet.has(slugKey(row.playerSlug))) continue;
+    await writeVisitIntel(row, { ignoreBudget: false });
+  }
+  for (const row of offers) {
+    if (missingSet.has(slugKey(row.playerSlug))) continue;
+    await writeOfferIntel(row, { ignoreBudget: false });
+  }
+
   // Board-pulse fallback: allowlist targets with zero visit/offer materialization
   // still need process intel so chase breadth stays fair (not Desk-only).
-  // Locked allowlist membership itself is the UF process signal — do not skip
-  // Wilkes/McCary/Jamarcus-style locks for empty note/RPM fields.
+  // Never skip this pass when maxCreates is already spent — 0-intel is the miss.
   const coverageBeforePulse = measureAllowlistIntelCoverage(classYear, { days: 30 });
-  for (const slug of coverageBeforePulse.missing || []) {
-    if (results.created.length >= maxCreates) break;
+  // Pulse missing AND thin (old intel only). Unique source+day fingerprint
+  // keeps chase fair — one board row per day, not a dump.
+  const needPulse = [
+    ...new Set([...(coverageBeforePulse.missing || []), ...(coverageBeforePulse.thin || [])]),
+  ];
+  for (const slug of needPulse) {
     try {
       const ctx = await loadPlayerContext(slug);
       const player = ctx.player;

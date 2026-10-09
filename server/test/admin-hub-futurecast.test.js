@@ -43,6 +43,9 @@ describe('FutureCast hub summary', () => {
     assert.ok(typeof summary.counts.board2028 === 'number');
     assert.ok(Array.isArray(summary.adminAllowlist2028));
     assert.match(summary.notes.closingClass2027, /Hard-locked/);
+    assert.ok(summary.allowlistIntel);
+    assert.ok(typeof summary.allowlistIntel.coveragePct === 'number');
+    assert.ok(Array.isArray(summary.allowlistIntel.missingWithVisits));
   });
 
   it('adds and removes 2028 allowlist extras; blocks 2027', () => {

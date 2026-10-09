@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] FutureCast pour guard: a crashed 7am vault-feed no longer counts as finished — 8–9am catch-up retries that slot. Allowlist intel coverage is live on Admin Hub + `/api/futurecast/health`. `j-c-wessel` aliases to `jc-wessel`. Home / movement heatmap soft-serve from HP after an API bounce instead of empty `building`. API after Render — no Codemagic.
 - [x] App Store **1.0.31** approved (Subscribe from StoreKit). Do not upload another 1.0.31. Community Reply waits on **1.0.32**.
 - [x] Roster Stats Missouri week 5 official box (Philo 21/34 197 1 TD, Baugh 12–13, Graham on the card). Cron overlay on `/var/data/roster/production-stats.json` so the next deploy cannot snap Stats back to Ole Miss. API `/api/roster/players/:slug` after Render — no Codemagic.
 - [x] Game Week South Carolina Matchup Edge: sat `radar` stamp (Run 68/74, Pass 72/64, Front 7 58/62, Secondary 64/44, ST 56/58, Coaching 54/50). PFF 88 missed tackles sits on Run Game. Not the 73% formula hexagon. API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.

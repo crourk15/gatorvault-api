@@ -641,7 +641,17 @@ function mountRecruitingRoutes(app) {
       }
       const dryRun = req.body.dryRun === true || req.query.dryRun === 'true';
       const result = await runAllowlistIntelSweep({ classYear, dryRun });
-      return res.json({ ok: true, ...result });
+      const missing = Array.isArray(result?.coverage?.missing) ? result.coverage.missing.length : 0;
+      const visitGaps = Array.isArray(result?.coverage?.missingWithVisits)
+        ? result.coverage.missingWithVisits.length
+        : 0;
+      return res.json({
+        ok: true,
+        // Visit-holding names still at 0 intel = the pour missed. Soft-fail so
+        // recruiting-light retries next hour instead of looking green.
+        softFailure: visitGaps > 0 || missing > 0,
+        ...result,
+      });
     } catch (err) {
       console.error('allowlist intel sweep error', err);
       return res.status(200).json({ ok: false, softFailure: true, error: err.message, cached: true });
@@ -675,6 +685,34 @@ function mountRecruitingRoutes(app) {
     } catch (err) {
       console.error('vault-feed-2028 sweep error', err);
       return res.status(200).json({ ok: false, softFailure: true, error: err.message, cached: true });
+    }
+  });
+
+  app.get('/api/recruiting/allowlist-intel/coverage', (req, res) => {
+    try {
+      const { measureAllowlistIntelCoverage } = require('./allowlist-intel-sweep');
+      const classYear = parseInt(String(req.query.classYear || '2028'), 10) || 2028;
+      const days = parseInt(String(req.query.days || '30'), 10) || 30;
+      const cov = measureAllowlistIntelCoverage(classYear, { days });
+      return res.json({
+        ok: true,
+        coverage: {
+          classYear: cov.classYear,
+          allowlistSize: cov.allowlistSize,
+          withAnyIntel: cov.withAnyIntel,
+          withIntelInWindow: cov.withIntelInWindow,
+          windowDays: cov.windowDays,
+          coveragePct: cov.coveragePct,
+          recentCoveragePct: cov.recentCoveragePct,
+          missingCount: Array.isArray(cov.missing) ? cov.missing.length : 0,
+          missingWithVisitsCount: Array.isArray(cov.missingWithVisits)
+            ? cov.missingWithVisits.length
+            : 0,
+          thinCount: Array.isArray(cov.thin) ? cov.thin.length : 0,
+        },
+      });
+    } catch (err) {
+      return res.status(200).json({ ok: false, error: err.message, coverage: null });
     }
   });
 

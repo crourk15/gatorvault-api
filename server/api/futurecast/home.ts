@@ -23,7 +23,7 @@ import {
 import { isHsLifecycle, isTrendingEligibleRow } from './eligibility';
 import { applyMomentumBoosts, loadSignalMomentumBoosts } from './momentum';
 import { listRecruitingStoreCommits, mergeLiveCommits } from './live-commits';
-import { sendCachedJson, scheduleClosestCommitWarm } from './response-cache';
+import { sendCachedJson, scheduleClosestCommitWarm, softHomeFromHighPriority } from './response-cache';
 import { enrichFeedPlayers } from './ranking-enrichment';
 import {
   buildHeatmapResponse,
@@ -75,7 +75,10 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
       req.query.commitSort === 'stability' ? ('stability' as const) : ('fit' as const);
     const cacheKey = `futurecast:home:${commitSort}`;
 
-    await sendCachedJson(res, cacheKey, async () => {
+    await sendCachedJson(
+      res,
+      cacheKey,
+      async () => {
     const [predictionRows, movementRows, portalRows] = await Promise.all([
       listPredictions({
         class_year: FUTURECAST_CLASS_YEAR,
@@ -217,7 +220,11 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
       trendingDown: enrichFeedPlayers(allowOnly(hsTrendingDown)),
       portalWatchlist,
     };
-    });
+    },
+      {
+        softOnDeferred: () => softHomeFromHighPriority(commitSort),
+      }
+    );
   } catch (err) {
     handlePredictionsApiError(res, err);
   }
