@@ -48,7 +48,7 @@ Vegas stamp: **UF -13.5 / 62.5** (DraftKings via Covers Oct 6 — opened -14.5 /
 
 ## Visitors
 
-Easton Royal (Texas commit) returning for Homecoming. Expected / planning.
+Expected / planning. Easton Royal (Texas commit) returning for Homecoming, plus Prince Che, Braxton Rein, Calvin Landy, Keston Beck, Auburn commit Marquis Evans, and the Oct. 10 Florida commits on the public unofficial list (Fountain, Davidson, Beard, Pearl, Wheeler, Ja'Bios Smith, Whitfield, Kendrick, Johnson).
 
 ## NOW
 

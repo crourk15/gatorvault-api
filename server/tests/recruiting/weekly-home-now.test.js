@@ -287,6 +287,9 @@ test('after the Missouri final NOW points at South Carolina homecoming', () => {
   const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [] });
   assert.equal(cats[1].label, 'Visitors');
   assert.match(String(cats[1].items[0] || ''), /Easton Royal/i);
+  assert.ok(cats[1].items.includes('Prince Che'));
+  assert.ok(cats[1].items.includes('Braxton Rein'));
+  assert.ok(cats[1].items.includes('Calvin Landy'));
 });
 
 test('Samuel Bailey is last week after Missouri — Visitors Easton Royal', () => {

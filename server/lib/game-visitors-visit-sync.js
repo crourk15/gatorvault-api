@@ -24,6 +24,7 @@ const SKIP_SLUGS = new Set([
   'judah-gumbs', // Arkansas commit (Alderman Campbell look)
   'easton-royal', // Texas commit (Ole Miss early look / flip watch)
   'omari-lawson', // Syracuse commit (Sep 26 Florida game-day still on the calendar)
+  'marquis-evans', // Auburn commit (South Carolina weekend flip watch)
 ]);
 
 function loadDoc() {

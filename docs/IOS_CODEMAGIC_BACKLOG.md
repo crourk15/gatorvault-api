@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week South Carolina expected visitors: panel is no longer Royal-only. Adds Che, Rein, Landy, Beck, Evans, and the Oct. 10 Florida commits. Home NOW still leads `Visitors — Easton Royal` and ticks the full name list. API `/api/schedule` + ticker edge after deploy — no Codemagic.
 - [x] FutureCast pour guard: a crashed 7am vault-feed no longer counts as finished — 8–9am catch-up retries that slot. Allowlist intel coverage is live on Admin Hub + `/api/futurecast/health`. `j-c-wessel` aliases to `jc-wessel`. Home / movement heatmap soft-serve from HP after an API bounce instead of empty `building`. API after Render — no Codemagic.
 - [x] App Store **1.0.31** approved (Subscribe from StoreKit). Do not upload another 1.0.31. Community Reply waits on **1.0.32**.
 - [x] Roster Stats Missouri week 5 official box (Philo 21/34 197 1 TD, Baugh 12–13, Graham on the card). Cron overlay on `/var/data/roster/production-stats.json` so the next deploy cannot snap Stats back to Ole Miss. API `/api/roster/players/:slug` after Render — no Codemagic.
