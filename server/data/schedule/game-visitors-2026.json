@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-04T00:40:00.000Z",
+  "updatedAt": "2026-10-10T12:50:00.000Z",
   "source": "Home-game visitor look only \u2014 plans can change. Away games do not get a visitor panel.",
   "visitorMeta": {
     "zylen-little": {
@@ -260,6 +260,104 @@
       "school": "Louisville (Louisville, MS)",
       "stars": 4,
       "classYear": 2028
+    },
+    "prince-che": {
+      "name": "Prince Che",
+      "position": "DL",
+      "school": "Thomas County Central (Thomasville, GA)",
+      "stars": 5,
+      "classYear": 2028
+    },
+    "braxton-rein": {
+      "name": "Braxton Rein",
+      "position": "TE",
+      "school": "Baylor School (Chattanooga, TN)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "calvin-landy": {
+      "name": "Calvin Landy",
+      "position": "OL",
+      "school": "Alpharetta (Alpharetta, GA)",
+      "stars": null,
+      "classYear": 2028
+    },
+    "keston-beck": {
+      "name": "Keston Beck",
+      "position": "WR",
+      "school": "Clay-Chalkville (Birmingham, AL)",
+      "stars": null,
+      "classYear": 2029
+    },
+    "marquis-evans": {
+      "name": "Marquis Evans",
+      "position": "EDGE",
+      "school": "Spain Park (Birmingham, AL)",
+      "stars": 4,
+      "classYear": 2027
+    },
+    "aamaury-fountain": {
+      "name": "Aamaury Fountain",
+      "position": "CB",
+      "school": "Dodge County (Eastman, GA)",
+      "stars": 4,
+      "classYear": 2027
+    },
+    "davin-davidson": {
+      "name": "Davin Davidson",
+      "position": "QB",
+      "school": "Cardinal Mooney (Sarasota, FL)",
+      "stars": 4,
+      "classYear": 2027
+    },
+    "andrew-beard": {
+      "name": "Andrew Beard",
+      "position": "RB",
+      "school": "Prince Avenue Christian (Bogart, GA)",
+      "stars": 4,
+      "classYear": 2027
+    },
+    "elias-pearl": {
+      "name": "Elias Pearl",
+      "position": "WR",
+      "school": "Port Charlotte (Port Charlotte, FL)",
+      "stars": 4,
+      "classYear": 2027
+    },
+    "cahron-wheeler": {
+      "name": "Cahron Wheeler",
+      "position": "DL",
+      "school": "St. Paul's School (Baltimore, MD)",
+      "stars": 4,
+      "classYear": 2027
+    },
+    "jabios-smith": {
+      "name": "Ja'Bios Smith",
+      "position": "LB",
+      "school": "Swainsboro (Swainsboro, GA)",
+      "stars": 4,
+      "classYear": 2027
+    },
+    "kamauri-whitfield": {
+      "name": "Kamauri Whitfield",
+      "position": "CB",
+      "school": "The First Academy (Orlando, FL)",
+      "stars": 3,
+      "classYear": 2027
+    },
+    "devoun-kendrick": {
+      "name": "De'Voun Kendrick",
+      "position": "DL",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "stars": 3,
+      "classYear": 2027
+    },
+    "kamarion-johnson": {
+      "name": "Kamarion Johnson",
+      "position": "ATH",
+      "school": "Clinch County (Homerville, GA)",
+      "stars": 3,
+      "classYear": 2027
     }
   },
   "games": [
@@ -340,9 +438,23 @@
       "date": "2026-10-10",
       "dateLabel": "Oct 10",
       "chaseLabel": "Expected South Carolina visit · Oct 10",
-      "source": "Expected / planning, not confirmed on campus. Plans can change. Royal is a Texas commit returning to Florida (Rivals / Spiegelman). Homecoming.",
+      "source": "Expected / planning, not confirmed on campus. Plans can change. Royal is a Texas commit returning for Homecoming (Rivals / Spiegelman). Che is back in Gainesville (On3). Landy and Rein are dated for this game (Swamp247). Beck is on the On3 Oct. 10 visit log. Evans is an Auburn commit. The rest are Florida commits on the public Oct. 10 unofficial list.",
       "slugs": [
-        "easton-royal"
+        "easton-royal",
+        "prince-che",
+        "braxton-rein",
+        "calvin-landy",
+        "keston-beck",
+        "marquis-evans",
+        "aamaury-fountain",
+        "davin-davidson",
+        "andrew-beard",
+        "elias-pearl",
+        "cahron-wheeler",
+        "jabios-smith",
+        "kamauri-whitfield",
+        "devoun-kendrick",
+        "kamarion-johnson"
       ]
     }
   ]

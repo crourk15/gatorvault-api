@@ -248,6 +248,37 @@ describe('game-week-visitors', () => {
     }
   });
 
+  it('lists the South Carolina homecoming visitors, Royal first', () => {
+    const panel = visitorsPanelForGameId('scar');
+    assert.equal(panel.visitors[0].slug, 'easton-royal');
+    const slugs = panel.visitors.map((v) => v.slug);
+    for (const slug of [
+      'prince-che',
+      'braxton-rein',
+      'calvin-landy',
+      'keston-beck',
+      'marquis-evans',
+      'aamaury-fountain',
+      'davin-davidson',
+      'andrew-beard',
+      'elias-pearl',
+      'cahron-wheeler',
+      'jabios-smith',
+      'kamauri-whitfield',
+      'devoun-kendrick',
+      'kamarion-johnson',
+    ]) {
+      assert.ok(slugs.includes(slug), `missing South Carolina visitor ${slug}`);
+    }
+    const che = panel.visitors.find((v) => v.slug === 'prince-che');
+    assert.equal(che.position, 'DL');
+    assert.equal(che.stars, 5);
+    assert.match(String(che.school || ''), /Thomas County Central/);
+    const landy = panel.visitors.find((v) => v.slug === 'calvin-landy');
+    assert.equal(landy.stars, null);
+    assert.match(String(landy.school || ''), /Alpharetta/);
+  });
+
   it('attaches expectedVisitors onto schedule games', () => {
     const games = attachExpectedVisitorsToGames([
       { id: 'fau', opp: 'FAU Owls', date: 'September 5, 2026' },

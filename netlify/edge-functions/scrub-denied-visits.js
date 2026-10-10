@@ -10,6 +10,24 @@ const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '4-1 · SEC home Saturday';
 const SC_NOW_GAME = 'South Carolina in the Swamp — 12:45 PM · SEC Network';
 const SC_VISITOR_LINE = 'Easton Royal';
+/** Home NOW ticks every named South Carolina visitor. Compact line stays Royal. */
+const SC_VISITOR_NAMES = [
+  'Easton Royal',
+  'Prince Che',
+  'Braxton Rein',
+  'Calvin Landy',
+  'Keston Beck',
+  'Marquis Evans',
+  "Aamaury Fountain",
+  'Davin Davidson',
+  'Andrew Beard',
+  'Elias Pearl',
+  'Cahron Wheeler',
+  "Ja'Bios Smith",
+  'Kamauri Whitfield',
+  "De'Voun Kendrick",
+  'Kamarion Johnson',
+];
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
 /** Posted Missouri final — last-good Faurot / 4-0 must not beat South Carolina week. */
 const LEFTOVER_MISSOURI_NOW_RE =
@@ -53,7 +71,7 @@ function pinLeftoverMissouriNow(data) {
       items: [`Game — ${SC_NOW_GAME}`, `Visitors — ${SC_VISITOR_LINE}`, `Season — ${SEASON_STANDING}`],
       nowWeek: [
         { key: 'game', label: 'Game', items: [SC_NOW_GAME] },
-        { key: 'visitors', label: 'Visitors', items: [SC_VISITOR_LINE] },
+        { key: 'visitors', label: 'Visitors', items: SC_VISITOR_NAMES },
         { key: 'season', label: 'Season', items: [SEASON_STANDING] },
       ],
       ...(Array.isArray(data.ticker)
@@ -108,7 +126,7 @@ const TICKER_FALLBACK = {
   ],
   nowWeek: [
     { key: 'game', label: 'Game', items: [SC_NOW_GAME] },
-    { key: 'visitors', label: 'Visitors', items: [SC_VISITOR_LINE] },
+    { key: 'visitors', label: 'Visitors', items: SC_VISITOR_NAMES },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],
   meta: { endpoint: 'ticker', cacheReason: 'now-edge-fallback' },
@@ -186,7 +204,7 @@ function pinBaileyNowNews(data) {
       const key = String(row.key || row.label || '').toLowerCase();
       const items = Array.isArray(row.items) ? row.items.map((s) => String(s || '')) : [];
       if ((key === 'news' || String(row.label || '') === 'News') && items.some((s) => STALE_NOW_NEWS_RE.test(s))) {
-        return { ...row, key: 'visitors', label: 'Visitors', items: [SC_VISITOR_LINE] };
+        return { ...row, key: 'visitors', label: 'Visitors', items: SC_VISITOR_NAMES };
       }
       return row;
     });
