@@ -18,6 +18,11 @@ function verifyCronOrAdmin(req) {
   return verifyAdminPin(pinFromReq(req));
 }
 
+function noStore(res) {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.set('Pragma', 'no-cache');
+}
+
 function requireSession(req, res) {
   const session = getSessionFromReq(req);
   if (!session || !session.email) {
@@ -38,6 +43,7 @@ function mountCommunityRoutes(app) {
 
   /** One request for the hub — replaces 6 parallel list GETs on first open. */
   app.get('/api/community/page', (req, res) => {
+    noStore(res);
     try {
       const sort = req.query.sort || 'recent';
       const category = req.query.category || null;
@@ -101,6 +107,7 @@ function mountCommunityRoutes(app) {
 
   /** Last game-day talk rooms — public, stays after Staff open rolls. */
   app.get('/api/community/game-rooms', (req, res) => {
+    noStore(res);
     try {
       const limit = parseInt(req.query.limit || '8', 10);
       const session = getSessionFromReq(req);
@@ -119,6 +126,7 @@ function mountCommunityRoutes(app) {
 
   /** Signed-in locker: started, replied, following, replies-on-yours. */
   app.get('/api/community/me', (req, res) => {
+    noStore(res);
     const session = requireSession(req, res);
     if (!session) return;
     try {

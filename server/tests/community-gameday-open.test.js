@@ -111,10 +111,63 @@ describe('community store gameday upgrade', () => {
     const rooms = store.getGameRooms({ limit: 12 });
     assert.equal(rooms[0].title, 'Game day talk: Florida vs South Carolina');
     assert.equal(rooms[0].gameId, 'scar');
+    assert.equal(rooms[0].id, 'thr_game_scar');
     const again = store.ensureWeeklyGameTalks({ asOf: '2026-10-10T18:00:00.000Z', force: true });
     assert.equal(again.created, 0);
-    const scar = store.loadThreads().filter((t) => !t.deleted && t.gameId === 'scar');
-    assert.equal(scar.length, 1);
+    const listed = rooms.filter((r) => r.gameId === 'scar');
+    assert.equal(listed.length, 1);
     assert.equal(rooms.some((r) => r.gameId === 'texas'), false);
+  });
+
+  it('shipped iOS still lists South Carolina when it hides today’s staff thread', () => {
+    store.ensureDailyOpenThread({ asOf: '2026-10-10T16:00:00.000Z' });
+    store.ensureWeeklyGameTalks({ asOf: '2026-10-10T16:00:00.000Z', force: true });
+    const threads = store.loadThreads().filter((t) => !t.deleted);
+    const today = threads.find((t) => t.pinned && t.dailyKey === '2026-10-10');
+    assert.ok(today);
+    const rooms = store.getGameRooms({ limit: 12 });
+    const visibleToIos = rooms.filter((t) => t.id !== today.id);
+    const scar = visibleToIos.find((t) => t.gameId === 'scar');
+    assert.ok(scar, 'Game talk must keep South Carolina after the iOS today-filter');
+    assert.equal(scar.id, 'thr_game_scar');
+    assert.equal(visibleToIos.filter((t) => t.gameId === 'scar').length, 1);
+  });
+
+  it('keeps the Saturday thread that already has replies', () => {
+    const threads = store.loadThreads();
+    threads.unshift({
+      id: 'thr_game_auburn',
+      title: 'Game day talk: Florida vs Auburn',
+      body: 'Empty duplicate.',
+      categorySlug: 'locker',
+      authorId: 'usr_gv_staff',
+      pinned: false,
+      gameday: true,
+      gameId: 'auburn',
+      gameDay: '2026-09-19',
+      replyCount: 0,
+      deleted: false,
+      createdAt: '2026-09-19T16:00:00.000Z',
+    });
+    threads.unshift({
+      id: 'thr_gameday_auburn',
+      title: 'Game day talk: Florida vs Auburn',
+      body: 'Jordan-Hare.',
+      categorySlug: 'locker',
+      authorId: 'usr_gv_staff',
+      pinned: false,
+      gameday: true,
+      gameId: 'auburn',
+      gameDay: '2026-09-19',
+      replyCount: 2,
+      dailyKey: '2026-09-19',
+      deleted: false,
+      createdAt: '2026-09-19T16:00:00.000Z',
+    });
+    store.saveThreads(threads);
+    const rooms = store.getGameRooms({ limit: 12 });
+    const auburns = rooms.filter((r) => r.gameId === 'auburn' || /Auburn/.test(r.title || ''));
+    assert.equal(auburns.length, 1);
+    assert.equal(auburns[0].id, 'thr_gameday_auburn');
   });
 });

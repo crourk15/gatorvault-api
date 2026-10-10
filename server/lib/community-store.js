@@ -241,7 +241,11 @@ function gameRoomRecency(thread) {
 
 /**
  * One Game talk thread per opponent for every week that has started.
- * Reuses a Saturday daily that already has that title. Does not invent replies.
+ * Past Saturdays keep the thread that already has replies.
+ * This week's room is its own id (`thr_game_<id>`), not today's pinned staff
+ * thread. The shipped iOS app drops whatever thread is pinned as today, so
+ * South Carolina has to be a separate row or Game talk never shows it.
+ * Does not invent replies.
  */
 function ensureWeeklyGameTalks(opts = {}) {
   ensureCategories();
@@ -271,9 +275,13 @@ function ensureWeeklyGameTalks(opts = {}) {
 
   for (const prompt of prompts) {
     if (!prompt.gameId || !prompt.title) continue;
-    let existing = threads.find((t) => !t.deleted && t.gameId === prompt.gameId);
+    const standaloneId = `thr_game_${prompt.gameId}`;
+    let existing = threads.find((t) => !t.deleted && t.id === standaloneId);
     if (!existing) {
-      existing = threads.find((t) => !t.deleted && t.title === prompt.title);
+      const prior = threads.find(
+        (t) => !t.deleted && t.dailyKey !== today && (t.gameId === prompt.gameId || t.title === prompt.title)
+      );
+      if (prior) existing = prior;
     }
     if (existing) {
       let touched = false;
@@ -301,7 +309,7 @@ function ensureWeeklyGameTalks(opts = {}) {
       continue;
     }
     threads.unshift({
-      id: `thr_game_${prompt.gameId}`,
+      id: standaloneId,
       title: prompt.title,
       body: prompt.body,
       categoryId: cat.id,
@@ -356,6 +364,8 @@ function ensureDailyOpenThread(opts = {}) {
       existing.title = gameday.title;
       existing.body = gameday.body;
       existing.gameday = true;
+      if (gameday.gameId) existing.gameId = gameday.gameId;
+      if (gameday.dayKey) existing.gameDay = gameday.dayKey;
       existing.categoryId = cat.id;
       existing.categorySlug = cat.slug;
       existing.pinned = true;
@@ -366,25 +376,6 @@ function ensureDailyOpenThread(opts = {}) {
     }
   } catch {
     gameday = null;
-  }
-  if (!existing && gameday) {
-    const adopt = threads.find(
-      (t) => !t.deleted && (t.gameId === gameday.gameId || t.title === gameday.title)
-    );
-    if (adopt) {
-      adopt.dailyKey = today;
-      adopt.pinned = true;
-      adopt.featured = true;
-      adopt.gameday = true;
-      if (gameday.gameId) adopt.gameId = gameday.gameId;
-      adopt.gameDay = gameday.dayKey;
-      for (const t of threads) {
-        if (t !== adopt && t.dailyKey && t.dailyKey !== today) t.pinned = false;
-      }
-      saveThreads(threads);
-      rememberDailyOpen(today, adopt);
-      return { created: false, thread: adopt, replaced: true };
-    }
   }
   if (existing) {
     // Keep today's daily at the top of Jump-in.
@@ -1066,9 +1057,36 @@ function getFollowedThreadIds(email) {
 }
 
 /**
- * Last game-day talk rooms — stays findable after Staff open rolls to the next ET day.
- * Does not invent replies.
+ * One Game talk row per opponent.
+ * Shipped iOS drops the pinned daily (today's staff card) out of this list, so
+ * this week's room has to be the other thread when both exist.
+ * A Saturday that already has replies stays that thread — an empty `thr_game_`
+ * duplicate must not replace it.
  */
+function listGameTalkThreads(threads) {
+  const live = (threads || []).filter((t) => !t.deleted && looksLikeGamedayThread(t));
+  const groups = new Map();
+  for (const thread of live) {
+    const key = String(thread.title || thread.gameId || thread.id);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(thread);
+  }
+  const picked = [];
+  for (const group of groups.values()) {
+    const notStaffCard = group.filter((t) => !(t.pinned && t.dailyKey));
+    const pool = notStaffCard.length ? notStaffCard : group;
+    pool.sort((a, b) => {
+      const replies = (b.replyCount || 0) - (a.replyCount || 0);
+      if (replies) return replies;
+      const aFresh = String(a.id || '').startsWith('thr_game_') ? 1 : 0;
+      const bFresh = String(b.id || '').startsWith('thr_game_') ? 1 : 0;
+      return aFresh - bFresh;
+    });
+    picked.push(pool[0]);
+  }
+  return picked.sort((a, b) => gameRoomRecency(b).localeCompare(gameRoomRecency(a)));
+}
+
 function getGameRooms({ limit = 8, viewerEmail = null } = {}) {
   ensureCategories();
   ensureFoundingSurface();
@@ -1078,9 +1096,7 @@ function getGameRooms({ limit = 8, viewerEmail = null } = {}) {
   const users = loadUsers();
   const posts = loadPosts();
   const cap = Math.max(1, Math.min(20, Number(limit) || 8));
-  return loadThreads()
-    .filter((t) => !t.deleted && looksLikeGamedayThread(t))
-    .sort((a, b) => gameRoomRecency(b).localeCompare(gameRoomRecency(a)))
+  return listGameTalkThreads(loadThreads())
     .slice(0, cap)
     .map((t) =>
       decorateActivityThread(t, {
@@ -1221,10 +1237,7 @@ function getPublicPage({ sort = 'recent', category = null, limit = 40, gameRoomL
   };
 
   const roomCap = Math.max(1, Math.min(20, Number(gameRoomLimit) || 8));
-  const gameRooms = allThreads
-    .filter((t) => looksLikeGamedayThread(t))
-    .sort((a, b) => gameRoomRecency(b).localeCompare(gameRoomRecency(a)))
-    .slice(0, roomCap)
+  const gameRooms = listGameTalkThreads(allThreads).slice(0, roomCap)
     .map((t) =>
       decorateActivityThread(t, {
         posts,
