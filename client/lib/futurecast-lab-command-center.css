@@ -17,12 +17,16 @@
   padding-bottom: var(--gv-space-6, 32px);
 }
 
-/* Full-bleed hero + feed inside gv-container */
+/* Column-width bands. 100vw + 50vw pull the band under the 220px vault
+   sidebar; overflow-x:hidden then cuts titles ("Florida win chance",
+   "Game Week Intel", "3 Keys to the Game"). Home and Team already stay
+   at 100% for the same reason. */
 .fc-lab-bleed {
-  width: 100vw;
-  max-width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
 }
 
 /* ── Hero — premium 300–340px ── */
