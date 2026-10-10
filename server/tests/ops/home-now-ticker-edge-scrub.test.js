@@ -37,7 +37,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the SC week pack', () => 
   assert.match(src, /pinCurrentScarNow/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'scar-visitors-ios'/);
+  assert.match(src, /NOW_BUST_VALUE = 'scar-board-ios'/);
   assert.match(src, /isSchedulePath/);
   assert.match(src, /isPingPath/);
   const toml = fs.readFileSync(path.join(__dirname, '../../../netlify.toml'), 'utf8');
@@ -55,7 +55,7 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to Visitors', () => 
   assert.match(src, /lorenzo\\s\+mcmullen/);
   assert.match(src, /samuel\\s\+bailey/);
   assert.match(src, /Visitors — \$\{SC_VISITOR_LINE\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'scar-visitors-ios'/);
+  assert.match(src, /NOW_BUST_VALUE = 'scar-board-ios'/);
 });
 
 test('iOS launch edge busts URLCache without rewriting the POST body', () => {
@@ -63,7 +63,7 @@ test('iOS launch edge busts URLCache without rewriting the POST body', () => {
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'scar-visitors-ios'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'scar-board-ios'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /clear-site-data/);
   assert.doesNotMatch(bust, /upstream\.json\(\)/);
