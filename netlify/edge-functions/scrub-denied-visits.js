@@ -3,7 +3,12 @@
  * Capacitor hits gatorvaultinsider.com/api/* (Netlify → Render). Even when
  * Render is clean, WKWebView URLCache / stale CDN can replay
  * Tranard × Auburn stones. Scrub visits, ticker, battle/heat, offers here.
+ *
+ * Schedule: a Render HTML 502 makes the App Store binary keep
+ * gv-schedule-board-last-good (Royal-only). Serve the fan board from here
+ * instead, and fill a stale scar expectedVisitors panel on a live 200.
  */
+import { pinScarExpectedVisitors, scheduleFallback } from './schedule-visitor-pin.mjs';
 const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolRe: /auburn/i }];
 
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
@@ -146,7 +151,9 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'scar-visitors-ios';
+const NOW_BUST_VALUE = 'scar-board-ios';
+/** Stay under the App Store schedule client's 8s timeout when Render hangs. */
+const SCHEDULE_ORIGIN_TIMEOUT_MS = 4000;
 
 function needsNowCacheBust(request) {
   const cookie = request?.headers?.get?.('cookie') || '';
@@ -162,6 +169,41 @@ function applyNowCacheBust(request, headers) {
   );
   headers.set('x-gv-now-bust', NOW_BUST_VALUE);
   return true;
+}
+
+/** Capacitor schedule GET is cross-origin. A fallback without ACAO never replaces last-good. */
+function applyScheduleCors(request, headers) {
+  const origin = String(request?.headers?.get?.('origin') || '');
+  const reflect =
+    origin === 'capacitor://localhost' ||
+    origin === 'ionic://localhost' ||
+    origin === 'https://localhost' ||
+    origin === 'http://localhost' ||
+    /^https:\/\/([a-z0-9-]+\.)?gatorvault(insider)?\.com$/i.test(origin) ||
+    /\.netlify\.app$/i.test(origin);
+  if (reflect) {
+    headers.set('access-control-allow-origin', origin);
+    headers.set('access-control-allow-credentials', 'true');
+    headers.set('vary', 'Origin');
+    return;
+  }
+  headers.set('access-control-allow-origin', '*');
+}
+
+function scheduleJsonResponse(request, payload, source) {
+  const headers = new Headers();
+  headers.set('content-type', 'application/json; charset=utf-8');
+  headers.set('cache-control', 'no-store, must-revalidate');
+  headers.set('pragma', 'no-cache');
+  headers.set('x-gv-schedule-source', source);
+  applyScheduleCors(request, headers);
+  const busted = applyNowCacheBust(request, headers);
+  headers.set('x-gv-visit-scrub', busted ? 'now-cache-bust' : '0');
+  return new Response(JSON.stringify(payload), { status: 200, headers });
+}
+
+function scheduleFallbackResponse(request) {
+  return scheduleJsonResponse(request, scheduleFallback, 'ios-fallback');
 }
 
 function pinCurrentScarNow(data) {
@@ -644,16 +686,25 @@ export default async (request, context) => {
   const origin = new URL(`https://gatorvault-api.onrender.com${url.pathname}${url.search}`);
   origin.searchParams.set('gvScrub', 't13');
 
+  const schedule = isSchedulePath(url.pathname);
   let upstream;
   try {
-    upstream = await fetch(origin.toString(), {
-      headers: {
-        Accept: 'application/json',
-        'Cache-Control': 'no-cache',
-        Pragma: 'no-cache',
-      },
-    });
+    const ac = new AbortController();
+    const timer = schedule ? setTimeout(() => ac.abort(), SCHEDULE_ORIGIN_TIMEOUT_MS) : null;
+    try {
+      upstream = await fetch(origin.toString(), {
+        headers: {
+          Accept: 'application/json',
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+        },
+        ...(schedule ? { signal: ac.signal } : {}),
+      });
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
   } catch {
+    if (schedule) return scheduleFallbackResponse(request);
     if (isTickerPath(url.pathname)) return tickerFallbackResponse(request);
     if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return context.next();
@@ -661,10 +712,12 @@ export default async (request, context) => {
 
   const contentType = upstream.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) {
+    if (schedule) return scheduleFallbackResponse(request);
     if (isTickerPath(url.pathname)) return tickerFallbackResponse(request);
     if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return upstream;
   }
+  if (schedule && !upstream.ok) return scheduleFallbackResponse(request);
   if (isTickerPath(url.pathname) && !upstream.ok) {
     return tickerFallbackResponse(request);
   }
@@ -676,16 +729,23 @@ export default async (request, context) => {
   try {
     payload = await upstream.json();
   } catch {
+    if (schedule) return scheduleFallbackResponse(request);
     if (isTickerPath(url.pathname)) return tickerFallbackResponse(request);
     if (isHubHeroPath(url.pathname) && yearFromRequest(url) === 2028) return heroFallbackResponse();
     return upstream;
   }
 
-  if (isSchedulePath(url.pathname) || isPingPath(url.pathname)) {
+  if (schedule || isPingPath(url.pathname)) {
     const headers = new Headers(upstream.headers);
     headers.set('content-type', 'application/json; charset=utf-8');
     headers.set('cache-control', 'no-store, must-revalidate');
     headers.set('pragma', 'no-cache');
+    if (schedule) {
+      const pinned = pinScarExpectedVisitors(payload);
+      payload = pinned.data;
+      headers.set('x-gv-schedule-source', pinned.changed ? 'origin-visitors-pinned' : 'origin');
+      applyScheduleCors(request, headers);
+    }
     const busted = applyNowCacheBust(request, headers);
     headers.set('x-gv-visit-scrub', busted ? 'now-cache-bust' : '0');
     headers.delete('content-length');
