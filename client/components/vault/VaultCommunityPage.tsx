@@ -661,10 +661,9 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const lockerThreads = me?.locker || [];
   const repliesOnYours = me?.repliesOnYours || [];
   const pastGameRooms = useMemo(() => {
-    const todayId = todaysThread?.id;
     const rooms = (me?.gameRooms?.length ? me.gameRooms : gameRooms) || [];
-    return rooms.filter((t) => t.id !== todayId);
-  }, [gameRooms, me, todaysThread]);
+    return rooms;
+  }, [gameRooms, me]);
 
   const handleFollowToggle = async () => {
     if (!selectedThread?.id) return;
@@ -1016,7 +1015,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
           {!selectedId && pastGameRooms.length > 0 ? (
             <PageSection
               title="Game talk"
-              subtitle="Past Saturdays stay here after Staff open rolls to a new day."
+              subtitle="One room each week — this week’s team, then the Saturdays already played."
             >
               <ul className="gv-community__threads">
                 {pastGameRooms.map((t) =>

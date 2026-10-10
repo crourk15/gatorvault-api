@@ -228,6 +228,104 @@ let dailyOpenMemo = null;
 
 function resetDailyOpenMemo() {
   dailyOpenMemo = null;
+  weeklyGameMemoKey = null;
+}
+
+/** Same-day memo so community page loads do not rewrite every game room. */
+let weeklyGameMemoKey = null;
+
+function gameRoomRecency(thread) {
+  const stamp = thread.gameDay || (looksLikeGamedayThread(thread) ? thread.dailyKey : '') || thread.createdAt || '';
+  return String(stamp).slice(0, 10);
+}
+
+/**
+ * One Game talk thread per opponent for every week that has started.
+ * Reuses a Saturday daily that already has that title. Does not invent replies.
+ */
+function ensureWeeklyGameTalks(opts = {}) {
+  ensureCategories();
+  ensureFoundingSurface();
+  ensureStaffUser();
+  const today = opts.dayKey || todayKeyET(opts.asOf);
+  if (!opts.force && !opts.asOf && weeklyGameMemoKey === today) {
+    return { created: 0, updated: 0 };
+  }
+  let prompts = [];
+  try {
+    prompts = require('./community-gameday-open').listWeeklyGameTalks({
+      asOf: opts.asOf,
+      dayKey: today,
+    });
+  } catch (err) {
+    console.warn('[community] weekly game talk skipped:', err.message);
+    return { created: 0, updated: 0 };
+  }
+  const threads = loadThreads();
+  const cats = ensureCategories();
+  const cat = cats.find((c) => c.slug === 'locker') || cats[0];
+  let created = 0;
+  let updated = 0;
+  let changed = false;
+  const ts = nowIso();
+
+  for (const prompt of prompts) {
+    if (!prompt.gameId || !prompt.title) continue;
+    let existing = threads.find((t) => !t.deleted && t.gameId === prompt.gameId);
+    if (!existing) {
+      existing = threads.find((t) => !t.deleted && t.title === prompt.title);
+    }
+    if (existing) {
+      let touched = false;
+      if (existing.gameId !== prompt.gameId) {
+        existing.gameId = prompt.gameId;
+        touched = true;
+      }
+      if (!existing.gameday) {
+        existing.gameday = true;
+        touched = true;
+      }
+      if (existing.gameDay !== prompt.dayKey) {
+        existing.gameDay = prompt.dayKey;
+        touched = true;
+      }
+      const quiet = (existing.replyCount || 0) === 0 && !existing.staffOverrideAt;
+      if (quiet && existing.body !== prompt.body) {
+        existing.body = prompt.body;
+        touched = true;
+      }
+      if (touched) {
+        updated += 1;
+        changed = true;
+      }
+      continue;
+    }
+    threads.unshift({
+      id: `thr_game_${prompt.gameId}`,
+      title: prompt.title,
+      body: prompt.body,
+      categoryId: cat.id,
+      categorySlug: cat.slug,
+      authorId: STAFF_USER.id,
+      authorEmail: STAFF_USER.email,
+      pinned: false,
+      locked: false,
+      featured: false,
+      gameday: true,
+      gameId: prompt.gameId,
+      gameDay: prompt.dayKey,
+      replyCount: 0,
+      viewCount: 0,
+      lastActivityAt: ts,
+      createdAt: prompt.kickoffAt || ts,
+      deleted: false,
+    });
+    created += 1;
+    changed = true;
+  }
+  if (changed) saveThreads(threads);
+  if (!opts.asOf) weeklyGameMemoKey = today;
+  return { created, updated };
 }
 
 function rememberDailyOpen(today, thread) {
@@ -268,6 +366,25 @@ function ensureDailyOpenThread(opts = {}) {
     }
   } catch {
     gameday = null;
+  }
+  if (!existing && gameday) {
+    const adopt = threads.find(
+      (t) => !t.deleted && (t.gameId === gameday.gameId || t.title === gameday.title)
+    );
+    if (adopt) {
+      adopt.dailyKey = today;
+      adopt.pinned = true;
+      adopt.featured = true;
+      adopt.gameday = true;
+      if (gameday.gameId) adopt.gameId = gameday.gameId;
+      adopt.gameDay = gameday.dayKey;
+      for (const t of threads) {
+        if (t !== adopt && t.dailyKey && t.dailyKey !== today) t.pinned = false;
+      }
+      saveThreads(threads);
+      rememberDailyOpen(today, adopt);
+      return { created: false, thread: adopt, replaced: true };
+    }
   }
   if (existing) {
     // Keep today's daily at the top of Jump-in.
@@ -956,13 +1073,14 @@ function getGameRooms({ limit = 8, viewerEmail = null } = {}) {
   ensureCategories();
   ensureFoundingSurface();
   ensureDailyOpenThread();
+  ensureWeeklyGameTalks();
   const categoryMap = getCategoryMap();
   const users = loadUsers();
   const posts = loadPosts();
   const cap = Math.max(1, Math.min(20, Number(limit) || 8));
   return loadThreads()
     .filter((t) => !t.deleted && looksLikeGamedayThread(t))
-    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+    .sort((a, b) => gameRoomRecency(b).localeCompare(gameRoomRecency(a)))
     .slice(0, cap)
     .map((t) =>
       decorateActivityThread(t, {
@@ -1073,6 +1191,7 @@ function getPublicPage({ sort = 'recent', category = null, limit = 40, gameRoomL
   ensureCategories();
   ensureFoundingSurface();
   ensureDailyOpenThread();
+  ensureWeeklyGameTalks();
   const categoryMap = getCategoryMap();
   const users = loadUsers();
   const posts = loadPosts();
@@ -1104,7 +1223,7 @@ function getPublicPage({ sort = 'recent', category = null, limit = 40, gameRoomL
   const roomCap = Math.max(1, Math.min(20, Number(gameRoomLimit) || 8));
   const gameRooms = allThreads
     .filter((t) => looksLikeGamedayThread(t))
-    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+    .sort((a, b) => gameRoomRecency(b).localeCompare(gameRoomRecency(a)))
     .slice(0, roomCap)
     .map((t) =>
       decorateActivityThread(t, {
@@ -1464,6 +1583,7 @@ module.exports = {
   ensureCategories,
   ensureFoundingSurface,
   ensureDailyOpenThread,
+  ensureWeeklyGameTalks,
   resetDailyOpenMemo,
   adminSetDailyOpen,
   getPublicPage,
