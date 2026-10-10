@@ -207,6 +207,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-10 | Laptop vault: Game Week / FutureCast / NIL bands stay in the content column. Titles were cut ("IN CHANCE", "t Intel", "to the Game") because `100vw` slid under the sidebar. **Web after Netlify.** | `futurecast-lab-command-center.css`, `nil-elite.css`, `vault-shell.css` in the binary. Approved 1.0.31 still clips those bands beside the nav. | this PR |
 | 2026-10-08 | App Store **1.0.32** / build **101**. **1.0.31 is approved — do not re-upload.** | `MARKETING_VERSION` 1.0.32. Charles asked for this train after the 1.0.31 Codemagic reject. | this PR |
 | 2026-10-09 | Community: thread is its own screen — comments paint immediately, no hub chrome / jump / iOS zoom. **1.0.32 / build 101.** Web after Netlify. | `VaultCommunityPage` + `community-elite.css` in binary. Current 1.0.31 still stacks locker/filters on the thread and waits on a long warm-poll. | this PR |
 | 2026-10-08 | Community: Reply under each comment (inline composer + `@Name`). **1.0.32 / build 101.** 1.0.31 is approved — do not re-upload. **Web after Netlify.** | `VaultCommunityPage` in binary. Current 1.0.31 still only has the thread box at the top. | this PR |

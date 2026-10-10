@@ -4032,11 +4032,12 @@ body.gv-scroll-locked {
   }
 }
 
-/* ESPN-style live feed */
+/* ESPN-style live feed. Shell pages are already flush (padding 0);
+   a negative horizontal margin slides the LIVE badge under the sidebar. */
 .gv-live-ticker {
   display: flex;
   align-items: stretch;
-  margin: -1.25rem -1.5rem 1.25rem;
+  margin: 0 0 1.25rem;
   background: #fa4616;
   overflow: hidden;
   min-height: 36px;
@@ -4044,7 +4045,7 @@ body.gv-scroll-locked {
 
 @media (max-width: 767px) {
   .gv-live-ticker {
-    margin: -1rem -1rem 1rem;
+    margin: 0 0 1rem;
   }
 }
 
