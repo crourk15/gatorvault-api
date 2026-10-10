@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Community Game talk: South Carolina is its own room (`thr_game_scar`), not today’s pinned staff thread. Approved 1.0.31 hides the staff card from the Game talk list, so the weekly room has to be a different id. `/api/community/page` and `/api/community/game-rooms` after Render — no Codemagic. Reopen Community once.
 - [x] iOS URLCache still showed the Royal-only expected visitors after the list went live. New one-shot `gv-now-bust=scar-visitors-ios` on schedule, ping, ticker, and launch POST `/api/push/device` so 1.0.29 drops the saved board. Live `/api/schedule` already has the 15 South Carolina names. Netlify edge after deploy — no Codemagic. Reopen the app once.
 - [x] Game Week South Carolina expected visitors: panel is no longer Royal-only. Adds Che, Rein, Landy, Beck, Evans, and the Oct. 10 Florida commits. Home NOW still leads `Visitors — Easton Royal` and ticks the full name list. API `/api/schedule` + ticker edge after deploy — no Codemagic.
 - [x] FutureCast pour guard: a crashed 7am vault-feed no longer counts as finished — 8–9am catch-up retries that slot. Allowlist intel coverage is live on Admin Hub + `/api/futurecast/health`. `j-c-wessel` aliases to `jc-wessel`. Home / movement heatmap soft-serve from HP after an API bounce instead of empty `building`. API after Render — no Codemagic.
@@ -207,7 +208,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-10-10 | Community Game talk lists this week’s opponent with the older Saturdays. **Web after Netlify.** The room itself is API (`thr_game_<id>`) and shows on the current app once Render deploys. | `VaultCommunityPage` filter used to hide today’s thread from Game talk. Approved 1.0.31 still drops that row when the weekly room is the same thread as Staff open. | this PR |
+| 2026-10-10 | Community Game talk subtitle (“One room each week…”). **Web after Netlify.** The South Carolina row itself is API (`thr_game_scar`) and shows in 1.0.31 Game talk after Render — see Already live. | `VaultCommunityPage` copy in the binary. Approved 1.0.31 still says “Past Saturdays stay here…”. | this PR |
 | 2026-10-10 | Laptop vault: Game Week / FutureCast / NIL bands stay in the content column. Titles were cut ("IN CHANCE", "t Intel", "to the Game") because `100vw` slid under the sidebar. **Web after Netlify.** | `futurecast-lab-command-center.css`, `nil-elite.css`, `vault-shell.css` in the binary. Approved 1.0.31 still clips those bands beside the nav. | this PR |
 | 2026-10-08 | App Store **1.0.32** / build **101**. **1.0.31 is approved — do not re-upload.** | `MARKETING_VERSION` 1.0.32. Charles asked for this train after the 1.0.31 Codemagic reject. | this PR |
 | 2026-10-09 | Community: thread is its own screen — comments paint immediately, no hub chrome / jump / iOS zoom. **1.0.32 / build 101.** Web after Netlify. | `VaultCommunityPage` + `community-elite.css` in binary. Current 1.0.31 still stacks locker/filters on the thread and waits on a long warm-poll. | this PR |
