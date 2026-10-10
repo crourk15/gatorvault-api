@@ -54,21 +54,62 @@ function formatKickClock(kick, dateStr) {
   return m ? m[1].replace(/\s+/g, ' ') : null;
 }
 
-function findUfGameOnEtDay(dayKey) {
-  let games = [];
+function loadSeasonGames() {
   try {
     const { getScheduleBoard } = require('./schedule-board');
     const board = getScheduleBoard(2026);
-    games = Array.isArray(board?.games) ? board.games : [];
+    return Array.isArray(board?.games) ? board.games : [];
   } catch {
-    games = [];
+    return [];
   }
-  for (const game of games) {
+}
+
+function isByeGame(game) {
+  const id = String(game?.id || '');
+  const opp = String(game?.opp || game?.opponent || '');
+  if (game?.kind === 'bye') return true;
+  if (/^bye\b/i.test(id)) return true;
+  return /bye week/i.test(opp);
+}
+
+function addCalendarDays(ymd, delta) {
+  const [y, m, d] = String(ymd || '').split('-').map((n) => Number(n));
+  if (!y || !m || !d) return '';
+  const utc = new Date(Date.UTC(y, m - 1, d));
+  utc.setUTCDate(utc.getUTCDate() + delta);
+  return utc.toISOString().slice(0, 10);
+}
+
+function findUfGameOnEtDay(dayKey) {
+  for (const game of loadSeasonGames()) {
+    if (isByeGame(game)) continue;
     const kick = parseEasternKickoff(game.date);
     if (!kick) continue;
     if (etYmd(kick) === dayKey) return { game, kick };
   }
   return null;
+}
+
+function buildGameTalkPrompt(game, kick) {
+  const opp = opponentShort(game.opp || game.opponent);
+  const when = formatKickClock(kick, game.date);
+  const tv = String(game.tv || '').trim();
+  const place = isHomeGame(game) ? 'The Swamp' : String(game.venue || 'On the road').split(',')[0];
+  const whenBit = when || 'Kickoff TBA';
+  const tvBit = tv ? ` on ${tv}` : '';
+  const dayKey = etYmd(kick);
+
+  return {
+    gameId: String(game.id || '').trim() || null,
+    title: `Game day talk: Florida vs ${opp}`,
+    body:
+      `${place}. ${whenBit}${tvBit}. Talk it now, during the game, and after the final whistle. Keys, calls, visitors, what you saw. Stay on Florida.`,
+    categorySlug: 'locker',
+    gameday: true,
+    opponent: opp,
+    dayKey,
+    kickoffAt: kick.toISOString(),
+  };
 }
 
 function looksLikeGamedayTalk(thread) {
@@ -86,23 +127,28 @@ function pickGamedayOpen(opts = {}) {
   const dayKey = opts.dayKey || etYmd(asOf);
   const hit = findUfGameOnEtDay(dayKey);
   if (!hit) return null;
+  return buildGameTalkPrompt(hit.game, hit.kick);
+}
 
-  const opp = opponentShort(hit.game.opp || hit.game.opponent);
-  const when = formatKickClock(hit.kick, hit.game.date);
-  const tv = String(hit.game.tv || '').trim();
-  const place = isHomeGame(hit.game) ? 'The Swamp' : String(hit.game.venue || 'On the road').split(',')[0];
-  const whenBit = when || 'Kickoff TBA';
-  const tvBit = tv ? ` on ${tv}` : '';
-
-  return {
-    title: `Game day talk: Florida vs ${opp}`,
-    body:
-      `${place}. ${whenBit}${tvBit}. Talk it now, during the game, and after the final whistle. Keys, calls, visitors, what you saw. Stay on Florida.`,
-    categorySlug: 'locker',
-    gameday: true,
-    opponent: opp,
-    dayKey,
-  };
+/**
+ * One Game talk room per opponent. Opens six days before kickoff (the week of
+ * that team) and stays after Saturday. Later weeks stay closed.
+ * @param {{ asOf?: Date|string, dayKey?: string }} [opts]
+ */
+function listWeeklyGameTalks(opts = {}) {
+  const asOf = opts.asOf ? new Date(opts.asOf) : new Date();
+  const today = opts.dayKey || etYmd(asOf);
+  const rooms = [];
+  for (const game of loadSeasonGames()) {
+    if (isByeGame(game)) continue;
+    const kick = parseEasternKickoff(game.date);
+    if (!kick) continue;
+    const dayKey = etYmd(kick);
+    if (today < addCalendarDays(dayKey, -6)) continue;
+    rooms.push(buildGameTalkPrompt(game, kick));
+  }
+  rooms.sort((a, b) => String(b.dayKey).localeCompare(String(a.dayKey)));
+  return rooms;
 }
 
 function shouldUpgradeDailyToGameday(existing, gameday) {
@@ -118,6 +164,7 @@ module.exports = {
   etYmd,
   opponentShort,
   pickGamedayOpen,
+  listWeeklyGameTalks,
   looksLikeGamedayTalk,
   shouldUpgradeDailyToGameday,
 };

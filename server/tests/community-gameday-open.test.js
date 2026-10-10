@@ -8,6 +8,7 @@ const path = require('path');
 
 const {
   pickGamedayOpen,
+  listWeeklyGameTalks,
   opponentShort,
   shouldUpgradeDailyToGameday,
 } = require('../lib/community-gameday-open');
@@ -39,6 +40,18 @@ describe('community gameday open', () => {
 
   it('returns null on a non-game ET day', () => {
     assert.equal(pickGamedayOpen({ asOf: '2026-09-06T16:00:00.000Z' }), null);
+  });
+
+  it('South Carolina week is open on Oct 10 and Texas week is not', () => {
+    const rooms = listWeeklyGameTalks({ asOf: '2026-10-10T16:00:00.000Z' });
+    assert.equal(rooms[0].gameId, 'scar');
+    assert.equal(rooms[0].title, 'Game day talk: Florida vs South Carolina');
+    assert.match(rooms[0].body, /The Swamp/);
+    assert.match(rooms[0].body, /12:45 PM ET on SEC Network/);
+    assert.ok(rooms.some((r) => r.gameId === 'missouri'));
+    assert.equal(rooms.some((r) => r.gameId === 'texas'), false);
+    const nextWeek = listWeeklyGameTalks({ asOf: '2026-10-11T16:00:00.000Z' });
+    assert.equal(nextWeek[0].gameId, 'texas');
   });
 
   it('upgrades a generic daily open into gameday talk', () => {
@@ -90,5 +103,18 @@ describe('community store gameday upgrade', () => {
     assert.equal(again.created, false);
     assert.equal(again.thread.id, first.thread.id);
     assert.equal(again.replaced, false);
+  });
+
+  it('opens one South Carolina game talk room and does not duplicate it', () => {
+    const first = store.ensureWeeklyGameTalks({ asOf: '2026-10-10T16:00:00.000Z', force: true });
+    assert.ok(first.created >= 1);
+    const rooms = store.getGameRooms({ limit: 12 });
+    assert.equal(rooms[0].title, 'Game day talk: Florida vs South Carolina');
+    assert.equal(rooms[0].gameId, 'scar');
+    const again = store.ensureWeeklyGameTalks({ asOf: '2026-10-10T18:00:00.000Z', force: true });
+    assert.equal(again.created, 0);
+    const scar = store.loadThreads().filter((t) => !t.deleted && t.gameId === 'scar');
+    assert.equal(scar.length, 1);
+    assert.equal(rooms.some((r) => r.gameId === 'texas'), false);
   });
 });
