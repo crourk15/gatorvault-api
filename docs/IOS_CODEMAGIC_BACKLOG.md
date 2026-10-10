@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] iOS URLCache still showed the Royal-only expected visitors after the list went live. New one-shot `gv-now-bust=scar-visitors-ios` on schedule, ping, ticker, and launch POST `/api/push/device` so 1.0.29 drops the saved board. Live `/api/schedule` already has the 15 South Carolina names. Netlify edge after deploy — no Codemagic. Reopen the app once.
 - [x] Game Week South Carolina expected visitors: panel is no longer Royal-only. Adds Che, Rein, Landy, Beck, Evans, and the Oct. 10 Florida commits. Home NOW still leads `Visitors — Easton Royal` and ticks the full name list. API `/api/schedule` + ticker edge after deploy — no Codemagic.
 - [x] FutureCast pour guard: a crashed 7am vault-feed no longer counts as finished — 8–9am catch-up retries that slot. Allowlist intel coverage is live on Admin Hub + `/api/futurecast/health`. `j-c-wessel` aliases to `jc-wessel`. Home / movement heatmap soft-serve from HP after an API bounce instead of empty `building`. API after Render — no Codemagic.
 - [x] App Store **1.0.31** approved (Subscribe from StoreKit). Do not upload another 1.0.31. Community Reply waits on **1.0.32**.

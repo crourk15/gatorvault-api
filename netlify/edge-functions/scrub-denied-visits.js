@@ -146,7 +146,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'scar-w6-ios';
+const NOW_BUST_VALUE = 'scar-visitors-ios';
 
 function needsNowCacheBust(request) {
   const cookie = request?.headers?.get?.('cookie') || '';
