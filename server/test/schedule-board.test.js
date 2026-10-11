@@ -368,6 +368,8 @@ describe('schedule-board', () => {
     assert.ok(!/catch it/.test(texas.howUFWins[0]));
     assert.ok(!/Simmons/.test(texas.howUFWins[0]));
     assert.match(texas.howUFWins[1], /dead throw/);
+    assert.match(texas.howUFWins[1], /stay in his gap/);
+    assert.ok(!/crease|stays square/.test(texas.howUFWins[1]));
     assert.match(texas.howUFWins[1], /53\.5/);
     assert.match(texas.howUFWins[1], /122 yards/);
     assert.match(texas.howUFWins[2], /come away with nothing/);
