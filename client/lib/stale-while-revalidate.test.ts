@@ -17,4 +17,10 @@ describe('shouldSkipSwrCache', () => {
   it('still caches other hub reads', () => {
     assert.equal(shouldSkipSwrCache('/api/recruiting/hub/footprint?year=2027'), false);
   });
+
+  it('skips GNL dashboard and beat intel so a warming cache cannot hide today', () => {
+    assert.equal(shouldSkipSwrCache('/api/live/dashboard?limit=40'), true);
+    assert.equal(shouldSkipSwrCache('/api/gnl/feed?limit=40'), true);
+    assert.equal(shouldSkipSwrCache('/api/recruiting/intel/beat?limit=8'), true);
+  });
 });

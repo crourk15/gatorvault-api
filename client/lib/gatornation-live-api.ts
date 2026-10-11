@@ -176,6 +176,19 @@ function opponentFromBettingGame(game: BettingGame): string {
   return game.game || away || home || 'Next opponent';
 }
 
+/** Schedule board only. Betting lines must not hold the news bundle. */
+export function gameDayFromSchedule(): GnlGameDay | null {
+  const seed = getFeaturedUfGame() || SCHEDULE_GAMES.find((g) => g.kind !== 'bye') || SCHEDULE_GAMES[0];
+  if (!seed) return null;
+  return {
+    opponent: seed.opp,
+    opponentAbbr: seed.id.toUpperCase(),
+    kickoffIso: parseKickoffIso(seed.date),
+    kickoffLabel: seed.date,
+    venue: seed.venue,
+  };
+}
+
 export async function fetchGnlGameDay(): Promise<GnlGameDay | null> {
   try {
     const lines = await fetchBettingLines();
@@ -195,15 +208,7 @@ export async function fetchGnlGameDay(): Promise<GnlGameDay | null> {
     /* fall through to schedule seed */
   }
 
-  const seed = getFeaturedUfGame() || SCHEDULE_GAMES.find((g) => g.kind !== 'bye') || SCHEDULE_GAMES[0];
-  if (!seed) return null;
-  return {
-    opponent: seed.opp,
-    opponentAbbr: seed.id.toUpperCase(),
-    kickoffIso: parseKickoffIso(seed.date),
-    kickoffLabel: seed.date,
-    venue: seed.venue,
-  };
+  return gameDayFromSchedule();
 }
 
 function isExcludedTickerFeedItem(item: LiveFeedItem): boolean {
@@ -523,10 +528,9 @@ export type LiveHubBundle = {
 
 /** GNL live bundle — beat-writer X posts drive the stream; podcasts are secondary. */
 export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> {
-  const [dash, gameDay] = await Promise.all([
-    fetchLiveDashboard(40, { force }).catch(() => null),
-    fetchGnlGameDay().catch(() => null),
-  ]);
+  // News first. Game day is the schedule seed; betting lines are a separate card.
+  const dash = await fetchLiveDashboard(40, { force }).catch(() => null);
+  const gameDay = gameDayFromSchedule();
 
   const feedItems = dash?.feed ?? [];
   const beat = dash?.beat?.posts ?? [];

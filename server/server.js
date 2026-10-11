@@ -1763,6 +1763,22 @@ function startPostBootServices() {
       console.warn('[recruiting-hub] early boot warm schedule failed:', e.message);
     }
   }, deferHubWarmMs);
+  // One async dashboard warm after listen. Not the 45s sync loop, and not on /health.
+  // A cold GET used to return empty "warming" and the phone kept the July GNL seed
+  // until the next 45s poll. This fills memory before the first open when it can.
+  const deferDashWarmMs = Math.max(
+    12000,
+    parseInt(process.env.API_BOOT_DEFER_DASH_WARM_MS || '20000', 10) || 20000
+  );
+  setTimeout(() => {
+    try {
+      const dashCache = require('./lib/live-dashboard-cache');
+      dashCache.scheduleAsyncWarm();
+      console.log('[live-dashboard] initial async warm scheduled');
+    } catch (e) {
+      console.warn('[live-dashboard] initial warm skipped:', e.message);
+    }
+  }, deferDashWarmMs);
   setTimeout(startPostBootRecruitingAndSchedulers, deferSchedMs);
   setTimeout(startPostBootHeavyServices, deferHeavyMs);
 }

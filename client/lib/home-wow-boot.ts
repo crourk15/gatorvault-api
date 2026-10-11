@@ -29,8 +29,13 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
       var BEAT_SEED = ${beatSeedLiteral};
       window.__GV_HOME_WOW__ = window.__GV_HOME_WOW__ || {};
 
+      // Bundled shell is capacitor://localhost — relative /api never reaches the site.
+      var apiOrigin = (location.hostname === 'gatorvaultinsider.com' || location.hostname === 'www.gatorvaultinsider.com')
+        ? ''
+        : 'https://gatorvaultinsider.com';
+
       // Wake Render before heavier hub fetches (cold-start softener).
-      try { fetch('/api/ping', { credentials: 'same-origin', cache: 'no-store' }).catch(function(){}); } catch (e) {}
+      try { fetch(apiOrigin + '/api/ping', { credentials: 'same-origin', cache: 'no-store' }).catch(function(){}); } catch (e) {}
 
       function fetchJson(url, attempt) {
         return fetch(url, { credentials: 'same-origin', cache: 'no-store' })
@@ -67,9 +72,9 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
       }
 
       Promise.all([
-        fetchJson('/api/recruiting/hub/bundle?year=' + year, 0).catch(function() { return null; }),
-        fetchJson('/api/futurecast/home', 0).catch(function() { return null; }),
-        fetchJson('/api/recruiting/intel/beat?limit=3', 0).catch(function() { return null; })
+        fetchJson(apiOrigin + '/api/recruiting/hub/bundle?year=' + year, 0).catch(function() { return null; }),
+        fetchJson(apiOrigin + '/api/futurecast/home', 0).catch(function() { return null; }),
+        fetchJson(apiOrigin + '/api/recruiting/intel/beat?limit=3', 0).catch(function() { return null; })
       ]).then(function(results) {
         var bundle = results[0];
         var metrics = bundle && bundle.classOverview ? bundle.classOverview : null;
