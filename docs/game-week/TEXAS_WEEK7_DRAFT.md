@@ -46,6 +46,14 @@ These are team jobs. No one player owns the run, the rush, or the throw.
 3. **The True Dropback**
    Their rush ends the play when the ball stays in on a straight drop. Colin Simmons has 8 sacks, 7 of them on true pass sets, and Lance Jackson has 14 pressures beside him. At Missouri, Philo was a 70.0 passer when the pocket was clean and a 56.0 when it collapsed. The pass-block grade on that game was 55.8. South Carolina sacked him three times. The line has to give help, and the ball has to be gone before that dropback becomes a sack.
 
+## Swing cards
+
+The key paragraphs stay team jobs. The swing cards are the Florida players whose week turns on each one. The card copy is the full key.
+
+1. **Myles Graham** — The Run. Fit the run and finish the tackle.
+2. **Jayden Woods** — The Escape. In Manning's hip when he pulls it down. The rush still arrives as a group.
+3. **Aaron Philo** — The True Dropback. The ball has to be gone before that drop becomes a sack.
+
 ## Matchup Edge (sat stamp — not the win% formula)
 
 | Axis | UF | Texas | Receipt |

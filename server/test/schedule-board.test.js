@@ -372,7 +372,7 @@ describe('schedule-board', () => {
     assert.match(texas.howUFWins[1], /149/);
     assert.ok(!/handoff/i.test(texas.howUFWins[1]));
     assert.ok(!/12-of-22|underneath/.test(texas.howUFWins[1]));
-    assert.equal(texas.swing[1].name, 'The Escape');
+    assert.equal(texas.swing[1].name, 'Jayden Woods');
     assert.equal(texas.swing[1].role, texas.howUFWins[1]);
     assert.match(texas.howUFWins[2], /true pass sets/);
     assert.match(texas.howUFWins[2], /55\.8/);
@@ -380,9 +380,9 @@ describe('schedule-board', () => {
     assert.match(texas.howUFWins[2], /56\.0/);
     assert.ok(!/90\.5/.test(texas.howUFWins[2]));
     assert.ok(!/387 yards|382 yards|53\.6/.test(texas.howUFWins[2]));
-    assert.equal(texas.swing[0].name, 'The Run');
+    assert.equal(texas.swing[0].name, 'Myles Graham');
     assert.equal(texas.swing[0].role, texas.howUFWins[0]);
-    assert.equal(texas.swing[2].name, 'The True Dropback');
+    assert.equal(texas.swing[2].name, 'Aaron Philo');
     assert.equal(texas.swing[2].role, texas.howUFWins[2]);
     assert.match(texas.film, /Oklahoma 27, Texas 24/);
     assert.match(texas.film, /Arch Manning/);
@@ -396,6 +396,18 @@ describe('schedule-board', () => {
     assert.deepEqual(fan.offenseScout, []);
     assert.ok(fan.opponentTendencies.some((n) => /Arch Manning/.test(n)));
     assert.equal(fan.filmWatched, false);
+    assert.equal(fan.swing[0].name, 'Myles Graham');
+    assert.equal(fan.swing[0].slug, 'myles-graham');
+    assert.ok(fan.swing[0].impact >= 84);
+    assert.equal(fan.swing[1].name, 'Jayden Woods');
+    assert.equal(fan.swing[1].slug, 'jayden-woods');
+    assert.ok(fan.swing[1].impact >= 84);
+    assert.equal(fan.swing[2].name, 'Aaron Philo');
+    assert.equal(fan.swing[2].slug, 'aaron-philo');
+    assert.ok(fan.swing[2].impact >= 82);
+    assert.equal(fan.swing[0].role, fan.howUFWins[0]);
+    assert.equal(fan.swing[1].role, fan.howUFWins[1]);
+    assert.equal(fan.swing[2].role, fan.howUFWins[2]);
     const memberCopy = [
       texas.film,
       texas.scoutingReport,
