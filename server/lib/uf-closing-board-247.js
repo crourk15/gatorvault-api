@@ -85,15 +85,6 @@ const FORCED_ELSEWHERE_COMMITS = [
     status: 'committed',
   },
   {
-    slug: 'easton-royal',
-    name: 'Easton Royal',
-    pos: 'WR',
-    school: 'IMG Academy (Bradenton, FL)',
-    classYear: 2027,
-    committedTo: 'Texas',
-    status: 'committed',
-  },
-  {
     slug: 'keldrid-ben',
     name: 'Keldrid Ben',
     pos: 'ATH',

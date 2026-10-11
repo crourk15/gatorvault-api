@@ -19,6 +19,7 @@ const VERIFIED_UF_COMMITS_BY_YEAR = {
     'kamauri-whitfield',
     'raheem-floyd',
     'maxwell-hiller',
+    'easton-royal',
     'kailib-dillard',
     'zahmar-tookes',
   ]),
@@ -173,10 +174,10 @@ function applyHollowDemote(player) {
   return out;
 }
 
-/** Flip targets who committed elsewhere — preserve external school when demoting false UF commits. */
-const HUB_EXTERNAL_COMMIT_BY_SLUG = {
-  'easton-royal': 'Texas',
-};
+/** Flip targets who committed elsewhere — preserve external school when demoting false UF commits.
+ * Easton Royal flipped to Florida on 2026-10-11 and lives in VERIFIED_UF_COMMITS_BY_YEAR.
+ */
+const HUB_EXTERNAL_COMMIT_BY_SLUG = {};
 
 function isHubExternalCommitFlipTarget(player) {
   const slug = playerSlug(player);

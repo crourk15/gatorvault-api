@@ -22,6 +22,11 @@ test('verified 2027 UF commits are only tre-geathers, jaydee-lane, ellis-mcgaski
     isVerifiedHubCommit({ slug: 'aamaury-fountain', classYear: 2027, status: 'committed', committedTo: 'Florida' }),
     false
   );
+  assert.equal(
+    isVerifiedHubCommit({ slug: 'easton-royal', classYear: 2027, status: 'committed', committedTo: 'Florida' }),
+    true,
+    'easton-royal flipped to Florida on 2026-10-11'
+  );
 });
 
 test('isFloridaCommit uses status committed for hub classes in JSON mode', () => {
@@ -75,8 +80,8 @@ test('getHubCommits returns all Florida commits for hub class years', async () =
   }
   assert.equal(
     commits.some((p) => String(p.slug || '').toLowerCase() === 'easton-royal'),
-    false,
-    'easton-royal must not appear as a UF commit'
+    true,
+    'easton-royal flipped to Florida on 2026-10-11 and must appear as a UF commit'
   );
   assert.equal(
     commits.some((p) => String(p.slug || '').toLowerCase() === 'maxwell-hiller'),
@@ -274,8 +279,8 @@ test('countVerifiedHubCommits returns 4 for canonical store slugs', () => {
   assert.equal(count, 4);
 });
 
-test('demoteUnverifiedHubCommit preserves Texas commit for protected flip target easton-royal', () => {
-  const demoted = demoteUnverifiedHubCommit({
+test('demoteUnverifiedHubCommit keeps Easton Royal on Florida after the flip', () => {
+  const kept = demoteUnverifiedHubCommit({
     slug: 'easton-royal',
     classYear: 2027,
     status: 'committed',
@@ -283,9 +288,9 @@ test('demoteUnverifiedHubCommit preserves Texas commit for protected flip target
     category: 'recruit',
     protected: true,
   });
-  assert.equal(demoted.status, 'uncommitted');
-  assert.equal(demoted.committedTo, 'Texas');
-  assert.equal(demoted.category, 'target');
+  assert.equal(kept.status, 'committed');
+  assert.equal(kept.committedTo, 'Florida');
+  assert.equal(kept.category, 'recruit');
 });
 
 test('getHubCommits ignores stale store rows when On3 snapshot defines the class board', async () => {

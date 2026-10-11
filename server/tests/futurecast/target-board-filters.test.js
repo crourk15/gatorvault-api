@@ -56,31 +56,30 @@ test('isActiveUfTarget excludes UF commits and elsewhere commits', () => {
   );
 });
 
-test('filterAllowlistedTargets keeps curated Flip Watch commits (Hyppolite / Royal)', () => {
+test('filterAllowlistedTargets keeps curated Flip Watch commits and drops Royal after the Florida flip', () => {
   const { FLIP_WATCH_2027 } = require('../../lib/recruiting-target-allowlist');
   assert.ok(FLIP_WATCH_2027.includes('andre-hyppolite'));
-  assert.ok(FLIP_WATCH_2027.includes('easton-royal'));
+  assert.equal(FLIP_WATCH_2027.includes('easton-royal'), false);
   const targets = filterAllowlistedTargets(
     [
       { slug: 'andre-hyppolite', name: 'Andre Hyppolite', classYear: 2027, committedTo: 'Miami' },
       { slug: 'jalen-brewster', name: 'Jalen Brewster', classYear: 2027, committedTo: 'Texas Tech' },
-      { slug: 'easton-royal', name: 'Easton Royal', classYear: 2027, committedTo: 'Texas' },
+      { slug: 'easton-royal', name: 'Easton Royal', classYear: 2027, committedTo: 'Florida', status: 'committed' },
       { slug: 'adryan-cole', name: 'Adryan Cole', classYear: 2027, committedTo: 'Georgia' },
     ],
     2027
   );
   const slugs = targets.map((p) => p.slug);
   assert.ok(slugs.includes('andre-hyppolite'));
-  assert.ok(slugs.includes('easton-royal'));
+  assert.equal(slugs.includes('easton-royal'), false);
   assert.ok(slugs.includes('jalen-brewster'));
   assert.ok(!slugs.includes('adryan-cole'));
 });
 
-test('filterAllowlistedTargets keeps Flip Watch top 5 after elsewhere commits', () => {
+test('filterAllowlistedTargets keeps Flip Watch after elsewhere commits', () => {
   const { FLIP_WATCH_2027 } = require('../../lib/recruiting-target-allowlist');
   assert.deepEqual(FLIP_WATCH_2027, [
     'jalen-brewster',
-    'easton-royal',
     'keldrid-ben',
     'andre-hyppolite',
     'ace-alston',
@@ -181,7 +180,6 @@ test('getAllowlistSet(2027) ignores durable admin.slugs2027 pollution', () => {
     [
       'ace-alston',
       'andre-hyppolite',
-      'easton-royal',
       'jalen-brewster',
       'keldrid-ben',
       'tranard-roberts',

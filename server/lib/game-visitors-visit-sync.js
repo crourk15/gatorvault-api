@@ -22,7 +22,7 @@ const SKIP_SLUGS = new Set([
   'anthony-blalock-jr', // Alabama commit
   'timi-aliu', // Nebraska commit (Alderman Campbell look)
   'judah-gumbs', // Arkansas commit (Alderman Campbell look)
-  'easton-royal', // Texas commit (Ole Miss early look / flip watch)
+  'easton-royal', // Florida commit 2026-10-11. 2027 visits stay historical labels, not auto process.
   'omari-lawson', // Syracuse commit (Sep 26 Florida game-day still on the calendar)
   'marquis-evans', // Auburn commit (South Carolina weekend flip watch)
 ]);
