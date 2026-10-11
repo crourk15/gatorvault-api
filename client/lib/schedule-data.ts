@@ -592,12 +592,12 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     tv: "ABC or ESPN",
     keys: [
       "Rush the Clean Pocket",
-      "Throw It Down the Field",
+      "Stay With the Scramble",
       "Finish the Drive",
     ],
     howUFWins: [
       "Do not let Arch Manning throw it clean. Florida's coverage graded 48.4 at Missouri, the low of the season, and the rush got home seven times. Manning grades 87.6 when he sets his feet. Oklahoma got there and he threw two fourth-quarter interceptions, one of them Peyton Bowen's pick-six while he was scrambling. Woods has to be that rush. When the ball comes out late, be aggressive and take it.",
-      "Do not live underneath. At Missouri, PFF had Philo at 3-of-9 for 57 yards on throws of 10 yards or more, and did not chart a big-time throw. He was 16-of-22 for 125 underneath, and the passing grade was 66.7. On throws of 20-plus, PFF has him at 12-of-22 for 378 yards and 2 scores, with no turnover-worthy play. John Mateer was 18-of-26 for 155 against this defense and did not score. They will take the checkdown. Philo has to throw the one he hits.",
+      "Do not lose him when he pulls the ball down. PFF split his runs. The designed ones are 24 carries for minus-8 yards. Those are not the problem. The scrambles are 20 carries for 149 yards. He has not scored on the ground. The handoff to him is not the play. Him leaving the pocket is. Graham has to go with him.",
       "Do not take the drive and come away with nothing. Philo is a 70.0 passer when the pocket is clean and a 56.0 when it collapses. At Missouri the pass blocking was 55.8 and Baugh's rushing grade fell to 53.6. The drive died up front. South Carolina made it 387 yards and 19 points. Colin Simmons is how that happens on Saturday. He grades 90.5 with 8 sacks, and he had 2 more against Oklahoma. If he gets home, Baugh never gets the chance to finish. The line has to hold. Baugh has to put it in. Texas had 382 yards and 24 points and lost.",
     ],
     swing: [
@@ -606,15 +606,15 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
         role: "Do not let Arch Manning throw it clean. Florida's coverage graded 48.4 at Missouri, the low of the season, and the rush got home seven times. Manning grades 87.6 when he sets his feet. Oklahoma got there and he threw two fourth-quarter interceptions, one of them Peyton Bowen's pick-six while he was scrambling. Woods has to be that rush. When the ball comes out late, be aggressive and take it.",
       },
       {
-        name: "Aaron Philo",
-        role: "Do not live underneath. At Missouri, PFF had Philo at 3-of-9 for 57 yards on throws of 10 yards or more, and did not chart a big-time throw. He was 16-of-22 for 125 underneath, and the passing grade was 66.7. On throws of 20-plus, PFF has him at 12-of-22 for 378 yards and 2 scores, with no turnover-worthy play. John Mateer was 18-of-26 for 155 against this defense and did not score. They will take the checkdown. Philo has to throw the one he hits.",
+        name: "Myles Graham",
+        role: "Do not lose him when he pulls the ball down. PFF split his runs. The designed ones are 24 carries for minus-8 yards. Those are not the problem. The scrambles are 20 carries for 149 yards. He has not scored on the ground. The handoff to him is not the play. Him leaving the pocket is. Graham has to go with him.",
       },
       {
         name: "Jadan Baugh",
         role: "Do not take the drive and come away with nothing. Philo is a 70.0 passer when the pocket is clean and a 56.0 when it collapses. At Missouri the pass blocking was 55.8 and Baugh's rushing grade fell to 53.6. The drive died up front. South Carolina made it 387 yards and 19 points. Colin Simmons is how that happens on Saturday. He grades 90.5 with 8 sacks, and he had 2 more against Oklahoma. If he gets home, Baugh never gets the chance to finish. The line has to hold. Baugh has to put it in. Texas had 382 yards and 24 points and lost.",
       },
     ],
-    film: "Florida's coverage graded 48.4 at Missouri and the rush got home seven times. Manning grades 87.6 when he sets his feet. Saturday was Oklahoma 27, Texas 24. They got there and he threw two fourth-quarter interceptions. Philo was 3-of-9 past 10 yards at Missouri, a 66.7 passing grade, and PFF has his throws of 20-plus at 12-of-22 for 378 and 2 scores. The drive dies up front: pass blocking was 55.8, Baugh's rushing grade was 53.6, and Colin Simmons grades 90.5. Florida had 387 yards and 19 points. Rush the clean pocket, throw it down the field, finish the drive.",
+    film: "Florida's coverage graded 48.4 at Missouri and the rush got home seven times. Manning grades 87.6 when he sets his feet. Saturday was Oklahoma 27, Texas 24. They got there and he threw two fourth-quarter interceptions. PFF has his designed runs at 24 for minus-8 and his scrambles at 20 for 149. Graham has to go with him when he leaves. The drive dies up front: pass blocking was 55.8, Baugh's rushing grade was 53.6, and Colin Simmons grades 90.5. Florida had 387 yards and 19 points. Rush the clean pocket, stay with the scramble, finish the drive.",
     filmWatched: false,
     pred: "UF 20 · Texas 34",
     predUF: 20,
