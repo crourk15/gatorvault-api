@@ -42,7 +42,7 @@ Florida's receipt: 387 yards and 19 points (120 rush, 267 pass), 6-of-13 on thir
    Do not lose him when he pulls the ball down. PFF split his runs. The runs they call for him are 24 carries for minus-8 yards. Those have not hurt anybody. When the pass breaks and he takes off, it is 20 carries for 149 yards. He has not scored on the ground. Graham has to go with him.
 
 3. **Finish the Drive** — Baugh
-   Do not take the drive and come away with nothing. Philo is a 70.0 passer when the pocket is clean and a 56.0 when it collapses. At Missouri the pass blocking was 55.8, and the drive died up front. Colin Simmons is how that happens on Saturday. He grades 90.5 with 8 sacks, and he had 2 more against Oklahoma. If he gets home, Baugh never gets the chance to finish. The line has to hold. Baugh has to put it in.
+   Do not take the drive and come away with nothing. Baugh cannot finish a drive that dies before it gets there. Philo is a 70.0 passer when the pocket stays clean and a 56.0 when it collapses. At Missouri the pass blocking was 55.8, and that is why the drive died up front. The ball never became a chance to score. Colin Simmons is how a pocket dies on Saturday. He grades 90.5 with 8 sacks, and he had 2 more against Oklahoma. If he gets to Philo, the drive is over in the backfield. The line has to hold him. Then Baugh puts it in. The score only happens if the pocket survives.
 
 ## Matchup Edge (sat stamp — not the win% formula)
 
