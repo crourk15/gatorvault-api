@@ -6,6 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const { slugify } = require('./slug');
+const { schoolIsCollegePledge } = require('./recruiting-placeholder-school');
 
 const HUB_CLASS_YEARS = new Set([2027, 2028, 2029]);
 
@@ -309,9 +310,85 @@ function applyVerifiedHubCommit(player) {
     if (bundled.commitDate) out.commitDate = bundled.commitDate;
     if (bundled.skinny) out.skinny = bundled.skinny;
     if (bundled.profileNote) out.profileNote = bundled.profileNote;
+    healHighSchoolFromBundle(out, bundled);
     out.protected = true;
     out.verifiedCommit = true;
   }
+  return out;
+}
+
+function twoLetterState(value) {
+  const s = String(value || '').trim();
+  return /^[A-Za-z]{2}$/.test(s) ? s.toUpperCase() : null;
+}
+
+/** Durable rows sometimes stored the old college (Texas) as the high school. */
+function healHighSchoolFromBundle(out, bundled) {
+  const bundleSchool = String(bundled?.school || '').trim();
+  if (!bundleSchool || schoolIsCollegePledge(bundleSchool)) return;
+  const liveSchool = String(out.school || '').trim();
+  if (liveSchool && !schoolIsCollegePledge(liveSchool)) return;
+  out.school = bundleSchool;
+  if (bundled.hometownCity) out.hometownCity = bundled.hometownCity;
+  if (bundled.hometownState) out.hometownState = bundled.hometownState;
+  const state = twoLetterState(bundled.state) || twoLetterState(bundled.hometownState);
+  if (state) out.state = state;
+}
+
+function heightInchesFromHtWt(htWt) {
+  const match = String(htWt || '').match(/(\d)\s*[-']\s*(\d{1,2})/);
+  if (!match) return null;
+  return parseInt(match[1], 10) * 12 + parseInt(match[2], 10);
+}
+
+function weightFromHtWt(htWt) {
+  const match = String(htWt || '').match(/\/\s*(\d+)/);
+  if (!match) return null;
+  const weight = Number(match[1]);
+  return Number.isFinite(weight) ? weight : null;
+}
+
+/**
+ * FutureCast profile rows (camelCase) follow the verified Florida commit
+ * when Postgres still has the old pledge.
+ */
+function overlayVerifiedFloridaProfile(player, recruiting) {
+  if (!player || !recruiting) return player;
+  const slug = String(player.slug || recruiting.slug || '').toLowerCase();
+  if (!/^florida$/i.test(String(recruiting.committedTo || ''))) return player;
+  if (recruiting.verifiedCommit !== true && !isVerifiedUfCommitAnyYear(slug)) return player;
+
+  const out = { ...player, committedTo: 'Florida' };
+  const hs = String(recruiting.highSchool || recruiting.school || '').trim();
+  const currentHs = String(out.highSchool || '').trim();
+  if (hs && !schoolIsCollegePledge(hs) && (!currentHs || schoolIsCollegePledge(currentHs))) {
+    out.highSchool = hs;
+  }
+  const city = recruiting.hometownCity
+    ? String(recruiting.hometownCity).split(',')[0].trim()
+    : '';
+  const currentHome = String(out.hometown || '').trim();
+  if (
+    city &&
+    (!currentHome || /\bhigh school\b|\bhs\b/i.test(currentHome) || schoolIsCollegePledge(currentHome))
+  ) {
+    out.hometown = city;
+  }
+  const state = twoLetterState(recruiting.hometownState) || twoLetterState(recruiting.state);
+  if (state && !twoLetterState(out.state)) out.state = state;
+  if (recruiting.stars) out.stars = recruiting.stars;
+  const rating = Number(recruiting.rating);
+  const currentRating = Number(out.compositeRating);
+  if (Number.isFinite(rating) && rating > 1 && (!Number.isFinite(currentRating) || currentRating <= 1)) {
+    out.compositeRating = rating;
+  }
+  if (recruiting.natlRank) out.rankingNational = recruiting.natlRank;
+  if (recruiting.posRank) out.rankingPosition = recruiting.posRank;
+  if (recruiting.stateRank) out.rankingState = recruiting.stateRank;
+  const height = heightInchesFromHtWt(recruiting.htWt);
+  const weight = weightFromHtWt(recruiting.htWt);
+  if (height) out.height = height;
+  if (weight) out.weight = weight;
   return out;
 }
 
@@ -327,7 +404,9 @@ async function restoreVerifiedHubCommitsInStore() {
       next.committedTo === p.committedTo &&
       next.category === p.category &&
       Number(next.classYear) === Number(p.classYear) &&
-      next.commitDate === p.commitDate
+      next.commitDate === p.commitDate &&
+      next.school === p.school &&
+      next.hometownState === p.hometownState
     ) {
       continue;
     }
@@ -360,6 +439,7 @@ module.exports = {
   demoteUnverifiedHubCommit,
   applyVerifiedHubCommit,
   overlayBundledVerifiedCommit: applyVerifiedHubCommit,
+  overlayVerifiedFloridaProfile,
   loadBundledVerifiedPlayers,
   restoreVerifiedHubCommitsInStore,
   validateVerifiedCommits,

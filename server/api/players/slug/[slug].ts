@@ -2,6 +2,7 @@
  * GET /api/players/slug/:slug — single player by slug.
  */
 import type { Request, Response } from 'express';
+import { createRequire } from 'node:module';
 import { getPlayerBySlug } from '../../../models/player';
 import { getUFSpecificProfileByPlayerId } from '../../../models/uf-specific-profile';
 import {
@@ -23,6 +24,25 @@ import {
   sendError,
   serializeFullPlayer,
 } from '../utils';
+
+const require = createRequire(import.meta.url);
+const { verifiedClassYearForSlug, overlayVerifiedFloridaProfile } = require('../../../lib/recruiting-verified-commits') as {
+  verifiedClassYearForSlug: (slug: string) => number | null;
+  overlayVerifiedFloridaProfile: (
+    player: Record<string, unknown>,
+    recruiting: Record<string, unknown> | null
+  ) => Record<string, unknown>;
+};
+
+async function withVerifiedFloridaCommit(slug: string, player: Record<string, unknown>) {
+  if (verifiedClassYearForSlug(slug) == null) return player;
+  try {
+    const recruiting = await getRecruitingPlayerBySlug(slug);
+    return overlayVerifiedFloridaProfile(player, recruiting);
+  } catch {
+    return player;
+  }
+}
 
 async function tryRecruitingFallback(slug: string, res: Response): Promise<boolean> {
   const recruiting = await getRecruitingPlayerBySlug(slug);
@@ -59,9 +79,10 @@ export const handleGetPlayerBySlug = asyncHandler(async (req: Request, res: Resp
     const movementRows = await listMovementHistoryByPlayerId(player.id);
     const volatilityScore = calculateVolatility(recentMovementHistory(movementRows));
 
+    const core = await withVerifiedFloridaCommit(slug, serializeFullPlayer(player) as Record<string, unknown>);
     res.json({
       player: {
-        ...serializeFullPlayer(player),
+        ...core,
         ufFitScore: ufProfile?.uf_fit_score ?? null,
         fitScoreBreakdown,
         movementHistory: movementHistoryFromRows(movementRows),

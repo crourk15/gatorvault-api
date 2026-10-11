@@ -63,6 +63,9 @@ import {
 import { relatedPositionsFor } from '../../lib/recruiting-position-buckets';
 
 const require = createRequire(import.meta.url);
+const { healStaleFloridaCommitNote } = require('../../lib/player-profile-stamp') as {
+  healStaleFloridaCommitNote: (note: unknown, recruiting: unknown) => unknown;
+};
 
 export type FullProfileSource = 'postgres' | 'recruiting-store';
 
@@ -211,11 +214,13 @@ async function finalizeProfileResponse(
     const offers = offersFromRecruitingAndLogs(slug, recruiting);
     highSchoolProfile = {
       ...highSchoolProfile,
-      recruitingNotes:
+      recruitingNotes: healStaleFloridaCommitNote(
         highSchoolProfile.recruitingNotes ??
-        recruiting.profileNote ??
-        recruiting.skinny ??
-        null,
+          recruiting.profileNote ??
+          recruiting.skinny ??
+          null,
+        recruiting
+      ),
       offers,
       stats: {
         ...stats,

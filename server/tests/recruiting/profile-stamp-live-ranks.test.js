@@ -34,4 +34,44 @@ describe('profile stamp live Industry ranks', () => {
     assert.equal(out.ranksLive, true);
     assert.equal(out.player.ufRpmPct, 17);
   });
+
+  it('replaces a stamped Texas pledge once Easton Royal is a Florida commit', () => {
+    const stamp = {
+      player: { fullName: 'Easton Royal', committedTo: 'Florida', slug: 'easton-royal' },
+      highSchoolProfile: {
+        recruitingNotes: '5★ WR committed to Texas — Closing Class Flip Watch #2.',
+        stats: {},
+      },
+      signals: [
+        {
+          signalType: 'EVALUATION_NOTE',
+          signalValue: {
+            note: '5★ WR committed to Texas — Closing Class Flip Watch #2.',
+            source: 'recruiting-store',
+          },
+        },
+      ],
+    };
+    const out = overlayLiveRpm(stamp, {
+      committedTo: 'Florida',
+      profileNote:
+        'Flipped from Texas to Florida on October 11, 2026. Hayes Fawcett, Rivals. No. 1 wide receiver in the 2027 class.',
+    });
+    assert.equal(out.player.committedTo, 'Florida');
+    assert.match(out.highSchoolProfile.recruitingNotes, /Flipped from Texas to Florida/);
+    assert.doesNotMatch(out.highSchoolProfile.recruitingNotes, /committed to Texas/i);
+    assert.match(out.signals[0].signalValue.note, /Flipped from Texas to Florida/);
+    assert.doesNotMatch(out.signals[0].signalValue.note, /committed to Texas/i);
+  });
+
+  it('leaves a real non-Florida pledge note alone', () => {
+    const stamp = {
+      player: { fullName: 'Jalen Brewster', committedTo: 'Texas Tech' },
+      highSchoolProfile: {
+        recruitingNotes: '5★ DT committed to Texas Tech — Closing Class Flip Watch #1.',
+      },
+    };
+    const out = overlayLiveRpm(stamp, { committedTo: 'Texas Tech', ufRpmPct: 4 });
+    assert.match(out.highSchoolProfile.recruitingNotes, /committed to Texas Tech/i);
+  });
 });

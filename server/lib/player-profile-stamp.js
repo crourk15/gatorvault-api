@@ -126,6 +126,63 @@ function isFloridaSchool(value) {
   return /\bflorida\b|\bgators\b|\buf\b/i.test(String(value || ''));
 }
 
+/** School named in "committed to X" copy. Null when the line is not a pledge. */
+function commitSchoolInNote(note) {
+  const text = String(note || '');
+  const match = text.match(/committed to\s+([^—–\-.\n]+)/i);
+  if (!match) return null;
+  return match[1].replace(/\s+/g, ' ').trim();
+}
+
+/** True when a bio still pledges the player to a school other than Florida. */
+function noteSaysNonFloridaCommit(note) {
+  const text = String(note || '').trim();
+  if (!text) return false;
+  const school = commitSchoolInNote(text);
+  if (school) return !isFloridaSchool(school);
+  return /flip watch/i.test(text) && !isFloridaSchool(text);
+}
+
+function floridaCommitBio(recruiting) {
+  const note = String(recruiting?.profileNote || '').trim();
+  if (note && !noteSaysNonFloridaCommit(note)) return note;
+  const skinny = String(recruiting?.skinny || '').trim();
+  if (skinny && !noteSaysNonFloridaCommit(skinny)) return skinny;
+  return 'Committed to Florida.';
+}
+
+/**
+ * Replace a stamped "committed to Texas" (or other non-Florida) bio once the
+ * live row is a Florida commit. Leaves real Florida bios and other pledges.
+ */
+function healStaleFloridaCommitNote(note, recruiting) {
+  if (!isFloridaSchool(recruiting?.committedTo)) return note ?? null;
+  if (!noteSaysNonFloridaCommit(note)) {
+    const existing = String(note || '').trim();
+    if (existing) return existing;
+    return floridaCommitBio(recruiting);
+  }
+  return floridaCommitBio(recruiting);
+}
+
+function healSignalCommitNote(signal, recruiting) {
+  if (!signal || typeof signal !== 'object') return signal;
+  const value =
+    signal.signalValue && typeof signal.signalValue === 'object'
+      ? signal.signalValue
+      : signal.value && typeof signal.value === 'object'
+        ? signal.value
+        : null;
+  if (!value) return signal;
+  const note = value.note || value.message;
+  if (!noteSaysNonFloridaCommit(note)) return signal;
+  const nextNote = floridaCommitBio(recruiting);
+  const nextValue = { ...value, note: nextNote };
+  if (value.message && noteSaysNonFloridaCommit(value.message)) nextValue.message = nextNote;
+  if (signal.signalValue) return { ...signal, signalValue: nextValue };
+  return { ...signal, value: nextValue };
+}
+
 function durableStampDir() {
   try {
     const base = resolveRecruitingDataDir();
@@ -379,6 +436,22 @@ function overlayLiveRpm(profile, recruiting) {
     if (rating != null) stats.rating = rating;
     if (stars != null && stars > 0) stats.stars = stars;
     highSchoolProfile = { ...highSchoolProfile, stats };
+    if (ufCommit) {
+      highSchoolProfile = {
+        ...highSchoolProfile,
+        recruitingNotes: healStaleFloridaCommitNote(highSchoolProfile.recruitingNotes, {
+          ...(recruiting || {}),
+          committedTo,
+        }),
+      };
+    }
+  }
+
+  let signals = Array.isArray(profile.signals) ? profile.signals : null;
+  if (ufCommit && signals) {
+    signals = signals.map((row) =>
+      healSignalCommitNote(row, { ...(recruiting || {}), committedTo })
+    );
   }
 
   let futurecastSummary =
@@ -430,6 +503,7 @@ function overlayLiveRpm(profile, recruiting) {
     player,
     competingSchools,
     ...(highSchoolProfile ? { highSchoolProfile } : {}),
+    ...(signals ? { signals } : {}),
     futurecastSummary,
     lastUpdated: new Date().toISOString(),
     servedFrom: 'stamp',
@@ -687,6 +761,8 @@ module.exports = {
   deleteStamp,
   isPoisonedStamp,
   overlayLiveRpm,
+  noteSaysNonFloridaCommit,
+  healStaleFloridaCommitNote,
   getStampedFullProfile,
   listVisitorStampSlugs,
   listAllowlistStampSlugs,
