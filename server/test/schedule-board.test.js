@@ -364,6 +364,12 @@ describe('schedule-board', () => {
     assert.equal(texas.radar.find((a) => a.label === 'Secondary')?.opp, 76);
     assert.match(texas.howUFWins[0], /87\.6/);
     assert.match(texas.howUFWins[0], /90\.5/);
+    assert.match(texas.howUFWins[0], /19-of-31/);
+    assert.match(texas.film, /Oklahoma 27, Texas 24/);
+    assert.equal(texas.radar.find((a) => a.label === 'Special Teams')?.opp, 66);
+    assert.equal(texas.radar.find((a) => a.label === 'Coaching Edge')?.opp, 58);
+    assert.ok(!/4-0 and No\. 1/.test(texas.film));
+    assert.ok(!/Red River grade is 9/.test(texas.film + texas.howUFWins.join(' ')));
     assert.match(texas.scoutingReport, /Rush the Clean Pocket/);
     assert.ok(!texas.expectedVisitors || texas.expectedVisitors.length === 0);
     const fan = scheduleBoard.toApiPayload().games.find((g) => g.id === 'texas');
