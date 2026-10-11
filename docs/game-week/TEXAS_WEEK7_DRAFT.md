@@ -39,7 +39,7 @@ Florida's receipt: 387 yards and 19 points (120 rush, 267 pass), 6-of-13 on thir
    Do not let Arch Manning throw it clean. Florida's coverage graded 48.4 at Missouri, the low of the season, and the rush got home seven times. Manning grades 87.6 when he sets his feet. Oklahoma got there and he threw two fourth-quarter interceptions, one of them Peyton Bowen's pick-six while he was scrambling. Woods has to be that rush. When the ball comes out late, be aggressive and take it.
 
 2. **Stay With the Scramble** — Graham
-   Do not lose him when he pulls the ball down. PFF split his runs. The designed ones are 24 carries for minus-8 yards. Those are not the problem. The scrambles are 20 carries for 149 yards. He has not scored on the ground. The handoff to him is not the play. Him leaving the pocket is. Graham has to go with him.
+   Do not lose him when he pulls the ball down. PFF split his runs. The runs they call for him are 24 carries for minus-8 yards. Those have not hurt anybody. When the pass breaks and he takes off, it is 20 carries for 149 yards. He has not scored on the ground. Graham has to go with him.
 
 3. **Finish the Drive** — Baugh
    Do not take the drive and come away with nothing. Philo is a 70.0 passer when the pocket is clean and a 56.0 when it collapses. At Missouri the pass blocking was 55.8 and Baugh's rushing grade fell to 53.6. The drive died up front. South Carolina made it 387 yards and 19 points. Colin Simmons is how that happens on Saturday. He grades 90.5 with 8 sacks, and he had 2 more against Oklahoma. If he gets home, Baugh never gets the chance to finish. The line has to hold. Baugh has to put it in. Texas had 382 yards and 24 points and lost.
