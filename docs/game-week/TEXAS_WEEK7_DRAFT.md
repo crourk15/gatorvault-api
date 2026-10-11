@@ -33,16 +33,16 @@ Special teams counting sheet: kick returns 7-91 (13.0), punt returns 8-96 (12.0)
 
 Florida's receipt: 387 yards and 19 points (120 rush, 267 pass), 6-of-13 on third down, 2-of-3 in the red zone. South Carolina: 393 yards, 114 rush, 279 pass, 10-of-16 on third, 4-of-4 in the red zone. Sellers 23-of-35, 279, 4 pass TD plus a rushing TD after the keep got crowded. Three takeaways.
 
-## 3 Keys (board, not a sit)
+## 3 Keys
 
 1. **Rush the Clean Pocket** — Woods
-   Published PFF passing grade stays 87.6. Oklahoma was the pressure game: 19-of-31, 260, 3 scores, 2 fourth-quarter interceptions, one of them Bowen's pick-six off a scramble. Simmons' published grade stays 90.5. The box added 2 sacks and 3 tackles for loss. Do not invent a new PFF number.
+   Do not let Arch Manning throw it clean, and do not let him leave the pocket with it. PFF has his passing grade at 87.6. When the rush got there Saturday, he gave it away: 19-of-31, 260 yards, 3 touchdowns, and 2 interceptions, both in the fourth. Texas led 17-7 at half and lost, Oklahoma 27, Texas 24. Peyton Bowen took one back 42 yards for a score while Manning was scrambling. Courtland Guillory took the last one, and Tate Sandell won it from 47. Colin Simmons is the problem on the other side. PFF has his pass-rush grade at 90.5, with 8 sacks. Against Oklahoma he had 2 more sacks and 3 tackles for loss. Woods has to get there. When the ball comes out late, catch it.
 
 2. **Fit the Run When the Throw Dies** — Graham
-   Oklahoma won with 83 rush yards. Texas had 122 and no score. Smothers 12-39. The four-game sheet was 3.6 a carry. A quiet run is not the win.
+   Do not treat a quiet run game as the win. Oklahoma just won one. Texas ran it 32 times for 122 yards and did not score. Hollywood Smothers was 12 for 39. Raleek Brown was 5 for 22. On the year they are at 3.6 a carry. The Sooners had 83 rush yards and still won 27-24. Graham stays square. One crease is the game.
 
 3. **Finish the Drive** — Baugh
-   Texas had 382 yards and 24 points and lost. Fourteen of Oklahoma's 27 were a blocked punt and a pick-six. Spetic missed from 53. Florida's 387 yards and 19 points are the same problem.
+   Do not confuse yards with points. Texas had 382 yards and 24 points, led 17-7 at half, and lost. John Mateer was 18-of-26 for 155 and did not score. Oklahoma went three-and-out seven times. Fourteen of their 27 points were a blocked punt and Peyton Bowen's pick-six. Florida just had 387 yards and 19 points. Baugh has to finish the drive. Gianni Spetic missed from 53. Do not give them the short field, and do not give them the punt.
 
 ## Matchup Edge (sat stamp — not the win% formula)
 

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Texas keys rewritten for members (Oklahoma 27, Texas 24; Manning 87.6; Simmons 90.5). Same three titles. API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week Texas after Oklahoma 27–24: keys keep the same titles and now use the ESPN box plus the published PFF sheet (Manning 87.6, Simmons 90.5). No invented Red River grade. API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week Texas: `/api/schedule` current game is Texas after the South Carolina final (Florida 19, South Carolina 38). Keys Rush the Clean Pocket / Fit the Run When the Throw Dies / Finish the Drive. Matchup Edge sat stamp (Pass opp 84). Noon ET, ABC or ESPN. Home NOW is Game / Road / Season 4-2. Ticker edge bust `gv-now-bust=texas-w7-ios`. API after Render, edge after Netlify — no Codemagic. Reopen the app once. Seed and last-good rewrite are the bake row.
 - [x] Community Game talk: South Carolina is its own room (`thr_game_scar`), not today’s pinned staff thread. Approved 1.0.31 hides the staff card from the Game talk list, so the weekly room has to be a different id. `/api/community/page` and `/api/community/game-rooms` after Render — no Codemagic. Reopen Community once.

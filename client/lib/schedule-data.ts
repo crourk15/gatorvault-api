@@ -596,25 +596,25 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Finish the Drive",
     ],
     howUFWins: [
-      "Do not let Arch Manning throw it clean, and do not let him leave the pocket with it. Published PFF passing grade is still 87.6. Oklahoma was 19-of-31, 260, 3 scores and 2 fourth-quarter picks. Simmons' published pass-rush grade is 90.5, and the box added 2 sacks.",
-      "Do not treat a quiet run game as the win. Oklahoma just did. Texas rushed for 122 yards and no score and lost 27-24.",
-      "Do not confuse yards with points. Texas had 382 yards and 24 points. Fourteen of Oklahoma's 27 were a blocked punt and a pick-six.",
+      "Do not let Arch Manning throw it clean, and do not let him leave the pocket with it. PFF has his passing grade at 87.6. When the rush got there Saturday, he gave it away: 19-of-31, 260 yards, 3 touchdowns, and 2 interceptions, both in the fourth. Texas led 17-7 at half and lost, Oklahoma 27, Texas 24. Peyton Bowen took one back 42 yards for a score while Manning was scrambling. Courtland Guillory took the last one, and Tate Sandell won it from 47. Colin Simmons is the problem on the other side. PFF has his pass-rush grade at 90.5, with 8 sacks. Against Oklahoma he had 2 more sacks and 3 tackles for loss. Woods has to get there. When the ball comes out late, catch it.",
+      "Do not treat a quiet run game as the win. Oklahoma just won one. Texas ran it 32 times for 122 yards and did not score. Hollywood Smothers was 12 for 39. Raleek Brown was 5 for 22. On the year they are at 3.6 a carry. The Sooners had 83 rush yards and still won 27-24. Graham stays square. One crease is the game.",
+      "Do not confuse yards with points. Texas had 382 yards and 24 points, led 17-7 at half, and lost. John Mateer was 18-of-26 for 155 and did not score. Oklahoma went three-and-out seven times. Fourteen of their 27 points were a blocked punt and Peyton Bowen's pick-six. Florida just had 387 yards and 19 points. Baugh has to finish the drive. Gianni Spetic missed from 53. Do not give them the short field, and do not give them the punt.",
     ],
     swing: [
       {
         name: "Jayden Woods",
-        role: "Do not let Arch Manning throw it clean, and do not let him leave the pocket with it. Published PFF passing grade is still 87.6. Oklahoma was 19-of-31, 260, 3 scores and 2 fourth-quarter picks. Simmons' published pass-rush grade is 90.5, and the box added 2 sacks.",
+        role: "Do not let Arch Manning throw it clean, and do not let him leave the pocket with it. PFF has his passing grade at 87.6. When the rush got there Saturday, he gave it away: 19-of-31, 260 yards, 3 touchdowns, and 2 interceptions, both in the fourth. Texas led 17-7 at half and lost, Oklahoma 27, Texas 24. Peyton Bowen took one back 42 yards for a score while Manning was scrambling. Courtland Guillory took the last one, and Tate Sandell won it from 47. Colin Simmons is the problem on the other side. PFF has his pass-rush grade at 90.5, with 8 sacks. Against Oklahoma he had 2 more sacks and 3 tackles for loss. Woods has to get there. When the ball comes out late, catch it.",
       },
       {
         name: "Myles Graham",
-        role: "Do not treat a quiet run game as the win. Oklahoma just did. Texas rushed for 122 yards and no score and lost 27-24.",
+        role: "Do not treat a quiet run game as the win. Oklahoma just won one. Texas ran it 32 times for 122 yards and did not score. Hollywood Smothers was 12 for 39. Raleek Brown was 5 for 22. On the year they are at 3.6 a carry. The Sooners had 83 rush yards and still won 27-24. Graham stays square. One crease is the game.",
       },
       {
         name: "Jadan Baugh",
-        role: "Do not confuse yards with points. Texas had 382 yards and 24 points. Fourteen of Oklahoma's 27 were a blocked punt and a pick-six.",
+        role: "Do not confuse yards with points. Texas had 382 yards and 24 points, led 17-7 at half, and lost. John Mateer was 18-of-26 for 155 and did not score. Oklahoma went three-and-out seven times. Fourteen of their 27 points were a blocked punt and Peyton Bowen's pick-six. Florida just had 387 yards and 19 points. Baugh has to finish the drive. Gianni Spetic missed from 53. Do not give them the short field, and do not give them the punt.",
       },
     ],
-    film: "Texas is 4-1 after Oklahoma 27-24. Manning's published PFF passing grade is still 87.6. He was 19-of-31 for 260 with 2 fourth-quarter picks. Simmons' published pass-rush grade is 90.5, and the box was 2 sacks. filmWatched: false.",
+    film: "Texas is 4-1 after Oklahoma 27, Texas 24 at the Cotton Bowl. Tate Sandell won it from 47 on the last play. Arch Manning was 19-of-31 for 260 with 3 scores and 2 picks, both in the fourth, after Texas led 17-7 at half. PFF has his passing grade at 87.6. Colin Simmons' pass-rush grade is 90.5, and he had 2 sacks and 3 tackles for loss. The run was 122 yards and no score. Fourteen of Oklahoma's points were a blocked punt and a pick-six. Rush the clean pocket, fit the run when the throw dies, finish the drive.",
     filmWatched: false,
     pred: "UF 20 · Texas 34",
     predUF: 20,
