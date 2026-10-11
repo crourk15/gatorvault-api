@@ -36,13 +36,13 @@ Florida's receipt: 387 yards and 19 points (120 rush, 267 pass), 6-of-13 on thir
 ## 3 Keys
 
 1. **Rush the Clean Pocket** — Woods
-   Do not let Arch Manning throw it clean. PFF has Florida's coverage at 48.4 from Missouri, the low for the season, and the rush created seven pressures. Woods had two. Manning's passing grade is 87.6. When the rush got there Saturday, he gave it away: 19-of-31, 260 yards, 3 touchdowns, and 2 interceptions, both in the fourth. Texas led 17-7 at half and lost, Oklahoma 27, Texas 24. Peyton Bowen took one back 42 yards for a score while Manning was scrambling. Woods has to get there. When the ball comes out late, catch it.
+   Do not let Arch Manning throw it clean. Florida's coverage graded 48.4 at Missouri, the low of the season, and the rush got home seven times. Manning grades 87.6 when he sets his feet. Oklahoma got there and he threw two fourth-quarter interceptions, one of them Peyton Bowen's pick-six while he was scrambling. Woods has to be that rush. When the ball comes out late, be aggressive and take it.
 
 2. **Fit the Run When the Throw Dies** — Graham
-   Do not treat a quiet run game as the win. Graham graded 53.5 against Auburn and 61.0 at Missouri, and Florida missed seven tackles there. Oklahoma just won with 83 rush yards. Texas ran it 32 times for 122 yards and did not score. Hollywood Smothers was 12 for 39. Raleek Brown was 5 for 22. On the year they are at 3.6 a carry. Graham stays square. One crease is the game.
+   Do not let a dead throw become a first down. Once Woods gets there, Manning is not standing in to throw it. He checks it down or they run it. That is the next snap. Texas is 3.6 a carry, and against Oklahoma the run was 32 for 122 yards and no score. Graham graded 53.5 against Auburn and 61.0 at Missouri. If he runs past the quarterback, Smothers has the crease and the rush was wasted. Graham stays square. One crease brings the drive back.
 
 3. **Finish the Drive** — Baugh
-   Do not confuse yards with points. PFF has Florida's pass blocking at 55.8 and the run blocking at 56.8 from Missouri. Philo was a 70.0 passer when kept clean and a 56.0 under pressure. Baugh's rushing grade was 53.6. South Carolina then sacked Philo three times, and Florida had 387 yards and 19 points. Colin Simmons is who the line has to block. PFF has his pass-rush grade at 90.5, with 8 sacks. Against Oklahoma he had 2 more sacks and 3 tackles for loss. The line has to hold. Baugh has to finish the drive. Texas had 382 yards and 24 points and lost. Do not give them the short field, and do not give them the punt.
+   Do not take the drive and come away with nothing. Philo is a 70.0 passer when the pocket is clean and a 56.0 when it collapses. At Missouri the pass blocking was 55.8 and Baugh's rushing grade fell to 53.6. The drive died up front. South Carolina made it 387 yards and 19 points. Colin Simmons is how that happens on Saturday. He grades 90.5 with 8 sacks, and he had 2 more against Oklahoma. If he gets home, Baugh never gets the chance to finish. The line has to hold. Baugh has to put it in. Texas had 382 yards and 24 points and lost.
 
 ## Matchup Edge (sat stamp — not the win% formula)
 

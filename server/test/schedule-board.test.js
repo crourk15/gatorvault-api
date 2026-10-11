@@ -364,10 +364,13 @@ describe('schedule-board', () => {
     assert.equal(texas.radar.find((a) => a.label === 'Secondary')?.opp, 76);
     assert.match(texas.howUFWins[0], /87\.6/);
     assert.match(texas.howUFWins[0], /48\.4/);
-    assert.match(texas.howUFWins[0], /19-of-31/);
+    assert.match(texas.howUFWins[0], /be aggressive and take it/);
+    assert.ok(!/catch it/.test(texas.howUFWins[0]));
     assert.ok(!/Simmons/.test(texas.howUFWins[0]));
+    assert.match(texas.howUFWins[1], /dead throw/);
     assert.match(texas.howUFWins[1], /53\.5/);
     assert.match(texas.howUFWins[1], /122 yards/);
+    assert.match(texas.howUFWins[2], /come away with nothing/);
     assert.match(texas.howUFWins[2], /55\.8/);
     assert.match(texas.howUFWins[2], /53\.6/);
     assert.match(texas.howUFWins[2], /90\.5/);
