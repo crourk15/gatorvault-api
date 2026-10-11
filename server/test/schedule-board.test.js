@@ -363,8 +363,16 @@ describe('schedule-board', () => {
     assert.equal(texas.radar.find((a) => a.label === 'Front 7')?.opp, 78);
     assert.equal(texas.radar.find((a) => a.label === 'Secondary')?.opp, 76);
     assert.match(texas.howUFWins[0], /87\.6/);
-    assert.match(texas.howUFWins[0], /90\.5/);
+    assert.match(texas.howUFWins[0], /48\.4/);
     assert.match(texas.howUFWins[0], /19-of-31/);
+    assert.ok(!/Simmons/.test(texas.howUFWins[0]));
+    assert.match(texas.howUFWins[1], /53\.5/);
+    assert.match(texas.howUFWins[1], /122 yards/);
+    assert.match(texas.howUFWins[2], /55\.8/);
+    assert.match(texas.howUFWins[2], /53\.6/);
+    assert.match(texas.howUFWins[2], /90\.5/);
+    assert.equal(texas.swing[0].role, texas.howUFWins[0]);
+    assert.equal(texas.swing[2].role, texas.howUFWins[2]);
     assert.match(texas.film, /Oklahoma 27, Texas 24/);
     assert.equal(texas.radar.find((a) => a.label === 'Special Teams')?.opp, 66);
     assert.equal(texas.radar.find((a) => a.label === 'Coaching Edge')?.opp, 58);
