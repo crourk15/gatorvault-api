@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '@/lib/uf-premium-gnl.css';
 import '@/lib/gnl.css';
 import {
@@ -19,6 +19,7 @@ import {
 } from '@/components/gatornation-live/GNLLiveFeedModule';
 
 const SEED_BUNDLE: LiveHubBundle = buildSeedLiveHubBundle();
+const EMPTY_RETRY_MS = [1200, 2500, 4000];
 
 export type GatorNationLiveFocus = GnlFocusSection;
 
@@ -34,6 +35,8 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
   const [error, setError] = useState<string | null>(null);
   const [pollSeq, setPollSeq] = useState(0);
   const [liveFresh, setLiveFresh] = useState(false);
+  const emptyRetryRef = useRef(0);
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useVaultPageRestore(LIVE_STATE_KEY, () => {});
 
@@ -42,14 +45,24 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
       setError(null);
     }
     try {
-      // Initial: cache-first. Polls: force refresh for beat freshness.
+      // Initial hits the network (SWR skipped). Polls force a beat refresh.
       const next = await fetchLiveHubBundle(!isInitial);
+      const nextLive =
+        (next.feed?.length || 0) + (next.panels?.beatWriterHighlights?.length || 0);
+      if (nextLive > 0) {
+        emptyRetryRef.current = 0;
+        setLiveFresh(true);
+      } else if (emptyRetryRef.current < EMPTY_RETRY_MS.length) {
+        const wait = EMPTY_RETRY_MS[emptyRetryRef.current];
+        emptyRetryRef.current += 1;
+        if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = setTimeout(() => {
+          void load(false);
+        }, wait);
+      }
       setBundle((prev) => {
-        const nextLive =
-          (next.feed?.length || 0) + (next.panels?.beatWriterHighlights?.length || 0);
         const prevLive =
           (prev.feed?.length || 0) + (prev.panels?.beatWriterHighlights?.length || 0);
-        if (nextLive > 0) setLiveFresh(true);
         // Don't blank the page when a poll fails / API returns empty mid-outage.
         if (nextLive === 0 && prevLive > 0) return prev;
         return next;
@@ -88,6 +101,7 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
     return () => {
       cancelled = true;
       if (timer) clearInterval(timer);
+      if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
     };
   }, [load]);
 

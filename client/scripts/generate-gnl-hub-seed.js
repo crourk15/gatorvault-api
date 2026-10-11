@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * Bake GNL hub seed for first paint from live dashboard (prod) or local feed.
+ * Bake GNL hub seed for first paint from the production live dashboard.
+ * Beat posts lead the ticker and feed. Do not stamp a local archive as "now".
  */
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const http = require('http');
 
-const ROOT = path.resolve(__dirname, '../..');
 const OUT = path.join(__dirname, '../lib/gnl-hub-seed.json');
 const API = process.env.GNL_SEED_API || 'https://gatorvault-api.onrender.com';
 
@@ -48,21 +48,33 @@ function slimFeedItem(item) {
   };
 }
 
-function fromLocalFeed() {
-  const feed = require(path.join(ROOT, 'server/data/live/feed-items.json'));
-  const now = new Date().toISOString();
-  // Local feed can be older than the live age gate — stamp seed rows as current
-  // so first paint stays elite until live refresh replaces them.
-  return (Array.isArray(feed) ? feed : [])
-    .filter((i) => String(i.title || '').trim())
-    .slice(0, 24)
-    .map((i, idx) =>
+function beatToFeed(posts) {
+  return (posts || [])
+    .filter((p) => String(p.text || '').trim())
+    .slice()
+    .sort((a, b) => (Date.parse(b.publishedAt || '') || 0) - (Date.parse(a.publishedAt || '') || 0))
+    .map((p, idx) =>
       slimFeedItem({
-        ...i,
-        createdAt: now,
-        id: i.id || `seed-feed-${idx}`,
+        id: p.id || p.url || `seed-beat-${idx}`,
+        type: 'beat',
+        title: `${p.writerName || p.handle || p.outlet || 'Beat'}: ${String(p.text || '').trim()}`,
+        source: p.outlet || p.writerName || 'Beat',
+        createdAt: p.publishedAt,
+        url: p.url,
       })
     );
+}
+
+function dedupeFeed(items) {
+  const seen = new Set();
+  const out = [];
+  for (const item of items) {
+    const title = String(item.title || '').trim().toLowerCase();
+    if (!title || seen.has(title)) continue;
+    seen.add(title);
+    out.push(item);
+  }
+  return out;
 }
 
 async function main() {
@@ -85,13 +97,14 @@ async function main() {
     }
   }
 
+  feed = dedupeFeed([...beatToFeed(beat), ...feed]).slice(0, 24);
   if (!feed.length) {
-    feed = fromLocalFeed();
-    source = source === 'prod-dashboard' ? source : 'local-feed';
+    console.error('[generate-gnl-hub-seed] FAIL — production dashboard had no feed or beat');
+    process.exit(1);
   }
 
   const ticker = feed.slice(0, 8).map((item) => ({
-    type: /break/i.test(item.title) ? 'BREAKING' : 'UPDATE',
+    type: /\bbreaking\b/i.test(item.title) ? 'BREAKING' : 'UPDATE',
     text: item.title,
     timestamp: item.createdAt,
     source: item.source,

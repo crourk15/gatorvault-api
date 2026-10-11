@@ -93,6 +93,17 @@ function buildSeedBeatIntel(): BeatIntelItem[] {
 
 const SEED_BEAT_INTEL = buildSeedBeatIntel();
 
+function realBeatWriters(beat: BeatIntelItem[] | null | undefined): BeatIntelItem[] {
+  if (!Array.isArray(beat) || !beat.length) return [];
+  return beat.filter((row) => {
+    const key = String(row.handle || row.writerName || '')
+      .toLowerCase()
+      .replace(/^@/, '')
+      .replace(/\s+/g, '');
+    return Boolean(key) && !key.includes('gatorvault');
+  });
+}
+
 declare global {
   interface Window {
     __GV_HOME_WOW__?: {
@@ -195,11 +206,21 @@ export function HomePremiumPage(): React.ReactElement {
         if (board?.games?.length) setScheduleGames(board.games);
       })
       .catch(() => {});
+    // Beat intel is the home Gator news strip. Do not wait on the hub bundle.
+    void fetchBeatIntel()
+      .then((beat) => {
+        const realWriters = realBeatWriters(beat);
+        if (realWriters.length) {
+          setBeatIntel(realWriters);
+          setBeatReady(true);
+        }
+      })
+      .catch(() => {});
     try {
       const year = ACTIVE_RECRUITING_CLASS_YEAR;
       // APIs that already warm-poll internally — do not nest another warm layer.
       const chaseYear = year + 1;
-      const [hubTickerPack, chaseTickerLive, hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets] =
+      const [hubTickerPack, chaseTickerLive, hubBundle, intel, movement, recruitingBoard, fcHome, hpTargets] =
         await Promise.all([
           // Dedicated ticker — lighter than full bundle; keeps NOW live without Codemagic.
           fetchWithWarmPoll(() => fetchRecruitingHubTickerPack(year), poll).catch(() => ({
@@ -211,7 +232,6 @@ export function HomePremiumPage(): React.ReactElement {
           fetchWithWarmPoll(() => fetchRecruitingHubBundle(year), poll).catch(() => null),
           fetchHighPriorityIntel().catch(() => null),
           fetchMovementIntel().catch(() => null),
-          fetchBeatIntel().catch(() => null),
           fetchWithWarmPoll(() => fetchRecruitingBoard(year), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchFutureCastHome(), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchHighPriorityTargets(year), poll).catch(() => null),
@@ -257,17 +277,6 @@ export function HomePremiumPage(): React.ReactElement {
       });
       if (Array.isArray(intel) && intel.length) setHpIntel(intel);
       if (movement) setMovementIntel(movement);
-      // Keep seeded real writers if live beat is empty or brand-only (@gatorvault).
-      if (Array.isArray(beat) && beat.length) {
-        const realWriters = beat.filter((row) => {
-          const key = String(row.handle || row.writerName || '')
-            .toLowerCase()
-            .replace(/^@/, '')
-            .replace(/\s+/g, '');
-          return key && !key.includes('gatorvault');
-        });
-        if (realWriters.length) setBeatIntel(realWriters);
-      }
       if (recruitingBoard) setBoard(recruitingBoard);
       if (fcHome) setFutureCastHome(fcHome);
       if (hpTargets) setHighPriority(hpTargets);

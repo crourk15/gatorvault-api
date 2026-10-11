@@ -50,7 +50,7 @@ describe('live-dashboard-cache request path', () => {
       'utf8'
     );
     assert.match(hubSrc, /HUB_BOOT_IMMEDIATE_WARM === 'true'/);
-    assert.match(hubSrc, /HUB_BOOT_WARM_DELAY_MS \|\| '90000'/);
+    assert.match(hubSrc, /HUB_BOOT_WARM_DELAY_MS \|\| '75000'/);
   });
 
   it('server defers heavy boot warm to >=60s by default', () => {
@@ -60,6 +60,14 @@ describe('live-dashboard-cache request path', () => {
     assert.match(src, /PLAYER_INTEL_REFRESH_ON_BOOT === 'true'/);
     assert.match(src, /GUARDIAN_BOOT_DELAY_MS \|\| '20000'/);
     assert.match(src, /boot verify deferred/);
+    assert.match(src, /API_BOOT_DEFER_DASH_WARM_MS \|\| '20000'/);
+    assert.match(src, /initial async warm scheduled/);
+  });
+
+  it('dashboard routes wait for an in-flight warm instead of returning empty', () => {
+    const src = require('fs').readFileSync(path.join(__dirname, '..', 'lib', 'live-routes.js'), 'utf8');
+    assert.match(src, /await dashCache\.getDashboardForRequest\(\{ feedLimit, force \}\)/);
+    assert.match(src, /await dashCache\.getDashboardForRequest\(\{ feedLimit, force: true \}\)/);
   });
 });
 

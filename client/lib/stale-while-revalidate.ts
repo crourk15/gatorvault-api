@@ -46,6 +46,11 @@ const NO_CACHE_PREFIXES = [
   '/api/recruiting/hub/bundle',
   '/api/recruiting/hub/commits',
   '/api/recruiting/hub/hero',
+  // GNL first paint. A cached empty "warming" body kept the July seed on screen
+  // because the live page does not apply a background SWR refresh.
+  '/api/live/dashboard',
+  '/api/gnl/feed',
+  '/api/recruiting/intel/beat',
 ];
 
 type CacheEnvelope<T> = { at: number; data: T };
