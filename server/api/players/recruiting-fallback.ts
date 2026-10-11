@@ -6,12 +6,12 @@ import { intelUuidForSlug, isUnderclassmenClassYear } from '../../lib/underclass
 
 const require = createRequire(import.meta.url);
 const { looksLikeHometownAsSchool } = require('../../lib/recruiting-geo-normalize');
-const { isPlaceholderSchool, formatRecruitSchoolLabel } = require('../../lib/recruiting-placeholder-school');
+const { isPlaceholderSchool, formatRecruitSchoolLabel, schoolIsCollegePledge } = require('../../lib/recruiting-placeholder-school');
 
 function resolveHighSchoolLabel(...candidates: unknown[]): string | null {
   for (const raw of candidates) {
     if (raw == null) continue;
-    if (isPlaceholderSchool(raw) || looksLikeHometownAsSchool(raw)) continue;
+    if (isPlaceholderSchool(raw) || looksLikeHometownAsSchool(raw) || schoolIsCollegePledge(raw)) continue;
     const label = formatRecruitSchoolLabel(raw);
     if (label) return label;
   }

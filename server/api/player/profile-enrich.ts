@@ -5,14 +5,15 @@ import { createRequire } from 'node:module';
 import { getRecruitingPlayerBySlug } from '../players/recruiting-fallback';
 
 const require = createRequire(import.meta.url);
-const { isPlaceholderSchool, formatRecruitSchoolLabel } = require('../../lib/recruiting-placeholder-school');
+const { isPlaceholderSchool, formatRecruitSchoolLabel, schoolIsCollegePledge } = require('../../lib/recruiting-placeholder-school');
+const { overlayVerifiedFloridaProfile } = require('../../lib/recruiting-verified-commits');
 const { looksLikeHometownAsSchool } = require('../../lib/recruiting-geo-normalize');
 const offerLogStore = require('../../lib/recruiting-offer-log-store');
 
 function resolveHighSchoolLabel(...candidates: unknown[]): string | null {
   for (const raw of candidates) {
     if (raw == null) continue;
-    if (isPlaceholderSchool(raw) || looksLikeHometownAsSchool(raw)) continue;
+    if (isPlaceholderSchool(raw) || looksLikeHometownAsSchool(raw) || schoolIsCollegePledge(raw)) continue;
     const label = formatRecruitSchoolLabel(raw);
     if (label) return label;
   }
@@ -86,7 +87,7 @@ export async function augmentPlayerFromRecruiting(
     recruiting.school
   );
 
-  return {
+  const enriched = {
     ...player,
     fullName: player.fullName ?? recruiting.name ?? player.slug,
     highSchool: schoolLabel,
@@ -115,6 +116,7 @@ export async function augmentPlayerFromRecruiting(
             ? storePct
             : player.ufFitScore,
   };
+  return overlayVerifiedFloridaProfile(enriched, recruiting);
 }
 
 export async function enrichRelatedFromRecruiting(

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Easton Royal's profile no longer says he is committed to Texas. The pledge line and the overview note are Florida (flipped October 11, 2026). API `/api/player/full-profile/easton-royal` after Render — no Codemagic. Reopen his profile once.
 - [x] Gator Nation Live keeps updating after the first open. The API re-reads the beat every minute and pulls writers if the 10-minute cron misses. API after Render — no Codemagic. The open page still follows the binary's poll until the bake row below.
 - [x] Gator Nation Live dashboard returns today's beat on a cold open instead of an empty warming body, and the feed leads with writer posts. Podcast episode lists on that payload are trimmed. API `/api/live/dashboard` after Render — no Codemagic. Reopen Gator Nation Live once. The July first-paint seed in the binary is the bake row below.
 - [x] Home NOW middle box is the Easton Royal flip (`News — Easton Royal flips to Florida · No. 5`), not Road. API ticker after Netlify edge — no Codemagic. Reopen the app once so the old Road pack drops.

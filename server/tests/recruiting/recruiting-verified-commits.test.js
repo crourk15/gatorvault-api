@@ -362,6 +362,70 @@ test('applyVerifiedHubCommit overlays Cyion Smith from the git bundle onto a dur
   assert.match(String(restored.profileNote || ''), /Cyion Smith committed to Florida/i);
 });
 
+test('applyVerifiedHubCommit restores Easton Royal high school when durable school is Texas', () => {
+  const restored = applyVerifiedHubCommit({
+    slug: 'easton-royal',
+    name: 'Easton Royal',
+    classYear: 2027,
+    category: 'recruit',
+    status: 'committed',
+    committedTo: 'Florida',
+    school: 'Texas',
+    fromSchool: 'Texas',
+    hometownState: 'FL',
+    commitDate: '2025-11-29',
+  });
+  assert.equal(restored.committedTo, 'Florida');
+  assert.equal(restored.commitDate, '2026-10-11');
+  assert.equal(restored.school, 'Brother Martin');
+  assert.equal(restored.hometownState, 'LA');
+  assert.equal(restored.hometownCity, 'New Orleans');
+  assert.match(String(restored.profileNote || ''), /Flipped from Texas to Florida/i);
+  assert.doesNotMatch(String(restored.profileNote || ''), /committed to Texas/i);
+});
+
+test('overlayVerifiedFloridaProfile does not paint Texas as the high school', () => {
+  const { overlayVerifiedFloridaProfile } = require('../../lib/recruiting-verified-commits');
+  const out = overlayVerifiedFloridaProfile(
+    {
+      slug: 'easton-royal',
+      fullName: 'Easton Royal',
+      committedTo: 'Texas',
+      highSchool: null,
+      hometown: 'Brother Martin HS',
+      state: 'New Orleans LA',
+      stars: 4,
+      compositeRating: 0.9,
+      rankingNational: 120,
+      height: 72,
+      weight: 175,
+    },
+    {
+      slug: 'easton-royal',
+      committedTo: 'Florida',
+      verifiedCommit: true,
+      school: 'Texas',
+      highSchool: null,
+      hometownCity: 'New Orleans',
+      hometownState: 'LA',
+      stars: 5,
+      rating: 98.43,
+      natlRank: 5,
+      posRank: 1,
+      stateRank: 1,
+      htWt: '5-11 / 200',
+    }
+  );
+  assert.equal(out.committedTo, 'Florida');
+  assert.equal(out.highSchool, null);
+  assert.equal(out.hometown, 'New Orleans');
+  assert.equal(out.state, 'LA');
+  assert.equal(out.stars, 5);
+  assert.equal(out.rankingNational, 5);
+  assert.equal(out.height, 71);
+  assert.equal(out.weight, 200);
+});
+
 test('applyVerifiedHubCommit overlays Samuel Bailey from the git bundle onto a durable target shell', () => {
   const restored = applyVerifiedHubCommit({
     slug: 'samuel-bailey',

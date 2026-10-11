@@ -20,9 +20,21 @@ function formatRecruitSchoolLabel(school) {
   return trimmed || null;
 }
 
+/** College nicknames that got stored in the high-school field (Easton Royal → Texas). */
+const COLLEGE_PLEDGE_RE =
+  /^(?:texas|florida|lsu|alabama|georgia|ohio state|miami|ole miss|auburn|tennessee|oregon|michigan|notre dame|clemson|usc|oklahoma|penn state|florida state|texas a&m|texas tech|south carolina)(?:\s+(?:longhorns|gators|tigers|bulldogs|buckeyes|hurricanes|rebels|crimson tide|fighting irish|nittany lions|seminoles|aggies|red raiders|trojans|sooners|volunteers|wolverines|ducks|gamecocks))?$/i;
+
+function schoolIsCollegePledge(school) {
+  const s = String(school ?? '').trim();
+  if (!s) return false;
+  if (/^university of\b/i.test(s)) return true;
+  return COLLEGE_PLEDGE_RE.test(s);
+}
+
 module.exports = {
   PLACEHOLDER_RECRUIT_SCHOOL,
   isPlaceholderSchool,
   isPlaceholderSkinny,
   formatRecruitSchoolLabel,
+  schoolIsCollegePledge,
 };
