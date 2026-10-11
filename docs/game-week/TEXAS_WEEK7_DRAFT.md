@@ -35,14 +35,16 @@ Florida's receipt: 387 yards and 19 points (120 rush, 267 pass), 6-of-13 on thir
 
 ## 3 Keys
 
-1. **Rush the Clean Pocket** — Woods
-   Do not let Arch Manning throw it clean. Florida's coverage graded 48.4 at Missouri, the low of the season, and the rush got home seven times. Manning grades 87.6 when he sets his feet. Oklahoma got there and he threw two fourth-quarter interceptions, one of them Peyton Bowen's pick-six while he was scrambling. Woods has to be that rush. When the ball comes out late, be aggressive and take it.
+These are team jobs. No one player owns the run, the rush, or the throw.
 
-2. **Stay With the Scramble** — Graham
-   Do not lose him when he pulls the ball down. PFF split his runs. The runs they call for him are 24 carries for minus-8 yards. Those have not hurt anybody. When the pass breaks and he takes off, it is 20 carries for 149 yards. He has not scored on the ground. Graham has to go with him.
+1. **The Run**
+   They do not open a clean hole. Sikorski, Baker, and Robertson all grade under 60 as run blockers, and the team run-block grade fell to 48.7 at Tennessee, the low of their season. The back is the run. Of Hollywood Smothers' 198 yards, 141 came after a defender got a hand on him, and he has forced 13 missed tackles. Saturday the tackle held. He had 12 carries for 39. The team had 32 for 122 and did not score. The front has to fit the run, and the second man has to finish the tackle.
 
-3. **Finish the Drive** — Baugh
-   Do not take the drive and come away with nothing. Baugh cannot finish a drive that dies before it gets there. Philo is a 70.0 passer when the pocket stays clean and a 56.0 when it collapses. At Missouri the pass blocking was 55.8, and that is why the drive died up front. The ball never became a chance to score. Colin Simmons is how a pocket dies on Saturday. He grades 90.5 with 8 sacks, and he had 2 more against Oklahoma. If he gets to Philo, the drive is over in the backfield. The line has to hold him. Then Baugh puts it in. The score only happens if the pocket survives.
+2. **The Escape**
+   Arch Manning will beat you if he gets to set his feet. Once the pocket is dirty he completes 53.8 percent, and about a quarter of those dropbacks end in a sack. He holds the ball. One rusher will not create that. Dylan Sikorski has not allowed a pressure in 128 pass-blocking snaps, so the rush has to arrive as a group. Then he leaves. On the year the runs they call for him are 24 carries for minus-8, and the scrambles are 20 for 149. Saturday the scramble was the play. Peyton Bowen picked him while he was running and brought it back 42 yards for a score. The defense has to be in his hip when he pulls it down.
+
+3. **The True Dropback**
+   Their rush ends the play when the ball stays in on a straight drop. Colin Simmons has 8 sacks, 7 of them on true pass sets, and Lance Jackson has 14 pressures beside him. At Missouri, Philo was a 70.0 passer when the pocket was clean and a 56.0 when it collapsed. The pass-block grade on that game was 55.8. South Carolina sacked him three times. The line has to give help, and the ball has to be gone before that dropback becomes a sack.
 
 ## Matchup Edge (sat stamp — not the win% formula)
 

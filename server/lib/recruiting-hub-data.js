@@ -1039,8 +1039,9 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
     const commits = await store.getHubCommits(focusYear);
     for (const raw of commits || []) {
       const slug = String(raw.slug || '').toLowerCase();
-      if (!slug || covered.has(slug)) continue;
+      if (!slug) continue;
       if (!isFloridaSchool(raw.committedTo)) continue;
+      // A fresh Florida pledge still leads the feed. Older visit rows must not hide it.
       const ts = new Date(commitFeedTimestamp({}, raw)).getTime();
       if (!Number.isFinite(ts) || ts < cutoff) continue;
       if (Date.now() - ts > COMMIT_FEED_MAX_AGE_MS) continue;

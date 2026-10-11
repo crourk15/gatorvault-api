@@ -1017,17 +1017,17 @@
     "slug": "easton-royal",
     "class_year": 2027,
     "position": "WR",
-    "status": "HS",
-    "height": 72,
-    "weight": 175,
-    "hometown": "Brother Martin HS",
-    "state": "New Orleans LA",
-    "high_school": null,
-    "stars": 4,
-    "composite_rating": 0.9,
-    "ranking_national": 120,
-    "ranking_position": 18,
-    "ranking_state": 8,
+    "status": "committed",
+    "height": 71,
+    "weight": 200,
+    "hometown": "New Orleans",
+    "state": "LA",
+    "high_school": "Brother Martin",
+    "stars": 5,
+    "composite_rating": 98.43,
+    "ranking_national": 5,
+    "ranking_position": 1,
+    "ranking_state": 1,
     "committed_to": "Florida",
     "high_school_profile": {
       "offers": [
@@ -1037,23 +1037,24 @@
         }
       ],
       "stats": {
-        "stars": 4,
-        "rating": 90,
-        "natl_rank": 120,
-        "pos_rank": 18,
-        "state_rank": 8,
+        "stars": 5,
+        "rating": 98.43,
+        "natl_rank": 5,
+        "pos_rank": 1,
+        "state_rank": 1,
         "on3_id": "243862"
       },
-      "recruiting_notes": "Tyler Harden: official visit to Gainesville scheduled June 11–13.",
+      "recruiting_notes": "Florida commit. Flipped from Texas on October 11, 2026. Hayes Fawcett, Rivals. No. 1 wide receiver in the 2027 class.",
       "discovery_score": null
     },
     "signals": [
       {
-        "signal_type": "OFFER",
+        "signal_type": "COMMIT",
         "signal_value": {
-          "school": "Texas"
+          "school": "Florida",
+          "flippedFrom": "Texas"
         },
-        "created_at": "2026-06-13T18:24:26.618Z"
+        "created_at": "2026-10-11T16:49:31.000Z"
       }
     ]
   },

@@ -36,15 +36,15 @@
       "category": "Flip Watch"
     },
     {
-      "id": "flip-easton-royal",
+      "id": "commit-easton-royal",
       "playerId": "easton-royal",
       "playerSlug": "easton-royal",
       "playerName": "Easton Royal",
-      "type": "flip_watch",
-      "message": "Easton Royal (Texas) — Flip score — · UF TBD",
-      "createdAt": "2026-06-13",
+      "type": "commit",
+      "message": "Easton Royal flipped from Texas to Florida. 5-star WR, No. 1 at the position.",
+      "createdAt": "2026-10-11",
       "seen": false,
-      "category": "Flip Watch"
+      "category": "Commit"
     },
     {
       "id": "recap-easton-royal-2026-06-11",
