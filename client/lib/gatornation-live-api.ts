@@ -23,7 +23,7 @@ import {
 } from './podcast-catalog';
 import { formatLiveSourceLabel } from './live-source-label';
 
-export const LIVE_HUB_REFRESH_MS = 45_000;
+export const LIVE_HUB_REFRESH_MS = 20_000;
 
 /** Brand Live + UF official — fine in the stream, not Beat Writer Highlights. */
 const BEAT_HIGHLIGHT_EXCLUDE_HANDLES = new Set([

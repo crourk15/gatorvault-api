@@ -1779,6 +1779,19 @@ function startPostBootServices() {
       console.warn('[live-dashboard] initial warm skipped:', e.message);
     }
   }, deferDashWarmMs);
+  // After health is green: keep the in-memory beat snapshot current, and pull
+  // writers if the */10 cron missed. This is not the old 45s sync warm loop.
+  const deferKeeperMs = Math.max(
+    90000,
+    parseInt(process.env.GNL_FRESHNESS_KEEPER_DELAY_MS || '120000', 10) || 120000
+  );
+  setTimeout(() => {
+    try {
+      require('./lib/gnl-freshness-keeper').startGnlFreshnessKeeper();
+    } catch (e) {
+      console.warn('[gnl-freshness] start skipped:', e.message);
+    }
+  }, deferKeeperMs);
   setTimeout(startPostBootRecruitingAndSchedulers, deferSchedMs);
   setTimeout(startPostBootHeavyServices, deferHeavyMs);
 }

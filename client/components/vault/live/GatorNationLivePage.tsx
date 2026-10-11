@@ -98,10 +98,18 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
       if (!cancelled) void load(false);
     }, LIVE_HUB_REFRESH_MS);
 
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') void load(false);
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('pageshow', onVisible);
+
     return () => {
       cancelled = true;
       if (timer) clearInterval(timer);
       if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('pageshow', onVisible);
     };
   }, [load]);
 
