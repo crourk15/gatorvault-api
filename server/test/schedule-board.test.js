@@ -348,7 +348,7 @@ describe('schedule-board', () => {
     const board = scheduleBoard.getScheduleBoard(2026);
     const texas = board.games.find((g) => g.id === 'texas');
     assert.equal(texas.keys[0], 'Rush the Clean Pocket');
-    assert.equal(texas.keys[1], 'Fit the Run When the Throw Dies');
+    assert.equal(texas.keys[1], 'Throw It Down the Field');
     assert.equal(texas.keys[2], 'Finish the Drive');
     assert.equal(texas.filmWatched, false);
     assert.equal(texas.tv, 'ABC or ESPN');
@@ -367,11 +367,11 @@ describe('schedule-board', () => {
     assert.match(texas.howUFWins[0], /be aggressive and take it/);
     assert.ok(!/catch it/.test(texas.howUFWins[0]));
     assert.ok(!/Simmons/.test(texas.howUFWins[0]));
-    assert.match(texas.howUFWins[1], /dead throw/);
-    assert.match(texas.howUFWins[1], /stay in his gap/);
-    assert.ok(!/crease|stays square/.test(texas.howUFWins[1]));
-    assert.match(texas.howUFWins[1], /53\.5/);
-    assert.match(texas.howUFWins[1], /122 yards/);
+    assert.match(texas.howUFWins[1], /12-of-22/);
+    assert.match(texas.howUFWins[1], /66\.7/);
+    assert.match(texas.howUFWins[1], /3-of-9/);
+    assert.equal(texas.swing[1].name, 'Aaron Philo');
+    assert.equal(texas.swing[1].role, texas.howUFWins[1]);
     assert.match(texas.howUFWins[2], /come away with nothing/);
     assert.match(texas.howUFWins[2], /55\.8/);
     assert.match(texas.howUFWins[2], /53\.6/);
