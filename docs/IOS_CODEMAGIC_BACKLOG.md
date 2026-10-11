@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Texas key 2 ending is plain: if Graham chases Manning out of his gap, Smothers has the lane and the dead throw is a first down. API `/api/schedule` after Render — no Codemagic. Seed is the bake row.
 - [x] Game Week Texas keys retied. Woods: coverage 48.4, Manning 87.6, be aggressive and take the late ball. Graham: the next snap after the throw dies. Baugh: the drive dies up front unless the line holds Simmons. API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week Texas keys pair Florida's PFF grades with Texas. Woods stays on Manning (coverage 48.4, seven pressures, passing 87.6). Graham's 53.5 / 61.0 sits on their run. Simmons 90.5 sits on the line and Baugh (pass block 55.8, Baugh 53.6). API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week Texas keys rewritten for members (Oklahoma 27, Texas 24; Manning 87.6; Simmons 90.5). Same three titles. API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.
