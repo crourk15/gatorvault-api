@@ -369,6 +369,7 @@ describe('schedule-board', () => {
     assert.ok(!/Simmons/.test(texas.howUFWins[0]));
     assert.match(texas.howUFWins[1], /minus-8/);
     assert.match(texas.howUFWins[1], /149/);
+    assert.ok(!/handoff/i.test(texas.howUFWins[1]));
     assert.ok(!/12-of-22|underneath/.test(texas.howUFWins[1]));
     assert.equal(texas.swing[1].name, 'Myles Graham');
     assert.equal(texas.swing[1].role, texas.howUFWins[1]);
