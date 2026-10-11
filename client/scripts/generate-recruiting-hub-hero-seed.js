@@ -22,7 +22,7 @@ async function main() {
     generatedAt: new Date().toISOString(),
     activeYear,
     title: 'Florida Recruiting',
-    subtitle: 'Who Florida is chasing — movement, board, and beat intel.',
+    subtitle: elite.hubHeroSubtitle(activeYear),
     classYears: years,
     classOverview: byYear[String(activeYear)],
     classOverviewAll: byYear,

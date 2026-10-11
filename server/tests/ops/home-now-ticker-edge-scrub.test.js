@@ -15,7 +15,7 @@ test('ticker edge strips the 1.0.29 App Store line and falls back when origin 50
   assert.match(src, /now-edge-fallback/);
   assert.match(src, /4-2 heading into Saturday/);
   assert.match(src, /Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN/);
-  assert.match(src, /on the road this Saturday/);
+  assert.match(src, /Easton Royal flips to Florida · No\. 5/);
   assert.match(src, /if \(isTickerPath\(url\.pathname\) && !upstream\.ok\)/);
   assert.equal(/1\.0\.29 is live/.test(src), false);
 });
@@ -40,7 +40,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the Texas week pack', () 
   assert.match(src, /pinCurrentTexasNow/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'texas-w7-ios'/);
+  assert.match(src, /NOW_BUST_VALUE = 'royal-commit-ios'/);
   assert.match(src, /isSchedulePath/);
   assert.match(src, /isPingPath/);
   const toml = fs.readFileSync(path.join(__dirname, '../../../netlify.toml'), 'utf8');
@@ -57,8 +57,10 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /cyion\\s\+smith/);
   assert.match(src, /lorenzo\\s\+mcmullen/);
   assert.match(src, /samuel\\s\+bailey/);
-  assert.match(src, /Road — \$\{TEXAS_NOW_ROAD\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'texas-w7-ios'/);
+  assert.match(src, /News — \$\{TEXAS_NOW_NEWS\}/);
+  assert.match(src, /NOW_BUST_VALUE = 'royal-commit-ios'/);
+  assert.match(src, /pinEastonRoyalHub/);
+  assert.match(src, /HUB_BUST_VALUE = 'royal-2027'/);
 });
 
 test('iOS launch edge busts URLCache without rewriting the POST body', () => {
@@ -66,7 +68,7 @@ test('iOS launch edge busts URLCache without rewriting the POST body', () => {
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'texas-w7-ios'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'royal-commit-ios'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /clear-site-data/);
   assert.doesNotMatch(bust, /upstream\.json\(\)/);

@@ -800,14 +800,14 @@ async function buildHubBundle(year = 2027) {
 
   if (!sequential) {
     const values = await Promise.all(parts.map(([, fn]) => fn()));
-    const out = { year };
+    const out = { year, subtitle: hubHeroSubtitle(year) };
     parts.forEach(([name], i) => {
       out[name] = values[i];
     });
     return out;
   }
 
-  const out = { year };
+  const out = { year, subtitle: hubHeroSubtitle(year) };
   for (const [name, fn] of parts) {
     out[name] = await fn();
     await yieldEventLoop();

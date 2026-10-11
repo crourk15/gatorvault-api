@@ -7,6 +7,8 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Home NOW middle box is the Easton Royal flip (`News — Easton Royal flips to Florida · No. 5`), not Road. API ticker after Netlify edge — no Codemagic. Reopen the app once so the old Road pack drops.
+- [x] Recruiting hub 2027 commit board leads with Easton Royal. One-shot hub cache bust so iOS URLCache refetches the live board. API after Render + Netlify edge — no Codemagic. Reopen the hub once.
 - [x] Game Week Texas swing cards are Myles Graham (The Run), Jayden Woods (The Escape), and Aaron Philo (The True Dropback). The key paragraphs stay team jobs. API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week Texas keys are The Run, The Escape, and The True Dropback. Arch Manning is named in The Escape. The jobs belong to the front, the defense, and the line. API `/api/schedule` after Render — no Codemagic. Seed `schedule-data.ts` is the bake row.
 - [x] Easton Royal is a Florida commit (flipped from Texas October 11, 2026, Hayes Fawcett / Rivals). On the 2027 commit board, first card. Hub hero subtitle names the flip. Off Closing Class Flip Watch, including the saved FutureCast plate that still said Texas. API after Render — no Codemagic. The baked Flip Watch fallback in `closing-class-flip-watch.ts` and the hub first-paint seed are the bake rows.
@@ -223,6 +225,8 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-11 | Recruiting hub hero line reads the live subtitle, and the hub boot fetch uses the production API from the bundled shell. **Live commit board and NOW News already follow the API.** | `RecruitingHeroStrip.tsx` and `recruiting-hub-hero-boot.ts` in the binary. Approved builds can still first-paint “Who Florida is chasing” until the live hero script lands. | this PR |
+| 2026-10-11 | Home NOW leftover last-good rewrites to the Easton Royal flip instead of Road. **Live ticker already News after the edge.** | `home-command-utils.ts` in the binary. Approved builds still rewrite a leftover week to Road until this bake; a clean News pack from the API already sticks. | this PR |
 | 2026-10-11 | Game Week first-paint swing cards name Myles Graham, Jayden Woods, and Aaron Philo. **Live `/api/schedule` swing names follow the API after Render.** | `schedule-data.ts` in the binary. Approved builds can still first-paint The Run / The Escape / The True Dropback as the swing names until the live pack lands. | this PR |
 | 2026-10-11 | Recruiting hub first paint leads with Easton Royal and the hero line names the Texas flip. **Live hero subtitle and commit order already follow the API after Render.** | `EliteCommitBoard.tsx` and `recruiting-hub-hero-seed.json` in the binary. Approved builds can still first-paint the August board until the live pack lands. | this PR |
 | 2026-10-11 | Recruiting hub first paint includes Easton Royal on the 2027 commit board. **Live hub commits and FutureCast Flip Watch already follow the API after Render.** | `recruiting-hub-bundle-seed.json` and `alerts-hub-seed.json` in the binary. Approved builds can still first-paint the August board and a Texas flip alert until the live pack lands. | this PR |

@@ -132,7 +132,7 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
         var pending = years.length;
         if (!pending) return;
         years.forEach(function(y) {
-          fetch('/api/recruiting/class-metrics?year=' + y, { credentials: 'same-origin', cache: 'no-store' })
+          fetch(apiOrigin + '/api/recruiting/class-metrics?year=' + y, { credentials: 'same-origin', cache: 'no-store' })
             .then(function(res) {
               if (!res.ok) throw new Error('metrics ' + res.status);
               return res.json();
@@ -169,7 +169,10 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
         classOverviewAll: SEED.classOverviewAll
       });
 
-      var heroUrl = '/api/recruiting/hub/hero?year=${safeYear}';
+      var apiOrigin = (location.hostname === 'gatorvaultinsider.com' || location.hostname === 'www.gatorvaultinsider.com')
+        ? ''
+        : 'https://gatorvaultinsider.com';
+      var heroUrl = apiOrigin + '/api/recruiting/hub/hero?year=${safeYear}';
       function loadHero(attempt) {
         fetch(heroUrl, { credentials: 'same-origin', cache: 'no-store' })
           .then(function(res) {

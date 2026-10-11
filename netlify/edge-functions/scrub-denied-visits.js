@@ -9,7 +9,7 @@ const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolR
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '4-2 heading into Saturday';
 const TEXAS_NOW_GAME = 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN';
-const TEXAS_NOW_ROAD = 'on the road this Saturday';
+const TEXAS_NOW_NEWS = 'Easton Royal flips to Florida · No. 5';
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
 /**
  * Posted South Carolina final — last-good Swamp / 4-1 must not beat Texas week.
@@ -54,14 +54,14 @@ function pinLeftoverMissouriNow(data) {
   return {
     data: {
       ...data,
-      items: [`Game — ${TEXAS_NOW_GAME}`, `Road — ${TEXAS_NOW_ROAD}`, `Season — ${SEASON_STANDING}`],
+      items: [`Game — ${TEXAS_NOW_GAME}`, `News — ${TEXAS_NOW_NEWS}`, `Season — ${SEASON_STANDING}`],
       nowWeek: [
         { key: 'game', label: 'Game', items: [TEXAS_NOW_GAME] },
-        { key: 'road', label: 'Road', items: [TEXAS_NOW_ROAD] },
+        { key: 'news', label: 'News', items: [TEXAS_NOW_NEWS] },
         { key: 'season', label: 'Season', items: [SEASON_STANDING] },
       ],
       ...(Array.isArray(data.ticker)
-        ? { ticker: [`Game — ${TEXAS_NOW_GAME}`, `Road — ${TEXAS_NOW_ROAD}`, `Season — ${SEASON_STANDING}`] }
+        ? { ticker: [`Game — ${TEXAS_NOW_GAME}`, `News — ${TEXAS_NOW_NEWS}`, `Season — ${SEASON_STANDING}`] }
         : {}),
     },
     changed: true,
@@ -107,12 +107,12 @@ const TICKER_FALLBACK = {
   status: 'ready',
   items: [
     `Game — ${TEXAS_NOW_GAME}`,
-    `Road — ${TEXAS_NOW_ROAD}`,
+    `News — ${TEXAS_NOW_NEWS}`,
     `Season — ${SEASON_STANDING}`,
   ],
   nowWeek: [
     { key: 'game', label: 'Game', items: [TEXAS_NOW_GAME] },
-    { key: 'road', label: 'Road', items: [TEXAS_NOW_ROAD] },
+    { key: 'news', label: 'News', items: [TEXAS_NOW_NEWS] },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],
   meta: { endpoint: 'ticker', cacheReason: 'now-edge-fallback' },
@@ -132,7 +132,9 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'texas-w7-ios';
+const NOW_BUST_VALUE = 'royal-commit-ios';
+const HUB_BUST_COOKIE = 'gv-hub-bust';
+const HUB_BUST_VALUE = 'royal-2027';
 
 function needsNowCacheBust(request) {
   const cookie = request?.headers?.get?.('cookie') || '';
@@ -174,7 +176,7 @@ function pinBaileyNowNews(data) {
     const next = out.items.map((line) => {
       if (typeof line !== 'string') return line;
       if (/^News — /i.test(line) && STALE_NOW_NEWS_RE.test(line)) {
-        return `Road — ${TEXAS_NOW_ROAD}`;
+        return `News — ${TEXAS_NOW_NEWS}`;
       }
       return line;
     });
@@ -190,7 +192,7 @@ function pinBaileyNowNews(data) {
       const key = String(row.key || row.label || '').toLowerCase();
       const items = Array.isArray(row.items) ? row.items.map((s) => String(s || '')) : [];
       if ((key === 'news' || String(row.label || '') === 'News') && items.some((s) => STALE_NOW_NEWS_RE.test(s))) {
-        return { ...row, key: 'road', label: 'Road', items: [TEXAS_NOW_ROAD] };
+        return { ...row, key: 'news', label: 'News', items: [TEXAS_NOW_NEWS] };
       }
       return row;
     });
@@ -204,7 +206,7 @@ function pinBaileyNowNews(data) {
     const next = out.ticker.map((line) => {
       if (typeof line !== 'string') return line;
       if (/^News — /i.test(line) && STALE_NOW_NEWS_RE.test(line)) {
-        return `Road — ${TEXAS_NOW_ROAD}`;
+        return `News — ${TEXAS_NOW_NEWS}`;
       }
       return line;
     });
@@ -362,6 +364,71 @@ function heal2028CommitPayload(data, year) {
     }
   }
   return { data: out, changed };
+}
+
+const EASTON_ROYAL_HUB_SUBTITLE =
+  'Easton Royal flipped from Texas. 5-star WR, No. 5 nationally.';
+
+const EASTON_ROYAL_COMMIT = {
+  id: 'easton-royal',
+  name: 'Easton Royal',
+  position: 'WR',
+  rating: '98.4',
+  rankNote: '5★ WR · New Orleans, LA · #5 natl · #1 WR · #1 LA',
+  metaLine: '5★ WR · New Orleans, LA · #5 natl · #1 WR · #1 LA',
+  skinny: 'Easton Royal flipped from Texas to Florida. 5-star WR, No. 5 nationally, No. 1 at the position.',
+  commitDate: 'Oct 11, 2026',
+  statusBadge: 'Committed',
+  profileUrl: '/vault/recruiting/player/easton-royal',
+  inState: false,
+  stars: 5,
+};
+
+function leadCommitList(items) {
+  if (!Array.isArray(items)) return { items, changed: false };
+  const rest = items.filter((row) => String(row?.id || row?.slug || '').toLowerCase() !== 'easton-royal');
+  const existing = items.find((row) => String(row?.id || row?.slug || '').toLowerCase() === 'easton-royal');
+  const next = [existing || EASTON_ROYAL_COMMIT, ...rest];
+  return { items: next, changed: JSON.stringify(next) !== JSON.stringify(items) };
+}
+
+/** iOS URLCache can keep the August 2027 board. Royal leads the live class. */
+function pinEastonRoyalHub(data, year) {
+  if (!data || typeof data !== 'object') return { data, changed: false };
+  if (Number(year) !== 2027) return { data, changed: false };
+  const out = { ...data };
+  let changed = false;
+  const isHeroSurface =
+    typeof out.subtitle === 'string' || out.title === 'Florida Recruiting' || Boolean(out.classOverview);
+  if (isHeroSurface && out.subtitle !== EASTON_ROYAL_HUB_SUBTITLE) {
+    out.subtitle = EASTON_ROYAL_HUB_SUBTITLE;
+    changed = true;
+  }
+  for (const key of ['commits', 'items']) {
+    if (!Array.isArray(out[key]) || !out[key].length || typeof out[key][0] !== 'object') continue;
+    const led = leadCommitList(out[key]);
+    if (led.changed) {
+      out[key] = led.items;
+      changed = true;
+    }
+  }
+  return { data: out, changed };
+}
+
+function needsHubCacheBust(request) {
+  const cookie = request?.headers?.get?.('cookie') || '';
+  return !new RegExp(`(?:^|;\\s*)${HUB_BUST_COOKIE}=${HUB_BUST_VALUE}(?:;|$)`).test(cookie);
+}
+
+function applyHubCacheBust(request, headers) {
+  if (!needsHubCacheBust(request)) return false;
+  headers.set('clear-site-data', '"cache"');
+  headers.append(
+    'set-cookie',
+    `${HUB_BUST_COOKIE}=${HUB_BUST_VALUE}; Max-Age=1209600; Path=/; Secure; SameSite=Lax`
+  );
+  headers.set('x-gv-hub-bust', HUB_BUST_VALUE);
+  return true;
 }
 
 function isAppStoreUpdateLine(text) {
@@ -715,6 +782,11 @@ export default async (request, context) => {
       data = healed.data;
       changed = true;
     }
+    const royal = pinEastonRoyalHub(data, yearFromRequest(url));
+    if (royal.changed) {
+      data = royal.data;
+      changed = true;
+    }
   }
   const body = JSON.stringify(data);
   const headers = new Headers(upstream.headers);
@@ -726,6 +798,8 @@ export default async (request, context) => {
   // Do not Clear-Site-Data on every hub hit — that thrashed sign-in.
   if (isTickerPath(url.pathname)) {
     applyNowCacheBust(request, headers);
+  } else if (isHubBundlePath(url.pathname) || isHubCommitsPath(url.pathname) || isHubHeroPath(url.pathname)) {
+    applyHubCacheBust(request, headers);
   } else if (changed) {
     headers.set('clear-site-data', '"cache"');
   }
