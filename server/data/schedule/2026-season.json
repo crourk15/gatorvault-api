@@ -1,8 +1,8 @@
 {
   "season": 2026,
-  "updatedAt": "2026-10-10T22:00:00.000Z",
+  "updatedAt": "2026-10-11T00:30:00.000Z",
   "label": "2026 Florida football schedule",
-  "source": "vault-schedule-board + Texas Matchup Edge sat stamp (PFF Simmons 90.5 / Manning 87.6 passing; not the win% formula)",
+  "source": "vault-schedule-board + Texas Matchup Edge after Oklahoma 27-24 (published PFF 87.6 / 90.5; ESPN box; no new Red River grade)",
   "predThrough": "2026-W7",
   "games": [
     {
@@ -724,7 +724,7 @@
       "finalSource": "official",
       "boxScoreUrl": "https://floridagators.com/sports/football/stats/2026/south-carolina/boxscore/27908"
     },
-    {
+        {
       "id": "texas",
       "kind": "game",
       "label": "Oct 17 @ Texas",
@@ -741,18 +741,18 @@
       "swing": [
         {
           "name": "Jayden Woods",
-          "role": "Do not let Arch Manning throw it clean. PFF has his 2026 passing grade at 87.6 (overall 85.8, 78 snaps on that sheet). The four-game board is 73-of-115 for 862 yards, 7 touchdowns, 3 interceptions, a 141.3 rating. Colin Simmons is the other problem: 90.5 PFF pass-rush, fifth among Power Four edges, 18 pressures and 8 sacks in four games, 6 of those sacks on Tennessee. South Carolina just threw for 279 and four scores after the keep got crowded (114 rush yards, not 256). Woods has to get there in Austin. Make the pocket uncomfortable."
+          "role": "Do not let Arch Manning throw it clean, and do not let him leave the pocket with it. PFF's published 2026 line is still 87.6 passing, 85.8 overall, and 58.7 rushing, on 78 snaps. That sheet was not restated after Saturday, so do not treat 78 snaps as a five-game total. Week 1 was a 90.7 passing grade on 13.3 percent pressure, and he was 3-for-3 under pressure that day. PFF's draft note is that his eyes drop and he leaves the pocket early when the rush arrives. Oklahoma was that game. ESPN box: 19-of-31, 260 yards, 3 touchdowns, 2 interceptions, a 73.0 QBR. Texas led 17-7 at half. Both picks were in the fourth. Peyton Bowen returned one 42 yards for a score while Manning was scrambling away from pressure. Courtland Guillory took the last one with 19 seconds left, and Tate Sandell won it from 47. A Red River PFF grade is not published. Do not invent one. Colin Simmons is still the rush: 90.5 PFF pass-rush through four games, 18 pressures and 8 sacks on that sheet, and the Oklahoma box added 2 sacks and 3 tackles for loss. Woods has to get there. When the ball comes out late, it has to be caught."
         },
         {
           "name": "Myles Graham",
-          "role": "Do not treat a quiet run game as the win. Texas is at 147 rush yards a game and only 3.6 a carry. Hollywood Smothers is 4.8. Raleek Brown is 4.1 with 4 scores. They do not need explosives if the fit is wrong. Graham stays square. South Carolina was held to 114 on the ground and still won 38-19."
+          "role": "Do not treat a quiet run game as the win. Oklahoma just did. Texas rushed 32 times for 122 yards, 3.8 a carry, and no score. Hollywood Smothers was 12 for 39. Raleek Brown was 5 for 22. The four-game sheet was 147 yards a game at 3.6, Smothers 4.8, Brown 4.1 and 4 scores. The Sooners had 83 rush yards and 238 total yards and won 27-24. Graham stays square. One crease is enough."
         },
         {
           "name": "Jadan Baugh",
-          "role": "Do not confuse yards with points. Florida just had 387 yards and 19 points: 120 rush, 267 pass, 6-of-13 on third down, 2-of-3 in the red zone. Texas allows 13.3 points a game and 271 yards, fourth in the SEC. Opponent passer rating is 109.7 with 2 passing touchdowns in four games. Baugh has to finish the drive. Do not donate the short field — South Carolina took it away three times."
+          "role": "Do not confuse yards with points, and do not donate the hidden ones. Texas had 382 yards and 24 points, led 17-7 at half, then lost. Oklahoma's offense was 238 yards, John Mateer 18-of-26 for 155 with no score, and seven three-and-outs. Fourteen of the 27 points were a blocked punt recovered in the end zone and Peyton Bowen's pick-six. Florida just had 387 yards and 19 points. Baugh has to finish the drive. Gianni Spetic missed from 53 with 1:55 left. Do not give them the short field the way South Carolina took it three times, and do not give them the punt."
         }
       ],
-      "film": "Texas is 4-0 and No. 1. Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17. Steve Sarkisian. Arch Manning's published PFF passing grade is 87.6. Colin Simmons' pass-rush grade is 90.5 with 8 sacks. They allow 13.3 points and 271 yards. Florida just lost 19-38 at home: the keep got crowded and Sellers still threw for 279 and four scores. Rush the clean pocket, fit the run when the throw dies, finish the drive. This is the official counting sheet plus two PFF grades, not a sit.",
+      "film": "Texas is 4-1 and 1-1 in the SEC after Oklahoma 27, Texas 24 at the Cotton Bowl. Tate Sandell's 47-yard field goal on the last play. Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17, then this. Steve Sarkisian. PFF's published passing grade on Arch Manning is still 87.6. It was not restated after Saturday. He was 19-of-31 for 260, 3 scores and 2 picks, both in the fourth, and Texas led 17-7 at half. Colin Simmons' published pass-rush grade is 90.5, and the Oklahoma box was 2 sacks and 3 tackles for loss. The run was 122 yards and no score. Fourteen of Oklahoma's points were a blocked punt and a pick-six. Rush the clean pocket, fit the run when the throw dies, finish the drive. This is the ESPN box, the AP recap, and the published PFF sheet. Not a sit. filmWatched: false.",
       "pred": "UF 22 · Texas 34",
       "predUF": 22,
       "predOpp": 34,
@@ -761,61 +761,87 @@
       "ufPctDelta": -3,
       "filmWatched": false,
       "filmNotes": [
-        "Texas is 4-0, 1-0 SEC, No. 1. Official sheet: Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17. Steve Sarkisian.",
-        "Arch Manning, four games: 73-of-115, 862 yards, 7 touchdowns, 3 interceptions, 141.3 rating, 7.5 yards per attempt. Rushing 32 for 82.",
-        "PFF's published 2026 line on Manning is 85.8 overall and 87.6 passing, on 78 snaps. That is the grade sheet, not a four-game snap total. Week 1 passing grade was 90.7 (20-of-27, 305, 4 scores).",
-        "Colin Simmons: 90.5 PFF pass-rush grade, fifth among Power Four edges. 18 pressures and 8 sacks through four games. Against Tennessee: 10 pressures and 6 sacks on 36 pass-rush snaps, a 91.3 grade.",
-        "Texas rush offense is 147 yards a game at 3.6 a carry. Hollywood Smothers 41-198-2 (4.8). Raleek Brown 48-196-4 (4.1).",
-        "Defense: 13.3 points a game, 271 yards a game (fourth in the SEC on the Gainesville Sun card), 99 rush yards allowed at 2.8 a carry, 172 pass yards allowed, opponent passer rating 109.7, 2 passing touchdowns and 3 interceptions.",
-        "Florida just lost 19-38 at home. 387 yards (120 rush, 267 pass), 6-of-13 on third down, 2-of-3 in the red zone. South Carolina: 393 yards, 114 rush, 279 pass, 10-of-16 on third down, 4-of-4 in the red zone.",
-        "LaNorris Sellers was 23-of-35 for 279 and four passing scores, plus a rushing touchdown. The keep got crowded. The ball still went over the top. South Carolina took it away three times.",
-        "Noon ET at DKR. SEC window is ABC or ESPN. Final network was still open after the Oct 10 games on the Florida release. Do not stamp one channel.",
-        "filmWatched: false. No coverage shells. Will Muschamp is the coordinator on the Gainesville Sun card. Do not invent his calls."
+        "Oklahoma 27, Texas 24. Final. Cotton Bowl, Oct. 10. ESPN: Texas 7-10-0-7, Oklahoma 0-7-3-17. Texas is 4-1, 1-1 SEC. Oklahoma is 3-2, 1-1. Steve Sarkisian. The four-game wins still stand: Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17.",
+        "Arch Manning, ESPN box: 19-of-31, 260 yards, 8.4 an attempt, 3 touchdowns, 2 interceptions, 73.0 QBR. Rushing 7 for 20. Cam Coleman 5-110-1. Ryan Wingo 2-57-1. Jermaine Bishop Jr. 1-15-1, the tying score with 6:32 left.",
+        "AP: Texas led 17-7 at half, then punted all three third-quarter possessions. Peyton Bowen intercepted Manning while he was scrambling away from pressure and returned it 42 yards for a touchdown with 10:07 left. Courtland Guillory intercepted the last pass with 19 seconds left. Tate Sandell kicked the 47-yard winner. Gianni Spetic was wide right from 53 with 1:55 left.",
+        "PFF has not published a Red River grade. The published 2026 line is still 85.8 overall, 87.6 passing, 58.7 rushing, on 78 snaps. That snap count is not a five-game total. Week 1 passing grade was 90.7 on 13.3 percent pressure, 3-for-3 under pressure. The draft note is that his eyes drop and he leaves the pocket early when the rush is there. Do not invent a Saturday grade.",
+        "Colin Simmons, published PFF through four games: 90.5 pass-rush, fifth among Power Four edges, 18 pressures, 8 sacks. Tennessee on that sheet: 10 pressures, 6 sacks, 36 pass-rush snaps, 91.3. ESPN Oklahoma box: 4 tackles, 2 sacks, 3 tackles for loss. Do not add the box onto the PFF sack total.",
+        "Texas rush, ESPN: 32 for 122, 3.8 a carry, no touchdown. Hollywood Smothers 12-39. Raleek Brown 5-22. Derrek Cooper 8-41. The four-game sheet was 147 yards a game at 3.6.",
+        "Oklahoma offense, ESPN and AP: 238 total yards, 83 rush, 155 pass. John Mateer 18-of-26, 155, no touchdown, no interception, 50.4 QBR. Seven three-and-outs. Lloyd Avant 10-72-1, including a 42-yard score.",
+        "Hidden points: Danny Okoye blocked a Mac Chiumento punt and Dakoda Fields recovered it in the end zone. Ryan Niblett had 5 punt returns for 16 yards. Gianni Spetic made 1 of 2 field goals and missed from 53. Tate Sandell made the 47-yard winner. Four-game special-teams sheet had no return touchdown. This blocked punt is on the ESPN card.",
+        "Four-game defense sheet stays what it was: 13.3 points, 271 yards, opponent passer rating 109.7, 2 passing touchdowns. Do not recompute a five-game average off one box. Saturday the scoreboard was 27, with the offense held to 238 and no passing score.",
+        "Florida's receipt is unchanged: 19-38, 387 yards and 19 points, 6-of-13 on third, 2-of-3 in the red zone. Sellers threw for 279 and four scores after the keep got crowded.",
+        "Noon ET at DKR. TV is still ABC or ESPN. filmWatched: false. No coverage shells. Will Muschamp is the coordinator on the Gainesville Sun card. Do not invent his calls."
       ],
       "opponentTendencies": [
-        "Four games, all wins: Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17. The two that mattered were one score.",
-        "Arch Manning is the quarterback. 73-of-115, 862 yards, 7 touchdowns, 3 interceptions, 141.3 rating. PFF passing grade 87.6.",
-        "The run is volume, not a breakaway show: 147 yards a game, 3.6 a carry. Smothers 4.8. Brown 4.1 and 4 scores.",
-        "Colin Simmons is the pass rush. 90.5 PFF grade, 18 pressures, 8 sacks, 6 of them on Tennessee.",
-        "They score 33.3 and allow 13.3. That is the gap Florida has to live in on the road."
+        "Five games: Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17, Oklahoma 24-27. 4-1, 1-1 SEC. The last one was a 17-7 halftime lead that got away.",
+        "Arch Manning is the quarterback. Published PFF passing grade 87.6. ESPN against Oklahoma: 19-of-31, 260, 3 touchdowns, 2 interceptions. Both picks were in the fourth, one of them a pick-six off a scramble.",
+        "The run is still volume, not a breakaway show. Saturday was 122 yards on 32 carries and no score. Smothers 12 for 39. The four-game sheet was 3.6 a carry.",
+        "Colin Simmons is the pass rush. Published 90.5 PFF grade and 8 sacks through four. The Oklahoma box was 2 more sacks and 3 tackles for loss. Do not blend those into one PFF number.",
+        "They can pile up yards and lose the hidden ones. 382 yards, 24 points, a blocked punt, and two fourth-quarter interceptions."
       ],
       "defenseTendencies": [
-        "271 yards a game allowed, fourth in the SEC on the beat card. 13.3 points. 2.8 yards per rush allowed. 99 rush yards a game.",
-        "Pass defense: 172 yards a game, opponent rating 109.7, 2 passing touchdowns, 3 interceptions, 59.5 percent completions.",
+        "Four-game sheet: 271 yards a game, 13.3 points, 2.8 yards per rush, opponent rating 109.7, 2 passing touchdowns. That sheet is not a five-game average.",
+        "Saturday the Oklahoma offense was 238 yards. Mateer 155 and no score. Seven three-and-outs. The 27 points include a blocked-punt touchdown and a pick-six.",
         "Will Muschamp is the coordinator on the Gainesville Sun card. Coverage shells are not on a sit. Do not invent them.",
-        "Simmons' 90.5 pass-rush grade is the pressure. Do not write a simulated blitz menu.",
-        "Special teams counting sheet: Texas kick returns 7 for 91, punt returns 8 for 96. No return touchdown on that sheet. Do not invent one."
+        "Simmons' 90.5 pass-rush grade is the published pressure. The Oklahoma box is 2 sacks. Do not write a simulated blitz menu.",
+        "Special teams is no longer a blank. Okoye blocked the punt, Fields recovered it in the end zone. Spetic missed from 53. Sandell made the 47-yard winner."
       ],
       "offenseScout": [
-        "Official 4-game: 4-0, 1-0 SEC. Texas State W 59-7, Ohio State W 24-23, UTSA W 30-6, Tennessee W 20-17. Steve Sarkisian.",
-        "Arch Manning: 73/115, 63.5%, 862 yards, 7 TD, 3 INT, 141.3 rating, 7.5 Y/A, 32-82 rushing. PFF 2026: 85.8 overall, 87.6 passing, 58.7 rush, 78 snaps on that published line.",
-        "Rush: 589 yards, 3.6 YPC, 147.2 YPG, 8 TD. Smothers 41-198-2. Brown 48-196-4. Ryan Wingo leads the receivers on the Texas game-center card (239 yards).",
-        "South Carolina final is the Florida receipt: Sellers 23/35, 279, 4 pass TD plus a rush TD after the Gators held the run to 114. Crowd-the-keep did not stop the throw.",
-        "filmWatched: false. watchStandard: official Texas cumulative sheet + PFF Manning/Simmons grades + SEC scoreboard of Florida 19, South Carolina 38. No broadcast sit."
+        "Through four, the official sheet was 4-0, 1-0 SEC: Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17. Fifth game, ESPN and AP: Oklahoma 27, Texas 24 at the Cotton Bowl. Texas is 4-1, 1-1. Steve Sarkisian.",
+        "Arch Manning four-game sheet: 73/115, 862, 7 TD, 3 INT, 141.3. PFF published line, not restated after Saturday: 85.8 overall, 87.6 passing, 58.7 rush, 78 snaps. ESPN Oklahoma: 19/31, 260, 3 TD, 2 INT, QBR 73.0, 7-20 rushing.",
+        "Rush Saturday: 32-122, 3.8, 0 TD. Smothers 12-39. Brown 5-22. Cooper 8-41. Four-game sheet was 589 yards, 3.6 YPC, 147.2 YPG.",
+        "The pressure receipt is the AP recap plus the PFF draft note. Bowen pick-six came while Manning scrambled away from pressure. PFF says his eyes drop and he leaves the pocket early. Week 1 90.7 was on 13.3 percent pressure. No Red River grade is published.",
+        "filmWatched: false. watchStandard: ESPN box 401856717 + AP recap + published PFF Manning/Simmons sheet. No broadcast sit."
       ],
       "defenseScout": [
-        "Points allowed 13.25. Yards allowed 271.0 (Sports-Reference / official). Rush allowed 99.2 YPG, 2.8 YPC. Pass allowed 171.75 YPG, 5.9 YPA, rating 109.7, 2 TD, 3 INT.",
-        "Colin Simmons: 18 pressures, 8 sacks, 90.5 PFF pass-rush (5th among Power Four edges). Tennessee: 10 pressures, 6 sacks, 36 pass-rush snaps, 91.3 grade, pressure on 27.8% of those snaps.",
-        "Gainesville Sun: Will Muschamp coordinates, fourth in the SEC in total defense at 271.0. Shells not sat.",
-        "Florida just put up 387 yards and 19 points, 6-of-13 on third down, 2-of-3 in the red zone. Yards are not points against this defense.",
+        "Four-game defense: 13.25 PPG, 271.0 YPG, rush allowed 99.2 at 2.8, pass allowed 171.75, rating 109.7, 2 TD, 3 INT. Do not invent a five-game average.",
+        "Oklahoma offense: 238 yards, 0 passing touchdowns. Mateer 18/26, 155, QBR 50.4. Avant 10-72-1. Seven three-and-outs (AP).",
+        "Colin Simmons ESPN box: 2 sacks, 3 TFL, 4 tackles. Published PFF through four stays 90.5, 18 pressures, 8 sacks. Tennessee sheet: 10 pressures, 6 sacks, 36 snaps, 91.3, pressure on 27.8 percent.",
+        "Scoreboard 27 includes Fields' blocked-punt touchdown and Bowen's 42-yard pick-six. Those are not a sustained offensive drive.",
         "filmWatched: false."
       ],
       "howUFWins": [
-        "Do not let Arch Manning throw it clean. PFF has his 2026 passing grade at 87.6 (overall 85.8, 78 snaps on that sheet). The four-game board is 73-of-115 for 862 yards, 7 touchdowns, 3 interceptions, a 141.3 rating. Colin Simmons is the other problem: 90.5 PFF pass-rush, fifth among Power Four edges, 18 pressures and 8 sacks in four games, 6 of those sacks on Tennessee. South Carolina just threw for 279 and four scores after the keep got crowded (114 rush yards, not 256). Woods has to get there in Austin. Make the pocket uncomfortable.",
-        "Do not treat a quiet run game as the win. Texas is at 147 rush yards a game and only 3.6 a carry. Hollywood Smothers is 4.8. Raleek Brown is 4.1 with 4 scores. They do not need explosives if the fit is wrong. Graham stays square. South Carolina was held to 114 on the ground and still won 38-19.",
-        "Do not confuse yards with points. Florida just had 387 yards and 19 points: 120 rush, 267 pass, 6-of-13 on third down, 2-of-3 in the red zone. Texas allows 13.3 points a game and 271 yards, fourth in the SEC. Opponent passer rating is 109.7 with 2 passing touchdowns in four games. Baugh has to finish the drive. Do not donate the short field — South Carolina took it away three times."
+        "Do not let Arch Manning throw it clean, and do not let him leave the pocket with it. PFF's published 2026 line is still 87.6 passing, 85.8 overall, and 58.7 rushing, on 78 snaps. That sheet was not restated after Saturday, so do not treat 78 snaps as a five-game total. Week 1 was a 90.7 passing grade on 13.3 percent pressure, and he was 3-for-3 under pressure that day. PFF's draft note is that his eyes drop and he leaves the pocket early when the rush arrives. Oklahoma was that game. ESPN box: 19-of-31, 260 yards, 3 touchdowns, 2 interceptions, a 73.0 QBR. Texas led 17-7 at half. Both picks were in the fourth. Peyton Bowen returned one 42 yards for a score while Manning was scrambling away from pressure. Courtland Guillory took the last one with 19 seconds left, and Tate Sandell won it from 47. A Red River PFF grade is not published. Do not invent one. Colin Simmons is still the rush: 90.5 PFF pass-rush through four games, 18 pressures and 8 sacks on that sheet, and the Oklahoma box added 2 sacks and 3 tackles for loss. Woods has to get there. When the ball comes out late, it has to be caught.",
+        "Do not treat a quiet run game as the win. Oklahoma just did. Texas rushed 32 times for 122 yards, 3.8 a carry, and no score. Hollywood Smothers was 12 for 39. Raleek Brown was 5 for 22. The four-game sheet was 147 yards a game at 3.6, Smothers 4.8, Brown 4.1 and 4 scores. The Sooners had 83 rush yards and 238 total yards and won 27-24. Graham stays square. One crease is enough.",
+        "Do not confuse yards with points, and do not donate the hidden ones. Texas had 382 yards and 24 points, led 17-7 at half, then lost. Oklahoma's offense was 238 yards, John Mateer 18-of-26 for 155 with no score, and seven three-and-outs. Fourteen of the 27 points were a blocked punt recovered in the end zone and Peyton Bowen's pick-six. Florida just had 387 yards and 19 points. Baugh has to finish the drive. Gianni Spetic missed from 53 with 1:55 left. Do not give them the short field the way South Carolina took it three times, and do not give them the punt."
       ],
-      "scoutingReport": "TEXAS through four (Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17). 4-0, No. 1. Manning 73/115, 862, 7 TD, 3 INT, 141.3. PFF passing 87.6. Simmons 90.5 pass-rush, 18 pressures, 8 sacks. Defense 13.3 PPG, 271 yards, 109.7 opponent passer rating. Florida just lost 19-38: 387 yards, 19 points, Sellers 279 and four scores after a crowded keep. UF wins: Rush the Clean Pocket / Fit the Run When the Throw Dies / Finish the Drive. filmWatched: false. Noon ET, ABC or ESPN.",
+      "scoutingReport": "TEXAS is 4-1 after Oklahoma 27-24 at the Cotton Bowl. Manning ESPN: 19/31, 260, 3 TD, 2 INT, both picks in the fourth, led 17-7 at half. Published PFF passing grade is still 87.6 on 78 snaps and was not restated. Simmons 90.5 through four; Oklahoma box 2 sacks and 3 TFL. Rush 32-122, no score. Fourteen of the 27 points were a blocked punt and a pick-six. UF wins: Rush the Clean Pocket / Fit the Run When the Throw Dies / Finish the Drive. filmWatched: false. Noon ET, ABC or ESPN.",
       "radar": [
-        { "label": "Run Game", "uf": 60, "opp": 66 },
-        { "label": "Pass Efficiency", "uf": 64, "opp": 84 },
-        { "label": "Front 7", "uf": 52, "opp": 78 },
-        { "label": "Secondary", "uf": 48, "opp": 76 },
-        { "label": "Special Teams", "uf": 54, "opp": 58 },
-        { "label": "Coaching Edge", "uf": 48, "opp": 66 }
+        {
+          "label": "Run Game",
+          "uf": 60,
+          "opp": 66
+        },
+        {
+          "label": "Pass Efficiency",
+          "uf": 64,
+          "opp": 84
+        },
+        {
+          "label": "Front 7",
+          "uf": 52,
+          "opp": 78
+        },
+        {
+          "label": "Secondary",
+          "uf": 48,
+          "opp": 76
+        },
+        {
+          "label": "Special Teams",
+          "uf": 54,
+          "opp": 66
+        },
+        {
+          "label": "Coaching Edge",
+          "uf": 48,
+          "opp": 58
+        }
       ],
       "specialTeams": [
-        "Official sheet: Texas kick returns 7 for 91 (13.0), punt returns 8 for 96 (12.0). Opponents 7 for 137 and 5 for 74. No return touchdown on that sheet. Do not invent one."
+        "Four-game sheet: kick returns 7 for 91 (13.0), punt returns 8 for 96 (12.0). No return touchdown on that sheet.",
+        "Oklahoma, ESPN and AP: Danny Okoye blocked Mac Chiumento's punt and Dakoda Fields recovered it in the end zone. Ryan Niblett had 5 punt returns for 16 yards. Gianni Spetic made 1 of 2 field goals and missed from 53. Tate Sandell made the 47-yard winner. Do not invent a return touchdown that is not on the card."
       ],
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27909",

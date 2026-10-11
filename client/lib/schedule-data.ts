@@ -596,25 +596,25 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Finish the Drive",
     ],
     howUFWins: [
-      "Do not let Arch Manning throw it clean. PFF passing grade 87.6. Colin Simmons is 90.5 pass-rush with 8 sacks. South Carolina threw for 279 and four scores after the keep got crowded.",
-      "Do not treat a quiet run game as the win. Texas is 147 rush yards a game at 3.6 a carry. South Carolina was held to 114 and still won 38-19.",
-      "Do not confuse yards with points. Florida had 387 yards and 19 points. Texas allows 13.3 points and 271 yards.",
+      "Do not let Arch Manning throw it clean, and do not let him leave the pocket with it. Published PFF passing grade is still 87.6. Oklahoma was 19-of-31, 260, 3 scores and 2 fourth-quarter picks. Simmons' published pass-rush grade is 90.5, and the box added 2 sacks.",
+      "Do not treat a quiet run game as the win. Oklahoma just did. Texas rushed for 122 yards and no score and lost 27-24.",
+      "Do not confuse yards with points. Texas had 382 yards and 24 points. Fourteen of Oklahoma's 27 were a blocked punt and a pick-six.",
     ],
     swing: [
       {
         name: "Jayden Woods",
-        role: "Do not let Arch Manning throw it clean. PFF passing grade 87.6. Colin Simmons is 90.5 pass-rush with 8 sacks. South Carolina threw for 279 and four scores after the keep got crowded.",
+        role: "Do not let Arch Manning throw it clean, and do not let him leave the pocket with it. Published PFF passing grade is still 87.6. Oklahoma was 19-of-31, 260, 3 scores and 2 fourth-quarter picks. Simmons' published pass-rush grade is 90.5, and the box added 2 sacks.",
       },
       {
         name: "Myles Graham",
-        role: "Do not treat a quiet run game as the win. Texas is 147 rush yards a game at 3.6 a carry. South Carolina was held to 114 and still won 38-19.",
+        role: "Do not treat a quiet run game as the win. Oklahoma just did. Texas rushed for 122 yards and no score and lost 27-24.",
       },
       {
         name: "Jadan Baugh",
-        role: "Do not confuse yards with points. Florida had 387 yards and 19 points. Texas allows 13.3 points and 271 yards.",
+        role: "Do not confuse yards with points. Texas had 382 yards and 24 points. Fourteen of Oklahoma's 27 were a blocked punt and a pick-six.",
       },
     ],
-    film: "Texas is 4-0. Manning's PFF passing grade is 87.6. Simmons' pass-rush grade is 90.5 with 8 sacks. They allow 13.3 points and 271 yards. Florida just lost 19-38. filmWatched: false.",
+    film: "Texas is 4-1 after Oklahoma 27-24. Manning's published PFF passing grade is still 87.6. He was 19-of-31 for 260 with 2 fourth-quarter picks. Simmons' published pass-rush grade is 90.5, and the box was 2 sacks. filmWatched: false.",
     filmWatched: false,
     pred: "UF 20 · Texas 34",
     predUF: 20,
@@ -627,8 +627,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { label: "Pass Efficiency", uf: 64, opp: 84 },
       { label: "Front 7", uf: 52, opp: 78 },
       { label: "Secondary", uf: 48, opp: 76 },
-      { label: "Special Teams", uf: 54, opp: 58 },
-      { label: "Coaching Edge", uf: 48, opp: 66 },
+      { label: "Special Teams", uf: 54, opp: 66 },
+      { label: "Coaching Edge", uf: 48, opp: 58 },
     ],
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27909",

@@ -8,12 +8,20 @@ TV is **ABC or ESPN**. The Oct 5 Florida release left the final designation unti
 Texas is away. Home NOW middle pillar is **Road**. Do not invent Austin visitors.
 
 filmWatched: false.
-Official Texas sheet through four: Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17. 4-0, 1-0 SEC, No. 1. Steve Sarkisian.
-No fifth game on that cumulative sheet. No broadcast sit. No coverage shells.
+Oklahoma just beat Texas **27–24** at the Cotton Bowl (ESPN / AP, Oct. 10). Texas is **4-1, 1-1 SEC**. Sandell's 47-yard field goal on the last play. Texas led 17–7 at half.
+The four-game sheet is still Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17. Do not recompute those season averages off one box.
+No broadcast sit. No coverage shells. No invented Red River PFF grade.
+
+## Oklahoma (the fifth game)
+
+ESPN box: Manning **19-of-31, 260, 3 TD, 2 INT**, QBR 73.0. Rushing 32-122, no score. Smothers 12-39. Coleman 5-110-1. Wingo 2-57-1. Bishop 1-15-1.
+Oklahoma offense: 238 yards. Mateer 18-of-26, 155, no score. Seven three-and-outs. Avant 10-72-1.
+Fourteen of the 27 points were Danny Okoye's blocked punt (Dakoda Fields recovered in the end zone) and Peyton Bowen's 42-yard pick-six. Courtland Guillory intercepted the last throw with 19 seconds left. The AP recap says the Bowen pick came while Manning was scrambling away from pressure.
+Simmons on the ESPN card: **2 sacks, 3 TFL**. That is the box, not a new PFF total.
 
 ## The picture
 
-Arch Manning throws it clean. PFF passing grade **87.6** (overall 85.8, rush 58.7) on **78 snaps** on that published line — that snap count is not a four-game total. Four-game board: 73-of-115, 862 yards, 7 TD, 3 INT, 141.3 rating, 7.5 Y/A, rush 32-82. Week 1 passing grade 90.7.
+Arch Manning's published PFF passing grade is still **87.6** (overall 85.8, rush 58.7) on **78 snaps**. That sheet was not restated after Saturday. Week 1 was 90.7 on 13.3 percent pressure, and he was 3-for-3 under pressure that day. The draft note is that his eyes drop and he leaves the pocket early when the rush arrives. Oklahoma is that receipt. Do not invent a Saturday grade.
 
 Colin Simmons: **90.5** PFF pass-rush, fifth among Power Four edges, 18 pressures and 8 sacks through four games. Against Tennessee: 10 pressures, 6 sacks, 36 pass-rush snaps, 91.3 grade, pressure on 27.8%.
 
@@ -28,24 +36,24 @@ Florida's receipt: 387 yards and 19 points (120 rush, 267 pass), 6-of-13 on thir
 ## 3 Keys (board, not a sit)
 
 1. **Rush the Clean Pocket** — Woods
-   Do not let Arch Manning throw it clean. PFF passing 87.6. Simmons is 90.5 with 8 sacks. South Carolina threw for 279 and four scores after the keep got crowded (114 rush yards, not 256).
+   Published PFF passing grade stays 87.6. Oklahoma was the pressure game: 19-of-31, 260, 3 scores, 2 fourth-quarter interceptions, one of them Bowen's pick-six off a scramble. Simmons' published grade stays 90.5. The box added 2 sacks and 3 tackles for loss. Do not invent a new PFF number.
 
 2. **Fit the Run When the Throw Dies** — Graham
-   Texas is 147 rush yards a game at 3.6 a carry. Smothers 4.8. Brown 4.1 and 4 scores. South Carolina was held to 114 and still won 38-19.
+   Oklahoma won with 83 rush yards. Texas had 122 and no score. Smothers 12-39. The four-game sheet was 3.6 a carry. A quiet run is not the win.
 
 3. **Finish the Drive** — Baugh
-   Florida had 387 yards and 19 points. Texas allows 13.3 points and 271 yards, opponent rating 109.7, 2 passing touchdowns. Do not donate the short field — South Carolina took it three times.
+   Texas had 382 yards and 24 points and lost. Fourteen of Oklahoma's 27 were a blocked punt and a pick-six. Spetic missed from 53. Florida's 387 yards and 19 points are the same problem.
 
 ## Matchup Edge (sat stamp — not the win% formula)
 
 | Axis | UF | Texas | Receipt |
 |---|---|---|---|
 | Run Game | 60 | 66 | UF just rushed for 120. Texas 147 YPG at 3.6, Smothers 4.8, Brown 4.1 and 4 TD. Not a breakaway show. |
-| Pass Efficiency | 64 | 84 | Manning 87.6 PFF passing, 141.3 rating, 7.5 Y/A. Sellers just threw 279 and 4 scores. |
-| Front 7 | 52 | 78 | Simmons 90.5, 18 pressures, 8 sacks. UF front just watched 279 through the air. |
-| Secondary | 48 | 76 | Texas allows a 109.7 opponent rating and 2 pass TD in four games. |
-| Special Teams | 54 | 58 | Counting sheet only. No return TD. Do not invent one. |
-| Coaching Edge | 48 | 66 | No. 1, 4-0, two one-score wins (Ohio State, Tennessee). Sarkisian. |
+| Pass Efficiency | 64 | 84 | Published PFF passing grade stays 87.6. Saturday was 260 and 3 scores, plus 2 fourth-quarter picks. No new grade, so the axis stays. |
+| Front 7 | 52 | 78 | Simmons 90.5 through four. Oklahoma box: 2 sacks, 3 TFL. Not blended into one number. |
+| Secondary | 48 | 76 | Four-game opponent rating 109.7. Mateer had 155 and no score. The picks were the damage. |
+| Special Teams | 54 | 66 | Okoye blocked the punt. Fields recovered it in the end zone. Spetic missed from 53. Sandell made the 47. |
+| Coaching Edge | 48 | 58 | Led 17-7 at half and lost. Was 4-0. Now 4-1. |
 
 ## Form restamp (2026-W7)
 
