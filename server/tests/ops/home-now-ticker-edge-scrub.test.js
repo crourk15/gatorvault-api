@@ -31,6 +31,8 @@ test('ticker edge rewrites leftover Missouri and South Carolina week to Texas', 
   assert.match(src, /LEFTOVER_MISSOURI_NOW_RE/);
   assert.match(src, /4-0 heading into saturday/);
   assert.match(src, /south carolina/);
+  assert.match(src, /visitors\\s\*\[—–-\]\\s\*easton royal/);
+  assert.doesNotMatch(src, /\|easton royal\/i/);
   assert.match(src, /Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN/);
 });
 
