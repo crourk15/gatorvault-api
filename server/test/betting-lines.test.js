@@ -129,4 +129,20 @@ describe('betting-lines next game', () => {
     assert.equal(payload.lastGame.homeScore, 17);
     assert.equal(payload.lastGame.awayScore, 45);
   });
+
+  it('serves Texas as nextGame with UF +8.5 / 53.5 after the South Carolina hold', async () => {
+    const when = new Date('2026-10-11T16:00:00.000Z');
+    const next = pickNextGame(STATIC_LINES, when);
+    assert.equal(next.id, 'uf-texas-2026-w7');
+    const payload = await getBettingLines(when);
+    assert.equal(payload.nextGame.id, 'uf-texas-2026-w7');
+    assert.equal(payload.nextGame.spread.line, 'UF +8.5');
+    assert.equal(payload.nextGame.spread.uf, 8.5);
+    assert.equal(payload.nextGame.total, 53.5);
+    assert.equal(payload.nextGame.moneyline.uf, 275);
+    assert.equal(payload.nextGame.moneyline.opp, -345);
+    assert.equal(payload.lastGame.id, 'uf-scar-2026-w6');
+    assert.equal(payload.lastGame.homeScore, 19);
+    assert.equal(payload.lastGame.awayScore, 38);
+  });
 });

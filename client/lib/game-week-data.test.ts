@@ -215,6 +215,25 @@ describe('Game Week Film Notes', () => {
     );
   });
 
+  it('Texas Matchup Edge is the sat stamp, not the 22% formula', () => {
+    const texas = SCHEDULE_GAMES.find((g) => g.id === 'texas');
+    assert.ok(texas);
+    const radar = buildRadar(texas);
+    assert.deepEqual(radar, texas.radar);
+    assert.equal(radar.find((a) => a.label === 'Run Game')?.opp, 66);
+    assert.equal(radar.find((a) => a.label === 'Pass Efficiency')?.opp, 84);
+    assert.equal(radar.find((a) => a.label === 'Front 7')?.uf, 52);
+    assert.equal(texas.tv, 'ABC or ESPN');
+    assert.equal(texas.date, 'October 17, 2026 · 12:00 PM ET');
+    assert.equal(texas.pred, 'UF 20 · Texas 34');
+    assert.equal(texas.ufPct, 22);
+    assert.equal(texas.filmWatched, false);
+    assert.notDeepEqual(
+      radar.find((a) => a.label === 'Pass Efficiency'),
+      { label: 'Pass Efficiency', uf: 78, opp: 32 },
+    );
+  });
+
   it('Missouri Matchup Edge is the sat stamp, not the 52% formula', () => {
     const missouri = SCHEDULE_GAMES.find((g) => g.id === 'missouri');
     assert.ok(missouri);
@@ -236,6 +255,7 @@ describe('Game Week Film Notes', () => {
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-20T00:30:00-04:00')), 'olemiss');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-27T12:00:00-04:00')), 'missouri');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-10-04T00:40:00.000Z')), 'scar');
+    assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-10-11T12:00:00-04:00')), 'texas');
     assert.equal(resolveGameWeekId(SCHEDULE_GAMES, new Date('2026-09-06T12:00:00-04:00'), 'auburn'), 'auburn');
     assert.equal(resolveGameWeekId(SCHEDULE_GAMES, new Date('2026-09-20T00:30:00-04:00'), 'olemiss'), 'olemiss');
     assert.equal(getFeaturedUfGame(new Date('2026-09-04T18:00:00-04:00'))?.id, 'fau');

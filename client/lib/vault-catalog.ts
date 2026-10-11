@@ -62,10 +62,10 @@ export const TICKET_GAMES: TicketGame[] = [
   },
   {
     game: '🐊 UF @ Texas',
-    date: 'October 17, 2026 · 12:00–1:00 PM ET',
+    date: 'October 17, 2026 · 12:00 PM ET',
     venue: 'DKR-Texas Memorial Stadium, Austin TX',
     type: 'AWAY',
-    note: 'TV TBD · early window',
+    note: 'Noon ET · ABC or ESPN',
   },
   {
     game: '🐊 OFF — Bye week',

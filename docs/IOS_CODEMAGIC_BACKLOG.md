@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Texas: `/api/schedule` current game is Texas after the South Carolina final (Florida 19, South Carolina 38). Keys Rush the Clean Pocket / Fit the Run When the Throw Dies / Finish the Drive. Matchup Edge sat stamp (Pass opp 84). Noon ET, ABC or ESPN. Home NOW is Game / Road / Season 4-2. Ticker edge bust `gv-now-bust=texas-w7-ios`. API after Render, edge after Netlify — no Codemagic. Reopen the app once. Seed and last-good rewrite are the bake row.
 - [x] Community Game talk: South Carolina is its own room (`thr_game_scar`), not today’s pinned staff thread. Approved 1.0.31 hides the staff card from the Game talk list, so the weekly room has to be a different id. `/api/community/page` and `/api/community/game-rooms` after Render — no Codemagic. Reopen Community once.
 - [x] iOS URLCache still showed the Royal-only expected visitors after the list went live. New one-shot `gv-now-bust=scar-visitors-ios` on schedule, ping, ticker, and launch POST `/api/push/device` so 1.0.29 drops the saved board. Live `/api/schedule` already has the 15 South Carolina names. Netlify edge after deploy — no Codemagic. Reopen the app once.
 - [x] Game Week South Carolina expected visitors: panel is no longer Royal-only. Adds Che, Rein, Landy, Beck, Evans, and the Oct. 10 Florida commits. Home NOW still leads `Visitors — Easton Royal` and ticks the full name list. API `/api/schedule` + ticker edge after deploy — no Codemagic.
@@ -208,6 +209,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-10 | Schedule first-paint seed + Home NOW last-good: South Carolina 19-38 and Texas noon / ABC or ESPN / Road / 4-2. **`/api/schedule` + ticker edge already Texas after Render/Netlify.** | `schedule-data.ts` and `home-command-utils.ts` in the binary. Approved 1.0.31 can still first-paint South Carolina until the live pack lands. A clean Texas noon line does not match the old `12:00–1:00` / `abc or sec network` rewrite, so the fetched pack sticks. | this PR |
 | 2026-10-10 | Community Game talk subtitle (“One room each week…”). **Web after Netlify.** The South Carolina row itself is API (`thr_game_scar`) and shows in 1.0.31 Game talk after Render — see Already live. | `VaultCommunityPage` copy in the binary. Approved 1.0.31 still says “Past Saturdays stay here…”. | this PR |
 | 2026-10-10 | Laptop vault: Game Week / FutureCast / NIL bands stay in the content column. Titles were cut ("IN CHANCE", "t Intel", "to the Game") because `100vw` slid under the sidebar. **Web after Netlify.** | `futurecast-lab-command-center.css`, `nil-elite.css`, `vault-shell.css` in the binary. Approved 1.0.31 still clips those bands beside the nav. | this PR |
 | 2026-10-08 | App Store **1.0.32** / build **101**. **1.0.31 is approved — do not re-upload.** | `MARKETING_VERSION` 1.0.32. Charles asked for this train after the 1.0.31 Codemagic reject. | this PR |

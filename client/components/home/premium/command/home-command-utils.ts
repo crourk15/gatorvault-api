@@ -426,12 +426,13 @@ const RETIRED_NOW_TICK_RE = /1\.0\.29|update in the App Store/i;
 /** Last-week pledge / false commits cannot own this week's NOW News. */
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri|faurot[\s\S]{0,40}espn/i;
-/** Posted Missouri final — last-good Faurot / 4-0 must not beat South Carolina week. */
-const LEFTOVER_MISSOURI_NOW_RE = /missouri|faurot|4-0 heading into saturday|samuel\s+bailey/i;
-const SOUTH_CAROLINA_NOW_GAME = 'South Carolina in the Swamp — 12:45 PM · SEC Network';
+/** Posted South Carolina final — last-good Swamp / 4-1 must not beat Texas week. */
+const LEFTOVER_MISSOURI_NOW_RE =
+  /missouri|faurot|4-0 heading into saturday|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45/i;
+const TEXAS_NOW_GAME = 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN';
 const LEFTOVER_SC_WINDOW_RE = /abc or sec network|12:00\s*[–-]\s*1:00/i;
-const SOUTH_CAROLINA_NOW_SEASON = '4-1 · SEC home Saturday';
-const SOUTH_CAROLINA_NOW_VISITOR = 'Easton Royal';
+const TEXAS_NOW_SEASON = '4-2 heading into Saturday';
+const TEXAS_NOW_ROAD = 'on the road this Saturday';
 
 function pinMissouriAbcTick(text: string): string {
   const t = String(text || '');
@@ -451,9 +452,9 @@ function pinLeftoverMissouriNowWeek(rows: HomeNowWeekPillar[]): HomeNowWeekPilla
     return rows;
   }
   return [
-    { key: 'game', label: 'Game', items: [SOUTH_CAROLINA_NOW_GAME] },
-    { key: 'visitors', label: 'Visitors', items: [SOUTH_CAROLINA_NOW_VISITOR] },
-    { key: 'season', label: 'Season', items: [SOUTH_CAROLINA_NOW_SEASON] },
+    { key: 'game', label: 'Game', items: [TEXAS_NOW_GAME] },
+    { key: 'road', label: 'Road', items: [TEXAS_NOW_ROAD] },
+    { key: 'season', label: 'Season', items: [TEXAS_NOW_SEASON] },
   ];
 }
 
@@ -464,9 +465,9 @@ function pinLeftoverMissouriTickerLines(lines: string[]): string[] {
     return next;
   }
   return [
-    `Game — ${SOUTH_CAROLINA_NOW_GAME}`,
-    `Visitors — ${SOUTH_CAROLINA_NOW_VISITOR}`,
-    `Season — ${SOUTH_CAROLINA_NOW_SEASON}`,
+    `Game — ${TEXAS_NOW_GAME}`,
+    `Road — ${TEXAS_NOW_ROAD}`,
+    `Season — ${TEXAS_NOW_SEASON}`,
   ];
 }
 
@@ -480,7 +481,7 @@ export function isRetiredHomeNowTick(text: string): boolean {
 
 function pinBaileyNowNewsItems(items: string[]): string[] {
   const next = items.map((s) => String(s || '').trim()).filter(Boolean);
-  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [SOUTH_CAROLINA_NOW_VISITOR];
+  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [TEXAS_NOW_ROAD];
   return next.filter((s) => !isRetiredHomeNowTick(s));
 }
 
@@ -488,7 +489,7 @@ function pinBaileyNowNewsLines(lines: string[]): string[] {
   return lines.map((line) => {
     const text = String(line || '');
     if (/^News — /i.test(text) && STALE_NOW_NEWS_RE.test(text)) {
-      return `Visitors — ${SOUTH_CAROLINA_NOW_VISITOR}`;
+      return `Road — ${TEXAS_NOW_ROAD}`;
     }
     return text;
   });
@@ -504,7 +505,7 @@ export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNow
       const rawItems = (row?.items || []).map((s) => String(s || '').trim()).filter(Boolean);
       const isNews = key === 'news' || label === 'News';
       if (isNews && rawItems.some((s) => STALE_NOW_NEWS_RE.test(s))) {
-        return { key: 'visitors', label: 'Visitors', items: [SOUTH_CAROLINA_NOW_VISITOR] };
+        return { key: 'road', label: 'Road', items: [TEXAS_NOW_ROAD] };
       }
       return {
         key,

@@ -47,8 +47,18 @@ describe('schedule-premium finals', () => {
     assert.equal(hasPostedFinal(game), true);
   });
 
-  it('leaves upcoming games without a posted final', () => {
+  it('maps the official South Carolina final onto the schedule card', () => {
     const raw = SCHEDULE_GAMES.find((g) => g.id === 'scar');
+    assert.ok(raw);
+    const game = toPremiumScheduleGame(raw);
+    assert.equal(game.finalUF, 19);
+    assert.equal(game.finalOpp, 38);
+    assert.equal(game.finalSource, 'official');
+    assert.equal(hasPostedFinal(game), true);
+  });
+
+  it('leaves Texas without a posted final', () => {
+    const raw = SCHEDULE_GAMES.find((g) => g.id === 'texas');
     assert.ok(raw);
     const game = toPremiumScheduleGame(raw);
     assert.equal(game.finalUF, undefined);
@@ -88,6 +98,16 @@ describe('schedule-premium finals', () => {
     assert.equal(getNextScheduleGame(games, afterWhistle)?.id, 'olemiss');
     assert.equal(
       getScheduleGameStatus(games.find((g) => g.id === 'auburn')!, 'olemiss', afterWhistle),
+      'past',
+    );
+  });
+
+  it('opens Texas Game Week once South Carolina has a posted final after kick', () => {
+    const games = SCHEDULE_GAMES.map(toPremiumScheduleGame);
+    const afterWhistle = new Date('2026-10-11T12:00:00-04:00');
+    assert.equal(getNextScheduleGame(games, afterWhistle)?.id, 'texas');
+    assert.equal(
+      getScheduleGameStatus(games.find((g) => g.id === 'scar')!, 'texas', afterWhistle),
       'past',
     );
   });

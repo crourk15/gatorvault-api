@@ -155,6 +155,7 @@ describe('buildHomePulseStories', () => {
   });
 
   it('does not paint Beat Desk / allowlist-intel ops into Home NOW', () => {
+    const offerDay = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
     const stories = buildHomePulseStories({
       now: OFFSEASON,
       hubTicker: [
@@ -169,16 +170,15 @@ describe('buildHomePulseStories', () => {
             id: '1',
             type: 'OFFER',
             player: 'Gionni Lewis',
-            detail: 'Gionni Lewis — Florida offer on file (2026-09-10) from player card.',
-            timestamp: '2026-09-12T18:03:06.055Z',
+            detail: `Gionni Lewis — Florida offer on file (${offerDay}) from player card.`,
+            timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
           },
           {
             id: '2',
             type: 'OFFER',
             player: 'Kaleb Ballard',
-            detail:
-              'Kaleb Ballard — Florida offer on file (2026-09-08). Continuous allowlist intel sweep.',
-            timestamp: '2026-09-12T12:28:57.660Z',
+            detail: `Kaleb Ballard — Florida offer on file (${offerDay}). Continuous allowlist intel sweep.`,
+            timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
           },
         ],
       } as any,
@@ -421,39 +421,41 @@ describe('resolveHomeNowWeekPillars', () => {
 });
 
 describe('usableHomeNowWeek drops the retired App Store tick', () => {
-  it('rewrites leftover Missouri last-good to South Carolina week', () => {
+  it('rewrites leftover Missouri last-good to Texas week', () => {
     const rows = usableHomeNowWeek([
       { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
-    assert.equal(rows[0].items[0], 'South Carolina in the Swamp — 12:45 PM · SEC Network');
-    assert.equal(rows[2].items[0], '4-1 · SEC home Saturday');
+    assert.equal(rows[0].items[0], 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN');
+    assert.equal(rows[1].label, 'Road');
+    assert.equal(rows[1].items[0], 'on the road this Saturday');
+    assert.equal(rows[2].items[0], '4-2 heading into Saturday');
     assert.ok(!rows.some((row) => row.items.some((s) => /missouri|faurot|4-0 heading/i.test(s))));
   });
 
-  it('rewrites leftover ABC-or-SECN and Bailey News to 12:45 Visitors', () => {
+  it('rewrites leftover ABC-or-SECN and Bailey News to the Texas road pack', () => {
     const rows = usableHomeNowWeek([
       { key: 'game', label: 'Game', items: ['South Carolina in the Swamp · ABC or SEC Network'] },
       { key: 'news', label: 'News', items: ['Samuel Bailey commits to Florida · No. 36'] },
       { key: 'season', label: 'Season', items: ['4-1 · SEC home Saturday'] },
     ]);
-    assert.equal(rows[0].items[0], 'South Carolina in the Swamp — 12:45 PM · SEC Network');
-    assert.equal(rows[1].label, 'Visitors');
-    assert.equal(rows[1].items[0], 'Easton Royal');
-    assert.equal(rows[2].items[0], '4-1 · SEC home Saturday');
-    assert.ok(!rows.some((row) => row.items.some((s) => /bailey|abc or sec network/i.test(s))));
+    assert.equal(rows[0].items[0], 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN');
+    assert.equal(rows[1].label, 'Road');
+    assert.equal(rows[1].items[0], 'on the road this Saturday');
+    assert.equal(rows[2].items[0], '4-2 heading into Saturday');
+    assert.ok(!rows.some((row) => row.items.some((s) => /bailey|abc or sec network|south carolina|4-1/i.test(s))));
   });
 
-  it('pins leftover Cyion News to Visitors Easton Royal', () => {
+  it('pins leftover Cyion News to the Texas road line', () => {
     const rows = usableHomeNowWeek([
       { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ABC'] },
       { key: 'news', label: 'News', items: ['Cyion Smith commits to Florida'] },
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
     assert.equal(rows.length, 3);
-    assert.equal(rows[0].items[0], 'South Carolina in the Swamp — 12:45 PM · SEC Network');
-    assert.equal(rows[1].label, 'Visitors');
-    assert.equal(rows[1].items[0], 'Easton Royal');
+    assert.equal(rows[0].items[0], 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN');
+    assert.equal(rows[1].label, 'Road');
+    assert.equal(rows[1].items[0], 'on the road this Saturday');
     assert.ok(!rows.some((row) => row.items.some((s) => /cyion|bailey/i.test(s))));
   });
 
@@ -463,8 +465,8 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
       { key: 'news', label: 'News', items: ['Lorenzo McMullen Jr. commits to Florida · No. 25'] },
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
-    assert.equal(rows[1].label, 'Visitors');
-    assert.equal(rows[1].items[0], 'Easton Royal');
+    assert.equal(rows[1].label, 'Road');
+    assert.equal(rows[1].items[0], 'on the road this Saturday');
     assert.ok(!rows.some((row) => row.items.some((s) => /mcmullen|bailey/i.test(s))));
   });
 
@@ -521,10 +523,10 @@ describe('applyHomeNowWeekPack', () => {
       []
     );
     const remount = applyHomeNowWeekPack([], []);
-    assert.equal(remount[0].items[0], 'South Carolina in the Swamp — 12:45 PM · SEC Network');
-    assert.equal(remount[1].label, 'Visitors');
-    assert.equal(remount[1].items[0], 'Easton Royal');
-    assert.equal(remount[2].items[0], '4-1 · SEC home Saturday');
+    assert.equal(remount[0].items[0], 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN');
+    assert.equal(remount[1].label, 'Road');
+    assert.equal(remount[1].items[0], 'on the road this Saturday');
+    assert.equal(remount[2].items[0], '4-2 heading into Saturday');
     assert.ok(!remount.some((row) => row.items.some((s) => /bailey/i.test(s))));
   });
 });
@@ -543,7 +545,7 @@ describe('applyHomeNowTickerPack', () => {
     assert.deepEqual(applyHomeNowTickerPack([], current), current);
   });
 
-  it('rewrites a false McMullen News ticker line to Visitors Easton Royal', () => {
+  it('rewrites a false McMullen News ticker line to the Texas road pack', () => {
     const next = applyHomeNowTickerPack(
       [
         'Game — Missouri at Faurot Field — 3:30 PM · ABC',
@@ -552,9 +554,9 @@ describe('applyHomeNowTickerPack', () => {
       ],
       []
     );
-    assert.ok(next.some((line) => /Visitors — Easton Royal/i.test(line)));
+    assert.ok(next.some((line) => /Road — on the road this Saturday/i.test(line)));
     assert.ok(!next.some((line) => /mcmullen|bailey/i.test(line)));
-    assert.ok(next.some((line) => /South Carolina in the Swamp — 12:45 PM · SEC Network/i.test(line)));
+    assert.ok(next.some((line) => /Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN/i.test(line)));
     assert.ok(!next.some((line) => /missouri|faurot|4-0 heading|abc or sec network/i.test(line)));
   });
 });

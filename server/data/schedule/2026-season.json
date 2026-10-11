@@ -1,9 +1,9 @@
 {
   "season": 2026,
-  "updatedAt": "2026-10-07T20:35:00.000Z",
+  "updatedAt": "2026-10-10T22:00:00.000Z",
   "label": "2026 Florida football schedule",
-  "source": "vault-schedule-board + South Carolina Matchup Edge sat stamp (not the 73% formula)",
-  "predThrough": "2026-W6",
+  "source": "vault-schedule-board + Texas Matchup Edge sat stamp (PFF Simmons 90.5 / Manning 87.6 passing; not the win% formula)",
+  "predThrough": "2026-W7",
   "games": [
     {
       "id": "fau",
@@ -718,36 +718,105 @@
       ],
       "specialTeams": [
         "No confirmed return or blocked-kick play on these five recaps. Do not invent hidden yardage for South Carolina."
-      ]
+      ],
+      "finalUF": 19,
+      "finalOpp": 38,
+      "finalSource": "official",
+      "boxScoreUrl": "https://floridagators.com/sports/football/stats/2026/south-carolina/boxscore/27908"
     },
     {
       "id": "texas",
       "kind": "game",
       "label": "Oct 17 @ Texas",
       "opp": "Texas Longhorns",
-      "date": "October 17, 2026 · 12:00–1:00 PM ET",
+      "date": "October 17, 2026 · 12:00 PM ET",
       "venue": "DKR-Texas Memorial Stadium, Austin TX",
       "ufPct": 25,
-      "tv": "TBD",
+      "tv": "ABC or ESPN",
       "keys": [
-        "Protect the football",
-        "Win early downs",
-        "Limit explosives"
+        "Rush the Clean Pocket",
+        "Fit the Run When the Throw Dies",
+        "Finish the Drive"
       ],
       "swing": [
         {
-          "name": "QB1",
-          "role": "Decision-making vs pressure"
+          "name": "Jayden Woods",
+          "role": "Do not let Arch Manning throw it clean. PFF has his 2026 passing grade at 87.6 (overall 85.8, 78 snaps on that sheet). The four-game board is 73-of-115 for 862 yards, 7 touchdowns, 3 interceptions, a 141.3 rating. Colin Simmons is the other problem: 90.5 PFF pass-rush, fifth among Power Four edges, 18 pressures and 8 sacks in four games, 6 of those sacks on Tennessee. South Carolina just threw for 279 and four scores after the keep got crowded (114 rush yards, not 256). Woods has to get there in Austin. Make the pocket uncomfortable."
         },
         {
-          "name": "OL",
-          "role": "Road pass protection"
+          "name": "Myles Graham",
+          "role": "Do not treat a quiet run game as the win. Texas is at 147 rush yards a game and only 3.6 a carry. Hollywood Smothers is 4.8. Raleek Brown is 4.1 with 4 scores. They do not need explosives if the fit is wrong. Graham stays square. South Carolina was held to 114 on the ground and still won 38-19."
+        },
+        {
+          "name": "Jadan Baugh",
+          "role": "Do not confuse yards with points. Florida just had 387 yards and 19 points: 120 rush, 267 pass, 6-of-13 on third down, 2-of-3 in the red zone. Texas allows 13.3 points a game and 271 yards, fourth in the SEC. Opponent passer rating is 109.7 with 2 passing touchdowns in four games. Baugh has to finish the drive. Do not donate the short field — South Carolina took it away three times."
         }
       ],
-      "film": "Texas balanced attack with elite skill.",
+      "film": "Texas is 4-0 and No. 1. Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17. Steve Sarkisian. Arch Manning's published PFF passing grade is 87.6. Colin Simmons' pass-rush grade is 90.5 with 8 sacks. They allow 13.3 points and 271 yards. Florida just lost 19-38 at home: the keep got crowded and Sellers still threw for 279 and four scores. Rush the clean pocket, fit the run when the throw dies, finish the drive. This is the official counting sheet plus two PFF grades, not a sit.",
       "pred": "UF 22 · Texas 34",
       "predUF": 22,
       "predOpp": 34,
+      "predConfidence": 74,
+      "predMovement": "down",
+      "ufPctDelta": -3,
+      "filmWatched": false,
+      "filmNotes": [
+        "Texas is 4-0, 1-0 SEC, No. 1. Official sheet: Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17. Steve Sarkisian.",
+        "Arch Manning, four games: 73-of-115, 862 yards, 7 touchdowns, 3 interceptions, 141.3 rating, 7.5 yards per attempt. Rushing 32 for 82.",
+        "PFF's published 2026 line on Manning is 85.8 overall and 87.6 passing, on 78 snaps. That is the grade sheet, not a four-game snap total. Week 1 passing grade was 90.7 (20-of-27, 305, 4 scores).",
+        "Colin Simmons: 90.5 PFF pass-rush grade, fifth among Power Four edges. 18 pressures and 8 sacks through four games. Against Tennessee: 10 pressures and 6 sacks on 36 pass-rush snaps, a 91.3 grade.",
+        "Texas rush offense is 147 yards a game at 3.6 a carry. Hollywood Smothers 41-198-2 (4.8). Raleek Brown 48-196-4 (4.1).",
+        "Defense: 13.3 points a game, 271 yards a game (fourth in the SEC on the Gainesville Sun card), 99 rush yards allowed at 2.8 a carry, 172 pass yards allowed, opponent passer rating 109.7, 2 passing touchdowns and 3 interceptions.",
+        "Florida just lost 19-38 at home. 387 yards (120 rush, 267 pass), 6-of-13 on third down, 2-of-3 in the red zone. South Carolina: 393 yards, 114 rush, 279 pass, 10-of-16 on third down, 4-of-4 in the red zone.",
+        "LaNorris Sellers was 23-of-35 for 279 and four passing scores, plus a rushing touchdown. The keep got crowded. The ball still went over the top. South Carolina took it away three times.",
+        "Noon ET at DKR. SEC window is ABC or ESPN. Final network was still open after the Oct 10 games on the Florida release. Do not stamp one channel.",
+        "filmWatched: false. No coverage shells. Will Muschamp is the coordinator on the Gainesville Sun card. Do not invent his calls."
+      ],
+      "opponentTendencies": [
+        "Four games, all wins: Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17. The two that mattered were one score.",
+        "Arch Manning is the quarterback. 73-of-115, 862 yards, 7 touchdowns, 3 interceptions, 141.3 rating. PFF passing grade 87.6.",
+        "The run is volume, not a breakaway show: 147 yards a game, 3.6 a carry. Smothers 4.8. Brown 4.1 and 4 scores.",
+        "Colin Simmons is the pass rush. 90.5 PFF grade, 18 pressures, 8 sacks, 6 of them on Tennessee.",
+        "They score 33.3 and allow 13.3. That is the gap Florida has to live in on the road."
+      ],
+      "defenseTendencies": [
+        "271 yards a game allowed, fourth in the SEC on the beat card. 13.3 points. 2.8 yards per rush allowed. 99 rush yards a game.",
+        "Pass defense: 172 yards a game, opponent rating 109.7, 2 passing touchdowns, 3 interceptions, 59.5 percent completions.",
+        "Will Muschamp is the coordinator on the Gainesville Sun card. Coverage shells are not on a sit. Do not invent them.",
+        "Simmons' 90.5 pass-rush grade is the pressure. Do not write a simulated blitz menu.",
+        "Special teams counting sheet: Texas kick returns 7 for 91, punt returns 8 for 96. No return touchdown on that sheet. Do not invent one."
+      ],
+      "offenseScout": [
+        "Official 4-game: 4-0, 1-0 SEC. Texas State W 59-7, Ohio State W 24-23, UTSA W 30-6, Tennessee W 20-17. Steve Sarkisian.",
+        "Arch Manning: 73/115, 63.5%, 862 yards, 7 TD, 3 INT, 141.3 rating, 7.5 Y/A, 32-82 rushing. PFF 2026: 85.8 overall, 87.6 passing, 58.7 rush, 78 snaps on that published line.",
+        "Rush: 589 yards, 3.6 YPC, 147.2 YPG, 8 TD. Smothers 41-198-2. Brown 48-196-4. Ryan Wingo leads the receivers on the Texas game-center card (239 yards).",
+        "South Carolina final is the Florida receipt: Sellers 23/35, 279, 4 pass TD plus a rush TD after the Gators held the run to 114. Crowd-the-keep did not stop the throw.",
+        "filmWatched: false. watchStandard: official Texas cumulative sheet + PFF Manning/Simmons grades + SEC scoreboard of Florida 19, South Carolina 38. No broadcast sit."
+      ],
+      "defenseScout": [
+        "Points allowed 13.25. Yards allowed 271.0 (Sports-Reference / official). Rush allowed 99.2 YPG, 2.8 YPC. Pass allowed 171.75 YPG, 5.9 YPA, rating 109.7, 2 TD, 3 INT.",
+        "Colin Simmons: 18 pressures, 8 sacks, 90.5 PFF pass-rush (5th among Power Four edges). Tennessee: 10 pressures, 6 sacks, 36 pass-rush snaps, 91.3 grade, pressure on 27.8% of those snaps.",
+        "Gainesville Sun: Will Muschamp coordinates, fourth in the SEC in total defense at 271.0. Shells not sat.",
+        "Florida just put up 387 yards and 19 points, 6-of-13 on third down, 2-of-3 in the red zone. Yards are not points against this defense.",
+        "filmWatched: false."
+      ],
+      "howUFWins": [
+        "Do not let Arch Manning throw it clean. PFF has his 2026 passing grade at 87.6 (overall 85.8, 78 snaps on that sheet). The four-game board is 73-of-115 for 862 yards, 7 touchdowns, 3 interceptions, a 141.3 rating. Colin Simmons is the other problem: 90.5 PFF pass-rush, fifth among Power Four edges, 18 pressures and 8 sacks in four games, 6 of those sacks on Tennessee. South Carolina just threw for 279 and four scores after the keep got crowded (114 rush yards, not 256). Woods has to get there in Austin. Make the pocket uncomfortable.",
+        "Do not treat a quiet run game as the win. Texas is at 147 rush yards a game and only 3.6 a carry. Hollywood Smothers is 4.8. Raleek Brown is 4.1 with 4 scores. They do not need explosives if the fit is wrong. Graham stays square. South Carolina was held to 114 on the ground and still won 38-19.",
+        "Do not confuse yards with points. Florida just had 387 yards and 19 points: 120 rush, 267 pass, 6-of-13 on third down, 2-of-3 in the red zone. Texas allows 13.3 points a game and 271 yards, fourth in the SEC. Opponent passer rating is 109.7 with 2 passing touchdowns in four games. Baugh has to finish the drive. Do not donate the short field — South Carolina took it away three times."
+      ],
+      "scoutingReport": "TEXAS through four (Texas State 59-7, Ohio State 24-23, UTSA 30-6, Tennessee 20-17). 4-0, No. 1. Manning 73/115, 862, 7 TD, 3 INT, 141.3. PFF passing 87.6. Simmons 90.5 pass-rush, 18 pressures, 8 sacks. Defense 13.3 PPG, 271 yards, 109.7 opponent passer rating. Florida just lost 19-38: 387 yards, 19 points, Sellers 279 and four scores after a crowded keep. UF wins: Rush the Clean Pocket / Fit the Run When the Throw Dies / Finish the Drive. filmWatched: false. Noon ET, ABC or ESPN.",
+      "radar": [
+        { "label": "Run Game", "uf": 60, "opp": 66 },
+        { "label": "Pass Efficiency", "uf": 64, "opp": 84 },
+        { "label": "Front 7", "uf": 52, "opp": 78 },
+        { "label": "Secondary", "uf": 48, "opp": 76 },
+        { "label": "Special Teams", "uf": 54, "opp": 58 },
+        { "label": "Coaching Edge", "uf": 48, "opp": 66 }
+      ],
+      "specialTeams": [
+        "Official sheet: Texas kick returns 7 for 91 (13.0), punt returns 8 for 96 (12.0). Opponents 7 for 137 and 5 for 74. No return touchdown on that sheet. Do not invent one."
+      ],
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27909",
         "tickpick": "https://www.tickpick.com/buy-texas-longhorns-vs-florida-gators-tickets-darrell-k-royal-texas-memorial-stadium-10-17-26-3am/7620985/"
@@ -758,10 +827,7 @@
         "pants": "Blue",
         "label": "Orange / White / Blue",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
-      },
-      "predConfidence": 80,
-      "predMovement": "down",
-      "ufPctDelta": -6
+      }
     },
     {
       "id": "bye-oct24",

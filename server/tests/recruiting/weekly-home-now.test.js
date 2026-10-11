@@ -292,6 +292,20 @@ test('after the Missouri final NOW points at South Carolina homecoming', () => {
   assert.ok(cats[1].items.includes('Calvin Landy'));
 });
 
+test('after the South Carolina final NOW points at Texas on the road', () => {
+  const now = new Date('2026-10-11T16:00:00.000Z');
+  const lines = buildWeeklyHomeNowLines(now, undefined, { breakInRows: [] });
+  assert.match(lines[0], /^Game — Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN$/);
+  const rec = seasonRecord(now, getScheduleBoard(2026).games);
+  assert.deepEqual(rec, { wins: 4, losses: 2 });
+  assert.ok(lines.some((s) => /^Season — 4-2 heading into Saturday$/.test(s)));
+  assert.ok(lines.some((s) => /^Road — on the road this Saturday$/.test(s)));
+  const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [] });
+  assert.equal(cats[1].label, 'Road');
+  assert.match(cats[1].items[0], /on the road this Saturday/i);
+  assert.ok(!cats.some((c) => c.label === 'Visitors'));
+});
+
 test('Samuel Bailey is last week after Missouri — Visitors Easton Royal', () => {
   const now = new Date('2026-10-04T03:58:00.000Z');
   const cats = buildWeeklyHomeNowCategories(now);
@@ -320,5 +334,8 @@ test('cached ticker News cannot keep last-week Samuel Bailey', () => {
   });
   assert.ok(!/bailey/i.test(JSON.stringify(body.items || [])));
   assert.ok(!/bailey/i.test(JSON.stringify(body.nowWeek || [])));
-  assert.ok(/Easton Royal/i.test(JSON.stringify(body.nowWeek || [])));
+  const packed = JSON.stringify(body.nowWeek || []);
+  assert.match(packed, /Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN/);
+  assert.match(packed, /on the road this Saturday/);
+  assert.match(packed, /4-2 heading into Saturday/);
 });

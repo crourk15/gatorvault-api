@@ -103,7 +103,7 @@ export type ScheduleGame = {
 };
 
 /** Bundled remaining-season pred week. Peek drops a leftover last-good stamp older than this. */
-export const SCHEDULE_SEED_PRED_THROUGH = '2026-W6';
+export const SCHEDULE_SEED_PRED_THROUGH = '2026-W7';
 
 export const SCHEDULE_GAMES: ScheduleGame[] = [
   {
@@ -555,6 +555,10 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     predConfidence: 79,
     predMovement: "down",
     ufPctDelta: -9,
+    finalUF: 19,
+    finalOpp: 38,
+    finalSource: "official",
+    boxScoreUrl: "https://floridagators.com/sports/football/stats/2026/south-carolina/boxscore/27908",
     radar: [
       { label: "Run Game", uf: 68, opp: 74 },
       { label: "Pass Efficiency", uf: 72, opp: 64 },
@@ -582,19 +586,50 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     id: "texas",
     label: "Oct 17 @ Texas",
     opp: "Texas Longhorns",
-    date: "October 17, 2026 · 12:00–1:00 PM ET",
+    date: "October 17, 2026 · 12:00 PM ET",
     venue: "DKR-Texas Memorial Stadium, Austin TX",
-    ufPct: 25,
-    tv: "TBD",
-    keys: ["Protect the football", "Win early downs", "Limit explosives"],
-    swing: [
-      { name: "QB1", role: "Decision-making vs pressure" },
-      { name: "OL", role: "Road pass protection" },
+    ufPct: 22,
+    tv: "ABC or ESPN",
+    keys: [
+      "Rush the Clean Pocket",
+      "Fit the Run When the Throw Dies",
+      "Finish the Drive",
     ],
-    film: "Texas balanced attack with elite skill.",
-    pred: "UF 22 · Texas 34",
-    predUF: 22,
+    howUFWins: [
+      "Do not let Arch Manning throw it clean. PFF passing grade 87.6. Colin Simmons is 90.5 pass-rush with 8 sacks. South Carolina threw for 279 and four scores after the keep got crowded.",
+      "Do not treat a quiet run game as the win. Texas is 147 rush yards a game at 3.6 a carry. South Carolina was held to 114 and still won 38-19.",
+      "Do not confuse yards with points. Florida had 387 yards and 19 points. Texas allows 13.3 points and 271 yards.",
+    ],
+    swing: [
+      {
+        name: "Jayden Woods",
+        role: "Do not let Arch Manning throw it clean. PFF passing grade 87.6. Colin Simmons is 90.5 pass-rush with 8 sacks. South Carolina threw for 279 and four scores after the keep got crowded.",
+      },
+      {
+        name: "Myles Graham",
+        role: "Do not treat a quiet run game as the win. Texas is 147 rush yards a game at 3.6 a carry. South Carolina was held to 114 and still won 38-19.",
+      },
+      {
+        name: "Jadan Baugh",
+        role: "Do not confuse yards with points. Florida had 387 yards and 19 points. Texas allows 13.3 points and 271 yards.",
+      },
+    ],
+    film: "Texas is 4-0. Manning's PFF passing grade is 87.6. Simmons' pass-rush grade is 90.5 with 8 sacks. They allow 13.3 points and 271 yards. Florida just lost 19-38. filmWatched: false.",
+    filmWatched: false,
+    pred: "UF 20 · Texas 34",
+    predUF: 20,
     predOpp: 34,
+    predConfidence: 82,
+    predMovement: "down",
+    ufPctDelta: -3,
+    radar: [
+      { label: "Run Game", uf: 60, opp: 66 },
+      { label: "Pass Efficiency", uf: 64, opp: 84 },
+      { label: "Front 7", uf: 52, opp: 78 },
+      { label: "Secondary", uf: 48, opp: 76 },
+      { label: "Special Teams", uf: 54, opp: 58 },
+      { label: "Coaching Edge", uf: 48, opp: 66 },
+    ],
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27909",
       tickpick: "https://www.tickpick.com/buy-texas-longhorns-vs-florida-gators-tickets-darrell-k-royal-texas-memorial-stadium-10-17-26-3am/7620985/",
@@ -631,7 +666,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Georgia Bulldogs",
     date: "October 31, 2026 · 3:30 PM ET",
     venue: "Mercedes-Benz Stadium, Atlanta GA",
-    ufPct: 31,
+    ufPct: 27,
     tv: "ABC",
     keys: ["Control time of possession", "Get pressure on their QB", "Establish run before going downfield"],
     swing: [
@@ -639,8 +674,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Jayden Woods", role: "Must generate pressure" },
     ],
     film: "Neutral-site Cocktail Party at Mercedes-Benz Stadium in Atlanta for 2026.",
-    pred: "UF 23 · Georgia 32",
-    predUF: 23,
+    pred: "UF 21 · Georgia 32",
+    predUF: 21,
     predOpp: 32,
     scoutingReport:
       "Georgia series moves to Atlanta in 2026 (Mercedes-Benz). UF path is controlling the ball and limiting explosives in a neutral-site environment.",
@@ -665,7 +700,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Oklahoma Sooners",
     date: "November 7, 2026 · 3:30–8:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 63,
+    ufPct: 56,
     tv: "TBD",
     keys: ["Win early downs", "Protect the football", "Limit explosives"],
     swing: [
@@ -673,8 +708,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Secondary", role: "Match skill in space" },
     ],
     film: "Oklahoma brings tempo and skill. Swamp night energy matters.",
-    pred: "UF 33 · Oklahoma 27",
-    predUF: 33,
+    pred: "UF 30 · Oklahoma 27",
+    predUF: 30,
     predOpp: 27,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27911",
@@ -697,7 +732,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Kentucky Wildcats",
     date: "November 14, 2026 · 6:00–8:00 PM ET",
     venue: "Kroger Field, Lexington KY",
-    ufPct: 63,
+    ufPct: 58,
     tv: "TBD",
     keys: ["Physical run fits", "Win the trenches", "Finish in red zone"],
     swing: [
@@ -705,8 +740,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "WR room", role: "Explosive plays" },
     ],
     film: "Kentucky power run and play-action on the road.",
-    pred: "UF 29 · Kentucky 23",
-    predUF: 29,
+    pred: "UF 27 · Kentucky 23",
+    predUF: 27,
     predOpp: 23,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27912",
@@ -728,7 +763,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Vanderbilt Commodores",
     date: "November 21, 2026 · 12:00–1:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 71,
+    ufPct: 65,
     tv: "TBD",
     keys: ["Execute early", "Avoid complacency", "Develop depth"],
     swing: [
@@ -736,8 +771,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "QB1", role: "Efficient scoring drives" },
     ],
     film: "Vanderbilt improving — treat as SEC test.",
-    pred: "UF 32 · Vanderbilt 22",
-    predUF: 32,
+    pred: "UF 29 · Vanderbilt 22",
+    predUF: 29,
     predOpp: 22,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27913",
@@ -759,7 +794,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Florida State Seminoles",
     date: "November 27, 2026 · 3:30 PM ET",
     venue: "Doak Campbell Stadium, Tallahassee FL",
-    ufPct: 63,
+    ufPct: 56,
     tv: "ABC",
     keys: ["Win field position battle", "Avoid penalties", "Win turnover margin"],
     swing: [
@@ -767,8 +802,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Myles Graham", role: "Contain their TE weapon" },
     ],
     film: "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
-    pred: "UF 30 · FSU 24",
-    predUF: 30,
+    pred: "UF 27 · FSU 24",
+    predUF: 27,
     predOpp: 24,
     filmLessonId: "frl00010-0000-4000-8000-00000000000a",
     opponentTendencies: ["RPO and quick game in rivalry setting", "TE usage in red zone", "Tempo spikes in critical moments"],

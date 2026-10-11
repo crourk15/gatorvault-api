@@ -134,6 +134,27 @@ const STATIC_LINES = [
     moneyline: { uf: -550, opp: +410 },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
+    source: 'schedule',
+    completed: true,
+    homeScore: 19,
+    awayScore: 38,
+    status: 'Final',
+    live: false,
+    scoreSource: 'official'
+  },
+  {
+    id: 'uf-texas-2026-w7',
+    week: 7,
+    game: 'Florida at Texas',
+    opponent: 'Texas',
+    date: '2026-10-17T16:00:00.000Z',
+    venue: 'DKR-Texas Memorial Stadium',
+    // Public board Oct 10: Texas -8.5 / 53.5, ML -345 / +275. Opened -9.5 / 54.5. Not one book screenshot.
+    spread: { line: 'UF +8.5', uf: 8.5 },
+    total: 53.5,
+    moneyline: { uf: 275, opp: -345 },
+    sportsbookUrl: FANDUEL_AFFILIATE,
+    sportsbookLinks: SPORTSBOOKS,
     source: 'schedule'
   },
   {

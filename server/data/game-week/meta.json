@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "currentGameId": "scar",
-  "updatedAt": "2026-10-07T20:35:00.000Z",
-  "source": "schedule-data + South Carolina Matchup Edge sat stamp (PFF 88 missed tackles on Run Game; not the 73% formula)"
+  "currentGameId": "texas",
+  "updatedAt": "2026-10-10T22:00:00.000Z",
+  "source": "schedule-data + Texas Matchup Edge sat stamp (PFF Simmons 90.5 pass-rush, Manning 87.6 passing; not the win% formula)"
 }
