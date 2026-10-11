@@ -12,13 +12,13 @@ const { isActiveUfTarget } = require('./recruiting-target-filters');
  * Dead elsewhere-commits and UF commits do not belong here.
  * Offer-list / soft 247 open rows are not board membership.
  *
- * Board shape: 1 open hunt (Tranard) + curated Flip Watch top 5.
+ * Board shape: 1 open hunt (Tranard) + curated Flip Watch.
+ * Easton Royal flipped to Florida on 2026-10-11 — commit board, not Flip Watch.
  */
 const ALLOWLIST_2027 = [
   'tranard-roberts', // still open — in-state RB UF is actively hunting
-  // Flip Watch top 5 (order = display rank)
+  // Flip Watch (order = display rank)
   'jalen-brewster', // 5★ DT — Texas Tech
-  'easton-royal', // 5★ WR — Texas
   'keldrid-ben', // 4★ RB — Oklahoma
   'andre-hyppolite', // S — Miami
   'ace-alston', // 4★ CB — Notre Dame
@@ -30,7 +30,6 @@ const ALLOWLIST_2027 = [
  */
 const FLIP_WATCH_2027 = [
   'jalen-brewster',
-  'easton-royal',
   'keldrid-ben',
   'andre-hyppolite',
   'ace-alston',
@@ -39,7 +38,6 @@ const FLIP_WATCH_2027 = [
 /** Stable commit-school labels for Flip Watch cards (logos + copy). */
 const FLIP_WATCH_COMMITS_2027 = {
   'jalen-brewster': 'Texas Tech',
-  'easton-royal': 'Texas',
   'keldrid-ben': 'Oklahoma',
   'andre-hyppolite': 'Miami',
   'ace-alston': 'Notre Dame',

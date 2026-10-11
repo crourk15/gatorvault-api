@@ -1164,6 +1164,30 @@
     },
     "2027": {
       "commits": {
+        "on3:243862": {
+          "on3Id": "243862",
+          "name": "Easton Royal",
+          "pos": "WR",
+          "classYear": 2027,
+          "school": "Brother Martin",
+          "hometownCity": "New Orleans",
+          "hometownState": "LA",
+          "state": "LA",
+          "htWt": "5-11 / 200",
+          "stars": 5,
+          "rating": 98.42634408602152,
+          "natlRank": 5,
+          "posRank": 1,
+          "stateRank": 1,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-10-11",
+          "committedTo": "Florida",
+          "category": "recruit",
+          "skinny": "5★ WR · #5 natl · #1 WR · Brother Martin, LA · flipped from Texas",
+          "sourceStatus": "Committed",
+          "on3ProfileUrl": "https://www.on3.com/rivals/easton-royal-243862/"
+        },
         "on3:180637": {
           "on3Id": "180637",
           "name": "Maxwell Hiller",

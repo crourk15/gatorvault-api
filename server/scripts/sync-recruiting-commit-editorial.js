@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Editorial commit sync: Aaron McWilliams (UF 2027) + Easton Royal (Texas, not UF).
+ * Editorial commit sync: Aaron McWilliams (UF 2027) + Easton Royal (UF 2027, flipped from Texas 2026-10-11).
  * Run against production DATABASE_URL / Supabase before or after deploy.
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
@@ -96,23 +96,28 @@ async function main() {
     name: 'Easton Royal',
     pos: 'WR',
     classYear: 2027,
-    school: 'Brother Martin HS, New Orleans LA',
-    htWt: '6-0 / 175',
-    stars: 4,
-    rating: 90,
-    natlRank: 120,
-    posRank: 18,
-    stateRank: 8,
+    school: 'Brother Martin, New Orleans LA',
+    htWt: '5-11 / 200',
+    stars: 5,
+    rating: 98.43,
+    natlRank: 5,
+    posRank: 1,
+    stateRank: 1,
     inState: false,
-    category: 'target',
-    status: 'uncommitted',
-    committedTo: 'Texas',
-    commitDate: null,
-    skinny: 'Official visit to UF June 11–13; Texas commit but Florida pushing hard.',
-    ufProbability: 48,
-    futurecastProbability: 48,
-    pipelineState: 'uncommitted',
+    category: 'recruit',
+    status: 'committed',
+    committedTo: 'Florida',
+    commitDate: '2026-10-11',
+    skinny: '5★ WR · #5 natl · #1 WR · Brother Martin, LA · Florida',
+    profileNote: 'Flipped from Texas to Florida on October 11, 2026. Hayes Fawcett, Rivals.',
+    on3Id: '243862',
+    on3Slug: 'easton-royal-243862',
+    on3ProfileUrl: 'https://www.on3.com/rivals/easton-royal-243862/',
+    ufProbability: 100,
+    futurecastProbability: 100,
+    pipelineState: 'committed',
     protected: true,
+    verifiedCommit: true,
     updatedAt: new Date().toISOString(),
   };
 
@@ -131,20 +136,20 @@ async function main() {
   console.log(
     JSON.stringify(
       {
-        ok: !eastonOnCommits && mcwilliamsOnCommits,
+        ok: eastonOnCommits && mcwilliamsOnCommits && !eastonOnTargets,
         restoredVerified: restored,
         commitSlugs: commits.map((p) => p.slug),
         eastonOnCommits,
         mcwilliamsOnCommits,
         eastonOnTargets,
-        note: 'eastonOnTargets may be false when committedTo is Texas (excluded from active UF target filter)',
+        note: 'Easton Royal is a Florida commit as of 2026-10-11. He stays off the 2027 target board.',
       },
       null,
       2
     )
   );
 
-  if (eastonOnCommits || !mcwilliamsOnCommits) {
+  if (!eastonOnCommits || eastonOnTargets || !mcwilliamsOnCommits) {
     process.exitCode = 1;
   }
 }

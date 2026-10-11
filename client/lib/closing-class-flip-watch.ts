@@ -1,5 +1,6 @@
 /**
- * Closing Class Flip Watch — curated top-5 elsewhere-commits.
+ * Closing Class Flip Watch — curated elsewhere-commits.
+ * Easton Royal flipped to Florida on 2026-10-11 and is a commit, not a row here.
  * Mirrors server/lib/recruiting-target-allowlist.js FLIP_WATCH_2027.
  */
 import type { FlipWatchRow } from '@/lib/futurecast-high-priority-api';
@@ -18,18 +19,6 @@ export const CLOSING_CLASS_FLIP_WATCH: FlipWatchRow[] = [
     flipRank: 1,
   },
   {
-    slug: 'easton-royal',
-    name: 'Easton Royal',
-    position: 'WR',
-    stars: 5,
-    committedTo: 'Texas',
-    committedShort: 'Texas',
-    ufProbability: null,
-    visitStart: null,
-    visitEnd: null,
-    flipRank: 2,
-  },
-  {
     slug: 'keldrid-ben',
     name: 'Keldrid Ben',
     position: 'RB',
@@ -39,7 +28,7 @@ export const CLOSING_CLASS_FLIP_WATCH: FlipWatchRow[] = [
     ufProbability: null,
     visitStart: null,
     visitEnd: null,
-    flipRank: 3,
+    flipRank: 2,
   },
   {
     slug: 'andre-hyppolite',
@@ -51,7 +40,7 @@ export const CLOSING_CLASS_FLIP_WATCH: FlipWatchRow[] = [
     ufProbability: null,
     visitStart: null,
     visitEnd: null,
-    flipRank: 4,
+    flipRank: 3,
   },
   {
     slug: 'ace-alston',
@@ -63,7 +52,7 @@ export const CLOSING_CLASS_FLIP_WATCH: FlipWatchRow[] = [
     ufProbability: null,
     visitStart: null,
     visitEnd: null,
-    flipRank: 5,
+    flipRank: 4,
   },
 ];
 

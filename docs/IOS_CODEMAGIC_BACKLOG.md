@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Easton Royal is a Florida commit (flipped from Texas October 11, 2026, Hayes Fawcett / Rivals). On the 2027 commit board. Off Closing Class Flip Watch. API after Render — no Codemagic. The baked Flip Watch fallback in `closing-class-flip-watch.ts` is the bake row.
 - [x] Game Week Texas key 3 states the order. The drive dies before Baugh can finish it. Philo is 70.0 when the pocket stays clean and 56.0 when it collapses. Missouri pass blocking 55.8 is why it died up front. Simmons 90.5 is that collapse on Saturday. The line holds him, then Baugh puts it in. API `/api/schedule` after Render — no Codemagic. Seed is the bake row.
 - [x] Game Week Texas key 3 is the pocket only. Philo 70.0 clean / 56.0 when it collapses, pass blocking 55.8, Simmons 90.5. The yardage lines are out. API `/api/schedule` after Render — no Codemagic. Seed is the bake row.
 - [x] Game Week Texas key 2 no longer says the handoff is not the play. Called runs are 24 for minus-8. Scrambles are 20 for 149. API `/api/schedule` after Render — no Codemagic. Seed is the bake row.
@@ -219,6 +220,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-11 | Closing Class Flip Watch fallback no longer lists Easton Royal as a Texas commit. **Live API Flip Watch drops him after Render.** | `closing-class-flip-watch.ts` in the binary. Approved builds can still paint the old Texas fallback if the live Flip Watch list is empty. | this PR |
 | 2026-10-10 | Schedule first-paint seed + Home NOW last-good: South Carolina 19-38 and Texas noon / ABC or ESPN / Road / 4-2. **`/api/schedule` + ticker edge already Texas after Render/Netlify.** | `schedule-data.ts` and `home-command-utils.ts` in the binary. Approved 1.0.31 can still first-paint South Carolina until the live pack lands. A clean Texas noon line does not match the old `12:00–1:00` / `abc or sec network` rewrite, so the fetched pack sticks. | this PR |
 | 2026-10-10 | Community Game talk subtitle (“One room each week…”). **Web after Netlify.** The South Carolina row itself is API (`thr_game_scar`) and shows in 1.0.31 Game talk after Render — see Already live. | `VaultCommunityPage` copy in the binary. Approved 1.0.31 still says “Past Saturdays stay here…”. | this PR |
 | 2026-10-10 | Laptop vault: Game Week / FutureCast / NIL bands stay in the content column. Titles were cut ("IN CHANCE", "t Intel", "to the Game") because `100vw` slid under the sidebar. **Web after Netlify.** | `futurecast-lab-command-center.css`, `nil-elite.css`, `vault-shell.css` in the binary. Approved 1.0.31 still clips those bands beside the nav. | this PR |
