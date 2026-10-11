@@ -64,6 +64,34 @@ describe('profile stamp live Industry ranks', () => {
     assert.doesNotMatch(out.signals[0].signalValue.note, /committed to Texas/i);
   });
 
+  it('replaces a stamped IMG Academy school with Brother Martin for Easton Royal', () => {
+    const out = overlayLiveRpm(
+      {
+        player: {
+          slug: 'easton-royal',
+          committedTo: 'Florida',
+          highSchool: 'IMG Academy (Bradenton, FL)',
+          hometown: 'New Orleans',
+          state: 'FL',
+        },
+        highSchoolProfile: {
+          recruitingNotes: 'Flipped from Texas to Florida on October 11, 2026.',
+        },
+      },
+      {
+        committedTo: 'Florida',
+        verifiedCommit: true,
+        school: 'Brother Martin',
+        hometownCity: 'New Orleans',
+        hometownState: 'LA',
+      }
+    );
+    assert.equal(out.player.highSchool, 'Brother Martin');
+    assert.equal(out.player.hometown, 'New Orleans');
+    assert.equal(out.player.state, 'LA');
+    assert.equal(out.player.committedTo, 'Florida');
+  });
+
   it('leaves a real non-Florida pledge note alone', () => {
     const stamp = {
       player: { fullName: 'Jalen Brewster', committedTo: 'Texas Tech' },

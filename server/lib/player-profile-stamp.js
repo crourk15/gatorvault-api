@@ -401,6 +401,19 @@ function overlayLiveRpm(profile, recruiting) {
   if (rpm != null) player.ufRpmPct = rpm;
   if (committedTo) player.committedTo = committedTo;
 
+  // Durable stamps can keep an old high school (Royal → IMG Academy) after a flip.
+  if (ufCommit && recruiting?.verifiedCommit === true) {
+    const { schoolIsCollegePledge } = require('./recruiting-placeholder-school');
+    const hs = String(recruiting.highSchool || recruiting.school || '').trim();
+    if (hs && !schoolIsCollegePledge(hs)) player.highSchool = hs;
+    const city = recruiting.hometownCity
+      ? String(recruiting.hometownCity).split(',')[0].trim()
+      : '';
+    if (city) player.hometown = city;
+    const state = String(recruiting.hometownState || recruiting.state || '').trim();
+    if (/^[A-Za-z]{2}$/.test(state)) player.state = state.toUpperCase();
+  }
+
   // Live On3 Industry Consensus — stamps bake ranks and go stale (Wright #208 vs #1).
   const natl = pickRankNumber(recruiting?.natlRank ?? recruiting?.nationalRank);
   const posRank = pickRankNumber(recruiting?.posRank ?? recruiting?.positionRank);
