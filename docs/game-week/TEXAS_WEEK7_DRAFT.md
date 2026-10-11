@@ -38,8 +38,8 @@ Florida's receipt: 387 yards and 19 points (120 rush, 267 pass), 6-of-13 on thir
 1. **Rush the Clean Pocket** — Woods
    Do not let Arch Manning throw it clean. Florida's coverage graded 48.4 at Missouri, the low of the season, and the rush got home seven times. Manning grades 87.6 when he sets his feet. Oklahoma got there and he threw two fourth-quarter interceptions, one of them Peyton Bowen's pick-six while he was scrambling. Woods has to be that rush. When the ball comes out late, be aggressive and take it.
 
-2. **Fit the Run When the Throw Dies** — Graham
-   Do not let a dead throw become a first down. Once Woods gets there, Manning is not standing in to throw it. He checks it down or they run it. That is the next snap. Texas is 3.6 a carry, and against Oklahoma the run was 32 for 122 yards and no score. Graham graded 53.5 against Auburn and 61.0 at Missouri. If Graham chases Manning out of his gap, he leaves a lane. That lane is Hollywood Smothers, the pressure is wasted, and the dead throw is a first down. Graham has to stay in his gap.
+2. **Throw It Down the Field** — Philo
+   Do not live underneath. At Missouri, PFF had Philo at 3-of-9 for 57 yards on throws of 10 yards or more, and did not chart a big-time throw. He was 16-of-22 for 125 underneath, and the passing grade was 66.7. On throws of 20-plus, PFF has him at 12-of-22 for 378 yards and 2 scores, with no turnover-worthy play. John Mateer was 18-of-26 for 155 against this defense and did not score. They will take the checkdown. Philo has to throw the one he hits.
 
 3. **Finish the Drive** — Baugh
    Do not take the drive and come away with nothing. Philo is a 70.0 passer when the pocket is clean and a 56.0 when it collapses. At Missouri the pass blocking was 55.8 and Baugh's rushing grade fell to 53.6. The drive died up front. South Carolina made it 387 yards and 19 points. Colin Simmons is how that happens on Saturday. He grades 90.5 with 8 sacks, and he had 2 more against Oklahoma. If he gets home, Baugh never gets the chance to finish. The line has to hold. Baugh has to put it in. Texas had 382 yards and 24 points and lost.

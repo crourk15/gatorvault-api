@@ -735,7 +735,7 @@
       "tv": "ABC or ESPN",
       "keys": [
         "Rush the Clean Pocket",
-        "Fit the Run When the Throw Dies",
+        "Throw It Down the Field",
         "Finish the Drive"
       ],
       "swing": [
@@ -744,15 +744,15 @@
           "role": "Do not let Arch Manning throw it clean. Florida's coverage graded 48.4 at Missouri, the low of the season, and the rush got home seven times. Manning grades 87.6 when he sets his feet. Oklahoma got there and he threw two fourth-quarter interceptions, one of them Peyton Bowen's pick-six while he was scrambling. Woods has to be that rush. When the ball comes out late, be aggressive and take it."
         },
         {
-          "name": "Myles Graham",
-          "role": "Do not let a dead throw become a first down. Once Woods gets there, Manning is not standing in to throw it. He checks it down or they run it. That is the next snap. Texas is 3.6 a carry, and against Oklahoma the run was 32 for 122 yards and no score. Graham graded 53.5 against Auburn and 61.0 at Missouri. If Graham chases Manning out of his gap, he leaves a lane. That lane is Hollywood Smothers, the pressure is wasted, and the dead throw is a first down. Graham has to stay in his gap."
+          "name": "Aaron Philo",
+          "role": "Do not live underneath. At Missouri, PFF had Philo at 3-of-9 for 57 yards on throws of 10 yards or more, and did not chart a big-time throw. He was 16-of-22 for 125 underneath, and the passing grade was 66.7. On throws of 20-plus, PFF has him at 12-of-22 for 378 yards and 2 scores, with no turnover-worthy play. John Mateer was 18-of-26 for 155 against this defense and did not score. They will take the checkdown. Philo has to throw the one he hits."
         },
         {
           "name": "Jadan Baugh",
           "role": "Do not take the drive and come away with nothing. Philo is a 70.0 passer when the pocket is clean and a 56.0 when it collapses. At Missouri the pass blocking was 55.8 and Baugh's rushing grade fell to 53.6. The drive died up front. South Carolina made it 387 yards and 19 points. Colin Simmons is how that happens on Saturday. He grades 90.5 with 8 sacks, and he had 2 more against Oklahoma. If he gets home, Baugh never gets the chance to finish. The line has to hold. Baugh has to put it in. Texas had 382 yards and 24 points and lost."
         }
       ],
-      "film": "Florida's coverage graded 48.4 at Missouri and the rush got home seven times. Manning grades 87.6 when he sets his feet. Saturday was Oklahoma 27, Texas 24. They got there and he threw two fourth-quarter interceptions. When that throw dies, Graham has to stay in his gap or Smothers runs through it. Texas gained 122 yards and did not score on the ground. The drive dies up front: pass blocking was 55.8, Baugh's rushing grade was 53.6, and Colin Simmons grades 90.5. Florida had 387 yards and 19 points. Rush the clean pocket, fit the run when the throw dies, finish the drive.",
+      "film": "Florida's coverage graded 48.4 at Missouri and the rush got home seven times. Manning grades 87.6 when he sets his feet. Saturday was Oklahoma 27, Texas 24. They got there and he threw two fourth-quarter interceptions. Philo was 3-of-9 past 10 yards at Missouri, a 66.7 passing grade, and PFF has his throws of 20-plus at 12-of-22 for 378 and 2 scores. The drive dies up front: pass blocking was 55.8, Baugh's rushing grade was 53.6, and Colin Simmons grades 90.5. Florida had 387 yards and 19 points. Rush the clean pocket, throw it down the field, finish the drive.",
       "pred": "UF 22 · Texas 34",
       "predUF": 22,
       "predOpp": 34,
@@ -761,7 +761,7 @@
       "ufPctDelta": -3,
       "filmWatched": false,
       "filmNotes": [
-        "Florida's coverage was 48.4 at Missouri, the low of the season, and the rush created seven pressures. Pass blocking was 55.8, run blocking was 56.8, and Baugh's rushing grade was 53.6. Philo was a 70.0 passer when kept clean and a 56.0 under pressure. Graham graded 53.5 against Auburn and 61.0 at Missouri.",
+        "Florida's coverage was 48.4 at Missouri, the low of the season, and the rush created seven pressures. Pass blocking was 55.8, run blocking was 56.8, and Baugh's rushing grade was 53.6. Philo was a 70.0 passer when kept clean and a 56.0 under pressure. Philo was 3-of-9 for 57 yards on throws of 10-plus, with no big-time throw.",
         "Oklahoma 27, Texas 24 at the Cotton Bowl. Texas is 4-1, 1-1 in the SEC. The wins before that were Texas State, Ohio State, UTSA, and Tennessee.",
         "Arch Manning was 19-of-31 for 260 yards, 3 touchdowns and 2 interceptions. Cam Coleman had 5 catches for 110 and a score. Ryan Wingo had 2 for 57 and a score. Jermaine Bishop Jr. caught the tying 15-yarder.",
         "Texas led 17-7 at half, then punted three times in the third. Peyton Bowen returned a pick 42 yards for a touchdown. Courtland Guillory intercepted the last throw. Tate Sandell kicked the winner from 47. Gianni Spetic missed from 53.",
@@ -802,10 +802,10 @@
       ],
       "howUFWins": [
         "Do not let Arch Manning throw it clean. Florida's coverage graded 48.4 at Missouri, the low of the season, and the rush got home seven times. Manning grades 87.6 when he sets his feet. Oklahoma got there and he threw two fourth-quarter interceptions, one of them Peyton Bowen's pick-six while he was scrambling. Woods has to be that rush. When the ball comes out late, be aggressive and take it.",
-        "Do not let a dead throw become a first down. Once Woods gets there, Manning is not standing in to throw it. He checks it down or they run it. That is the next snap. Texas is 3.6 a carry, and against Oklahoma the run was 32 for 122 yards and no score. Graham graded 53.5 against Auburn and 61.0 at Missouri. If Graham chases Manning out of his gap, he leaves a lane. That lane is Hollywood Smothers, the pressure is wasted, and the dead throw is a first down. Graham has to stay in his gap.",
+        "Do not live underneath. At Missouri, PFF had Philo at 3-of-9 for 57 yards on throws of 10 yards or more, and did not chart a big-time throw. He was 16-of-22 for 125 underneath, and the passing grade was 66.7. On throws of 20-plus, PFF has him at 12-of-22 for 378 yards and 2 scores, with no turnover-worthy play. John Mateer was 18-of-26 for 155 against this defense and did not score. They will take the checkdown. Philo has to throw the one he hits.",
         "Do not take the drive and come away with nothing. Philo is a 70.0 passer when the pocket is clean and a 56.0 when it collapses. At Missouri the pass blocking was 55.8 and Baugh's rushing grade fell to 53.6. The drive died up front. South Carolina made it 387 yards and 19 points. Colin Simmons is how that happens on Saturday. He grades 90.5 with 8 sacks, and he had 2 more against Oklahoma. If he gets home, Baugh never gets the chance to finish. The line has to hold. Baugh has to put it in. Texas had 382 yards and 24 points and lost."
       ],
-      "scoutingReport": "Florida's coverage graded 48.4 at Missouri and the rush got home seven times. Manning grades 87.6 when he sets his feet, and Oklahoma's rush turned him into two fourth-quarter interceptions in Oklahoma 27, Texas 24. When that throw dies, the next snap is the run, and Graham has to stay in his gap. Pass blocking was 55.8, Baugh's rushing grade was 53.6, and Colin Simmons grades 90.5. If the pocket dies, the drive dies. Florida had 387 yards and 19 points. Rush the clean pocket, fit the run when the throw dies, and finish the drive. Noon at DKR. ABC or ESPN.",
+      "scoutingReport": "Florida's coverage graded 48.4 at Missouri and the rush got home seven times. Manning grades 87.6 when he sets his feet, and Oklahoma's rush turned him into two fourth-quarter interceptions in Oklahoma 27, Texas 24. Philo has to throw it down the field. PFF has those throws of 20-plus at 12-of-22 for 378 and 2 scores. Pass blocking was 55.8, Baugh's rushing grade was 53.6, and Colin Simmons grades 90.5. If the pocket dies, the drive dies. Florida had 387 yards and 19 points. Rush the clean pocket, throw it down the field, and finish the drive. Noon at DKR. ABC or ESPN.",
       "radar": [
         {
           "label": "Run Game",
