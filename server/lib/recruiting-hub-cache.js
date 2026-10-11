@@ -613,15 +613,81 @@ function healBundleNests(value, year) {
   return value;
 }
 
+function commitRowSlug(row) {
+  return String(row?.id || row?.slug || '').toLowerCase();
+}
+
+function moveEastonRoyalFirst(list) {
+  if (!Array.isArray(list)) return;
+  const idx = list.findIndex((row) => row && typeof row === 'object' && commitRowSlug(row) === 'easton-royal');
+  if (idx > 0) {
+    const [row] = list.splice(idx, 1);
+    list.unshift(row);
+  }
+}
+
+/**
+ * 2027 hub: Easton Royal leads the commit class and the hero line.
+ * Cached plates built before the flip kept Maxwell first and a generic subtitle.
+ */
+function pinEastonRoyalHubSurface(value, year) {
+  if (!value || typeof value !== 'object' || Number(year) !== 2027) return value;
+  moveEastonRoyalFirst(value.commits);
+  moveEastonRoyalFirst(value.items);
+  const onBoard =
+    (Array.isArray(value.commits) && value.commits.some((row) => commitRowSlug(row) === 'easton-royal')) ||
+    (Array.isArray(value.items) && value.items.some((row) => commitRowSlug(row) === 'easton-royal'));
+  if (onBoard && Array.isArray(value.movementFeed)) {
+    const hasFeed = value.movementFeed.some(
+      (row) =>
+        commitRowSlug(row) === 'easton-royal' ||
+        String(row?.id || '').toLowerCase() === 'commit-easton-royal'
+    );
+    if (!hasFeed) {
+      value.movementFeed.unshift({
+        id: 'commit-easton-royal',
+        timestamp: '2026-10-11T16:49:31.000Z',
+        name: 'Easton Royal',
+        position: 'WR',
+        class: 2027,
+        event: 'commit',
+        summary: 'Commits to Florida · 5★ WR · #5 natl',
+        profileUrl: '/vault/recruiting/player/easton-royal',
+      });
+    }
+  }
+  if (typeof value.subtitle === 'string' || value.title === 'Florida Recruiting') {
+    const { hubHeroSubtitle } = require('./recruiting-hub-elite');
+    value.subtitle = hubHeroSubtitle(2027);
+  }
+  return value;
+}
+
+function isHubRoyalSurfaceKey(cacheKey) {
+  const key = String(cacheKey || '');
+  return (
+    /^hub:elite:bundle:[^:]+:\d+$/.test(key) ||
+    /^hub:elite:hero:\d+$/.test(key) ||
+    /^hub:elite:commits:(?:[^:]+:)?\d+$/.test(key)
+  );
+}
+
 function healCachedHubPayload(cacheKey, value) {
   if (!value || typeof value !== 'object') return value;
   const bundleYear = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
   if (bundleYear) {
     healBundleNests(value, Number(bundleYear[1]));
+    pinEastonRoyalHubSurface(value, Number(bundleYear[1]));
     return value;
   }
   const heroYear = String(cacheKey || '').match(/^hub:elite:hero:(\d+)$/);
-  if (heroYear) healOverviewNests(value, Number(heroYear[1]));
+  if (heroYear) {
+    healOverviewNests(value, Number(heroYear[1]));
+    pinEastonRoyalHubSurface(value, Number(heroYear[1]));
+    return value;
+  }
+  const commitsYear = String(cacheKey || '').match(/^hub:elite:commits:(?:[^:]+:)?(\d+)$/);
+  if (commitsYear) pinEastonRoyalHubSurface(value, Number(commitsYear[1]));
   return value;
 }
 
@@ -1059,8 +1125,7 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   if (hit != null) {
     // Older in-memory bundles predate footprint seeding — backfill on hit.
     // Also heal poisoned nest (0 commits while dedicated footprint is healthy).
-    const bundleYearHit = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
-    if (bundleYearHit || /^hub:elite:hero:(\d+)$/.test(String(cacheKey || ''))) {
+    if (isHubRoyalSurfaceKey(cacheKey)) {
       healCachedHubPayload(cacheKey, hit);
       persistDurableCacheValue(cacheKey, hit);
     }
@@ -1075,8 +1140,7 @@ async function serveCached(cacheKey, builderFn, options = {}) {
 
   const stale = hubCache.getStale(cacheKey);
   if (stale != null) {
-    const bundleYearStale = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
-    if (bundleYearStale || /^hub:elite:hero:(\d+)$/.test(String(cacheKey || ''))) {
+    if (isHubRoyalSurfaceKey(cacheKey)) {
       healCachedHubPayload(cacheKey, stale);
       persistDurableCacheValue(cacheKey, stale);
     }
@@ -1103,7 +1167,11 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     if (diskOk) {
       // Seed memory so the next request is a hot hit. Cron warm-memory refreshes later.
       // Bundle disk hits also seed dedicated footprint keys for Class year tabs.
-      if (diskFallback.endpoint === 'bundle' || diskFallback.endpoint === 'hero') {
+      if (
+        diskFallback.endpoint === 'bundle' ||
+        diskFallback.endpoint === 'hero' ||
+        diskFallback.endpoint === 'commits'
+      ) {
         healCachedHubPayload(cacheKey, diskValue);
       }
       cacheHubValue(cacheKey, diskValue);
@@ -2023,6 +2091,7 @@ module.exports = {
   healBundleCommitsNest,
   healOverviewNests,
   healBundleNests,
+  pinEastonRoyalHubSurface,
   clearHubCache,
   removeHubCacheKeys,
   warmEliteHubCaches,

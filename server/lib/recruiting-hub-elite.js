@@ -749,6 +749,15 @@ async function buildHubFootprint(year = 2027) {
 
 const HERO_CLASS_YEARS = [2026, 2027, 2028];
 
+/** 2027 hub hero — the flip has to be the first line members read. */
+const EASTON_ROYAL_HUB_SUBTITLE =
+  'Easton Royal flipped from Texas. 5-star WR, No. 5 nationally.';
+
+function hubHeroSubtitle(year) {
+  if (Number(year) === 2027) return EASTON_ROYAL_HUB_SUBTITLE;
+  return 'Who Florida is chasing — movement, board, and beat intel.';
+}
+
 /** Lightweight hero payload — title, year tabs, summary metrics, ticker only. */
 async function buildHubHero(year = 2027) {
   const [ticker, classOverview, classOverviewAll] = await Promise.all([
@@ -760,7 +769,7 @@ async function buildHubHero(year = 2027) {
   return {
     year,
     title: 'Florida Recruiting',
-    subtitle: 'Who Florida is chasing — movement, board, and beat intel.',
+    subtitle: hubHeroSubtitle(year),
     classYears: HERO_CLASS_YEARS,
     ticker,
     classOverview,
@@ -819,6 +828,7 @@ module.exports = {
   buildHubBattleBoard,
   buildHubFootprint,
   buildHubHero,
+  hubHeroSubtitle,
   buildHubBundle,
   getVaultScoutingForSlug,
   buildCommitFanSkinny,

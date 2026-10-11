@@ -11,9 +11,13 @@ const SEASON_STANDING = '4-2 heading into Saturday';
 const TEXAS_NOW_GAME = 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN';
 const TEXAS_NOW_ROAD = 'on the road this Saturday';
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
-/** Posted South Carolina final — last-good Swamp / 4-1 / Royal must not beat Texas week. */
+/**
+ * Posted South Carolina final — last-good Swamp / 4-1 must not beat Texas week.
+ * "Visitors — Easton Royal" is that leftover board. A Florida flip line
+ * ("News — Easton Royal flips to Florida") is this week's commit and stays.
+ */
 const LEFTOVER_MISSOURI_NOW_RE =
-  /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45|easton royal/i;
+  /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45|visitors\s*[—–-]\s*easton royal/i;
 /** Sep 21 was ABC-or-ESPN. SEC locked ABC Sep 27. Git ESPN overlay snapped NOW back. */
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri/i;
 
