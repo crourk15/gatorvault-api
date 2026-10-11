@@ -1120,10 +1120,34 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
   } catch {
     /* optional */
   }
+  // Disk Flip Watch can predate a Florida commit (Easton Royal, Oct 11 2026).
+  // Strip verified UF commits on serve so a stale plate cannot keep them on Texas.
+  let flipWatch = Array.isArray(doc.flipWatch) ? doc.flipWatch : null;
+  if (flipWatch) {
+    try {
+      const { isVerifiedUfCommitAnyYear } = require('../../lib/recruiting-verified-commits') as {
+        isVerifiedUfCommitAnyYear: (slug: string) => boolean;
+      };
+      flipWatch = flipWatch.filter((row) => {
+        if (!row || typeof row !== 'object') return false;
+        const slug = String((row as { slug?: string }).slug || '').toLowerCase();
+        if (slug && isVerifiedUfCommitAnyYear(slug)) return false;
+        return true;
+      });
+    } catch {
+      /* optional */
+    }
+  }
   return {
     ...doc,
     count: Array.isArray(players) ? players.length : doc.count,
     players,
+    ...(flipWatch
+      ? {
+          flipWatch,
+          flipWatchCount: flipWatch.length,
+        }
+      : {}),
   };
 }
 

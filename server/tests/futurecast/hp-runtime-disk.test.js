@@ -46,6 +46,9 @@ describe('FutureCast HP durable runtime', () => {
     const doc = JSON.parse(fs.readFileSync(seed, 'utf8'));
     assert.equal(doc.classYear, 2027);
     assert.ok(Array.isArray(doc.players) && doc.players.some((p) => p.slug === 'tranard-roberts'));
+    const flip = Array.isArray(doc.flipWatch) ? doc.flipWatch : [];
+    assert.equal(flip.some((p) => p.slug === 'easton-royal'), false);
+    assert.equal(doc.flipWatchCount, flip.length);
   });
 
   it('high-priority GET primes from disk before building', () => {
@@ -55,5 +58,10 @@ describe('FutureCast HP durable runtime', () => {
     );
     assert.match(src, /loadHighPriorityCached/);
     assert.match(src, /primeFuturecastCache/);
+    const cacheSrc = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'api', 'futurecast', 'response-cache.ts'),
+      'utf8'
+    );
+    assert.match(cacheSrc, /isVerifiedUfCommitAnyYear/);
   });
 });

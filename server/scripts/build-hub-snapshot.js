@@ -43,7 +43,7 @@ function meta(endpoint, year) {
       const { FOOTPRINT_CACHE_REV } = require('../lib/recruiting-hub-cache');
       base.cacheRev = FOOTPRINT_CACHE_REV;
     } catch {
-      base.cacheRev = 'fp5';
+      base.cacheRev = 'fp6';
     }
   }
   return base;

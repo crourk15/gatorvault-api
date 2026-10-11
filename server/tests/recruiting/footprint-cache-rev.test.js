@@ -78,6 +78,13 @@ describe('footprint cache rev and heal', () => {
     };
     assert.equal(cache.isUsableFootprintSnapshot(good, 2028), true);
 
+    const mislabeled = {
+      states: [{ state: 'FL', commits: 8, targets: 2 }],
+      pins: [{ id: 'easton-royal', pinType: 'target', status: 'target' }],
+      year: 2027,
+    };
+    assert.equal(cache.isUsableFootprintSnapshot(mislabeled, 2027), false);
+
     cache.writeHubDiskSnapshot('footprint', 2028, good);
     const read = cache.readHubDiskSnapshot('footprint', 2028);
     assert.ok(read);
@@ -86,7 +93,7 @@ describe('footprint cache rev and heal', () => {
     assert.equal(raw.meta.cacheRev, cache.FOOTPRINT_CACHE_REV);
   });
 
-  it('bundled hub-runtime 2028 footprint is fp5 with Armani, Cyion, and Bailey commits', () => {
+  it('bundled hub-runtime 2028 footprint is current rev with Armani, Cyion, and Bailey commits', () => {
     const snap = path.join(__dirname, '../../data/recruiting/hub-runtime/2028/footprint.json');
     const doc = JSON.parse(fs.readFileSync(snap, 'utf8'));
     assert.equal(doc.meta.cacheRev, cache.FOOTPRINT_CACHE_REV);
@@ -103,7 +110,7 @@ describe('footprint cache rev and heal', () => {
     assert.equal(bailey.pinType, 'commit');
   });
 
-  it('skips poisoned durable runtime and falls back to bundled fp5 seed', () => {
+  it('skips poisoned durable runtime and falls back to bundled footprint seed', () => {
     const yearDir = path.join(tmpRoot, 'hub-runtime', '2028');
     fs.mkdirSync(yearDir, { recursive: true });
     fs.writeFileSync(

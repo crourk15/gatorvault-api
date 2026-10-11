@@ -10,10 +10,10 @@ const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
 const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 
 /** Bump when HS-only class commit metrics logic changes. */
-const HUB_METRICS_CACHE_REV = 'hs10';
+const HUB_METRICS_CACHE_REV = 'hs11';
 
 /** Bump when footprint commit/target tallies logic changes. */
-const FOOTPRINT_CACHE_REV = 'fp5';
+const FOOTPRINT_CACHE_REV = 'fp6';
 
 /**
  * Bump when commit card meta (On3 ranks / rating plate) must invalidate durable
@@ -98,10 +98,25 @@ function isUsableClassOverviewAllSnapshot(value) {
   return true;
 }
 
+/** A verified UF commit still pinned as a target is a pre-flip plate. */
+function footprintMislabelsVerifiedCommit(value, year) {
+  const required = verifiedCommitSlugsForYear(year);
+  if (!required || !value) return false;
+  const pins = Array.isArray(value.pins) ? value.pins : [];
+  for (const pin of pins) {
+    const id = String(pin?.id || pin?.slug || '').toLowerCase();
+    if (!required.has(id)) continue;
+    const kind = String(pin.pinType || pin.status || '').toLowerCase();
+    if (kind && kind !== 'commit') return true;
+  }
+  return false;
+}
+
 /** Reject poisoned pre-fp3 runtime plates that zeroed HS signees (e.g. Armani Strong). */
 function isUsableFootprintSnapshot(value, year) {
   if (!value || typeof value !== 'object') return false;
   if (!Array.isArray(value.states) || !value.states.length) return false;
+  if (footprintMislabelsVerifiedCommit(value, year)) return false;
   if (footprintStateCommitCount(value) > 0) return true;
   if (year == null || !Number.isFinite(Number(year))) return true;
   try {
