@@ -199,6 +199,7 @@ export type RhHubFootprintResponse = {
 /** Full Recruiting Hub elite landing payload — one request replaces ~10 hub calls. */
 export type RhHubBundle = {
   year: number;
+  subtitle?: string;
   ticker: string[];
   classOverview: RhHubClassOverview;
   classOverviewAll: RhHubClassOverviewByYear;
@@ -374,6 +375,7 @@ export async function fetchRecruitingHubBundle(year = HUB_YEAR): Promise<RhHubBu
   );
   return {
     year: raw.year ?? year,
+    subtitle: raw.subtitle,
     ticker: raw.ticker ?? [],
     classOverview: raw.classOverview,
     classOverviewAll: raw.classOverviewAll ?? {},

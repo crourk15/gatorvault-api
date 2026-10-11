@@ -226,15 +226,16 @@ function loadBundledThisWeekCommitRows(nowMs) {
       const date = player.commitDate || player.commit_date;
       const ts = parseDateMs(date, nowMs);
       if (!Number.isFinite(ts) || nowMs - ts > WEEK_MS || ts > nowMs + DAY_MS) continue;
+      const flipped = String(player.slug || '').toLowerCase() === 'easton-royal';
       rows.push({
-        eventType: 'commit',
+        eventType: flipped ? 'flip' : 'commit',
         playerSlug: player.slug,
         playerName: player.name,
         commitDate: date,
         committedTo: 'Florida',
         stars: player.stars,
         natlRank: player.natlRank,
-        text: `${player.name} commits to Florida`,
+        text: flipped ? `${player.name} flips to Florida` : `${player.name} commits to Florida`,
         source: 'bundle_verified_commit',
       });
     }

@@ -135,8 +135,11 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
     seeded?.classOverview ??
     null;
   const title = seeded?.title ?? 'Florida Recruiting';
+  const bundleSubtitle = String(data?.subtitle || '').trim();
   const subtitle =
-    seeded?.subtitle ?? 'Who Florida is chasing — movement, board, and beat intel.';
+    (bundleSubtitle && !/command\s*center/i.test(bundleSubtitle) ? bundleSubtitle : '') ||
+    seeded?.subtitle ||
+    'Who Florida is chasing — movement, board, and beat intel.';
 
   const handleYear = useCallback(
     (nextYear: number) => {

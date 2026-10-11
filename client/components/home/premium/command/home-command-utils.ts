@@ -432,7 +432,7 @@ const LEFTOVER_MISSOURI_NOW_RE =
 const TEXAS_NOW_GAME = 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN';
 const LEFTOVER_SC_WINDOW_RE = /abc or sec network|12:00\s*[–-]\s*1:00/i;
 const TEXAS_NOW_SEASON = '4-2 heading into Saturday';
-const TEXAS_NOW_ROAD = 'on the road this Saturday';
+const TEXAS_NOW_NEWS = 'Easton Royal flips to Florida · No. 5';
 
 function pinMissouriAbcTick(text: string): string {
   const t = String(text || '');
@@ -453,7 +453,7 @@ function pinLeftoverMissouriNowWeek(rows: HomeNowWeekPillar[]): HomeNowWeekPilla
   }
   return [
     { key: 'game', label: 'Game', items: [TEXAS_NOW_GAME] },
-    { key: 'road', label: 'Road', items: [TEXAS_NOW_ROAD] },
+    { key: 'news', label: 'News', items: [TEXAS_NOW_NEWS] },
     { key: 'season', label: 'Season', items: [TEXAS_NOW_SEASON] },
   ];
 }
@@ -466,7 +466,7 @@ function pinLeftoverMissouriTickerLines(lines: string[]): string[] {
   }
   return [
     `Game — ${TEXAS_NOW_GAME}`,
-    `Road — ${TEXAS_NOW_ROAD}`,
+    `News — ${TEXAS_NOW_NEWS}`,
     `Season — ${TEXAS_NOW_SEASON}`,
   ];
 }
@@ -481,7 +481,7 @@ export function isRetiredHomeNowTick(text: string): boolean {
 
 function pinBaileyNowNewsItems(items: string[]): string[] {
   const next = items.map((s) => String(s || '').trim()).filter(Boolean);
-  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [TEXAS_NOW_ROAD];
+  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [TEXAS_NOW_NEWS];
   return next.filter((s) => !isRetiredHomeNowTick(s));
 }
 
@@ -489,7 +489,7 @@ function pinBaileyNowNewsLines(lines: string[]): string[] {
   return lines.map((line) => {
     const text = String(line || '');
     if (/^News — /i.test(text) && STALE_NOW_NEWS_RE.test(text)) {
-      return `Road — ${TEXAS_NOW_ROAD}`;
+      return `News — ${TEXAS_NOW_NEWS}`;
     }
     return text;
   });
@@ -505,7 +505,7 @@ export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNow
       const rawItems = (row?.items || []).map((s) => String(s || '').trim()).filter(Boolean);
       const isNews = key === 'news' || label === 'News';
       if (isNews && rawItems.some((s) => STALE_NOW_NEWS_RE.test(s))) {
-        return { key: 'road', label: 'Road', items: [TEXAS_NOW_ROAD] };
+        return { key: 'news', label: 'News', items: [TEXAS_NOW_NEWS] };
       }
       return {
         key,

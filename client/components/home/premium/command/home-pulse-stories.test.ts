@@ -427,8 +427,8 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
     assert.equal(rows[0].items[0], 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN');
-    assert.equal(rows[1].label, 'Road');
-    assert.equal(rows[1].items[0], 'on the road this Saturday');
+    assert.equal(rows[1].label, 'News');
+    assert.equal(rows[1].items[0], 'Easton Royal flips to Florida · No. 5');
     assert.equal(rows[2].items[0], '4-2 heading into Saturday');
     assert.ok(!rows.some((row) => row.items.some((s) => /missouri|faurot|4-0 heading/i.test(s))));
   });
@@ -440,8 +440,8 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
       { key: 'season', label: 'Season', items: ['4-1 · SEC home Saturday'] },
     ]);
     assert.equal(rows[0].items[0], 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN');
-    assert.equal(rows[1].label, 'Road');
-    assert.equal(rows[1].items[0], 'on the road this Saturday');
+    assert.equal(rows[1].label, 'News');
+    assert.equal(rows[1].items[0], 'Easton Royal flips to Florida · No. 5');
     assert.equal(rows[2].items[0], '4-2 heading into Saturday');
     assert.ok(!rows.some((row) => row.items.some((s) => /bailey|abc or sec network|south carolina|4-1/i.test(s))));
   });
@@ -454,8 +454,8 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
     ]);
     assert.equal(rows.length, 3);
     assert.equal(rows[0].items[0], 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN');
-    assert.equal(rows[1].label, 'Road');
-    assert.equal(rows[1].items[0], 'on the road this Saturday');
+    assert.equal(rows[1].label, 'News');
+    assert.equal(rows[1].items[0], 'Easton Royal flips to Florida · No. 5');
     assert.ok(!rows.some((row) => row.items.some((s) => /cyion|bailey/i.test(s))));
   });
 
@@ -465,8 +465,8 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
       { key: 'news', label: 'News', items: ['Lorenzo McMullen Jr. commits to Florida · No. 25'] },
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
-    assert.equal(rows[1].label, 'Road');
-    assert.equal(rows[1].items[0], 'on the road this Saturday');
+    assert.equal(rows[1].label, 'News');
+    assert.equal(rows[1].items[0], 'Easton Royal flips to Florida · No. 5');
     assert.ok(!rows.some((row) => row.items.some((s) => /mcmullen|bailey/i.test(s))));
   });
 
@@ -524,8 +524,8 @@ describe('applyHomeNowWeekPack', () => {
     );
     const remount = applyHomeNowWeekPack([], []);
     assert.equal(remount[0].items[0], 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN');
-    assert.equal(remount[1].label, 'Road');
-    assert.equal(remount[1].items[0], 'on the road this Saturday');
+    assert.equal(remount[1].label, 'News');
+    assert.equal(remount[1].items[0], 'Easton Royal flips to Florida · No. 5');
     assert.equal(remount[2].items[0], '4-2 heading into Saturday');
     assert.ok(!remount.some((row) => row.items.some((s) => /bailey/i.test(s))));
   });
@@ -554,7 +554,7 @@ describe('applyHomeNowTickerPack', () => {
       ],
       []
     );
-    assert.ok(next.some((line) => /Road — on the road this Saturday/i.test(line)));
+    assert.ok(next.some((line) => /News — Easton Royal flips to Florida · No\. 5/i.test(line)));
     assert.ok(!next.some((line) => /mcmullen|bailey/i.test(line)));
     assert.ok(next.some((line) => /Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN/i.test(line)));
     assert.ok(!next.some((line) => /missouri|faurot|4-0 heading|abc or sec network/i.test(line)));
