@@ -26,8 +26,8 @@ describe('schedule-board', () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
-    assert.equal(payload.predThrough, '2026-W6');
-    assert.equal(payload.currentGameId, 'scar');
+    assert.equal(payload.predThrough, '2026-W7');
+    assert.equal(payload.currentGameId, 'texas');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);
     assert.equal(campbell.finalOpp, 3);
@@ -78,7 +78,7 @@ describe('schedule-board', () => {
   it('game-week meta games also hide desk scout', () => {
     const feed = require('../lib/game-week-feed');
     const payload = feed.buildGameWeekPayload();
-    assert.equal(payload.currentGameId, 'scar');
+    assert.equal(payload.currentGameId, 'texas');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.deepEqual(campbell.offenseScout, []);
     assert.equal(campbell.scoutingReport, undefined);
@@ -316,6 +316,9 @@ describe('schedule-board', () => {
     assert.equal(scar.date, 'October 10, 2026 · 12:45 PM ET');
     assert.equal(scar.pred, 'UF 32 · South Carolina 21');
     assert.equal(scar.ufPct, 73);
+    assert.equal(scar.finalUF, 19);
+    assert.equal(scar.finalOpp, 38);
+    assert.equal(scar.finalSource, 'official');
     assert.match(scar.scoutingReport, /Crowd the Keep/);
     assert.match(scar.scoutingReport, /9\.4 yards per pass attempt/);
     assert.ok(scar.defenseScout?.some((n) => /190\.3 passer rating/i.test(n)));
@@ -339,6 +342,34 @@ describe('schedule-board', () => {
     assert.match(dump, /Baugh/);
     assert.match(dump, /256 rush yards/);
     assert.ok(!/chambliss|simmons|roberts/i.test(dump));
+  });
+
+  it('Texas 3 Keys and Matchup Edge are the sat stamp after South Carolina 19-38', () => {
+    const board = scheduleBoard.getScheduleBoard(2026);
+    const texas = board.games.find((g) => g.id === 'texas');
+    assert.equal(texas.keys[0], 'Rush the Clean Pocket');
+    assert.equal(texas.keys[1], 'Fit the Run When the Throw Dies');
+    assert.equal(texas.keys[2], 'Finish the Drive');
+    assert.equal(texas.filmWatched, false);
+    assert.equal(texas.tv, 'ABC or ESPN');
+    assert.equal(texas.date, 'October 17, 2026 · 12:00 PM ET');
+    assert.equal(texas.pred, 'UF 20 · Texas 34');
+    assert.equal(texas.predUF, 20);
+    assert.equal(texas.predOpp, 34);
+    assert.equal(texas.ufPct, 22);
+    assert.equal(texas.radar.find((a) => a.label === 'Run Game')?.uf, 60);
+    assert.equal(texas.radar.find((a) => a.label === 'Run Game')?.opp, 66);
+    assert.equal(texas.radar.find((a) => a.label === 'Pass Efficiency')?.opp, 84);
+    assert.equal(texas.radar.find((a) => a.label === 'Front 7')?.opp, 78);
+    assert.equal(texas.radar.find((a) => a.label === 'Secondary')?.opp, 76);
+    assert.match(texas.howUFWins[0], /87\.6/);
+    assert.match(texas.howUFWins[0], /90\.5/);
+    assert.match(texas.scoutingReport, /Rush the Clean Pocket/);
+    assert.ok(!texas.expectedVisitors || texas.expectedVisitors.length === 0);
+    const fan = scheduleBoard.toApiPayload().games.find((g) => g.id === 'texas');
+    assert.deepEqual(fan.offenseScout, []);
+    assert.ok(fan.opponentTendencies.some((n) => /87\.6/.test(n)));
+    assert.equal(fan.filmWatched, false);
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

@@ -197,10 +197,10 @@ describe('schedule uniform board', () => {
       const fresh = require('../lib/schedule-board');
       const board = fresh.getScheduleBoard(2026);
       const fsu = board.games.find((g) => g.id === 'fsu');
-      assert.equal(fsu.pred, 'UF 30 · FSU 24');
-      assert.equal(fsu.predUF, 30);
+      assert.equal(fsu.pred, 'UF 27 · FSU 24');
+      assert.equal(fsu.predUF, 27);
       assert.equal(fsu.predOpp, 24);
-      assert.equal(fsu.ufPct, 63);
+      assert.equal(fsu.ufPct, 56);
       assert.match(fsu.film, /UF takes Doak/i);
       const rewritten = JSON.parse(fs.readFileSync(file, 'utf8'));
       const rewrittenFsu = rewritten.games.find((g) => g.id === 'fsu');

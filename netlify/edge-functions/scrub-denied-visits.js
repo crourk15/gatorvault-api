@@ -7,31 +7,13 @@
 const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolRe: /auburn/i }];
 
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
-const SEASON_STANDING = '4-1 · SEC home Saturday';
-const SC_NOW_GAME = 'South Carolina in the Swamp — 12:45 PM · SEC Network';
-const SC_VISITOR_LINE = 'Easton Royal';
-/** Home NOW ticks every named South Carolina visitor. Compact line stays Royal. */
-const SC_VISITOR_NAMES = [
-  'Easton Royal',
-  'Prince Che',
-  'Braxton Rein',
-  'Calvin Landy',
-  'Keston Beck',
-  'Marquis Evans',
-  "Aamaury Fountain",
-  'Davin Davidson',
-  'Andrew Beard',
-  'Elias Pearl',
-  'Cahron Wheeler',
-  "Ja'Bios Smith",
-  'Kamauri Whitfield',
-  "De'Voun Kendrick",
-  'Kamarion Johnson',
-];
+const SEASON_STANDING = '4-2 heading into Saturday';
+const TEXAS_NOW_GAME = 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN';
+const TEXAS_NOW_ROAD = 'on the road this Saturday';
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
-/** Posted Missouri final — last-good Faurot / 4-0 must not beat South Carolina week. */
+/** Posted South Carolina final — last-good Swamp / 4-1 / Royal must not beat Texas week. */
 const LEFTOVER_MISSOURI_NOW_RE =
-  /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00|samuel\s+bailey/i;
+  /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45|easton royal/i;
 /** Sep 21 was ABC-or-ESPN. SEC locked ABC Sep 27. Git ESPN overlay snapped NOW back. */
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri/i;
 
@@ -68,14 +50,14 @@ function pinLeftoverMissouriNow(data) {
   return {
     data: {
       ...data,
-      items: [`Game — ${SC_NOW_GAME}`, `Visitors — ${SC_VISITOR_LINE}`, `Season — ${SEASON_STANDING}`],
+      items: [`Game — ${TEXAS_NOW_GAME}`, `Road — ${TEXAS_NOW_ROAD}`, `Season — ${SEASON_STANDING}`],
       nowWeek: [
-        { key: 'game', label: 'Game', items: [SC_NOW_GAME] },
-        { key: 'visitors', label: 'Visitors', items: SC_VISITOR_NAMES },
+        { key: 'game', label: 'Game', items: [TEXAS_NOW_GAME] },
+        { key: 'road', label: 'Road', items: [TEXAS_NOW_ROAD] },
         { key: 'season', label: 'Season', items: [SEASON_STANDING] },
       ],
       ...(Array.isArray(data.ticker)
-        ? { ticker: [`Game — ${SC_NOW_GAME}`, `Visitors — ${SC_VISITOR_LINE}`, `Season — ${SEASON_STANDING}`] }
+        ? { ticker: [`Game — ${TEXAS_NOW_GAME}`, `Road — ${TEXAS_NOW_ROAD}`, `Season — ${SEASON_STANDING}`] }
         : {}),
     },
     changed: true,
@@ -120,13 +102,13 @@ const TICKER_FALLBACK = {
   ok: true,
   status: 'ready',
   items: [
-    `Game — ${SC_NOW_GAME}`,
-    `Visitors — ${SC_VISITOR_LINE}`,
+    `Game — ${TEXAS_NOW_GAME}`,
+    `Road — ${TEXAS_NOW_ROAD}`,
     `Season — ${SEASON_STANDING}`,
   ],
   nowWeek: [
-    { key: 'game', label: 'Game', items: [SC_NOW_GAME] },
-    { key: 'visitors', label: 'Visitors', items: SC_VISITOR_NAMES },
+    { key: 'game', label: 'Game', items: [TEXAS_NOW_GAME] },
+    { key: 'road', label: 'Road', items: [TEXAS_NOW_ROAD] },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],
   meta: { endpoint: 'ticker', cacheReason: 'now-edge-fallback' },
@@ -146,7 +128,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'scar-visitors-ios';
+const NOW_BUST_VALUE = 'texas-w7-ios';
 
 function needsNowCacheBust(request) {
   const cookie = request?.headers?.get?.('cookie') || '';
@@ -164,7 +146,7 @@ function applyNowCacheBust(request, headers) {
   return true;
 }
 
-function pinCurrentScarNow(data) {
+function pinCurrentTexasNow(data) {
   if (!data || typeof data !== 'object') return { data, changed: false };
   const next = {
     ...data,
@@ -188,7 +170,7 @@ function pinBaileyNowNews(data) {
     const next = out.items.map((line) => {
       if (typeof line !== 'string') return line;
       if (/^News — /i.test(line) && STALE_NOW_NEWS_RE.test(line)) {
-        return `Visitors — ${SC_VISITOR_LINE}`;
+        return `Road — ${TEXAS_NOW_ROAD}`;
       }
       return line;
     });
@@ -204,7 +186,7 @@ function pinBaileyNowNews(data) {
       const key = String(row.key || row.label || '').toLowerCase();
       const items = Array.isArray(row.items) ? row.items.map((s) => String(s || '')) : [];
       if ((key === 'news' || String(row.label || '') === 'News') && items.some((s) => STALE_NOW_NEWS_RE.test(s))) {
-        return { ...row, key: 'visitors', label: 'Visitors', items: SC_VISITOR_NAMES };
+        return { ...row, key: 'road', label: 'Road', items: [TEXAS_NOW_ROAD] };
       }
       return row;
     });
@@ -218,7 +200,7 @@ function pinBaileyNowNews(data) {
     const next = out.ticker.map((line) => {
       if (typeof line !== 'string') return line;
       if (/^News — /i.test(line) && STALE_NOW_NEWS_RE.test(line)) {
-        return `Visitors — ${SC_VISITOR_LINE}`;
+        return `Road — ${TEXAS_NOW_ROAD}`;
       }
       return line;
     });
@@ -711,7 +693,7 @@ export default async (request, context) => {
       changed = true;
     }
     if (isTickerPath(url.pathname)) {
-      const scar = pinCurrentScarNow(data);
+      const scar = pinCurrentTexasNow(data);
       if (scar.changed) {
         data = scar.data;
         changed = true;

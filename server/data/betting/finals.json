@@ -43,5 +43,14 @@
     "opp": 45,
     "source": "official",
     "completedAt": "2026-10-03T23:50:00.000Z"
+  },
+  "uf-scar-2026-w6": {
+    "gameKey": "uf-scar-2026-w6",
+    "scheduleId": "scar",
+    "opponent": "South Carolina",
+    "uf": 19,
+    "opp": 38,
+    "source": "official",
+    "completedAt": "2026-10-10T21:00:00.000Z"
   }
 }

@@ -229,28 +229,28 @@ describe('schedule-api uniforms', () => {
   });
 
   it('peekScheduleBoard does not first-paint durable leftover remaining scores', () => {
-    const scar = SCHEDULE_GAMES.find((g) => g.id === 'scar');
-    assert.ok(scar);
+    const texas = SCHEDULE_GAMES.find((g) => g.id === 'texas');
+    assert.ok(texas);
     __scheduleApiTest.clearLastGood(2026);
     __scheduleApiTest.writeLastGood(2026, {
       games: [
         {
-          ...scar,
-          pred: 'UF 36 · South Carolina 21',
+          ...texas,
+          pred: 'UF 36 · Texas 21',
           predUF: 36,
           predOpp: 21,
           ufPct: 82,
-          keys: ['Crowd the Keep & Win Early Downs'],
+          keys: ['Rush the Clean Pocket'],
         },
       ],
-      currentGameId: 'scar',
+      currentGameId: 'texas',
     });
     const peeked = peekScheduleBoard(2026);
-    const row = peeked.games.find((g) => g.id === 'scar');
+    const row = peeked.games.find((g) => g.id === 'texas');
     assert.equal(row?.pred, '');
     assert.equal(row?.predUF, 0);
     assert.equal(row?.predPending, true);
-    assert.equal(row?.keys?.[0], 'Crowd the Keep & Win Early Downs');
+    assert.equal(row?.keys?.[0], 'Rush the Clean Pocket');
   });
 
   it('peekScheduleBoard paints remaining scores after this-session live fetch', () => {
