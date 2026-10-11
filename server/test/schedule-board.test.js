@@ -370,12 +370,34 @@ describe('schedule-board', () => {
     assert.equal(texas.radar.find((a) => a.label === 'Coaching Edge')?.opp, 58);
     assert.ok(!/4-0 and No\. 1/.test(texas.film));
     assert.ok(!/Red River grade is 9/.test(texas.film + texas.howUFWins.join(' ')));
-    assert.match(texas.scoutingReport, /Rush the Clean Pocket/);
+    assert.match(texas.scoutingReport, /clean pocket/i);
     assert.ok(!texas.expectedVisitors || texas.expectedVisitors.length === 0);
     const fan = scheduleBoard.toApiPayload().games.find((g) => g.id === 'texas');
     assert.deepEqual(fan.offenseScout, []);
     assert.ok(fan.opponentTendencies.some((n) => /87\.6/.test(n)));
     assert.equal(fan.filmWatched, false);
+    const memberCopy = [
+      texas.film,
+      texas.scoutingReport,
+      ...(texas.filmNotes || []),
+      ...(texas.howUFWins || []),
+      ...(texas.opponentTendencies || []),
+      ...(texas.defenseTendencies || []),
+      ...(texas.specialTeams || []),
+      ...(texas.swing || []).map((row) => row.role),
+      fan.film,
+      fan.scoutingReport,
+      ...(fan.filmNotes || []),
+      ...(fan.howUFWins || []),
+      ...(fan.opponentTendencies || []),
+      ...(fan.defenseTendencies || []),
+      ...(fan.specialTeams || []),
+    ].join('\n');
+    assert.ok(
+      !/do not invent|not restated|ESPN box|watchStandard|filmWatched|four-game sheet|published PFF|do not blend|do not recompute|not a sit|on that sheet|the box added|PFF's note/i.test(
+        memberCopy,
+      ),
+    );
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {
