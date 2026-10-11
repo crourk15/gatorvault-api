@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Texas key 3 states the order. The drive dies before Baugh can finish it. Philo is 70.0 when the pocket stays clean and 56.0 when it collapses. Missouri pass blocking 55.8 is why it died up front. Simmons 90.5 is that collapse on Saturday. The line holds him, then Baugh puts it in. API `/api/schedule` after Render — no Codemagic. Seed is the bake row.
 - [x] Game Week Texas key 3 is the pocket only. Philo 70.0 clean / 56.0 when it collapses, pass blocking 55.8, Simmons 90.5. The yardage lines are out. API `/api/schedule` after Render — no Codemagic. Seed is the bake row.
 - [x] Game Week Texas key 2 no longer says the handoff is not the play. Called runs are 24 for minus-8. Scrambles are 20 for 149. API `/api/schedule` after Render — no Codemagic. Seed is the bake row.
 - [x] Game Week Texas key 2 is Stay With the Scramble. PFF designed runs 24 for minus-8, scrambles 20 for 149. Graham goes with Manning when he leaves. API `/api/schedule` after Render — no Codemagic. Seed is the bake row.

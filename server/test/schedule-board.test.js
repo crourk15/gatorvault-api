@@ -374,10 +374,12 @@ describe('schedule-board', () => {
     assert.equal(texas.swing[1].name, 'Myles Graham');
     assert.equal(texas.swing[1].role, texas.howUFWins[1]);
     assert.match(texas.howUFWins[2], /come away with nothing/);
+    assert.match(texas.howUFWins[2], /dies before it gets there/);
     assert.match(texas.howUFWins[2], /55\.8/);
     assert.match(texas.howUFWins[2], /70\.0/);
     assert.match(texas.howUFWins[2], /56\.0/);
     assert.match(texas.howUFWins[2], /90\.5/);
+    assert.match(texas.howUFWins[2], /pocket survives/);
     assert.ok(!/387 yards|382 yards|53\.6/.test(texas.howUFWins[2]));
     assert.equal(texas.swing[0].role, texas.howUFWins[0]);
     assert.equal(texas.swing[2].role, texas.howUFWins[2]);
