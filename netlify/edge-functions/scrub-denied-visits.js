@@ -8,6 +8,7 @@ const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolR
 
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '4-2 heading into Saturday';
+// SEC locked this window to ABC on Oct 11. The published edge was still pinning the Oct 5 line.
 const TEXAS_NOW_GAME = 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC';
 const TEXAS_NOW_NEWS = 'Easton Royal flips to Florida · No. 5';
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
