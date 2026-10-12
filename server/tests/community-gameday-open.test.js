@@ -58,6 +58,8 @@ describe('community gameday open', () => {
   it('opens Georgia with Texas week so it is not created on Georgia Saturday', () => {
     const rooms = listWeeklyGameTalks({ asOf: '2026-10-12T16:00:00.000Z' });
     assert.equal(rooms[0].gameId, 'texas');
+    assert.match(rooms[0].body, /12:00 PM ET on ABC/);
+    assert.doesNotMatch(rooms[0].body, /ABC or ESPN/);
     const georgia = rooms.find((r) => r.gameId === 'uga');
     assert.ok(georgia);
     assert.equal(georgia.title, 'Game day talk: Florida vs Georgia');

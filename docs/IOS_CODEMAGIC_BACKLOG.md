@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Home NOW Game is Florida at Texas, Saturday, October 17, 2026, 12:00 PM ET on ABC. The Oct 5 ABC-or-ESPN window is closed. API `/api/schedule` and the ticker edge after Render and Netlify — no Codemagic. Reopen the app once so the old window drops. Cache bust `gv-now-bust=texas-abc-ios`.
 - [x] Community Game talk includes Georgia (`thr_game_uga`, Oct 31 at Mercedes-Benz Stadium) while Texas stays the first room. Opened with Texas week so it is not created on Georgia Saturday. API `/api/community/game-rooms` after Render — no Codemagic. Reopen Community once.
 - [x] Easton Royal's profile no longer says he is committed to Texas. The pledge line and the overview note are Florida (flipped October 11, 2026). High school is Brother Martin, New Orleans, LA. API `/api/player/full-profile/easton-royal` after Render — no Codemagic. Reopen his profile once.
 - [x] Gator Nation Live keeps updating after the first open. The API re-reads the beat every minute and pulls writers if the 10-minute cron misses. API after Render — no Codemagic. The open page still follows the binary's poll until the bake row below.
@@ -229,6 +230,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-12 | Home NOW leftover last-good rewrites a stale week to Texas noon on ABC. **Live ticker already says ABC after the edge.** | `home-command-utils.ts` in the binary. Approved builds still rewrite a leftover week to “ABC or ESPN” until this bake. A live pack from the ticker already says ABC. | this PR |
 | 2026-10-12 | Community Game talk subtitle says this week’s game, then the next one. **Georgia and Texas rooms are API after Render.** | `VaultCommunityPage` copy in the binary. Approved builds still say “One room each week…”. | this PR |
 | 2026-10-11 | Gator Nation Live refreshes every 20 seconds and again when the member comes back to the app. **The beat itself keeps moving on the API after Render.** | `GatorNationLivePage.tsx` and `gatornation-live-api.ts` in the binary. Approved builds still poll every 45 seconds. | this PR |
 | 2026-10-11 | Gator Nation Live skips the saved dashboard cache, paints today's beat seed, and does not wait on betting lines before the news. Empty live responses retry in a few seconds. Home beat intel paints when it arrives, and the home boot script calls the production API from the bundled shell. **Live dashboard news already follows the API after Render.** | `GatorNationLivePage.tsx`, `gatornation-live-api.ts`, `gnl-hub-seed.json`, `stale-while-revalidate.ts`, `HomePremiumPage.tsx`, and `home-wow-boot.ts` in the binary. Approved builds can still first-paint the July seed and wait 45s if the first body was empty. | this PR |

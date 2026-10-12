@@ -441,9 +441,15 @@ function buildHomeNowGameStory(now = new Date(), games) {
   const home = /gainesville|swamp|hill griffin/i.test(venue);
   const where = home ? 'in the Swamp' : venue ? `at ${venue.split(',')[0].trim()}` : '';
   const tvRaw = String(game.tv || '').trim();
-  // Missouri 3:30 is ABC (SEC lock Sep 27). Do not let leftover ESPN git/durable leak onto NOW.
+  // Missouri 3:30 is ABC (SEC lock Sep 27). Texas noon is ABC (SEC lock Oct 11).
+  // Do not leave the Oct 5 ABC-or-ESPN window on NOW.
+  const gameId = String(game.id || '');
   const tvLocked =
-    String(game.id || '') === 'missouri' && /espn/i.test(tvRaw) ? 'ABC' : tvRaw;
+    gameId === 'missouri' && /espn/i.test(tvRaw)
+      ? 'ABC'
+      : gameId === 'texas' && /abc\s+or\s+espn/i.test(tvRaw)
+        ? 'ABC'
+        : tvRaw;
   const tv = tvLocked && !/^(TBD|—|-)$/i.test(tvLocked) ? tvLocked : '';
   const clock = formatKickClock(game.date);
   const weekday = weekdayFromKick(kickMs);

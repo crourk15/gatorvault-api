@@ -8,7 +8,7 @@ const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolR
 
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '4-2 heading into Saturday';
-const TEXAS_NOW_GAME = 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN';
+const TEXAS_NOW_GAME = 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC';
 const TEXAS_NOW_NEWS = 'Easton Royal flips to Florida · No. 5';
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
 /**
@@ -132,7 +132,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'royal-commit-ios';
+const NOW_BUST_VALUE = 'texas-abc-ios';
 const HUB_BUST_COOKIE = 'gv-hub-bust';
 const HUB_BUST_VALUE = 'royal-2027';
 

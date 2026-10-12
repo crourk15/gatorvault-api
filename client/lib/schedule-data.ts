@@ -589,7 +589,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     date: "October 17, 2026 · 12:00 PM ET",
     venue: "DKR-Texas Memorial Stadium, Austin TX",
     ufPct: 22,
-    tv: "ABC or ESPN",
+    tv: "ABC",
     keys: [
       "The Run",
       "The Escape",
@@ -614,7 +614,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
         role: "Their rush ends the play when the ball stays in on a straight drop. Colin Simmons has 8 sacks, 7 of them on true pass sets, and Lance Jackson has 14 pressures beside him. At Missouri, Philo was a 70.0 passer when the pocket was clean and a 56.0 when it collapsed. The pass-block grade on that game was 55.8. South Carolina sacked him three times. The line has to give help, and the ball has to be gone before that dropback becomes a sack.",
       },
     ],
-    film: "They do not open a clean hole. The run-block grade fell to 48.7 at Tennessee, and Sikorski, Baker, and Robertson all grade under 60. Of Hollywood Smothers' 198 yards, 141 came after contact, and he has forced 13 missed tackles. Saturday the tackle held: 32 carries for 122 yards and no score. Arch Manning will beat you if he gets to set his feet. Once the pocket is dirty he completes 53.8 percent. Sikorski has not allowed a pressure in 128 pass-blocking snaps, so the rush has to arrive as a group. On the year the called runs are 24 for minus-8 and the scrambles are 20 for 149. Peyton Bowen picked him while he was running and brought it back 42 yards. Saturday was Oklahoma 27, Texas 24. Colin Simmons has 8 sacks, 7 of them on true pass sets, and Lance Jackson has 14 pressures beside him. At Missouri, Philo was a 70.0 passer when the pocket was clean and a 56.0 when it collapsed. The pass-block grade was 55.8. The front has to fit the run, the defense has to be in Manning's hip when he pulls it down, and the ball has to be gone before the dropback becomes a sack. Noon at DKR. ABC or ESPN.",
+    film: "They do not open a clean hole. The run-block grade fell to 48.7 at Tennessee, and Sikorski, Baker, and Robertson all grade under 60. Of Hollywood Smothers' 198 yards, 141 came after contact, and he has forced 13 missed tackles. Saturday the tackle held: 32 carries for 122 yards and no score. Arch Manning will beat you if he gets to set his feet. Once the pocket is dirty he completes 53.8 percent. Sikorski has not allowed a pressure in 128 pass-blocking snaps, so the rush has to arrive as a group. On the year the called runs are 24 for minus-8 and the scrambles are 20 for 149. Peyton Bowen picked him while he was running and brought it back 42 yards. Saturday was Oklahoma 27, Texas 24. Colin Simmons has 8 sacks, 7 of them on true pass sets, and Lance Jackson has 14 pressures beside him. At Missouri, Philo was a 70.0 passer when the pocket was clean and a 56.0 when it collapsed. The pass-block grade was 55.8. The front has to fit the run, the defense has to be in Manning's hip when he pulls it down, and the ball has to be gone before the dropback becomes a sack. Noon at DKR. ABC.",
     filmWatched: false,
     pred: "UF 20 · Texas 34",
     predUF: 20,

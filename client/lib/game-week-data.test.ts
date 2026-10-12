@@ -223,7 +223,7 @@ describe('Game Week Film Notes', () => {
     assert.equal(radar.find((a) => a.label === 'Run Game')?.opp, 66);
     assert.equal(radar.find((a) => a.label === 'Pass Efficiency')?.opp, 84);
     assert.equal(radar.find((a) => a.label === 'Front 7')?.uf, 52);
-    assert.equal(texas.tv, 'ABC or ESPN');
+    assert.equal(texas.tv, 'ABC');
     assert.equal(texas.date, 'October 17, 2026 · 12:00 PM ET');
     assert.equal(texas.pred, 'UF 20 · Texas 34');
     assert.equal(texas.ufPct, 22);

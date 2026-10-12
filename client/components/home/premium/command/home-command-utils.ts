@@ -429,7 +429,7 @@ const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri|
 /** Posted South Carolina final — last-good Swamp / 4-1 must not beat Texas week. */
 const LEFTOVER_MISSOURI_NOW_RE =
   /missouri|faurot|4-0 heading into saturday|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45/i;
-const TEXAS_NOW_GAME = 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN';
+const TEXAS_NOW_GAME = 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC';
 const LEFTOVER_SC_WINDOW_RE = /abc or sec network|12:00\s*[–-]\s*1:00/i;
 const TEXAS_NOW_SEASON = '4-2 heading into Saturday';
 const TEXAS_NOW_NEWS = 'Easton Royal flips to Florida · No. 5';
