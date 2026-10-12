@@ -3,7 +3,7 @@
 South Carolina is final: **Florida 19, South Carolina 38** (Ben Hill Griffin).
 Record **4-2 (2-2 SEC)**. Next: **Sat Oct 17, 2026, 12:00 PM ET** at DKR-Texas Memorial Stadium, Austin.
 
-TV is **ABC or ESPN**. The Oct 5 Florida release left the final designation until after the Oct 10 games. Do not stamp one network.
+TV is **ABC**. The Oct 5 window was ABC or ESPN. The SEC locked noon ET on ABC on Oct 11.
 
 Texas is away. Home NOW middle pillar is **Road**. Do not invent Austin visitors.
 
@@ -79,7 +79,7 @@ Public board: **Texas -8.5 / O/U 53.5**. Moneyline Texas -345 / UF +275. Opened 
 
 ## NOW
 
-Game — Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN
+Game — Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC
 Road — on the road this Saturday
 Season — 4-2 heading into Saturday
 

@@ -351,7 +351,7 @@ describe('schedule-board', () => {
     assert.equal(texas.keys[1], 'The Escape');
     assert.equal(texas.keys[2], 'The True Dropback');
     assert.equal(texas.filmWatched, false);
-    assert.equal(texas.tv, 'ABC or ESPN');
+    assert.equal(texas.tv, 'ABC');
     assert.equal(texas.date, 'October 17, 2026 · 12:00 PM ET');
     assert.equal(texas.pred, 'UF 20 · Texas 34');
     assert.equal(texas.predUF, 20);
