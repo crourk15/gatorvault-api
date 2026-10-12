@@ -1015,7 +1015,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
           {!selectedId && pastGameRooms.length > 0 ? (
             <PageSection
               title="Game talk"
-              subtitle="One room each week — this week’s team, then the Saturdays already played."
+              subtitle="This week’s game, the next one, then the Saturdays already played."
             >
               <ul className="gv-community__threads">
                 {pastGameRooms.map((t) =>
