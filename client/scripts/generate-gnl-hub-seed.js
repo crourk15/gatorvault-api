@@ -65,6 +65,25 @@ function beatToFeed(posts) {
     );
 }
 
+function keepLastSeed(reason) {
+  try {
+    const prev = JSON.parse(fs.readFileSync(OUT, 'utf8'));
+    const prevFeed = Array.isArray(prev.feed) ? prev.feed.length : 0;
+    if (prevFeed > 0 && prev.source === 'prod-dashboard') {
+      console.warn(
+        '[generate-gnl-hub-seed] keeping last prod seed —',
+        reason,
+        'generatedAt',
+        prev.generatedAt
+      );
+      return true;
+    }
+  } catch {
+    /* no prior seed */
+  }
+  return false;
+}
+
 function dedupeFeed(items) {
   const seen = new Set();
   const out = [];
@@ -99,6 +118,7 @@ async function main() {
 
   feed = dedupeFeed([...beatToFeed(beat), ...feed]).slice(0, 24);
   if (!feed.length) {
+    if (keepLastSeed('production dashboard had no feed or beat')) return;
     console.error('[generate-gnl-hub-seed] FAIL — production dashboard had no feed or beat');
     process.exit(1);
   }
@@ -168,6 +188,7 @@ async function main() {
   const signal =
     payload.feed.length + payload.ticker.length + payload.panels.beatWriterHighlights.length;
   if (signal < 6) {
+    if (keepLastSeed('insufficient live signal ' + signal)) return;
     console.error('[generate-gnl-hub-seed] FAIL — insufficient live signal', signal);
     process.exit(1);
   }
