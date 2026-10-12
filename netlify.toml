@@ -15,6 +15,12 @@
   command = "npm run build:netlify"
   publish = "server"
 
+# Preview builds were starting with production and the production publish
+# was the one that died, so the live Now board stayed on the old edge.
+# Skip previews so a merge to main gets the build slot.
+[context.deploy-preview]
+  ignore = "exit 0"
+
 [build.environment]
   NODE_VERSION = "20"
   NODE_OPTIONS = "--max-old-space-size=4096"
