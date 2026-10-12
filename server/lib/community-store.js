@@ -1063,7 +1063,7 @@ function getFollowedThreadIds(email) {
  * A Saturday that already has replies stays that thread — an empty `thr_game_`
  * duplicate must not replace it.
  */
-function listGameTalkThreads(threads) {
+function listGameTalkThreads(threads, today) {
   const live = (threads || []).filter((t) => !t.deleted && looksLikeGamedayThread(t));
   const groups = new Map();
   for (const thread of live) {
@@ -1078,25 +1078,45 @@ function listGameTalkThreads(threads) {
     pool.sort((a, b) => {
       const replies = (b.replyCount || 0) - (a.replyCount || 0);
       if (replies) return replies;
+      // Empty staff daily loses to the standalone room. iOS hides today's
+      // staff card, so Game talk has to keep thr_game_<id>.
+      const aDaily = a.dailyKey ? 1 : 0;
+      const bDaily = b.dailyKey ? 1 : 0;
+      if (aDaily !== bDaily) return aDaily - bDaily;
       const aFresh = String(a.id || '').startsWith('thr_game_') ? 1 : 0;
       const bFresh = String(b.id || '').startsWith('thr_game_') ? 1 : 0;
-      return aFresh - bFresh;
+      return bFresh - aFresh;
     });
     picked.push(pool[0]);
   }
-  return picked.sort((a, b) => gameRoomRecency(b).localeCompare(gameRoomRecency(a)));
+  return sortGameTalkThreads(picked, today);
 }
 
-function getGameRooms({ limit = 8, viewerEmail = null } = {}) {
+/** Soonest upcoming game first, then the one after it, then past Saturdays. */
+function sortGameTalkThreads(threads, today) {
+  const day = String(today || todayKeyET());
+  return threads.sort((a, b) => {
+    const ad = gameRoomRecency(a);
+    const bd = gameRoomRecency(b);
+    const aUp = ad >= day;
+    const bUp = bd >= day;
+    if (aUp !== bUp) return aUp ? -1 : 1;
+    if (aUp) return ad.localeCompare(bd);
+    return bd.localeCompare(ad);
+  });
+}
+
+function getGameRooms({ limit = 8, viewerEmail = null, asOf = null } = {}) {
   ensureCategories();
   ensureFoundingSurface();
-  ensureDailyOpenThread();
-  ensureWeeklyGameTalks();
+  ensureDailyOpenThread(asOf ? { asOf } : {});
+  ensureWeeklyGameTalks(asOf ? { asOf, force: true } : {});
+  const today = todayKeyET(asOf || undefined);
   const categoryMap = getCategoryMap();
   const users = loadUsers();
   const posts = loadPosts();
   const cap = Math.max(1, Math.min(20, Number(limit) || 8));
-  return listGameTalkThreads(loadThreads())
+  return listGameTalkThreads(loadThreads(), today)
     .slice(0, cap)
     .map((t) =>
       decorateActivityThread(t, {
@@ -1237,7 +1257,7 @@ function getPublicPage({ sort = 'recent', category = null, limit = 40, gameRoomL
   };
 
   const roomCap = Math.max(1, Math.min(20, Number(gameRoomLimit) || 8));
-  const gameRooms = listGameTalkThreads(allThreads).slice(0, roomCap)
+  const gameRooms = listGameTalkThreads(allThreads, todayKeyET()).slice(0, roomCap)
     .map((t) =>
       decorateActivityThread(t, {
         posts,

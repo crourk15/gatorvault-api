@@ -50,8 +50,21 @@ describe('community gameday open', () => {
     assert.match(rooms[0].body, /12:45 PM ET on SEC Network/);
     assert.ok(rooms.some((r) => r.gameId === 'missouri'));
     assert.equal(rooms.some((r) => r.gameId === 'texas'), false);
+    assert.equal(rooms.some((r) => r.gameId === 'uga'), false);
     const nextWeek = listWeeklyGameTalks({ asOf: '2026-10-11T16:00:00.000Z' });
     assert.equal(nextWeek[0].gameId, 'texas');
+  });
+
+  it('opens Georgia with Texas week so it is not created on Georgia Saturday', () => {
+    const rooms = listWeeklyGameTalks({ asOf: '2026-10-12T16:00:00.000Z' });
+    assert.equal(rooms[0].gameId, 'texas');
+    const georgia = rooms.find((r) => r.gameId === 'uga');
+    assert.ok(georgia);
+    assert.equal(georgia.title, 'Game day talk: Florida vs Georgia');
+    assert.match(georgia.body, /Mercedes-Benz Stadium/);
+    assert.match(georgia.body, /3:30 PM ET on ABC/);
+    assert.doesNotMatch(georgia.body, /Swamp/);
+    assert.equal(rooms.some((r) => r.gameId === 'oklahoma'), false);
   });
 
   it('upgrades a generic daily open into gameday talk', () => {
@@ -108,7 +121,7 @@ describe('community store gameday upgrade', () => {
   it('opens one South Carolina game talk room and does not duplicate it', () => {
     const first = store.ensureWeeklyGameTalks({ asOf: '2026-10-10T16:00:00.000Z', force: true });
     assert.ok(first.created >= 1);
-    const rooms = store.getGameRooms({ limit: 12 });
+    const rooms = store.getGameRooms({ limit: 12, asOf: '2026-10-10T16:00:00.000Z' });
     assert.equal(rooms[0].title, 'Game day talk: Florida vs South Carolina');
     assert.equal(rooms[0].gameId, 'scar');
     assert.equal(rooms[0].id, 'thr_game_scar');
@@ -117,6 +130,23 @@ describe('community store gameday upgrade', () => {
     const listed = rooms.filter((r) => r.gameId === 'scar');
     assert.equal(listed.length, 1);
     assert.equal(rooms.some((r) => r.gameId === 'texas'), false);
+    assert.equal(rooms.some((r) => r.gameId === 'uga'), false);
+  });
+
+  it('adds Georgia once Texas week is open and keeps Texas first', () => {
+    const first = store.ensureWeeklyGameTalks({ asOf: '2026-10-12T16:00:00.000Z', force: true });
+    assert.ok(first.created >= 1);
+    const rooms = store.getGameRooms({ limit: 12, asOf: '2026-10-12T16:00:00.000Z' });
+    assert.equal(rooms[0].id, 'thr_game_texas');
+    assert.equal(rooms[0].gameId, 'texas');
+    const georgia = rooms.find((r) => r.gameId === 'uga');
+    assert.ok(georgia);
+    assert.equal(georgia.id, 'thr_game_uga');
+    assert.match(georgia.body, /Mercedes-Benz Stadium/);
+    const again = store.ensureWeeklyGameTalks({ asOf: '2026-10-12T18:00:00.000Z', force: true });
+    assert.equal(again.created, 0);
+    const listed = store.getGameRooms({ limit: 12, asOf: '2026-10-12T18:00:00.000Z' });
+    assert.equal(listed.filter((r) => r.gameId === 'uga').length, 1);
   });
 
   it('shipped iOS still lists South Carolina when it hides today’s staff thread', () => {

@@ -28,7 +28,13 @@ function opponentShort(raw) {
   return stripped.trim() || s;
 }
 
+function isNeutralSite(game) {
+  const blob = `${game?.label || ''} ${game?.venue || ''} ${game?.site || ''}`;
+  return /atlanta|mercedes-benz|neutral/i.test(blob);
+}
+
 function isHomeGame(game) {
+  if (isNeutralSite(game)) return false;
   const blob = `${game?.label || ''} ${game?.venue || ''} ${game?.site || ''}`;
   if (/\bvs\b/i.test(game?.label || '')) return true;
   if (/\bat\b/i.test(game?.label || '')) return false;
@@ -94,7 +100,11 @@ function buildGameTalkPrompt(game, kick) {
   const opp = opponentShort(game.opp || game.opponent);
   const when = formatKickClock(kick, game.date);
   const tv = String(game.tv || '').trim();
-  const place = isHomeGame(game) ? 'The Swamp' : String(game.venue || 'On the road').split(',')[0];
+  const place = isNeutralSite(game)
+    ? String(game.venue || 'Neutral site').split(',')[0]
+    : isHomeGame(game)
+      ? 'The Swamp'
+      : String(game.venue || 'On the road').split(',')[0];
   const whenBit = when || 'Kickoff TBA';
   const tvBit = tv ? ` on ${tv}` : '';
   const dayKey = etYmd(kick);
@@ -130,25 +140,52 @@ function pickGamedayOpen(opts = {}) {
   return buildGameTalkPrompt(hit.game, hit.kick);
 }
 
+function sortGameTalkPrompts(rooms, today) {
+  const day = String(today || '');
+  return rooms.sort((a, b) => {
+    const ad = String(a.dayKey || '');
+    const bd = String(b.dayKey || '');
+    const aUp = ad >= day;
+    const bUp = bd >= day;
+    if (aUp !== bUp) return aUp ? -1 : 1;
+    if (aUp) return ad.localeCompare(bd);
+    return bd.localeCompare(ad);
+  });
+}
+
 /**
- * One Game talk room per opponent. Opens six days before kickoff (the week of
- * that team) and stays after Saturday. Later weeks stay closed.
+ * One Game talk room per opponent. The current week opens six days before
+ * kickoff. The following game opens with that week, so it is not created on
+ * its own Saturday. A later week stays closed (Texas stays closed on Oct 10).
  * @param {{ asOf?: Date|string, dayKey?: string }} [opts]
  */
 function listWeeklyGameTalks(opts = {}) {
   const asOf = opts.asOf ? new Date(opts.asOf) : new Date();
   const today = opts.dayKey || etYmd(asOf);
-  const rooms = [];
+  const dated = [];
   for (const game of loadSeasonGames()) {
     if (isByeGame(game)) continue;
     const kick = parseEasternKickoff(game.date);
     if (!kick) continue;
-    const dayKey = etYmd(kick);
-    if (today < addCalendarDays(dayKey, -6)) continue;
-    rooms.push(buildGameTalkPrompt(game, kick));
+    dated.push({ game, kick, dayKey: etYmd(kick) });
   }
-  rooms.sort((a, b) => String(b.dayKey).localeCompare(String(a.dayKey)));
-  return rooms;
+  dated.sort((a, b) => a.dayKey.localeCompare(b.dayKey));
+
+  const rooms = [];
+  let latestOpen = null;
+  for (const row of dated) {
+    if (today < addCalendarDays(row.dayKey, -6)) continue;
+    rooms.push(buildGameTalkPrompt(row.game, row.kick));
+    latestOpen = row;
+  }
+  // Current week's kick is still ahead — open the game after it now.
+  if (latestOpen && latestOpen.dayKey > today) {
+    const next = dated.find((row) => row.dayKey > latestOpen.dayKey);
+    if (next && !rooms.some((room) => room.gameId === String(next.game.id || ''))) {
+      rooms.push(buildGameTalkPrompt(next.game, next.kick));
+    }
+  }
+  return sortGameTalkPrompts(rooms, today);
 }
 
 function shouldUpgradeDailyToGameday(existing, gameday) {
