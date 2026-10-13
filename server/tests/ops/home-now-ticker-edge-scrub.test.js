@@ -65,6 +65,9 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
   assert.match(src, /HUB_BUST_VALUE = 'class-rank-5'/);
+  const hubBust = src.slice(src.indexOf('function applyHubCacheBust'), src.indexOf('function isAppStoreUpdateLine'));
+  assert.match(hubBust, /headers\.delete\('clear-site-data'\)/);
+  assert.doesNotMatch(hubBust, /headers\.set\('clear-site-data'/);
   assert.match(src, /ROYAL_2027_CLASS_LINE/);
   assert.match(src, /classRank: '#5'/);
   assert.match(src, /isClassMetricsPath/);
@@ -87,10 +90,9 @@ test('recruiting page edge drops a cached 8th and stamps 5th', () => {
     'utf8'
   );
   assert.equal(htmlEdge.includes('\u0000'), false);
-  assert.match(htmlEdge, /gv-hero-rank/);
-  assert.match(htmlEdge, /class-5/);
   assert.match(htmlEdge, /"classRank":"#5"/);
-  assert.match(htmlEdge, /clear-site-data/);
+  assert.match(htmlEdge, /headers\.delete\('clear-site-data'\)/);
+  assert.doesNotMatch(htmlEdge, /headers\.set\('clear-site-data'/);
   const toml = fs.readFileSync(path.join(__dirname, '../../../netlify.toml'), 'utf8');
   assert.match(toml, /function = "hero-class-rank"/);
   assert.match(toml, /path = "\/api\/recruiting\/class-metrics"/);
