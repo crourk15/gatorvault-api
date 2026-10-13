@@ -163,7 +163,11 @@ function maxProductionWeek(ps) {
 function preferProduction(fromGit, fromOverlay) {
   if (!fromOverlay) return fromGit || null;
   if (!fromGit) return fromOverlay;
-  if (maxProductionWeek(fromOverlay) > maxProductionWeek(fromGit)) return fromOverlay;
+  const overlayWeek = maxProductionWeek(fromOverlay);
+  const gitWeek = maxProductionWeek(fromGit);
+  // A later game week always wins. A CFBD refresh can stamp a newer
+  // syncedAt on an older week and would otherwise hide the official box.
+  if (overlayWeek !== gitWeek) return overlayWeek > gitWeek ? fromOverlay : fromGit;
   const overlayAt = Date.parse(fromOverlay.syncedAt || '');
   const gitAt = Date.parse(fromGit.syncedAt || '');
   if (Number.isFinite(overlayAt) && (!Number.isFinite(gitAt) || overlayAt > gitAt)) return fromOverlay;

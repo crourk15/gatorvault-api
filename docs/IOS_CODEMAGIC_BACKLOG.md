@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Roster Stats include the South Carolina official box (week 6). Philo 21-of-28 for 227, 1 TD, 1 INT. Baugh 15 carries for 59 and a score. Wilson 8 for 74. Graham 8 tackles, 2 sacks. API `/api/roster/players/:slug` after Render — no Codemagic. Platform-ops runs `roster-official-box-sync` every 2 hours and stamps the next final on its own.
 - [x] Home NOW Game is Florida at Texas, Saturday, October 17, 2026, 12:00 PM ET on ABC. The Oct 5 window is closed on `/api/schedule` and the ticker. Launch POST `/api/member-activity/ping` and `/api/push/device` send `Clear-Site-Data: cache` on every open so a saved iOS URLCache of “ABC or ESPN” drops. Cache bust `gv-now-bust=texas-abc-only`. The Film Room chip and a saved last-good board inside the binary are the bake row.
 - [x] Community Game talk includes Georgia (`thr_game_uga`, Oct 31 at Mercedes-Benz Stadium) while Texas stays the first room. Opened with Texas week so it is not created on Georgia Saturday. API `/api/community/game-rooms` after Render — no Codemagic. Reopen Community once.
 - [x] Easton Royal's profile no longer says he is committed to Texas. The pledge line and the overview note are Florida (flipped October 11, 2026). High school is Brother Martin, New Orleans, LA. API `/api/player/full-profile/easton-royal` after Render — no Codemagic. Reopen his profile once.

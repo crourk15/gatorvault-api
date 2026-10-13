@@ -1,10 +1,13 @@
 const assert = require('assert');
 const { applyOfficialGameLines, addStatMaps, mergeExistingForward, rebuildOfficialSeason } = require('../lib/roster-production-merge');
 const { parseOfficialBoxHtml, matchRosterPlayer, indexRosterByName } = require('../lib/roster-official-box-parse');
+const fs = require('fs');
+const path = require('path');
 const {
   weekForGame,
   completedBoxes,
   candidateGames,
+  gamesNeedingOfficialBox,
   extractBoxScoreUrl,
   gameDayReached,
 } = require('../lib/roster-official-box-sync');
@@ -82,6 +85,34 @@ test('name match ignores Jr/III and last-first order', () => {
   assert.strictEqual(matchRosterPlayer('Jones Jr., Tramell', idx).slug, 'tramell-jones-jr');
   assert.strictEqual(matchRosterPlayer('Brown III, Vernell', idx).slug, 'vernell-brown-iii');
   assert.strictEqual(matchRosterPlayer('Veltkamp, Caden', idx), null);
+});
+
+test('all-zero skill rows are not a recorded line', () => {
+  const html = `
+<table>
+  <th><span class="s-table-header__column-label">Att</span></th>
+  <th><span class="s-table-header__column-label">Net</span></th>
+  <th><span class="s-table-header__column-label">TD</span></th>
+  <th><span class="s-table-header__column-label">Lg</span></th>
+  <tr><td>Ugorji, Emeka</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><td>Philo, Aaron</td><td>13</td><td>32</td><td>0</td><td>24</td></tr>
+</table>
+<table>
+  <th><span class="s-table-header__column-label">Rec.</span></th>
+  <th><span class="s-table-header__column-label">Yds.</span></th>
+  <th><span class="s-table-header__column-label">TD</span></th>
+  <th><span class="s-table-header__column-label">Long</span></th>
+  <tr><td>Chieca, Evan</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+</table>`;
+  const parsed = parseOfficialBoxHtml(html, [
+    { slug: 'emeka-ugorji', name: 'Emeka Ugorji' },
+    { slug: 'aaron-philo', name: 'Aaron Philo' },
+    { slug: 'evan-chieca', name: 'Evan Chieca' },
+  ]);
+  assert.strictEqual(parsed.has('emeka-ugorji'), false);
+  assert.strictEqual(parsed.has('evan-chieca'), false);
+  assert.strictEqual(parsed.get('aaron-philo').lines[0].stats.car, 13);
+  assert.strictEqual(parsed.get('aaron-philo').lines[0].stats.yds, 32);
 });
 
 test('parseOfficialBoxHtml keeps only UF roster rows', () => {
@@ -268,14 +299,21 @@ test('Auburn Week 3 and Ole Miss Week 4 official boxes are on Philo / Baugh / Wi
   assert.equal(game('aaron-philo', 5, 'Missouri', 'passing')?.stats?.cmp, 21);
   assert.equal(game('aaron-philo', 5, 'Missouri', 'passing')?.stats?.att, 34);
   assert.equal(game('aaron-philo', 5, 'Missouri', 'passing')?.stats?.td, 1);
+  assert.equal(game('aaron-philo', 6, 'South Carolina', 'passing')?.stats?.cmp, 21);
+  assert.equal(game('aaron-philo', 6, 'South Carolina', 'passing')?.stats?.att, 28);
+  assert.equal(game('aaron-philo', 6, 'South Carolina', 'passing')?.stats?.yds, 227);
+  assert.equal(game('aaron-philo', 6, 'South Carolina', 'passing')?.stats?.td, 1);
+  assert.equal(game('aaron-philo', 6, 'South Carolina', 'passing')?.stats?.int, 1);
+  assert.equal(game('aaron-philo', 6, 'South Carolina', 'rushing')?.stats?.car, 13);
+  assert.equal(game('aaron-philo', 6, 'South Carolina', 'rushing')?.stats?.yds, 32);
   assert.deepEqual(season('aaron-philo', 'passing')?.stats, {
-    cmp: 84,
-    att: 121,
-    yds: 1114,
-    td: 8,
-    int: 2,
+    cmp: 105,
+    att: 149,
+    yds: 1341,
+    td: 9,
+    int: 3,
     lng: 63,
-    avg: 9.2,
+    avg: 9,
   });
 
   assert.equal(game('jadan-baugh', 3, 'Auburn', 'rushing')?.stats?.yds, 162);
@@ -284,17 +322,25 @@ test('Auburn Week 3 and Ole Miss Week 4 official boxes are on Philo / Baugh / Wi
   assert.equal(game('jadan-baugh', 4, 'Ole Miss', 'rushing')?.stats?.td, 3);
   assert.equal(game('jadan-baugh', 5, 'Missouri', 'rushing')?.stats?.yds, 13);
   assert.equal(game('jadan-baugh', 5, 'Missouri', 'rushing')?.stats?.car, 12);
-  assert.equal(season('jadan-baugh', 'rushing')?.stats?.car, 95);
-  assert.equal(season('jadan-baugh', 'rushing')?.stats?.yds, 613);
-  assert.equal(season('jadan-baugh', 'rushing')?.stats?.td, 11);
+  assert.equal(game('jadan-baugh', 6, 'South Carolina', 'rushing')?.stats?.car, 15);
+  assert.equal(game('jadan-baugh', 6, 'South Carolina', 'rushing')?.stats?.yds, 59);
+  assert.equal(game('jadan-baugh', 6, 'South Carolina', 'rushing')?.stats?.td, 1);
+  assert.equal(game('jadan-baugh', 6, 'South Carolina', 'receiving')?.stats?.rec, 2);
+  assert.equal(game('jadan-baugh', 6, 'South Carolina', 'receiving')?.stats?.yds, 11);
+  assert.equal(season('jadan-baugh', 'rushing')?.stats?.car, 110);
+  assert.equal(season('jadan-baugh', 'rushing')?.stats?.yds, 672);
+  assert.equal(season('jadan-baugh', 'rushing')?.stats?.td, 12);
 
   assert.equal(game('dallas-wilson', 3, 'Auburn', 'receiving')?.stats?.yds, 74);
   assert.equal(game('dallas-wilson', 3, 'Auburn', 'receiving')?.stats?.td, 1);
   assert.equal(game('dallas-wilson', 4, 'Ole Miss', 'receiving')?.stats?.yds, 11);
   assert.equal(game('dallas-wilson', 5, 'Missouri', 'receiving')?.stats?.yds, 66);
   assert.equal(game('dallas-wilson', 5, 'Missouri', 'receiving')?.stats?.td, 1);
-  assert.equal(season('dallas-wilson', 'receiving')?.stats?.rec, 18);
-  assert.equal(season('dallas-wilson', 'receiving')?.stats?.yds, 302);
+  assert.equal(game('dallas-wilson', 6, 'South Carolina', 'receiving')?.stats?.rec, 8);
+  assert.equal(game('dallas-wilson', 6, 'South Carolina', 'receiving')?.stats?.yds, 74);
+  assert.equal(game('dallas-wilson', 6, 'South Carolina', 'receiving')?.stats?.td, 0);
+  assert.equal(season('dallas-wilson', 'receiving')?.stats?.rec, 26);
+  assert.equal(season('dallas-wilson', 'receiving')?.stats?.yds, 376);
   assert.equal(season('dallas-wilson', 'receiving')?.stats?.td, 3);
 });
 
@@ -322,8 +368,13 @@ test('every 2026 official week is on Brown / Graham after the full-box rebuild',
   assert.equal(game('myles-graham', 2, 'Campbell', 'defense')?.stats?.solo, 4);
   assert.equal(game('myles-graham', 5, 'Missouri', 'defense')?.stats?.tot, 5);
   assert.equal(game('myles-graham', 5, 'Missouri', 'defense')?.stats?.solo, 1);
-  assert.equal(season('myles-graham', 'defense')?.stats?.tot, 33);
-  assert.equal(season('myles-graham', 'defense')?.stats?.solo, 17);
+  assert.equal(game('myles-graham', 6, 'South Carolina', 'defense')?.stats?.tot, 8);
+  assert.equal(game('myles-graham', 6, 'South Carolina', 'defense')?.stats?.solo, 3);
+  assert.equal(game('myles-graham', 6, 'South Carolina', 'defense')?.stats?.sack, 2);
+  assert.equal(game('jayden-woods', 6, 'South Carolina', 'defense')?.stats?.tot, 3);
+  assert.equal(game('jayden-woods', 6, 'South Carolina', 'defense')?.stats?.sack, 0.5);
+  assert.equal(season('myles-graham', 'defense')?.stats?.tot, 41);
+  assert.equal(season('myles-graham', 'defense')?.stats?.solo, 20);
   assert.equal(game('drake-stubbs', 2, 'Campbell', 'defense')?.stats?.tot, 2);
 });
 
@@ -415,6 +466,101 @@ test('durable production overlay wins when it has a newer week', () => {
   const picked = preferProduction(git, overlay);
   assert.strictEqual(picked.recentGames[0].opponent, 'Missouri');
   assert.strictEqual(picked.recentGames[0].week, 5);
+});
+
+test('a later git week wins over a newer timestamp on an older week', () => {
+  const { preferProduction } = require('../lib/roster-store');
+  const git = {
+    source: 'official',
+    syncedAt: '2026-10-13T15:00:00.000Z',
+    recentGames: [{ season: 2026, week: 6, opponent: 'South Carolina', stats: { yds: 227 } }],
+  };
+  const overlay = {
+    source: 'official',
+    syncedAt: '2026-10-13T18:00:00.000Z',
+    recentGames: [{ season: 2026, week: 5, opponent: 'Missouri', stats: { yds: 197 } }],
+  };
+  const picked = preferProduction(git, overlay);
+  assert.strictEqual(picked.recentGames[0].opponent, 'South Carolina');
+  assert.strictEqual(picked.recentGames[0].week, 6);
+});
+
+test('South Carolina is a completed official box in week 6', () => {
+  const board = require('../lib/schedule-board').getScheduleBoard(2026);
+  const scar = completedBoxes(board).find((g) => g.id === 'scar');
+  assert.ok(scar);
+  assert.strictEqual(weekForGame(board, scar), 6);
+  assert.match(String(scar.boxScoreUrl || ''), /south-carolina\/boxscore\/27908/);
+});
+
+test('automatic sync fetches a missing week and still rechecks the latest final', () => {
+  const board = {
+    season: 2026,
+    games: [
+      {
+        id: 'fau',
+        kind: 'game',
+        finalUF: 66,
+        finalOpp: 7,
+        boxScoreUrl: 'https://example.com/fau',
+        date: 'September 5, 2026 · 12:00 PM ET',
+        tickets: { gameCenter: 'https://floridagators.com/game-center/1' },
+      },
+      {
+        id: 'scar',
+        kind: 'game',
+        finalUF: 19,
+        finalOpp: 38,
+        boxScoreUrl: 'https://example.com/scar',
+        date: 'October 10, 2026 · 12:45 PM ET',
+        tickets: { gameCenter: 'https://floridagators.com/game-center/2' },
+      },
+    ],
+  };
+  const now = new Date('2026-10-13T16:00:00.000Z');
+  const missing = gamesNeedingOfficialBox(
+    board,
+    [{ productionStats: { recentGames: [{ season: 2026, week: 1, category: 'passing' }] } }],
+    { now }
+  );
+  assert.deepEqual(missing.map((g) => g.id), ['scar']);
+
+  const stamped = gamesNeedingOfficialBox(
+    board,
+    [
+      {
+        productionStats: {
+          recentGames: [
+            { season: 2026, week: 1, category: 'passing' },
+            { season: 2026, week: 2, category: 'passing' },
+          ],
+        },
+      },
+    ],
+    { now }
+  );
+  assert.deepEqual(stamped.map((g) => g.id), ['scar']);
+
+  const forced = gamesNeedingOfficialBox(board, [], { gameId: 'fau', now });
+  assert.deepEqual(forced.map((g) => g.id), ['fau']);
+});
+
+test('on October 13 the automatic sync still has South Carolina and not Texas', () => {
+  const board = require('../lib/schedule-board').getScheduleBoard(2026);
+  const roster = require('../data/roster/players.json');
+  const need = gamesNeedingOfficialBox(board, roster, { now: new Date('2026-10-13T18:00:00.000Z') });
+  assert.deepEqual(
+    need.map((g) => g.id),
+    ['scar']
+  );
+});
+
+test('platform-ops cron runs the official box sync first', () => {
+  const yaml = fs.readFileSync(path.join(__dirname, '../../render.yaml'), 'utf8');
+  const ensure = fs.readFileSync(path.join(__dirname, '../scripts/ensure-live-intel-cron.js'), 'utf8');
+  const jobs = 'roster-official-box-sync,portal-ingest,depth-chart-refresh,game-zone-refresh,nil-refresh';
+  assert.ok(yaml.includes(`value: ${jobs}`));
+  assert.ok(ensure.includes(jobs));
 });
 
 console.log('all official box roster stats tests passed');

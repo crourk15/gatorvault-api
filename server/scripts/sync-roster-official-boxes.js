@@ -5,7 +5,8 @@
  *
  *   node server/scripts/sync-roster-official-boxes.js
  *   node server/scripts/sync-roster-official-boxes.js --dry-run
- *   node server/scripts/sync-roster-official-boxes.js --game=fau
+ *   node server/scripts/sync-roster-official-boxes.js --game=scar
+ *   node server/scripts/sync-roster-official-boxes.js --rebuild
  */
 'use strict';
 
@@ -18,9 +19,11 @@ function argValue(flag) {
 
 async function main() {
   const dryRun = process.argv.includes('--dry-run');
+  const rebuild = process.argv.includes('--rebuild');
   const gameId = argValue('--game');
   const result = await syncRosterOfficialBoxes({
     dryRun,
+    rebuild,
     persistSchedule: !dryRun,
     gameId: gameId || undefined,
   });

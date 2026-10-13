@@ -3,7 +3,7 @@
  * - Verify beat-ingest + platform-ops cron services
  * - Sync MONITORING_CRON_SECRET onto those crons from gatorvault-api
  * - Hub mode ON / auto-scheduler OFF on web service
- * - PLATFORM_OPS_JOBS without x-autoposter-run; include live-refresh
+ * - PLATFORM_OPS_JOBS without x-autoposter-run; roster-official-box-sync first
  * Does not print secret values.
  *
  * Usage: node server/scripts/ensure-live-intel-cron.js
@@ -24,7 +24,7 @@ const KEEPALIVE_CRON = 'gatorvault-api-keepalive';
 const EXTRA_CRONS = ['gatorvault-api-recruiting-ingest', 'gatorvault-api-hub-refresh'];
 const PROD_API = 'https://gatorvault-api.onrender.com';
 const PLATFORM_OPS_JOBS =
-  'portal-ingest,depth-chart-refresh,game-zone-refresh,nil-refresh';
+  'roster-official-box-sync,portal-ingest,depth-chart-refresh,game-zone-refresh,nil-refresh';
 
 function saveLocalSecret(secret) {
   let text = fs.existsSync(ENV_PATH) ? fs.readFileSync(ENV_PATH, 'utf8') : '';

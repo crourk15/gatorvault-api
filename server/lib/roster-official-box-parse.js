@@ -118,6 +118,7 @@ function statsFromRow(category, headers, row) {
     const int = numAt(row, at(['int']));
     const lng = numAt(row, at(['long', 'lng']));
     if (cmp == null && att == null && yds == null) return null;
+    if (!cmp && !att && !yds && !td && !int) return null;
     const stats = { cmp, att, yds, td, int, lng };
     if (att && yds != null) stats.avg = Math.round((yds / att) * 10) / 10;
     return compact(stats);
@@ -128,6 +129,7 @@ function statsFromRow(category, headers, row) {
     const td = numAt(row, at(['td']));
     const lng = numAt(row, at(['lg', 'long', 'lng']));
     if (car == null && yds == null) return null;
+    if (!car && !yds && !td) return null;
     const stats = { car, yds, td, lng };
     if (car && yds != null) stats.avg = Math.round((yds / car) * 10) / 10;
     return compact(stats);
@@ -138,6 +140,7 @@ function statsFromRow(category, headers, row) {
     const td = numAt(row, at(['td']));
     const lng = numAt(row, at(['long', 'lng']));
     if (rec == null && yds == null) return null;
+    if (!rec && !yds && !td) return null;
     const stats = { rec, yds, td, lng };
     if (rec && yds != null) stats.avg = Math.round((yds / rec) * 10) / 10;
     return compact(stats);
