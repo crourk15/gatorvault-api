@@ -522,15 +522,11 @@ function needsHubCacheBust(request) {
   return !new RegExp(`(?:^|;\\s*)${HUB_BUST_COOKIE}=${HUB_BUST_VALUE}(?:;|$)`).test(cookie);
 }
 
-function applyHubCacheBust(request, headers) {
-  if (!needsHubCacheBust(request)) return false;
-  headers.set('clear-site-data', '"cache"');
-  headers.append(
-    'set-cookie',
-    `${HUB_BUST_COOKIE}=${HUB_BUST_VALUE}; Max-Age=1209600; Path=/; Secure; SameSite=Lax`
-  );
-  headers.set('x-gv-hub-bust', HUB_BUST_VALUE);
-  return true;
+function applyHubCacheBust(_request, headers) {
+  // Clear-Site-Data on the hub response wiped scripts while the vault page
+  // was still loading and members saw "This Vault page failed to load".
+  headers.delete('clear-site-data');
+  return false;
 }
 
 function isAppStoreUpdateLine(text) {
