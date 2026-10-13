@@ -1,24 +1,24 @@
 {
   "year": 2027,
   "title": "Florida Recruiting",
-  "subtitle": "Who Florida is chasing \u2014 movement, board, and beat intel.",
+  "subtitle": "Easton Royal flipped from Texas. 5-star WR, No. 5 nationally.",
   "classYears": [
     2026,
     2027,
     2028
   ],
   "ticker": [
-    "2027 class trending nationally \u2014 UF at #8",
-    "Blue chip % at 65%",
-    "26 commits locked for 2027",
+    "2027 class trending nationally \u2014 UF at #5",
+    "Blue chip % at 67%",
+    "27 commits locked for 2027",
     "Tranard Roberts \u2014 unofficial visit \u00b7 Florida"
   ],
   "classOverview": {
-    "classRank": "#8",
-    "blueChip": "68%",
-    "commits": "26",
+    "classRank": "#5",
+    "blueChip": "67%",
+    "commits": "27",
     "commitLabel": "Commits",
-    "avgRating": "89.9",
+    "avgRating": "90.1",
     "trendRank": "Stable",
     "trendBlueChip": "Rising",
     "trendCommits": "Rising",
@@ -49,11 +49,11 @@
       }
     },
     "2027": {
-      "classRank": "#8",
-      "blueChip": "68%",
-      "commits": "26",
+      "classRank": "#5",
+      "blueChip": "67%",
+      "commits": "27",
       "commitLabel": "Commits",
-      "avgRating": "89.9",
+      "avgRating": "90.1",
       "trendRank": "Stable",
       "trendBlueChip": "Rising",
       "trendCommits": "Rising",
@@ -91,9 +91,9 @@
     "source": "hub-runtime"
   },
   "items": [
-    "2027 class trending nationally \u2014 UF at #8",
-    "Blue chip % at 65%",
-    "26 commits locked for 2027",
+    "2027 class trending nationally \u2014 UF at #5",
+    "Blue chip % at 67%",
+    "27 commits locked for 2027",
     "Tranard Roberts \u2014 unofficial visit \u00b7 Florida"
   ]
 }
