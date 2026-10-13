@@ -82,6 +82,69 @@ function classOverviewCommitCount(value) {
   return Number.parseInt(String(value?.commits ?? ''), 10) || 0;
 }
 
+function classRankNumber(value) {
+  const n = Number.parseInt(String(value?.classRank || '').replace(/[^0-9]/g, ''), 10);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+/** August 2027 plate the hero kept painting after Easton Royal flipped. */
+function isAugust2027ClassLine(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  if (String(value.classRank || '') !== '#8') return false;
+  const commits = String(value.commits ?? '');
+  const avg = String(value.avgRating || '');
+  return commits === '26' || avg === '89.9' || avg === '89.8' || avg === '89.7';
+}
+
+const ROYAL_2027_CLASS_LINE = {
+  classRank: '#5',
+  blueChip: '67%',
+  commits: '27',
+  commitLabel: 'Commits',
+  avgRating: '90.1',
+};
+
+function pinRoyalClassFields(target) {
+  if (!target || typeof target !== 'object' || Array.isArray(target)) return;
+  for (const key of Object.keys(ROYAL_2027_CLASS_LINE)) {
+    if (Array.isArray(target[key])) continue;
+    target[key] = ROYAL_2027_CLASS_LINE[key];
+  }
+}
+
+/** 2027 hero chart. Never replace a commit list with the count string. */
+function pin2027OverviewNests(value, year) {
+  if (!value || typeof value !== 'object') return value;
+  if (Number(year) === 2027) {
+    if (value.classOverview && typeof value.classOverview === 'object' && !Array.isArray(value.classOverview)) {
+      pinRoyalClassFields(value.classOverview);
+    } else if (value.classRank != null || value.avgRating != null || value.blueChip != null) {
+      pinRoyalClassFields(value);
+    }
+  }
+  const all = value.classOverviewAll;
+  if (all && typeof all === 'object') {
+    if (all[2027] && typeof all[2027] === 'object') pinRoyalClassFields(all[2027]);
+    if (all['2027'] && all['2027'] !== all[2027] && typeof all['2027'] === 'object') {
+      pinRoyalClassFields(all['2027']);
+    }
+  }
+  return value;
+}
+
+function healthyOverviewCanReplace(nest, healthy) {
+  if (!healthy || typeof healthy !== 'object') return false;
+  if (!nest || typeof nest !== 'object') return true;
+  if (isAugust2027ClassLine(healthy) && !isAugust2027ClassLine(nest)) return false;
+  const nestCount = classOverviewCommitCount(nest);
+  const healthyCount = classOverviewCommitCount(healthy);
+  if (healthyCount && nestCount && healthyCount < nestCount) return false;
+  const nestRank = classRankNumber(nest);
+  const healthyRank = classRankNumber(healthy);
+  if (nestRank != null && healthyRank != null && healthyRank > nestRank) return false;
+  return true;
+}
+
 function isUsableClassOverviewSnapshot(value, year) {
   if (!value || typeof value !== 'object') return false;
   const required = verifiedCommitSlugsForYear(year);
@@ -525,14 +588,15 @@ function readHealthyClassOverview(year) {
       /* optional */
     }
   }
-  if (!isUsableClassOverviewSnapshot(healthy, y)) {
+  if (!isUsableClassOverviewSnapshot(healthy, y) || isAugust2027ClassLine(healthy)) {
     try {
       healthy = readHubDiskSnapshot('class-overview', y);
     } catch {
       healthy = null;
     }
   }
-  return isUsableClassOverviewSnapshot(healthy, y) ? healthy : null;
+  if (!isUsableClassOverviewSnapshot(healthy, y) || isAugust2027ClassLine(healthy)) return null;
+  return healthy;
 }
 
 /**
@@ -558,13 +622,16 @@ function healOverviewNests(value, year) {
           avgRating: healthy.avgRating,
         };
       } else if (
-        !isUsableClassOverviewSnapshot(nest, y) ||
-        healthyCount > nestCount ||
-        String(nest.avgRating || '') !== String(healthy.avgRating || '')
+        healthyOverviewCanReplace(nest, healthy) &&
+        (!isUsableClassOverviewSnapshot(nest, y) ||
+          healthyCount > nestCount ||
+          String(nest.avgRating || '') !== String(healthy.avgRating || ''))
       ) {
         applyHealthyOverview(nest, healthy);
       }
-      healLockedCommitTicker(value.ticker, y, healthy.commits);
+      if (!isAugust2027ClassLine(healthy)) {
+        healLockedCommitTicker(value.ticker, y, healthy.commits);
+      }
     }
   }
 
@@ -588,14 +655,16 @@ function healOverviewNests(value, year) {
         continue;
       }
       if (
-        !isUsableClassOverviewSnapshot(nest, nestYear) ||
-        classOverviewCommitCount(healthy) > classOverviewCommitCount(nest) ||
-        String(nest.avgRating || '') !== String(healthy.avgRating || '')
+        healthyOverviewCanReplace(nest, healthy) &&
+        (!isUsableClassOverviewSnapshot(nest, nestYear) ||
+          classOverviewCommitCount(healthy) > classOverviewCommitCount(nest) ||
+          String(nest.avgRating || '') !== String(healthy.avgRating || ''))
       ) {
         applyHealthyOverview(nest, healthy);
       }
     }
   }
+  pin2027OverviewNests(value, y);
   return value;
 }
 
@@ -660,6 +729,7 @@ function pinEastonRoyalHubSurface(value, year) {
     const { hubHeroSubtitle } = require('./recruiting-hub-elite');
     value.subtitle = hubHeroSubtitle(2027);
   }
+  pin2027OverviewNests(value, 2027);
   return value;
 }
 
@@ -669,6 +739,14 @@ function isHubRoyalSurfaceKey(cacheKey) {
     /^hub:elite:bundle:[^:]+:\d+$/.test(key) ||
     /^hub:elite:hero:\d+$/.test(key) ||
     /^hub:elite:commits:(?:[^:]+:)?\d+$/.test(key)
+  );
+}
+
+function isHubClassLineKey(cacheKey) {
+  const key = String(cacheKey || '');
+  return (
+    /^hub:class:snapshot:[^:]+:\d+$/.test(key) ||
+    /^hub:elite:class-overview:[^:]+:\d+$/.test(key)
   );
 }
 
@@ -688,6 +766,10 @@ function healCachedHubPayload(cacheKey, value) {
   }
   const commitsYear = String(cacheKey || '').match(/^hub:elite:commits:(?:[^:]+:)?(\d+)$/);
   if (commitsYear) pinEastonRoyalHubSurface(value, Number(commitsYear[1]));
+  const metricsYear = String(cacheKey || '').match(
+    /^(?:hub:class:snapshot|hub:elite:class-overview):[^:]+:(\d+)$/
+  );
+  if (metricsYear) pin2027OverviewNests(value, Number(metricsYear[1]));
   return value;
 }
 
@@ -1125,7 +1207,7 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   if (hit != null) {
     // Older in-memory bundles predate footprint seeding — backfill on hit.
     // Also heal poisoned nest (0 commits while dedicated footprint is healthy).
-    if (isHubRoyalSurfaceKey(cacheKey)) {
+    if (isHubRoyalSurfaceKey(cacheKey) || isHubClassLineKey(cacheKey)) {
       healCachedHubPayload(cacheKey, hit);
       persistDurableCacheValue(cacheKey, hit);
     }
@@ -1140,7 +1222,7 @@ async function serveCached(cacheKey, builderFn, options = {}) {
 
   const stale = hubCache.getStale(cacheKey);
   if (stale != null) {
-    if (isHubRoyalSurfaceKey(cacheKey)) {
+    if (isHubRoyalSurfaceKey(cacheKey) || isHubClassLineKey(cacheKey)) {
       healCachedHubPayload(cacheKey, stale);
       persistDurableCacheValue(cacheKey, stale);
     }
@@ -1170,7 +1252,9 @@ async function serveCached(cacheKey, builderFn, options = {}) {
       if (
         diskFallback.endpoint === 'bundle' ||
         diskFallback.endpoint === 'hero' ||
-        diskFallback.endpoint === 'commits'
+        diskFallback.endpoint === 'commits' ||
+        diskFallback.endpoint === 'class-metrics' ||
+        diskFallback.endpoint === 'class-overview'
       ) {
         healCachedHubPayload(cacheKey, diskValue);
       }
@@ -1515,7 +1599,14 @@ function primeLiteKeysFromDisk(years, options = {}) {
     if (persist) {
       cacheHubValue(cacheKey, value);
     } else {
-      if (endpoint === 'bundle' || endpoint === 'hero') healCachedHubPayload(cacheKey, value);
+      if (
+        endpoint === 'bundle' ||
+        endpoint === 'hero' ||
+        endpoint === 'class-overview' ||
+        endpoint === 'class-metrics'
+      ) {
+        healCachedHubPayload(cacheKey, value);
+      }
       hubCache.set(cacheKey, value);
       seedFootprintFromBundle(cacheKey, value);
     }
@@ -1585,7 +1676,14 @@ async function primeLiteKeysFromDiskAsync(years, options = {}) {
       if (persist) {
         cacheHubValue(cacheKey, value);
       } else {
-        if (endpoint === 'bundle' || endpoint === 'hero') healCachedHubPayload(cacheKey, value);
+        if (
+          endpoint === 'bundle' ||
+          endpoint === 'hero' ||
+          endpoint === 'class-overview' ||
+          endpoint === 'class-metrics'
+        ) {
+          healCachedHubPayload(cacheKey, value);
+        }
         hubCache.set(cacheKey, value);
         seedFootprintFromBundle(cacheKey, value);
       }

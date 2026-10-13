@@ -51,4 +51,81 @@ describe('Recruiting Hub hero endpoint payload', () => {
     const again = pinEastonRoyalHubSurface(bundle, 2027);
     assert.equal(again.movementFeed.filter((row) => row.id === 'commit-easton-royal').length, 1);
   });
+
+  it('keeps #5 / 67% / 27 / 90.1 when an August plate is the healthy cache', () => {
+    const {
+      healOverviewNests,
+      eliteClassOverviewCacheKey,
+      hubCache,
+    } = require('../../lib/recruiting-hub-cache');
+    const key = eliteClassOverviewCacheKey(2027);
+    hubCache.set(key, {
+      classRank: '#8',
+      blueChip: '65%',
+      commits: '26',
+      commitLabel: 'Commits',
+      avgRating: '89.9',
+    });
+    const payload = {
+      commits: [
+        { id: 'maxwell-hiller', name: 'Maxwell Hiller' },
+        { id: 'easton-royal', name: 'Easton Royal' },
+      ],
+      classOverview: {
+        classRank: '#5',
+        blueChip: '67%',
+        commits: '27',
+        commitLabel: 'Commits',
+        avgRating: '90.1',
+      },
+      classOverviewAll: {
+        2027: {
+          classRank: '#8',
+          blueChip: '68%',
+          commits: '26',
+          avgRating: '89.9',
+        },
+      },
+    };
+    healOverviewNests(payload, 2027);
+    assert.equal(Array.isArray(payload.commits), true);
+    assert.equal(payload.commits.length, 2);
+    assert.equal(payload.commits[1].id, 'easton-royal');
+    assert.equal(payload.classOverview.classRank, '#5');
+    assert.equal(payload.classOverview.blueChip, '67%');
+    assert.equal(payload.classOverview.commits, '27');
+    assert.equal(payload.classOverview.avgRating, '90.1');
+    assert.equal(payload.classOverviewAll[2027].classRank, '#5');
+    assert.equal(payload.classOverviewAll[2027].commits, '27');
+    assert.equal(payload.classOverviewAll[2027].avgRating, '90.1');
+    hubCache.remove(key);
+  });
+
+  it('pins the 2027 class line without turning the commit list into a count', () => {
+    const bundle = pinEastonRoyalHubSurface(
+      {
+        title: 'Florida Recruiting',
+        subtitle: 'Who Florida is chasing — movement, board, and beat intel.',
+        commits: [
+          { id: 'maxwell-hiller', name: 'Maxwell Hiller' },
+          { id: 'easton-royal', name: 'Easton Royal' },
+        ],
+        classOverview: {
+          classRank: '#8',
+          blueChip: '65%',
+          commits: '26',
+          commitLabel: 'Commits',
+          avgRating: '89.9',
+        },
+      },
+      2027
+    );
+    assert.equal(Array.isArray(bundle.commits), true);
+    assert.equal(bundle.commits[0].id, 'easton-royal');
+    assert.equal(bundle.classOverview.classRank, '#5');
+    assert.equal(bundle.classOverview.blueChip, '67%');
+    assert.equal(bundle.classOverview.commits, '27');
+    assert.equal(bundle.classOverview.avgRating, '90.1');
+    assert.match(bundle.subtitle, /Easton Royal flipped from Texas/);
+  });
 });
