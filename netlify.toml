@@ -152,6 +152,26 @@
 
 [[edge_functions]]
   function = "scrub-denied-visits"
+  path = "/api/recruiting/class-metrics"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
+  path = "/api/recruiting/class-metrics/*"
+
+[[edge_functions]]
+  function = "hero-class-rank"
+  path = "/vault/recruiting"
+
+[[edge_functions]]
+  function = "hero-class-rank"
+  path = "/vault/recruiting/"
+
+[[edge_functions]]
+  function = "hero-class-rank"
+  path = "/vault/recruiting/index.html"
+
+[[edge_functions]]
+  function = "scrub-denied-visits"
   path = "/api/players/*"
 
 [[edge_functions]]
