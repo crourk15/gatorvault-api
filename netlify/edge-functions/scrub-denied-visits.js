@@ -425,9 +425,14 @@ const ROYAL_2027_CLASS_LINE = {
 };
 
 function pin2027ClassLine(ov) {
-  const base = ov && typeof ov === 'object' ? { ...ov } : {};
+  const base = ov && typeof ov === 'object' && !Array.isArray(ov) ? { ...ov } : {};
   let changed = false;
   for (const key of Object.keys(ROYAL_2027_CLASS_LINE)) {
+    // Hub bundle `commits` is the player list. The count string belongs on
+    // classOverview and the flat class-metrics plate. Replacing the list
+    // with "27" makes installed iOS call .map on a string and show
+    // "This Vault page failed to load".
+    if (Array.isArray(base[key])) continue;
     if (base[key] !== ROYAL_2027_CLASS_LINE[key]) {
       base[key] = ROYAL_2027_CLASS_LINE[key];
       changed = true;
@@ -441,11 +446,13 @@ function apply2027ClassLine(data) {
   const out = { ...data };
   let changed = false;
   if (out.classRank != null || out.blueChip != null || out.commits != null || out.avgRating != null) {
+    const playerList = Array.isArray(out.commits) ? out.commits : null;
     const pinned = pin2027ClassLine(out);
     if (pinned.changed) {
       Object.assign(out, pinned.overview);
       changed = true;
     }
+    if (playerList) out.commits = playerList;
   }
   if (out.classOverview && typeof out.classOverview === 'object') {
     const pinned = pin2027ClassLine(out.classOverview);

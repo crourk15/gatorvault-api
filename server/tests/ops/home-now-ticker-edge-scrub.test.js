@@ -103,6 +103,49 @@ test('recruiting page edge drops a cached 8th and stamps 5th', () => {
   assert.match(toml, /path = "\/api\/recruiting\/class-metrics"/);
 });
 
+test('2027 class pin keeps the hub commit list and still stamps the class line', () => {
+  const start = src.indexOf('const EASTON_ROYAL_HUB_SUBTITLE');
+  const end = src.indexOf('function needsHubCacheBust');
+  assert.ok(start > 0 && end > start);
+  const { apply2027ClassLine, pinEastonRoyalHub } = new Function(
+    `${src.slice(start, end)}; return { apply2027ClassLine, pinEastonRoyalHub };`
+  )();
+  const players = [
+    { id: 'maxwell-hiller', name: 'Maxwell Hiller' },
+    { id: 'easton-royal', name: 'Easton Royal' },
+  ];
+  const bundle = {
+    year: 2027,
+    commits: players,
+    classOverview: { classRank: '#8', blueChip: '65%', commits: '26', avgRating: '89.7' },
+    classOverviewAll: { 2027: { classRank: '#8', commits: '26' } },
+  };
+  const pinned = pinEastonRoyalHub(bundle, 2027);
+  assert.equal(Array.isArray(pinned.data.commits), true);
+  assert.equal(pinned.data.commits.length, 2);
+  assert.equal(pinned.data.commits[0].id, 'easton-royal');
+  assert.equal(pinned.data.commits[0].name, 'Easton Royal');
+  assert.equal(pinned.data.classOverview.classRank, '#5');
+  assert.equal(pinned.data.classOverview.blueChip, '67%');
+  assert.equal(pinned.data.classOverview.commits, '27');
+  assert.equal(pinned.data.classOverview.avgRating, '90.1');
+  assert.equal(pinned.data.classOverviewAll['2027'].classRank, '#5');
+  assert.equal(pinned.data.classOverviewAll['2027'].commits, '27');
+
+  const metrics = apply2027ClassLine({
+    ok: true,
+    classRank: '#8',
+    blueChip: '65%',
+    commits: '26',
+    avgRating: '89.7',
+  });
+  assert.equal(metrics.data.classRank, '#5');
+  assert.equal(metrics.data.blueChip, '67%');
+  assert.equal(metrics.data.commits, '27');
+  assert.equal(metrics.data.avgRating, '90.1');
+  assert.equal(typeof metrics.data.commits, 'string');
+});
+
 test('vault hydration boot script parses', () => {
   const { VAULT_HYDRATION_BOOT_SCRIPT } = require('../../../client/lib/vault-hydration-guard');
   assert.equal(VAULT_HYDRATION_BOOT_SCRIPT.includes('\u0000'), false);
