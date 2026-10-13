@@ -17,6 +17,11 @@ import {
 } from '@/lib/recruiting-class-year-store';
 import { RECRUITING_CLASS_YEARS, parseRecruitingClassYear, classCommitMetricLabel } from '@/lib/recruiting-cycle';
 import { initGvHydrate, scheduleHeroHydration, releaseHeroHydrationGate } from '@/lib/gv-hydrate';
+import {
+  isStaleAugust2027ClassLine,
+  readStoredHubClassLine,
+  writeStoredHubClassLine,
+} from '@/lib/recruiting-hub-bundle-seed';
 import '@/lib/recruiting-hub-window';
 
 const CLASS_YEARS = RECRUITING_CLASS_YEARS;
@@ -105,25 +110,46 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
 
   useEffect(() => {
     let cancelled = false;
-    const fromBundle =
+    const rawFromBundle =
       data?.year === activeYear
         ? data.classOverview
         : data?.classOverviewAll?.[activeYear as 2026 | 2027 | 2028];
-    if (fromBundle) {
-      setYearOverview(fromBundle);
+    if (rawFromBundle && !isStaleAugust2027ClassLine(activeYear, rawFromBundle)) {
+      writeStoredHubClassLine(activeYear, rawFromBundle);
+      setYearOverview(rawFromBundle);
       setMetricsLoading(false);
       return;
     }
 
-    const hasSeed =
-      seeded?.classOverview && parseRecruitingClassYear(seeded.year ?? year) === activeYear;
-    if (!hasSeed) setMetricsLoading(true);
+    const stored = readStoredHubClassLine(activeYear);
+    if (stored?.classRank && stored.blueChip && stored.commits && stored.avgRating) {
+      setYearOverview({
+        classRank: stored.classRank,
+        blueChip: stored.blueChip,
+        commits: stored.commits,
+        commitLabel: stored.commitLabel,
+        avgRating: stored.avgRating,
+        trendRank: 'Stable',
+        trendBlueChip: 'Stable',
+        trendCommits: 'Stable',
+        trendRating: 'Stable',
+      });
+      setMetricsLoading(false);
+    } else {
+      const windowLine =
+        seeded?.classOverview && parseRecruitingClassYear(seeded.year ?? year) === activeYear
+          ? seeded.classOverview
+          : null;
+      if (!windowLine || isStaleAugust2027ClassLine(activeYear, windowLine)) setMetricsLoading(true);
+    }
     void fetchClassMetrics(activeYear)
       .then((res) => {
-        if (!cancelled) setYearOverview(res);
+        if (cancelled || !res || isStaleAugust2027ClassLine(activeYear, res)) return;
+        writeStoredHubClassLine(activeYear, res);
+        setYearOverview(res);
       })
       .catch(() => {
-        if (!cancelled) setYearOverview(null);
+        if (!cancelled && !stored) setYearOverview(null);
       })
       .finally(() => {
         if (!cancelled) setMetricsLoading(false);
@@ -133,11 +159,14 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
     };
   }, [activeYear, data?.classOverview, data?.classOverviewAll, data?.year, seeded?.classOverview, seeded?.year, year]);
 
+  const bundleOverview =
+    data?.year === activeYear ? data.classOverview : data?.classOverviewAll?.[activeYear as 2026 | 2027 | 2028];
   const overview =
-    yearOverview ??
-    (data?.year === activeYear ? data.classOverview : data?.classOverviewAll?.[activeYear as 2026 | 2027 | 2028]) ??
-    seeded?.classOverview ??
-    null;
+    (yearOverview && !isStaleAugust2027ClassLine(activeYear, yearOverview) ? yearOverview : null) ??
+    (bundleOverview && !isStaleAugust2027ClassLine(activeYear, bundleOverview) ? bundleOverview : null) ??
+    (seeded?.classOverview && !isStaleAugust2027ClassLine(activeYear, seeded.classOverview)
+      ? seeded.classOverview
+      : null);
   const title = seeded?.title ?? 'Florida Recruiting';
   const bundleSubtitle = String(data?.subtitle || '').trim();
   const subtitle =
