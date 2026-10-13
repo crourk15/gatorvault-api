@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
+  buildGameStatBoards,
   careerSeasonsForPos,
   formatGameStatLine,
   groupProductionGames,
@@ -67,9 +68,57 @@ describe('roster production stats display', () => {
     );
   });
 
-  it('formats a passing game as 16/23 · 196 · TD · INT', () => {
+  it('formats a passing game with every box column', () => {
     const line = formatGameStatLine(philo2026.recentGames[1]);
-    assert.equal(line, '16/23 · YDS 196 · TD 1 · INT 0');
+    assert.equal(line, '16/23 · YDS 196 · TD 1 · INT 0 · LNG 38 · AVG 8.5');
+  });
+
+  it('lists every player under the game, with the full defense line', () => {
+    const boards = buildGameStatBoards([
+      {
+        slug: 'aaron-philo',
+        name: 'Aaron Philo',
+        position: 'QB',
+        productionStats: philo2026,
+      },
+      {
+        slug: 'myles-graham',
+        name: 'Myles Graham',
+        position: 'LB',
+        productionStats: {
+          source: 'official',
+          syncedAt: '2026-10-13T00:00:00.000Z',
+          cfbdPlayerId: null,
+          matchConfidence: null,
+          seasons: [],
+          recentGames: [
+            {
+              season: 2026,
+              week: 6,
+              date: '2026-10-10T23:55:00.000Z',
+              opponent: 'South Carolina',
+              homeAway: 'home',
+              category: 'defense',
+              stats: { solo: 3, ast: 5, tot: 8, tfl: 2, sack: 2, qh: 2 },
+            },
+          ],
+        },
+      },
+    ]);
+    assert.equal(boards[0].opponent, 'South Carolina');
+    assert.equal(boards[0].chip, 'W6');
+    assert.equal(boards[0].categories[0].label, 'Defense');
+    assert.equal(
+      boards[0].categories[0].rows[0].line,
+      'TOT 8 · SOLO 3 · AST 5 · TFL 2 · SACK 2 · QH 2'
+    );
+    const oleMiss = boards.find((board) => board.opponent === 'Ole Miss');
+    assert.ok(oleMiss);
+    assert.deepEqual(
+      oleMiss.categories.map((block) => block.category),
+      ['passing', 'rushing']
+    );
+    assert.equal(oleMiss.categories[0].rows[0].name, 'Aaron Philo');
   });
 
   it('groups Ole Miss passing + rushing onto one game card', () => {

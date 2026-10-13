@@ -211,7 +211,7 @@ const JOBS = {
   'roster-official-box-sync': {
     label: 'Roster official box stats sync',
     subsystem: 'cron:roster-official-box',
-    schedule: 'Every 3h after kickoff (ROSTER_OFFICIAL_BOX_SYNC_ENABLED)',
+    schedule: 'Every 2h on platform-ops — missing weeks plus the latest final',
     async run(opts = {}) {
       const { syncRosterOfficialBoxes } = require('./roster-official-box-sync');
       return syncRosterOfficialBoxes(opts);

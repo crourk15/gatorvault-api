@@ -1,0 +1,97 @@
+'use client';
+
+import React, { useEffect, useMemo, useState } from 'react';
+import { PlayerNavLink } from '@/components/vault/PlayerNavLink';
+import { playerProfilePath } from '@/lib/player-routes';
+import { buildGameStatBoards } from '@/lib/roster-production-stats';
+import type { TeamPlayer } from '@/lib/team-hub-types';
+import { TeamPremiumModule } from './TeamPremiumModule';
+
+type Props = {
+  roster: TeamPlayer[];
+  loading?: boolean;
+};
+
+export function TeamGameStatsSection({ roster, loading }: Props): React.ReactElement {
+  const boards = useMemo(() => buildGameStatBoards(roster), [roster]);
+  const [selectedKey, setSelectedKey] = useState<string>('');
+  const selected = boards.find((board) => board.key === selectedKey) || boards[0] || null;
+
+  useEffect(() => {
+    if (!boards.length) return;
+    if (!boards.some((board) => board.key === selectedKey)) {
+      setSelectedKey(boards[0].key);
+    }
+  }, [boards, selectedKey]);
+
+  const playerCount = selected
+    ? new Set(selected.categories.flatMap((block) => block.rows.map((row) => row.slug || row.name))).size
+    : 0;
+
+  return (
+    <div className="team-premium-section" id="game-stats" data-section="game-stats">
+      <TeamPremiumModule
+        title="Game stats"
+        subtitle="Every player who recorded a line, game by game."
+        stamp={
+          selected
+            ? `${playerCount} players · ${selected.headline}`
+            : loading
+              ? 'Loading…'
+              : 'No lines yet'
+        }
+        className="team-game-stats-module"
+      >
+        {selected ? (
+          <>
+            <div className="gv-team-roster-filters-rail">
+              <div className="gv-team-roster-filters" role="tablist" aria-label="Games">
+                {boards.map((board) => (
+                  <button
+                    key={board.key}
+                    type="button"
+                    role="tab"
+                    aria-selected={board.key === selected.key}
+                    className={`gv-team-roster-chip${board.key === selected.key ? ' is-active' : ''}`}
+                    onClick={() => setSelectedKey(board.key)}
+                  >
+                    <span className="gv-team-roster-chip__label">{board.chip}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <p className="team-game-stats__headline">{selected.headline}</p>
+            {selected.categories.map((block) => (
+              <section key={block.category} aria-label={block.label}>
+                <h3 className="team-game-stats__cat">{block.label}</h3>
+                <ul className="team-game-stats__list">
+                  {block.rows.map((row) => {
+                    const href = row.slug
+                      ? playerProfilePath(row.slug, 'ROSTER', true, row.name, 'roster')
+                      : undefined;
+                    const who = (
+                      <span className="team-game-stats__who">
+                        <span className="team-game-stats__name">{row.name}</span>
+                        {row.position ? <span className="team-game-stats__pos">{row.position}</span> : null}
+                      </span>
+                    );
+                    return (
+                      <li key={`${block.category}-${row.slug || row.name}`} className="team-game-stats__row">
+                        {href ? <PlayerNavLink href={href}>{who}</PlayerNavLink> : who}
+                        <span className="team-game-stats__line">{row.line}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ))}
+          </>
+        ) : (
+          <p className="team-game-stats__empty">
+            {loading ? 'Loading game lines.' : 'No confirmed game lines yet.'}
+          </p>
+        )}
+      </TeamPremiumModule>
+    </div>
+  );
+}

@@ -240,16 +240,17 @@ Do **not** ship a live Review from box score / play-by-play alone.
 
 Team profile Stats tabs read `productionStats` on `roster/players.json` via `/api/roster/players/:slug`. After the **one-time 1.0.25** bake (Stats tab accepts `source: official`), weekly numbers are **API-only**.
 
-1. **Official UF box cron** (`roster-official-box-sync`) — every ~3h after kickoff. Finds the floridagators.com box from the game-center link already on the schedule (`tickets.gameCenter`), parses every individual line, and upserts whoever recorded one. OL / P / LS / DNP still get no traditional box line (we do not invent zeros). Writes also land on Render `/var/data/roster/production-stats.json` so the next deploy cannot wipe the new week back to the last git stamp.
+1. **Official UF box cron** (`roster-official-box-sync`) — Render platform-ops, every 2 hours, first in `PLATFORM_OPS_JOBS`. Stamps any completed week that is not already on the roster, and rechecks the latest game-day box (game-center link on the schedule) so the next final lands without a manual run. One new box stays inside the 120s job timeout. OL / P / LS / DNP still get no traditional box line (we do not invent zeros). Writes also land on Render `/var/data/roster/production-stats.json`. A later week wins over a newer timestamp on an older week, so a CFBD refresh cannot hide the new game.
 2. **CFBD nightly** (`roster-stats-sync`) — career backfill. Official in-season weeks are merged forward so a late/empty CFBD pull cannot wipe Game 1+.
 3. Manual / dry-run:
 
 ```bash
 node server/scripts/sync-roster-official-boxes.js --dry-run
-node server/scripts/sync-roster-official-boxes.js --game=fau
+node server/scripts/sync-roster-official-boxes.js --game=scar
+node server/scripts/sync-roster-official-boxes.js --rebuild
 ```
 
-Job Queue: `roster-official-box-sync`. Env: `ROSTER_OFFICIAL_BOX_SYNC_ENABLED` (default on), `ROSTER_OFFICIAL_BOX_INTERVAL_MS`.
+Job Queue: `roster-official-box-sync`. The in-process timer (`ROSTER_OFFICIAL_BOX_SYNC_ENABLED`, default on) only runs when `X_SCHEDULED_JOBS_ENABLED` is true. The week-to-week path is the platform-ops cron above.
 
 Do **not** start Codemagic to refresh weekly stats. The 1.0.25 bake is the last Stats-tab client change.
 

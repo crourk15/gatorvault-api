@@ -117,7 +117,7 @@ function ProductionStatsOverview({ player }: { player: RosterPlayer }): React.Re
   if (!hasProductionStats(player) || !player.productionStats) return null;
   const season = pickPrimarySeason(player.productionStats, player.pos || player.position);
   const strip = seasonStripItems(season);
-  const games = groupProductionGames(player.productionStats.recentGames).slice(0, 4);
+  const games = groupProductionGames(player.productionStats.recentGames);
   const synced = formatSyncedAt(player.productionStats.syncedAt);
   if (!strip.length && !games.length) return null;
 

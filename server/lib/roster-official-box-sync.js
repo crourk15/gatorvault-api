@@ -118,6 +118,40 @@ function completedBoxes(board) {
   return playableGames(board).filter((g) => isComplete(g) && String(g.boxScoreUrl || '').trim());
 }
 
+function weeksStampedOnRoster(roster, season) {
+  const weeks = new Set();
+  const year = Number(season);
+  for (const player of roster || []) {
+    for (const game of player?.productionStats?.recentGames || []) {
+      if (Number(game?.season) !== year) continue;
+      const week = Number(game.week);
+      if (Number.isFinite(week) && week > 0) weeks.add(week);
+    }
+  }
+  return weeks;
+}
+
+/**
+ * Weeks with no roster line, plus the latest game-day box so a new final
+ * is discovered from the game-center link without re-downloading every prior box.
+ * An explicit gameId always returns that completed box.
+ */
+function gamesNeedingOfficialBox(board, roster, opts = {}) {
+  const completed = completedBoxes(board).filter((g) => !opts.gameId || g.id === opts.gameId);
+  if (opts.gameId) return completed;
+
+  const season = Number(board?.season || opts.season || 2026);
+  const stamped = opts.stampedWeeks || weeksStampedOnRoster(roster, season);
+  const missing = completed.filter((g) => {
+    const week = weekForGame(board, g);
+    return !Number.isFinite(week) || !stamped.has(week);
+  });
+
+  const latest = candidateGames(board, opts.now).slice(-1)[0];
+  if (latest && !missing.some((g) => g.id === latest.id)) missing.push(latest);
+  return missing;
+}
+
 async function fetchBoxHtml(url) {
   const resp = await fetch(url, {
     headers: { Accept: 'text/html', 'User-Agent': FETCH_UA },
@@ -321,20 +355,27 @@ async function rebuildRosterOfficialBoxes(opts = {}) {
 }
 
 async function syncRosterOfficialBoxes(opts = {}) {
-  if (opts.rebuild !== false) {
+  if (opts.rebuild === true) {
     return rebuildRosterOfficialBoxes(opts);
   }
   const season = Number(opts.season || process.env.ROSTER_STATS_SEASON || 2026);
   const board = scheduleBoard.getScheduleBoard(season);
-  const games = candidateGames(board, opts.now);
+  const roster = rosterStore.loadPlayersRaw();
+  const games = gamesNeedingOfficialBox(board, roster, { ...opts, season });
   if (!games.length) {
-    return { ok: true, skipped: true, reason: 'no probeable official boxes', season, games: 0 };
+    return {
+      ok: true,
+      skipped: true,
+      reason: 'official boxes already stamped',
+      season,
+      games: 0,
+      incremental: true,
+    };
   }
 
   const results = [];
   const errors = [];
   for (const game of games) {
-    if (opts.gameId && game.id !== opts.gameId) continue;
     try {
       results.push(await syncOfficialBoxForGame(game, board, opts));
     } catch (err) {
@@ -345,7 +386,8 @@ async function syncRosterOfficialBoxes(opts = {}) {
   const applied = results.filter((r) => !r.skipped);
   return {
     ok: errors.length === 0,
-    skipped: applied.length === 0,
+    skipped: applied.length === 0 && errors.length === 0,
+    incremental: true,
     season,
     games: results.length,
     matched: applied.reduce((n, r) => n + (r.matched || 0), 0),
@@ -360,6 +402,8 @@ module.exports = {
   rebuildRosterOfficialBoxes,
   syncOfficialBoxForGame,
   completedBoxes,
+  weeksStampedOnRoster,
+  gamesNeedingOfficialBox,
   candidateGames,
   weekForGame,
   homeAwayForGame,
