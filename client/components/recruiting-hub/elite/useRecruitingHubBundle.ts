@@ -7,9 +7,13 @@ import {
   type RhHubBundle,
 } from '@/lib/recruiting-hub-elite-api';
 import {
+  applyStoredHubClassLine,
   getRecruitingHubBundleSeed,
+  isStaleAugust2027ClassLine,
+  preferRecruitingHubBundle,
   recruitingHubBundleHasSignal,
   recruitingHubBundleIsCurrent,
+  writeStoredHubClassLine,
 } from '@/lib/recruiting-hub-bundle-seed';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { hubBundleWarmPollProfile } from '@/lib/warm-poll-profile';
@@ -40,7 +44,7 @@ function readHubBundleCache(year: number): RhHubBundle | null {
 }
 
 function initialHubBundle(year: number): RhHubBundle | null {
-  return readHubBundleCache(year) ?? getRecruitingHubBundleSeed(year);
+  return applyStoredHubClassLine(readHubBundleCache(year) ?? getRecruitingHubBundleSeed(year), year);
 }
 
 function writeHubBundleCache(year: number, bundle: RhHubBundle): void {
@@ -92,8 +96,9 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
     const start = initHubMonitor(year);
     const seeded = initialHubBundle(year);
     const hasSeedPaint = recruitingHubBundleIsCurrent(seeded, year);
-    if (seeded) {
-      setData(seeded);
+    // A return visit must not paint the August class line over the live one.
+    if (seeded && !isStaleAugust2027ClassLine(year, seeded.classOverview)) {
+      setData((current) => preferRecruitingHubBundle(current, seeded, year));
       setLoading(false);
       setWarming(false);
     }
@@ -117,6 +122,7 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
           gotBundle = true;
           return;
         }
+        writeStoredHubClassLine(year, bundle.classOverview);
         writeHubBundleCache(year, bundle);
         if (typeof window !== 'undefined') {
           window.__GV_HUB__ = {
@@ -134,7 +140,7 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
         if (process.env.NODE_ENV !== 'production') {
           console.info(`[recruiting-hub] bundle loaded in ${bundleLoadMs}ms`);
         }
-        setData(bundle);
+        setData((current) => preferRecruitingHubBundle(current, bundle, year));
         gotBundle = true;
         setWarming(false);
         setError(false);
@@ -142,7 +148,7 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
         if (cancelled) return;
         const fallback = initialHubBundle(year);
         if (recruitingHubBundleHasSignal(fallback)) {
-          setData(fallback);
+          setData((current) => preferRecruitingHubBundle(current, fallback, year));
           setError(false);
           setWarming(false);
           gotBundle = true;

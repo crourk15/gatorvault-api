@@ -31,6 +31,36 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
         return subtitle;
       }
 
+      var LINE_KEY = 'gv_hub_class_line_v1:${safeYear}';
+      function augustClassLine(overview) {
+        if (!overview) return false;
+        var rank = String(overview.classRank || '');
+        var commits = String(overview.commits || '');
+        var avg = String(overview.avgRating || '');
+        return rank === '#8' && (commits === '26' || avg === '89.9' || avg === '89.7');
+      }
+      function readStoredClassLine() {
+        try {
+          var raw = localStorage.getItem(LINE_KEY);
+          if (!raw) return null;
+          var line = JSON.parse(raw);
+          if (!line || augustClassLine(line) || !line.classRank) return null;
+          return line;
+        } catch (e) { return null; }
+      }
+      function writeStoredClassLine(overview) {
+        try {
+          if (!overview || augustClassLine(overview) || !overview.classRank) return;
+          localStorage.setItem(LINE_KEY, JSON.stringify({
+            classRank: overview.classRank,
+            blueChip: overview.blueChip,
+            commits: overview.commits,
+            commitLabel: overview.commitLabel || 'Commits',
+            avgRating: overview.avgRating
+          }));
+        } catch (e) {}
+      }
+
       function paintMetricFields(root, metrics) {
         if (!root || !metrics) return;
         var map = [
@@ -79,6 +109,11 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
         });
         window.__GV_HERO__ = normalized;
         data = normalized;
+        if (data.classOverview && augustClassLine(data.classOverview)) {
+          var storedLine = readStoredClassLine();
+          if (storedLine) data.classOverview = storedLine;
+        }
+        if (data.classOverview && !augustClassLine(data.classOverview)) writeStoredClassLine(data.classOverview);
         window.__GV_HUB__.heroRenderMs = Math.round(performance.now() - start);
         if (data.classOverview) {
           storeMetrics(data.year || ${safeYear}, data.classOverview);
@@ -159,13 +194,16 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
           storeMetrics(y, SEED.classOverviewAll[y]);
         });
       }
+      var firstOverview = (SEED && SEED.classOverview) || null;
+      var remembered = readStoredClassLine();
+      if (remembered && (!firstOverview || augustClassLine(firstOverview))) firstOverview = remembered;
       paintHero({
         ok: true,
         year: SEED.activeYear || ${safeYear},
         title: SEED.title,
         subtitle: SEED.subtitle,
         classYears: SEED.classYears || [2026, 2027, 2028],
-        classOverview: SEED.classOverview,
+        classOverview: firstOverview,
         classOverviewAll: SEED.classOverviewAll
       });
 
@@ -189,6 +227,7 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
       }
       loadHero(0);
       loadClassMetrics([2026, 2027, 2028], 0);
+      window.addEventListener('pageshow', function() { loadHero(0); });
     } catch (e) {}
   }
 
