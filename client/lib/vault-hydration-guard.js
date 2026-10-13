@@ -21,7 +21,7 @@ const VAULT_HYDRATION_BOOT_SCRIPT =
   'window.addEventListener("error",function(ev){var msg=String(ev.message||"");var file=String(ev.filename||"");' +
   'if(/hydration|Hydration|did not match|Minified React error #(418|423|425|422)/i.test(msg)||/vault-chunks|_next\\/static\\/chunks/i.test(file)){' +
   'setTimeout(guard,0)}});' +
-  'window.addEventListener("pageshow",function(ev){if(ev.persisted){arm()}})' +
+  'window.addEventListener("pageshow",function(ev){if(ev.persisted){arm()}});' +
   'window.addEventListener("load",function(){var r=document.getElementById("gv-vault-root");if(r&&r.getAttribute("data-gv-hydrated")==="true")clearReloadGuard()})' +
   '})();';
 
