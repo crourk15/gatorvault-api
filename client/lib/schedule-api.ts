@@ -4,7 +4,12 @@
  * Do not refill desk scout (offenseScout / defenseScout / scoutingReport) from seed.
  */
 import { snapshotLiveFetch } from './snapshot-fetch';
-import { SCHEDULE_GAMES, SCHEDULE_SEED_PRED_THROUGH, type ScheduleGame } from './schedule-data';
+import {
+  lockBroadcastWindow,
+  SCHEDULE_GAMES,
+  SCHEDULE_SEED_PRED_THROUGH,
+  type ScheduleGame,
+} from './schedule-data';
 
 export type ScheduleBoardResponse = {
   ok?: boolean;
@@ -99,10 +104,13 @@ function preferKickoffDate(live: string, seed?: string): string {
 function preferTv(live: unknown, seed?: string): string | undefined {
   const liveTv = String(live || '').trim();
   const seedTv = String(seed || '').trim();
-  if ((!liveTv || /^(TBD|TBA|—|-)$/i.test(liveTv)) && seedTv && !/^(TBD|TBA|—|-)$/i.test(seedTv)) {
-    return seedTv;
-  }
-  return liveTv || seedTv || undefined;
+  const chosen =
+    (!liveTv || /^(TBD|TBA|—|-)$/i.test(liveTv)) && seedTv && !/^(TBD|TBA|—|-)$/i.test(seedTv)
+      ? seedTv
+      : liveTv || seedTv;
+  if (!chosen) return undefined;
+  const locked = lockBroadcastWindow(chosen);
+  return locked || undefined;
 }
 
 function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] {
@@ -150,10 +158,10 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
           : seed?.radar
             ? { radar: seed.radar }
             : {}),
-        film: String(g.film || ''),
+        film: lockBroadcastWindow(String(g.film || '')),
         filmNotes: Array.isArray(g.filmNotes)
-          ? g.filmNotes.map((n) => String(n || '').trim()).filter(Boolean)
-          : seed?.filmNotes,
+          ? g.filmNotes.map((n) => lockBroadcastWindow(String(n || '').trim())).filter(Boolean)
+          : seed?.filmNotes?.map((n) => lockBroadcastWindow(n)),
         // Never refill desk scout from Capacitor seed — public API empties these
         // so current iOS falls through to fan tendencies + film.
         offenseScout: Array.isArray(g.offenseScout)
@@ -164,7 +172,7 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
           : undefined,
         scoutingReport:
           g.scoutingReport != null && String(g.scoutingReport).trim()
-            ? String(g.scoutingReport).trim()
+            ? lockBroadcastWindow(String(g.scoutingReport).trim())
             : undefined,
         pred: String(g.pred || ''),
         predUF: Number.isFinite(Number(g.predUF)) ? Number(g.predUF) : 0,

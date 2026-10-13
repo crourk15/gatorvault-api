@@ -1,4 +1,4 @@
-import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
+import { lockBroadcastWindow, SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 import { parseScheduleKickoff } from '@/lib/gators-live';
 import { gameWeekRoute } from '@/lib/site-routes';
 
@@ -139,8 +139,9 @@ function splitDateTime(date: string): { date: string; time: string } {
 }
 
 function normalizeTv(tv?: string): string {
-  if (!tv || TV_PLACEHOLDERS.has(tv)) return 'TBD';
-  return tv;
+  const locked = lockBroadcastWindow(tv);
+  if (!locked || TV_PLACEHOLDERS.has(locked)) return 'TBD';
+  return locked;
 }
 
 function isTicketEventUrl(url: string): boolean {

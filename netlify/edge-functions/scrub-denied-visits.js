@@ -133,7 +133,45 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'texas-abc-ios';
+const NOW_BUST_VALUE = 'texas-abc-only';
+
+function lockAbcOnlyString(value) {
+  return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
+}
+
+/** Saved iOS boards still carry the Oct 5 window. Network responses must not. */
+function lockScheduleBroadcast(data) {
+  if (!data || typeof data !== 'object' || !Array.isArray(data.games)) return { data, changed: false };
+  let changed = false;
+  const games = data.games.map((game) => {
+    if (!game || typeof game !== 'object') return game;
+    const next = { ...game };
+    let gameChanged = false;
+    for (const key of ['tv', 'film', 'scoutingReport']) {
+      if (typeof next[key] === 'string' && /ABC or ESPN/i.test(next[key])) {
+        next[key] = lockAbcOnlyString(next[key]);
+        gameChanged = true;
+      }
+    }
+    if (Array.isArray(next.filmNotes)) {
+      let notesChanged = false;
+      const notes = next.filmNotes.map((note) => {
+        if (typeof note !== 'string' || !/ABC or ESPN/i.test(note)) return note;
+        notesChanged = true;
+        return lockAbcOnlyString(note);
+      });
+      if (notesChanged) {
+        next.filmNotes = notes;
+        gameChanged = true;
+      }
+    }
+    if (!gameChanged) return game;
+    changed = true;
+    return next;
+  });
+  if (!changed) return { data, changed: false };
+  return { data: { ...data, games }, changed };
+}
 const HUB_BUST_COOKIE = 'gv-hub-bust';
 const HUB_BUST_VALUE = 'royal-2027';
 
@@ -736,6 +774,11 @@ export default async (request, context) => {
   }
 
   if (isSchedulePath(url.pathname) || isPingPath(url.pathname)) {
+    let schedulePayload = payload;
+    if (isSchedulePath(url.pathname)) {
+      const locked = lockScheduleBroadcast(payload);
+      schedulePayload = locked.data;
+    }
     const headers = new Headers(upstream.headers);
     headers.set('content-type', 'application/json; charset=utf-8');
     headers.set('cache-control', 'no-store, must-revalidate');
@@ -745,7 +788,7 @@ export default async (request, context) => {
     headers.delete('content-length');
     headers.delete('etag');
     headers.delete('age');
-    return new Response(JSON.stringify(payload), {
+    return new Response(JSON.stringify(schedulePayload), {
       status: upstream.status,
       statusText: upstream.statusText,
       headers,
@@ -789,7 +832,14 @@ export default async (request, context) => {
       changed = true;
     }
   }
-  const body = JSON.stringify(data);
+  let body = JSON.stringify(data);
+  if (
+    (isTickerPath(url.pathname) || isHubBundlePath(url.pathname)) &&
+    /ABC or ESPN/i.test(body)
+  ) {
+    body = lockAbcOnlyString(body);
+    changed = true;
+  }
   const headers = new Headers(upstream.headers);
   headers.set('content-type', 'application/json; charset=utf-8');
   headers.set('cache-control', 'no-store, must-revalidate');

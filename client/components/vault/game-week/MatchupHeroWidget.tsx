@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { GameWeekBundle } from '@/lib/game-week-data';
+import { lockBroadcastWindow } from '@/lib/schedule-data';
 import { homeLogoUrl, awayLogoUrl } from '@/lib/team-logos';
 import { buildUfUniformChips } from '@/lib/uf-uniform-colors';
 import { CountdownWidget } from './CountdownWidget';
@@ -41,7 +42,7 @@ export function MatchupHeroWidget({ bundle }: Props): React.ReactElement {
         <p className="gv-gw-matchup-hero__meta">{game.date}</p>
         <p className="gv-gw-matchup-hero__meta">
           {game.venue}
-          {game.tv ? ` · ${game.tv}` : ''}
+          {game.tv ? ` · ${lockBroadcastWindow(game.tv)}` : ''}
         </p>
         {uniformChips.length > 0 ? (
           <div className="gv-gw-matchup-hero__uniform" data-testid="gw-uniform">

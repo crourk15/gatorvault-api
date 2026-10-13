@@ -203,6 +203,30 @@ describe('schedule-api uniforms', () => {
     assert.equal(live[0]?.tv, 'ABC');
   });
 
+  it('normalizeGames locks a saved Texas ABC-or-ESPN window to ABC', () => {
+    const live = normalizeGames([
+      {
+        id: 'texas',
+        label: 'Oct 17 @ Texas',
+        opp: 'Texas Longhorns',
+        date: 'October 17, 2026 · 12:00 PM ET',
+        venue: 'DKR-Texas Memorial Stadium, Austin TX',
+        ufPct: 22,
+        tv: 'ABC or ESPN',
+        keys: [],
+        swing: [],
+        film: 'Noon at DKR. ABC or ESPN.',
+        filmNotes: ['Noon at DKR. ABC or ESPN.'],
+        pred: '',
+        predUF: 20,
+        predOpp: 34,
+      },
+    ]);
+    assert.equal(live[0]?.tv, 'ABC');
+    assert.equal(live[0]?.film, 'Noon at DKR. ABC.');
+    assert.deepEqual(live[0]?.filmNotes, ['Noon at DKR. ABC.']);
+  });
+
   it('bundled Ole Miss seed first-paints the live keys and Baugh 95', () => {
     const olemiss = SCHEDULE_GAMES.find((g) => g.id === 'olemiss');
     assert.ok(olemiss);

@@ -9,7 +9,7 @@ import type { FlipWatchRow, MovementNarrativeRow, VisitRecapRow } from '@/lib/fu
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { movementDelta7d } from '@/lib/movement-intel-types';
 import { getFeaturedUfGame, parseScheduleKickoff } from '@/lib/gators-live';
-import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
+import { lockBroadcastWindow, SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 
 /** Same as the schedule board — Cocktail Party + Doak. Not every SEC road game. */
 const RIVAL_OPPONENT_IDS = new Set(['fsu', 'uga']);
@@ -435,7 +435,7 @@ const TEXAS_NOW_SEASON = '4-2 heading into Saturday';
 const TEXAS_NOW_NEWS = 'Easton Royal flips to Florida · No. 5';
 
 function pinMissouriAbcTick(text: string): string {
-  const t = String(text || '');
+  const t = lockBroadcastWindow(text);
   if (!MISSOURI_ESPN_NOW_RE.test(t)) return t;
   return t.replace(/\bESPN\b/g, 'ABC');
 }
@@ -579,16 +579,16 @@ export function applyHomeNowWeekPack(
  * Do not fall back to hub-bundle class-rank seed when the ticker flaps.
  */
 export function applyHomeNowTickerPack(liveItems: string[] | undefined, currentItems: string[]): string[] {
-  const live = pinLeftoverMissouriTickerLines(
-    pinBaileyNowNewsLines(
-      (Array.isArray(liveItems) ? liveItems : []).map((s) => String(s || '').trim()).filter(Boolean)
-    )
-  );
-  const current = pinLeftoverMissouriTickerLines(
-    pinBaileyNowNewsLines(
-      (Array.isArray(currentItems) ? currentItems : []).map((s) => String(s || '').trim()).filter(Boolean)
-    )
-  );
+  const clean = (items: string[] | undefined) =>
+    pinLeftoverMissouriTickerLines(
+      pinBaileyNowNewsLines(
+        (Array.isArray(items) ? items : [])
+          .map((s) => lockBroadcastWindow(String(s || '').trim()))
+          .filter(Boolean)
+      )
+    );
+  const live = clean(liveItems);
+  const current = clean(currentItems);
   if (live.filter(isWeeklyNowPillarLine).length >= 2) return live;
   if (current.filter(isWeeklyNowPillarLine).length >= 2) return current;
   return current.length ? current : live;
@@ -625,7 +625,7 @@ export function buildHomeNowGameStory(now = new Date()): string | null {
   const venue = String(game.venue || '');
   const home = /gainesville|swamp|hill griffin/i.test(venue);
   const where = home ? 'in the Swamp' : venue ? `at ${venue.split(',')[0].trim()}` : '';
-  const tvRaw = String(game.tv || '').trim();
+  const tvRaw = lockBroadcastWindow(game.tv);
   const tv = tvRaw && !/^(TBD|—|-)$/i.test(tvRaw) ? tvRaw : '';
   const dateRaw = String(game.date || '');
   const clockMatch = /\d{1,2}:\d{2}\s*[-–]\s*\d{1,2}:\d{2}/.test(dateRaw)
