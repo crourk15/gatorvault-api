@@ -118,7 +118,14 @@ export function initGvHydrate(): void {
 
   window.__GV_HYDRATE__ = (id, fn, priority = 'top-fold') => {
     const queue = window.__GV_HYDRATE_QUEUE__ ?? [];
-    if (queue.some((job) => job.id === id)) return;
+    const existing = queue.findIndex((job) => job.id === id);
+    // The hub schedules the hero again when the live bundle replaces the
+    // August seed. Keep that latest paint. Dropping it left class rank at #8.
+    if (existing !== -1) {
+      queue[existing] = { id, fn, priority, enqueuedAt: queue[existing].enqueuedAt };
+      window.__GV_HYDRATE_QUEUE__ = queue;
+      return;
+    }
     queue.push({ id, fn, priority, enqueuedAt: performance.now() });
     window.__GV_HYDRATE_QUEUE__ = queue;
     runIdle(flushQueue);

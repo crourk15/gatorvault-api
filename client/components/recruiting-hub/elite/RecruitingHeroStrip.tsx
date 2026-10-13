@@ -42,14 +42,18 @@ function heroFromWindow(): RhHubHeroPayload | null {
 function HeroMetric({
   label,
   value,
+  metric,
 }: {
   label: string;
   value: string;
+  metric: string;
 }): React.ReactElement {
   return (
     <div className="rh-hero-metric">
       <span className="rh-hero-metric__label">{label}</span>
-      <span className="rh-hero-metric__value">{value}</span>
+      <span className="rh-hero-metric__value" data-hero-metric={metric}>
+        {value}
+      </span>
     </div>
   );
 }
@@ -64,10 +68,10 @@ function HeroMetrics({
   const commitLabel = overview?.commitLabel ?? classCommitMetricLabel(activeYear);
   return (
     <div className="rh-hero-metrics" aria-label="Class summary metrics">
-      <HeroMetric label="Class rank" value={overview?.classRank ?? '—'} />
-      <HeroMetric label="Blue chip %" value={overview?.blueChip ?? '—'} />
-      <HeroMetric label={commitLabel} value={overview?.commits ?? '—'} />
-      <HeroMetric label="Avg rating" value={overview?.avgRating ?? '—'} />
+      <HeroMetric label="Class rank" metric="class-rank" value={overview?.classRank ?? '—'} />
+      <HeroMetric label="Blue chip %" metric="blue-chip" value={overview?.blueChip ?? '—'} />
+      <HeroMetric label={commitLabel} metric="commits" value={overview?.commits ?? '—'} />
+      <HeroMetric label="Avg rating" metric="avg-rating" value={overview?.avgRating ?? '—'} />
     </div>
   );
 }
@@ -156,8 +160,12 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
       </div>
       <div className="rh-hero-top">
         <div>
-          <div className="rh-hero-title">{title}</div>
-          <div className="rh-hero-subtitle">{subtitle}</div>
+          <div className="rh-hero-title" data-hero-field="title">
+            {title}
+          </div>
+          <div className="rh-hero-subtitle" data-hero-field="subtitle">
+            {subtitle}
+          </div>
           <div className="rh-hero-year-tabs" role="tablist" aria-label="Class year">
             {CLASS_YEARS.map((y) => (
               <button
@@ -182,18 +190,31 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
 
 let heroRoot: Root | null = null;
 
-/** Mount interactive hero into SSR shell after bundle loads. */
+/**
+ * Mount the hero, then paint again when the live bundle replaces the seed.
+ * The first pass often still holds the August class line (#8 / 26 / 89.9).
+ * Skipping a host that is already marked hydrated left that line on screen.
+ */
 export function hydrateRecruitingHero(bundleState: RecruitingHubBundleState): void {
-  const host = document.querySelector('[data-hydrate="hero"]:not([data-hydrated="true"])');
+  const freshHost = document.querySelector('[data-hydrate="hero"]:not([data-hydrated="true"])');
+  const host = freshHost || (heroRoot ? document.querySelector('[data-hydrate="hero"]') : null);
   if (!host) {
     releaseHeroHydrationGate('hero-host-missing');
     return;
   }
 
   const t0 = performance.now();
-  heroRoot?.unmount();
-  heroRoot = createRoot(host);
-  heroRoot.render(
+  const mountHost = freshHost || host;
+  if (!heroRoot || freshHost) {
+    heroRoot?.unmount();
+    heroRoot = createRoot(mountHost);
+  }
+  const root = heroRoot;
+  if (!root) {
+    releaseHeroHydrationGate('hero-host-missing');
+    return;
+  }
+  root.render(
     <RecruitingHubBundleProvider value={bundleState}>
       <RecruitingHeroStrip />
     </RecruitingHubBundleProvider>
