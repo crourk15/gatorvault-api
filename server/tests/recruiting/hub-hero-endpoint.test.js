@@ -14,10 +14,10 @@ describe('Recruiting Hub hero endpoint payload', () => {
     assert.ok(hero.classYears.includes(2027));
     assert.ok(Array.isArray(hero.ticker));
     assert.ok(hero.classOverview);
-    assert.equal(typeof hero.classOverview.classRank, 'string');
-    assert.equal(typeof hero.classOverview.blueChip, 'string');
-    assert.equal(typeof hero.classOverview.commits, 'string');
-    assert.equal(typeof hero.classOverview.avgRating, 'string');
+    assert.equal(hero.classOverview.classRank, '#5');
+    assert.equal(hero.classOverview.blueChip, '67%');
+    assert.equal(hero.classOverview.commits, '27');
+    assert.equal(hero.classOverview.avgRating, '90.1');
     assert.ok(hero.classOverviewAll);
     assert.ok(hero.classOverviewAll[2027]);
     assert.equal(hero.commits, undefined);
