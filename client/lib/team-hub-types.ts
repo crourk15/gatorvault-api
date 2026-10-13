@@ -1,5 +1,7 @@
 /** Team hub — dev-ready prop types and copy. */
 
+import type { ProductionStats } from '@/lib/roster-api';
+
 export type Era = {
   id: string;
   label: string;
@@ -47,6 +49,8 @@ export type TeamPlayer = {
   slug?: string;
   /** Official jersey number (0 is valid). */
   jersey?: number | null;
+  /** Official / CFBD lines used by the per-game stat board. */
+  productionStats?: ProductionStats | null;
 };
 
 export type DepthChartStatus = 'Locked' | 'Battle' | 'Watch';
@@ -113,6 +117,7 @@ export const TEAM_COPY = {
     title: 'Team Resources',
     links: [
       { href: '#depth-chart', label: 'Depth Chart' },
+      { href: '#game-stats', label: 'Game Stats' },
       { href: '#roster', label: 'Full Roster' },
       { href: '/vault/team/staff/', label: 'Coaching Staff' },
       { href: '/vault/team/history/', label: 'Program History' },

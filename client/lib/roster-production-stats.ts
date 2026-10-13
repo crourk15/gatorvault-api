@@ -58,10 +58,30 @@ const LABEL: Record<string, string> = {
   pts: 'PTS',
   punts: 'PUNTS',
   lng: 'LNG',
+  ast: 'AST',
+  tfl: 'TFL',
+  qh: 'QH',
+  ff: 'FF',
+  pd: 'PD',
+  fr: 'FR',
+  xpa: 'XPA',
+  in20: 'IN20',
+  tb: 'TB',
   kr: 'KR',
   krYds: 'KR YDS',
   pr: 'PR',
   prYds: 'PR YDS',
+};
+
+/** Every box column, in reading order. Passing CMP/ATT is formatted separately. */
+const GAME_STAT_KEYS: Record<string, string[]> = {
+  passing: ['yds', 'td', 'int', 'lng', 'avg'],
+  rushing: ['car', 'yds', 'td', 'lng', 'avg'],
+  receiving: ['rec', 'yds', 'td', 'lng', 'avg'],
+  defense: ['tot', 'solo', 'ast', 'tfl', 'sack', 'qh', 'int', 'pd', 'ff', 'fr'],
+  kicking: ['fgm', 'fga', 'lng', 'xpm', 'xpa', 'pts'],
+  punting: ['punts', 'yds', 'avg', 'lng', 'in20', 'tb'],
+  returning: ['kr', 'krYds', 'pr', 'prYds'],
 };
 
 export function primaryCategoryForRosterPos(pos?: string | null): string {
@@ -131,22 +151,22 @@ export function seasonStripItems(
 
 export function formatGameStatLine(game: ProductionGameLine): string {
   const cat = String(game.category || '');
-  if (cat === 'passing') {
-    const combo = formatCmpAtt(game.stats);
-    const parts: string[] = [];
-    if (combo) parts.push(combo);
-    for (const key of ['yds', 'td', 'int'] as const) {
-      if (game.stats[key] == null) continue;
-      parts.push(`${LABEL[key]} ${formatStatValue(key, game.stats[key])}`);
-    }
-    return parts.join(' · ') || '—';
-  }
-  const keys = STRIP_KEYS[cat] || Object.keys(game.stats);
+  const stats = game.stats || {};
   const parts: string[] = [];
-  for (const key of keys) {
-    if (game.stats[key] == null) continue;
-    parts.push(`${LABEL[key] || key.toUpperCase()} ${formatStatValue(key, game.stats[key])}`);
-    if (parts.length >= 4) break;
+  if (cat === 'passing') {
+    const combo = formatCmpAtt(stats);
+    if (combo) parts.push(combo);
+  }
+  const ordered = GAME_STAT_KEYS[cat] || Object.keys(stats);
+  const seen = new Set<string>(cat === 'passing' ? ['cmp', 'att'] : []);
+  for (const key of ordered) {
+    seen.add(key);
+    if (stats[key] == null) continue;
+    parts.push(`${LABEL[key] || key.toUpperCase()} ${formatStatValue(key, stats[key])}`);
+  }
+  for (const key of Object.keys(stats)) {
+    if (seen.has(key) || stats[key] == null) continue;
+    parts.push(`${LABEL[key] || key.toUpperCase()} ${formatStatValue(key, stats[key])}`);
   }
   return parts.join(' · ') || '—';
 }
@@ -157,8 +177,13 @@ export function categoryLabel(category?: string | null): string {
   return cat.replace(/^./, (c) => c.toUpperCase());
 }
 
+function isPlayedGame(game: ProductionGameLine): boolean {
+  const week = Number(game?.week);
+  return Number.isFinite(week) && week > 0 && !/^opponent$/i.test(String(game?.opponent || ''));
+}
+
 export function groupProductionGames(games: ProductionGameLine[] | null | undefined): GroupedProductionGame[] {
-  const rows = Array.isArray(games) ? games : [];
+  const rows = (Array.isArray(games) ? games : []).filter(isPlayedGame);
   const groups = new Map<string, GroupedProductionGame>();
   for (const game of rows) {
     const key = `${game.season}|${game.week ?? ''}|${game.opponent}|${game.date ?? ''}`;
@@ -242,6 +267,138 @@ export function hasProductionStats(player: RosterPlayer): boolean {
 export function productionSourceLabel(source?: string | null): string {
   if (source === 'official') return 'Official box';
   return 'CollegeFootballData';
+}
+
+export type GameStatPlayer = {
+  slug?: string;
+  name: string;
+  position?: string | null;
+  productionStats?: ProductionStats | null;
+};
+
+export type GameStatRow = {
+  slug?: string;
+  name: string;
+  position: string;
+  line: string;
+};
+
+export type GameStatCategoryBlock = {
+  category: string;
+  label: string;
+  rows: GameStatRow[];
+};
+
+export type GameStatBoard = {
+  key: string;
+  season: number;
+  week: number | null;
+  date: string | null;
+  opponent: string;
+  homeAway: ProductionGameLine['homeAway'];
+  headline: string;
+  chip: string;
+  categories: GameStatCategoryBlock[];
+};
+
+function gameBucketKey(game: ProductionGameLine): string {
+  return `${game.season}|${game.week ?? ''}|${game.opponent}|${game.date ?? ''}`;
+}
+
+function categorySortValue(category: string, stats: Record<string, number>): number {
+  if (category === 'defense') return Number(stats.tot ?? stats.solo ?? 0);
+  if (category === 'kicking') return Number(stats.pts ?? stats.fgm ?? 0);
+  if (category === 'punting') return Number(stats.punts ?? 0);
+  if (category === 'returning') return Number(stats.krYds ?? 0) + Number(stats.prYds ?? 0);
+  return Number(stats.yds ?? 0);
+}
+
+/** One board per game. Every roster player who recorded a line is listed with the full box. */
+export function buildGameStatBoards(players: GameStatPlayer[] | null | undefined): GameStatBoard[] {
+  const buckets = new Map<
+    string,
+    {
+      sample: ProductionGameLine;
+      byCategory: Map<string, { row: GameStatRow; sort: number }[]>;
+    }
+  >();
+
+  for (const player of players || []) {
+    const games = player.productionStats?.recentGames;
+    if (!Array.isArray(games)) continue;
+    for (const game of games) {
+      if (!isPlayedGame(game)) continue;
+      const line = formatGameStatLine(game);
+      if (!line || line === '—') continue;
+      const key = gameBucketKey(game);
+      let bucket = buckets.get(key);
+      if (!bucket) {
+        bucket = { sample: game, byCategory: new Map() };
+        buckets.set(key, bucket);
+      }
+      const category = String(game.category || 'stats');
+      const rows = bucket.byCategory.get(category) || [];
+      rows.push({
+        sort: categorySortValue(category, game.stats || {}),
+        row: {
+          slug: player.slug,
+          name: player.name,
+          position: String(player.position || '').toUpperCase(),
+          line,
+        },
+      });
+      bucket.byCategory.set(category, rows);
+    }
+  }
+
+  const boards = [...buckets.values()].map((bucket) => {
+    const categories = [...bucket.byCategory.entries()]
+      .sort(
+        (a, b) =>
+          CATEGORY_ORDER.indexOf(a[0]) - CATEGORY_ORDER.indexOf(b[0])
+      )
+      .map(([category, rows]) => ({
+        category,
+        label: categoryLabel(category),
+        rows: rows
+          .slice()
+          .sort((a, b) => b.sort - a.sort || a.row.name.localeCompare(b.row.name))
+          .map((entry) => entry.row),
+      }))
+      .filter((block) => block.rows.length > 0);
+    const sample = bucket.sample;
+    const week = sample.week ?? null;
+    return {
+      key: gameBucketKey(sample),
+      season: sample.season,
+      week,
+      date: sample.date ?? null,
+      opponent: sample.opponent,
+      homeAway: sample.homeAway ?? null,
+      headline: formatRecentGameHeadline(sample),
+      chip: week != null ? `W${week}` : 'Game',
+      categories,
+    };
+  });
+
+  const ordered = boards.sort((a, b) => {
+    if (b.season !== a.season) return b.season - a.season;
+    const weekA = a.week ?? 0;
+    const weekB = b.week ?? 0;
+    if (weekB !== weekA) return weekB - weekA;
+    return String(b.date || '').localeCompare(String(a.date || ''));
+  });
+  const weekCounts = new Map<string, number>();
+  for (const board of ordered) {
+    const id = String(board.week ?? '');
+    weekCounts.set(id, (weekCounts.get(id) || 0) + 1);
+  }
+  for (const board of ordered) {
+    if ((weekCounts.get(String(board.week ?? '')) || 0) > 1 && board.week != null) {
+      board.chip = `${board.season} W${board.week}`;
+    }
+  }
+  return ordered;
 }
 
 export function careerSeasonsForPos(

@@ -127,6 +127,7 @@ function mapRosterPlayer(p: RosterPlayer): TeamPlayer {
     tags,
     slug: p.slug,
     jersey: p.jersey != null && Number.isFinite(Number(p.jersey)) ? Number(p.jersey) : null,
+    productionStats: p.productionStats ?? null,
   };
 }
 

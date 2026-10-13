@@ -15,6 +15,7 @@ import { TeamPremiumHero } from '@/components/team/premium/TeamPremiumHero';
 import { TeamPremiumSubNav } from '@/components/team/premium/TeamPremiumSubNav';
 import { TeamRosterSection } from '@/components/team/premium/TeamRosterSection';
 import { TeamDepthChartSection } from '@/components/team/premium/TeamDepthChartSection';
+import { TeamGameStatsSection } from '@/components/team/premium/TeamGameStatsSection';
 import { TeamDestinationGrid } from '@/components/team/TeamDestinationGrid';
 import { computeHeroMetrics } from '@/components/team/premium/team-premium-metrics';
 import { TEAM_PREMIUM_TABS, type TeamPremiumTabId } from '@/components/team/premium/team-premium-types';
@@ -224,6 +225,7 @@ export function TeamHubPage(): React.ReactElement {
           loading={depthLoading}
           subtitle={bundle.depthSubtitle || bundle.depthLabel || TEAM_COPY.depthChart.subtitle}
         />
+        <TeamGameStatsSection roster={bundle.roster} loading={rosterLoading} />
         <TeamRosterSection
           roster={bundle.roster}
           filter={rosterFilter}

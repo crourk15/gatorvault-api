@@ -1,6 +1,6 @@
 /** UF Premium Team Page — tab ids, metrics, shared types */
 
-export type TeamPremiumTabId = 'depth-chart' | 'roster';
+export type TeamPremiumTabId = 'depth-chart' | 'game-stats' | 'roster';
 
 export type TeamPremiumTab = {
   id: TeamPremiumTabId;
@@ -10,6 +10,7 @@ export type TeamPremiumTab = {
 /** Fan-first hub: depth + roster. Recruiting footprint lives on Recruiting. */
 export const TEAM_PREMIUM_TABS: TeamPremiumTab[] = [
   { id: 'depth-chart', label: 'Depth Chart' },
+  { id: 'game-stats', label: 'Game Stats' },
   { id: 'roster', label: 'Roster' },
 ];
 
