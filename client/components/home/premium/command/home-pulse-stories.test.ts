@@ -433,6 +433,17 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
     assert.ok(!rows.some((row) => row.items.some((s) => /missouri|faurot|4-0 heading/i.test(s))));
   });
 
+  it('locks a saved Texas ABC-or-ESPN line to ABC', () => {
+    const rows = usableHomeNowWeek([
+      { key: 'game', label: 'Game', items: ['Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC or ESPN'] },
+      { key: 'news', label: 'News', items: ['Easton Royal flips to Florida · No. 5'] },
+      { key: 'season', label: 'Season', items: ['4-2 heading into Saturday'] },
+    ]);
+    assert.equal(rows[0].items[0], 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC');
+    assert.equal(rows[1].items[0], 'Easton Royal flips to Florida · No. 5');
+    assert.ok(!rows.some((row) => row.items.some((s) => /ABC or ESPN/i.test(s))));
+  });
+
   it('rewrites leftover ABC-or-SECN and Bailey News to the Texas road pack', () => {
     const rows = usableHomeNowWeek([
       { key: 'game', label: 'Game', items: ['South Carolina in the Swamp · ABC or SEC Network'] },

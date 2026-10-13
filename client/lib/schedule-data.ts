@@ -105,6 +105,13 @@ export type ScheduleGame = {
 /** Bundled remaining-season pred week. Peek drops a leftover last-good stamp older than this. */
 export const SCHEDULE_SEED_PRED_THROUGH = '2026-W7';
 
+/** SEC locked Texas noon to ABC on Oct 11. Saved boards still say the Oct 5 window. */
+export function lockBroadcastWindow(tv?: string | null): string {
+  return String(tv || '')
+    .replace(/abc\s+or\s+espn/gi, 'ABC')
+    .trim();
+}
+
 export const SCHEDULE_GAMES: ScheduleGame[] = [
   {
     id: "fau",

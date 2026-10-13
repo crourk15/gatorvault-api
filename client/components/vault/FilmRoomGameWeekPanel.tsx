@@ -3,7 +3,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Chip, GridLayout, PageSection } from '@/components/brand';
 import { defaultGameWeekId } from '@/lib/game-week-data';
-import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
+import { fetchScheduleBoard } from '@/lib/schedule-api';
+import { lockBroadcastWindow, SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 import { SITE_ROUTES } from '@/lib/site-routes';
 
 function daysUntilKickoff(dateStr: string): number {
@@ -29,7 +30,7 @@ function MatchupHero({ game }: { game: ScheduleGame }): React.ReactElement {
         🐊
       </div>
       <div className="gv-fr-gw-matchup__center">
-        <Chip variant="orange">{game.tv ?? 'TBD'}</Chip>
+        <Chip variant="orange">{lockBroadcastWindow(game.tv) || 'TBD'}</Chip>
         <h2 className="gv-fr-gw-matchup__title">Florida vs {game.opp}</h2>
         <p className="gv-fr-gw-matchup__meta">{game.date}</p>
         <p className="gv-fr-gw-matchup__venue">{game.venue}</p>
@@ -61,11 +62,29 @@ type Props = {
 
 export function FilmRoomGameWeekPanel({ initialGameId }: Props): React.ReactElement {
   const [gameId, setGameId] = useState(initialGameId || defaultGameWeekId());
+  const [games, setGames] = useState<ScheduleGame[]>(SCHEDULE_GAMES);
 
   useEffect(() => {
     if (initialGameId) setGameId(initialGameId);
   }, [initialGameId]);
-  const game = SCHEDULE_GAMES.find((g) => g.id === gameId) ?? SCHEDULE_GAMES[0];
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchScheduleBoard(2026)
+      .then((board) => {
+        if (!cancelled && board.games?.length) setGames(board.games);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const game =
+    games.find((g) => g.id === gameId) ??
+    SCHEDULE_GAMES.find((g) => g.id === gameId) ??
+    games[0] ??
+    SCHEDULE_GAMES[0];
   const days = useMemo(() => daysUntilKickoff(game.date), [game.date]);
 
   return (
@@ -77,7 +96,7 @@ export function FilmRoomGameWeekPanel({ initialGameId }: Props): React.ReactElem
       <MatchupHero game={game} />
 
       <div className="gv-fr-gw-pills">
-        {SCHEDULE_GAMES.map((g) => (
+        {games.map((g) => (
           <button
             key={g.id}
             type="button"

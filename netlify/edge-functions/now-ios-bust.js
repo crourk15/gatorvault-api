@@ -6,7 +6,7 @@
  * Do not rewrite the body -- auth / APNs POSTs must pass through.
  */
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'texas-abc-ios';
+const NOW_BUST_VALUE = 'texas-abc-only';
 
 function needsNowCacheBust(request) {
   const cookie = request?.headers?.get?.('cookie') || '';
@@ -18,13 +18,15 @@ export default async (request, context) => {
   const headers = new Headers(res.headers);
   headers.set('cache-control', 'no-store, must-revalidate');
   headers.set('pragma', 'no-cache');
+  // Every launch POST clears WKWebView URLCache. A one-shot cookie can get
+  // set while the old ABC-or-ESPN body is still the cached GET.
+  headers.set('clear-site-data', '"cache"');
+  headers.set('x-gv-now-bust', NOW_BUST_VALUE);
   if (needsNowCacheBust(request)) {
-    headers.set('clear-site-data', '"cache"');
     headers.append(
       'set-cookie',
       `${NOW_BUST_COOKIE}=${NOW_BUST_VALUE}; Max-Age=1209600; Path=/; Secure; SameSite=Lax`
     );
-    headers.set('x-gv-now-bust', NOW_BUST_VALUE);
   }
   return new Response(res.body, {
     status: res.status,
