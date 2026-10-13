@@ -181,8 +181,11 @@ function needsNowCacheBust(request) {
 }
 
 function applyNowCacheBust(request, headers) {
+  // Clear-Site-Data on ping, schedule, and the ticker wiped scripts while
+  // the vault page was still loading. Close and reopen still showed
+  // "This Vault page failed to load". no-store stays; do not clear cache.
+  headers.delete('clear-site-data');
   if (!needsNowCacheBust(request)) return false;
-  headers.set('clear-site-data', '"cache"');
   headers.append(
     'set-cookie',
     `${NOW_BUST_COOKIE}=${NOW_BUST_VALUE}; Max-Age=1209600; Path=/; Secure; SameSite=Lax`
@@ -923,7 +926,7 @@ export default async (request, context) => {
   ) {
     applyHubCacheBust(request, headers);
   } else if (changed) {
-    headers.set('clear-site-data', '"cache"');
+    headers.delete('clear-site-data');
   }
   headers.delete('content-length');
   headers.delete('etag');

@@ -73,15 +73,20 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /isClassMetricsPath/);
 });
 
-test('iOS launch edge busts URLCache without rewriting the POST body', () => {
+test('iOS launch edge does not clear the cache while the vault page opens', () => {
   const bust = fs.readFileSync(
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
   assert.match(bust, /NOW_BUST_VALUE = 'texas-abc-only'/);
   assert.match(bust, /context\.next\(\)/);
-  assert.match(bust, /headers\.set\('clear-site-data', '"cache"'\)/);
+  assert.match(bust, /headers\.delete\('clear-site-data'\)/);
+  assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
   assert.doesNotMatch(bust, /upstream\.json\(\)/);
+  const nowBust = src.slice(src.indexOf('function applyNowCacheBust'), src.indexOf('function pinCurrentTexasNow'));
+  assert.match(nowBust, /headers\.delete\('clear-site-data'\)/);
+  assert.doesNotMatch(nowBust, /headers\.set\('clear-site-data'/);
+  assert.doesNotMatch(src, /headers\.set\('clear-site-data'/);
 });
 
 test('recruiting page edge drops a cached 8th and stamps 5th', () => {
@@ -96,6 +101,13 @@ test('recruiting page edge drops a cached 8th and stamps 5th', () => {
   const toml = fs.readFileSync(path.join(__dirname, '../../../netlify.toml'), 'utf8');
   assert.match(toml, /function = "hero-class-rank"/);
   assert.match(toml, /path = "\/api\/recruiting\/class-metrics"/);
+});
+
+test('vault hydration boot script parses', () => {
+  const { VAULT_HYDRATION_BOOT_SCRIPT } = require('../../../client/lib/vault-hydration-guard');
+  assert.equal(VAULT_HYDRATION_BOOT_SCRIPT.includes('\u0000'), false);
+  assert.match(VAULT_HYDRATION_BOOT_SCRIPT, /pageshow/);
+  new Function(VAULT_HYDRATION_BOOT_SCRIPT);
 });
 
 test('hub edge pins 2028 hero at 3 commits and drops verified commits from battles', () => {

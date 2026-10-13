@@ -18,9 +18,10 @@ export default async (request, context) => {
   const headers = new Headers(res.headers);
   headers.set('cache-control', 'no-store, must-revalidate');
   headers.set('pragma', 'no-cache');
-  // Every launch POST clears WKWebView URLCache. A one-shot cookie can get
-  // set while the old ABC-or-ESPN body is still the cached GET.
-  headers.set('clear-site-data', '"cache"');
+  // Do not Clear-Site-Data. Launch POSTs run while the vault page is opening,
+  // and that header wiped scripts so close-and-reopen still failed to load.
+  // no-store on this response is the cache policy. ABC stays on the ticker pin.
+  headers.delete('clear-site-data');
   headers.set('x-gv-now-bust', NOW_BUST_VALUE);
   if (needsNowCacheBust(request)) {
     headers.append(
