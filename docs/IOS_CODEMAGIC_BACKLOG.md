@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] 2027 hub responses the installed app requests are pinned to class rank #5, 67% blue chip, 27 commits, 90.1. The next recruiting-hub load clears the saved copy (`gv-hub-bust=class-rank-5`). The Royal sentence under Florida Recruiting is still the line baked into 1.0.31 until the next app build.
 - [x] 2027 hero class line on the live hub is #5, 67% blue chip, 27 commits, 90.1. Those three counts already include Easton Royal. On3 class rank moved to #5 on October 11. API `/api/recruiting/hub/hero?year=2027` — no Codemagic. The website first-paint seed was still #8 until the next site publish. Reopen the recruiting hub once.
 - [x] Roster Stats include the South Carolina official box (week 6). Philo 21-of-28 for 227, 1 TD, 1 INT. Baugh 15 carries for 59 and a score. Wilson 8 for 74. Graham 8 tackles, 2 sacks. API `/api/roster/players/:slug` after Render — no Codemagic. Platform-ops runs `roster-official-box-sync` every 2 hours and stamps the next final on its own.
 - [x] Home NOW Game is Florida at Texas, Saturday, October 17, 2026, 12:00 PM ET on ABC. The Oct 5 window is closed on `/api/schedule` and the ticker. Launch POST `/api/member-activity/ping` and `/api/push/device` send `Clear-Site-Data: cache` on every open so a saved iOS URLCache of “ABC or ESPN” drops. Cache bust `gv-now-bust=texas-abc-only`. The Film Room chip and a saved last-good board inside the binary are the bake row.
