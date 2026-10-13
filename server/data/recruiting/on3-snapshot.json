@@ -1789,10 +1789,11 @@
       },
       "rankings": {
         "classYear": 2027,
-        "nationalRank": 8,
-        "secRank": 3,
-        "classScore": 91.716417099799,
-        "source": "on3"
+        "nationalRank": 5,
+        "secRank": 2,
+        "classScore": 92.088285024155,
+        "source": "on3",
+        "updatedAt": "2026-10-11T18:01:33.744Z"
       }
     },
     "2028": {
