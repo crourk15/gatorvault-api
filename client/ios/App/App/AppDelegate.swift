@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import WebKit
 import FBSDKCoreKit
 import AppTrackingTransparency
 
@@ -16,6 +17,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
         Settings.shared.isAutoLogAppEventsEnabled = true
         Settings.shared.isAdvertiserIDCollectionEnabled = true
+        // Drop a cached recruiting page or hero JSON left by the previous install.
+        // Do not touch local storage — that is the member session.
+        URLCache.shared.removeAllCachedResponses()
+        WKWebsiteDataStore.default().removeData(
+            ofTypes: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache],
+            modifiedSince: Date(timeIntervalSince1970: 0)
+        ) { }
         return true
     }
 
