@@ -68,8 +68,8 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   const hubBust = src.slice(src.indexOf('function applyHubCacheBust'), src.indexOf('function isAppStoreUpdateLine'));
   assert.match(hubBust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(hubBust, /headers\.set\('clear-site-data'/);
-  assert.match(src, /ROYAL_2027_CLASS_LINE/);
-  assert.match(src, /classRank: '#5'/);
+  assert.doesNotMatch(src, /ROYAL_2027_CLASS_LINE/);
+  assert.doesNotMatch(src, /pin2027ClassLine/);
   assert.match(src, /isClassMetricsPath/);
 });
 
@@ -103,12 +103,12 @@ test('recruiting page edge drops a cached 8th and stamps 5th', () => {
   assert.match(toml, /path = "\/api\/recruiting\/class-metrics"/);
 });
 
-test('2027 class pin keeps the hub commit list and still stamps the class line', () => {
+test('2027 hub edge keeps the commit list and leaves the live class line alone', () => {
   const start = src.indexOf('const EASTON_ROYAL_HUB_SUBTITLE');
   const end = src.indexOf('function needsHubCacheBust');
   assert.ok(start > 0 && end > start);
-  const { apply2027ClassLine, pinEastonRoyalHub } = new Function(
-    `${src.slice(start, end)}; return { apply2027ClassLine, pinEastonRoyalHub };`
+  const { pinEastonRoyalHub } = new Function(
+    `${src.slice(start, end)}; return { pinEastonRoyalHub };`
   )();
   const players = [
     { id: 'maxwell-hiller', name: 'Maxwell Hiller' },
@@ -117,33 +117,20 @@ test('2027 class pin keeps the hub commit list and still stamps the class line',
   const bundle = {
     year: 2027,
     commits: players,
-    classOverview: { classRank: '#8', blueChip: '65%', commits: '26', avgRating: '89.7' },
-    classOverviewAll: { 2027: { classRank: '#8', commits: '26' } },
+    classOverview: { classRank: '#4', blueChip: '70%', commits: '28', avgRating: '90.4' },
+    classOverviewAll: { 2027: { classRank: '#4', commits: '28', avgRating: '90.4' } },
   };
   const pinned = pinEastonRoyalHub(bundle, 2027);
   assert.equal(Array.isArray(pinned.data.commits), true);
   assert.equal(pinned.data.commits.length, 2);
   assert.equal(pinned.data.commits[0].id, 'easton-royal');
   assert.equal(pinned.data.commits[0].name, 'Easton Royal');
-  assert.equal(pinned.data.classOverview.classRank, '#5');
-  assert.equal(pinned.data.classOverview.blueChip, '67%');
-  assert.equal(pinned.data.classOverview.commits, '27');
-  assert.equal(pinned.data.classOverview.avgRating, '90.1');
-  assert.equal(pinned.data.classOverviewAll['2027'].classRank, '#5');
-  assert.equal(pinned.data.classOverviewAll['2027'].commits, '27');
-
-  const metrics = apply2027ClassLine({
-    ok: true,
-    classRank: '#8',
-    blueChip: '65%',
-    commits: '26',
-    avgRating: '89.7',
-  });
-  assert.equal(metrics.data.classRank, '#5');
-  assert.equal(metrics.data.blueChip, '67%');
-  assert.equal(metrics.data.commits, '27');
-  assert.equal(metrics.data.avgRating, '90.1');
-  assert.equal(typeof metrics.data.commits, 'string');
+  assert.equal(pinned.data.classOverview.classRank, '#4');
+  assert.equal(pinned.data.classOverview.blueChip, '70%');
+  assert.equal(pinned.data.classOverview.commits, '28');
+  assert.equal(pinned.data.classOverview.avgRating, '90.4');
+  assert.equal(pinned.data.classOverviewAll['2027'].classRank, '#4');
+  assert.equal(pinned.data.classOverviewAll['2027'].commits, '28');
 });
 
 test('vault hydration boot script parses', () => {

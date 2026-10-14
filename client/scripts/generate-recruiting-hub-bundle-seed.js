@@ -197,24 +197,6 @@ async function main() {
   }
 
   const active = byYear[String(ACTIVE_YEAR)];
-  const augustPlate =
-    active &&
-    active.classOverview &&
-    String(active.classOverview.classRank) === '#8' &&
-    (String(active.classOverview.commits) === '26' || String(active.classOverview.avgRating) === '89.9');
-  if (augustPlate) {
-    const royalLine = {
-      classRank: '#5',
-      blueChip: '67%',
-      commits: '27',
-      commitLabel: 'Commits',
-      avgRating: '90.1',
-    };
-    active.classOverview = { ...active.classOverview, ...royalLine };
-    if (active.classOverviewAll && active.classOverviewAll['2027']) {
-      active.classOverviewAll['2027'] = { ...active.classOverviewAll['2027'], ...royalLine };
-    }
-  }
   if (!bundleHasSignal(active)) {
     console.error('[generate-recruiting-hub-bundle-seed] FAIL — active year bundle empty');
     process.exit(1);

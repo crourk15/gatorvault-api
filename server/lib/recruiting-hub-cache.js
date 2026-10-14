@@ -96,42 +96,6 @@ function isAugust2027ClassLine(value) {
   return commits === '26' || avg === '89.9' || avg === '89.8' || avg === '89.7';
 }
 
-const ROYAL_2027_CLASS_LINE = {
-  classRank: '#5',
-  blueChip: '67%',
-  commits: '27',
-  commitLabel: 'Commits',
-  avgRating: '90.1',
-};
-
-function pinRoyalClassFields(target) {
-  if (!target || typeof target !== 'object' || Array.isArray(target)) return;
-  for (const key of Object.keys(ROYAL_2027_CLASS_LINE)) {
-    if (Array.isArray(target[key])) continue;
-    target[key] = ROYAL_2027_CLASS_LINE[key];
-  }
-}
-
-/** 2027 hero chart. Never replace a commit list with the count string. */
-function pin2027OverviewNests(value, year) {
-  if (!value || typeof value !== 'object') return value;
-  if (Number(year) === 2027) {
-    if (value.classOverview && typeof value.classOverview === 'object' && !Array.isArray(value.classOverview)) {
-      pinRoyalClassFields(value.classOverview);
-    } else if (value.classRank != null || value.avgRating != null || value.blueChip != null) {
-      pinRoyalClassFields(value);
-    }
-  }
-  const all = value.classOverviewAll;
-  if (all && typeof all === 'object') {
-    if (all[2027] && typeof all[2027] === 'object') pinRoyalClassFields(all[2027]);
-    if (all['2027'] && all['2027'] !== all[2027] && typeof all['2027'] === 'object') {
-      pinRoyalClassFields(all['2027']);
-    }
-  }
-  return value;
-}
-
 function healthyOverviewCanReplace(nest, healthy) {
   if (!healthy || typeof healthy !== 'object') return false;
   if (!nest || typeof nest !== 'object') return true;
@@ -641,7 +605,13 @@ function healOverviewNests(value, year) {
       const nestYear = Number(key);
       if (!Number.isFinite(nestYear)) continue;
       const nest = all[key];
-      if (isUsableClassOverviewSnapshot(nest, nestYear) && nestYear !== 2028) continue;
+      if (
+        isUsableClassOverviewSnapshot(nest, nestYear) &&
+        nestYear !== 2028 &&
+        !isAugust2027ClassLine(nest)
+      ) {
+        continue;
+      }
       const healthy = readHealthyClassOverview(nestYear);
       if (!healthy) continue;
       if (!nest || typeof nest !== 'object') {
@@ -664,7 +634,6 @@ function healOverviewNests(value, year) {
       }
     }
   }
-  pin2027OverviewNests(value, y);
   return value;
 }
 
@@ -729,7 +698,6 @@ function pinEastonRoyalHubSurface(value, year) {
     const { hubHeroSubtitle } = require('./recruiting-hub-elite');
     value.subtitle = hubHeroSubtitle(2027);
   }
-  pin2027OverviewNests(value, 2027);
   return value;
 }
 
@@ -769,7 +737,7 @@ function healCachedHubPayload(cacheKey, value) {
   const metricsYear = String(cacheKey || '').match(
     /^(?:hub:class:snapshot|hub:elite:class-overview):[^:]+:(\d+)$/
   );
-  if (metricsYear) pin2027OverviewNests(value, Number(metricsYear[1]));
+  if (metricsYear) healOverviewNests(value, Number(metricsYear[1]));
   return value;
 }
 
