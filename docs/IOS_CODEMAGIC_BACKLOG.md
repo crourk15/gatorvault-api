@@ -229,15 +229,15 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 **1.0.31 is closed.** Apple approved it. Do not upload another 1.0.31 — Codemagic cannot attach to a closed train.
 
-**1.0.32 is already built.** Do not upload another 1.0.32.
+**1.0.33 is on the App Store.** Do not upload another 1.0.33.
 
-**Next bake target: App Store `1.0.33` / build `102`.** The recruiting hero follows the live class line. See `docs/APP_STORE_1_0_33.md`. Merge to `main`, then Charles starts Codemagic **ios-release**. Do **not** start until this bump is on `main`.
+**Next bake target: App Store `1.0.34` / build `103`.** The recruiting hero must not paint the old class line over the live one. See `docs/APP_STORE_1_0_34.md`. Merge to `main`, then Charles starts Codemagic **ios-release**. Do **not** start until this bump is on `main`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-10-13 | App Store **1.0.33** / build **102**. **1.0.32 is already built — do not re-upload.** Recruiting hero boxes follow the live class line when it changes. | `MARKETING_VERSION` 1.0.33. The four boxes are drawn by the binary. | this PR |
+| 2026-10-14 | App Store **1.0.34** / build **103**. **1.0.33 is on the store — do not re-upload.** Opening Recruiting must not paint the old class line over the live one. | `recruiting-hub-hero-boot.ts` and `AppDelegate.swift` in the binary. 1.0.33 can still paint a saved old hero after the App Store install. | this PR |
 | 2026-10-13 | Vault hydration guard runs on open. **The failed-to-load screen was the hub bundle `commits` field turned into the count string; the edge sends the player list again without a bake.** | `vault-hydration-guard.js` in the binary. Approved 1.0.31 has a script error in that guard, so the blank-page reload does not run. That script error is not the error screen. | this PR |
 | 2026-10-13 | Recruiting hero keeps the live class line when you leave and come back. A commit moves the line, and the August plate (#8, 26 commits, 89.9) is not painted over it. **The live chart is the class overview, not a fixed plate.** | `RecruitingHeroStrip.tsx`, `useRecruitingHubBundle.ts`, and `recruiting-hub-hero-boot.ts` in the binary. The installed app can still first-paint its saved August copy. | this PR |
 | 2026-10-13 | Recruiting hero replaces the August class line when the live bundle arrives. **Live API and the website already show #5, 67% blue chip, 27 commits, 90.1.** | `RecruitingHeroStrip.tsx` in the binary. Approved 1.0.31 mounts the saved hero once (#8, 26 commits, 89.9) and ignores the later live class line. | this PR |

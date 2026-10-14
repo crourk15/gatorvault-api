@@ -54,6 +54,8 @@ test('hero boot remembers the live class line and refreshes when the page is sho
   assert.match(src, /gv_hub_class_line_v1:2027/);
   assert.match(src, /augustClassLine/);
   assert.match(src, /pageshow/);
+  assert.match(src, /if \(augustClassLine\(metrics\)\)/);
+  assert.match(src, /data\.classOverview = null/);
   assert.equal(src.includes('\u0000'), false);
   new Function(src);
 });

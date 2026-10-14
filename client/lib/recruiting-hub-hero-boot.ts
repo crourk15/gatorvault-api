@@ -97,8 +97,10 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
 
       function storeMetrics(year, data) {
         if (!data) return;
-        window.__GV_HUB__.metricsByYear[year] = data.classOverview || data;
-        window.__GV_HUB__.metricsByYear[String(year)] = data.classOverview || data;
+        var line = data.classOverview || data;
+        if (String(year) === '2027' && augustClassLine(line)) return;
+        window.__GV_HUB__.metricsByYear[year] = line;
+        window.__GV_HUB__.metricsByYear[String(year)] = line;
       }
 
       function paintHero(data) {
@@ -107,12 +109,17 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
           title: fanTitle(data.title),
           subtitle: fanSubtitle(data.subtitle)
         });
-        window.__GV_HERO__ = normalized;
         data = normalized;
         if (data.classOverview && augustClassLine(data.classOverview)) {
           var storedLine = readStoredClassLine();
+          var previous = window.__GV_HERO__ && window.__GV_HERO__.classOverview;
           if (storedLine) data.classOverview = storedLine;
+          else if (previous && !augustClassLine(previous)) data.classOverview = previous;
         }
+        if (data.classOverview && augustClassLine(data.classOverview)) {
+          data.classOverview = null;
+        }
+        window.__GV_HERO__ = data;
         if (data.classOverview && !augustClassLine(data.classOverview)) writeStoredClassLine(data.classOverview);
         window.__GV_HUB__.heroRenderMs = Math.round(performance.now() - start);
         if (data.classOverview) {
@@ -145,6 +152,11 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
         }
 
         var metrics = data.classOverview || {};
+        if (augustClassLine(metrics)) {
+          var kept = readStoredClassLine();
+          if (!kept) return;
+          metrics = kept;
+        }
         var fields = [
           ['classRank', 'class-rank'],
           ['blueChip', 'blue-chip'],
