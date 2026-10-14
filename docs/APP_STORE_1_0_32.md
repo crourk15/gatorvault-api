@@ -1,6 +1,8 @@
 # Submit 1.0.32 (Build 101+) — Community Reply
 
-**Why:** Apple approved **1.0.31**. Codemagic cannot upload another 1.0.31 IPA (version train closed). Community Reply was on that closed train. This bump is the next bake.
+**1.0.32 is already built.** Do not upload another 1.0.32. Next bake is **1.0.33** (`docs/APP_STORE_1_0_33.md`).
+
+**Why:** Apple approved **1.0.31**. Codemagic cannot upload another 1.0.31 IPA (version train closed). Community Reply was on that closed train. This bump was that bake.
 
 Do **not** upload another 1.0.31. Do **not** start Codemagic until this bump is on `main`.
 

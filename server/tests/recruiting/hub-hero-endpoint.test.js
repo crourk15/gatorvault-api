@@ -99,9 +99,41 @@ describe('Recruiting Hub hero endpoint payload', () => {
     assert.equal(payload.classOverviewAll[2027].commits, '27');
     assert.equal(payload.classOverviewAll[2027].avgRating, '90.1');
     hubCache.remove(key);
+
+    const later = {
+      classOverview: {
+        classRank: '#4',
+        blueChip: '70%',
+        commits: '28',
+        commitLabel: 'Commits',
+        avgRating: '90.4',
+      },
+      classOverviewAll: {
+        2027: {
+          classRank: '#4',
+          blueChip: '70%',
+          commits: '28',
+          avgRating: '90.4',
+        },
+      },
+    };
+    hubCache.set(key, {
+      classRank: '#8',
+      blueChip: '65%',
+      commits: '26',
+      commitLabel: 'Commits',
+      avgRating: '89.9',
+    });
+    healOverviewNests(later, 2027);
+    assert.equal(later.classOverview.classRank, '#4');
+    assert.equal(later.classOverview.commits, '28');
+    assert.equal(later.classOverview.avgRating, '90.4');
+    assert.equal(later.classOverviewAll[2027].classRank, '#4');
+    assert.equal(later.classOverviewAll[2027].commits, '28');
+    hubCache.remove(key);
   });
 
-  it('pins the 2027 class line without turning the commit list into a count', () => {
+  it('keeps a later class line and does not turn the commit list into a count', () => {
     const bundle = pinEastonRoyalHubSurface(
       {
         title: 'Florida Recruiting',
@@ -111,21 +143,21 @@ describe('Recruiting Hub hero endpoint payload', () => {
           { id: 'easton-royal', name: 'Easton Royal' },
         ],
         classOverview: {
-          classRank: '#8',
-          blueChip: '65%',
-          commits: '26',
+          classRank: '#4',
+          blueChip: '70%',
+          commits: '28',
           commitLabel: 'Commits',
-          avgRating: '89.9',
+          avgRating: '90.4',
         },
       },
       2027
     );
     assert.equal(Array.isArray(bundle.commits), true);
     assert.equal(bundle.commits[0].id, 'easton-royal');
-    assert.equal(bundle.classOverview.classRank, '#5');
-    assert.equal(bundle.classOverview.blueChip, '67%');
-    assert.equal(bundle.classOverview.commits, '27');
-    assert.equal(bundle.classOverview.avgRating, '90.1');
+    assert.equal(bundle.classOverview.classRank, '#4');
+    assert.equal(bundle.classOverview.blueChip, '70%');
+    assert.equal(bundle.classOverview.commits, '28');
+    assert.equal(bundle.classOverview.avgRating, '90.4');
     assert.match(bundle.subtitle, /Easton Royal flipped from Texas/);
   });
 });

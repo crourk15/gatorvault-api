@@ -415,67 +415,6 @@ function heal2028CommitPayload(data, year) {
 const EASTON_ROYAL_HUB_SUBTITLE =
   'Easton Royal flipped from Texas. 5-star WR, No. 5 nationally.';
 
-/** On3 class line the day Royal flipped. Installed iOS must not keep the August 8th. */
-const ROYAL_2027_CLASS_LINE = {
-  classRank: '#5',
-  blueChip: '67%',
-  commits: '27',
-  commitLabel: 'Commits',
-  avgRating: '90.1',
-};
-
-function pin2027ClassLine(ov) {
-  const base = ov && typeof ov === 'object' && !Array.isArray(ov) ? { ...ov } : {};
-  let changed = false;
-  for (const key of Object.keys(ROYAL_2027_CLASS_LINE)) {
-    // Hub bundle `commits` is the player list. The count string belongs on
-    // classOverview and the flat class-metrics plate. Replacing the list
-    // with "27" makes installed iOS call .map on a string and show
-    // "This Vault page failed to load".
-    if (Array.isArray(base[key])) continue;
-    if (base[key] !== ROYAL_2027_CLASS_LINE[key]) {
-      base[key] = ROYAL_2027_CLASS_LINE[key];
-      changed = true;
-    }
-  }
-  return { overview: base, changed };
-}
-
-function apply2027ClassLine(data) {
-  if (!data || typeof data !== 'object') return { data, changed: false };
-  const out = { ...data };
-  let changed = false;
-  if (out.classRank != null || out.blueChip != null || out.commits != null || out.avgRating != null) {
-    const playerList = Array.isArray(out.commits) ? out.commits : null;
-    const pinned = pin2027ClassLine(out);
-    if (pinned.changed) {
-      Object.assign(out, pinned.overview);
-      changed = true;
-    }
-    if (playerList) out.commits = playerList;
-  }
-  if (out.classOverview && typeof out.classOverview === 'object') {
-    const pinned = pin2027ClassLine(out.classOverview);
-    if (pinned.changed) {
-      out.classOverview = pinned.overview;
-      changed = true;
-    }
-  }
-  if (out.classOverviewAll && typeof out.classOverviewAll === 'object') {
-    const all = { ...out.classOverviewAll };
-    for (const key of ['2027', 2027]) {
-      if (!all[key]) continue;
-      const pinned = pin2027ClassLine(all[key]);
-      if (pinned.changed) {
-        all[key] = pinned.overview;
-        changed = true;
-      }
-    }
-    if (changed) out.classOverviewAll = all;
-  }
-  return { data: out, changed };
-}
-
 const EASTON_ROYAL_COMMIT = {
   id: 'easton-royal',
   name: 'Easton Royal',
@@ -509,11 +448,6 @@ function pinEastonRoyalHub(data, year) {
     typeof out.subtitle === 'string' || out.title === 'Florida Recruiting' || Boolean(out.classOverview);
   if (isHeroSurface && out.subtitle !== EASTON_ROYAL_HUB_SUBTITLE) {
     out.subtitle = EASTON_ROYAL_HUB_SUBTITLE;
-    changed = true;
-  }
-  const classLine = apply2027ClassLine(out);
-  if (classLine.changed) {
-    Object.assign(out, classLine.data);
     changed = true;
   }
   for (const key of ['commits', 'items']) {
@@ -898,13 +832,6 @@ export default async (request, context) => {
     const royal = pinEastonRoyalHub(data, yearFromRequest(url));
     if (royal.changed) {
       data = royal.data;
-      changed = true;
-    }
-  }
-  if (isClassMetricsPath(url.pathname) && (yearFromRequest(url) == null || yearFromRequest(url) === 2027)) {
-    const classLine = apply2027ClassLine(data);
-    if (classLine.changed) {
-      data = classLine.data;
       changed = true;
     }
   }
