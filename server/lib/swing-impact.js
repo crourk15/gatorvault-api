@@ -13,6 +13,7 @@ const NAME_SLUGS = {
   'Jadan Baugh': 'jadan-baugh',
   'Jaden Baugh': 'jadan-baugh',
   'Aaron Philo': 'aaron-philo',
+  'Tramell Jones Jr.': 'tramell-jones-jr',
   'Jayden Woods': 'jayden-woods',
   'Myles Graham': 'myles-graham',
   'Cormani McClain': 'cormani-mcclain',
@@ -25,6 +26,7 @@ const NAME_SLUGS = {
 const IDENTITY_FLOOR = {
   'jadan-baugh': 88,
   'aaron-philo': 82,
+  'tramell-jones-jr': 84,
   'jayden-woods': 84,
   'myles-graham': 84,
   'dallas-wilson': 82,
@@ -227,7 +229,7 @@ function edgeMatchupAdj(game, role) {
 function familyForSlug(slug, production) {
   const pos = String(production?.pos || '').toLowerCase();
   if (slug === 'jadan-baugh' || pos === 'rb') return 'rb';
-  if (slug === 'aaron-philo' || pos === 'qb') return 'qb';
+  if (slug === 'aaron-philo' || slug === 'tramell-jones-jr' || pos === 'qb') return 'qb';
   if (slug === 'dallas-wilson' || slug === 'eric-singleton-jr' || pos === 'wr') return 'wr';
   return 'def';
 }
