@@ -42,6 +42,8 @@ test('ticker edge one-shot busts iOS URLCache and pins the Texas week pack', () 
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
   assert.match(src, /NOW_BUST_VALUE = 'texas-abc-only'/);
   assert.match(src, /lockScheduleBroadcast/);
+  assert.match(src, /pinTexasJonesCard/);
+  assert.match(src, /Tramell Jones starts/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /isSchedulePath/);
   assert.match(src, /isPingPath/);
