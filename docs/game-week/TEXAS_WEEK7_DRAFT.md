@@ -44,7 +44,7 @@ These are team jobs. No one player owns the run, the rush, or the throw.
    Arch Manning will beat you if he gets to set his feet. Once the pocket is dirty he completes 53.8 percent, and about a quarter of those dropbacks end in a sack. He holds the ball. One rusher will not create that. Dylan Sikorski has not allowed a pressure in 128 pass-blocking snaps, so the rush has to arrive as a group. Then he leaves. On the year the runs they call for him are 24 carries for minus-8, and the scrambles are 20 for 149. Saturday the scramble was the play. Peyton Bowen picked him while he was running and brought it back 42 yards for a score. The defense has to be in his hip when he pulls it down.
 
 3. **The True Dropback**
-   Their rush ends the play when the ball stays in on a straight drop. Colin Simmons has 8 sacks, 7 of them on true pass sets, and Lance Jackson has 14 pressures beside him. At Missouri, Philo was a 70.0 passer when the pocket was clean and a 56.0 when it collapsed. The pass-block grade on that game was 55.8. South Carolina sacked him three times. The line has to give help, and the ball has to be gone before that dropback becomes a sack.
+   Tramell Jones starts. Aaron Philo is the shoulder. This is Jones's first start. In relief he is 23 of 29 for 252, two scores and two picks. Colin Simmons has 8 sacks, 7 of them on true pass sets, and Lance Jackson has 14 pressures beside him. The ball has to be gone before that dropback becomes a sack. The line has to give him help.
 
 ## Swing cards
 
@@ -52,7 +52,7 @@ The key paragraphs stay team jobs. The swing cards are the Florida players whose
 
 1. **Myles Graham** — The Run. Fit the run and finish the tackle.
 2. **Jayden Woods** — The Escape. In Manning's hip when he pulls it down. The rush still arrives as a group.
-3. **Aaron Philo** — The True Dropback. The ball has to be gone before that drop becomes a sack.
+3. **Tramell Jones Jr.** — The True Dropback. Jones starts. Philo is the shoulder. The ball has to be gone before that drop becomes a sack.
 
 ## Matchup Edge (sat stamp — not the win% formula)
 
