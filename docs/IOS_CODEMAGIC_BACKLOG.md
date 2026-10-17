@@ -7,6 +7,8 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Gators Live stays on Texas during the noon window. The score API was answering Georgia and `inWindow: false`, so the page flipped between Game day and Next up. The edge serves the ESPN Texas board on `/api/gators-live` until the origin window is Texas. Netlify edge after deploy — no Codemagic. Reopen Gators Live once.
+- [x] Game Week Texas key 3 is Tramell Jones Jr. on the way through `/api/schedule`. Aaron Philo is the shoulder. The origin card can still say Philo until Render; the edge the app calls pins Jones. Netlify edge after deploy — no Codemagic. Reopen Game Week once.
 - [x] 2027 hub bundle `commits` is the player list again (27, Easton Royal first). The class line stays on `classOverview` and class-metrics: #5, 67% blue chip, 27 commits, 90.1. The installed app maps that list; a count string in its place threw “This Vault page failed to load”. Netlify edge after deploy — no Codemagic. Force-quit the app and open it once.
 - [x] Vault open no longer sends `Clear-Site-Data` on `/api/ping`, `/api/schedule`, the hub ticker, or the launch POSTs (`/api/push/device`, `/api/push/config`, `/api/member-activity/ping`). That header wiped scripts while the page was loading. Those responses stay `no-store`. ABC stays the ticker and schedule pin. Netlify edge after deploy — no Codemagic.
 - [x] 2027 hub class line is the live overview (rank, blue chip, commit count, average). It is not a fixed plate. A saved August plate (#8, 26 commits, 89.9) cannot replace a newer line. The commit list stays a list. API after Render. The installed 1.0.31 app still paints its saved boxes until 1.0.33. After that build, the four boxes follow this overview when the class changes.

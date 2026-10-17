@@ -172,6 +172,53 @@ function lockScheduleBroadcast(data) {
   if (!changed) return { data, changed: false };
   return { data: { ...data, games }, changed };
 }
+
+const JONES_DROPBACK =
+  "Tramell Jones starts. Aaron Philo is the shoulder. This is Jones's first start. In relief he is 23 of 29 for 252, two scores and two picks. Colin Simmons has 8 sacks, 7 of them on true pass sets, and Lance Jackson has 14 pressures beside him. The ball has to be gone before that dropback becomes a sack. The line has to give him help.";
+
+/** Render still has Philo's Missouri chart on the Texas card. Pin Jones on the way through. */
+function pinTexasJonesCard(data) {
+  if (!data || typeof data !== 'object' || !Array.isArray(data.games)) return { data, changed: false };
+  let changed = false;
+  const games = data.games.map((game) => {
+    if (!game || game.id !== 'texas') return game;
+    const next = { ...game };
+    const how = Array.isArray(next.howUFWins) ? next.howUFWins.slice() : null;
+    if (how && how[2] !== JONES_DROPBACK) {
+      how[2] = JONES_DROPBACK;
+      next.howUFWins = how;
+      changed = true;
+    }
+    if (Array.isArray(next.swing) && next.swing[2]) {
+      const row = { ...next.swing[2] };
+      if (row.name !== 'Tramell Jones Jr.' || row.role !== JONES_DROPBACK || (row.slug && row.slug !== 'tramell-jones-jr')) {
+        row.name = 'Tramell Jones Jr.';
+        row.role = JONES_DROPBACK;
+        if (row.slug) row.slug = 'tramell-jones-jr';
+        next.swing = next.swing.slice();
+        next.swing[2] = row;
+        changed = true;
+      }
+    }
+    if (typeof next.film === 'string' && /Philo was a 70\.0/.test(next.film)) {
+      next.film = next.film.replace(
+        /At Missouri, Philo was a 70\.0 passer when the pocket was clean and a 56\.0 when it collapsed\. The pass-block grade was 55\.8\. /,
+        "Tramell Jones starts. Aaron Philo is the shoulder. This is Jones's first start. "
+      );
+      changed = true;
+    }
+    if (typeof next.scoutingReport === 'string' && /Philo was a 70\.0/.test(next.scoutingReport)) {
+      next.scoutingReport = next.scoutingReport.replace(
+        /At Missouri, Philo was a 70\.0 passer when the pocket was clean and a 56\.0 when it collapsed\. The pass-block grade was 55\.8\. /,
+        "Tramell Jones starts. Aaron Philo is the shoulder. This is Jones's first start. "
+      );
+      changed = true;
+    }
+    return changed ? next : game;
+  });
+  if (!changed) return { data, changed: false };
+  return { data: { ...data, games }, changed: true };
+}
 const HUB_BUST_COOKIE = 'gv-hub-bust';
 const HUB_BUST_VALUE = 'class-rank-5';
 
@@ -780,7 +827,8 @@ export default async (request, context) => {
     let schedulePayload = payload;
     if (isSchedulePath(url.pathname)) {
       const locked = lockScheduleBroadcast(payload);
-      schedulePayload = locked.data;
+      const jones = pinTexasJonesCard(locked.data);
+      schedulePayload = jones.data;
     }
     const headers = new Headers(upstream.headers);
     headers.set('content-type', 'application/json; charset=utf-8');

@@ -410,10 +410,14 @@ export function VaultLiveScoresPage(): React.ReactElement {
       try {
         const live = await fetchGatorsLive();
         if (stale()) return;
-        if (live.mode === 'ready' && !live.inWindow) {
-          setMode('ready');
-          setBoard(null);
-          hasBoard.current = false;
+        const localName = String(featured?.opp || '').split(/\s+/)[0].toLowerCase();
+        const apiName = `${live.featured?.opp || ''} ${live.featured?.id || ''} ${live.board?.opponent || ''}`.toLowerCase();
+        const apiIsThisGame = !localName || apiName.includes(localName);
+        if ((live.mode === 'ready' && !live.inWindow) || (live.board && !apiIsThisGame)) {
+          setMode('live-window');
+          if (!hasBoard.current && featured) {
+            paintBoard(previewBoard('pregame', featured));
+          }
           return;
         }
         if (live.board) {

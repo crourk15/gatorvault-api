@@ -93,6 +93,10 @@
   path = "/api/recruiting/hub/ticker/*"
 
 [[edge_functions]]
+  function = "gators-live-window"
+  path = "/api/gators-live"
+
+[[edge_functions]]
   function = "scrub-denied-visits"
   path = "/api/schedule"
 
