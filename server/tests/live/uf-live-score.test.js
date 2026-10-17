@@ -7,6 +7,8 @@ const {
   getUfLiveBoard,
   isFloridaGatorsTeam,
   espnScoreboardUrl,
+  featuredUfGame,
+  isUfGameLiveWindow,
   LIVE_CACHE_MS,
   ESPN_FETCH_MS,
   resetUfLiveScoreCache,
@@ -78,6 +80,46 @@ describe('uf-live-score', () => {
     assert.equal(out.mode, 'ready');
     assert.equal(out.board, null);
     assert.equal(out.overlay, null);
+  });
+
+  it('treats Texas noon as the live window on October 17, not the next dated game', async () => {
+    const asOf = new Date('2026-10-17T14:30:00.000Z');
+    const featured = featuredUfGame(asOf);
+    assert.equal(featured.id, 'texas');
+    assert.match(featured.opp, /Texas/i);
+    assert.equal(featured.kickoffIso, '2026-10-17T16:00:00.000Z');
+    assert.equal(isUfGameLiveWindow(asOf), true);
+    assert.match(espnScoreboardUrl(asOf, featured), /dates=20261017/);
+
+    const texasBoard = {
+      events: [
+        {
+          id: '401856724',
+          competitions: [
+            {
+              competitors: [
+                { team: { id: '251', abbreviation: 'TEX', displayName: 'Texas Longhorns' }, score: '0' },
+                { team: { id: '57', abbreviation: 'FLA', displayName: 'Florida Gators' }, score: '0' },
+              ],
+              status: {
+                type: {
+                  name: 'STATUS_SCHEDULED',
+                  completed: false,
+                  detail: 'Sat, October 17th at 12:00 PM EDT',
+                },
+              },
+            },
+          ],
+        },
+      ],
+    };
+    resetUfLiveScoreCache();
+    const out = await getUfLiveBoard({ asOf, scoreboard: texasBoard });
+    assert.equal(out.mode, 'live-window');
+    assert.equal(out.inWindow, true);
+    assert.equal(out.board.eventId, '401856724');
+    assert.match(out.board.opponent, /Texas/i);
+    assert.equal(out.board.live, false);
   });
 
   it('pins ESPN to the featured kickoff date so Saturday is not dropped after midnight', () => {

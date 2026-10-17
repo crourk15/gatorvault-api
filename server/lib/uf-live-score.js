@@ -38,7 +38,7 @@ const UF_2026_GAMES = [
   { id: 'ole-miss', opp: 'Ole Miss Rebels', date: 'September 26, 2026 3:30 PM ET' },
   { id: 'missouri', opp: 'Missouri Tigers', date: 'October 3, 2026 3:30 PM ET' },
   { id: 'south-carolina', opp: 'South Carolina Gamecocks', date: 'October 10, 2026 TBA' },
-  { id: 'texas', opp: 'Texas Longhorns', date: 'October 17, 2026 TBA' },
+  { id: 'texas', opp: 'Texas Longhorns', date: 'October 17, 2026 12:00 PM ET' },
   { id: 'georgia', opp: 'Georgia Bulldogs', date: 'October 31, 2026 3:30 PM ET' },
   { id: 'kentucky', opp: 'Kentucky Wildcats', date: 'November 14, 2026 TBA' },
   { id: 'vanderbilt', opp: 'Vanderbilt Commodores', date: 'November 21, 2026 TBA' },
@@ -168,12 +168,34 @@ function toBettingOverlay(game) {
   };
 }
 
+/** Kickoff rows from the live schedule board. The baked list is the fallback. */
+function scheduleKickoffGames() {
+  try {
+    const { getScheduleBoard } = require('./schedule-board');
+    const board = getScheduleBoard(2026);
+    const games = Array.isArray(board?.games) ? board.games : [];
+    const rows = [];
+    for (const g of games) {
+      if (!g || g.kind === 'bye') continue;
+      const id = String(g.id || '').trim();
+      if (!id || id.startsWith('bye')) continue;
+      const date = String(g.date || '').trim();
+      if (!date) continue;
+      rows.push({ id, opp: g.opp, date });
+    }
+    if (rows.length) return rows;
+  } catch {
+    /* baked list */
+  }
+  return UF_2026_GAMES;
+}
+
 function featuredUfGame(now = new Date()) {
   const t = now.getTime();
   let current = null;
   let next = null;
   let nextTs = Infinity;
-  for (const g of UF_2026_GAMES) {
+  for (const g of scheduleKickoffGames()) {
     const kick = parseEasternKickoff(g.date);
     if (!kick) continue;
     const start = kick.getTime() - PREGAME_HOURS * 3600_000;
@@ -192,7 +214,7 @@ function featuredUfGame(now = new Date()) {
 
 function isUfGameLiveWindow(now = new Date()) {
   const t = now.getTime();
-  for (const g of UF_2026_GAMES) {
+  for (const g of scheduleKickoffGames()) {
     const kick = parseEasternKickoff(g.date);
     if (!kick) continue;
     const start = kick.getTime() - PREGAME_HOURS * 3600_000;
@@ -336,6 +358,7 @@ module.exports = {
   extractFloridaGame,
   buildStatusLine,
   toBettingOverlay,
+  scheduleKickoffGames,
   featuredUfGame,
   isUfGameLiveWindow,
   getUfLiveBoard,
