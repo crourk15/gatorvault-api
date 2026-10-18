@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Georgia keys are The Empty Success, The One Play, and The Fit. Myles Graham, Tramell Jones Jr., and Jadan Baugh, in that order. The opinion is the card. The rate sheet stays off it. API `/api/schedule` after Render — no Codemagic. Reopen Game Week once. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week current game is Georgia after Texas 27-24. Home NOW is Georgia at Mercedes-Benz Stadium, 3:30 PM ET, ABC, season 5-2. A saved Texas noon / 4-2 / Easton Royal board rewrites on the ticker edge. `/api/schedule` stamps the Texas final and `currentGameId` uga even if Render is still on last week. API and Netlify edge after deploy — no Codemagic. Reopen Home and Game Week once.
 - [x] Gators Live stays on Texas during the noon window. The score API was answering Georgia and `inWindow: false`, so the page flipped between Game day and Next up. The edge serves the ESPN Texas board on `/api/gators-live` until the origin window is Texas. Netlify edge after deploy — no Codemagic. Reopen Gators Live once.
 - [x] Game Week Texas key 3 is Tramell Jones Jr. on the way through `/api/schedule`. Aaron Philo is the shoulder. The origin card can still say Philo until Render; the edge the app calls pins Jones. Netlify edge after deploy — no Codemagic. Reopen Game Week once.
@@ -242,6 +243,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-18 | Game Week first paint can still say The Clock, The Rush, and The Ball. **Live `/api/schedule` is The Empty Success, The One Play, and The Fit after Render.** | `schedule-data.ts` in the binary. Approved builds can still first-paint the recap keys until the live pack lands. | this PR |
 | 2026-10-18 | Home NOW first paint and a saved Texas noon board. **Live ticker already says Georgia at Mercedes-Benz Stadium, 3:30 PM, ABC, Florida 27 Texas 24, 5-2, after the edge.** | `home-command-utils.ts` and `schedule-data.ts` in the binary. Approved builds can still first-paint noon at DKR and 4-2 until the live pack lands. The timeline can still say HOME for Atlanta until this bake. | this PR |
 | 2026-10-17 | Game Week first paint of the Texas third card still names Aaron Philo. **Live `/api/schedule` names Tramell Jones Jr. after Render.** | `schedule-data.ts` in the binary. Approved builds can still first-paint Philo on The True Dropback until the live pack lands. | this PR |
 | 2026-10-14 | App Store **1.0.34** / build **103**. **1.0.33 is on the store — do not re-upload.** Opening Recruiting must not paint the old class line over the live one. | `recruiting-hub-hero-boot.ts` and `AppDelegate.swift` in the binary. 1.0.33 can still paint a saved old hero after the App Store install. | this PR |
