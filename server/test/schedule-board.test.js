@@ -455,6 +455,8 @@ describe('schedule-board', () => {
     assert.equal(uga.ufPct, 25);
     assert.match(uga.howUFWins[0], /none of it mattered/);
     assert.match(uga.howUFWins[0], /three times/);
+    assert.match(uga.howUFWins[0], /did not need a big play/);
+    assert.ok(!/not explosive either/.test(uga.howUFWins[0]));
     assert.match(uga.howUFWins[1], /Gunner Stockton will complete/);
     assert.match(uga.howUFWins[1], /22 of 35/);
     assert.match(uga.howUFWins[2], /Byrum Brown/);
