@@ -26,8 +26,8 @@ describe('schedule-board', () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
-    assert.equal(payload.predThrough, '2026-W7');
-    assert.equal(payload.currentGameId, 'texas');
+    assert.equal(payload.predThrough, '2026-W8');
+    assert.equal(payload.currentGameId, 'uga');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);
     assert.equal(campbell.finalOpp, 3);
@@ -78,7 +78,7 @@ describe('schedule-board', () => {
   it('game-week meta games also hide desk scout', () => {
     const feed = require('../lib/game-week-feed');
     const payload = feed.buildGameWeekPayload();
-    assert.equal(payload.currentGameId, 'texas');
+    assert.equal(payload.currentGameId, 'uga');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.deepEqual(campbell.offenseScout, []);
     assert.equal(campbell.scoutingReport, undefined);
@@ -353,10 +353,17 @@ describe('schedule-board', () => {
     assert.equal(texas.filmWatched, false);
     assert.equal(texas.tv, 'ABC');
     assert.equal(texas.date, 'October 17, 2026 · 12:00 PM ET');
-    assert.equal(texas.pred, 'UF 20 · Texas 34');
-    assert.equal(texas.predUF, 20);
+    assert.equal(texas.finalUF, 27);
+    assert.equal(texas.finalOpp, 24);
+    assert.equal(texas.finalSource, 'official');
+    assert.equal(
+      texas.boxScoreUrl,
+      'https://floridagators.com/sports/football/stats/2026/texas/boxscore/27909',
+    );
+    assert.equal(texas.pred, 'UF 22 · Texas 34');
+    assert.equal(texas.predUF, 22);
     assert.equal(texas.predOpp, 34);
-    assert.equal(texas.ufPct, 22);
+    assert.equal(texas.ufPct, 25);
     assert.equal(texas.radar.find((a) => a.label === 'Run Game')?.uf, 60);
     assert.equal(texas.radar.find((a) => a.label === 'Run Game')?.opp, 66);
     assert.equal(texas.radar.find((a) => a.label === 'Pass Efficiency')?.opp, 84);
@@ -430,6 +437,37 @@ describe('schedule-board', () => {
         memberCopy,
       ),
     );
+  });
+
+  it('Georgia week is the current board after Texas 27-24', () => {
+    const board = scheduleBoard.getScheduleBoard(2026);
+    const uga = board.games.find((g) => g.id === 'uga');
+    assert.equal(uga.keys[0], 'The Clock');
+    assert.equal(uga.keys[1], 'The Rush');
+    assert.equal(uga.keys[2], 'The Ball');
+    assert.equal(uga.filmWatched, false);
+    assert.equal(uga.tv, 'ABC');
+    assert.match(uga.venue, /Mercedes-Benz/);
+    assert.equal(uga.pred, 'UF 20 · Georgia 32');
+    assert.equal(uga.predUF, 20);
+    assert.equal(uga.predOpp, 32);
+    assert.ok(uga.predUF < uga.predOpp);
+    assert.equal(uga.ufPct, 25);
+    assert.match(uga.howUFWins[0], /38 minutes/);
+    assert.match(uga.howUFWins[0], /Jadan Baugh/);
+    assert.match(uga.howUFWins[1], /Gunner Stockton/);
+    assert.match(uga.howUFWins[1], /Myles Graham/);
+    assert.match(uga.howUFWins[2], /Jones did not/);
+    assert.match(uga.howUFWins[2], /6-1/);
+    assert.equal(uga.swing[0].name, 'Jadan Baugh');
+    assert.equal(uga.swing[1].name, 'Myles Graham');
+    assert.equal(uga.swing[2].name, 'Tramell Jones Jr.');
+    assert.equal(uga.swing[0].role, uga.howUFWins[0]);
+    assert.equal(uga.swing[2].role, uga.howUFWins[2]);
+    assert.ok(!uga.expectedVisitors || uga.expectedVisitors.length === 0);
+    const copy = [uga.film, uga.scoutingReport, ...(uga.howUFWins || []), ...(uga.filmNotes || [])].join('\n');
+    assert.ok(!/70\.0|56\.0|PFF/i.test(copy));
+    assert.match(copy, /Mercedes-Benz/);
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

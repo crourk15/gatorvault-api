@@ -151,6 +151,16 @@ describe('community store gameday upgrade', () => {
     assert.equal(listed.filter((r) => r.gameId === 'uga').length, 1);
   });
 
+  it('puts Georgia first once Texas Saturday is over', () => {
+    store.ensureWeeklyGameTalks({ asOf: '2026-10-18T16:00:00.000Z', force: true });
+    const rooms = store.getGameRooms({ limit: 12, asOf: '2026-10-18T16:00:00.000Z' });
+    assert.equal(rooms[0].id, 'thr_game_uga');
+    assert.equal(rooms[0].gameId, 'uga');
+    assert.match(rooms[0].body, /Mercedes-Benz Stadium/);
+    assert.match(rooms[0].body, /3:30/);
+    assert.match(rooms[0].body, /ABC/);
+  });
+
   it('shipped iOS still lists South Carolina when it hides today’s staff thread', () => {
     store.ensureDailyOpenThread({ asOf: '2026-10-10T16:00:00.000Z' });
     store.ensureWeeklyGameTalks({ asOf: '2026-10-10T16:00:00.000Z', force: true });

@@ -146,7 +146,15 @@ export function daysUntilKickoff(dateStr: string): number {
   return Math.max(0, Math.ceil((kick.getTime() - Date.now()) / 86400000));
 }
 
+export function isNeutralSite(game: ScheduleGame): boolean {
+  const blob = `${game.venue || ''} ${game.label || ''}`;
+  return /mercedes|atlanta|neutral/i.test(blob);
+}
+
 export function isHomeGame(game: ScheduleGame): boolean {
+  if (isNeutralSite(game)) return false;
+  if (/@/.test(game.label) || /\bat\b/i.test(game.label)) return false;
+  if (/gainesville|swamp|hill griffin/i.test(game.venue || '')) return true;
   return game.label.includes(' vs ');
 }
 

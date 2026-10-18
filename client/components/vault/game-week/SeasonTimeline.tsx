@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { getGameWeekBundle, isHomeGame, type GameWeekBundle } from '@/lib/game-week-data';
+import { getGameWeekBundle, isHomeGame, isNeutralSite, type GameWeekBundle } from '@/lib/game-week-data';
 import type { ScheduleGame } from '@/lib/schedule-data';
 import { opponentLogoUrl } from '@/lib/team-logos';
 
@@ -23,7 +23,8 @@ export function SeasonTimeline({ activeGameId, onSelect, games }: Props): React.
       <div className="gv-gw-timeline" data-testid="gw-season-timeline">
         {games.filter((g) => g.kind !== 'bye' && !String(g.id || '').startsWith('bye')).map((g) => {
           const bundle = getGameWeekBundle(g.id, games);
-          const home = isHomeGame(g);
+          const neutral = isNeutralSite(g);
+          const home = !neutral && isHomeGame(g);
           return (
             <button
               key={g.id}
@@ -40,8 +41,8 @@ export function SeasonTimeline({ activeGameId, onSelect, games }: Props): React.
               />
               <p className="gv-gw-timeline__label">{g.label}</p>
               <p className="gv-gw-timeline__date">{g.date.split('·')[0]?.trim()}</p>
-              <span className={`gv-gw-timeline__ha gv-gw-timeline__ha--${home ? 'home' : 'away'}`}>
-                {home ? 'HOME' : 'AWAY'}
+              <span className={`gv-gw-timeline__ha gv-gw-timeline__ha--${neutral ? 'away' : home ? 'home' : 'away'}`}>
+                {neutral ? 'NEUTRAL' : home ? 'HOME' : 'AWAY'}
               </span>
             </button>
           );
