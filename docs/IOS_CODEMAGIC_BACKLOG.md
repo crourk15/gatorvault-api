@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Georgia keys are the sportswriter column: success rate, EPA, and win probability inside the opinion. The Empty Success, The One Play, and The Fit. The Texas line stays “the offense did not need a big play.” The Fit is Brown reaching the second level, not Florida’s run game. API `/api/schedule` after Render — no Codemagic. Reopen Game Week once. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week Georgia key 1 no longer says the Gators were not explosive. The Texas line is: the offense did not need a big play, and the defense ruined the drives. API `/api/schedule` after Render — no Codemagic. Reopen Game Week once. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week Georgia keys are The Empty Success, The One Play, and The Fit. Myles Graham, Tramell Jones Jr., and Jadan Baugh, in that order. The opinion is the card. The rate sheet stays off it. API `/api/schedule` after Render — no Codemagic. Reopen Game Week once. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week current game is Georgia after Texas 27-24. Home NOW is Georgia at Mercedes-Benz Stadium, 3:30 PM ET, ABC, season 5-2. A saved Texas noon / 4-2 / Easton Royal board rewrites on the ticker edge. `/api/schedule` stamps the Texas final and `currentGameId` uga even if Render is still on last week. API and Netlify edge after deploy — no Codemagic. Reopen Home and Game Week once.
@@ -244,6 +245,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-18 | Game Week first paint can still be the short keys, without the success rate, EPA, and win-probability lines. **Live `/api/schedule` is the sportswriter column after Render.** | `schedule-data.ts` in the binary. Approved builds can still first-paint the short version until the live pack lands. | this PR |
 | 2026-10-18 | Game Week first paint of The Empty Success can still say the Gators were not explosive. **Live `/api/schedule` says the offense did not need a big play.** | `schedule-data.ts` in the binary. Approved builds can still first-paint the old sentence until the live pack lands. | this PR |
 | 2026-10-18 | Game Week first paint can still say The Clock, The Rush, and The Ball. **Live `/api/schedule` is The Empty Success, The One Play, and The Fit after Render.** | `schedule-data.ts` in the binary. Approved builds can still first-paint the recap keys until the live pack lands. | this PR |
 | 2026-10-18 | Home NOW first paint and a saved Texas noon board. **Live ticker already says Georgia at Mercedes-Benz Stadium, 3:30 PM, ABC, Florida 27 Texas 24, 5-2, after the edge.** | `home-command-utils.ts` and `schedule-data.ts` in the binary. Approved builds can still first-paint noon at DKR and 4-2 until the live pack lands. The timeline can still say HOME for Atlanta until this bake. | this PR |
