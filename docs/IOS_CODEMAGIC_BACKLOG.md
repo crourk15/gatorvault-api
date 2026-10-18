@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week Georgia keys are Inside the 20, On Schedule, and In the Backfield. Jadan Baugh, Tramell Jones Jr., and Myles Graham, in that order. API `/api/schedule` after Render — no Codemagic. Reopen Game Week once. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week Georgia keys are the full column, with the paragraph breaks. Florida's Texas explosive rate is 5%, and the havoc on 26% of snaps is why the EPA was still +0.11. Deep middle was 2-for-2, and one of those was Puglisi. The Fit is the run reaching the second level, Auburn's run, not Florida's. API `/api/schedule` after Render — no Codemagic. Reopen Game Week once. Seed `schedule-data.ts` and the key-card line breaks are the bake row.
 - [x] Game Week Georgia keys are the sportswriter column: success rate, EPA, and win probability inside the opinion. The Empty Success, The One Play, and The Fit. The Texas line stays “the offense did not need a big play.” The Fit is Brown reaching the second level, not Florida’s run game. API `/api/schedule` after Render — no Codemagic. Reopen Game Week once. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week Georgia key 1 no longer says the Gators were not explosive. The Texas line is: the offense did not need a big play, and the defense ruined the drives. API `/api/schedule` after Render — no Codemagic. Reopen Game Week once. Seed `schedule-data.ts` is the bake row.
@@ -246,6 +247,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-18 | Game Week first paint can still say The Empty Success, The One Play, and The Fit. **Live `/api/schedule` is Inside the 20, On Schedule, and In the Backfield after Render.** | `schedule-data.ts` in the binary. Approved builds can still first-paint the Auburn column until the live pack lands. | this PR |
 | 2026-10-18 | Game Week key cards keep paragraph breaks in the column. **Live `/api/schedule` has the full Georgia column after Render.** | `game-week-wow.css`, `gators-live-elite.css`, and `schedule-data.ts` in the binary. Approved builds can still paint the keys as one block until this bake. | this PR |
 | 2026-10-18 | Game Week first paint can still be the short keys, without the success rate, EPA, and win-probability lines. **Live `/api/schedule` is the sportswriter column after Render.** | `schedule-data.ts` in the binary. Approved builds can still first-paint the short version until the live pack lands. | this PR |
 | 2026-10-18 | Game Week first paint of The Empty Success can still say the Gators were not explosive. **Live `/api/schedule` says the offense did not need a big play.** | `schedule-data.ts` in the binary. Approved builds can still first-paint the old sentence until the live pack lands. | this PR |
