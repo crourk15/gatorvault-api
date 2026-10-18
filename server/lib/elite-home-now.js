@@ -473,7 +473,10 @@ function buildHomeNowGameStory(now = new Date(), games) {
   }
   if (days <= 14) {
     const loc = where ? ` ${where}` : '';
-    return `Up next — ${opp}${loc}`.trim();
+    let line = `Up next — ${opp}${loc}`.trim();
+    if (clock) line += ` — ${clock}`;
+    if (tv) line += ` · ${tv}`;
+    return line;
   }
   return null;
 }

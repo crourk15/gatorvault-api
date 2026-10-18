@@ -103,7 +103,7 @@ export type ScheduleGame = {
 };
 
 /** Bundled remaining-season pred week. Peek drops a leftover last-good stamp older than this. */
-export const SCHEDULE_SEED_PRED_THROUGH = '2026-W7';
+export const SCHEDULE_SEED_PRED_THROUGH = '2026-W8';
 
 /** SEC locked Texas noon to ABC on Oct 11. Saved boards still say the Oct 5 window. */
 export function lockBroadcastWindow(tv?: string | null): string {
@@ -648,6 +648,10 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       label: "Orange / White / Blue",
       source: "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318",
     },
+    finalUF: 27,
+    finalOpp: 24,
+    finalSource: "official",
+    boxScoreUrl: "https://floridagators.com/sports/football/stats/2026/texas/boxscore/27909",
   },
   {
     id: "bye-oct24",
@@ -673,19 +677,35 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Georgia Bulldogs",
     date: "October 31, 2026 · 3:30 PM ET",
     venue: "Mercedes-Benz Stadium, Atlanta GA",
-    ufPct: 27,
+    ufPct: 25,
     tv: "ABC",
-    keys: ["Control time of possession", "Get pressure on their QB", "Establish run before going downfield"],
-    swing: [
-      { name: "Jadan Baugh", impact: 95, role: "Must go 100+ yards" },
-      { name: "Jayden Woods", role: "Must generate pressure" },
+    keys: ["The Clock", "The Rush", "The Ball"],
+    howUFWins: [
+      "Florida held the ball for 38 minutes and 11 seconds at Texas, a plus-16, and scored 24 unanswered after trailing 17-3. Tramell Jones was 22 of 35, both touchdowns to Lacota Dippre, and he did not turn it over. The offense finished with 313 yards and 21 first downs. Jadan Baugh carried 25 times for 91 yards, including the 13-yard score. Georgia scored on its first two possessions against Auburn, then failed to score in the second quarter for the first time this year and was blanked in the third. The ball has to stay with Baugh and Jones the way it did in the second half in Austin.",
+      "Auburn ran for 192 yards and won 27-24 in Athens. Georgia finished with 113 on the ground and 440 total, 327 of it through the air, on 65 plays. At Texas the Florida front sacked Arch Manning five times. Myles Graham's last one was a fumble, and Kanye Clark recovered it with 1:58 left. Gunner Stockton was 22 of 34 for 272 yards, two touchdowns and two interceptions. He left for three plays after a medical stoppage, Ryan Puglisi was 3 of 3 for 55, and Stockton came back. The rush has to arrive before Stockton sets, and the fit has to be there when a 192-yard run game shows up.",
+      "Stockton's two interceptions were a career high, and Auburn turned a 14-0 hole into a 27-24 win. Jones did not give Texas a turnover in his first start. Florida was 0 for 8 on third down in the first half and 8 of 11 in the second. Texas was 2 of 10. Florida cannot hand Georgia the extra possession. Georgia is 6-1 and 4-1 after that home loss. Florida is 5-2 and 3-2. Mercedes-Benz Stadium, 3:30 PM, ABC.",
     ],
-    film: "Neutral-site Cocktail Party at Mercedes-Benz Stadium in Atlanta for 2026.",
-    pred: "UF 21 · Georgia 32",
-    predUF: 21,
+    swing: [
+      {
+        name: "Jadan Baugh",
+        role: "Florida held the ball for 38 minutes and 11 seconds at Texas, a plus-16, and scored 24 unanswered after trailing 17-3. Tramell Jones was 22 of 35, both touchdowns to Lacota Dippre, and he did not turn it over. The offense finished with 313 yards and 21 first downs. Jadan Baugh carried 25 times for 91 yards, including the 13-yard score. Georgia scored on its first two possessions against Auburn, then failed to score in the second quarter for the first time this year and was blanked in the third. The ball has to stay with Baugh and Jones the way it did in the second half in Austin.",
+      },
+      {
+        name: "Myles Graham",
+        role: "Auburn ran for 192 yards and won 27-24 in Athens. Georgia finished with 113 on the ground and 440 total, 327 of it through the air, on 65 plays. At Texas the Florida front sacked Arch Manning five times. Myles Graham's last one was a fumble, and Kanye Clark recovered it with 1:58 left. Gunner Stockton was 22 of 34 for 272 yards, two touchdowns and two interceptions. He left for three plays after a medical stoppage, Ryan Puglisi was 3 of 3 for 55, and Stockton came back. The rush has to arrive before Stockton sets, and the fit has to be there when a 192-yard run game shows up.",
+      },
+      {
+        name: "Tramell Jones Jr.",
+        role: "Stockton's two interceptions were a career high, and Auburn turned a 14-0 hole into a 27-24 win. Jones did not give Texas a turnover in his first start. Florida was 0 for 8 on third down in the first half and 8 of 11 in the second. Texas was 2 of 10. Florida cannot hand Georgia the extra possession. Georgia is 6-1 and 4-1 after that home loss. Florida is 5-2 and 3-2. Mercedes-Benz Stadium, 3:30 PM, ABC.",
+      },
+    ],
+    film: "The Clock. Florida held the ball for 38 minutes and 11 seconds at Texas and scored 24 unanswered after trailing 17-3. Tramell Jones was 22 of 35 with both scores to Lacota Dippre and no turnover. Jadan Baugh carried 25 times for 91 yards. The Rush. Auburn ran for 192 and won 27-24. Myles Graham's sack was a fumble Kanye Clark recovered. Gunner Stockton was 22 of 34 for 272 with two interceptions. The Ball. Jones did not give one away. Georgia is 6-1, 4-1. Florida is 5-2, 3-2. Mercedes-Benz Stadium. 3:30 PM. ABC.",
+    filmWatched: false,
+    pred: "UF 20 · Georgia 32",
+    predUF: 20,
     predOpp: 32,
     scoutingReport:
-      "Georgia series moves to Atlanta in 2026 (Mercedes-Benz). UF path is controlling the ball and limiting explosives in a neutral-site environment.",
+      "The Clock. Florida held it for 38 minutes and 11 seconds at Texas. Tramell Jones was 22 of 35 with both scores to Lacota Dippre and no turnover. Jadan Baugh was 25 for 91. The Rush. Auburn ran for 192 in a 27-24 win. Myles Graham's sack was a fumble, and Kanye Clark recovered it. Gunner Stockton was 22 of 34 for 272 with two interceptions. The Ball. Jones did not give one away. Georgia is 6-1, 4-1. Florida is 5-2, 3-2. Mercedes-Benz Stadium. 3:30 PM. ABC.",
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27910",
       official: "https://am.ticketmaster.com/gators/en/buy/ism/RkIyNjA4R0E=",
@@ -707,7 +727,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Oklahoma Sooners",
     date: "November 7, 2026 · 3:30–8:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 56,
+    ufPct: 54,
     tv: "TBD",
     keys: ["Win early downs", "Protect the football", "Limit explosives"],
     swing: [
@@ -715,8 +735,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Secondary", role: "Match skill in space" },
     ],
     film: "Oklahoma brings tempo and skill. Swamp night energy matters.",
-    pred: "UF 30 · Oklahoma 27",
-    predUF: 30,
+    pred: "UF 29 · Oklahoma 27",
+    predUF: 29,
     predOpp: 27,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27911",
@@ -739,7 +759,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Kentucky Wildcats",
     date: "November 14, 2026 · 6:00–8:00 PM ET",
     venue: "Kroger Field, Lexington KY",
-    ufPct: 58,
+    ufPct: 56,
     tv: "TBD",
     keys: ["Physical run fits", "Win the trenches", "Finish in red zone"],
     swing: [
@@ -747,8 +767,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "WR room", role: "Explosive plays" },
     ],
     film: "Kentucky power run and play-action on the road.",
-    pred: "UF 27 · Kentucky 23",
-    predUF: 27,
+    pred: "UF 26 · Kentucky 23",
+    predUF: 26,
     predOpp: 23,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27912",
@@ -770,7 +790,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Vanderbilt Commodores",
     date: "November 21, 2026 · 12:00–1:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 65,
+    ufPct: 63,
     tv: "TBD",
     keys: ["Execute early", "Avoid complacency", "Develop depth"],
     swing: [
@@ -778,8 +798,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "QB1", role: "Efficient scoring drives" },
     ],
     film: "Vanderbilt improving — treat as SEC test.",
-    pred: "UF 29 · Vanderbilt 22",
-    predUF: 29,
+    pred: "UF 28 · Vanderbilt 22",
+    predUF: 28,
     predOpp: 22,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27913",
@@ -801,7 +821,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Florida State Seminoles",
     date: "November 27, 2026 · 3:30 PM ET",
     venue: "Doak Campbell Stadium, Tallahassee FL",
-    ufPct: 56,
+    ufPct: 54,
     tv: "ABC",
     keys: ["Win field position battle", "Avoid penalties", "Win turnover margin"],
     swing: [
@@ -809,8 +829,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Myles Graham", role: "Contain their TE weapon" },
     ],
     film: "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
-    pred: "UF 27 · FSU 24",
-    predUF: 27,
+    pred: "UF 26 · FSU 24",
+    predUF: 26,
     predOpp: 24,
     filmLessonId: "frl00010-0000-4000-8000-00000000000a",
     opponentTendencies: ["RPO and quick game in rivalry setting", "TE usage in red zone", "Tempo spikes in critical moments"],

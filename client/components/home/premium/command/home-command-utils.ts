@@ -298,7 +298,13 @@ const WEEKLY_NOW_VISITORS_BY_GAME: Record<string, string[]> = {
   ],
 };
 
+function isWeeklyNowNeutral(game: { venue?: string; label?: string } | null | undefined): boolean {
+  const blob = `${game?.venue || ''} ${game?.label || ''}`;
+  return /mercedes|atlanta|neutral/i.test(blob);
+}
+
 function isWeeklyNowHomeGame(game: { venue?: string; label?: string } | null | undefined): boolean {
+  if (isWeeklyNowNeutral(game)) return false;
   const venue = String(game?.venue || '');
   const label = String(game?.label || '');
   if (/@/.test(label) || /\bat\b/i.test(label)) return false;
@@ -383,7 +389,14 @@ export function buildLocalWeeklyNowWeek(now = new Date()): HomeNowWeekPillar[] {
   ];
   const home = isWeeklyNowHomeGame(game);
   const names = WEEKLY_NOW_VISITORS_BY_GAME[String(game.id || '')] || [];
-  if (home) {
+  if (isWeeklyNowNeutral(game)) {
+    const place = String(game.venue || 'Atlanta').split(',')[0].trim() || 'Atlanta';
+    pillars.push({
+      key: 'road',
+      label: 'Road',
+      items: [`${place} this ${weekday}`],
+    });
+  } else if (home) {
     pillars.push({
       key: 'visitors',
       label: 'Visitors',
@@ -426,13 +439,16 @@ const RETIRED_NOW_TICK_RE = /1\.0\.29|update in the App Store/i;
 /** Last-week pledge / false commits cannot own this week's NOW News. */
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri|faurot[\s\S]{0,40}espn/i;
-/** Posted South Carolina final — last-good Swamp / 4-1 must not beat Texas week. */
+/** Posted South Carolina final — last-good Swamp / 4-1 must not beat this week. */
 const LEFTOVER_MISSOURI_NOW_RE =
   /missouri|faurot|4-0 heading into saturday|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45/i;
-const TEXAS_NOW_GAME = 'Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC';
 const LEFTOVER_SC_WINDOW_RE = /abc or sec network|12:00\s*[–-]\s*1:00/i;
-const TEXAS_NOW_SEASON = '4-2 heading into Saturday';
-const TEXAS_NOW_NEWS = 'Easton Royal flips to Florida · No. 5';
+/** Posted Texas final — last-good noon at DKR / 4-2 must not beat Georgia week. */
+const LEFTOVER_TEXAS_NOW_RE =
+  /texas at dkr|dkr-texas|4-2 heading into saturday|12:00\s*pm\s*·\s*abc|easton royal flips to florida/i;
+const UGA_NOW_GAME = 'Georgia at Mercedes-Benz Stadium — 3:30 PM · ABC';
+const UGA_NOW_SEASON = '5-2 heading into Saturday';
+const UGA_NOW_NEWS = 'Florida 27, Texas 24';
 
 function pinMissouriAbcTick(text: string): string {
   const t = lockBroadcastWindow(text);
@@ -446,29 +462,33 @@ function nowWeekBlob(rows: HomeNowWeekPillar[]): string {
     .join(' ');
 }
 
+function isLeftoverNowBlob(blob: string): boolean {
+  return (
+    LEFTOVER_MISSOURI_NOW_RE.test(blob) ||
+    LEFTOVER_SC_WINDOW_RE.test(blob) ||
+    LEFTOVER_TEXAS_NOW_RE.test(blob)
+  );
+}
+
+function georgiaNowWeek(): HomeNowWeekPillar[] {
+  return [
+    { key: 'game', label: 'Game', items: [UGA_NOW_GAME] },
+    { key: 'news', label: 'News', items: [UGA_NOW_NEWS] },
+    { key: 'season', label: 'Season', items: [UGA_NOW_SEASON] },
+  ];
+}
+
 function pinLeftoverMissouriNowWeek(rows: HomeNowWeekPillar[]): HomeNowWeekPillar[] {
   const blob = nowWeekBlob(rows);
-  if (!rows.length || !(LEFTOVER_MISSOURI_NOW_RE.test(blob) || LEFTOVER_SC_WINDOW_RE.test(blob))) {
-    return rows;
-  }
-  return [
-    { key: 'game', label: 'Game', items: [TEXAS_NOW_GAME] },
-    { key: 'news', label: 'News', items: [TEXAS_NOW_NEWS] },
-    { key: 'season', label: 'Season', items: [TEXAS_NOW_SEASON] },
-  ];
+  if (!rows.length || !isLeftoverNowBlob(blob)) return rows;
+  return georgiaNowWeek();
 }
 
 function pinLeftoverMissouriTickerLines(lines: string[]): string[] {
   const next = (Array.isArray(lines) ? lines : []).map((s) => String(s || '').trim()).filter(Boolean);
   const text = next.join(' ');
-  if (!next.length || !(LEFTOVER_MISSOURI_NOW_RE.test(text) || LEFTOVER_SC_WINDOW_RE.test(text))) {
-    return next;
-  }
-  return [
-    `Game — ${TEXAS_NOW_GAME}`,
-    `News — ${TEXAS_NOW_NEWS}`,
-    `Season — ${TEXAS_NOW_SEASON}`,
-  ];
+  if (!next.length || !isLeftoverNowBlob(text)) return next;
+  return [`Game — ${UGA_NOW_GAME}`, `News — ${UGA_NOW_NEWS}`, `Season — ${UGA_NOW_SEASON}`];
 }
 
 let lastGoodNowWeekMemory: HomeNowWeekPillar[] | null = null;
@@ -481,7 +501,7 @@ export function isRetiredHomeNowTick(text: string): boolean {
 
 function pinBaileyNowNewsItems(items: string[]): string[] {
   const next = items.map((s) => String(s || '').trim()).filter(Boolean);
-  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [TEXAS_NOW_NEWS];
+  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [UGA_NOW_NEWS];
   return next.filter((s) => !isRetiredHomeNowTick(s));
 }
 
@@ -489,7 +509,7 @@ function pinBaileyNowNewsLines(lines: string[]): string[] {
   return lines.map((line) => {
     const text = String(line || '');
     if (/^News — /i.test(text) && STALE_NOW_NEWS_RE.test(text)) {
-      return `News — ${TEXAS_NOW_NEWS}`;
+      return `News — ${UGA_NOW_NEWS}`;
     }
     return text;
   });
@@ -505,7 +525,7 @@ export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNow
       const rawItems = (row?.items || []).map((s) => String(s || '').trim()).filter(Boolean);
       const isNews = key === 'news' || label === 'News';
       if (isNews && rawItems.some((s) => STALE_NOW_NEWS_RE.test(s))) {
-        return { key: 'news', label: 'News', items: [TEXAS_NOW_NEWS] };
+        return { key: 'news', label: 'News', items: [UGA_NOW_NEWS] };
       }
       return {
         key,
@@ -656,7 +676,10 @@ export function buildHomeNowGameStory(now = new Date()): string | null {
   }
   if (days <= 14) {
     const loc = where ? ` ${where}` : '';
-    return `Up next — ${opp}${loc}`.trim();
+    let line = `Up next — ${opp}${loc}`.trim();
+    if (clock) line += ` — ${clock}`;
+    if (tv) line += ` · ${tv}`;
+    return line;
   }
   return null;
 }

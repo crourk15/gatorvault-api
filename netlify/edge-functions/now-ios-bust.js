@@ -6,7 +6,7 @@
  * Do not rewrite the body -- auth / APNs POSTs must pass through.
  */
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'texas-abc-only';
+const NOW_BUST_VALUE = 'uga-abc-only';
 
 function needsNowCacheBust(request) {
   const cookie = request?.headers?.get?.('cookie') || '';

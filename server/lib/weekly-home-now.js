@@ -25,7 +25,13 @@ function loadWeeklyOverride() {
   }
 }
 
+function isNeutralSite(game) {
+  const blob = `${game?.venue || ''} ${game?.label || ''} ${game?.site || ''}`;
+  return /mercedes|atlanta|neutral/i.test(blob);
+}
+
 function isHomeGame(game) {
+  if (isNeutralSite(game)) return false;
   const venue = String(game?.venue || '');
   const label = String(game?.label || '');
   if (/@/.test(label) || /\bat\b/i.test(label)) return false;
@@ -109,6 +115,10 @@ function compactVisitorLine(names) {
 function autoPlaceLine(picked) {
   if (!picked?.game) return null;
   const weekday = weekdayForKick(picked.kickMs);
+  if (isNeutralSite(picked.game)) {
+    const place = String(picked.game.venue || 'Atlanta').split(',')[0].trim() || 'Atlanta';
+    return `Road — ${place} this ${weekday}`;
+  }
   if (!isHomeGame(picked.game)) {
     return `Road — on the road this ${weekday}`;
   }
