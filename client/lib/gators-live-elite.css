@@ -405,6 +405,7 @@
   font-size: 0.8rem;
   line-height: 1.35;
   color: var(--gl-muted);
+  white-space: pre-line;
 }
 
 .gv-gl-elite__visitors {

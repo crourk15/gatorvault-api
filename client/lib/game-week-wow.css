@@ -670,6 +670,7 @@
   font-size: 0.82rem;
   line-height: 1.45;
   color: var(--color-text-muted);
+  white-space: pre-line;
 }
 
 /* Swing players — light feed rows */
@@ -828,6 +829,7 @@
   margin: 0.25rem 0 0;
   font-size: 0.8125rem;
   color: var(--color-text-muted);
+  white-space: pre-line;
 }
 
 .gv-gw-swing-card__impact-row {
