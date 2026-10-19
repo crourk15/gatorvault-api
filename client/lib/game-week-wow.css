@@ -57,6 +57,24 @@
   background: transparent;
   color: var(--gv-gw-text);
   padding-bottom: var(--gv-space-6, 32px);
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/*
+ * Game Week sits in the vault main column (sidebar on desktop).
+ * Global .fc-lab-bleed is 100vw + margin: 50% - 50vw — that walks past
+ * the column and clips Keys / Swing Players / radar on the right.
+ */
+.gv-gw-wow-page .fc-lab-bleed,
+.gv-gw-wow-hero.fc-lab-bleed,
+.gv-gw-wow-feed.fc-lab-bleed {
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
 }
 
 /* ── Dark hero band ── */
@@ -97,13 +115,14 @@
 
 .gv-gw-wow-hero__metrics {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
+  min-width: 0;
 }
 
 @media (min-width: 768px) {
   .gv-gw-wow-hero__metrics {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
   }
 }
@@ -127,6 +146,8 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .gv-gw-wow-panel {
@@ -136,6 +157,8 @@
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .gv-gw-wow-panel.fc-lab-panel-shell {
@@ -566,6 +589,9 @@
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
   animation: gv-gw-fade-in 0.6s ease;
   color: #0b1b4a;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .gv-gw-wp-gauge__heading,
@@ -633,8 +659,9 @@
 /* Flip cards — light feed */
 .gv-gw-flip-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
   gap: 0.75rem;
+  min-width: 0;
 }
 
 /* Key cards — always show title + body (no hover-flip; mobile never saw visitors). */
@@ -676,8 +703,9 @@
 /* Swing players — light feed rows */
 .gv-gw-swing-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
   gap: 0.75rem;
+  min-width: 0;
 }
 
 .gv-gw-swing-card {
@@ -830,6 +858,7 @@
   font-size: 0.8125rem;
   color: var(--color-text-muted);
   white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .gv-gw-swing-card__impact-row {
@@ -1358,10 +1387,11 @@
   display: grid;
   gap: 1rem;
   margin-bottom: 1rem;
+  min-width: 0;
 }
 
 .gv-gw-wow-row--2 {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .gv-gw-wow-tab--intel > .gv-gw-wow-panel {
@@ -1374,7 +1404,7 @@
 
 @media (min-width: 768px) {
   .gv-gw-wow-row--2 {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
   }
 }
