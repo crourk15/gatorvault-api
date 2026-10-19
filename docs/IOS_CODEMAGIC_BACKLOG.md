@@ -247,6 +247,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-19 | Game Week Intel no longer bleeds off the right edge (100vw full-bleed + unsized 2-col grids). **Netlify picks this up; iOS still needs the bake.** | `game-week-wow.css` in the binary | this PR |
 | 2026-10-18 | Game Week first paint can still say The Empty Success, The One Play, and The Fit. **Live `/api/schedule` is Inside the 20, On Schedule, and In the Backfield after Render.** | `schedule-data.ts` in the binary. Approved builds can still first-paint the Auburn column until the live pack lands. | this PR |
 | 2026-10-18 | Game Week key cards keep paragraph breaks in the column. **Live `/api/schedule` has the full Georgia column after Render.** | `game-week-wow.css`, `gators-live-elite.css`, and `schedule-data.ts` in the binary. Approved builds can still paint the keys as one block until this bake. | this PR |
 | 2026-10-18 | Game Week first paint can still be the short keys, without the success rate, EPA, and win-probability lines. **Live `/api/schedule` is the sportswriter column after Render.** | `schedule-data.ts` in the binary. Approved builds can still first-paint the short version until the live pack lands. | this PR |
