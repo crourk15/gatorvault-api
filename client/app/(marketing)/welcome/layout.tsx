@@ -2,13 +2,13 @@ import React from 'react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'GatorVault — Florida Recruiting. Reimagined.',
+  title: 'GatorVault — Every Florida recruiting storyline. One place.',
   description:
-    'FutureCast Elite, insider notes, portal intel, film room, and real-time recruiting analytics for Florida Gators fans.',
+    'The 2028 board, campus visits, Game Week, and film for Florida fans. 30-day free trial — no card required.',
   openGraph: {
-    title: 'GatorVault — Florida Recruiting. Reimagined.',
+    title: 'GatorVault — Every Florida recruiting storyline. One place.',
     description:
-      'The most advanced Florida recruiting platform. FutureCast Elite, insider intel, portal movement, and film evaluations.',
+      'The board, the visits, Game Week, and the film — built by Florida fans who follow the class as closely as you do.',
     images: ['/og-image.jpg'],
   },
 };

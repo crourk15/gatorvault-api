@@ -2,15 +2,11 @@
 
 export const landingContent = {
   hero: {
-    headline: 'Built for Gator Nation.',
+    headline: 'Every Florida recruiting storyline. One place.',
     subheadline:
-      'Verified intel. Real-time updates. Elite recruiting tools for Florida fans who refuse to guess.',
+      'The board, the visits, Game Week, and the film — built by Florida fans who follow the class as closely as you do.',
     microcopy: 'Cancel anytime. Instant access.',
-    tickerItems: [
-      'Portal update coming at 6 PM',
-      'UF trending for 2026 WR',
-      'Film Room drop tonight',
-    ],
+    tickerItems: ['Recruiting board', 'FutureCast', 'Game Week', 'Film Room'],
   },
   systemOverview: {
     title: 'How GatorVault Works',
@@ -79,7 +75,7 @@ export const landingContent = {
   finalCta: {
     title: 'Ready to enter the Vault?',
     subtitle:
-      'Join now and get instant access to recruiting intel, FutureCast, film, and insider tools.',
+      'Join now and get the board, FutureCast, Game Week, and film in one place. 30-day free trial — no card required.',
     primaryLabel: 'Become an Insider',
     secondaryLabel: 'Enter Vault',
   },
