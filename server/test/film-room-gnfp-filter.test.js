@@ -40,6 +40,16 @@ describe('GNFP Film Breakdown title filter', () => {
       true
     );
     assert.equal(
+      isGnfpFilmBreakdownTitle('GNFP Film Review- 2026 Florida Gators Offense vs. Texas'),
+      true
+    );
+    assert.equal(
+      isGnfpFilmBreakdownTitle(
+        'Film Review- 2026 Florida Gators vs Texas Longhorns, Tramell Jones seals the game with this run.'
+      ),
+      true
+    );
+    assert.equal(
       isGnfpFilmBreakdownTitle(
         'GNFP Film Review- 2026 Florida Gators Defense vs. Florida Atlantic (FAU)'
       ),
@@ -88,6 +98,10 @@ describe('Film Guy UF football breakdowns only', () => {
   it('keeps UF film studies and drops other teams / live / reactions', () => {
     assert.equal(
       isFilmGuyFloridaBreakdownTitle('FILM: I Can\'t Stop Studying Buster Faulkner Florida Offense'),
+      true
+    );
+    assert.equal(
+      isFilmGuyFloridaBreakdownTitle('FILM: Texas Offense And Arch Manning Are a Disaster vs Florida'),
       true
     );
     assert.equal(
@@ -234,6 +248,14 @@ describe('Tengwall UF 2026 run-game film only', () => {
       }),
       true
     );
+    assert.equal(
+      isTengwallUfFilmReview({
+        title: "FILM STUDY: How Florida's Defense WREAKED HAVOC On Texas' Offense | Texas vs Florida Recap",
+        youtubeId: '62XGpTs7Er8',
+        publishedAt: '2026-10-18T19:01:06.000Z',
+      }),
+      true
+    );
   });
 
   it('drops pass-game sits, other teams, FSU, and the Week 1 FAU tape', () => {
@@ -343,27 +365,64 @@ describe('Tengwall UF 2026 run-game film only', () => {
   });
 });
 
-describe('UF pressers include the 9/28 Sumrall weekly', () => {
-  it('surfaces Coach Sumrall 9-28-26 ahead of the 9/26 postgame', () => {
+describe('UF pressers include Texas week postgame', () => {
+  it('keeps official postgame interviews from the athletics channel', () => {
+    const official = { kind: 'florida_official', bucket: 'pressers', label: 'Florida Gators YouTube' };
+    assert.equal(
+      shouldKeepEntry(
+        { title: 'Florida Football | Coach Sumrall Postgame Interview 10-17-26' },
+        official
+      ),
+      true
+    );
+    assert.equal(
+      shouldKeepEntry(
+        { title: 'Florida Football | Tramell Jones Jr.  Postgame Interview 10-17-26' },
+        official
+      ),
+      true
+    );
+    assert.equal(
+      shouldKeepEntry(
+        { title: 'Florida Football with Jon Sumrall presented by XRP | Texas' },
+        official
+      ),
+      false
+    );
+  });
+});
+
+describe('Texas week tape is on the Film Room catalog', () => {
+  it('pins the official highlight, GNFP, Film Guy, and Tengwall sits', () => {
     const items = loadLegacyVideoCatalog();
-    const weekly = items.find((i) => i.youtubeId === 'asXiHSFj7S8');
-    assert.ok(weekly, 'asXiHSFj7S8 missing from Film Room catalog');
-    assert.match(String(weekly.title || ''), /9-28-26/);
-    assert.match(String(weekly.category || weekly.source || ''), /Press/i);
-    const postgame = items.find((i) => i.youtubeId === 'VVguTPt-Te8');
-    if (postgame && weekly.publishedAt && postgame.publishedAt) {
-      assert.ok(
-        new Date(weekly.publishedAt).getTime() > new Date(postgame.publishedAt).getTime()
-      );
-    }
+    const highlight = items.find((i) => i.youtubeId === 'c1AiATYDwa4');
+    assert.ok(highlight, 'c1AiATYDwa4 Texas highlights missing');
+    assert.match(String(highlight.category || ''), /Highlight/i);
+    assert.ok(items.some((i) => i.youtubeId === 'ByNf6n_KK1U'), 'GNFP Texas offense missing');
+    assert.ok(items.some((i) => i.youtubeId === 'CoZVndn2vtw'), 'GNFP Texas defense missing');
+    assert.ok(items.some((i) => i.youtubeId === 'hzKX5Odxyn4'), 'GNFP Jones run missing');
+    const filmGuy = items.find((i) => i.youtubeId === 'fJad8xOTtHM');
+    assert.ok(filmGuy, 'Film Guy Texas sit missing');
+    assert.match(String(filmGuy.source || ''), /Film Guy/i);
+    const tengwall = items.find((i) => i.youtubeId === '62XGpTs7Er8');
+    assert.ok(tengwall, 'Tengwall Texas defense sit missing');
+    assert.match(String(tengwall.source || ''), /Tengwall/i);
+    const sumrall = items.find((i) => i.youtubeId === '4uxiLxMQxPE');
+    assert.ok(sumrall, 'Sumrall Texas postgame presser missing');
+    assert.match(String(sumrall.category || ''), /Press/i);
   });
 });
 
 describe('Highlights drop condensed games', () => {
   it('keeps official cuts and rejects condensed titles', () => {
     assert.equal(isOfficialHighlightTitle('Game Highlights | Week One | Florida vs. FAU'), true);
+    assert.equal(isOfficialHighlightTitle('Game Highlights | Week Seven | Florida vs. Texas'), true);
     assert.equal(isCondensedGameTitle('Florida vs. FAU | Condensed Game'), true);
     assert.equal(isOfficialHighlightTitle('Florida vs. FAU | Condensed Game'), false);
     assert.equal(isOfficialHighlightTitle('Florida vs Campbell Condensed Game'), false);
+    assert.equal(
+      isOfficialHighlightTitle('Florida Gators vs. Texas Longhorns | Condensed Game | 2026 SEC Football'),
+      false
+    );
   });
 });
