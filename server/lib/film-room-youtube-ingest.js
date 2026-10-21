@@ -72,7 +72,7 @@ const NON_FOOTBALL =
   /\b(soccer|softball|baseball|basketball|gymnast|swimming|diving|tennis|golf|volleyball|lacrosse|cross country|track|soccer|wrestling|row(?:ing)?|cheer)\b/i;
 
 const PRESSER_TITLE =
-  /\b(press conference|media availability|media day|media days|availability)\b/i;
+  /\b(press conference|media availability|media day|media days|availability|postgame interview)\b/i;
 
 const FOOTBALL_HINT =
   /\b(football|gators football|spring (?:practice|game)|sumrall|faulkner|napier|sec media|offense|defense|coordinator|head coach|rb\b|wr\b|qb\b|lb\b)\b/i;
@@ -440,7 +440,7 @@ function speakerKeyFromCleanedName(cleaned) {
 function normalizePresserSpeaker(title) {
   const t = String(title || '');
   if (!t) return '';
-  const nameStop = /^(press|media|availability|sec|conference|days?|at|the|and)$/i;
+  const nameStop = /^(press|media|availability|sec|conference|days?|at|the|and|postgame|interview)$/i;
   // Prefer explicit Coach / HC / Head Coach name anywhere in the title.
   // Capture stops at non-letter boundaries so "Coach Sumrall Press…" / "HC Jon Sumrall - SEC…" work.
   const coach = t.match(
@@ -455,7 +455,7 @@ function normalizePresserSpeaker(title) {
   const cleaned = afterSep
     .replace(/\bSEC Media Days?\b/gi, ' ')
     .replace(/\b\d{1,2}[-/]\d{1,2}(?:[-/]\d{2,4})?\b/g, ' ')
-    .replace(/\b(press conference|media availability|media days?|availability)\b/gi, ' ')
+    .replace(/\b(press conference|media availability|media days?|availability|postgame interview)\b/gi, ' ')
     .replace(/\b(coach|hc|head coach)\b/gi, ' ')
     .replace(/[^a-zA-Z\s']/g, ' ')
     .replace(/\s+/g, ' ')
@@ -467,7 +467,7 @@ function normalizePresserSpeaker(title) {
   const full = t
     .replace(/\bSEC Media Days?\b/gi, ' ')
     .replace(/\b\d{1,2}[-/]\d{1,2}(?:[-/]\d{2,4})?\b/g, ' ')
-    .replace(/\b(press conference|media availability|media days?|availability)\b/gi, ' ')
+    .replace(/\b(press conference|media availability|media days?|availability|postgame interview)\b/gi, ' ')
     .replace(/\b(coach|hc|head coach)\b/gi, ' ')
     .replace(/[^a-zA-Z\s']/g, ' ')
     .replace(/\s+/g, ' ')

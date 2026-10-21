@@ -26,6 +26,14 @@ describe('Film Room presser same-event dedupe', () => {
       normalizePresserSpeaker('Florida HC Jon Sumrall - SEC Media Days 2026 Press Conference'),
       'sumrall'
     );
+    assert.equal(
+      normalizePresserSpeaker('Florida Football | Coach Sumrall Postgame Interview 10-17-26'),
+      'sumrall'
+    );
+    assert.equal(
+      normalizePresserSpeaker('Florida Football | Tramell Jones Jr.  Postgame Interview 10-17-26'),
+      'jones'
+    );
   });
 
   it('keeps one Aug 4 Sumrall when two YouTube IDs exist', () => {
