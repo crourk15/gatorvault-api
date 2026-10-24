@@ -697,6 +697,7 @@ async function runVaultFeed2028SweepInner(opts = {}) {
       const liveBeat = require('./live-beat');
       if (!skipBeatRefresh && !opts.posts && !opts.candidates) {
         try {
+          touchVaultFeedHeartbeat(report, { skipPersist: opts.skipPersist === true });
           const refreshed = await liveBeat.refreshBeatStream();
           report.beatRefresh = {
             ok: !refreshed?.error || !!refreshed?.postCount || !!refreshed?.posts?.length,

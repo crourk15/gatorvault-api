@@ -324,4 +324,14 @@ describe('summarizeFeedResult proof detail', () => {
     const s = summarizeFeedResult({ ok: false, error: 'staff_not_recruit' });
     assert.match(s.whatChanged, /Feed failed: staff_not_recruit/);
   });
+
+  it('Hub Run skips beat-stream refresh unless asked — that refresh hangs Starter', () => {
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const src = fs.readFileSync(path.join(__dirname, '../lib/admin-hub-routes.js'), 'utf8');
+    assert.match(src, /skipBeatRefresh: req\.body\?\.skipBeatRefresh !== false/);
+    const sweepSrc = fs.readFileSync(path.join(__dirname, '../lib/vault-feed-2028-sweep.js'), 'utf8');
+    assert.match(sweepSrc, /touchVaultFeedHeartbeat\(report/);
+    assert.match(sweepSrc, /refreshBeatStream\(\)/);
+  });
 });

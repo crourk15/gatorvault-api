@@ -1234,13 +1234,15 @@ function mountAdminHubRoutes(app) {
     try {
       const dryRun = req.body?.dryRun === true;
       const { acceptVaultFeedSweep } = require('./vault-feed-2028-sweep');
-      // Hub Run now always force-starts (Charles tap). Skip allowlist unless asked —
-      // that sweep alone can exceed Starter memory. Cron still runs the full pass.
+      // Hub Run force-starts (Charles tap). Skip beat-stream refresh + allowlist
+      // unless asked — refreshBeatStream blocks the Starter event loop so the
+      // heartbeat dies and the pour never writes names. Cron still does the
+      // full pass. Pass skipBeatRefresh:false only when you mean to wait on X.
       const result = acceptVaultFeedSweep({
         dryRun,
         force: true,
         trigger: 'hub',
-        skipBeatRefresh: req.body?.skipBeatRefresh === true,
+        skipBeatRefresh: req.body?.skipBeatRefresh !== false,
         skipAllowlistIntel: req.body?.skipAllowlistIntel !== false,
         lookbackHours: req.body?.lookbackHours != null ? Number(req.body.lookbackHours) : 72,
         maxCreates: req.body?.maxCreates != null ? Number(req.body.maxCreates) : 40,
