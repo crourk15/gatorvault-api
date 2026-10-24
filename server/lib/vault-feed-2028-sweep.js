@@ -10,8 +10,11 @@
  * Cron must accept-and-background. The 7am pass often takes ~30 minutes; a
  * 4-minute HTTP wait + retries will 502 the Starter dyno and the 7pm stamp
  * never writes. Hours 8–9 and 20–21 ET catch a missed 7 / 19 slot.
- * Scheduled cron skips allowlist + full beat-ingest (those have their own
- * jobs) so the 7am / 7pm FutureCast pass can finish on Starter memory.
+ * Scheduled cron skips allowlist, full beat-ingest, and the X/Nitter writer
+ * pull (those have their own jobs). refreshBeatStream used to block the
+ * Starter event loop so the 60s heartbeat never fired and the slot died as
+ * stale_running_no_heartbeat. Hub Run and Job Queue skip the same pull.
+ * An explicit refresh is budgeted (90s) and falls back to the beat cache.
  */
 'use strict';
 
@@ -23,6 +26,11 @@ const CLASS_YEAR_MIN = 2028;
 const CLASS_YEAR_MAX = 2030;
 /** No heartbeat for this long → prior run is dead; catch-up may start. */
 const STALE_HEARTBEAT_MS = 15 * 60 * 1000;
+/** Hard cap when someone opts into a beat refresh on this pass. */
+const BEAT_REFRESH_BUDGET_MS = 90 * 1000;
+
+/** Process-local lock — disk heartbeat can go stale while the writer loop is still up. */
+let _vaultFeedInFlight = null;
 
 function reportPath() {
   return path.join(resolveRecruitingDataDir(), 'vault-feed-2028-last-report.json');
@@ -165,6 +173,70 @@ function touchVaultFeedHeartbeat(report, { skipPersist = false } = {}) {
     }
   }
   return report;
+}
+
+function isVaultFeedInFlight() {
+  return !!_vaultFeedInFlight;
+}
+
+function resetVaultFeedInFlightForTests() {
+  _vaultFeedInFlight = null;
+}
+
+/**
+ * Never wait on an unbounded writer pull. Race the live-beat budget, then
+ * pour from whatever is already in the beat cache.
+ */
+async function refreshBeatsForVaultFeed(liveBeat, timeoutMs = BEAT_REFRESH_BUDGET_MS) {
+  const budget = Math.max(50, Number(timeoutMs) || BEAT_REFRESH_BUDGET_MS);
+  if (typeof liveBeat.isBeatRefreshInFlight === 'function' && liveBeat.isBeatRefreshInFlight()) {
+    return {
+      timedOut: false,
+      cached: true,
+      inFlight: true,
+      softFailure: true,
+      error: 'beat_refresh_already_running',
+      source: 'cache',
+    };
+  }
+  let timer = null;
+  const timeout = new Promise((resolve) => {
+    timer = setTimeout(() => {
+      resolve({
+        timedOut: true,
+        cached: true,
+        softFailure: true,
+        error: 'beat_refresh_timeout',
+        source: 'cache',
+      });
+    }, budget);
+  });
+  try {
+    const refreshed = await Promise.race([
+      Promise.resolve()
+        .then(() =>
+          liveBeat.refreshBeatStream({
+            timeoutMs: budget,
+            skipSideEffects: true,
+          })
+        )
+        .catch((err) => ({
+          error: err.message || String(err),
+          cached: true,
+          softFailure: true,
+          source: 'cache',
+        })),
+      timeout,
+    ]);
+    return refreshed || {
+      cached: true,
+      softFailure: true,
+      error: 'beat_refresh_empty',
+      source: 'cache',
+    };
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 function buildRunningReport({ dryRun = false, slotId = null, trigger = 'cron' } = {}) {
@@ -697,17 +769,29 @@ async function runVaultFeed2028SweepInner(opts = {}) {
       const liveBeat = require('./live-beat');
       if (!skipBeatRefresh && !opts.posts && !opts.candidates) {
         try {
-          const refreshed = await liveBeat.refreshBeatStream();
+          touchVaultFeedHeartbeat(report, { skipPersist: opts.skipPersist === true });
+          const budget =
+            opts.beatRefreshTimeoutMs != null
+              ? Number(opts.beatRefreshTimeoutMs)
+              : BEAT_REFRESH_BUDGET_MS;
+          const refreshed = await refreshBeatsForVaultFeed(liveBeat, budget);
           report.beatRefresh = {
-            ok: !refreshed?.error || !!refreshed?.postCount || !!refreshed?.posts?.length,
+            ok:
+              !refreshed?.error ||
+              !!refreshed?.postCount ||
+              !!refreshed?.posts?.length ||
+              !!refreshed?.cached ||
+              !!refreshed?.timedOut,
             postCount: refreshed?.postCount ?? refreshed?.posts?.length ?? null,
             source: refreshed?.source || null,
             error: refreshed?.error || null,
             softFailure: !!refreshed?.softFailure,
             cached: !!refreshed?.cached,
+            timedOut: !!refreshed?.timedOut,
+            inFlight: !!refreshed?.inFlight,
           };
         } catch (err) {
-          report.beatRefresh = { ok: false, error: err.message };
+          report.beatRefresh = { ok: false, error: err.message, cached: true };
           report.errors.push({ step: 'refreshBeatStream', error: err.message });
         }
       } else {
@@ -1016,6 +1100,16 @@ function acceptVaultFeedSweep(opts = {}) {
   const slotId = opts.slotId || vaultFeedSlotId(date);
   const prev = readLastReport();
 
+  if (_vaultFeedInFlight) {
+    return {
+      ok: true,
+      started: false,
+      alreadyRunning: true,
+      accepted: true,
+      inProcess: true,
+      report: prev,
+    };
+  }
   if (isActiveVaultFeedRun(prev)) {
     return { ok: true, started: false, alreadyRunning: true, accepted: true, report: prev };
   }
@@ -1046,24 +1140,27 @@ function acceptVaultFeedSweep(opts = {}) {
     }
   }
 
-  // Scheduled 7am/7pm: beat refresh + named-candidate feed only. Allowlist and
-  // full beat-ingest have their own crons and OOMed the Starter dyno here, so
-  // last-report sat on "running" with zero names written.
+  // Scheduled 7am/7pm: named-candidate feed only. Allowlist, full beat-ingest,
+  // and the X/Nitter writer pull have their own crons. The writer pull used to
+  // starve the heartbeat so last-report sat on "running" with zero names.
   const cronLite = trigger === 'cron' && force !== true;
   const skipAllowlistIntel =
     opts.skipAllowlistIntel != null ? opts.skipAllowlistIntel === true : cronLite;
   const skipBeatIngest = opts.skipBeatIngest != null ? opts.skipBeatIngest === true : cronLite;
+  const skipBeatRefresh =
+    opts.skipBeatRefresh != null ? opts.skipBeatRefresh === true : cronLite || trigger === 'hub';
 
   const sweepOpts = {
     dryRun: opts.dryRun === true,
     force,
     maxCreates: opts.maxCreates,
     lookbackHours: opts.lookbackHours,
-    skipBeatRefresh: opts.skipBeatRefresh,
+    skipBeatRefresh,
     skipAllowlistIntel,
     skipBeatIngest,
     skipOn3Articles: opts.skipOn3Articles,
     skipPersist: opts.skipPersist,
+    beatRefreshTimeoutMs: opts.beatRefreshTimeoutMs,
     slotId,
     trigger,
   };
@@ -1071,6 +1168,8 @@ function acceptVaultFeedSweep(opts = {}) {
   if (opts.launch === false) {
     return { ok: true, started: true, accepted: true, report: running };
   }
+
+  _vaultFeedInFlight = { startedAt: Date.now(), slotId, trigger };
 
   const hb = setInterval(() => {
     try {
@@ -1101,7 +1200,10 @@ function acceptVaultFeedSweep(opts = {}) {
           /* ignore */
         }
       })
-      .finally(() => clearInterval(hb));
+      .finally(() => {
+        clearInterval(hb);
+        _vaultFeedInFlight = null;
+      });
   });
 
   return { ok: true, started: true, accepted: true, report: running };
@@ -1130,4 +1232,8 @@ module.exports = {
   CLASS_YEAR_MIN,
   CLASS_YEAR_MAX,
   STALE_HEARTBEAT_MS,
+  BEAT_REFRESH_BUDGET_MS,
+  refreshBeatsForVaultFeed,
+  isVaultFeedInFlight,
+  resetVaultFeedInFlightForTests,
 };

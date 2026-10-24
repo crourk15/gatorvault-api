@@ -112,7 +112,7 @@ function buildFutureCastHubSummary() {
       deskFeed:
         'Beat Desk Open feeds FutureCast (board fields + UF% nudge / seed) when Florida involvement is real.',
       vaultFeed2028:
-        '7am/7pm ET vault feed: trusted beats → update existing 2028+ + monitor-provision new 2028/2029/2030+. Staff blocked. A dead/error stamp retries in the same 8–9am / 8–9pm window — it does not wait until the next 7pm. Proof = last report below.',
+        '7am/7pm ET vault feed: trusted beats → update existing 2028+ + monitor-provision new 2028/2029/2030+. Staff blocked. Cron/Hub skip the X writer pull (GNL owns it, now timed). A dead/error stamp retries in the same 8–9am / 8–9pm window — it does not wait until the next 7pm. Proof = last report below.',
     },
     adminAllowlist2028: adminRows,
     board2028Sample: boardSample,

@@ -17,6 +17,9 @@ const {
   isActiveVaultFeedRun,
   healStaleRunningReport,
   acceptVaultFeedSweep,
+  refreshBeatsForVaultFeed,
+  isVaultFeedInFlight,
+  resetVaultFeedInFlightForTests,
   CLASS_YEAR_MIN,
 } = require('../lib/vault-feed-2028-sweep');
 
@@ -95,7 +98,15 @@ describe('vault-feed-2028-sweep gates', () => {
     assert.equal(report.ok, true);
     assert.equal(report.summary.createdCount, 0);
     assert.equal(report.summary.updatedCount, 0);
-    assert.ok(report.emptyReason === 'no_beat_posts_in_cache' || report.emptyReason === 'beats_present_but_no_named_2028_plus_in_lookback' || report.emptyReason === 'no_creates_or_updates');
+    assert.ok(
+      report.emptyReason == null ||
+        report.emptyReason === 'no_beat_posts_in_cache' ||
+        report.emptyReason === 'beats_present_but_no_named_2028_plus_in_lookback' ||
+        report.emptyReason === 'no_creates_or_updates' ||
+        report.emptyReason === 'beat_fetch_failed' ||
+        report.emptyReason === 'candidates_unresolved_only' ||
+        report.emptyReason === 'only_2027_or_skipped'
+    );
   });
 
   it('ET window helper returns boolean', () => {
@@ -323,5 +334,88 @@ describe('summarizeFeedResult proof detail', () => {
   it('surfaces feed failures clearly', () => {
     const s = summarizeFeedResult({ ok: false, error: 'staff_not_recruit' });
     assert.match(s.whatChanged, /Feed failed: staff_not_recruit/);
+  });
+
+  it('Hub Run and cron skip unbounded beat-stream refresh; explicit pull is budgeted', () => {
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const src = fs.readFileSync(path.join(__dirname, '../lib/admin-hub-routes.js'), 'utf8');
+    assert.match(src, /skipBeatRefresh: req\.body\?\.skipBeatRefresh !== false/);
+    const sweepSrc = fs.readFileSync(path.join(__dirname, '../lib/vault-feed-2028-sweep.js'), 'utf8');
+    assert.match(sweepSrc, /touchVaultFeedHeartbeat\(report/);
+    assert.match(sweepSrc, /skipBeatRefresh != null \? opts\.skipBeatRefresh === true : cronLite/);
+    assert.match(sweepSrc, /refreshBeatsForVaultFeed/);
+    assert.match(sweepSrc, /beat_refresh_timeout/);
+    assert.match(sweepSrc, /_vaultFeedInFlight/);
+    const jobs = fs.readFileSync(path.join(__dirname, '../lib/ops-jobs.js'), 'utf8');
+    assert.match(jobs, /skipBeatRefresh: opts\.skipBeatRefresh !== false/);
+  });
+});
+
+describe('vault-feed hang guards', () => {
+  it('refreshBeatsForVaultFeed returns cache when refresh never settles', async () => {
+    const fake = {
+      isBeatRefreshInFlight: () => false,
+      refreshBeatStream: () => new Promise(() => {}),
+    };
+    const started = Date.now();
+    const out = await refreshBeatsForVaultFeed(fake, 40);
+    assert.equal(out.timedOut, true);
+    assert.equal(out.cached, true);
+    assert.ok(Date.now() - started < 500);
+  });
+
+  it('refreshBeatsForVaultFeed does not start a second pull when one is in flight', async () => {
+    const out = await refreshBeatsForVaultFeed(
+      {
+        isBeatRefreshInFlight: () => true,
+        refreshBeatStream: () => {
+          throw new Error('should not start');
+        },
+      },
+      40
+    );
+    assert.equal(out.inFlight, true);
+    assert.equal(out.cached, true);
+  });
+
+  it('accept will not stack a second in-process sweep', async () => {
+    resetVaultFeedInFlightForTests();
+    try {
+      const first = acceptVaultFeedSweep({
+        launch: true,
+        skipPersist: true,
+        skipBeatRefresh: true,
+        skipBeatIngest: true,
+        skipAllowlistIntel: true,
+        skipOn3Articles: true,
+        dryRun: true,
+        now: new Date('2026-10-24T11:05:00.000Z'),
+      });
+      const second = acceptVaultFeedSweep({
+        launch: true,
+        skipPersist: true,
+        now: new Date('2026-10-24T11:05:01.000Z'),
+      });
+      assert.equal(first.started, true);
+      assert.equal(isVaultFeedInFlight(), true);
+      assert.equal(second.alreadyRunning, true);
+      assert.equal(second.inProcess, true);
+      const deadline = Date.now() + 8000;
+      while (isVaultFeedInFlight() && Date.now() < deadline) {
+        await new Promise((r) => setTimeout(r, 50));
+      }
+      assert.equal(isVaultFeedInFlight(), false);
+    } finally {
+      resetVaultFeedInFlightForTests();
+    }
+  });
+
+  it('sweep inner calls the budgeted refresh helper, not a bare writer pull', () => {
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const sweepSrc = fs.readFileSync(path.join(__dirname, '../lib/vault-feed-2028-sweep.js'), 'utf8');
+    assert.equal(sweepSrc.includes('refreshBeatStream()'), false);
+    assert.equal(sweepSrc.includes('refreshBeatsForVaultFeed(liveBeat, budget)'), true);
   });
 });

@@ -113,6 +113,7 @@ const JOBS = {
         force: opts.force === true,
         maxCreates: opts.maxCreates != null ? Number(opts.maxCreates) : 40,
         lookbackHours: opts.lookbackHours != null ? Number(opts.lookbackHours) : 36,
+        skipBeatRefresh: opts.skipBeatRefresh !== false,
       });
     }
   },
