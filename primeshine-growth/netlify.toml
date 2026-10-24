@@ -1,0 +1,17 @@
+# Owner-only PrimeShine growth plan — deploy separately from the customer site.
+# Do not publish this folder with primeshine/.
+
+[build]
+  publish = "."
+  command = "true"
+
+[build.processing]
+  skip_processing = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Robots-Tag = "noindex, nofollow"
