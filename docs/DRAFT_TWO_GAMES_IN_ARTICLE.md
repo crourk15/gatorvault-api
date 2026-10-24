@@ -1,58 +1,46 @@
-# DRAFT — Home Was the Easy Part (taken down)
+# DRAFT — Saturday Starts the Road
 
-**Status:** NOT live. Taken down Sep 14, 2026 — flow not right.
+**Status:** NOT live. Reported rewrite. Await Charles approve.
 **Id:** `art-two-games-in-2026`
-**Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 14, 2026 · **Read:** 7 min
+**Tier:** locker · **Author:** GatorVault Staff · **Date:** Sep 16, 2026 · **Read:** 6 min
 
-Removed from `articles.json`. No Codemagic.
+Taken down Sep 14 for flow. Still off `articles.json`. No Codemagic.
 
 ---
 
-# Home Was the Easy Part
+# Saturday Starts the Road
 
-By GatorVault Staff · Sep 14, 2026 · 7 min read
+By GatorVault Staff · Sep 16, 2026 · 6 min read
 
-Florida is 2-0 after two home games that never got close. The second half against Campbell did not cost them a thing. Saturday it can.
+Florida is 2-0 because two home Saturdays never got close. The nights were loud and the scores were ugly, 66-21 and 52-3, and that is what a building remembers. What the two games actually showed is the part that has to travel. Saturday at Auburn is the first night it has to.
 
-The Swamp had 52-3 on the board and a 2-0 start for the first time in five years. Jon Sumrall walked to the locker room unhappy. He said he was happy his guys got the win. Then he said a lot he was not pleased with. Play that second half in conference, he said, and they are about to have a real rude awakening. Walk in like that, and they will get absolutely embarrassed. The flags, the guys who were not ready, and the slow start are still here. Auburn can make them count.
+Buster Faulkner's play calling has looked sharp, and Aaron Philo has been the one making it look simple. Philo went 16-of-21 against Florida Atlantic and 16-of-21 again against Campbell, 517 yards, five touchdowns, and one interception Sumrall put on a catchable ball, not on the quarterback. He changed the play at the line when he needed to. The receivers have made those calls look right. Vernell Brown III took the Campbell half to 45-3 on two punt returns and a catch. Dallas Wilson hit the 40. Eric Singleton Jr. was a problem before he left the opener and did not come back. The playmakers have been ahead of the night. Tuesday, Faulkner said Philo is cool, calm, and collected, and they will coach him through DJ Durkin's front and the first crowd that will try to take that away.
 
-Florida went to the locker room up 45-3. Vernell Brown III had already scored twice on punt returns and once as a receiver. Dallas Wilson had the 40-yard touchdown. Jadan Baugh had the 75-yard run. Then the second half started. Sumrall put the backups in. Campbell never got back in it.
+The offensive line has not dominated, and that is not a slogan. It is what Sumrall said out loud after 52-3. The starting five, he said, was not awful and is not where it needs to be. They did not give Jadan Baugh the lanes a back like him should have. A guy went the wrong way. Somebody missed a protection. After halftime T.J. Shanahan Jr. wiped a Baugh run that was already a big gain and then added the personal foul that made it 1st-and-25. Roderick Kearney picked up another. That is a line that has not controlled a game. It is also the reason Baugh's two weeks matter as much as they do. He has been the best running back in the country anyway, 75 late in the third against a long of 26 a year ago, 296 yards and five scores in two weeks on 14 carries each Saturday, and Sumrall still walked off already sick of the depth behind him. If that line does not get him the same lanes in Jordan-Hare, Saturday gets harder in a hurry.
 
-Every time they hit a big play after halftime, another flag came out. T.J. Shanahan Jr. got called on back-to-back plays, a hold that wiped a Baugh run that was already a big gain, then a personal foul. Roderick Kearney picked up another. A hold or a personal foul can shove you into 1st-and-25. That is first down with 25 yards still to go, and the drive is dead. In this league, Sumrall said, you might as well get ready to give the ball back. The Gators cannot beat the Gators. Seven flags after halftime. One in the first half. Three in the whole opener against Florida Atlantic. Up 45-3, those flags do not change the score. If they show up when the game is still close, they are how you lose.
+The corners have been the concern through both games, and the tape is why. After Florida Atlantic, Sumrall spent Monday on a corner sitting nine yards off the ball on 3rd-and-short. They took the deep ball and still let FAU speed it up. Campbell put that same start on the field, completions down the field and a field goal, and Sumrall told the defensive backs not to get scared of it because at corner you get beat and the snap that matters is the one after. Two home games hid that. Saturday they have to step up, especially on the road. Byrum Brown will throw it short and Keshaun Singleton will run it if they sit off the way they sat off in the first two weeks. Seven flags after 45-3 did not cost them. Byrum and Jeremiah Cobb will play those flags while the score is still a score.
 
-Second-team and third-team guys got a chance to prove people right or wrong. Some of them, he said, proved why they are not playing. Freshmen have been here since January. The standard is a Florida Gator standard, first team or third, and it is not negotiable. Readiness is whether you can play when your name is called. That matters this week only if the starters do the same thing Saturday.
+Monday, these games count twice, Sumrall said, overall and conference, and the last two counted once. If he has to get anybody ready, they have the wrong people. He wants sacks and a finish on the quarterback. Singleton and Emmanuel Oyebadejo came out of the boot limited, and Sumrall will call both questionable and will not go further than that. Brad White called Saturday a fist fight. That is the version of this team the first two nights never asked them to be.
 
-Defense has not started either game. After Florida Atlantic, Sumrall watched the tape and said the issue was football IQ: knowing what the play is asking you to do, the down and distance, when the other team is speeding the game up, when to crowd a receiver and when to give him space. On 3rd-and-short a corner sat nine yards off the ball. That is too far. They kept FAU from hitting the long passes. They let FAU speed the game up. Against Campbell the first drive got a field goal, a couple of completions down the field, then Florida held them to those three points the rest of the night. Sumrall told the defensive backs not to get scared after a catch. At corner you are going to get beat. Next play. The opening drive was still not a three-and-out.
+They have not won in that building since 1999. Win Saturday and 3-0 is the first one that counts twice.
 
-Aaron Philo started both games. He has been steady and shown good command of the offense. After FAU, Sumrall said the interception was not on him. It was a catchable ball that should have been a completion. Philo changed the play at the line when he needed to, and led. After Campbell he said they are playing good football with him in the game. He went 16-of-21 against FAU and 16-of-21 again against Campbell. Combined, that is 517 yards, five touchdowns, and one interception.
+## Takeaways
 
-Last year Jadan Baugh's longest run was 23 yards. He has now hit a long run in both games, and in two weeks he has 296 yards and five scores on 14 carries each Saturday. Sumrall likes the physical run between the tackles and the long run. What he did not like was the depth behind Baugh. He called it subpar. A guy went the wrong way on one run. Somebody missed a protection call. The starting offensive line, he said, was not awful and is not where it needs to be. They did not give Baugh as many rushing lanes as they should have.
-
-Saturday is Auburn, in Jordan-Hare, the first conference game of Year One. Florida scored 118 and allowed 24 at home. Auburn does not play those two games. Ole Miss, Missouri, South Carolina, Texas in Austin, and Georgia in Atlanta on Halloween are still on the card. Two home blowouts do not change those. The honest range for this roster is still 7-5 or 8-4. 2-0 is what you are supposed to be after FAU and Campbell.
-
-Auburn's offense is no-huddle shotgun. They line up fast and almost never put the quarterback under center. Byrum Brown is the quarterback. He came from USF with this staff. He wants the first throw or the keep, where he pulls the ball and runs it himself. Against Baylor he threw those short throws and let Keshaun Singleton, Jeremiah Koger, and Chas Nimrod catch it and run. When he got off schedule, he forced the ball and threw three interceptions. When they got in his face before he could find that first throw, they sacked him five times. If Florida starts the way they have started two games, Brown will have that throw before the defense is ready.
-
-Auburn's defensive line and the linebackers behind it came downhill to stop the run. Baylor got 103 yards on the ground. Extra bodies near the line take the run away and leave space behind them. Baylor threw for 333 yards into that space. If Auburn does that to Baugh, Philo has to throw over those extra bodies and score. If a flag comes out after a big run the way it did after halftime Saturday, the drive dies at 1st-and-25 and that throw never happens. Against Campbell that was a wasted possession in a blowout. Against Auburn it is a missed chance while the game is still close.
-
-Florida wins in Jordan-Hare if they start the game the way they have not started the first two, if Philo throws it when Auburn puts extra bodies near the line to stop Baugh, and if they get to Byrum Brown before the first throw. Chase the keep and he runs. Miss the tackle after the catch and Singleton, Koger, and Nimrod turn a short throw into a long gain. Take a flag after a big run and the drive is 1st-and-25.
-
-Sumrall said he is a little uneasy with where they are. You can win games the way they have won these two. If they are not urgent and detailed this week, he said, Saturday will not be what they desire.
-
-## Key takeaways
-
-- Florida is 2-0 because two home games never got close. The Campbell second half did not cost them. The same flags and slow start can cost them at Auburn.
-- Seven flags after halftime shoved drives into 1st-and-25. Shanahan and Kearney got the flags. Up 45-3 those flags do not change the score. If they show up when the game is still close, they are how you lose.
-- Defense has not opened a game with a three-and-out. Campbell kicked a field goal and did not score again.
-- Philo went 16-of-21 in each game (517 yards, five touchdowns, one interception combined). Baugh has the long run. The depth behind him was subpar. The starting line did not give him enough lanes.
-- At Auburn: start the game, do not take flags, throw over extra bodies if they put them near the line to stop Baugh, get to Byrum Brown before the first throw, tackle Singleton, Koger, and Nimrod after the catch.
+- Faulkner's play calling has looked sharp. Philo went 16-of-21 in both games. The receivers have made the calls look right.
+- The offensive line has not dominated. Sumrall said they are not where they need to be and did not give Baugh lanes. Baugh has been the best running back in the country anyway.
+- The corners have been the concern both weeks, nine yards off on 3rd-and-short, the same start against Campbell. Saturday they have to step up on the road.
+- Seven flags after 45-3 did not cost them. Byrum and Cobb will play those flags while the score is still a score.
+- Win Saturday and 3-0 is the first one that counts twice.
 
 ## Sources
+
 - Jon Sumrall postgame, Campbell (Sep 12, 2026) / Florida Gators / ASAP transcript
 - Jon Sumrall Monday presser after FAU (Sep 8, 2026)
+- Jon Sumrall Monday Auburn-week presser (Sep 14, 2026) / Alligator / WRUF
+- Buster Faulkner and Brad White Tuesday availability (Sep 15, 2026) / Alligator
 - Official UF box vs FAU: https://floridagators.com/sports/football/stats/2026/florida-atlantic/boxscore/27903
 - Official UF box vs Campbell: https://floridagators.com/sports/football/stats/2026/campbell/boxscore/27904
-- Official Baylor PBP / Auburn sit (not a broadcast sit)
 
 ---
 
-Taken down. Not on the locker rail.
+Not on the locker rail. Approve before live.
