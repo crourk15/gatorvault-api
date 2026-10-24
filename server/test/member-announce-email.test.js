@@ -12,8 +12,11 @@ const {
   getIosUpdateAnnounceEmail,
   getArticleAnnounceEmail,
   getIos129ChaseAnnounceEmail,
+  getGeorgiaWeekTrialEmail,
+  sendGeorgiaWeekTrialAnnounce,
   shouldAutoSendIos129Chase,
   IOS_129_CHASE_SUBJECT,
+  GEORGIA_WEEK_TRIAL_SUBJECT,
   SEASON_PREVIEW_2026_URL,
 } = require('../lib/member-announce-email');
 
@@ -61,6 +64,44 @@ describe('member announce email', () => {
     assert.match(built.html, /Open FutureCast/);
     assert.match(built.html, /gatorvault-insider/);
     assert.doesNotMatch(built.html, /Read the season preview/);
+  });
+
+  it('builds the Georgia week trial letter without TEST or On3', () => {
+    const built = getGeorgiaWeekTrialEmail();
+    assert.equal(built.subject, GEORGIA_WEEK_TRIAL_SUBJECT);
+    assert.equal(/\[TEST\]/.test(built.subject), false);
+    assert.match(built.html, /Forward this email to one friend/);
+    assert.match(built.html, /30 days free/);
+    assert.match(built.html, /gatorvault-insider/);
+    assert.match(built.html, /\$9\.99/);
+    assert.doesNotMatch(built.html, /On3/);
+    assert.doesNotMatch(built.html, /\[TEST\]/);
+  });
+
+  it('Georgia week send is trial-only and skips paid / expired / operator', async () => {
+    const now = Date.now();
+    const users = [
+      { email: 'trial@gmail.com', name: 'Trial Fan', trialEnd: new Date(now + 86400000 * 10).toISOString() },
+      { email: 'paid@gmail.com', name: 'Paid Fan', paid: true, trialEnd: new Date(now + 86400000 * 10).toISOString() },
+      { email: 'expired@gmail.com', name: 'Expired Fan', trialEnd: new Date(now - 86400000 * 2).toISOString() },
+      { email: 'crourk15@gmail.com', name: 'Charles', trialEnd: new Date(now + 86400000 * 10).toISOString() },
+    ];
+    const sentTo = [];
+    const result = await sendGeorgiaWeekTrialAnnounce({
+      loadUsers: () => users,
+      deliverEmail: async (to) => {
+        sentTo.push(to);
+        return { sent: true, provider: 'test' };
+      },
+      dryRun: true,
+    });
+    assert.equal(result.candidateCount, 1);
+    assert.equal(result.queued, 1);
+    assert.equal(result.details[0].email, 'trial@gmail.com');
+    assert.equal(result.details[0].subject, GEORGIA_WEEK_TRIAL_SUBJECT);
+    assert.equal(sentTo.length, 0);
+    const { recipients } = listAnnounceRecipients(() => users, { trialOnly: true });
+    assert.deepEqual(recipients.map((u) => u.email), ['trial@gmail.com']);
   });
 
   it('does not auto-send 1.0.29 Chase mail unless explicitly enabled', () => {

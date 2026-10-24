@@ -25,6 +25,9 @@ const IOS_129_CHASE_STAMP_KEY = 'iosAnnounce_1_0_29_chase';
 const IOS_129_CHASE_SUBJECT =
   'GatorVault 1.0.29 is live — 2028 is heating up. Here’s how to read it.';
 
+const GEORGIA_WEEK_TRIAL_STAMP_KEY = 'georgiaWeekTrial_2026_10';
+const GEORGIA_WEEK_TRIAL_SUBJECT = 'Your GatorVault free trial and Georgia week';
+
 function ios129ChaseReportPath() {
   const usersPath = process.env.GV_USERS_PATH || path.join(__dirname, '..', 'data', 'users.json');
   return path.join(path.dirname(usersPath), 'ios-129-chase-announce-last.json');
@@ -99,7 +102,14 @@ function hasSubscriberAccess(user) {
   return !trialState(user).expired;
 }
 
-function listAnnounceRecipients(loadUsers, { requireActiveAccess = true } = {}) {
+function isActiveTrialRecipient(user) {
+  if (hasPaidAccess(user)) return false;
+  const trial = trialState(user);
+  if (!trial.trialEndISO) return false;
+  return trial.expired !== true;
+}
+
+function listAnnounceRecipients(loadUsers, { requireActiveAccess = true, trialOnly = false } = {}) {
   const users = typeof loadUsers === 'function' ? loadUsers() || [] : [];
   const kept = [];
   const skipped = [];
@@ -109,7 +119,15 @@ function listAnnounceRecipients(loadUsers, { requireActiveAccess = true } = {}) 
       skipped.push({ email: user.email || null, reason: gate.reason });
       continue;
     }
-    if (requireActiveAccess && !hasSubscriberAccess(user)) {
+    if (trialOnly) {
+      if (!isActiveTrialRecipient(user)) {
+        skipped.push({
+          email: user.email,
+          reason: hasPaidAccess(user) ? 'paid' : 'not_active_trial',
+        });
+        continue;
+      }
+    } else if (requireActiveAccess && !hasSubscriberAccess(user)) {
       skipped.push({ email: user.email, reason: 'inactive' });
       continue;
     }
@@ -715,6 +733,184 @@ async function sendIos129ChaseAnnounce({
   return payload;
 }
 
+function buildGeorgiaWeekTrialBodyHtml() {
+  return `
+  <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">Georgia is Saturday, and your free trial is still open.</p>
+  <p style="margin:0 0 8px;font-size:15px;line-height:1.6;">Use it this week:</p>
+  <p style="margin:0 0 6px;font-size:14px;line-height:1.55;"><strong>Game Week:</strong> the intel for Georgia</p>
+  <p style="margin:0 0 6px;font-size:14px;line-height:1.55;"><strong>Film Room:</strong> film breakdowns that show why, not just what</p>
+  <p style="margin:0 0 6px;font-size:14px;line-height:1.55;"><strong>FutureCast:</strong> who's closest to Florida on the 2028 board</p>
+  <p style="margin:0 0 20px;font-size:14px;line-height:1.55;"><strong>Gator Nation Live:</strong> watch the game with other fans</p>
+  <p style="margin:0 0 20px;font-size:14px;line-height:1.6;">Film Room is the plan most members keep: $9.99/month or $95.88/year.</p>
+  <p style="margin:0 0 20px;font-size:15px;line-height:1.6;">Know a Gator who'd use this? Forward this email to one friend. They get the same 30 days free, no card.</p>
+  ${ctaButton(APP_STORE_URL, 'Open the vault')}
+  <p style="margin:0 0 20px;font-size:13px;color:#94a3b8;line-height:1.55;word-break:break-all;">${APP_STORE_URL}</p>
+  <p style="margin:0 0 8px;font-size:13px;color:#64748b;line-height:1.55;">GatorVault Insider is independent and not affiliated with the University of Florida.</p>
+  <p style="margin:16px 0 0;font-size:13px;color:#64748b;line-height:1.55;">— GatorVault</p>
+  <p style="margin:12px 0 0;font-size:12px;color:#475569;line-height:1.55;">Questions? Reply or email <a href="mailto:${SUPPORT_EMAIL}" style="color:#94a3b8;">${SUPPORT_EMAIL}</a>.</p>
+`;
+}
+
+function getGeorgiaWeekTrialEmail() {
+  const subject = GEORGIA_WEEK_TRIAL_SUBJECT;
+  const bodyInner = buildGeorgiaWeekTrialBodyHtml();
+  const html = emailShell(bodyInner);
+  return {
+    kind: 'georgia_week_trial_2026',
+    subject,
+    html,
+    templateParams: {
+      body_html: bodyInner,
+      email_subject: subject,
+      vault_url: APP_STORE_URL,
+      support_email: SUPPORT_EMAIL,
+    },
+  };
+}
+
+/**
+ * One-shot Georgia-week note to active trials only.
+ * Stamps georgiaWeekTrial_2026_10 so a retry does not re-blast.
+ */
+async function sendGeorgiaWeekTrialAnnounce({
+  loadUsers,
+  deliverEmail,
+  updateUser = null,
+  saveUsers = null,
+  dryRun = false,
+  force = false,
+  limit = null,
+  concurrency = announceEmailConcurrency(),
+  saveEvery = announceSaveEvery(),
+} = {}) {
+  if (typeof loadUsers !== 'function' || typeof deliverEmail !== 'function') {
+    throw new Error('sendGeorgiaWeekTrialAnnounce requires loadUsers and deliverEmail');
+  }
+
+  const effectiveForce = Boolean(force);
+  const key = GEORGIA_WEEK_TRIAL_STAMP_KEY;
+  const { recipients, skipped } = listAnnounceRecipients(loadUsers, { trialOnly: true });
+  const queue =
+    Number.isFinite(Number(limit)) && Number(limit) > 0
+      ? recipients.slice(0, Number(limit))
+      : recipients;
+
+  const details = [];
+  let sent = 0;
+  let failed = 0;
+  let sinceSave = 0;
+
+  let stampChain = Promise.resolve();
+  function enqueueStamp(work) {
+    const run = stampChain.then(work);
+    stampChain = run.catch(() => {});
+    return run;
+  }
+
+  async function persistStamp(user) {
+    const iso = new Date().toISOString();
+    user[key] = iso;
+    if (typeof updateUser === 'function') {
+      await enqueueStamp(async () => {
+        updateUser(user.email, { [key]: iso });
+      });
+      return;
+    }
+    sinceSave += 1;
+    if (typeof saveUsers === 'function' && sinceSave >= saveEvery) {
+      await enqueueStamp(async () => {
+        saveUsers(loadUsers());
+        sinceSave = 0;
+      });
+    }
+  }
+
+  const built = getGeorgiaWeekTrialEmail();
+
+  await mapPool(queue, dryRun ? 1 : concurrency, async (user) => {
+    if (!effectiveForce && user[key]) {
+      details.push({ email: user.email, sent: false, reason: 'already_sent' });
+      return;
+    }
+
+    if (dryRun) {
+      details.push({ email: user.email, sent: false, dryRun: true, subject: built.subject });
+      return;
+    }
+
+    try {
+      const delivery = await deliverEmail(user.email, built.subject, built.html, {
+        name: displayNameFrom(user),
+        bodyHtml: built.templateParams.body_html,
+        emailSubject: built.subject,
+        html: built.html,
+      });
+      if (!delivery || delivery.sent !== true) {
+        failed += 1;
+        details.push({
+          email: user.email,
+          sent: false,
+          reason: 'send_failed',
+          error: delivery?.error || 'deliverEmail returned sent=false',
+          provider: delivery?.provider || null,
+        });
+        return;
+      }
+      sent += 1;
+      details.push({
+        email: user.email,
+        sent: true,
+        provider: delivery?.provider || null,
+        id: delivery?.id || null,
+      });
+      await persistStamp(user);
+    } catch (err) {
+      failed += 1;
+      details.push({
+        email: user.email,
+        sent: false,
+        reason: 'send_failed',
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  });
+
+  await stampChain;
+
+  if (
+    !dryRun &&
+    sent > 0 &&
+    typeof updateUser !== 'function' &&
+    typeof saveUsers === 'function' &&
+    sinceSave > 0
+  ) {
+    saveUsers(loadUsers());
+  }
+
+  const alreadySent = details.filter((d) => d.reason === 'already_sent').length;
+  const deliveredViaResend = details.some((d) => d.sent && d.provider === 'resend');
+  return {
+    ok: failed === 0,
+    kind: 'georgia_week_trial_2026',
+    stampKey: key,
+    subject: GEORGIA_WEEK_TRIAL_SUBJECT,
+    at: new Date().toISOString(),
+    dryRun,
+    force: effectiveForce,
+    candidateCount: recipients.length,
+    queued: queue.length,
+    sent,
+    failed,
+    skippedCount: skipped.length,
+    alreadySent,
+    delivered: sent > 0,
+    deliveredViaResend,
+    skipped: skipped.slice(0, 50),
+    details,
+    concurrency: dryRun ? 1 : concurrency,
+  };
+}
+
 function shouldAutoSendIos129Chase({
   env = process.env,
   nodeEnv = process.env.NODE_ENV,
@@ -807,4 +1003,10 @@ module.exports = {
   scheduleIos129ChaseAnnounce,
   readIos129ChaseReport,
   summarizeIos129ChaseResult,
+  GEORGIA_WEEK_TRIAL_STAMP_KEY,
+  GEORGIA_WEEK_TRIAL_SUBJECT,
+  isActiveTrialRecipient,
+  buildGeorgiaWeekTrialBodyHtml,
+  getGeorgiaWeekTrialEmail,
+  sendGeorgiaWeekTrialAnnounce,
 };
