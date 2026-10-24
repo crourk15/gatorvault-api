@@ -13,6 +13,20 @@ const NITTER_BASES = (process.env.NITTER_BASES || 'https://nitter.poast.org,http
   .map((s) => s.trim())
   .filter(Boolean);
 
+/** X / Nitter per-request abort. Unbounded fetch() was hanging vault-feed heartbeats. */
+const X_FETCH_TIMEOUT_MS = Math.max(
+  3000,
+  parseInt(process.env.X_BEAT_FETCH_TIMEOUT_MS || '12000', 10) || 12000
+);
+/** Whole-stream budget. Vault feed / GNL / beat cron must not run writers for 15+ min. */
+const DEFAULT_BEAT_REFRESH_TIMEOUT_MS = Math.max(
+  15000,
+  parseInt(process.env.BEAT_REFRESH_TIMEOUT_MS || '120000', 10) || 120000
+);
+
+let _refreshInFlight = null;
+let _refreshStartedAt = 0;
+
 /** Default tweets pulled per writer — keep low to conserve X API credits. */
 const DEFAULT_MAX_POSTS = Math.min(
   20,
@@ -91,6 +105,34 @@ function xAuthHeaders() {
   return { Authorization: `Bearer ${rawToken}` };
 }
 
+function isBeatRefreshInFlight() {
+  return !!_refreshInFlight;
+}
+
+function cacheSoftResult(cache, error, extra = {}) {
+  const purgedExisting = filterBeatPosts((cache && cache.posts) || []);
+  return {
+    posts: purgedExisting.kept,
+    postCount: purgedExisting.kept.length,
+    fetchedAt: (cache && cache.fetchedAt) || null,
+    source: (cache && cache.source) || 'cache',
+    error,
+    softFailure: true,
+    cached: true,
+    ...extra,
+  };
+}
+
+async function fetchAbort(url, opts = {}, timeoutMs = X_FETCH_TIMEOUT_MS) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...opts, signal: ctrl.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function validateXBearerToken({ force = false } = {}) {
   const headers = xAuthHeaders();
   if (!headers) {
@@ -112,7 +154,7 @@ async function validateXBearerToken({ force = false } = {}) {
   }
 
   try {
-    const res = await fetch('https://api.twitter.com/2/users/by/username/Corey_Bender', { headers });
+    const res = await fetchAbort('https://api.twitter.com/2/users/by/username/Corey_Bender', { headers });
     if (res.status === 401 || res.status === 403) {
       _xTokenStatus = {
         configured: true,
@@ -200,7 +242,7 @@ async function resolveXUserId(handle, headers) {
 
   const userJson = await withRetries(
     async () => {
-      const userRes = await fetch(
+      const userRes = await fetchAbort(
         `https://api.twitter.com/2/users/by/username/${encodeURIComponent(handle)}?user.fields=profile_image_url`,
         { headers }
       );
@@ -233,7 +275,7 @@ async function fetchXUserTimeline(handle, { maxPosts } = {}) {
   const maxResults = Math.min(100, Math.max(5, capped));
   const tweetsJson = await withRetries(
     async () => {
-      const tweetsRes = await fetch(
+      const tweetsRes = await fetchAbort(
         `https://api.twitter.com/2/users/${userId}/tweets?max_results=${maxResults}&tweet.fields=created_at,entities&exclude=retweets,replies`,
         { headers }
       );
@@ -438,24 +480,61 @@ function isAllowedFetchWriter(writer) {
   });
 }
 
-async function refreshBeatStream() {
+async function refreshBeatStream(opts = {}) {
   const cache = store.loadBeatCache();
-  try {
-    return await refreshBeatStreamInner(cache);
-  } catch (err) {
-    console.warn('[live-beat] refresh soft failure, keeping cache:', err.message);
-    const purgedExisting = filterBeatPosts(cache.posts || []);
-    return {
-      postCount: purgedExisting.kept.length,
-      source: cache.source || 'cache',
-      error: err.message,
-      softFailure: true,
-      cached: true,
-    };
+  const timeoutMs =
+    opts.timeoutMs === false || opts.timeoutMs === 0
+      ? 0
+      : Number.isFinite(Number(opts.timeoutMs))
+        ? Math.max(0, Number(opts.timeoutMs))
+        : DEFAULT_BEAT_REFRESH_TIMEOUT_MS;
+  const skipSideEffects = opts.skipSideEffects === true;
+  const staleLockMs = Math.max(timeoutMs, DEFAULT_BEAT_REFRESH_TIMEOUT_MS) * 2;
+
+  if (_refreshInFlight) {
+    if (_refreshStartedAt && Date.now() - _refreshStartedAt > staleLockMs) {
+      console.warn('[live-beat] abandoning stale refresh lock');
+      _refreshInFlight = null;
+      _refreshStartedAt = 0;
+    } else {
+      return cacheSoftResult(cache, 'beat_refresh_already_running', { inFlight: true });
+    }
   }
+
+  const deadlineAt = timeoutMs > 0 ? Date.now() + timeoutMs : 0;
+
+  const run = (async () => {
+    try {
+      return await refreshBeatStreamInner(cache, { deadlineAt, skipSideEffects });
+    } catch (err) {
+      console.warn('[live-beat] refresh soft failure, keeping cache:', err.message);
+      return cacheSoftResult(cache, err.message);
+    } finally {
+      _refreshInFlight = null;
+      _refreshStartedAt = 0;
+    }
+  })();
+
+  _refreshInFlight = run;
+  _refreshStartedAt = Date.now();
+
+  if (timeoutMs > 0) {
+    let timer = null;
+    const timeoutP = new Promise((resolve) => {
+      timer = setTimeout(() => {
+        resolve(cacheSoftResult(cache, 'beat_refresh_timeout', { timedOut: true }));
+      }, timeoutMs);
+    });
+    try {
+      return await Promise.race([run, timeoutP]);
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  }
+  return run;
 }
 
-async function refreshBeatStreamInner(cache) {
+async function refreshBeatStreamInner(cache, { deadlineAt = 0, skipSideEffects = false } = {}) {
   const tokenStatus = await validateXBearerToken({ force: false });
   const writers = store.loadWriters().filter(isAllowedFetchWriter);
   const hasBearer = !!getXBearerToken() && tokenStatus.ok;
@@ -465,11 +544,21 @@ async function refreshBeatStreamInner(cache) {
   let blocked = 0;
   let nitterHits = 0;
   let xHits = 0;
+  let timedOut = false;
 
   let writerIndex = 0;
   for (const writer of writers) {
+    if (deadlineAt && Date.now() >= deadlineAt - 8000) {
+      timedOut = true;
+      console.warn('[live-beat] refresh deadline — keeping partial cache', {
+        writersDone: writerIndex,
+        writersTotal: writers.length,
+      });
+      break;
+    }
     writerIndex += 1;
     const posts = await fetchWriterPosts(writer);
+    await new Promise((resolve) => setImmediate(resolve));
     if (!posts.length) errors += 1;
     posts.forEach((p) => {
       if (p.source === 'nitter') nitterHits += 1;
@@ -523,32 +612,41 @@ async function refreshBeatStreamInner(cache) {
     error = null;
   }
 
+  if (timedOut && !error) {
+    error = 'beat_refresh_deadline — partial writer pull saved';
+  }
+
   const next = {
     posts: merged,
     fetchedAt: store.nowIso(),
     source,
     blockedNational: blocked,
     error,
-    tokenStatus: { configured: tokenStatus.configured, ok: tokenStatus.ok }
+    tokenStatus: { configured: tokenStatus.configured, ok: tokenStatus.ok },
+    timedOut,
+    partial: timedOut || writerIndex < writers.length,
+    postCount: merged.length,
   };
   store.saveBeatCache(next);
 
-  try {
-    const dashCache = require('./live-dashboard-cache');
-    dashCache.clearDashboardCache();
-    dashCache.warmDashboardCache();
-    dashCache.bumpMobileRefreshSignal();
-  } catch (e) {
-    console.warn('[live-beat] dashboard cache refresh failed:', e.message);
-  }
-
-  try {
-    if (process.env.X_INSIDER_STYLE_AUTO_REFRESH !== 'false' && merged.length) {
-      const styleCorpus = require('./autoposter/insider-style-corpus');
-      styleCorpus.refreshFromPosts(merged, { source: next.source || 'beat-cache' });
+  if (!skipSideEffects) {
+    try {
+      const dashCache = require('./live-dashboard-cache');
+      // Async only — sync clear+warm here blocked /health and killed vault-feed heartbeats.
+      dashCache.bumpMobileRefreshSignal();
+      dashCache.scheduleAsyncWarm();
+    } catch (e) {
+      console.warn('[live-beat] dashboard cache refresh failed:', e.message);
     }
-  } catch (e) {
-    console.warn('[live-beat] insider style corpus refresh failed:', e.message);
+
+    try {
+      if (process.env.X_INSIDER_STYLE_AUTO_REFRESH !== 'false' && merged.length) {
+        const styleCorpus = require('./autoposter/insider-style-corpus');
+        styleCorpus.refreshFromPosts(merged, { source: next.source || 'beat-cache' });
+      }
+    } catch (e) {
+      console.warn('[live-beat] insider style corpus refresh failed:', e.message);
+    }
   }
 
   console.log('[live-beat] refresh complete', {
@@ -557,8 +655,12 @@ async function refreshBeatStreamInner(cache) {
     xHits,
     nitterHits,
     error: next.error || null,
-    tokenOk: tokenStatus.ok
+    tokenOk: tokenStatus.ok,
+    timedOut,
+    skipSideEffects,
   });
+
+  if (skipSideEffects) return next;
 
   purgeNonFloridaBeatFromFeed();
 
@@ -627,5 +729,8 @@ module.exports = {
   purgeNonFloridaBeatContent,
   purgeNonFloridaBeatCache,
   purgeNonFloridaBeatFromFeed,
-  filterBeatPosts
+  filterBeatPosts,
+  isBeatRefreshInFlight,
+  X_FETCH_TIMEOUT_MS,
+  DEFAULT_BEAT_REFRESH_TIMEOUT_MS,
 };
