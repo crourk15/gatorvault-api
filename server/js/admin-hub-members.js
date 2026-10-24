@@ -142,6 +142,7 @@
       + '<button type="button" class="hub-btn" id="hub-mem-extend-visible">Extend visible expired +30d</button>'
       + '<button type="button" class="hub-btn secondary" id="hub-mem-inbox-delete">Delete inbox list</button>'
       + '<button type="button" class="hub-btn secondary" id="hub-mem-announce-129">Send 1.0.29 Chase email</button>'
+      + '<button type="button" class="hub-btn secondary" id="hub-mem-announce-georgia">Send Georgia week trial email</button>'
       + '</div>'
       + '</div>'
       + '<div id="hub-mem-counts" class="hub-mem-counts hub-meta"></div>'
@@ -204,6 +205,27 @@
         })
         .catch(function (e) {
           setMsg((e && e.message) || '1.0.29 Chase email failed', true);
+        });
+    });
+    document.getElementById('hub-mem-announce-georgia').addEventListener('click', function () {
+      if (!apiPost) {
+        setMsg('Announce is not wired in this hub build', true);
+        return;
+      }
+      if (!window.confirm('Email current trial users only about Georgia week? Paid and expired are skipped. People who already got this letter will not get it again.')) {
+        return;
+      }
+      setMsg('Sending Georgia week trial email…');
+      apiPost('/api/admin/members/announce-georgia-week-trial', { dryRun: false })
+        .then(function (payload) {
+          var sent = payload && payload.sent != null ? payload.sent : 0;
+          var queued = payload && payload.queued != null ? payload.queued : 0;
+          var failed = payload && payload.failed != null ? payload.failed : 0;
+          var skipped = payload && payload.skippedCount != null ? payload.skippedCount : 0;
+          setMsg('Georgia week trial email · sent ' + sent + ' of ' + queued + ' · failed ' + failed + ' · skipped ' + skipped);
+        })
+        .catch(function (e) {
+          setMsg((e && e.message) || 'Georgia week trial email failed', true);
         });
     });
 

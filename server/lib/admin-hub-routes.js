@@ -1169,6 +1169,41 @@ function mountAdminHubRoutes(app) {
    * Body: { articleUrl?, articleTitle?, subject?, introHtml?, stampKey?, dryRun?, force?, limit? }
    * Defaults to the 2026 season preview piece.
    */
+  app.post('/api/admin/members/announce-georgia-week-trial', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const body = req.body || {};
+      const dryRun = body.dryRun === true || body.dryRun === 'true' || body.dry_run === true;
+      const force = body.force === true || body.force === 'true';
+      const limit = body.limit != null ? Number(body.limit) : null;
+
+      const mail =
+        (global.__GV_SUBSCRIPTION_MAIL__ && global.__GV_SUBSCRIPTION_MAIL__.deliverEmail) ||
+        null;
+      if (!mail && !dryRun) {
+        return res.status(503).json({ ok: false, error: 'Email deliverer not ready' });
+      }
+
+      const users = loadUsers();
+      const result = await memberAnnounce.sendGeorgiaWeekTrialAnnounce({
+        loadUsers: () => users,
+        updateUser,
+        deliverEmail: mail || (async () => ({ sent: false, provider: 'dry' })),
+        dryRun,
+        force,
+        limit,
+      });
+
+      return res.status(200).json({
+        ok: true,
+        ...result,
+        appStoreUrl: memberAnnounce.APP_STORE_URL,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/admin/members/announce-article', async (req, res) => {
     if (!requireAdmin(req, res)) return;
     try {
