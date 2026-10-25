@@ -516,6 +516,41 @@ describe('vault-feed hang guards', () => {
     }
   });
 
+  it('accept starts after a restart leftover running stamp with no process lock', () => {
+    const fs = require('fs');
+    const os = require('os');
+    const path = require('path');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vf-2028-'));
+    const prevEnv = process.env.GV_RECRUITING_DATA_DIR;
+    process.env.GV_RECRUITING_DATA_DIR = dir;
+    resetVaultFeedInFlightForTests();
+    const now = new Date('2026-10-25T23:38:00.000Z'); // 7:38 PM EDT
+    fs.writeFileSync(
+      path.join(dir, 'vault-feed-2028-last-report.json'),
+      `${JSON.stringify({
+        status: 'running',
+        slotId: '2026-10-25T19',
+        startedAt: '2026-10-25T23:05:53.582Z',
+        heartbeatAt: '2026-10-25T23:37:06.207Z',
+      })}\n`
+    );
+    try {
+      assert.equal(isActiveVaultFeedRun(JSON.parse(fs.readFileSync(path.join(dir, 'vault-feed-2028-last-report.json'), 'utf8')), now.getTime()), true);
+      const accepted = acceptVaultFeedSweep({
+        launch: false,
+        skipPersist: true,
+        now,
+      });
+      assert.equal(accepted.started, true);
+      assert.equal(accepted.alreadyRunning, undefined);
+      assert.equal(accepted.report.slotId, '2026-10-25T19');
+    } finally {
+      resetVaultFeedInFlightForTests();
+      if (prevEnv == null) delete process.env.GV_RECRUITING_DATA_DIR;
+      else process.env.GV_RECRUITING_DATA_DIR = prevEnv;
+    }
+  });
+
   it('cheap cron/hub vault-feed does not wait on a stuck heavy-job gate', async () => {
     const gate = require('../lib/heavy-job-gate');
     const orig = gate.runHeavyJob;
