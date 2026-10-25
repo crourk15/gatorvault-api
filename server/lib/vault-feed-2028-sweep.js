@@ -1173,9 +1173,9 @@ function acceptVaultFeedSweep(opts = {}) {
       report: prev,
     };
   }
-  if (isActiveVaultFeedRun(prev)) {
-    return { ok: true, started: false, alreadyRunning: true, accepted: true, report: prev };
-  }
+  // Disk "running" with a fresh heartbeat but no in-process lock is a
+  // leftover from a restart. Waiting 15 min here is what blocked Hub Run
+  // after the gate-fix deploy (Sunday 7:37 PM).
   if (!force && alreadyFinishedThisSlot(prev, date)) {
     return { ok: true, started: false, alreadyDone: true, accepted: true, report: prev };
   }
