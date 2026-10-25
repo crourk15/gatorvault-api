@@ -12,8 +12,10 @@
  * never writes. A missed 7am stays owed until 7pm; a missed 7pm stays owed
  * until the next 7am — so an 11:03 restart or a noon deploy still pours.
  * Scheduled cron skips allowlist, full beat-ingest, and the X/Nitter writer
- * pull. An in-process lock only blocks while the disk heartbeat is live or
- * the lock is younger than 15 min — a stale lock must not eat the next slot.
+ * pull. Cheap 7am/7pm + Hub Run must not wait on the heavy-job gate —
+ * an on3-ingest hold used to leave 7pm "running" with zero names until
+ * the deadline fired. An in-process lock only blocks while the disk
+ * heartbeat is live or the lock is younger than 15 min.
  */
 'use strict';
 
@@ -1129,7 +1131,19 @@ async function runVaultFeed2028SweepInner(opts = {}) {
   return report;
 }
 
+/**
+ * Only an explicit writer pull belongs on the heavy-job FIFO.
+ * Cron/Hub already skip that pull — queuing them behind on3-ingest is
+ * what left Sunday 7pm running for 30+ minutes with 0 beats.
+ */
+function shouldQueueVaultFeedOnHeavyGate(opts = {}) {
+  return opts.skipBeatRefresh === false;
+}
+
 async function runVaultFeed2028Sweep(opts = {}) {
+  if (!shouldQueueVaultFeedOnHeavyGate(opts)) {
+    return runVaultFeed2028SweepInner(opts);
+  }
   try {
     const { runHeavyJob } = require('./heavy-job-gate');
     return runHeavyJob('vault-feed-2028-sweep', () => runVaultFeed2028SweepInner(opts));
@@ -1235,14 +1249,16 @@ function acceptVaultFeedSweep(opts = {}) {
     const deadlineMs =
       opts.sweepDeadlineMs != null ? Number(opts.sweepDeadlineMs) : SWEEP_DEADLINE_MS;
     let deadlineTimer = null;
-    const deadline = new Promise((_, reject) => {
-      deadlineTimer = setTimeout(
-        () => reject(new Error('vault_feed_deadline')),
-        Math.max(5000, deadlineMs)
-      );
-    });
+    const startDeadline = () =>
+      new Promise((_, reject) => {
+        deadlineTimer = setTimeout(
+          () => reject(new Error('vault_feed_deadline')),
+          Math.max(5000, deadlineMs)
+        );
+      });
+    // Clock starts when the inner pass starts, not while we wait for On3.
     Promise.resolve()
-      .then(() => Promise.race([runVaultFeed2028Sweep(sweepOpts), deadline]))
+      .then(() => Promise.race([runVaultFeed2028Sweep(sweepOpts), startDeadline()]))
       .catch((err) => {
         try {
           writeReport({
@@ -1299,4 +1315,5 @@ module.exports = {
   setVaultFeedInFlightForTests,
   ON3_ARTICLE_BUDGET_MS,
   SWEEP_DEADLINE_MS,
+  shouldQueueVaultFeedOnHeavyGate,
 };

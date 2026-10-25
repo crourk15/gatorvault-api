@@ -22,6 +22,7 @@ const {
   isVaultFeedLockBlocking,
   resetVaultFeedInFlightForTests,
   setVaultFeedInFlightForTests,
+  shouldQueueVaultFeedOnHeavyGate,
   CLASS_YEAR_MIN,
 } = require('../lib/vault-feed-2028-sweep');
 
@@ -363,6 +364,7 @@ describe('summarizeFeedResult proof detail', () => {
     assert.match(sweepSrc, /refreshBeatsForVaultFeed/);
     assert.match(sweepSrc, /beat_refresh_timeout/);
     assert.match(sweepSrc, /_vaultFeedInFlight/);
+    assert.match(sweepSrc, /shouldQueueVaultFeedOnHeavyGate/);
     const jobs = fs.readFileSync(path.join(__dirname, '../lib/ops-jobs.js'), 'utf8');
     assert.match(jobs, /skipBeatRefresh: opts\.skipBeatRefresh !== false/);
   });
@@ -511,6 +513,32 @@ describe('vault-feed hang guards', () => {
       resetVaultFeedInFlightForTests();
       if (prevEnv == null) delete process.env.GV_RECRUITING_DATA_DIR;
       else process.env.GV_RECRUITING_DATA_DIR = prevEnv;
+    }
+  });
+
+  it('cheap cron/hub vault-feed does not wait on a stuck heavy-job gate', async () => {
+    const gate = require('../lib/heavy-job-gate');
+    const orig = gate.runHeavyJob;
+    gate.runHeavyJob = () => new Promise(() => {});
+    try {
+      assert.equal(shouldQueueVaultFeedOnHeavyGate({ trigger: 'cron' }), false);
+      assert.equal(shouldQueueVaultFeedOnHeavyGate({ skipBeatRefresh: true }), false);
+      assert.equal(shouldQueueVaultFeedOnHeavyGate({ skipBeatRefresh: false }), true);
+      const started = Date.now();
+      const report = await runVaultFeed2028Sweep({
+        dryRun: true,
+        skipPersist: true,
+        skipBeatRefresh: true,
+        skipBeatIngest: true,
+        skipAllowlistIntel: true,
+        skipOn3Articles: true,
+        candidates: [],
+      });
+      assert.ok(Date.now() - started < 2000);
+      assert.ok(report);
+      assert.ok(report.status === 'success' || report.status === 'warning');
+    } finally {
+      gate.runHeavyJob = orig;
     }
   });
 
