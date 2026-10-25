@@ -19,7 +19,9 @@ const {
   acceptVaultFeedSweep,
   refreshBeatsForVaultFeed,
   isVaultFeedInFlight,
+  isVaultFeedLockBlocking,
   resetVaultFeedInFlightForTests,
+  setVaultFeedInFlightForTests,
   CLASS_YEAR_MIN,
 } = require('../lib/vault-feed-2028-sweep');
 
@@ -115,15 +117,17 @@ describe('vault-feed-2028-sweep gates', () => {
 });
 
 describe('vault-feed 7am / 7pm ET slots', () => {
-  it('opens at 7–9 ET for the 7am slot, 19–21 for 7pm', () => {
+  it('7am slot is owed 7–18 ET; 7pm slot is owed 19–6 overnight', () => {
     assert.equal(vaultFeedSlotHour(7), 7);
     assert.equal(vaultFeedSlotHour(8), 7);
-    assert.equal(vaultFeedSlotHour(9), 7);
+    assert.equal(vaultFeedSlotHour(11), 7);
+    assert.equal(vaultFeedSlotHour(12), 7);
+    assert.equal(vaultFeedSlotHour(18), 7);
     assert.equal(vaultFeedSlotHour(19), 19);
     assert.equal(vaultFeedSlotHour(20), 19);
-    assert.equal(vaultFeedSlotHour(21), 19);
-    assert.equal(vaultFeedSlotHour(10), null);
-    assert.equal(vaultFeedSlotHour(22), null);
+    assert.equal(vaultFeedSlotHour(23), 19);
+    assert.equal(vaultFeedSlotHour(0), 19);
+    assert.equal(vaultFeedSlotHour(6), 19);
   });
 
   it('treats 8:05 ET as the same slot as 7:05 so a miss can catch up', () => {
@@ -133,18 +137,30 @@ describe('vault-feed 7am / 7pm ET slots', () => {
     const pm8 = new Date('2026-09-23T00:05:00.000Z'); // 8:05 PM EDT
     const pm9 = new Date('2026-09-23T01:05:00.000Z'); // 9:05 PM EDT
     const pm10 = new Date('2026-09-23T02:05:00.000Z'); // 10:05 PM EDT
+    const pm11 = new Date('2026-09-23T03:05:00.000Z'); // 11:05 PM EDT
+    const am11 = new Date('2026-09-22T15:05:00.000Z'); // 11:05 AM EDT
+    const noon = new Date('2026-09-22T16:05:00.000Z'); // 12:05 PM EDT
+    const am3 = new Date('2026-09-22T07:05:00.000Z'); // 3:05 AM EDT
     assert.equal(isVaultFeedEtWindow(am7), true);
     assert.equal(isVaultFeedEtWindow(am8), true);
+    assert.equal(isVaultFeedEtWindow(am11), true);
+    assert.equal(isVaultFeedEtWindow(noon), true);
+    assert.equal(isVaultFeedEtWindow(am3), true);
     assert.equal(isVaultFeedEtWindow(pm7), true);
     assert.equal(isVaultFeedEtWindow(pm8), true);
     assert.equal(isVaultFeedEtWindow(pm9), true);
-    assert.equal(isVaultFeedEtWindow(pm10), false);
+    assert.equal(isVaultFeedEtWindow(pm10), true);
+    assert.equal(isVaultFeedEtWindow(pm11), true);
     assert.equal(vaultFeedSlotId(am7), '2026-09-22T07');
     assert.equal(vaultFeedSlotId(am8), '2026-09-22T07');
+    assert.equal(vaultFeedSlotId(am11), '2026-09-22T07');
+    assert.equal(vaultFeedSlotId(noon), '2026-09-22T07');
+    assert.equal(vaultFeedSlotId(am3), '2026-09-21T19');
     assert.equal(vaultFeedSlotId(pm7), '2026-09-22T19');
     assert.equal(vaultFeedSlotId(pm8), '2026-09-22T19');
     assert.equal(vaultFeedSlotId(pm9), '2026-09-22T19');
-    assert.equal(vaultFeedSlotId(pm10), null);
+    assert.equal(vaultFeedSlotId(pm10), '2026-09-22T19');
+    assert.equal(vaultFeedSlotId(pm11), '2026-09-22T19');
   });
 
   it('EST 7pm / 8pm still map to the evening slot', () => {
@@ -380,6 +396,12 @@ describe('vault-feed hang guards', () => {
   });
 
   it('accept will not stack a second in-process sweep', async () => {
+    const fs = require('fs');
+    const os = require('os');
+    const path = require('path');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vf-2028-'));
+    const prevEnv = process.env.GV_RECRUITING_DATA_DIR;
+    process.env.GV_RECRUITING_DATA_DIR = dir;
     resetVaultFeedInFlightForTests();
     try {
       const first = acceptVaultFeedSweep({
@@ -408,6 +430,87 @@ describe('vault-feed hang guards', () => {
       assert.equal(isVaultFeedInFlight(), false);
     } finally {
       resetVaultFeedInFlightForTests();
+      if (prevEnv == null) delete process.env.GV_RECRUITING_DATA_DIR;
+      else process.env.GV_RECRUITING_DATA_DIR = prevEnv;
+    }
+  });
+
+  it('accept drops a stale in-process lock so the next 7am can start', () => {
+    const fs = require('fs');
+    const os = require('os');
+    const path = require('path');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vf-2028-'));
+    const prevEnv = process.env.GV_RECRUITING_DATA_DIR;
+    process.env.GV_RECRUITING_DATA_DIR = dir;
+    resetVaultFeedInFlightForTests();
+    const now = Date.parse('2026-10-25T11:05:00.000Z'); // 7:05 AM EDT
+    fs.writeFileSync(
+      path.join(dir, 'vault-feed-2028-last-report.json'),
+      `${JSON.stringify({
+        status: 'running',
+        slotId: '2026-10-24T19',
+        startedAt: '2026-10-25T01:05:39.226Z',
+        heartbeatAt: '2026-10-25T01:05:39.226Z',
+      })}\n`
+    );
+    setVaultFeedInFlightForTests({
+      startedAt: Date.parse('2026-10-25T01:05:39.226Z'),
+      slotId: '2026-10-24T19',
+      trigger: 'cron',
+    });
+    try {
+      assert.equal(isVaultFeedLockBlocking(now), false);
+      assert.equal(isVaultFeedInFlight(), false);
+      const accepted = acceptVaultFeedSweep({
+        launch: false,
+        skipPersist: true,
+        now: new Date(now),
+      });
+      assert.equal(accepted.started, true);
+      assert.equal(accepted.alreadyRunning, undefined);
+      assert.equal(accepted.report.slotId, '2026-10-25T07');
+    } finally {
+      resetVaultFeedInFlightForTests();
+      if (prevEnv == null) delete process.env.GV_RECRUITING_DATA_DIR;
+      else process.env.GV_RECRUITING_DATA_DIR = prevEnv;
+    }
+  });
+
+  it('Sunday noon still starts the missed 7am after Saturday 7pm died', () => {
+    const fs = require('fs');
+    const os = require('os');
+    const path = require('path');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vf-2028-'));
+    const prevEnv = process.env.GV_RECRUITING_DATA_DIR;
+    process.env.GV_RECRUITING_DATA_DIR = dir;
+    resetVaultFeedInFlightForTests();
+    const noon = new Date('2026-10-25T16:11:00.000Z'); // 12:11 PM EDT
+    fs.writeFileSync(
+      path.join(dir, 'vault-feed-2028-last-report.json'),
+      `${JSON.stringify({
+        ok: false,
+        status: 'error',
+        slotId: '2026-10-24T19',
+        startedAt: '2026-10-25T01:05:39.226Z',
+        finishedAt: '2026-10-25T01:20:39.226Z',
+        errors: [{ step: 'heartbeat', error: 'stale_running_no_heartbeat' }],
+      })}\n`
+    );
+    try {
+      assert.equal(vaultFeedSlotId(noon), '2026-10-25T07');
+      const accepted = acceptVaultFeedSweep({
+        launch: false,
+        skipPersist: true,
+        now: noon,
+      });
+      assert.equal(accepted.started, true);
+      assert.equal(accepted.alreadyDone, undefined);
+      assert.equal(accepted.alreadyRunning, undefined);
+      assert.equal(accepted.report.slotId, '2026-10-25T07');
+    } finally {
+      resetVaultFeedInFlightForTests();
+      if (prevEnv == null) delete process.env.GV_RECRUITING_DATA_DIR;
+      else process.env.GV_RECRUITING_DATA_DIR = prevEnv;
     }
   });
 

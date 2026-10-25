@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
  * Render cron — 2028+ vault feed at 7am / 7pm Eastern.
- * Schedule fires hourly; script no-ops unless America/New_York hour is 7–9
- * or 19–21 (8–9am / 8–9pm catch a missed 7 slot). Set VAULT_FEED_FORCE=true
- * to run outside the window (ops). The API accepts immediately and finishes
- * in the background — do not wait on the 30-minute pass.
+ * Schedule fires hourly. A missed 7am stays owed until 7pm; a missed 7pm
+ * stays owed until the next 7am. The API no-ops when that slot already
+ * succeeded. Set VAULT_FEED_FORCE=true to re-run a finished slot. The API
+ * accepts immediately and finishes in the background — do not wait on the
+ * 30-minute pass.
  */
 require('./render-cron-env');
 
@@ -27,7 +28,7 @@ async function runIngest() {
 
   const force = process.env.VAULT_FEED_FORCE === 'true';
   if (!force && !isVaultFeedEtWindow()) {
-    console.log('[vault-feed-2028-cron] skip — outside 7am/7pm ET window');
+    console.log('[vault-feed-2028-cron] skip — no owed 7am/7pm slot');
     return { ok: true, skipped: true, reason: 'outside_et_window' };
   }
 
