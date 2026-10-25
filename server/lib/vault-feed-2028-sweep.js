@@ -9,12 +9,11 @@
  *
  * Cron must accept-and-background. The 7am pass often takes ~30 minutes; a
  * 4-minute HTTP wait + retries will 502 the Starter dyno and the 7pm stamp
- * never writes. Hours 8–9 and 20–21 ET catch a missed 7 / 19 slot.
+ * never writes. A missed 7am stays owed until 7pm; a missed 7pm stays owed
+ * until the next 7am — so an 11:03 restart or a noon deploy still pours.
  * Scheduled cron skips allowlist, full beat-ingest, and the X/Nitter writer
- * pull (those have their own jobs). refreshBeatStream used to block the
- * Starter event loop so the 60s heartbeat never fired and the slot died as
- * stale_running_no_heartbeat. Hub Run and Job Queue skip the same pull.
- * An explicit refresh is budgeted (90s) and falls back to the beat cache.
+ * pull. An in-process lock only blocks while the disk heartbeat is live or
+ * the lock is younger than 15 min — a stale lock must not eat the next slot.
  */
 'use strict';
 
@@ -28,6 +27,10 @@ const CLASS_YEAR_MAX = 2030;
 const STALE_HEARTBEAT_MS = 15 * 60 * 1000;
 /** Hard cap when someone opts into a beat refresh on this pass. */
 const BEAT_REFRESH_BUDGET_MS = 90 * 1000;
+/** On3 team-news fetch must not hold the 7am/7pm stamp open. */
+const ON3_ARTICLE_BUDGET_MS = 20 * 1000;
+/** Kill a hung accept pass. Healthy cronLite can take ~30 min — do not cut it off. */
+const SWEEP_DEADLINE_MS = 45 * 60 * 1000;
 
 /** Process-local lock — disk heartbeat can go stale while the writer loop is still up. */
 let _vaultFeedInFlight = null;
@@ -59,7 +62,7 @@ function healStaleRunningReport(report) {
     heartbeatAt: new Date().toISOString(),
     errors: [...(report.errors || []), { step: 'heartbeat', error: 'stale_running_no_heartbeat' }],
     message:
-      'Vault feed started but did not finish — no heartbeat. Same-window 8–9am / 8–9pm catch-up will retry this slot.',
+      'Vault feed started but did not finish — no heartbeat. Hourly catch-up retries this slot until the next 7am / 7pm.',
   };
   try {
     writeReport(dead);
@@ -94,20 +97,29 @@ function etParts(date = new Date()) {
   };
 }
 
-/** Primary slot 7 or 19; hours 8–9 and 20–21 are the same-day catch-up. */
+/** 7am slot is owed 7–18 ET; 7pm slot is owed 19–23 and overnight 0–6. */
 function vaultFeedSlotHour(etHour) {
   const h = Number(etHour);
-  if (h === 7 || h === 8 || h === 9) return 7;
-  if (h === 19 || h === 20 || h === 21) return 19;
-  return null;
+  if (h >= 7 && h < 19) return 7;
+  return 19;
+}
+
+function previousEtYmd(p) {
+  const utcNoon = Date.UTC(Number(p.year), Number(p.month) - 1, Number(p.day) - 1, 12, 0, 0);
+  return etParts(new Date(utcNoon));
 }
 
 function vaultFeedSlotId(date = new Date()) {
   try {
     const p = etParts(date);
-    const slotHour = vaultFeedSlotHour(p.hour);
-    if (slotHour == null) return null;
-    return `${p.year}-${p.month}-${p.day}T${String(slotHour).padStart(2, '0')}`;
+    if (p.hour >= 7 && p.hour < 19) {
+      return `${p.year}-${p.month}-${p.day}T07`;
+    }
+    if (p.hour >= 19) {
+      return `${p.year}-${p.month}-${p.day}T19`;
+    }
+    const prev = previousEtYmd(p);
+    return `${prev.year}-${prev.month}-${prev.day}T19`;
   } catch {
     return null;
   }
@@ -123,23 +135,12 @@ function windowLabelForSlot(slotId) {
   return String(slotId || '').endsWith('T19') ? '7pm' : '7am';
 }
 
-/** True at 7–8am and 7–8pm ET so a missed :05 still runs on the next hour. */
+/** Always in a 7am or 7pm slot — hourly cron no-ops via alreadyFinishedThisSlot. */
 function isVaultFeedEtWindow(date = new Date()) {
   try {
-    return vaultFeedSlotHour(etParts(date).hour) != null;
+    return vaultFeedSlotId(date) != null;
   } catch {
-    const utc = date.getUTCHours();
-    // EDT 11–12 / 23–0 · EST 12–13 / 0–1
-    return (
-      utc === 11 ||
-      utc === 12 ||
-      utc === 13 ||
-      utc === 14 ||
-      utc === 23 ||
-      utc === 0 ||
-      utc === 1 ||
-      utc === 2
-    );
+    return true;
   }
 }
 
@@ -151,8 +152,8 @@ function isActiveVaultFeedRun(report, now = Date.now()) {
 }
 
 function alreadyFinishedThisSlot(report, date = new Date()) {
-  // A crashed/healed error stamp must NOT count as done — 8am/9am catch-up
-  // retries the same 7am slot instead of waiting until 7pm.
+  // A crashed/healed error stamp must NOT count as done — hourly catch-up
+  // retries the same slot until the next 7am / 7pm.
   if (!report || report.status === 'running' || report.status === 'error') return false;
   if (!report.finishedAt) return false;
   const slot = vaultFeedSlotId(date);
@@ -181,6 +182,31 @@ function isVaultFeedInFlight() {
 
 function resetVaultFeedInFlightForTests() {
   _vaultFeedInFlight = null;
+}
+
+function setVaultFeedInFlightForTests(value) {
+  _vaultFeedInFlight = value || { startedAt: Date.now(), slotId: 'test', trigger: 'test' };
+}
+
+/**
+ * Block only while this process is mid-pass AND (disk heartbeat is live
+ * or the lock is younger than 15 min). Negative lock age means the check
+ * clock is a slot date behind wall-clock startedAt — that is a live lock.
+ * A Saturday 9pm hang used to keep the lock for 14 hours and reject Sunday 7am.
+ */
+function isVaultFeedLockBlocking(now = Date.now()) {
+  if (!_vaultFeedInFlight) return false;
+  const prev = readLastReport();
+  if (isActiveVaultFeedRun(prev, now)) return true;
+  const started = Number(_vaultFeedInFlight.startedAt) || 0;
+  if (!started) {
+    _vaultFeedInFlight = null;
+    return false;
+  }
+  const lockAge = now - started;
+  if (lockAge < STALE_HEARTBEAT_MS) return true;
+  _vaultFeedInFlight = null;
+  return false;
 }
 
 /**
@@ -832,10 +858,28 @@ async function runVaultFeed2028SweepInner(opts = {}) {
     // 3) Merge On3 / Gators Online team-news articles into the beat candidate pool
     if (!opts.candidates && opts.skipOn3Articles !== true) {
       try {
-        const on3 = await collectOn3ArticlePosts({
-          lookbackHours: Math.max(lookbackHours, 96),
-          maxArticles: opts.on3MaxArticles != null ? Number(opts.on3MaxArticles) : 40,
-        });
+        const on3Budget =
+          opts.on3TimeoutMs != null ? Number(opts.on3TimeoutMs) : ON3_ARTICLE_BUDGET_MS;
+        const on3 = await Promise.race([
+          collectOn3ArticlePosts({
+            lookbackHours: Math.max(lookbackHours, 96),
+            maxArticles: opts.on3MaxArticles != null ? Number(opts.on3MaxArticles) : 40,
+          }),
+          new Promise((resolve) =>
+            setTimeout(
+              () =>
+                resolve({
+                  posts: [],
+                  scanned: 0,
+                  skippedNoId: 0,
+                  skippedOld: 0,
+                  error: 'on3_article_timeout',
+                  timedOut: true,
+                }),
+              Math.max(1000, on3Budget)
+            )
+          ),
+        ]);
         report.on3Articles = {
           scanned: on3.scanned,
           posts: on3.posts.length,
@@ -865,7 +909,12 @@ async function runVaultFeed2028SweepInner(opts = {}) {
     touchVaultFeedHeartbeat(report, { skipPersist: opts.skipPersist === true });
 
     let creates = 0;
+    let candidateIndex = 0;
     for (const candidate of candidates) {
+      candidateIndex += 1;
+      if (candidateIndex % 5 === 0) {
+        touchVaultFeedHeartbeat(report, { skipPersist: opts.skipPersist === true });
+      }
       if (candidate.kind === 'skip_2027') {
         report.skipped2027.push({
           reason: 'class_2027_handpick_only',
@@ -1100,7 +1149,7 @@ function acceptVaultFeedSweep(opts = {}) {
   const slotId = opts.slotId || vaultFeedSlotId(date);
   const prev = readLastReport();
 
-  if (_vaultFeedInFlight) {
+  if (isVaultFeedLockBlocking()) {
     return {
       ok: true,
       started: false,
@@ -1183,8 +1232,17 @@ function acceptVaultFeedSweep(opts = {}) {
   if (typeof hb.unref === 'function') hb.unref();
 
   setImmediate(() => {
+    const deadlineMs =
+      opts.sweepDeadlineMs != null ? Number(opts.sweepDeadlineMs) : SWEEP_DEADLINE_MS;
+    let deadlineTimer = null;
+    const deadline = new Promise((_, reject) => {
+      deadlineTimer = setTimeout(
+        () => reject(new Error('vault_feed_deadline')),
+        Math.max(5000, deadlineMs)
+      );
+    });
     Promise.resolve()
-      .then(() => runVaultFeed2028Sweep(sweepOpts))
+      .then(() => Promise.race([runVaultFeed2028Sweep(sweepOpts), deadline]))
       .catch((err) => {
         try {
           writeReport({
@@ -1201,6 +1259,7 @@ function acceptVaultFeedSweep(opts = {}) {
         }
       })
       .finally(() => {
+        if (deadlineTimer) clearTimeout(deadlineTimer);
         clearInterval(hb);
         _vaultFeedInFlight = null;
       });
@@ -1235,5 +1294,9 @@ module.exports = {
   BEAT_REFRESH_BUDGET_MS,
   refreshBeatsForVaultFeed,
   isVaultFeedInFlight,
+  isVaultFeedLockBlocking,
   resetVaultFeedInFlightForTests,
+  setVaultFeedInFlightForTests,
+  ON3_ARTICLE_BUDGET_MS,
+  SWEEP_DEADLINE_MS,
 };
