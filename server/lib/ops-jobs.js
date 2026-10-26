@@ -114,6 +114,8 @@ const JOBS = {
         maxCreates: opts.maxCreates != null ? Number(opts.maxCreates) : 40,
         lookbackHours: opts.lookbackHours != null ? Number(opts.lookbackHours) : 36,
         skipBeatRefresh: opts.skipBeatRefresh !== false,
+        skipBeatIngest: opts.skipBeatIngest !== false,
+        skipAllowlistIntel: opts.skipAllowlistIntel !== false,
       });
     }
   },
