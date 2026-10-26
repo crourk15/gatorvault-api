@@ -12,10 +12,9 @@
  * never writes. A missed 7am stays owed until 7pm; a missed 7pm stays owed
  * until the next 7am — so an 11:03 restart or a noon deploy still pours.
  * Scheduled cron skips allowlist, full beat-ingest, and the X/Nitter writer
- * pull. Cheap 7am/7pm + Hub Run must not wait on the heavy-job gate —
- * an on3-ingest hold used to leave 7pm "running" with zero names until
- * the deadline fired. An in-process lock only blocks while the disk
- * heartbeat is live or the lock is younger than 15 min.
+ * pull. Cheap 7am/7pm + Hub Run skip beat-ingest (ingest 502'd Starter)
+ * and must not wait on the heavy-job gate. An in-process lock only blocks
+ * while the disk heartbeat is live or the lock is younger than 15 min.
  */
 'use strict';
 
@@ -1140,6 +1139,19 @@ function shouldQueueVaultFeedOnHeavyGate(opts = {}) {
   return opts.skipBeatRefresh === false;
 }
 
+/** Cron + Hub default to cache-only. Beat ingest has its own job and 502'd Starter. */
+function resolveVaultFeedSkipFlags(opts = {}) {
+  const trigger = opts.trigger || 'cron';
+  const force = opts.force === true;
+  const lite = (trigger === 'cron' && force !== true) || trigger === 'hub';
+  const flag = (key) => (opts[key] != null ? opts[key] === true : lite);
+  return {
+    skipAllowlistIntel: flag('skipAllowlistIntel'),
+    skipBeatIngest: flag('skipBeatIngest'),
+    skipBeatRefresh: flag('skipBeatRefresh'),
+  };
+}
+
 async function runVaultFeed2028Sweep(opts = {}) {
   if (!shouldQueueVaultFeedOnHeavyGate(opts)) {
     return runVaultFeed2028SweepInner(opts);
@@ -1203,24 +1215,19 @@ function acceptVaultFeedSweep(opts = {}) {
     }
   }
 
-  // Scheduled 7am/7pm: named-candidate feed only. Allowlist, full beat-ingest,
-  // and the X/Nitter writer pull have their own crons. The writer pull used to
-  // starve the heartbeat so last-report sat on "running" with zero names.
-  const cronLite = trigger === 'cron' && force !== true;
-  const skipAllowlistIntel =
-    opts.skipAllowlistIntel != null ? opts.skipAllowlistIntel === true : cronLite;
-  const skipBeatIngest = opts.skipBeatIngest != null ? opts.skipBeatIngest === true : cronLite;
-  const skipBeatRefresh =
-    opts.skipBeatRefresh != null ? opts.skipBeatRefresh === true : cronLite || trigger === 'hub';
+  // Scheduled 7am/7pm + Hub Run: named-candidate feed only. Allowlist, full
+  // beat-ingest, and the X/Nitter writer pull have their own crons. Hub force
+  // used to still run beat-ingest and take the Starter dyno to 502.
+  const skips = resolveVaultFeedSkipFlags(opts);
 
   const sweepOpts = {
     dryRun: opts.dryRun === true,
     force,
     maxCreates: opts.maxCreates,
     lookbackHours: opts.lookbackHours,
-    skipBeatRefresh,
-    skipAllowlistIntel,
-    skipBeatIngest,
+    skipBeatRefresh: skips.skipBeatRefresh,
+    skipAllowlistIntel: skips.skipAllowlistIntel,
+    skipBeatIngest: skips.skipBeatIngest,
     skipOn3Articles: opts.skipOn3Articles,
     skipPersist: opts.skipPersist,
     beatRefreshTimeoutMs: opts.beatRefreshTimeoutMs,
@@ -1316,4 +1323,5 @@ module.exports = {
   ON3_ARTICLE_BUDGET_MS,
   SWEEP_DEADLINE_MS,
   shouldQueueVaultFeedOnHeavyGate,
+  resolveVaultFeedSkipFlags,
 };

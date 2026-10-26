@@ -23,6 +23,7 @@ const {
   resetVaultFeedInFlightForTests,
   setVaultFeedInFlightForTests,
   shouldQueueVaultFeedOnHeavyGate,
+  resolveVaultFeedSkipFlags,
   CLASS_YEAR_MIN,
 } = require('../lib/vault-feed-2028-sweep');
 
@@ -358,15 +359,17 @@ describe('summarizeFeedResult proof detail', () => {
     const path = require('node:path');
     const src = fs.readFileSync(path.join(__dirname, '../lib/admin-hub-routes.js'), 'utf8');
     assert.match(src, /skipBeatRefresh: req\.body\?\.skipBeatRefresh !== false/);
+    assert.match(src, /skipBeatIngest: req\.body\?\.skipBeatIngest !== false/);
     const sweepSrc = fs.readFileSync(path.join(__dirname, '../lib/vault-feed-2028-sweep.js'), 'utf8');
     assert.match(sweepSrc, /touchVaultFeedHeartbeat\(report/);
-    assert.match(sweepSrc, /skipBeatRefresh != null \? opts\.skipBeatRefresh === true : cronLite/);
+    assert.match(sweepSrc, /resolveVaultFeedSkipFlags/);
     assert.match(sweepSrc, /refreshBeatsForVaultFeed/);
     assert.match(sweepSrc, /beat_refresh_timeout/);
     assert.match(sweepSrc, /_vaultFeedInFlight/);
     assert.match(sweepSrc, /shouldQueueVaultFeedOnHeavyGate/);
     const jobs = fs.readFileSync(path.join(__dirname, '../lib/ops-jobs.js'), 'utf8');
     assert.match(jobs, /skipBeatRefresh: opts\.skipBeatRefresh !== false/);
+    assert.match(jobs, /skipBeatIngest: opts\.skipBeatIngest !== false/);
   });
 });
 
@@ -549,6 +552,17 @@ describe('vault-feed hang guards', () => {
       if (prevEnv == null) delete process.env.GV_RECRUITING_DATA_DIR;
       else process.env.GV_RECRUITING_DATA_DIR = prevEnv;
     }
+  });
+
+  it('hub force-start and cron skip beat ingest by default', () => {
+    const hub = resolveVaultFeedSkipFlags({ trigger: 'hub', force: true });
+    assert.equal(hub.skipBeatIngest, true);
+    assert.equal(hub.skipBeatRefresh, true);
+    assert.equal(hub.skipAllowlistIntel, true);
+    const cron = resolveVaultFeedSkipFlags({ trigger: 'cron' });
+    assert.equal(cron.skipBeatIngest, true);
+    const explicit = resolveVaultFeedSkipFlags({ trigger: 'hub', force: true, skipBeatIngest: false });
+    assert.equal(explicit.skipBeatIngest, false);
   });
 
   it('cheap cron/hub vault-feed does not wait on a stuck heavy-job gate', async () => {
