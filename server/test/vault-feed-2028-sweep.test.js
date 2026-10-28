@@ -8,6 +8,9 @@ const {
   collectBeatCandidates,
   pickClassYear,
   isBlockedStaff,
+  isVaultFeedProspectName,
+  vaultFeedPourLooksComplete,
+  healStaleRunningReport,
   summarizeFeedResult,
   runVaultFeed2028Sweep,
   isVaultFeedEtWindow,
@@ -15,7 +18,6 @@ const {
   vaultFeedSlotId,
   alreadyFinishedThisSlot,
   isActiveVaultFeedRun,
-  healStaleRunningReport,
   acceptVaultFeedSweep,
   refreshBeatsForVaultFeed,
   isVaultFeedInFlight,
@@ -39,6 +41,50 @@ describe('vault-feed-2028-sweep gates', () => {
     assert.equal(isBlockedStaff('Jon Sumrall', null), true);
     assert.equal(isBlockedStaff("Jon Sumrall's", null), true);
     assert.equal(isBlockedStaff('Asher Ghioto', 'asher-ghioto'), false);
+  });
+
+  it('rejects venue / headline identities from the pour', () => {
+    assert.equal(isVaultFeedProspectName('Hudson West'), true);
+    assert.equal(isVaultFeedProspectName('Dominick Harris-Payne'), true);
+    assert.equal(isVaultFeedProspectName('Mercedes-Benz Stadium'), false);
+    assert.equal(isVaultFeedProspectName('College Football Playoff'), false);
+    assert.equal(isVaultFeedProspectName('Coach Sumrall'), false);
+    assert.equal(isVaultFeedProspectName('Of Th'), false);
+    assert.equal(isVaultFeedProspectName('recruiting trail'), false);
+    assert.equal(isVaultFeedProspectName('Jon Sumrall'), false);
+  });
+
+  it('cheap pass skips junk and does not provision new names', async () => {
+    const report = await runVaultFeed2028Sweep({
+      dryRun: true,
+      skipBeatIngest: true,
+      skipAllowlistIntel: true,
+      skipBeatRefresh: true,
+      skipOn3Articles: true,
+      skipPersist: true,
+      candidates: [
+        {
+          kind: 'named',
+          playerName: 'Mercedes-Benz Stadium',
+          playerSlug: 'mercedes-benz-stadium',
+          classYear: 2028,
+          text: 'Florida-Georgia at Mercedes-Benz Stadium',
+          trusted: true,
+        },
+        {
+          kind: 'named',
+          playerName: 'Kellen Vaultfeed',
+          playerSlug: 'kellen-vaultfeed',
+          classYear: 2028,
+          text: '2028 Kellen Vaultfeed visits Florida',
+          trusted: true,
+        },
+      ],
+    });
+    assert.equal(report.created.length, 0);
+    assert.equal(report.updated.length, 0);
+    assert.ok(report.skipped.some((r) => r.reason === 'junk_identity'));
+    assert.ok(report.skipped.some((r) => r.reason === 'skip_provision_existing_only'));
   });
 
   it('collectBeatCandidates skips pure-2027 headlines', () => {
@@ -218,6 +264,42 @@ describe('vault-feed 7am / 7pm ET slots', () => {
     };
     assert.equal(alreadyFinishedThisSlot(morningDone, am), true);
     assert.equal(alreadyFinishedThisSlot(morningDone, pm), false);
+  });
+
+  it('healStaleRunningReport closes a poured slot as warning, not error', () => {
+    const fs = require('fs');
+    const os = require('os');
+    const path = require('path');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vf-2028-'));
+    const prevEnv = process.env.GV_RECRUITING_DATA_DIR;
+    process.env.GV_RECRUITING_DATA_DIR = dir;
+    const poured = {
+      status: 'running',
+      startedAt: '2026-10-28T00:05:00.000Z',
+      heartbeatAt: '2026-10-28T00:05:00.000Z',
+      slotId: '2026-10-27T19',
+      window: '7pm',
+      errors: [],
+      created: [],
+      updated: [
+        {
+          playerName: 'Hudson West',
+          playerSlug: 'hudson-west',
+          feedOk: true,
+          action: 'fed_futurecast',
+        },
+      ],
+    };
+    try {
+      assert.equal(vaultFeedPourLooksComplete(poured), true);
+      const healed = healStaleRunningReport(poured);
+      assert.equal(healed.status, 'warning');
+      assert.equal(healed.ok, true);
+      assert.equal(alreadyFinishedThisSlot(healed, new Date('2026-10-28T01:20:00.000Z')), true);
+    } finally {
+      if (prevEnv == null) delete process.env.GV_RECRUITING_DATA_DIR;
+      else process.env.GV_RECRUITING_DATA_DIR = prevEnv;
+    }
   });
 
   it('healStaleRunningReport marks a dead running stamp as error', () => {
@@ -559,6 +641,7 @@ describe('vault-feed hang guards', () => {
     assert.equal(hub.skipBeatIngest, true);
     assert.equal(hub.skipBeatRefresh, true);
     assert.equal(hub.skipAllowlistIntel, true);
+    assert.equal(hub.skipProvision, true);
     const cron = resolveVaultFeedSkipFlags({ trigger: 'cron' });
     assert.equal(cron.skipBeatIngest, true);
     const explicit = resolveVaultFeedSkipFlags({ trigger: 'hub', force: true, skipBeatIngest: false });

@@ -30,8 +30,10 @@ const STALE_HEARTBEAT_MS = 15 * 60 * 1000;
 const BEAT_REFRESH_BUDGET_MS = 90 * 1000;
 /** On3 team-news fetch must not hold the 7am/7pm stamp open. */
 const ON3_ARTICLE_BUDGET_MS = 20 * 1000;
-/** Kill a hung accept pass. Healthy cronLite can take ~30 min — do not cut it off. */
+/** Kill a hung accept pass. Unique-slug feeds should finish well under this. */
 const SWEEP_DEADLINE_MS = 45 * 60 * 1000;
+/** One FutureCast write per slug. Repeat tweets must not re-feed the same name. */
+const MAX_EXISTING_FEEDS = 16;
 
 /** Process-local lock — disk heartbeat can go stale while the writer loop is still up. */
 let _vaultFeedInFlight = null;
@@ -51,26 +53,52 @@ function readLastReport(opts = {}) {
   return report;
 }
 
-/** Turn a dead "running" stamp into an error so Hub is not stuck on running. */
+/** True when this pass already wrote real FutureCast names (slot can close). */
+function vaultFeedPourLooksComplete(report) {
+  if (!report || typeof report !== 'object') return false;
+  const okUpdates = (report.updated || []).filter((row) => row && row.feedOk !== false);
+  const created = Array.isArray(report.created) ? report.created : [];
+  return okUpdates.length > 0 || created.length > 0;
+}
+
+/**
+ * Close a dead/interrupted pass. If names already landed, the slot is done
+ * (warning) — do not mark error and re-pour the same board. Empty death
+ * stays error so hourly catch-up retries.
+ */
+function finalizeCrashedVaultFeed(report, err, step) {
+  const next = { ...(report || {}) };
+  const error = (err && (err.message || err.error)) || String(err || 'vault_feed_failed');
+  next.errors = [...(next.errors || []), { step: step || 'sweep', error }];
+  next.heartbeatAt = new Date().toISOString();
+  if (vaultFeedPourLooksComplete(next)) {
+    finalizeSummary(next);
+    next.ok = true;
+    next.status = 'warning';
+    next.message = `${next.message} · slot closed after interrupt`;
+    return next;
+  }
+  next.ok = false;
+  next.status = 'error';
+  next.finishedAt = new Date().toISOString();
+  next.message =
+    step === 'heartbeat'
+      ? 'Vault feed started but did not finish — no heartbeat. Hourly catch-up retries this slot until the next 7am / 7pm.'
+      : error || 'Vault feed failed';
+  return next;
+}
+
+/** Turn a dead "running" stamp into a closed slot (warning if it already poured). */
 function healStaleRunningReport(report) {
   if (!report || report.status !== 'running') return report;
   if (isActiveVaultFeedRun(report)) return report;
-  const dead = {
-    ...report,
-    ok: false,
-    status: 'error',
-    finishedAt: new Date().toISOString(),
-    heartbeatAt: new Date().toISOString(),
-    errors: [...(report.errors || []), { step: 'heartbeat', error: 'stale_running_no_heartbeat' }],
-    message:
-      'Vault feed started but did not finish — no heartbeat. Hourly catch-up retries this slot until the next 7am / 7pm.',
-  };
+  const closed = finalizeCrashedVaultFeed(report, { error: 'stale_running_no_heartbeat' }, 'heartbeat');
   try {
-    writeReport(dead);
+    writeReport(closed);
   } catch {
     /* still return honest status */
   }
-  return dead;
+  return closed;
 }
 
 function writeReport(report) {
@@ -341,6 +369,32 @@ function isBlockedStaff(name, slug) {
   return false;
 }
 
+/**
+ * Beat resolvers still emit venues / headlines ("Mercedes-Benz Stadium",
+ * "College Football Playoff"). Those must never enter Created/Updated.
+ */
+function isVaultFeedProspectName(name) {
+  const trimmed = String(name || '').trim();
+  if (!trimmed) return false;
+  try {
+    const { isValidPlayerName } = require('./x-autoposter-player-context');
+    if (!isValidPlayerName(trimmed)) return false;
+  } catch {
+    if (trimmed.split(/\s+/).filter(Boolean).length < 2) return false;
+  }
+  if (isBlockedStaff(trimmed, null)) return false;
+  if (trimmed.split(/\s+/).length > 4) return false;
+  if (/^(of|the|a|an)\s+/i.test(trimmed)) return false;
+  if (
+    /\b(stadium|arena|coliseum|playoff|poll|rankings|cocktail|bye week|press conference|recruiting trail|college football|sec basketball|power rankings|watch$|^coach\b|^everything\b|removed$|raves about|eyeing another)\b/i.test(
+      trimmed
+    )
+  ) {
+    return false;
+  }
+  return true;
+}
+
 function emptyReport(opts = {}) {
   const slotId = opts.slotId || vaultFeedSlotId() || null;
   const startedAt = new Date().toISOString();
@@ -378,7 +432,9 @@ function emptyReport(opts = {}) {
 }
 
 function explainEmpty(report) {
-  if (report.created.length || report.updated.length) return null;
+  const created = report.created || [];
+  const updated = report.updated || [];
+  if (created.length || updated.length) return null;
   if (report.errors?.some((e) => e.step === 'getBeatPosts' || e.step === 'refreshBeatStream')) {
     return 'beat_fetch_failed';
   }
@@ -386,15 +442,22 @@ function explainEmpty(report) {
   if (!report.candidatesNamed) {
     return 'beats_present_but_no_named_2028_plus_in_lookback';
   }
-  if (report.unresolved.length) return 'candidates_unresolved_only';
-  if (report.skipped2027.length && !report.created.length) return 'only_2027_or_skipped';
+  if ((report.unresolved || []).length) return 'candidates_unresolved_only';
+  if ((report.skipped2027 || []).length && !created.length) return 'only_2027_or_skipped';
   return 'no_creates_or_updates';
 }
 
 function finalizeSummary(report) {
+  report.created = report.created || [];
+  report.updated = report.updated || [];
+  report.skipped2027 = report.skipped2027 || [];
+  report.blockedStaff = report.blockedStaff || [];
+  report.unresolved = report.unresolved || [];
+  report.skipped = report.skipped || [];
+  report.errors = report.errors || [];
   report.finishedAt = new Date().toISOString();
   report.emptyReason = explainEmpty(report);
-  report.status = report.errors?.length ? 'warning' : 'success';
+  report.status = report.errors.length ? 'warning' : 'success';
   report.summary = {
     createdCount: report.created.length,
     updatedCount: report.updated.length,
@@ -476,12 +539,7 @@ function collectBeatCandidates(posts = [], { lookbackHours = 36 } = {}) {
     if (!hit?.playerName) continue;
 
     const name = String(hit.playerName).trim();
-    try {
-      const { isValidPlayerName } = require('./x-autoposter-player-context');
-      if (!isValidPlayerName(name)) continue;
-    } catch {
-      /* optional */
-    }
+    if (!isVaultFeedProspectName(name)) continue;
     const slug = String(hit.playerSlug || '').toLowerCase() || null;
     const key = `${slug || name.toLowerCase()}|${text.slice(0, 40)}`;
     if (seen.has(key)) continue;
@@ -781,6 +839,9 @@ async function runVaultFeed2028SweepInner(opts = {}) {
   const maxCreates = opts.maxCreates != null ? Number(opts.maxCreates) : 40;
   const skipBeatIngest = opts.skipBeatIngest === true;
   const skipAllowlistIntel = opts.skipAllowlistIntel === true;
+  const skipProvision = opts.skipProvision != null ? opts.skipProvision === true : skipBeatIngest;
+  const maxUpdates =
+    opts.maxUpdates != null ? Number(opts.maxUpdates) : MAX_EXISTING_FEEDS;
   const report = emptyReport(opts);
   if (!opts.skipPersist) touchVaultFeedHeartbeat(report, { skipPersist: false });
 
@@ -911,11 +972,10 @@ async function runVaultFeed2028SweepInner(opts = {}) {
 
     let creates = 0;
     let candidateIndex = 0;
+    const fedSlugs = new Set();
     for (const candidate of candidates) {
       candidateIndex += 1;
-      if (candidateIndex % 5 === 0) {
-        touchVaultFeedHeartbeat(report, { skipPersist: opts.skipPersist === true });
-      }
+      touchVaultFeedHeartbeat(report, { skipPersist: opts.skipPersist === true });
       if (candidate.kind === 'skip_2027') {
         report.skipped2027.push({
           reason: 'class_2027_handpick_only',
@@ -932,6 +992,15 @@ async function runVaultFeed2028SweepInner(opts = {}) {
           playerName: name,
           playerSlug: slugHint,
           reason: 'staff_or_coach',
+          handle: candidate.handle || null,
+        });
+        continue;
+      }
+      if (!isVaultFeedProspectName(name)) {
+        report.skipped.push({
+          playerName: name,
+          playerSlug: slugHint || null,
+          reason: 'junk_identity',
           handle: candidate.handle || null,
         });
         continue;
@@ -980,24 +1049,55 @@ async function runVaultFeed2028SweepInner(opts = {}) {
           });
           continue;
         }
+        const slugKey = String(existing.slug).toLowerCase();
+        if (fedSlugs.has(slugKey)) continue;
+        if (fedSlugs.size >= maxUpdates) {
+          report.skipped.push({
+            playerName: existing.name || name,
+            playerSlug: existing.slug,
+            reason: 'max_updates_reached',
+          });
+          continue;
+        }
         const fed = await feedExistingSlug(existing.slug, {
           signalType: 'vault_feed_2028_existing',
           dryRun,
+          timeoutMs: opts.feedTimeoutMs != null ? Number(opts.feedTimeoutMs) : 12000,
         });
+        if (fed?.ok === false) {
+          report.skipped.push({
+            playerName: existing.name || name,
+            playerSlug: existing.slug,
+            reason: fed.error || fed.reason || 'feed_failed',
+          });
+          continue;
+        }
+        fedSlugs.add(slugKey);
         const feedSummary = summarizeFeedResult(fed);
         report.updated.push({
           playerName: existing.name || name,
           playerSlug: existing.slug,
           classYear: existing.classYear || candidate.classYear,
           action: dryRun ? 'would_update' : 'fed_futurecast',
-          feedOk: fed?.ok !== false,
-          feedError: fed?.error || fed?.reason || null,
+          feedOk: true,
+          feedError: null,
           whatChanged: feedSummary.whatChanged,
           ufPct: feedSummary.ufPct,
           promoted: feedSummary.promoted,
           handle: candidate.handle || null,
           sourceUrl: candidate.url || null,
           sourcePreview: String(candidate.text || '').slice(0, 160),
+        });
+        continue;
+      }
+
+      // Cheap cron/Hub: update existing 2028+ only. Provision has its own job
+      // and is what invented stadium / "Of Th" phantoms.
+      if (skipProvision) {
+        report.skipped.push({
+          playerName: name,
+          playerSlug: slugHint || null,
+          reason: 'skip_provision_existing_only',
         });
         continue;
       }
@@ -1149,6 +1249,7 @@ function resolveVaultFeedSkipFlags(opts = {}) {
     skipAllowlistIntel: flag('skipAllowlistIntel'),
     skipBeatIngest: flag('skipBeatIngest'),
     skipBeatRefresh: flag('skipBeatRefresh'),
+    skipProvision: flag('skipProvision'),
   };
 }
 
@@ -1228,6 +1329,7 @@ function acceptVaultFeedSweep(opts = {}) {
     skipBeatRefresh: skips.skipBeatRefresh,
     skipAllowlistIntel: skips.skipAllowlistIntel,
     skipBeatIngest: skips.skipBeatIngest,
+    skipProvision: skips.skipProvision,
     skipOn3Articles: opts.skipOn3Articles,
     skipPersist: opts.skipPersist,
     beatRefreshTimeoutMs: opts.beatRefreshTimeoutMs,
@@ -1268,15 +1370,9 @@ function acceptVaultFeedSweep(opts = {}) {
       .then(() => Promise.race([runVaultFeed2028Sweep(sweepOpts), startDeadline()]))
       .catch((err) => {
         try {
-          writeReport({
-            ...running,
-            ok: false,
-            status: 'error',
-            finishedAt: new Date().toISOString(),
-            heartbeatAt: new Date().toISOString(),
-            errors: [{ step: trigger, error: err.message || String(err) }],
-            message: err.message || 'Vault feed failed',
-          });
+          const live = readLastReport() || running;
+          if (live.status === 'success' || live.status === 'warning') return;
+          writeReport(finalizeCrashedVaultFeed(live, err, trigger));
         } catch {
           /* ignore */
         }
@@ -1300,6 +1396,9 @@ module.exports = {
   pickClassYear,
   extractClassYears,
   isBlockedStaff,
+  isVaultFeedProspectName,
+  vaultFeedPourLooksComplete,
+  finalizeCrashedVaultFeed,
   summarizeFeedResult,
   readLastReport,
   writeReport,
@@ -1322,6 +1421,7 @@ module.exports = {
   setVaultFeedInFlightForTests,
   ON3_ARTICLE_BUDGET_MS,
   SWEEP_DEADLINE_MS,
+  MAX_EXISTING_FEEDS,
   shouldQueueVaultFeedOnHeavyGate,
   resolveVaultFeedSkipFlags,
 };
