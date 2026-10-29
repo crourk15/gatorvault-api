@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-28T17:42:37.658Z",
+  "updatedAt": "2026-10-29T19:39:37.939Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -13491,26 +13491,28 @@
           "writerId": "power",
           "outlet": "GatorVault film desk (Hudl)",
           "url": "https://www.hudl.com/embed/video/3/22702365/68dd4f84c72735906301536b",
-          "publishedAt": "2026-08-04"
+          "publishedAt": "2026-10-29"
         }
       ],
       "strengths": [
-        "Player covers ground with 6-3 length and range when flow stretches the field.",
-        "Player shows instincts to trigger downhill without false-stepping every snap.",
-        "Player has the frame and athleticism to match tight ends/slot in space as he fills out."
+        "Player covers ground with 6-3 length and range when flow stretches the field — second-level chase from hash to hash on Eau Gallie soph tape.",
+        "Player triggers downhill without a false step, reading the mesh and filling the alley before the back can bounce.",
+        "Player has the frame and length to match tight ends and the slot in space; coverage drop stays over the number instead of drifting."
       ],
       "weaknesses": [
         "Player (6-3 / 190) still needs mass to take on SEC OL climb blocks in the box."
       ],
       "comparison": "Player comps to Devin Lloyd — 6-3 rangy linebacker with length to chase, cover, and fill before he packs on MIKE mass.",
       "schemeFit": "Player fits White 3-3-5 second-level LB who chases with range and can cover in space while adding mass.",
-      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
-      "projection": "Player projects as a Year 2 SEC starter at WILL/MIKE (special teams / packages Year 1). Ceiling: every-down SEC linebacker — the rangy second-level piece who can chase, cover, and fill.",
-      "insiderNotes": "Player is a rangy 6-3 linebacker who covers ground when flow stretches the field and triggers downhill without false-stepping every snap. Frame and athleticism to match tight ends and slots in space. Wins with length, instincts, and range — a WILL/MIKE who can run and hit.",
-      "recruitingStory": "Gabriel Player is a 4-star LB · listed 6-3 / 190 · Eau Gallie (Melbourne, FL) (FL) · open-board Florida target.",
+      "staffNotes": "Vault film desk re-locked 2026-10-29 from the same Eau Gallie soph Hudl (4:18) already verified 2026-08-04. Comp size-matched within ~1–2\" — Devin Lloyd 6-3 mold, not a Florida-alum default. Not PROVISIONAL.",
+      "projection": "Player projects as special teams and nickel/WILL packages Year 1, then Year 2 compete for every-down WILL/MIKE. Ceiling: rangy SEC starter who can chase, cover, and fill.",
+      "insiderNotes": "Player is a rangy 6-3 linebacker who covers ground when flow stretches the field and triggers downhill without false-stepping every snap. Frame and athleticism to match tight ends and slots in space. Wins with length, instincts, and range — a WILL/MIKE who can run and hit. Hardmon was in Melbourne last week; Gainesville is the next campus ask.",
+      "recruitingStory": "Gabriel Player is a 4-star 2028 LB · 6-3 / 190 · Eau Gallie (Melbourne, FL) · uncommitted. Bam Hardmon hit the school last week; a Gainesville trip is the next ask. Miami still leads the visit trail (4 UOV, last 2026-09-26) and On3 Journey (~94%). Florida has one UOV (2026-03-27).",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-08-06T21:24:31.380Z"
+      "updatedAt": "2026-10-29T19:39:37.923Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "brady-quinn": {
       "playerSlug": "brady-quinn",
