@@ -101,6 +101,52 @@ function preferKickoffDate(live: string, seed?: string): string {
   return live || seedDate;
 }
 
+function isStubKeyTitle(title: string): boolean {
+  return /win early downs|protect the football|limit explosives/i.test(title);
+}
+
+/** iOS last-good can keep Saturday's empty Oklahoma keys after the live board landed. */
+function preferOklahomaIntel(
+  live: ScheduleGame,
+  seed?: ScheduleGame
+): Pick<ScheduleGame, 'keys' | 'swing'> & {
+  howUFWins?: string[];
+  film?: string;
+  scoutingReport?: string;
+} {
+  const liveKeys = Array.isArray(live.keys)
+    ? live.keys.map((k) => String(k || '').trim()).filter(Boolean)
+    : [];
+  const stub = liveKeys.some(isStubKeyTitle);
+  if (liveKeys.length && !stub) {
+    return {
+      keys: liveKeys,
+      swing: Array.isArray(live.swing) ? live.swing : [],
+      ...(Array.isArray(live.howUFWins) && live.howUFWins.length
+        ? { howUFWins: live.howUFWins }
+        : {}),
+    };
+  }
+  if (seed?.keys?.length) {
+    return {
+      keys: seed.keys.slice(),
+      swing: Array.isArray(seed.swing) ? seed.swing.slice() : [],
+      ...(Array.isArray(seed.howUFWins) && seed.howUFWins.length
+        ? { howUFWins: seed.howUFWins.slice() }
+        : {}),
+      ...(seed.film ? { film: seed.film } : {}),
+      ...(seed.scoutingReport ? { scoutingReport: seed.scoutingReport } : {}),
+    };
+  }
+  return {
+    keys: liveKeys,
+    swing: Array.isArray(live.swing) ? live.swing : [],
+    ...(Array.isArray(live.howUFWins) && live.howUFWins.length
+      ? { howUFWins: live.howUFWins }
+      : {}),
+  };
+}
+
 function preferTv(live: unknown, seed?: string): string | undefined {
   const liveTv = String(live || '').trim();
   const seedTv = String(seed || '').trim();
@@ -129,6 +175,7 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
       const predConfidence = Number(g.predConfidence ?? seed?.predConfidence);
       const predMovement = g.predMovement || seed?.predMovement;
       const ufPctDelta = Number(g.ufPctDelta ?? seed?.ufPctDelta);
+      const oklahomaIntel = id === 'oklahoma' ? preferOklahomaIntel(g, seed) : null;
       return {
         ...g,
         id,
@@ -143,8 +190,9 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
         label: String(g.label || id).trim(),
         venue: String(g.venue || '').trim(),
         ufPct: Number.isFinite(Number(g.ufPct)) ? Number(g.ufPct) : 50,
-        keys: Array.isArray(g.keys) ? g.keys : [],
-        swing: Array.isArray(g.swing) ? g.swing : [],
+        keys: oklahomaIntel ? oklahomaIntel.keys : Array.isArray(g.keys) ? g.keys : [],
+        swing: oklahomaIntel ? oklahomaIntel.swing : Array.isArray(g.swing) ? g.swing : [],
+        ...(oklahomaIntel?.howUFWins ? { howUFWins: oklahomaIntel.howUFWins } : {}),
         ...(Array.isArray(g.radar) && g.radar.length
           ? {
               radar: g.radar
@@ -158,7 +206,7 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
           : seed?.radar
             ? { radar: seed.radar }
             : {}),
-        film: lockBroadcastWindow(String(g.film || '')),
+        film: lockBroadcastWindow(String(oklahomaIntel?.film || g.film || '')),
         filmNotes: Array.isArray(g.filmNotes)
           ? g.filmNotes.map((n) => lockBroadcastWindow(String(n || '').trim())).filter(Boolean)
           : seed?.filmNotes?.map((n) => lockBroadcastWindow(n)),
@@ -171,8 +219,8 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
           ? g.defenseScout.map((n) => String(n || '').trim()).filter(Boolean)
           : undefined,
         scoutingReport:
-          g.scoutingReport != null && String(g.scoutingReport).trim()
-            ? lockBroadcastWindow(String(g.scoutingReport).trim())
+          String(oklahomaIntel?.scoutingReport || g.scoutingReport || '').trim()
+            ? lockBroadcastWindow(String(oklahomaIntel?.scoutingReport || g.scoutingReport || '').trim())
             : undefined,
         pred: String(g.pred || ''),
         predUF: Number.isFinite(Number(g.predUF)) ? Number(g.predUF) : 0,
@@ -217,18 +265,25 @@ function lastGoodKey(season: number): string {
   return `${LAST_GOOD_PREFIX}${season}`;
 }
 
+function hydrateBoard(parsed: ScheduleBoardLive | null | undefined): ScheduleBoardLive | null {
+  const games = normalizeGames(parsed?.games);
+  if (!games.length) return null;
+  const currentGameId = String(parsed?.currentGameId || '').trim() || undefined;
+  const predThrough = String(parsed?.predThrough || '').trim() || undefined;
+  return { games, currentGameId, ...(predThrough ? { predThrough } : {}) };
+}
+
 function readLastGood(season: number): ScheduleBoardLive | null {
-  if (lastGoodMemory[season]?.games?.length) return lastGoodMemory[season];
+  if (lastGoodMemory[season]?.games?.length) {
+    return hydrateBoard(lastGoodMemory[season]);
+  }
   if (typeof window === 'undefined' || !window.localStorage) return null;
   try {
     const raw = window.localStorage.getItem(lastGoodKey(season));
     if (!raw) return null;
     const parsed = JSON.parse(raw) as ScheduleBoardLive;
-    const games = normalizeGames(parsed?.games);
-    if (!games.length) return null;
-    const currentGameId = String(parsed.currentGameId || '').trim() || undefined;
-    const predThrough = String(parsed.predThrough || '').trim() || undefined;
-    const board = { games, currentGameId, ...(predThrough ? { predThrough } : {}) };
+    const board = hydrateBoard(parsed);
+    if (!board) return null;
     lastGoodMemory[season] = board;
     return board;
   } catch {
@@ -334,11 +389,13 @@ export const __scheduleApiTest = {
   normalizeGames,
   normalizeUniform,
   mergeUniform,
+  preferOklahomaIntel,
   writeLastGood,
   readLastGood,
   clearLastGood,
   lastGoodKey,
   stripRemainingPreds,
+  sessionLive,
   inflight,
   SCHEDULE_FETCH_OPTS,
 };
