@@ -448,7 +448,7 @@ const LEFTOVER_TEXAS_NOW_RE =
   /texas at dkr|dkr-texas|4-2 heading into saturday|12:00\s*pm\s*·\s*abc|easton royal flips to florida/i;
 /** Posted Georgia final — last-good Atlanta / 5-2 must not beat Oklahoma week. */
 const LEFTOVER_GEORGIA_NOW_RE =
-  /georgia at mercedes|mercedes-benz|5-2 heading into saturday|florida 27,\s*texas 24|3:30\s*pm\s*·\s*abc/i;
+  /georgia at mercedes|mercedes-benz|5-2 heading into saturday|florida 27,\s*texas 24/i;
 const OU_NOW_GAME = 'Oklahoma in the Swamp — 7:45 PM · SEC Network';
 const OU_NOW_SEASON = '5-3 · SEC home Saturday';
 const OU_NOW_NEWS = 'Florida 8, Georgia 27';

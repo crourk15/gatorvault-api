@@ -4,12 +4,12 @@ const assert = require('assert');
 const { describe, it } = require('node:test');
 const scheduleBoard = require('../lib/schedule-board');
 
-/** Week 8 remaining-season board — scoring form after Texas 27-24. Georgia is now final. */
+/** Week 8 form overlay after Georgia 8-27 (season 35.6 PPG). */
 const WEEK8_REMAINING = {
-  oklahoma: { ufPct: 63, pred: 'UF 33 · Oklahoma 27', predUF: 33, predOpp: 27 },
-  kentucky: { ufPct: 63, pred: 'UF 29 · Kentucky 23', predUF: 29, predOpp: 23 },
-  vandy: { ufPct: 71, pred: 'UF 32 · Vanderbilt 22', predUF: 32, predOpp: 22 },
-  fsu: { ufPct: 63, pred: 'UF 30 · FSU 24', predUF: 30, predOpp: 24 },
+  oklahoma: { ufPct: 50, pred: 'UF 27 · Oklahoma 27', predUF: 27, predOpp: 27 },
+  kentucky: { ufPct: 52, pred: 'UF 24 · Kentucky 23', predUF: 24, predOpp: 23 },
+  vandy: { ufPct: 58, pred: 'UF 26 · Vanderbilt 22', predUF: 26, predOpp: 22 },
+  fsu: { ufPct: 50, pred: 'UF 24 · FSU 24', predUF: 24, predOpp: 24 },
 };
 
 describe('schedule remaining-season predictions (2026-W8)', () => {

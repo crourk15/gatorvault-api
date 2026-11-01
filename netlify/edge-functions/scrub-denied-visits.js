@@ -18,7 +18,7 @@ const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
  * the same rewrite.
  */
 const LEFTOVER_MISSOURI_NOW_RE =
-  /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45|visitors\s*[—–-]\s*easton royal|texas at dkr|dkr-texas|4-2 heading into saturday|12:00\s*pm\s*·\s*abc|georgia at mercedes|mercedes-benz|5-2 heading into saturday|florida 27,\s*texas 24|3:30\s*pm\s*·\s*abc/i;
+  /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45|visitors\s*[—–-]\s*easton royal|texas at dkr|dkr-texas|4-2 heading into saturday|12:00\s*pm\s*·\s*abc|georgia at mercedes|mercedes-benz|5-2 heading into saturday|florida 27,\s*texas 24/i;
 /** Sep 21 was ABC-or-ESPN. SEC locked ABC Sep 27. Git ESPN overlay snapped NOW back. */
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri/i;
 
