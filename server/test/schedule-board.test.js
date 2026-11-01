@@ -483,8 +483,28 @@ describe('schedule-board', () => {
     assert.ok(!/70\.0|56\.0|PFF/i.test(copy));
     assert.match(copy, /Mercedes-Benz/);
     const oklahoma = board.games.find((g) => g.id === 'oklahoma');
-    assert.deepEqual(oklahoma.keys, []);
-    assert.deepEqual(oklahoma.swing, []);
+    assert.deepEqual(oklahoma.keys, [
+      'Make Them One-Dimensional',
+      'Find the Explosive',
+      'Get to Third-and-Long',
+    ]);
+    assert.equal(oklahoma.howUFWins[0], oklahoma.swing[0].role);
+    assert.equal(oklahoma.howUFWins[1], oklahoma.swing[1].role);
+    assert.equal(oklahoma.howUFWins[2], oklahoma.swing[2].role);
+    assert.equal(oklahoma.swing[0].name, 'Myles Graham');
+    assert.equal(oklahoma.swing[1].name, 'Tramell Jones Jr.');
+    assert.equal(oklahoma.swing[2].name, 'Jayden Woods');
+    assert.match(oklahoma.howUFWins[0], /137th nationally in rush EPA/);
+    assert.match(oklahoma.howUFWins[0], /-0\.145/);
+    assert.match(oklahoma.howUFWins[0], /3\.2 yards per carry/);
+    assert.match(oklahoma.howUFWins[0], /three rushing touchdowns/);
+    assert.match(oklahoma.howUFWins[0], /-0\.11 EPA/);
+    assert.match(oklahoma.howUFWins[1], /111th in explosiveness allowed/);
+    assert.match(oklahoma.howUFWins[1], /21st in pass EPA \(\+0\.374\)/);
+    assert.match(oklahoma.howUFWins[1], /Find the play worth 30/);
+    assert.match(oklahoma.howUFWins[2], /133rd in standard-down success rate/);
+    assert.match(oklahoma.howUFWins[2], /24\.5% success and -0\.56 EPA, 134th/);
+    assert.match(oklahoma.howUFWins[2], /23 sacks/);
     assert.equal(oklahoma.tv, 'SEC Network');
     assert.equal(oklahoma.date, 'November 7, 2026 · 7:45 PM ET');
     assert.match(oklahoma.film, /7:45 PM ET/);

@@ -733,9 +733,34 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
     ufPct: 54,
     tv: "SEC Network",
-    keys: [],
-    swing: [],
-    film: "Oklahoma in the Swamp. November 7, 2026. 7:45 PM ET. SEC Network.",
+    keys: [
+      "Make Them One-Dimensional",
+      "Find the Explosive",
+      "Get to Third-and-Long",
+    ],
+    howUFWins: [
+      "Oklahoma cannot run it.\n\nThe Sooners sit 137th nationally in rush EPA (-0.145), average 3.2 yards per carry and have scored only three rushing touchdowns through eight games. Lead back Lloyd Avant is at -0.11 EPA.\n\nFlorida does not need to manufacture anything exotic here. Win first down, choke off the run and make Oklahoma play the game through the weakness of its offense.\n\nIf the Gators own first down, Oklahoma starts every series in trouble.",
+      "Oklahoma’s defense is legitimately good. The mistake would be treating it like Georgia’s.\n\nThe Sooners are excellent at keeping offenses off schedule, but the contradiction is sitting right there: 111th in explosiveness allowed despite ranking among the nation's best in success rate.\n\nThat is Florida’s opening.\n\nWith the Gators sitting 21st in pass EPA (+0.374), this does not have to be four quarters of consistently beating Oklahoma down after down. Florida needs to recognize when the shot is there and connect.\n\nDo not chase five yards every snap. Find the play worth 30.",
+      "Everything Oklahoma struggles with offensively becomes worse when the chains turn against it.\n\nThe Sooners rank 133rd in standard-down success rate and 133rd on first down. Get them to third-and-long and the numbers collapse to 24.5% success and -0.56 EPA, 134th nationally.\n\nThat puts the game directly into the strength of a Florida front with 23 sacks.\n\nWin first down. Create third-and-long. Turn the rush loose.",
+    ],
+    swing: [
+      {
+        name: "Myles Graham",
+        role: "Oklahoma cannot run it.\n\nThe Sooners sit 137th nationally in rush EPA (-0.145), average 3.2 yards per carry and have scored only three rushing touchdowns through eight games. Lead back Lloyd Avant is at -0.11 EPA.\n\nFlorida does not need to manufacture anything exotic here. Win first down, choke off the run and make Oklahoma play the game through the weakness of its offense.\n\nIf the Gators own first down, Oklahoma starts every series in trouble.",
+      },
+      {
+        name: "Tramell Jones Jr.",
+        role: "Oklahoma’s defense is legitimately good. The mistake would be treating it like Georgia’s.\n\nThe Sooners are excellent at keeping offenses off schedule, but the contradiction is sitting right there: 111th in explosiveness allowed despite ranking among the nation's best in success rate.\n\nThat is Florida’s opening.\n\nWith the Gators sitting 21st in pass EPA (+0.374), this does not have to be four quarters of consistently beating Oklahoma down after down. Florida needs to recognize when the shot is there and connect.\n\nDo not chase five yards every snap. Find the play worth 30.",
+      },
+      {
+        name: "Jayden Woods",
+        role: "Everything Oklahoma struggles with offensively becomes worse when the chains turn against it.\n\nThe Sooners rank 133rd in standard-down success rate and 133rd on first down. Get them to third-and-long and the numbers collapse to 24.5% success and -0.56 EPA, 134th nationally.\n\nThat puts the game directly into the strength of a Florida front with 23 sacks.\n\nWin first down. Create third-and-long. Turn the rush loose.",
+      },
+    ],
+    film: "Make Them One-Dimensional. Oklahoma cannot run it. 137th in rush EPA, 3.2 yards a carry, three rushing touchdowns. Find the Explosive. They are 111th in explosiveness allowed. Florida is 21st in pass EPA. Do not chase five yards every snap. Find the play worth 30. Get to Third-and-Long. 133rd on first down. Third-and-long is 24.5 percent and minus-0.56 EPA, 134th. Florida has 23 sacks. The Swamp. 7:45 PM ET. SEC Network.",
+    filmWatched: false,
+    scoutingReport:
+      "Make Them One-Dimensional. Oklahoma cannot run it. 137th in rush EPA, 3.2 yards a carry, three rushing touchdowns. Find the Explosive. They are 111th in explosiveness allowed. Florida is 21st in pass EPA. Find the play worth 30. Get to Third-and-Long. 133rd on first down. Third-and-long is 24.5 percent, 134th. Florida has 23 sacks. The Swamp. 7:45 PM ET. SEC Network.",
     pred: "UF 29 · Oklahoma 27",
     predUF: 29,
     predOpp: 27,
