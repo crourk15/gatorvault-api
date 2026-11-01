@@ -17,25 +17,25 @@ const FORM_2026_W5 = {
 };
 
 const FORM_2026 = {
-  n: 5,
-  ufPpg: (66 + 52 + 44 + 52 + 17) / 5,
-  allowed: (21 + 3 + 39 + 28 + 45) / 5,
+  n: 8,
+  ufPpg: (66 + 52 + 44 + 52 + 17 + 19 + 27 + 8) / 8,
+  allowed: (21 + 3 + 39 + 28 + 45 + 38 + 24 + 27) / 8,
 };
 
 describe('schedule form predictions', () => {
-  it('reads 46.2 PPG from the official 2026 finals after Missouri', () => {
+  it('reads 35.6 PPG from the official 2026 finals after Georgia', () => {
     const board = scheduleBoard.getScheduleBoard(2026);
     const form = measureUfScoringForm(board.games);
-    assert.equal(form.n, 5);
+    assert.equal(form.n, 8);
     assert.equal(form.ufPpg, FORM_2026.ufPpg);
-    assert.ok(form.ufPpg < 50, 'Missouri 17 pulls season scoring off 50+');
+    assert.ok(form.ufPpg < 40, 'Georgia 8 pulls season scoring off the Texas-week 30s');
   });
 
   it('regresses pace so remaining cards are not 50 every week', () => {
     const pace = blendedUfPace(FORM_2026.ufPpg);
     assert.ok(pace < FORM_2026.ufPpg);
-    assert.ok(pace > 40);
-    assert.ok(pace < 50);
+    assert.ok(pace > 30);
+    assert.ok(pace < 40);
   });
 
   it('Missouri is a 30s road win, not 28-21', () => {

@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Game Week current game is Oklahoma after Georgia 8-27. Home NOW is Oklahoma in the Swamp, 7:45 PM ET, SEC Network, season 5-3. A saved Georgia Atlanta / 5-2 / Texas 27-24 board rewrites on the ticker edge. `/api/schedule` stamps the Georgia final and `currentGameId` oklahoma even if Render is still on last week. Oklahoma 3 keys are empty until Charles signs off. API and Netlify edge after deploy — no Codemagic. Reopen Home and Game Week once.
 - [x] Film Room Texas week: official highlight `c1AiATYDwa4`, Sumrall / Jones / Baugh / Graham / McCray postgame, GNFP offense+defense+Jones run, Film Guy Texas, Tengwall Florida D. Official Gators Football never posted Missouri or South Carolina highlight cuts — those stay off the hub. API `/api/film-room/catalog` after Render — no Codemagic. Reopen Film Room once. Hub seed first paint is the bake row.
 - [x] Game Week Georgia keys are Inside the 20, On Schedule, and In the Backfield. Jadan Baugh, Tramell Jones Jr., and Myles Graham, in that order. API `/api/schedule` after Render — no Codemagic. Reopen Game Week once. Seed `schedule-data.ts` is the bake row.
 - [x] Game Week Georgia keys are the full column, with the paragraph breaks. Florida's Texas explosive rate is 5%, and the havoc on 26% of snaps is why the EPA was still +0.11. Deep middle was 2-for-2, and one of those was Puglisi. The Fit is the run reaching the second level, Auburn's run, not Florida's. API `/api/schedule` after Render — no Codemagic. Reopen Game Week once. Seed `schedule-data.ts` and the key-card line breaks are the bake row.
@@ -248,6 +249,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-10-31 | Home NOW first paint and a saved Georgia Atlanta board. **Live ticker already says Oklahoma in the Swamp, 7:45 PM, SEC Network, Florida 8 Georgia 27, 5-3, after the edge.** | `home-command-utils.ts` and `schedule-data.ts` in the binary. Approved builds can still first-paint Mercedes-Benz / 5-2 until the live pack lands. | this PR |
 | 2026-10-21 | Film Room first paint can still be the Oct 18 catalog (South Carolina / Ole Miss). **Live `/api/film-room/catalog` is Texas week after Render.** | `film-room-hub-seed.json` in the binary. Approved builds can still first-paint last week until this bake. | this PR |
 | 2026-10-18 | Game Week first paint can still say The Empty Success, The One Play, and The Fit. **Live `/api/schedule` is Inside the 20, On Schedule, and In the Backfield after Render.** | `schedule-data.ts` in the binary. Approved builds can still first-paint the Auburn column until the live pack lands. | this PR |
 | 2026-10-18 | Game Week key cards keep paragraph breaks in the column. **Live `/api/schedule` has the full Georgia column after Render.** | `game-week-wow.css`, `gators-live-elite.css`, and `schedule-data.ts` in the binary. Approved builds can still paint the keys as one block until this bake. | this PR |

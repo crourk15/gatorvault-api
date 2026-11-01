@@ -83,10 +83,10 @@ export const TICKET_GAMES: TicketGame[] = [
   },
   {
     game: '🐊 UF vs Oklahoma',
-    date: 'November 7, 2026 · 3:30–8:00 PM ET',
+    date: 'November 7, 2026 · 7:45 PM ET',
     venue: 'Ben Hill Griffin Stadium, Gainesville FL',
     type: 'HOME',
-    note: 'TV TBD · window 3:30–8:00 PM ET',
+    note: '7:45 PM ET · SEC Network',
   },
   {
     game: '🐊 UF @ Kentucky',

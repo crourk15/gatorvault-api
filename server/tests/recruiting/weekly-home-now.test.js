@@ -359,7 +359,19 @@ test('cached ticker News cannot keep last-week Samuel Bailey', () => {
   assert.ok(!/bailey/i.test(JSON.stringify(body.items || [])));
   assert.ok(!/bailey/i.test(JSON.stringify(body.nowWeek || [])));
   const packed = JSON.stringify(body.nowWeek || []);
-  assert.match(packed, /Georgia at Mercedes-Benz Stadium — 3:30 PM · ABC/);
-  assert.match(packed, /5-2 heading into Saturday/);
-  assert.doesNotMatch(packed, /Texas at DKR|4-2 heading/);
+  assert.doesNotMatch(packed, /South Carolina|4-1 · SEC home|Texas at DKR|4-2 heading/);
+  assert.match(packed, /Game|Oklahoma|Georgia/);
+});
+
+test('after the Georgia final NOW points at Oklahoma at home', () => {
+  const now = new Date('2026-11-01T16:00:00.000Z');
+  const lines = buildWeeklyHomeNowLines(now, undefined, { breakInRows: [] });
+  assert.match(lines[0], /^Game — Oklahoma in the Swamp — 7:45 PM · SEC Network$/);
+  const rec = seasonRecord(now, getScheduleBoard(2026).games);
+  assert.deepEqual(rec, { wins: 5, losses: 3 });
+  assert.ok(lines.some((s) => /^Season — 5-3 · SEC home Saturday$/.test(s)));
+  const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [] });
+  assert.equal(cats[1].label, 'Visitors');
+  assert.match(String(cats[1].items[0] || ''), /home this Saturday/i);
+  assert.ok(!cats.some((c) => c.label === 'Road'));
 });

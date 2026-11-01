@@ -7,18 +7,18 @@
 const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolRe: /auburn/i }];
 
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
-const SEASON_STANDING = '5-2 heading into Saturday';
-// Texas is final. The published edge was still pinning noon at DKR.
-const UGA_NOW_GAME = 'Georgia at Mercedes-Benz Stadium — 3:30 PM · ABC';
-const UGA_NOW_NEWS = 'Florida 27, Texas 24';
+const SEASON_STANDING = '5-3 · SEC home Saturday';
+// Georgia is final. Saved boards still pin Atlanta / 5-2 / Texas 27-24.
+const OU_NOW_GAME = 'Oklahoma in the Swamp — 7:45 PM · SEC Network';
+const OU_NOW_NEWS = 'Florida 8, Georgia 27';
 const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
 /**
- * Posted South Carolina final — last-good Swamp / 4-1 must not beat Texas week.
- * "Visitors — Easton Royal" is that leftover board. A Florida flip line
- * ("News — Easton Royal flips to Florida") is this week's commit and stays.
+ * Posted Georgia final — last-good Atlanta / 5-2 / Texas 27-24 must not beat
+ * Oklahoma week. Older leftover boards (Missouri / SC / Texas noon) stay in
+ * the same rewrite.
  */
 const LEFTOVER_MISSOURI_NOW_RE =
-  /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45|visitors\s*[—–-]\s*easton royal|texas at dkr|dkr-texas|4-2 heading into saturday|12:00\s*pm\s*·\s*abc/i;
+  /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45|visitors\s*[—–-]\s*easton royal|texas at dkr|dkr-texas|4-2 heading into saturday|12:00\s*pm\s*·\s*abc|georgia at mercedes|mercedes-benz|5-2 heading into saturday|florida 27,\s*texas 24/i;
 /** Sep 21 was ABC-or-ESPN. SEC locked ABC Sep 27. Git ESPN overlay snapped NOW back. */
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri/i;
 
@@ -55,14 +55,14 @@ function pinLeftoverMissouriNow(data) {
   return {
     data: {
       ...data,
-      items: [`Game — ${UGA_NOW_GAME}`, `News — ${UGA_NOW_NEWS}`, `Season — ${SEASON_STANDING}`],
+      items: [`Game — ${OU_NOW_GAME}`, `News — ${OU_NOW_NEWS}`, `Season — ${SEASON_STANDING}`],
       nowWeek: [
-        { key: 'game', label: 'Game', items: [UGA_NOW_GAME] },
-        { key: 'news', label: 'News', items: [UGA_NOW_NEWS] },
+        { key: 'game', label: 'Game', items: [OU_NOW_GAME] },
+        { key: 'news', label: 'News', items: [OU_NOW_NEWS] },
         { key: 'season', label: 'Season', items: [SEASON_STANDING] },
       ],
       ...(Array.isArray(data.ticker)
-        ? { ticker: [`Game — ${UGA_NOW_GAME}`, `News — ${UGA_NOW_NEWS}`, `Season — ${SEASON_STANDING}`] }
+        ? { ticker: [`Game — ${OU_NOW_GAME}`, `News — ${OU_NOW_NEWS}`, `Season — ${SEASON_STANDING}`] }
         : {}),
     },
     changed: true,
@@ -107,13 +107,13 @@ const TICKER_FALLBACK = {
   ok: true,
   status: 'ready',
   items: [
-    `Game — ${UGA_NOW_GAME}`,
-    `News — ${UGA_NOW_NEWS}`,
+    `Game — ${OU_NOW_GAME}`,
+    `News — ${OU_NOW_NEWS}`,
     `Season — ${SEASON_STANDING}`,
   ],
   nowWeek: [
-    { key: 'game', label: 'Game', items: [UGA_NOW_GAME] },
-    { key: 'news', label: 'News', items: [UGA_NOW_NEWS] },
+    { key: 'game', label: 'Game', items: [OU_NOW_GAME] },
+    { key: 'news', label: 'News', items: [OU_NOW_NEWS] },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],
   meta: { endpoint: 'ticker', cacheReason: 'now-edge-fallback' },
@@ -133,7 +133,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'uga-abc-only';
+const NOW_BUST_VALUE = 'ou-secn-745';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
@@ -221,30 +221,72 @@ function pinTexasJonesCard(data) {
 }
 
 const TEXAS_BOX = 'https://floridagators.com/sports/football/stats/2026/texas/boxscore/27909';
+const GEORGIA_BOX = 'https://floridagators.com/sports/football/stats/2026/georgia/boxscore/27910';
 
-/** Render can still be on Texas week. Stamp the final and point the board at Georgia. */
-function pinGeorgiaWeek(data) {
+/** Render can still be on Georgia week. Stamp the final and point the board at Oklahoma. */
+function pinOklahomaWeek(data) {
   if (!data || typeof data !== 'object') return { data, changed: false };
   const next = { ...data };
   let changed = false;
-  if (Array.isArray(next.games) && next.currentGameId !== 'uga') {
-    next.currentGameId = 'uga';
+  if (Array.isArray(next.games) && next.currentGameId !== 'oklahoma') {
+    next.currentGameId = 'oklahoma';
     changed = true;
   }
   if (Array.isArray(next.games)) {
     next.games = next.games.map((game) => {
-      if (!game || game.id !== 'texas') return game;
-      if (Number(game.finalUF) === 27 && Number(game.finalOpp) === 24 && game.finalSource === 'official') {
+      if (!game || typeof game !== 'object') return game;
+      if (game.id === 'texas') {
+        if (Number(game.finalUF) === 27 && Number(game.finalOpp) === 24 && game.finalSource === 'official') {
+          return game;
+        }
+        changed = true;
+        return {
+          ...game,
+          finalUF: 27,
+          finalOpp: 24,
+          finalSource: 'official',
+          boxScoreUrl: game.boxScoreUrl || TEXAS_BOX,
+        };
+      }
+      if (game.id === 'uga') {
+        if (Number(game.finalUF) === 8 && Number(game.finalOpp) === 27 && game.finalSource === 'official') {
+          return game;
+        }
+        changed = true;
+        return {
+          ...game,
+          finalUF: 8,
+          finalOpp: 27,
+          finalSource: 'official',
+          boxScoreUrl: game.boxScoreUrl || GEORGIA_BOX,
+        };
+      }
+      if (game.id === 'oklahoma') {
+        let ou = game;
+        let ouChanged = false;
+        if (ou.tv !== 'SEC Network' || !/7:45/.test(String(ou.date || ''))) {
+          ou = { ...ou, tv: 'SEC Network', date: 'November 7, 2026 · 7:45 PM ET' };
+          ouChanged = true;
+        }
+        const keys = Array.isArray(ou.keys) ? ou.keys : [];
+        if (
+          keys.length &&
+          keys.some((k) => /win early downs|protect the football|limit explosives/i.test(String(k || '')))
+        ) {
+          ou = { ...ou, keys: [] };
+          ouChanged = true;
+        }
+        if (Array.isArray(ou.swing) && ou.swing.some((row) => /QB1|Pace vs SEC-speed/i.test(`${row?.name || ''} ${row?.role || ''}`))) {
+          ou = { ...ou, swing: [] };
+          ouChanged = true;
+        }
+        if (ouChanged) {
+          changed = true;
+          return ou;
+        }
         return game;
       }
-      changed = true;
-      return {
-        ...game,
-        finalUF: 27,
-        finalOpp: 24,
-        finalSource: 'official',
-        boxScoreUrl: game.boxScoreUrl || TEXAS_BOX,
-      };
+      return game;
     });
   }
   if (!changed) return { data, changed: false };
@@ -272,7 +314,7 @@ function applyNowCacheBust(request, headers) {
   return true;
 }
 
-function pinCurrentGeorgiaNow(data) {
+function pinCurrentOklahomaNow(data) {
   if (!data || typeof data !== 'object') return { data, changed: false };
   const next = {
     ...data,
@@ -296,7 +338,7 @@ function pinBaileyNowNews(data) {
     const next = out.items.map((line) => {
       if (typeof line !== 'string') return line;
       if (/^News — /i.test(line) && STALE_NOW_NEWS_RE.test(line)) {
-        return `News — ${UGA_NOW_NEWS}`;
+        return `News — ${OU_NOW_NEWS}`;
       }
       return line;
     });
@@ -312,7 +354,7 @@ function pinBaileyNowNews(data) {
       const key = String(row.key || row.label || '').toLowerCase();
       const items = Array.isArray(row.items) ? row.items.map((s) => String(s || '')) : [];
       if ((key === 'news' || String(row.label || '') === 'News') && items.some((s) => STALE_NOW_NEWS_RE.test(s))) {
-        return { ...row, key: 'news', label: 'News', items: [UGA_NOW_NEWS] };
+        return { ...row, key: 'news', label: 'News', items: [OU_NOW_NEWS] };
       }
       return row;
     });
@@ -326,7 +368,7 @@ function pinBaileyNowNews(data) {
     const next = out.ticker.map((line) => {
       if (typeof line !== 'string') return line;
       if (/^News — /i.test(line) && STALE_NOW_NEWS_RE.test(line)) {
-        return `News — ${UGA_NOW_NEWS}`;
+        return `News — ${OU_NOW_NEWS}`;
       }
       return line;
     });
@@ -859,7 +901,7 @@ export default async (request, context) => {
     if (isSchedulePath(url.pathname)) {
       const locked = lockScheduleBroadcast(payload);
       const jones = pinTexasJonesCard(locked.data);
-      const week = pinGeorgiaWeek(jones.data);
+      const week = pinOklahomaWeek(jones.data);
       schedulePayload = week.data;
     }
     const headers = new Headers(upstream.headers);
@@ -891,7 +933,7 @@ export default async (request, context) => {
       changed = true;
     }
     if (isTickerPath(url.pathname)) {
-      const scar = pinCurrentGeorgiaNow(data);
+      const scar = pinCurrentOklahomaNow(data);
       if (scar.changed) {
         data = scar.data;
         changed = true;

@@ -13,9 +13,9 @@ const src = fs.readFileSync(
 test('ticker edge strips the 1.0.29 App Store line and falls back when origin 502s', () => {
   assert.match(src, /APP_STORE_UPDATE_RE/);
   assert.match(src, /now-edge-fallback/);
-  assert.match(src, /5-2 heading into Saturday/);
-  assert.match(src, /Georgia at Mercedes-Benz Stadium — 3:30 PM · ABC/);
-  assert.match(src, /Florida 27, Texas 24/);
+  assert.match(src, /5-3 · SEC home Saturday/);
+  assert.match(src, /Oklahoma in the Swamp — 7:45 PM · SEC Network/);
+  assert.match(src, /Florida 8, Georgia 27/);
   assert.match(src, /if \(isTickerPath\(url\.pathname\) && !upstream\.ok\)/);
   assert.equal(/1\.0\.29 is live/.test(src), false);
 });
@@ -34,15 +34,15 @@ test('ticker edge rewrites leftover Missouri and South Carolina week to Texas', 
   assert.match(src, /visitors\\s\*\[—–-\]\\s\*easton royal/);
   assert.doesNotMatch(src, /\|easton royal\/i/);
   assert.match(src, /texas at dkr/);
-  assert.match(src, /Georgia at Mercedes-Benz Stadium — 3:30 PM · ABC/);
+  assert.match(src, /Oklahoma in the Swamp — 7:45 PM · SEC Network/);
 });
 
-test('ticker edge one-shot busts iOS URLCache and pins the Georgia week pack', () => {
-  assert.match(src, /pinCurrentGeorgiaNow/);
-  assert.match(src, /pinGeorgiaWeek/);
+test('ticker edge one-shot busts iOS URLCache and pins the Oklahoma week pack', () => {
+  assert.match(src, /pinCurrentOklahomaNow/);
+  assert.match(src, /pinOklahomaWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'uga-abc-only'/);
+  assert.match(src, /NOW_BUST_VALUE = 'ou-secn-745'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -63,8 +63,8 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /cyion\\s\+smith/);
   assert.match(src, /lorenzo\\s\+mcmullen/);
   assert.match(src, /samuel\\s\+bailey/);
-  assert.match(src, /News — \$\{UGA_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'uga-abc-only'/);
+  assert.match(src, /News — \$\{OU_NOW_NEWS\}/);
+  assert.match(src, /NOW_BUST_VALUE = 'ou-secn-745'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -82,12 +82,12 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'uga-abc-only'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'ou-secn-745'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
   assert.doesNotMatch(bust, /upstream\.json\(\)/);
-  const nowBust = src.slice(src.indexOf('function applyNowCacheBust'), src.indexOf('function pinCurrentGeorgiaNow'));
+  const nowBust = src.slice(src.indexOf('function applyNowCacheBust'), src.indexOf('function pinCurrentOklahomaNow'));
   assert.match(nowBust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(nowBust, /headers\.set\('clear-site-data'/);
   assert.doesNotMatch(src, /headers\.set\('clear-site-data'/);
