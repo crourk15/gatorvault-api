@@ -27,7 +27,7 @@ describe('schedule-board', () => {
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
     assert.equal(payload.predThrough, '2026-W8');
-    assert.equal(payload.currentGameId, 'uga');
+    assert.equal(payload.currentGameId, 'oklahoma');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);
     assert.equal(campbell.finalOpp, 3);
@@ -78,7 +78,7 @@ describe('schedule-board', () => {
   it('game-week meta games also hide desk scout', () => {
     const feed = require('../lib/game-week-feed');
     const payload = feed.buildGameWeekPayload();
-    assert.equal(payload.currentGameId, 'uga');
+    assert.equal(payload.currentGameId, 'oklahoma');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.deepEqual(campbell.offenseScout, []);
     assert.equal(campbell.scoutingReport, undefined);
@@ -439,7 +439,7 @@ describe('schedule-board', () => {
     );
   });
 
-  it('Georgia week is the current board after Texas 27-24', () => {
+  it('Georgia is closed after the official 8-27 and Oklahoma is the current board', () => {
     const board = scheduleBoard.getScheduleBoard(2026);
     const uga = board.games.find((g) => g.id === 'uga');
     assert.equal(uga.keys[0], 'Inside the 20');
@@ -448,11 +448,18 @@ describe('schedule-board', () => {
     assert.equal(uga.filmWatched, false);
     assert.equal(uga.tv, 'ABC');
     assert.match(uga.venue, /Mercedes-Benz/);
-    assert.equal(uga.pred, 'UF 20 · Georgia 32');
-    assert.equal(uga.predUF, 20);
+    assert.equal(uga.finalUF, 8);
+    assert.equal(uga.finalOpp, 27);
+    assert.equal(uga.finalSource, 'official');
+    assert.equal(
+      uga.boxScoreUrl,
+      'https://floridagators.com/sports/football/stats/2026/georgia/boxscore/27910',
+    );
+    assert.equal(uga.pred, 'UF 23 · Georgia 32');
+    assert.equal(uga.predUF, 23);
     assert.equal(uga.predOpp, 32);
     assert.ok(uga.predUF < uga.predOpp);
-    assert.equal(uga.ufPct, 25);
+    assert.equal(uga.ufPct, 31);
     assert.match(uga.howUFWins[0], /124th in the country/);
     assert.match(uga.howUFWins[0], /11 of the 15|Eleven of the 15/);
     assert.match(uga.howUFWins[0], /25 touchdowns in 33 trips/);
@@ -475,6 +482,13 @@ describe('schedule-board', () => {
     const copy = [uga.film, uga.scoutingReport, ...(uga.howUFWins || []), ...(uga.filmNotes || [])].join('\n');
     assert.ok(!/70\.0|56\.0|PFF/i.test(copy));
     assert.match(copy, /Mercedes-Benz/);
+    const oklahoma = board.games.find((g) => g.id === 'oklahoma');
+    assert.deepEqual(oklahoma.keys, []);
+    assert.deepEqual(oklahoma.swing, []);
+    assert.equal(oklahoma.tv, 'SEC Network');
+    assert.equal(oklahoma.date, 'November 7, 2026 · 7:45 PM ET');
+    assert.match(oklahoma.film, /7:45 PM ET/);
+    assert.ok(!oklahoma.keys.some((k) => /Win early downs|Protect the football|Limit explosives/i.test(k)));
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

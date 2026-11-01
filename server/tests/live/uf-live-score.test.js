@@ -131,6 +131,15 @@ describe('uf-live-score', () => {
     assert.equal(isUfGameLiveWindow(asOf), false);
   });
 
+  it('leaves Georgia after the final is posted and points the next window at Oklahoma', () => {
+    const asOf = new Date('2026-11-01T16:00:00.000Z');
+    const featured = featuredUfGame(asOf);
+    assert.equal(featured.id, 'oklahoma');
+    assert.match(featured.opp, /Oklahoma/i);
+    assert.equal(featured.kickoffIso, '2026-11-08T00:45:00.000Z');
+    assert.equal(isUfGameLiveWindow(asOf), false);
+  });
+
   it('pins ESPN to the featured kickoff date so Saturday is not dropped after midnight', () => {
     const url = espnScoreboardUrl(new Date('2026-09-20T04:10:00.000Z'), {
       kickoffIso: '2026-09-19T23:00:00.000Z',

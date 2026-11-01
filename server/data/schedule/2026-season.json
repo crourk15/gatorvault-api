@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-10-18T02:00:00.000Z",
+  "updatedAt": "2026-11-01T03:10:00.000Z",
   "label": "2026 Florida football schedule",
   "source": "vault-schedule-board",
   "predThrough": "2026-W8",
@@ -947,33 +947,24 @@
       },
       "predConfidence": 77,
       "predMovement": "down",
-      "ufPctDelta": -6
+      "ufPctDelta": -6,
+      "finalUF": 8,
+      "finalOpp": 27,
+      "finalSource": "official",
+      "boxScoreUrl": "https://floridagators.com/sports/football/stats/2026/georgia/boxscore/27910"
     },
     {
       "id": "oklahoma",
       "kind": "game",
       "label": "Nov 7 vs Oklahoma",
       "opp": "Oklahoma Sooners",
-      "date": "November 7, 2026 · 3:30–8:00 PM ET",
+      "date": "November 7, 2026 · 7:45 PM ET",
       "venue": "Ben Hill Griffin Stadium, Gainesville FL",
       "ufPct": 63,
-      "tv": "TBD",
-      "keys": [
-        "Win early downs",
-        "Protect the football",
-        "Limit explosives"
-      ],
-      "swing": [
-        {
-          "name": "QB1",
-          "role": "Pace vs SEC-speed pressure"
-        },
-        {
-          "name": "Secondary",
-          "role": "Match skill in space"
-        }
-      ],
-      "film": "Oklahoma brings tempo and skill. Swamp night energy matters.",
+      "tv": "SEC Network",
+      "keys": [],
+      "swing": [],
+      "film": "Oklahoma in the Swamp. November 7, 2026. 7:45 PM ET. SEC Network.",
       "pred": "UF 33 · Oklahoma 27",
       "predUF": 33,
       "predOpp": 27,

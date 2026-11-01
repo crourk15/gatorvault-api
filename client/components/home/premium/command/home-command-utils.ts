@@ -443,12 +443,15 @@ const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri|
 const LEFTOVER_MISSOURI_NOW_RE =
   /missouri|faurot|4-0 heading into saturday|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45/i;
 const LEFTOVER_SC_WINDOW_RE = /abc or sec network|12:00\s*[–-]\s*1:00/i;
-/** Posted Texas final — last-good noon at DKR / 4-2 must not beat Georgia week. */
+/** Posted Texas final — last-good noon at DKR / 4-2 must not beat this week. */
 const LEFTOVER_TEXAS_NOW_RE =
   /texas at dkr|dkr-texas|4-2 heading into saturday|12:00\s*pm\s*·\s*abc|easton royal flips to florida/i;
-const UGA_NOW_GAME = 'Georgia at Mercedes-Benz Stadium — 3:30 PM · ABC';
-const UGA_NOW_SEASON = '5-2 heading into Saturday';
-const UGA_NOW_NEWS = 'Florida 27, Texas 24';
+/** Posted Georgia final — last-good Atlanta / 5-2 must not beat Oklahoma week. */
+const LEFTOVER_GEORGIA_NOW_RE =
+  /georgia at mercedes|mercedes-benz|5-2 heading into saturday|florida 27,\s*texas 24|3:30\s*pm\s*·\s*abc/i;
+const OU_NOW_GAME = 'Oklahoma in the Swamp — 7:45 PM · SEC Network';
+const OU_NOW_SEASON = '5-3 · SEC home Saturday';
+const OU_NOW_NEWS = 'Florida 8, Georgia 27';
 
 function pinMissouriAbcTick(text: string): string {
   const t = lockBroadcastWindow(text);
@@ -466,29 +469,30 @@ function isLeftoverNowBlob(blob: string): boolean {
   return (
     LEFTOVER_MISSOURI_NOW_RE.test(blob) ||
     LEFTOVER_SC_WINDOW_RE.test(blob) ||
-    LEFTOVER_TEXAS_NOW_RE.test(blob)
+    LEFTOVER_TEXAS_NOW_RE.test(blob) ||
+    LEFTOVER_GEORGIA_NOW_RE.test(blob)
   );
 }
 
-function georgiaNowWeek(): HomeNowWeekPillar[] {
+function oklahomaNowWeek(): HomeNowWeekPillar[] {
   return [
-    { key: 'game', label: 'Game', items: [UGA_NOW_GAME] },
-    { key: 'news', label: 'News', items: [UGA_NOW_NEWS] },
-    { key: 'season', label: 'Season', items: [UGA_NOW_SEASON] },
+    { key: 'game', label: 'Game', items: [OU_NOW_GAME] },
+    { key: 'news', label: 'News', items: [OU_NOW_NEWS] },
+    { key: 'season', label: 'Season', items: [OU_NOW_SEASON] },
   ];
 }
 
 function pinLeftoverMissouriNowWeek(rows: HomeNowWeekPillar[]): HomeNowWeekPillar[] {
   const blob = nowWeekBlob(rows);
   if (!rows.length || !isLeftoverNowBlob(blob)) return rows;
-  return georgiaNowWeek();
+  return oklahomaNowWeek();
 }
 
 function pinLeftoverMissouriTickerLines(lines: string[]): string[] {
   const next = (Array.isArray(lines) ? lines : []).map((s) => String(s || '').trim()).filter(Boolean);
   const text = next.join(' ');
   if (!next.length || !isLeftoverNowBlob(text)) return next;
-  return [`Game — ${UGA_NOW_GAME}`, `News — ${UGA_NOW_NEWS}`, `Season — ${UGA_NOW_SEASON}`];
+  return [`Game — ${OU_NOW_GAME}`, `News — ${OU_NOW_NEWS}`, `Season — ${OU_NOW_SEASON}`];
 }
 
 let lastGoodNowWeekMemory: HomeNowWeekPillar[] | null = null;
@@ -501,7 +505,7 @@ export function isRetiredHomeNowTick(text: string): boolean {
 
 function pinBaileyNowNewsItems(items: string[]): string[] {
   const next = items.map((s) => String(s || '').trim()).filter(Boolean);
-  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [UGA_NOW_NEWS];
+  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [OU_NOW_NEWS];
   return next.filter((s) => !isRetiredHomeNowTick(s));
 }
 
@@ -509,7 +513,7 @@ function pinBaileyNowNewsLines(lines: string[]): string[] {
   return lines.map((line) => {
     const text = String(line || '');
     if (/^News — /i.test(text) && STALE_NOW_NEWS_RE.test(text)) {
-      return `News — ${UGA_NOW_NEWS}`;
+      return `News — ${OU_NOW_NEWS}`;
     }
     return text;
   });
@@ -525,7 +529,7 @@ export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNow
       const rawItems = (row?.items || []).map((s) => String(s || '').trim()).filter(Boolean);
       const isNews = key === 'news' || label === 'News';
       if (isNews && rawItems.some((s) => STALE_NOW_NEWS_RE.test(s))) {
-        return { key: 'news', label: 'News', items: [UGA_NOW_NEWS] };
+        return { key: 'news', label: 'News', items: [OU_NOW_NEWS] };
       }
       return {
         key,
