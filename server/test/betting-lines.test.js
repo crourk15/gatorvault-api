@@ -145,4 +145,48 @@ describe('betting-lines next game', () => {
     assert.equal(payload.lastGame.homeScore, 19);
     assert.equal(payload.lastGame.awayScore, 38);
   });
+
+  it('advances to Georgia after the Texas postgame window', () => {
+    const next = pickNextGame(STATIC_LINES, new Date('2026-10-18T12:00:00.000Z'));
+    assert.equal(next.id, 'uf-uga-2026-w9');
+    const last = pickLastCompleted(STATIC_LINES, new Date('2026-10-18T12:00:00.000Z'));
+    assert.equal(last.id, 'uf-texas-2026-w7');
+  });
+
+  it('serves Texas 27-24 as lastGame after the Texas hold', async () => {
+    const payload = await getBettingLines(new Date('2026-10-18T12:00:00.000Z'));
+    assert.equal(payload.nextGame.id, 'uf-uga-2026-w9');
+    assert.equal(payload.lastGame.id, 'uf-texas-2026-w7');
+    assert.equal(payload.lastGame.homeScore, 27);
+    assert.equal(payload.lastGame.awayScore, 24);
+    assert.equal(payload.finals['uf-texas-2026-w7'].uf, 27);
+    assert.equal(payload.finals['uf-texas-2026-w7'].opp, 24);
+  });
+
+  it('serves Oklahoma as nextGame with UF -5.5 / 48.5 after the Georgia hold', async () => {
+    const when = new Date('2026-11-01T20:00:00.000Z');
+    const next = pickNextGame(STATIC_LINES, when);
+    assert.equal(next.id, 'uf-oklahoma-2026-w10');
+    const payload = await getBettingLines(when);
+    assert.equal(payload.nextGame.id, 'uf-oklahoma-2026-w10');
+    assert.equal(payload.nextGame.spread.line, 'UF -5.5');
+    assert.equal(payload.nextGame.spread.uf, -5.5);
+    assert.equal(payload.nextGame.total, 48.5);
+    assert.equal(payload.nextGame.moneyline.uf, -205);
+    assert.equal(payload.nextGame.moneyline.opp, 176);
+    assert.equal(payload.lastGame.id, 'uf-uga-2026-w9');
+    assert.equal(payload.lastGame.homeScore, 8);
+    assert.equal(payload.lastGame.awayScore, 27);
+    assert.equal(payload.finals['uf-uga-2026-w9'].uf, 8);
+    assert.equal(payload.finals['uf-uga-2026-w9'].opp, 27);
+  });
+
+  it('does not invent a FanDuel -6.5 / 46.5 as the Oklahoma stamp', () => {
+    const ou = STATIC_LINES.find((g) => g.id === 'uf-oklahoma-2026-w10');
+    assert.ok(ou);
+    assert.equal(ou.spread.line, 'UF -5.5');
+    assert.equal(ou.total, 48.5);
+    assert.notEqual(ou.spread.uf, -6.5);
+    assert.notEqual(ou.total, 46.5);
+  });
 });

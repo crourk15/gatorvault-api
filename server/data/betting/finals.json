@@ -52,5 +52,23 @@
     "opp": 38,
     "source": "official",
     "completedAt": "2026-10-10T21:00:00.000Z"
+  },
+  "uf-texas-2026-w7": {
+    "gameKey": "uf-texas-2026-w7",
+    "scheduleId": "texas",
+    "opponent": "Texas",
+    "uf": 27,
+    "opp": 24,
+    "source": "official",
+    "completedAt": "2026-10-17T23:15:00.000Z"
+  },
+  "uf-uga-2026-w9": {
+    "gameKey": "uf-uga-2026-w9",
+    "scheduleId": "uga",
+    "opponent": "Georgia",
+    "uf": 8,
+    "opp": 27,
+    "source": "official",
+    "completedAt": "2026-10-31T23:45:00.000Z"
   }
 }

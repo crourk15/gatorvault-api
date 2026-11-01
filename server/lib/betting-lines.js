@@ -155,6 +155,49 @@ const STATIC_LINES = [
     moneyline: { uf: 275, opp: -345 },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
+    source: 'schedule',
+    completed: true,
+    homeScore: 27,
+    awayScore: 24,
+    status: 'Final',
+    live: false,
+    scoreSource: 'official'
+  },
+  {
+    id: 'uf-uga-2026-w9',
+    week: 9,
+    game: 'Florida vs Georgia',
+    opponent: 'Georgia',
+    date: '2026-10-31T19:30:00.000Z',
+    venue: 'Mercedes-Benz Stadium',
+    // Week-of line was never sat on this board. Official final only.
+    spread: null,
+    total: null,
+    moneyline: null,
+    sportsbookUrl: FANDUEL_AFFILIATE,
+    sportsbookLinks: SPORTSBOOKS,
+    source: 'schedule',
+    completed: true,
+    homeScore: 8,
+    awayScore: 27,
+    status: 'Final',
+    live: false,
+    scoreSource: 'official'
+  },
+  {
+    id: 'uf-oklahoma-2026-w10',
+    week: 10,
+    game: 'Florida vs Oklahoma',
+    opponent: 'Oklahoma',
+    date: '2026-11-08T00:45:00.000Z',
+    venue: 'Ben Hill Griffin Stadium',
+    // Market Nov 1 2026: DraftKings via Covers/ESPN FLA -5.5 / 48.5, ML -205 / +176
+    // (opened ESPN -4 / 48.5). Hard Rock / BetRivers same -5.5 / 48.5. FanDuel -6.5 / 46.5 is not the stamp.
+    spread: { line: 'UF -5.5', uf: -5.5 },
+    total: 48.5,
+    moneyline: { uf: -205, opp: +176 },
+    sportsbookUrl: FANDUEL_AFFILIATE,
+    sportsbookLinks: SPORTSBOOKS,
     source: 'schedule'
   },
   {

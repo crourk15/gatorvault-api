@@ -9,6 +9,7 @@ import {
   defaultGameWeekId,
   resolveGameWeekId,
   DESK_SCOUT_TALK_RE,
+  bettingLineForScheduleGame,
   getGameWeekBundle,
 } from './game-week-data';
 
@@ -259,6 +260,25 @@ describe('Game Week Film Notes', () => {
     assert.equal(radar.find((a) => a.label === 'Front 7')?.uf, 70);
     assert.equal(oklahoma.pred, 'UF 27 · Oklahoma 24');
     assert.equal(oklahoma.ufPct, 50);
+    const bundle = getGameWeekBundle('oklahoma');
+    assert.equal(bundle.prediction.spread, 'Line pending');
+    const withVegas = getGameWeekBundle('oklahoma', SCHEDULE_GAMES, {
+      spreadLine: 'UF -5.5',
+      total: 48.5,
+    });
+    assert.equal(withVegas.prediction.spread, 'UF -5.5');
+    assert.equal(withVegas.prediction.total, 'O/U 48.5');
+    const fromBoard = bettingLineForScheduleGame(oklahoma, {
+      nextGame: {
+        id: 'uf-oklahoma-2026-w10',
+        opponent: 'Oklahoma',
+        game: 'Florida vs Oklahoma',
+        spread: { line: 'UF -5.5', uf: -5.5 },
+        total: 48.5,
+      },
+    });
+    assert.equal(fromBoard?.spreadLine, 'UF -5.5');
+    assert.equal(fromBoard?.total, 48.5);
     assert.notDeepEqual(
       radar.find((a) => a.label === 'Run Game'),
       { label: 'Run Game', uf: 78, opp: 60 },
