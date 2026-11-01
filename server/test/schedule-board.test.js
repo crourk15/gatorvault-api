@@ -509,6 +509,16 @@ describe('schedule-board', () => {
     assert.equal(oklahoma.date, 'November 7, 2026 · 7:45 PM ET');
     assert.match(oklahoma.film, /7:45 PM ET/);
     assert.ok(!oklahoma.keys.some((k) => /Win early downs|Protect the football|Limit explosives/i.test(k)));
+    assert.equal(oklahoma.ufPct, 50);
+    assert.equal(oklahoma.pred, 'UF 27 · Oklahoma 24');
+    assert.equal(oklahoma.predUF, 27);
+    assert.equal(oklahoma.predOpp, 24);
+    assert.equal(oklahoma.predSat, true);
+    assert.equal(oklahoma.radar.find((a) => a.label === 'Run Game')?.uf, 66);
+    assert.equal(oklahoma.radar.find((a) => a.label === 'Run Game')?.opp, 48);
+    assert.equal(oklahoma.radar.find((a) => a.label === 'Secondary')?.uf, 54);
+    assert.equal(oklahoma.radar.find((a) => a.label === 'Secondary')?.opp, 70);
+    assert.equal(oklahoma.radar.find((a) => a.label === 'Front 7')?.uf, 70);
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

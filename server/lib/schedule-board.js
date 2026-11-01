@@ -323,6 +323,7 @@ function normalizeGame(row) {
     pred: String(row.pred || '').trim(),
     predUF: Number.isFinite(Number(row.predUF)) ? Number(row.predUF) : 0,
     predOpp: Number.isFinite(Number(row.predOpp)) ? Number(row.predOpp) : 0,
+    ...(row.predSat === true ? { predSat: true } : {}),
     ...(Number.isFinite(Number(row.predConfidence))
       ? { predConfidence: Math.max(0, Math.min(100, Math.round(Number(row.predConfidence)))) }
       : {}),

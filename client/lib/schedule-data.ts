@@ -33,6 +33,8 @@ export type ScheduleGame = {
   /** Explicit projected score — prefer over parsing `pred`. */
   predUF: number;
   predOpp: number;
+  /** Sat GatorVault score — form overlay must not overwrite. */
+  predSat?: boolean;
   /** True when remaining-game lean is waiting on live `/api/schedule` — do not paint last-good/seed. */
   predPending?: boolean;
   /** Conviction in the lean (0–100). Not “distance from 50%.” */
@@ -731,7 +733,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Oklahoma Sooners",
     date: "November 7, 2026 · 7:45 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 54,
+    ufPct: 50,
     tv: "SEC Network",
     keys: [
       "Make Them One-Dimensional",
@@ -761,9 +763,21 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     filmWatched: false,
     scoutingReport:
       "Make Them One-Dimensional. Oklahoma cannot run it. 137th in rush EPA, 3.2 yards a carry, three rushing touchdowns. Find the Explosive. They are 111th in explosiveness allowed. Florida is 21st in pass EPA. Find the play worth 30. Get to Third-and-Long. 133rd on first down. Third-and-long is 24.5 percent, 134th. Florida has 23 sacks. The Swamp. 7:45 PM ET. SEC Network.",
-    pred: "UF 29 · Oklahoma 27",
-    predUF: 29,
-    predOpp: 27,
+    pred: "UF 27 · Oklahoma 24",
+    predUF: 27,
+    predOpp: 24,
+    predSat: true,
+    predConfidence: 64,
+    predMovement: "down",
+    ufPctDelta: -13,
+    radar: [
+      { label: "Run Game", uf: 66, opp: 48 },
+      { label: "Pass Efficiency", uf: 68, opp: 64 },
+      { label: "Front 7", uf: 70, opp: 54 },
+      { label: "Secondary", uf: 54, opp: 70 },
+      { label: "Special Teams", uf: 55, opp: 55 },
+      { label: "Coaching Edge", uf: 50, opp: 56 },
+    ],
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27911",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-oklahoma-sooners-gainesville-florida-11-07-2026/event/2200645C2197098A",

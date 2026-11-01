@@ -77,6 +77,36 @@ describe('schedule form predictions', () => {
     assert.equal(olemiss.finalUF, 52);
   });
 
+  it('does not overwrite a sat Oklahoma GatorVault prediction', () => {
+    const payload = scheduleBoard.toApiPayload();
+    const oklahoma = payload.games.find((g) => g.id === 'oklahoma');
+    assert.equal(oklahoma.ufPct, 50);
+    assert.equal(oklahoma.pred, 'UF 27 · Oklahoma 24');
+    assert.equal(oklahoma.predUF, 27);
+    assert.equal(oklahoma.predOpp, 24);
+    const locked = applyFormPredictions({
+      games: [
+        { id: 'fau', finalUF: 66, finalOpp: 21 },
+        { id: 'campbell', finalUF: 52, finalOpp: 3 },
+        { id: 'auburn', finalUF: 44, finalOpp: 39 },
+        {
+          id: 'oklahoma',
+          predSat: true,
+          predUF: 27,
+          predOpp: 24,
+          ufPct: 50,
+          pred: 'UF 27 · Oklahoma 24',
+          venue: 'Ben Hill Griffin Stadium, Gainesville FL',
+        },
+      ],
+    });
+    const ou = locked.games.find((g) => g.id === 'oklahoma');
+    assert.equal(ou.pred, 'UF 27 · Oklahoma 24');
+    assert.equal(ou.ufPct, 50);
+    assert.equal(ou.predUF, 27);
+    assert.equal(ou.predOpp, 24);
+  });
+
   it('skips overlay when there are not enough finals', () => {
     const doc = {
       games: [

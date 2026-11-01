@@ -6,7 +6,7 @@ const scheduleBoard = require('../lib/schedule-board');
 
 /** Week 8 form overlay after Georgia 8-27 (season 35.6 PPG). */
 const WEEK8_REMAINING = {
-  oklahoma: { ufPct: 50, pred: 'UF 27 · Oklahoma 27', predUF: 27, predOpp: 27 },
+  oklahoma: { ufPct: 50, pred: 'UF 27 · Oklahoma 24', predUF: 27, predOpp: 24 },
   kentucky: { ufPct: 52, pred: 'UF 24 · Kentucky 23', predUF: 24, predOpp: 23 },
   vandy: { ufPct: 58, pred: 'UF 26 · Vanderbilt 22', predUF: 26, predOpp: 22 },
   fsu: { ufPct: 50, pred: 'UF 24 · FSU 24', predUF: 24, predOpp: 24 },
