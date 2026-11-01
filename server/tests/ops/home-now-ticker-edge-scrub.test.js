@@ -42,7 +42,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the Oklahoma week pack', 
   assert.match(src, /pinOklahomaWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'ou-secn-745'/);
+  assert.match(src, /NOW_BUST_VALUE = 'ou-keys-3'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -64,7 +64,7 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /lorenzo\\s\+mcmullen/);
   assert.match(src, /samuel\\s\+bailey/);
   assert.match(src, /News — \$\{OU_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'ou-secn-745'/);
+  assert.match(src, /NOW_BUST_VALUE = 'ou-keys-3'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -82,7 +82,7 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'ou-secn-745'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'ou-keys-3'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
@@ -135,6 +135,48 @@ test('2027 hub edge keeps the commit list and leaves the live class line alone',
   assert.equal(pinned.data.classOverview.avgRating, '90.4');
   assert.equal(pinned.data.classOverviewAll['2027'].classRank, '#4');
   assert.equal(pinned.data.classOverviewAll['2027'].commits, '28');
+});
+
+test('schedule edge pins Charles Oklahoma 3 Keys over an empty iOS last-good board', () => {
+  const start = src.indexOf('const OU_KEY_TITLES');
+  const end = src.indexOf('const HUB_BUST_COOKIE');
+  assert.ok(start > 0 && end > start);
+  const { pinOklahomaWeek } = new Function(`${src.slice(start, end)}; return { pinOklahomaWeek };`)();
+  const empty = {
+    currentGameId: 'oklahoma',
+    games: [
+      {
+        id: 'oklahoma',
+        tv: 'SEC Network',
+        date: 'November 7, 2026 · 7:45 PM ET',
+        keys: [],
+        swing: [],
+      },
+    ],
+  };
+  const pinned = pinOklahomaWeek(empty);
+  const ou = pinned.data.games[0];
+  assert.equal(pinned.changed, true);
+  assert.deepEqual(ou.keys, [
+    'Make Them One-Dimensional',
+    'Find the Explosive',
+    'Get to Third-and-Long',
+  ]);
+  assert.equal(ou.swing[0].name, 'Myles Graham');
+  assert.equal(ou.swing[1].name, 'Tramell Jones Jr.');
+  assert.equal(ou.swing[2].name, 'Jayden Woods');
+  assert.match(ou.howUFWins[0], /137th nationally in rush EPA/);
+  assert.match(ou.howUFWins[1], /111th in explosiveness allowed/);
+  assert.match(ou.howUFWins[2], /24\.5% success and -0\.56 EPA, 134th/);
+  assert.equal(ou.swing[0].role, ou.howUFWins[0]);
+  assert.equal(ou.swing[1].role, ou.howUFWins[1]);
+  assert.equal(ou.swing[2].role, ou.howUFWins[2]);
+
+  const live = pinOklahomaWeek({
+    currentGameId: 'oklahoma',
+    games: [{ ...ou }],
+  });
+  assert.equal(live.changed, false);
 });
 
 test('vault hydration boot script parses', () => {

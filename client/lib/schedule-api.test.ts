@@ -240,6 +240,25 @@ describe('schedule-api uniforms', () => {
     assert.ok(!olemiss.keys.some((k) => /Attack a front that just gave LSU 172/i.test(k)));
   });
 
+  it('peekScheduleBoard replaces empty Oklahoma last-good keys with the live seed', () => {
+    const oklahoma = SCHEDULE_GAMES.find((g) => g.id === 'oklahoma');
+    assert.ok(oklahoma);
+    __scheduleApiTest.clearLastGood(2026);
+    __scheduleApiTest.writeLastGood(2026, {
+      games: [{ ...oklahoma, keys: [], howUFWins: [], swing: [] }],
+      currentGameId: 'oklahoma',
+    });
+    const peeked = peekScheduleBoard(2026);
+    const row = peeked.games.find((g) => g.id === 'oklahoma');
+    assert.deepEqual(row?.keys, [
+      'Make Them One-Dimensional',
+      'Find the Explosive',
+      'Get to Third-and-Long',
+    ]);
+    assert.equal(row?.swing?.[0]?.name, 'Myles Graham');
+    assert.match(String(row?.howUFWins?.[0] || ''), /137th nationally in rush EPA/);
+  });
+
   it('peekScheduleBoard prefers last-good live keys over the baked seed', () => {
     const olemiss = SCHEDULE_GAMES.find((g) => g.id === 'olemiss');
     assert.ok(olemiss);
@@ -253,28 +272,30 @@ describe('schedule-api uniforms', () => {
   });
 
   it('peekScheduleBoard does not first-paint durable leftover remaining scores', () => {
-    const texas = SCHEDULE_GAMES.find((g) => g.id === 'texas');
-    assert.ok(texas);
-    __scheduleApiTest.clearLastGood(2026);
-    __scheduleApiTest.writeLastGood(2026, {
+    const oklahoma = SCHEDULE_GAMES.find((g) => g.id === 'oklahoma');
+    assert.ok(oklahoma);
+    __scheduleApiTest.clearLastGood(1999);
+    __scheduleApiTest.writeLastGood(1999, {
       games: [
         {
-          ...texas,
-          pred: 'UF 36 · Texas 21',
+          ...oklahoma,
+          pred: 'UF 36 · Oklahoma 21',
           predUF: 36,
           predOpp: 21,
           ufPct: 82,
-          keys: ['Rush the Clean Pocket'],
+          keys: ['Make Them One-Dimensional'],
+          finalUF: undefined,
+          finalOpp: undefined,
         },
       ],
-      currentGameId: 'texas',
+      currentGameId: 'oklahoma',
     });
-    const peeked = peekScheduleBoard(2026);
-    const row = peeked.games.find((g) => g.id === 'texas');
+    const peeked = peekScheduleBoard(1999);
+    const row = peeked.games.find((g) => g.id === 'oklahoma');
     assert.equal(row?.pred, '');
     assert.equal(row?.predUF, 0);
     assert.equal(row?.predPending, true);
-    assert.equal(row?.keys?.[0], 'Rush the Clean Pocket');
+    assert.equal(row?.keys?.[0], 'Make Them One-Dimensional');
   });
 
   it('peekScheduleBoard paints remaining scores after this-session live fetch', () => {

@@ -133,7 +133,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'ou-secn-745';
+const NOW_BUST_VALUE = 'ou-keys-3';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
@@ -223,7 +223,57 @@ function pinTexasJonesCard(data) {
 const TEXAS_BOX = 'https://floridagators.com/sports/football/stats/2026/texas/boxscore/27909';
 const GEORGIA_BOX = 'https://floridagators.com/sports/football/stats/2026/georgia/boxscore/27910';
 
-/** Render can still be on Georgia week. Stamp the final and point the board at Oklahoma. */
+/** Charles Oklahoma 3 Keys — pin on the wire so iOS last-good / URLCache cannot keep the empty Saturday board. */
+const OU_KEY_TITLES = [
+  'Make Them One-Dimensional',
+  'Find the Explosive',
+  'Get to Third-and-Long',
+];
+const OU_HOW_UF_WINS = [
+  'Oklahoma cannot run it.\n\nThe Sooners sit 137th nationally in rush EPA (-0.145), average 3.2 yards per carry and have scored only three rushing touchdowns through eight games. Lead back Lloyd Avant is at -0.11 EPA.\n\nFlorida does not need to manufacture anything exotic here. Win first down, choke off the run and make Oklahoma play the game through the weakness of its offense.\n\nIf the Gators own first down, Oklahoma starts every series in trouble.',
+  "Oklahoma’s defense is legitimately good. The mistake would be treating it like Georgia’s.\n\nThe Sooners are excellent at keeping offenses off schedule, but the contradiction is sitting right there: 111th in explosiveness allowed despite ranking among the nation's best in success rate.\n\nThat is Florida’s opening.\n\nWith the Gators sitting 21st in pass EPA (+0.374), this does not have to be four quarters of consistently beating Oklahoma down after down. Florida needs to recognize when the shot is there and connect.\n\nDo not chase five yards every snap. Find the play worth 30.",
+  'Everything Oklahoma struggles with offensively becomes worse when the chains turn against it.\n\nThe Sooners rank 133rd in standard-down success rate and 133rd on first down. Get them to third-and-long and the numbers collapse to 24.5% success and -0.56 EPA, 134th nationally.\n\nThat puts the game directly into the strength of a Florida front with 23 sacks.\n\nWin first down. Create third-and-long. Turn the rush loose.',
+];
+const OU_SWING = [
+  { name: 'Myles Graham', role: OU_HOW_UF_WINS[0] },
+  { name: 'Tramell Jones Jr.', role: OU_HOW_UF_WINS[1] },
+  { name: 'Jayden Woods', role: OU_HOW_UF_WINS[2] },
+];
+const OU_FILM =
+  'Make Them One-Dimensional. Oklahoma cannot run it. 137th in rush EPA, 3.2 yards a carry, three rushing touchdowns. Find the Explosive. They are 111th in explosiveness allowed. Florida is 21st in pass EPA. Do not chase five yards every snap. Find the play worth 30. Get to Third-and-Long. 133rd on first down. Third-and-long is 24.5 percent and minus-0.56 EPA, 134th. Florida has 23 sacks. The Swamp. 7:45 PM ET. SEC Network.';
+const OU_SCOUT =
+  'Make Them One-Dimensional. Oklahoma cannot run it. 137th in rush EPA, 3.2 yards a carry, three rushing touchdowns. Find the Explosive. They are 111th in explosiveness allowed. Florida is 21st in pass EPA. Find the play worth 30. Get to Third-and-Long. 133rd on first down. Third-and-long is 24.5 percent, 134th. Florida has 23 sacks. The Swamp. 7:45 PM ET. SEC Network.';
+
+function oklahomaKeysNeedPin(ou) {
+  const keys = Array.isArray(ou?.keys) ? ou.keys.map((k) => String(k || '').trim()) : [];
+  if (keys.length !== 3) return true;
+  if (keys.some((k) => /win early downs|protect the football|limit explosives/i.test(k))) return true;
+  if (
+    keys[0] !== OU_KEY_TITLES[0] ||
+    keys[1] !== OU_KEY_TITLES[1] ||
+    keys[2] !== OU_KEY_TITLES[2]
+  ) {
+    return true;
+  }
+  const how = Array.isArray(ou?.howUFWins) ? ou.howUFWins.map((n) => String(n || '')) : [];
+  if (how.length < 3) return true;
+  if (!/137th/.test(how[0]) || !/111th/.test(how[1]) || !/24\.5%/.test(how[2])) return true;
+  const swing = Array.isArray(ou?.swing) ? ou.swing : [];
+  if (swing.length < 3) return true;
+  if (
+    swing[0]?.name !== 'Myles Graham' ||
+    swing[1]?.name !== 'Tramell Jones Jr.' ||
+    swing[2]?.name !== 'Jayden Woods'
+  ) {
+    return true;
+  }
+  if (Array.isArray(swing) && swing.some((row) => /QB1|Pace vs SEC-speed/i.test(`${row?.name || ''} ${row?.role || ''}`))) {
+    return true;
+  }
+  return false;
+}
+
+/** Render can still be on Georgia week. Stamp the final, point the board at Oklahoma, and pin the 3 Keys. */
 function pinOklahomaWeek(data) {
   if (!data || typeof data !== 'object') return { data, changed: false };
   const next = { ...data };
@@ -268,16 +318,15 @@ function pinOklahomaWeek(data) {
           ou = { ...ou, tv: 'SEC Network', date: 'November 7, 2026 · 7:45 PM ET' };
           ouChanged = true;
         }
-        const keys = Array.isArray(ou.keys) ? ou.keys : [];
-        if (
-          keys.length &&
-          keys.some((k) => /win early downs|protect the football|limit explosives/i.test(String(k || '')))
-        ) {
-          ou = { ...ou, keys: [] };
-          ouChanged = true;
-        }
-        if (Array.isArray(ou.swing) && ou.swing.some((row) => /QB1|Pace vs SEC-speed/i.test(`${row?.name || ''} ${row?.role || ''}`))) {
-          ou = { ...ou, swing: [] };
+        if (oklahomaKeysNeedPin(ou)) {
+          ou = {
+            ...ou,
+            keys: OU_KEY_TITLES.slice(),
+            howUFWins: OU_HOW_UF_WINS.slice(),
+            swing: OU_SWING.map((row) => ({ ...row })),
+            film: OU_FILM,
+            scoutingReport: OU_SCOUT,
+          };
           ouChanged = true;
         }
         if (ouChanged) {
@@ -857,7 +906,7 @@ function tickerFallbackResponse(request) {
 export default async (request, context) => {
   const url = new URL(request.url);
   const origin = new URL(`https://gatorvault-api.onrender.com${url.pathname}${url.search}`);
-  origin.searchParams.set('gvScrub', 't13');
+  origin.searchParams.set('gvScrub', 't14');
 
   let upstream;
   try {
