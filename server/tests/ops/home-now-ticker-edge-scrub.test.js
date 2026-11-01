@@ -42,7 +42,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the Oklahoma week pack', 
   assert.match(src, /pinOklahomaWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'ou-keys-3'/);
+  assert.match(src, /NOW_BUST_VALUE = 'ou-pred-50'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -64,7 +64,7 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /lorenzo\\s\+mcmullen/);
   assert.match(src, /samuel\\s\+bailey/);
   assert.match(src, /News — \$\{OU_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'ou-keys-3'/);
+  assert.match(src, /NOW_BUST_VALUE = 'ou-pred-50'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -82,7 +82,7 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'ou-keys-3'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'ou-pred-50'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
@@ -171,6 +171,16 @@ test('schedule edge pins Charles Oklahoma 3 Keys over an empty iOS last-good boa
   assert.equal(ou.swing[0].role, ou.howUFWins[0]);
   assert.equal(ou.swing[1].role, ou.howUFWins[1]);
   assert.equal(ou.swing[2].role, ou.howUFWins[2]);
+  assert.equal(ou.ufPct, 50);
+  assert.equal(ou.pred, 'UF 27 · Oklahoma 24');
+  assert.equal(ou.predUF, 27);
+  assert.equal(ou.predOpp, 24);
+  assert.equal(ou.radar[0].label, 'Run Game');
+  assert.equal(ou.radar[0].uf, 66);
+  assert.equal(ou.radar[0].opp, 48);
+  assert.equal(ou.radar[3].label, 'Secondary');
+  assert.equal(ou.radar[3].uf, 54);
+  assert.equal(ou.radar[3].opp, 70);
 
   const live = pinOklahomaWeek({
     currentGameId: 'oklahoma',

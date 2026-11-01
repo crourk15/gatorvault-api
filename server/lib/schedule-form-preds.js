@@ -109,7 +109,7 @@ function applyFormPredictions(doc) {
   if (form.n < MIN_FINALS || !Number.isFinite(form.ufPpg)) return doc;
   let changed = false;
   const games = doc.games.map((game) => {
-    if (!game || isBye(game) || isFinal(game)) return game;
+    if (!game || isBye(game) || isFinal(game) || game.predSat === true) return game;
     const next = projectRemainingGame(game, form);
     if (!next) return game;
     if (game.predUF === next.predUF && game.predOpp === next.predOpp && game.ufPct === next.ufPct) {

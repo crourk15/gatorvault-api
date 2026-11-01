@@ -133,7 +133,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'ou-keys-3';
+const NOW_BUST_VALUE = 'ou-pred-50';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
@@ -243,6 +243,15 @@ const OU_FILM =
   'Make Them One-Dimensional. Oklahoma cannot run it. 137th in rush EPA, 3.2 yards a carry, three rushing touchdowns. Find the Explosive. They are 111th in explosiveness allowed. Florida is 21st in pass EPA. Do not chase five yards every snap. Find the play worth 30. Get to Third-and-Long. 133rd on first down. Third-and-long is 24.5 percent and minus-0.56 EPA, 134th. Florida has 23 sacks. The Swamp. 7:45 PM ET. SEC Network.';
 const OU_SCOUT =
   'Make Them One-Dimensional. Oklahoma cannot run it. 137th in rush EPA, 3.2 yards a carry, three rushing touchdowns. Find the Explosive. They are 111th in explosiveness allowed. Florida is 21st in pass EPA. Find the play worth 30. Get to Third-and-Long. 133rd on first down. Third-and-long is 24.5 percent, 134th. Florida has 23 sacks. The Swamp. 7:45 PM ET. SEC Network.';
+const OU_PRED = 'UF 27 · Oklahoma 24';
+const OU_RADAR = [
+  { label: 'Run Game', uf: 66, opp: 48 },
+  { label: 'Pass Efficiency', uf: 68, opp: 64 },
+  { label: 'Front 7', uf: 70, opp: 54 },
+  { label: 'Secondary', uf: 54, opp: 70 },
+  { label: 'Special Teams', uf: 55, opp: 55 },
+  { label: 'Coaching Edge', uf: 50, opp: 56 },
+];
 
 function oklahomaKeysNeedPin(ou) {
   const keys = Array.isArray(ou?.keys) ? ou.keys.map((k) => String(k || '').trim()) : [];
@@ -270,6 +279,13 @@ function oklahomaKeysNeedPin(ou) {
   if (Array.isArray(swing) && swing.some((row) => /QB1|Pace vs SEC-speed/i.test(`${row?.name || ''} ${row?.role || ''}`))) {
     return true;
   }
+  if (Number(ou?.ufPct) !== 50 || String(ou?.pred || '') !== OU_PRED || Number(ou?.predUF) !== 27 || Number(ou?.predOpp) !== 24) {
+    return true;
+  }
+  const radar = Array.isArray(ou?.radar) ? ou.radar : [];
+  if (radar.length < 6) return true;
+  if (Number(radar[0]?.uf) !== 66 || Number(radar[0]?.opp) !== 48) return true;
+  if (Number(radar[3]?.uf) !== 54 || Number(radar[3]?.opp) !== 70) return true;
   return false;
 }
 
@@ -326,6 +342,15 @@ function pinOklahomaWeek(data) {
             swing: OU_SWING.map((row) => ({ ...row })),
             film: OU_FILM,
             scoutingReport: OU_SCOUT,
+            ufPct: 50,
+            pred: OU_PRED,
+            predUF: 27,
+            predOpp: 24,
+            predSat: true,
+            predConfidence: 64,
+            predMovement: 'down',
+            ufPctDelta: -13,
+            radar: OU_RADAR.map((axis) => ({ ...axis })),
           };
           ouChanged = true;
         }

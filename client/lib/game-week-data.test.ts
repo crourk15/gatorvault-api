@@ -247,6 +247,24 @@ describe('Game Week Film Notes', () => {
     );
   });
 
+  it('Oklahoma Matchup Edge is the sat stamp, not the 50% formula', () => {
+    const oklahoma = SCHEDULE_GAMES.find((g) => g.id === 'oklahoma');
+    assert.ok(oklahoma);
+    const radar = buildRadar(oklahoma);
+    assert.deepEqual(radar, oklahoma.radar);
+    assert.equal(radar.find((a) => a.label === 'Run Game')?.uf, 66);
+    assert.equal(radar.find((a) => a.label === 'Run Game')?.opp, 48);
+    assert.equal(radar.find((a) => a.label === 'Secondary')?.uf, 54);
+    assert.equal(radar.find((a) => a.label === 'Secondary')?.opp, 70);
+    assert.equal(radar.find((a) => a.label === 'Front 7')?.uf, 70);
+    assert.equal(oklahoma.pred, 'UF 27 · Oklahoma 24');
+    assert.equal(oklahoma.ufPct, 50);
+    assert.notDeepEqual(
+      radar.find((a) => a.label === 'Run Game'),
+      { label: 'Run Game', uf: 78, opp: 60 },
+    );
+  });
+
   it('defaults Game Week to the next upcoming kickoff', () => {
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-04T18:00:00-04:00')), 'fau');
     assert.equal(defaultGameWeekId(SCHEDULE_GAMES, new Date('2026-09-06T12:00:00-04:00')), 'campbell');
