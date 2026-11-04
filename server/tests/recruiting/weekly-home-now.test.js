@@ -372,6 +372,6 @@ test('after the Georgia final NOW points at Oklahoma at home', () => {
   assert.ok(lines.some((s) => /^Season — 5-3 · SEC home Saturday$/.test(s)));
   const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [] });
   assert.equal(cats[1].label, 'Visitors');
-  assert.match(String(cats[1].items[0] || ''), /home this Saturday/i);
+  assert.match(String(cats[1].items[0] || ''), /Moreno Fisher/);
   assert.ok(!cats.some((c) => c.label === 'Road'));
 });

@@ -133,7 +133,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'ou-pred-50';
+const NOW_BUST_VALUE = 'ou-visitors-4';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
@@ -252,6 +252,48 @@ const OU_RADAR = [
   { label: 'Special Teams', uf: 55, opp: 55 },
   { label: 'Coaching Edge', uf: 50, opp: 56 },
 ];
+const OU_VISITORS = {
+  gameId: 'oklahoma',
+  opponent: 'Oklahoma',
+  dateLabel: 'Nov 7',
+  chaseLabel: 'Expected Oklahoma visit · Nov 7',
+  source:
+    'Expected / planning, not confirmed on campus. Plans can change. Fisher is the official visitor Nov 6–8. Holston and Steele are on the On3 Nov 7 card. Boyd is dated by 247 for Saturday; he is not on that On3 card.',
+  visitors: [
+    {
+      slug: 'moreno-fisher',
+      name: 'Moreno Fisher',
+      position: 'OT',
+      school: 'William Amos Hough (Charlotte, NC)',
+      stars: 3,
+      classYear: 2027,
+    },
+    {
+      slug: 'nathan-holston',
+      name: 'Nathan Holston',
+      position: 'CB',
+      school: 'Sandy Creek (Tyrone, GA)',
+      stars: 4,
+      classYear: 2028,
+    },
+    {
+      slug: 'lee-steele',
+      name: 'Lee Steele',
+      position: 'TE',
+      school: 'Orange Beach (Orange Beach, AL)',
+      stars: 4,
+      classYear: 2028,
+    },
+    {
+      slug: 'tyler-boyd',
+      name: 'Tyler Boyd',
+      position: 'CB',
+      school: 'Carrollton (Carrollton, GA)',
+      stars: 4,
+      classYear: 2028,
+    },
+  ],
+};
 
 function oklahomaKeysNeedPin(ou) {
   const keys = Array.isArray(ou?.keys) ? ou.keys.map((k) => String(k || '').trim()) : [];
@@ -287,6 +329,20 @@ function oklahomaKeysNeedPin(ou) {
   if (Number(radar[0]?.uf) !== 66 || Number(radar[0]?.opp) !== 48) return true;
   if (Number(radar[3]?.uf) !== 54 || Number(radar[3]?.opp) !== 70) return true;
   return false;
+}
+
+function oklahomaVisitorsNeedPin(ou) {
+  const panel = ou?.expectedVisitors;
+  const slugs = Array.isArray(panel?.visitors)
+    ? panel.visitors.map((v) => String(v?.slug || '').trim())
+    : [];
+  if (slugs.length !== 4) return true;
+  return (
+    slugs[0] !== 'moreno-fisher' ||
+    slugs[1] !== 'nathan-holston' ||
+    slugs[2] !== 'lee-steele' ||
+    slugs[3] !== 'tyler-boyd'
+  );
 }
 
 /** Render can still be on Georgia week. Stamp the final, point the board at Oklahoma, and pin the 3 Keys. */
@@ -351,6 +407,16 @@ function pinOklahomaWeek(data) {
             predMovement: 'down',
             ufPctDelta: -13,
             radar: OU_RADAR.map((axis) => ({ ...axis })),
+          };
+          ouChanged = true;
+        }
+        if (oklahomaVisitorsNeedPin(ou)) {
+          ou = {
+            ...ou,
+            expectedVisitors: {
+              ...OU_VISITORS,
+              visitors: OU_VISITORS.visitors.map((row) => ({ ...row })),
+            },
           };
           ouChanged = true;
         }

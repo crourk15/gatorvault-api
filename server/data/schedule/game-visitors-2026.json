@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T12:50:00.000Z",
+  "updatedAt": "2026-11-04T13:50:00.000Z",
   "source": "Home-game visitor look only \u2014 plans can change. Away games do not get a visitor panel.",
   "visitorMeta": {
     "zylen-little": {
@@ -358,6 +358,34 @@
       "school": "Clinch County (Homerville, GA)",
       "stars": 3,
       "classYear": 2027
+    },
+    "moreno-fisher": {
+      "name": "Moreno Fisher",
+      "position": "OT",
+      "school": "William Amos Hough (Charlotte, NC)",
+      "stars": 3,
+      "classYear": 2027
+    },
+    "nathan-holston": {
+      "name": "Nathan Holston",
+      "position": "CB",
+      "school": "Sandy Creek (Tyrone, GA)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "lee-steele": {
+      "name": "Lee Steele",
+      "position": "TE",
+      "school": "Orange Beach (Orange Beach, AL)",
+      "stars": 4,
+      "classYear": 2028
+    },
+    "tyler-boyd": {
+      "name": "Tyler Boyd",
+      "position": "CB",
+      "school": "Carrollton (Carrollton, GA)",
+      "stars": 4,
+      "classYear": 2028
     }
   },
   "games": [
@@ -455,6 +483,21 @@
         "kamauri-whitfield",
         "devoun-kendrick",
         "kamarion-johnson"
+      ]
+    },
+    {
+      "gameId": "oklahoma",
+      "home": true,
+      "opponent": "Oklahoma",
+      "date": "2026-11-07",
+      "dateLabel": "Nov 7",
+      "chaseLabel": "Expected Oklahoma visit · Nov 7",
+      "source": "Expected / planning, not confirmed on campus. Plans can change. Fisher is the official visitor Nov 6–8. Holston and Steele are on the On3 Nov 7 card. Boyd is dated by 247 for Saturday; he is not on that On3 card.",
+      "slugs": [
+        "moreno-fisher",
+        "nathan-holston",
+        "lee-steele",
+        "tyler-boyd"
       ]
     }
   ]

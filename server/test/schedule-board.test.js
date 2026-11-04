@@ -519,6 +519,12 @@ describe('schedule-board', () => {
     assert.equal(oklahoma.radar.find((a) => a.label === 'Secondary')?.uf, 54);
     assert.equal(oklahoma.radar.find((a) => a.label === 'Secondary')?.opp, 70);
     assert.equal(oklahoma.radar.find((a) => a.label === 'Front 7')?.uf, 70);
+    assert.deepEqual(
+      oklahoma.expectedVisitors?.visitors?.map((v) => v.slug),
+      ['moreno-fisher', 'nathan-holston', 'lee-steele', 'tyler-boyd']
+    );
+    assert.equal(oklahoma.expectedVisitors.visitors[0].name, 'Moreno Fisher');
+    assert.match(String(oklahoma.expectedVisitors.source || ''), /expected \/ planning, not confirmed on campus/i);
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {
