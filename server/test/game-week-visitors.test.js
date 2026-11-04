@@ -283,10 +283,56 @@ describe('game-week-visitors', () => {
     const games = attachExpectedVisitorsToGames([
       { id: 'fau', opp: 'FAU Owls', date: 'September 5, 2026' },
       { id: 'campbell', opp: 'Campbell', date: 'September 12, 2026' },
+      { id: 'oklahoma', opp: 'Oklahoma Sooners', date: 'November 7, 2026' },
     ]);
     assert.ok(games[0].expectedVisitors?.visitors?.length);
     assert.ok(games[1].expectedVisitors);
     assert.equal(games[1].expectedVisitors.visitors.length, 5);
     assert.match(String(games[1].expectedVisitors.source || ''), /expected \/ planning/i);
+    assert.equal(games[2].expectedVisitors.visitors.length, 4);
+    assert.equal(games[2].expectedVisitors.visitors[0].slug, 'moreno-fisher');
+  });
+
+  it('lists the four uncommitted Oklahoma visitors, Fisher first', () => {
+    const panel = visitorsPanelForGameId('oklahoma');
+    assert.ok(panel);
+    assert.equal(panel.gameId, 'oklahoma');
+    assert.deepEqual(
+      panel.visitors.map((v) => v.slug),
+      ['moreno-fisher', 'nathan-holston', 'lee-steele', 'tyler-boyd']
+    );
+    assert.match(String(panel.source || ''), /expected \/ planning, not confirmed on campus/i);
+    assert.match(String(panel.source || ''), /official visitor Nov 6–8/);
+    assert.match(String(panel.source || ''), /Holston and Steele are on the On3 Nov 7 card/);
+    assert.match(String(panel.source || ''), /Boyd is dated by 247/);
+    assert.doesNotMatch(String(panel.source || ''), /Simmons|Alderman|Rivals|Gators Online|Bender/i);
+    assert.equal(expectedVisitLabelForSlug('moreno-fisher'), 'Expected Oklahoma visit · Nov 7');
+    assert.equal(expectedVisitLabelForSlug('nathan-holston'), 'Expected Oklahoma visit · Nov 7');
+    assert.equal(expectedVisitLabelForSlug('lee-steele'), 'Expected Oklahoma visit · Nov 7');
+    assert.equal(expectedVisitLabelForSlug('tyler-boyd'), 'Expected Oklahoma visit · Nov 7');
+    const fisher = panel.visitors.find((v) => v.slug === 'moreno-fisher');
+    assert.equal(fisher.name, 'Moreno Fisher');
+    assert.equal(fisher.position, 'OT');
+    assert.equal(fisher.classYear, 2027);
+    assert.equal(fisher.stars, 3);
+    assert.match(String(fisher.school || ''), /Hough/);
+    const holston = panel.visitors.find((v) => v.slug === 'nathan-holston');
+    assert.equal(holston.position, 'CB');
+    assert.equal(holston.classYear, 2028);
+    assert.equal(holston.stars, 4);
+    assert.match(String(holston.school || ''), /Sandy Creek/);
+    const steele = panel.visitors.find((v) => v.slug === 'lee-steele');
+    assert.equal(steele.name, 'Lee Steele');
+    assert.equal(steele.position, 'TE');
+    assert.equal(steele.classYear, 2028);
+    assert.match(String(steele.school || ''), /Orange Beach/);
+    const boyd = panel.visitors.find((v) => v.slug === 'tyler-boyd');
+    assert.equal(boyd.name, 'Tyler Boyd');
+    assert.equal(boyd.position, 'CB');
+    assert.equal(boyd.classYear, 2028);
+    assert.match(String(boyd.school || ''), /Carrollton/);
+    assert.ok(!panel.visitors.some((v) => v.slug === 'prince-che'));
+    assert.ok(!panel.visitors.some((v) => v.slug === 'jaxon-flowers'));
+    assert.ok(!panel.visitors.some((v) => v.slug === 'brysen-wright'));
   });
 });
