@@ -1,34 +1,49 @@
 === GatorVault Insider - App Store Connect paste sheet ===
 Open Version 1.0 -> English (U.S.) and paste each block below.
 
---- Promotional Text (170 chars, optional) ---
-Florida Gators football intel: FutureCast, recruiting, roster depth, live pulse, and member community - all in one app.
+--- Promotional Text (170 chars, optional — no new build) ---
+Florida recruiting in one place: 2028 board, campus visits, Game Week keys, and film. 30-day free trial — no card required.
 
 --- Description ---
-GatorVault Insider is the membership hub for Florida Gators football fans - FutureCast predictions, recruiting intel, team roster and depth, live pulse, and member community.
+Every Florida recruiting storyline, in one place.
 
-WHAT YOU GET
-- FutureCast Lab - commit likelihood, movement intel, and competing schools
-- Recruiting Hub - class overview, commits, targets, and battles
-- Team Command Center - roster, depth chart, staff, and program history
-- GatorNation Live - real-time pulse and insider feed
-- Member community - threads, debate, and game-week talk
+You already follow the class. You know the board, the visits, and which recruit everyone is talking about. GatorVault puts all of it together so you are not jumping between message boards, timelines, and five different tabs.
 
-COMMUNITY SAFETY
-Signed-in members can report inappropriate posts and block other members. Reports are reviewed by our team.
+Built by Gator fans, for Gator fans. Florida only — no national noise.
 
-SUBSCRIPTIONS (auto-renewable via Apple In-App Purchase)
+WHAT'S INSIDE
+- Recruiting board — 2027 commits and 2028 targets, with status and movement
+- Visits — official and unofficial campus visits, plus alerts
+- Portal tracker — incoming transfers on the Florida roster
+- Game Week — keys, matchup edge, and who is on campus
+- Team hub — roster, depth chart, and staff
+- Live feed and member community
+
+FUTURECAST
+Florida lean and week-to-week movement on the targets that matter. Full FutureCast unlocks with a Film Room plan.
+
+FILM ROOM
+Game film, breakdowns, and scouting reports on the players and opponents that matter.
+
+PLANS
+Start with a 30-day free trial — no card required. Then choose:
 - Locker Room — $4.99/month or $47.88/year
 - Film Room — $9.99/month or $95.88/year
 - War Room — $19.99/month or $191.88/year
-Payment is charged to your Apple ID at confirmation of purchase. Subscriptions automatically renew unless canceled at least 24 hours before the end of the current period. Manage or cancel in your Apple ID account settings.
+
+Payment is charged to your Apple Account at confirmation of purchase. Subscriptions automatically renew unless canceled at least 24 hours before the end of the current period. Manage or cancel anytime in your App Store account settings.
+
+COMMUNITY SAFETY
+Signed-in members can report inappropriate posts and block other members. Reports are reviewed by our team.
 
 LEGAL
 Privacy Policy: https://gatorvaultinsider.com/privacy/
 Terms of Use (EULA): https://gatorvaultinsider.com/terms/
 
+GatorVault is an independent fan app and is not affiliated with or endorsed by the University of Florida.
+
 --- Keywords (100 chars max) ---
-florida,gators,football,recruiting,sec,college,sports,uf,gatorvault,futurecast
+football,uf,florida,gators,recruiting,signing,2028,class,predictions,sec,depth,chart,film,futurecast
 
 --- Support URL ---
 https://gatorvaultinsider.com/
@@ -43,7 +58,8 @@ https://gatorvaultinsider.com/
 2026 GatorVault Media, LLC
 
 --- App Information (separate page) ---
-Subtitle: UF Football Intel Hub
+Name: GatorVault Insider (do not rename)
+Subtitle: Commits, portal & visit alerts
 Primary category: Sports
 Secondary category: News (optional)
 Privacy Policy URL: https://gatorvaultinsider.com/privacy/
@@ -91,22 +107,22 @@ UGC: report + block. Account deletion: password + type DELETE (permanent).
 Support: support@gatorvaultinsider.com
 
 --- Screenshots (6.5 inch Display slot — 1284×2778) ---
-Upload PNGs from docs/app-store-screenshots/ in order:
-01-futurecast.png
-02-recruiting.png
-03-team.png
-04-community.png
-05-membership.png
-06-live-feed.png
+Upload PNGs from docs/app-store-screenshots/ in this order (board first):
+02-recruiting.png — Every Florida target. One board.
+01-futurecast.png — See who's leaning Florida, and how the board moves
+03-team.png — Roster, depth, and staff in one hub
+06-live-feed.png — Today's Florida recruiting feed
+04-community.png — Talk the class with other fans
+05-membership.png — 30-day free trial. No card required.
 
 --- iPad 13 inch Display slot (2064×2752, optional) ---
-Upload from docs/app-store-screenshots/ipad-13/:
-01-futurecast-ipad-13.png
+Same upload order from docs/app-store-screenshots/ipad-13/:
 02-recruiting-ipad-13.png
+01-futurecast-ipad-13.png
 03-team-ipad-13.png
+06-live-feed-ipad-13.png
 04-community-ipad-13.png
 05-membership-ipad-13.png
-06-live-feed-ipad-13.png
 
 --- Connect questionnaires (manual in UI) ---
 Age Rating + App Privacy answers: docs/APP_STORE_CONNECT_REMAINING.md

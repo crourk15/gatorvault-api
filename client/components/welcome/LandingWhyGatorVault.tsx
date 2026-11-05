@@ -10,28 +10,26 @@ export function LandingWhyGatorVault(): React.ReactElement {
 
         <div className="gv-why-grid">
           <article className="gv-why-card">
-            <h3 className="gv-why-card-title">The Problem</h3>
+            <h3 className="gv-why-card-title">The problem</h3>
             <p className="gv-why-card-body">
-              Florida recruiting moves fast — but most fans are stuck scrolling message boards, chasing
-              rumors, and piecing together half-truths from scattered sources. Noise wins when there is no
-              single place to trust.
+              Following Florida recruiting means bouncing between message boards, timelines, and
+              paywalled sites, then piecing it together yourself.
             </p>
           </article>
 
           <article className="gv-why-card">
-            <h3 className="gv-why-card-title">The Mission</h3>
+            <h3 className="gv-why-card-title">What we do</h3>
             <p className="gv-why-card-body">
-              GatorVault exists to cut through the clutter. We combine verified intel, movement tracking,
-              FutureCast probabilities, film, and insider tools into one platform built specifically for
-              Gator Nation.
+              GatorVault keeps the board, portal, visits, Game Week, and film in one clean app,
+              updated as the class moves.
             </p>
           </article>
 
           <article className="gv-why-card">
-            <h3 className="gv-why-card-title">The Promise</h3>
+            <h3 className="gv-why-card-title">Who it&apos;s for</h3>
             <p className="gv-why-card-body">
-              Real-time updates when it matters. Elite recruiting tools when you need an edge. A home for
-              Florida fans who refuse to guess — and want the same clarity the insiders see.
+              Fans who already know the names and want one place to keep up — without the rumor
+              chase.
             </p>
           </article>
         </div>

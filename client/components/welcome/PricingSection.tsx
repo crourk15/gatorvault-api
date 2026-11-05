@@ -10,9 +10,10 @@ export function PricingSection(): React.ReactElement {
 
   return (
     <section className="pricing-section" id="pricing" data-testid="welcome-pricing">
-      <h2>Choose Your Plan</h2>
+      <h2>Start free. Upgrade when you&apos;re hooked.</h2>
       <p className="pricing-subtitle">
-        Two plans built for how Gator fans follow recruiting. 30-day free trial — no card required.
+        30-day free trial — no card required. Locker Room is the hub. Film Room adds FutureCast,
+        staff notes, and film.
       </p>
       <div className="pricing-grid pricing-grid--duo">
         {tiers.map((tier) => (
