@@ -46,7 +46,7 @@ const FLIP_WATCH_COMMITS_2027 = {
 /** Locked 2028 target slugs */
 const ALLOWLIST_2028 = [
   'kaleb-ballard',
-  'brysen-wright',
+  // brysen-wright — Miami commit (2026-11-05); removed from active 2028 targets
   'asher-ghioto',
   // Closest-to-commit / Who commits next — Carrollwood EDGE priority (must stay locked)
   'antonio-thomas-jr',
@@ -224,7 +224,7 @@ function loadLabPromotionSlugs(classYear) {
  * Soft-promote mistakes that must never reappear on the 2028 board / Home teaser.
  * (Visit-only national prospects, etc.)
  */
-const BLOCKED_SOFT_2028 = new Set(['trace-hawkins', 'uf-three']);
+const BLOCKED_SOFT_2028 = new Set(['trace-hawkins', 'uf-three', 'brysen-wright']);
 
 function getAllowlistSet(classYear) {
   const year = parseInt(classYear, 10);

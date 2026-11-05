@@ -23,12 +23,17 @@ test('mergeAllowlistIntoDiscovery backfills all 2028 allowlist slugs', () => {
   for (const slug of boardBacked) {
     assert.ok(slugs.has(slug), 'missing allowlist slug ' + slug);
   }
-  const sample = merged.find((p) => p.slug === 'brysen-wright');
+  const sample = merged.find((p) => p.slug === 'asher-ghioto');
   assert.ok(sample);
   assert.equal(sample.allowlistTarget, true);
   assert.ok(Number(sample.discoveryScore) >= ALLOWLIST_DISCOVERY_FLOOR);
   assert.ok(Number(sample.ufProbability) > 0);
   assert.equal(sample.ufStatus, 'TARGET');
+  assert.equal(
+    merged.some((p) => p.slug === 'brysen-wright' && p.allowlistTarget),
+    false,
+    'Wright → Miami must not stay on 2028 Early Discovery allowlist'
+  );
 });
 
 test('mergeAllowlistIntoDiscovery raises floor for existing low-score rows', () => {
@@ -58,7 +63,7 @@ test('mergeAllowlistIntoDiscovery raises floor for existing low-score rows', () 
 
 test('buildAllowlistDiscoveryRow includes ufProbability from board seed', () => {
   const boardBySlug = require('../../lib/target-board-path').loadTargetBoardBySlug(2028, path.join(__dirname, '../..'));
-  const row = buildAllowlistDiscoveryRow(boardBySlug.get('brysen-wright'), 2028);
+  const row = buildAllowlistDiscoveryRow(boardBySlug.get('asher-ghioto'), 2028);
   assert.equal(row.allowlistTarget, true);
   assert.ok(Number(row.ufProbability) > 0 && Number(row.ufProbability) <= 1);
 });

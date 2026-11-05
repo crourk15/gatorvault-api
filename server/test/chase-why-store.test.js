@@ -37,7 +37,7 @@ describe('chase-why-store seed ∪ durable merge', () => {
     const store = require('../lib/chase-why-store');
     const text = store.getOverride('izayah-vickers');
     assert.ok(text, 'expected seed override');
-    assert.match(text, /Quiet CB|already leads on On3/i);
+    assert.match(text, /Quiet CB|already leads Vickers on On3|already leads on On3/i);
     assert.doesNotMatch(text, /Florida already owns this CB/i);
     const doc = store.loadDoc();
     assert.ok(Object.keys(doc.bySlug).length >= 50, 'seed board should load');
@@ -58,6 +58,6 @@ describe('chase-why-store seed ∪ durable merge', () => {
     delete require.cache[require.resolve('../lib/chase-why-store')];
     const store = require('../lib/chase-why-store');
     assert.equal(store.getOverride('izayah-vickers'), 'Durable override for Vickers only.');
-    assert.match(store.getOverride('brysen-wright') || '', /WR|Wright|Miami/i);
+    assert.match(store.getOverride('asher-ghioto') || '', /EDGE|Ghioto|Miami/i);
   });
 });

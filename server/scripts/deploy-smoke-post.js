@@ -210,9 +210,9 @@ async function main() {
         if (body.players.length < 20) return `expected >=20 2028 early-discovery players, got ${body.players.length}`;
         const allowlist = body.players.filter((p) => p.allowlistTarget === true);
         if (allowlist.length < 20) return `expected >=20 allowlistTarget rows, got ${allowlist.length}`;
-        const brysen = body.players.find((p) => p.slug === 'brysen-wright');
-        if (!brysen?.allowlistTarget) return 'brysen-wright missing allowlistTarget in early-discovery';
-        if (Number(brysen.ufProbability) <= 0) return 'brysen-wright missing ufProbability in early-discovery allowlist merge';
+        const ghioto = body.players.find((p) => p.slug === 'asher-ghioto');
+        if (!ghioto?.allowlistTarget) return 'asher-ghioto missing allowlistTarget in early-discovery';
+        if (Number(ghioto.ufProbability) <= 0) return 'asher-ghioto missing ufProbability in early-discovery allowlist merge';
         return null;
       },
     }),

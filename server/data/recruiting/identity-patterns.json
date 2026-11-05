@@ -4215,9 +4215,9 @@
       "stars": 5,
       "position": "WR",
       "school": "Mandarin (Jacksonville, FL)",
-      "commitSchool": null,
+      "commitSchool": "Miami",
       "class": 2028,
-      "natlRank": 208,
+      "natlRank": 1,
       "patterns": [
         "5 star WR Brysen",
         "5-star WR Brysen",
@@ -4232,24 +4232,25 @@
         "Mandarin (Jacksonville, FL) WR",
         "Brysen Wright",
         "Wright",
-        "5 star WR",
-        "5-star WR",
-        "five star WR",
-        "five-star WR",
         "WR Brysen",
         "WR Wright",
         "5 star Mandarin (Jacksonville, FL) commit",
         "five star Mandarin (Jacksonville, FL) commit",
+        "Miami 5 star",
+        "Miami five star",
+        "5 star Miami",
+        "five star Miami",
+        "Miami WR",
         "2028 WR Brysen",
-        "2028 5-star WR",
-        "2028 five-star WR",
+        "2028 5-star WR Brysen",
+        "2028 five-star WR Brysen",
         "2028 Brysen Wright",
-        "#208 Brysen",
-        "top 208 WR Brysen",
-        "208 5 star WR",
-        "208 five star WR"
+        "#1 Brysen",
+        "top 1 WR Brysen",
+        "1 5 star WR Brysen",
+        "1 five star WR Brysen"
       ],
-      "updatedAt": "2026-07-12T18:56:59.164Z"
+      "updatedAt": "2026-11-05T18:34:29.174Z"
     },
     "marquis-evans": {
       "slug": "marquis-evans",
@@ -5714,5 +5715,5 @@
       "updatedAt": "2026-09-23T19:43:05.593Z"
     }
   },
-  "updatedAt": "2026-10-05T18:00:32.102Z"
+  "updatedAt": "2026-11-05T18:34:29.174Z"
 }

@@ -178,7 +178,9 @@ function applyHollowDemote(player) {
 /** Flip targets who committed elsewhere — preserve external school when demoting false UF commits.
  * Easton Royal flipped to Florida on 2026-10-11 and lives in VERIFIED_UF_COMMITS_BY_YEAR.
  */
-const HUB_EXTERNAL_COMMIT_BY_SLUG = {};
+const HUB_EXTERNAL_COMMIT_BY_SLUG = {
+  'brysen-wright': 'Miami',
+};
 
 function isHubExternalCommitFlipTarget(player) {
   const slug = playerSlug(player);

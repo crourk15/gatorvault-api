@@ -2,6 +2,17 @@
   "version": 1,
   "events": [
     {
+      "id": "gm2_1793903669353_gjmen",
+      "at": "2026-11-05T18:34:29.353Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "brysen-wright",
+      "fingerprint": "manual_commit_brysen-wright_2026-11-05",
+      "source": "manual",
+      "eventType": "commit"
+    },
+    {
       "id": "gm2_1791223232254_2g74u",
       "at": "2026-10-05T18:00:32.254Z",
       "layer": "sil",
@@ -5256,19 +5267,7 @@
       "playerSlug": "jamison-roberts",
       "reason": "invalid_player_on_write",
       "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1783769292479_3tsva",
-      "at": "2026-07-11T11:28:12.479Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "stafford-willis",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
     }
   ],
-  "updatedAt": "2026-10-05T18:00:32.254Z"
+  "updatedAt": "2026-11-05T18:34:29.353Z"
 }
