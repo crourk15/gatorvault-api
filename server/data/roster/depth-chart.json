@@ -1,20 +1,20 @@
 {
   "version": 1,
   "mode": "fall-camp",
-  "label": "Week 1 · Florida Atlantic",
-  "subtitle": "Official UF depth chart (Aug 31). Philo QB1 · Tramell QB2 · Will Griffin off the two-deep. Open ORs at END, H-TE, and one CB. Ole Miss initial availability (Wed): Singleton questionable (ankle) — game-time. If he sits, Brown starts at Z and Stockton in the slot. Oyebadejo not listed — cleared from last week.",
-  "updatedAt": "2026-09-24T01:10:00.000Z",
-  "source": "official-week1-fau-depth-chart",
+  "label": "Week 10 · Oklahoma",
+  "subtitle": "Jones named starter vs Oklahoma. Philo is the backup. Monday official sheet had Jones OR Philo; Thursday reports lock Jones. Ugorji out (Caden Jones at RT). McCloud suspended (Kalu / Lyons). Brown doubtful. Stockton and Oyebadejo questionable.",
+  "updatedAt": "2026-11-05T13:55:00.000Z",
+  "source": "oklahoma-week-jones-starter",
   "offense": [
     {
       "pos": "QB",
-      "s": "Aaron Philo",
-      "si": "Jr.",
-      "b": "Tramell Jones Jr.",
-      "bi": "So.",
+      "s": "Tramell Jones Jr.",
+      "si": "So.",
+      "b": "Aaron Philo",
+      "bi": "Jr.",
       "third": "",
       "status": "locked",
-      "analysis": "Official Week 1 chart: Philo starts vs FAU. Tramell is the listed backup. Will Griffin is not on the two-deep."
+      "analysis": "Jones starts vs Oklahoma — second career start (first was Texas). Philo is the backup after the Georgia bench. Monday official sheet listed them as OR; he is now the named starter."
     },
     {
       "pos": "RB",
@@ -44,7 +44,7 @@
       "bi": "Jr.",
       "third": "",
       "status": "locked",
-      "analysis": "Singleton Jr. starts at Z with Abrams next. Questionable vs Ole Miss (ankle) — official Wed initial report, game-time again. If he can't go, Brown starts at Z. Stays listed 1st."
+      "analysis": "Singleton Jr. starts at Z with Abrams next."
     },
     {
       "pos": "WR (F)",
@@ -54,7 +54,7 @@
       "bi": "Sr.",
       "third": "",
       "status": "locked",
-      "analysis": "VB3 holds the F with Stockton behind him (also the PR two-deep). If Singleton sits, Brown starts at Z and Stockton starts in the slot."
+      "analysis": "VB3 holds the F with Stockton behind him (also the PR two-deep). Brown is doubtful vs Oklahoma (knee). Stockton is questionable (foot)."
     },
     {
       "pos": "TE (Y)",
@@ -124,7 +124,7 @@
       "bi": "Sr.",
       "third": "",
       "status": "locked",
-      "analysis": "Ugorji starts at RT; Caden Jones is next."
+      "analysis": "Ugorji stays listed 1st, out vs Oklahoma. Caden Jones has taken the starting RT snaps this week."
     }
   ],
   "defense": [
@@ -136,7 +136,7 @@
       "bi": "",
       "third": "",
       "status": "battle",
-      "analysis": "Three-way OR at defensive end on the official sheet — all listed first team. Oyebadejo not on the Ole Miss availability report — cleared from last week's Q. Stays in the OR."
+      "analysis": "Three-way OR at defensive end on the official sheet — all listed first team. Oyebadejo is questionable vs Oklahoma."
     },
     {
       "pos": "NOSE",
@@ -156,7 +156,7 @@
       "bi": "Sr. / 5th",
       "third": "",
       "status": "locked",
-      "analysis": "McCloud starts at DT. Kalu and Lyons are the OR behind him."
+      "analysis": "McCloud stays listed 1st, suspended vs Oklahoma. Kalu started two of the three games McCloud missed; Lyons started the other."
     },
     {
       "pos": "JACK",
@@ -258,7 +258,7 @@
       "bi": "Sr.",
       "third": "",
       "status": "locked",
-      "analysis": "Official PR two-deep: Brown III, then Stockton."
+      "analysis": "Official PR two-deep: Brown III, then Stockton. Brown is doubtful vs Oklahoma; Stockton is questionable."
     },
     {
       "pos": "KR",
