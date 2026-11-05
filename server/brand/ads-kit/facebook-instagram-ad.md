@@ -1,13 +1,17 @@
-# Facebook / Instagram Ad
+# Facebook / Instagram App Install ads
 
-**Headline:** Florida Football, Unlocked.
+**Rule:** paid ads never use a recruit or player name.
 
-**Body:**
+**Upload this video:** `docs/promo/meta-ads-refresh/UPLOAD-THIS-REEL.mp4`
 
-GatorVault is the first-ever Florida football intelligence platform.
+Clicks: `docs/promo/meta-ads-refresh/README.md`
 
-Real recruiting movement. Real film breakdowns. Real NIL insights.
+**Headline:** Open the Vault.
 
-No rumors. No noise. Just truth.
+**Primary text:**
 
-👉 Join today at GatorVault.com
+Open the Vault.
+Recruiting, Film Room, Game Week — Florida football in one app.
+Download Gator Vault Insider on the App Store.
+
+**Description:** Florida football in one app.
