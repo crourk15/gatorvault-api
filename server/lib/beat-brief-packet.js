@@ -16,12 +16,34 @@ function statusLooksCommitted(raw) {
   return /\b(committed|signed|enrolled)\b/i.test(s);
 }
 
+function schoolIsFlorida(name) {
+  try {
+    return require('./on3-board-hydrate').isUfSchoolName(name);
+  } catch {
+    const s = String(name || '').trim().toLowerCase();
+    if (!s) return false;
+    if (s === 'florida' || s === 'florida gators' || s === 'uf' || s === 'gators') return true;
+    if (/florida\s*state|seminoles|\bfsu\b|south\s*florida|\busf\b|atlantic|\bfau\b/.test(s)) {
+      return false;
+    }
+    return /^florida\b/.test(s) && !/state|south|atlantic/.test(s);
+  }
+}
+
+/**
+ * True only when the player is committed/signed **to Florida**.
+ * Elsewhere commits (e.g. Alabama) keep status=committed but must NOT get
+ * Florida COMMIT / commit_culture Vault framing.
+ */
 function isCommittedPlayer(player, research) {
   if (!player && !research) return false;
-  if (research?.eventType === 'commit' || research?.eventType === 'flip') return true;
-  if (statusLooksCommitted(research?.ufPosition)) return true;
-  if (statusLooksCommitted(player?.ufStatus || player?.status)) return true;
-  if (player?.committedTo && /florida|gators/i.test(String(player.committedTo))) return true;
+  const committedTo = String(player?.committedTo || '').trim();
+  if (committedTo) return schoolIsFlorida(committedTo);
+
+  // Explicit Florida status strings ("Florida Committed") — not bare "committed".
+  const ufStatus = String(player?.ufStatus || '').trim();
+  if (ufStatus && schoolIsFlorida(ufStatus) && statusLooksCommitted(ufStatus)) return true;
+
   const teams = player?.on3TopTeams || player?.topTeams || [];
   try {
     const on3 = require('./on3-recruit-client');
@@ -31,7 +53,38 @@ function isCommittedPlayer(player, research) {
   } catch {
     /* optional */
   }
+
+  // Research-only commit/flip — trust only when ufPosition says committed (Florida desk).
+  if (research?.eventType === 'commit' || research?.eventType === 'flip') {
+    return statusLooksCommitted(research?.ufPosition);
+  }
+  if (statusLooksCommitted(research?.ufPosition)) return true;
+
+  // Bare player.status === "committed" without committedTo / UF team is NOT enough
+  // (Kingston Preyear poison: Alabama commit framed as Florida COMMIT).
   return false;
+}
+
+/** Committed/signed to a school that is not Florida. */
+function isCommittedElsewhere(player) {
+  const committedTo = String(player?.committedTo || '').trim();
+  if (committedTo) return !schoolIsFlorida(committedTo);
+  if (!statusLooksCommitted(player?.status) && !statusLooksCommitted(player?.ufStatus)) return false;
+  // status committed, no school — check whether UF team is the committed one
+  const teams = player?.on3TopTeams || player?.topTeams || [];
+  try {
+    const on3 = require('./on3-recruit-client');
+    const year = Number(player?.classYear) || 2028;
+    const uf = on3.getFloridaTeam(teams, year);
+    if (uf && statusLooksCommitted(uf.status)) return false;
+    const elsewhere = teams.some((t) => {
+      const name = t?.team?.name || t?.team?.fullName || t?.name || '';
+      return statusLooksCommitted(t?.status) && name && !schoolIsFlorida(name);
+    });
+    return elsewhere;
+  } catch {
+    return statusLooksCommitted(player?.status) && !schoolIsFlorida(player?.ufStatus || '');
+  }
 }
 
 function currentRosterCollision(slug) {
@@ -458,26 +511,35 @@ function buildWhyFlorida({ player, research, intelligence, beatRows, rivals }) {
   const interested = interestedSchoolsSummary(player, rivals);
   const ladder = schoolLadderSummary(player, 5);
   const ufRpm = pct(player?.ufRpmPct ?? player?.ufProbability ?? player?.ufConfidence ?? player?.floridaOdds);
+  const elsewhere = !committed && isCommittedElsewhere(player);
   if (ufRpm) {
     bits.push(
       committed
         ? `Florida On3 RPM ~${ufRpm} (commit locked).`
-        : `Florida On3 RPM ~${ufRpm}${interested && /florida/i.test(interested) ? ' (leads involved schools)' : ''}.`
+        : elsewhere
+          ? `Florida On3 RPM ~${ufRpm} (committed elsewhere — not a UF lock).`
+          : `Florida On3 RPM ~${ufRpm}${interested && /florida/i.test(interested) ? ' (leads involved schools)' : ''}.`
     );
   }
   const staff = ufStaffSummary(player);
   if (staff) bits.push(`${staff}.`);
 
-  const ufPos = committed ? 'committed' : research?.ufPosition;
+  const ufPos = committed
+    ? 'committed'
+    : elsewhere
+      ? `committed elsewhere (${String(player?.committedTo || 'other').trim()})`
+      : research?.ufPosition;
   const eventType = committed && (!research?.eventType || research.eventType === 'target_update' || research.eventType === 'update' || research.eventType === 'trending')
     ? 'commit_culture'
-    : research?.eventType;
+    : elsewhere
+      ? 'committed_elsewhere'
+      : research?.eventType;
   if (ufPos) bits.push(`UF board read: ${ufPos}.`);
   if (eventType && eventType !== 'update') bits.push(`Latest signal type: ${eventType.replace(/_/g, ' ')}.`);
 
   const ufStatus = player?.ufStatus || player?.status;
   if (ufStatus) bits.push(`Tracked UF status: ${ufStatus}.`);
-  if (committed && player?.committedTo) bits.push(`Committed to: ${player.committedTo}.`);
+  if ((committed || elsewhere) && player?.committedTo) bits.push(`Committed to: ${player.committedTo}.`);
 
   const visits = visitSummary(intelligence, player);
   if (visits) bits.push(`Visit / OV trail: ${visits}.`);
@@ -552,14 +614,22 @@ function buildVaultAngle({
   const gaps = intelligence?.gaps || research?.gaps || [];
 
   const committed = isCommittedPlayer(player, research);
-  const stake = committed ? 'committed' : ufPos;
+  const elsewhere = !committed && isCommittedElsewhere(player);
+  const stake = committed ? 'committed' : elsewhere ? `lost (${String(player?.committedTo || 'elsewhere').trim()})` : ufPos;
   const signal = committed && (eventType === 'update' || eventType === 'target update' || eventType === 'trending')
     ? 'commit culture'
-    : eventType;
+    : elsewhere
+      ? 'committed elsewhere'
+      : eventType;
   const lines = [];
   if (committed) {
     lines.push(
       `Angle: ${name} is a Florida COMMIT — do not frame as an open board chase. Own the culture/ownership story in Vault voice (program member energy, fall plans, class leadership) without citing writers. Lead with commit stake + one board credential (${concrete || 'ranks/size/staff'}).`
+    );
+  } else if (elsewhere) {
+    const school = String(player?.committedTo || 'another school').trim();
+    lines.push(
+      `Angle: ${name} is COMMITTED ELSEWHERE (${school}) — DO NOT write a Florida ownership / commit-culture post. Desk may use this Open only as a lost-board note or QB-room pivot. Never claim UF lock, never invent a flip unless a fresh verified flip signal is in the packet.`
     );
   } else if (filmHook) {
     lines.push(
@@ -582,6 +652,10 @@ function buildVaultAngle({
   if (committed) {
     lines.push(
       'Pressure angle: none — commitment is locked. If rivals appear on the ladder they are former board noise; use them only as contrast to how locked UF already is.'
+    );
+  } else if (elsewhere) {
+    lines.push(
+      `Pressure angle: none — ${name} is locked elsewhere. Do not manufacture Florida separation or chase urgency.`
     );
   } else if (rivalHook.length) {
     lines.push(
@@ -624,7 +698,9 @@ function buildVaultAngle({
     lines.push(
       committed
         ? `Vault edge (verified long-form COMMIT): stack ${parts.join(' | ')} under the ownership/culture hook — elite Vault voice — ownership story, not a chase recap.`
-        : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. State board + film as Vault fact; never announce that you’re different or ahead of anyone.`
+        : elsewhere
+          ? `Vault edge (ELSEWHERE COMMIT — ${String(player?.committedTo || 'other').trim()}): board facts only. Do not draft Florida ownership copy. If posting at all, frame as lost target / room pivot — never UF lock.`
+          : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. State board + film as Vault fact; never announce that you’re different or ahead of anyone.`
     );
   } else if (gaps.length) {
     lines.push(`Vault edge (fill the board gaps): ${gaps.slice(0, 4).join(', ')}.`);
@@ -1361,6 +1437,11 @@ async function buildBeatBrief(slug, opts = {}) {
     if (!research.eventType || research.eventType === 'target_update' || research.eventType === 'update' || research.eventType === 'trending') {
       research.eventType = 'commit_culture';
     }
+  } else if (research && isCommittedElsewhere(player)) {
+    research.ufPosition = `committed elsewhere (${String(player?.committedTo || 'other').trim()})`;
+    if (!research.eventType || research.eventType === 'target_update' || research.eventType === 'update' || research.eventType === 'trending' || research.eventType === 'commit_culture') {
+      research.eventType = 'committed_elsewhere';
+    }
   }
 
   const rivals = rivalList(player || {}, research, intelligence);
@@ -1654,6 +1735,7 @@ module.exports = {
   buildWhyFlorida,
   buildVaultAngle,
   isCommittedPlayer,
+  isCommittedElsewhere,
   statusLooksCommitted,
   currentRosterCollision,
   buildBoardFacts,

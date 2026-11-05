@@ -11,7 +11,8 @@ const {
 const {
   buildWhyFlorida,
   buildVaultAngle,
-  isCommittedPlayer
+  isCommittedPlayer,
+  isCommittedElsewhere
 } = require('../lib/beat-brief-packet');
 const { resolvePlayerFromTextSync } = require('../lib/beat-recruiting-ingest-gate');
 const teaser = require('../lib/beat-teaser-resolve');
@@ -61,6 +62,45 @@ function main() {
     ]
   };
   assert.ok(isCommittedPlayer(player, { eventType: 'target_update', ufPosition: 'tracking' }));
+
+  // Elsewhere commit (Alabama) must NEVER get Florida COMMIT / commit_culture framing.
+  const preyear = {
+    name: 'Kingston Preyear',
+    classYear: 2028,
+    pos: 'QB',
+    stars: 4,
+    status: 'committed',
+    ufStatus: 'committed',
+    committedTo: 'Alabama Crimson Tide',
+    ufRpmPct: 38,
+    on3TopTeams: [
+      { team: { name: 'Alabama' }, status: 'Committed', prediction: 98, year: 2028 },
+      { team: { name: 'Florida' }, status: 'Offered', prediction: 0, year: 2028 }
+    ]
+  };
+  assert.equal(isCommittedPlayer(preyear, { eventType: 'target_update', ufPosition: 'tracking' }), false);
+  assert.equal(isCommittedElsewhere(preyear), true);
+  const whyPreyear = buildWhyFlorida({
+    player: preyear,
+    research: { ufPosition: 'tracking', eventType: 'target_update' },
+    intelligence: null,
+    beatRows: [{ detail: 'Kingston Preyear — Florida offer', source: 'auto:allowlist-intel-sweep' }],
+    rivals: ['Alabama', 'Auburn']
+  });
+  assert.ok(/committed elsewhere/i.test(whyPreyear), whyPreyear);
+  assert.ok(!/UF board read: committed(?!\s+elsewhere)/i.test(whyPreyear), whyPreyear);
+  assert.ok(!/commit locked/i.test(whyPreyear), whyPreyear);
+  const anglePreyear = buildVaultAngle({
+    playerName: 'Kingston Preyear',
+    research: { ufPosition: 'tracking', eventType: 'target_update' },
+    intelligence: null,
+    beatRows: [{ detail: 'Kingston Preyear — Florida offer' }],
+    rivals: ['Alabama'],
+    whyFlorida: whyPreyear,
+    player: preyear
+  });
+  assert.ok(/COMMITTED ELSEWHERE/i.test(anglePreyear), anglePreyear);
+  assert.ok(!/is a Florida COMMIT/i.test(anglePreyear), anglePreyear);
 
   // Regression: "uncommitted" must NEVER match /committed/ substring and invent commit_culture.
   assert.equal(
