@@ -100,13 +100,18 @@ const NAME_SUFFIX = `(?:\\s+(?:Jr\\.?|Sr\\.?|II|III|IV|V))?`;
 const NAME_CHUNK = `${NAME_PART}(?:\\s+${NAME_PART}){1,2}${NAME_SUFFIX}`;
 const POS_TOKEN = `(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|K|P)`;
 const TRAILING_NAME_NOISE_RE =
-  /\s+(?:can't|cant|won't|wont|doesn't|doesnt|isn't|isnt|aren't|arent|wasn't|wasnt|hasn't|hasnt|haven't|havent|didn't|didnt|ignore|ignores|ignored|could|would|should|will|can)\.?$/i;
+  /\s+(?:can't|cant|won't|wont|doesn't|doesnt|isn't|isnt|aren't|arent|wasn't|wasnt|hasn't|hasnt|haven't|havent|didn't|didnt|ignore|ignores|ignored|could|would|should|will|can|continues|continue|remains|remain|leads|lead|opens|open|names|name|details|detail|discusses|discuss|says|said|adds|added|joins|join|visits|visit|returns|return|rises|rise|enters|enter)\.?$/i;
 const TRAILING_PREP_TIME_RE =
   /\s+(?:in|on|at)\s+(?:january|february|march|april|may|june|july|august|september|october|november|december|spring|summer|fall|winter|\d{4})\b/i;
+
+const LEADING_POS_WORD_RE =
+  /^(?:safety|safeties|corner|cornerback|linebacker|quarterback|running\s*back|wide\s*receiver|wideout|tight\s*end|offensive|defensive|athlete|prospect|recruit|edge)\s+/i;
 
 function sanitizeExtractedPlayerName(name, fullText = '') {
   let n = String(name || '').trim();
   if (!n) return null;
+  // "Safety Isaiah Reeves opens…" → strip leading position word before validation.
+  n = n.replace(LEADING_POS_WORD_RE, '').trim();
   const prepMatch = n.match(/^(.+?)\s+(in|on|at)$/i);
   if (prepMatch && fullText) {
     const hay = String(fullText);
