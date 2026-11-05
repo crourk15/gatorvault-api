@@ -1,0 +1,8 @@
+# Shanahan / McVay install
+
+Open and use: `docs/cfb-27-shanahan-mcvay-playsheet.txt`
+
+1. Add formations from Section 1 (Ohio State + Notre Dame Gun Normal Y Off / pistols)
+2. Set A1–A4 audibles
+3. Fill My Gameplan from Section 2
+4. Practice the first 8 (Section 3) until Wide Zone and boot are automatic
