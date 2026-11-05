@@ -16,13 +16,13 @@ test('toUfFraction accepts percent and fraction', () => {
 
 test('mergeBoardSeed fills ranks and UF from 2028 target board', () => {
   const boardBySlug = require('../../lib/target-board-path').loadTargetBoardBySlug(2028, path.join(__dirname, '../..'));
-  const boardRow = boardBySlug.get('brysen-wright');
-  assert.ok(boardRow, 'expected brysen-wright on 2028 board');
+  const boardRow = boardBySlug.get('asher-ghioto');
+  assert.ok(boardRow, 'expected asher-ghioto on 2028 board');
 
   const merged = mergeBoardSeed(
     {
-      slug: 'brysen-wright',
-      name: 'Brysen Wright',
+      slug: 'asher-ghioto',
+      name: 'Asher Ghioto',
       classYear: 2028,
       category: 'target',
       natlRank: null,
@@ -52,10 +52,13 @@ test('enrichTargetsWithBoardSeed backfills allowlist rows from board seed', () =
 
   const slugs = new Set(targets.map((p) => p.slug));
   assert.ok(slugs.has('bryce-willingham'));
-  assert.ok(slugs.size >= allowlist.ALLOWLIST_2028.length);
-  for (const slug of allowlist.ALLOWLIST_2028) {
+  const board = require('../../lib/target-board-path').loadTargetBoardBySlug(2028);
+  const boardBacked = allowlist.ALLOWLIST_2028.filter((slug) => board.get(slug));
+  assert.ok(boardBacked.length >= 30, 'expected board-backed allowlist targets');
+  for (const slug of boardBacked) {
     assert.ok(slugs.has(slug), 'missing allowlist slug ' + slug);
   }
+  assert.equal(slugs.has('brysen-wright'), false, 'Wright → Miami must not be synthesized onto the 2028 board');
 });
 
 test('enrichTargetsWithBoardSeed skips committed slugs from board synthesis', () => {

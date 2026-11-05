@@ -54,6 +54,14 @@ test('isActiveUfTarget excludes UF commits and elsewhere commits', () => {
     false,
     'Robinson → Florida State must never count as an active 2028 chase target'
   );
+  assert.equal(
+    isActiveUfTarget({ slug: 'brysen-wright', committedTo: null, status: 'uncommitted', category: 'target' }),
+    false,
+    'Wright → Miami must never count as an active 2028 chase target'
+  );
+  const { getAllowlistSet, ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist');
+  assert.equal(ALLOWLIST_2028.includes('brysen-wright'), false);
+  assert.equal(getAllowlistSet(2028).has('brysen-wright'), false);
 });
 
 test('filterAllowlistedTargets keeps curated Flip Watch commits and drops Royal after the Florida flip', () => {

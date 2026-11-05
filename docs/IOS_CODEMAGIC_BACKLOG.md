@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Brysen Wright (2028 WR) committed to Miami on Nov 5. FutureCast Chase / Closest / 2028 board drop him. Profile is Miami, not a Florida pledge. No Home NOW News. API after Render — no Codemagic. Reopen FutureCast once.
 - [x] Depth chart Week 10 Oklahoma: Tramell Jones Jr. is the named starter, Aaron Philo the backup. Ugorji out (Caden Jones at RT). McCloud suspended (Kalu / Lyons). Brown doubtful. Stockton and Oyebadejo questionable. Official two-deep names stay except the named QB flip. API `/api/roster/depth-chart` after Render — no Codemagic. Reopen Team / Game Week Depth once. Seed is the bake row.
 - [x] Game Week Oklahoma expected visitors: Moreno Fisher (2027 OT, official Nov 6–8), Nathan Holston (2028 CB), Lee Steele (2028 TE), Tyler Boyd (2028 CB). Uncommitted only. Expected / planning, not confirmed on campus. Origin `/api/schedule` attaches the panel. Edge pins the four names and one-shot busts `gv-now-bust=ou-visitors-4` so iOS last-good empty does not hide the list. API + Netlify after deploy — no Codemagic. Force-quit and reopen Game Week once. Seed is the bake row.
 - [x] Game Week Oklahoma Vegas: stamp DraftKings via Covers/ESPN **UF -5.5 / O/U 48.5** (ML -205 / +176) on `/api/betting/lines` so Prediction is not Line pending. Opened ESPN -4 / 48.5. FanDuel -6.5 / 46.5 is not the stamp. Texas 27-24 and Georgia 8-27 are completed so nextGame is Oklahoma, not leftover FSU. API after Render — no Codemagic. Force-quit and reopen Game Week once.

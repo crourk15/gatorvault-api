@@ -22,6 +22,15 @@ const SNAPSHOT_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'uf-closi
  */
 const FORCED_ELSEWHERE_COMMITS = [
   {
+    slug: 'brysen-wright',
+    name: 'Brysen Wright',
+    pos: 'WR',
+    school: 'Mandarin (Jacksonville, FL)',
+    classYear: 2028,
+    committedTo: 'Miami',
+    status: 'committed',
+  },
+  {
     slug: 'man-robinson',
     name: 'Man Robinson',
     pos: 'CB',
