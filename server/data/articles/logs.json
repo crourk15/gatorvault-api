@@ -1,7 +1,15 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-15T22:12:25.886Z",
+  "updatedAt": "2026-08-18T02:43:12.122Z",
   "events": [
+    {
+      "id": "log_1787020992122_3oshcn",
+      "action": "draft_created",
+      "at": "2026-08-18T02:43:12.122Z",
+      "articleId": "insider_1787020992118_d59gqs",
+      "title": "Heat Check: Sumrall after the first scrimmage — urgency, open QB, tackle still unfinished",
+      "category": "heat_check"
+    },
     {
       "id": "log_1784153545886_l53zda",
       "action": "draft_created",
