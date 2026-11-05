@@ -1,13 +1,38 @@
-# Facebook / Instagram Ad
+# Facebook / Instagram Ad — App Install (Apple)
 
-**Headline:** Florida Football, Unlocked.
+**Objective:** App installs → Apple App Store → GatorVault Insider  
+**Full paste pack + creatives:** [`docs/promo/open-the-vault/META-APP-INSTALL-AD.md`](../../../docs/promo/open-the-vault/META-APP-INSTALL-AD.md)
+
+---
+
+## Primary (recommended)
+
+**Headline:** Download on the App Store
 
 **Body:**
 
-GatorVault is the first-ever Florida football intelligence platform.
+Open the Vault.
 
-Real recruiting movement. Real film breakdowns. Real NIL insights.
+Florida football intel in one app — FutureCast, recruiting, team, live beat, Game Week.
 
-No rumors. No noise. Just truth.
+GatorVault Insider is on the App Store. Download free, start your trial on iPhone.
 
-👉 Join today at GatorVault.com
+**CTA:** Install now
+
+**Creative:** `docs/promo/open-the-vault/meta-exports/feed-1080-app-install.png`
+
+---
+
+## Alt
+
+**Headline:** Florida football. Unlocked.
+
+**Body:**
+
+Real recruiting movement. Real board. Real visit alerts.
+
+GatorVault Insider puts Florida football intel on your iPhone — not rumor threads.
+
+Download on the App Store.
+
+**CTA:** Install now
