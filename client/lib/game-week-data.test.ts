@@ -261,6 +261,17 @@ describe('Game Week Film Notes', () => {
     assert.equal(kentucky.pred, 'UF 22 · Kentucky 23');
     assert.equal(kentucky.ufPct, 48);
     assert.equal(kentucky.predSat, true);
+    assert.deepEqual(kentucky.keys, [
+      'Take Away the Run',
+      'Stay Alive on Third',
+      "Don't Give Them the Ball",
+    ]);
+    const kyBundle = getGameWeekBundle('kentucky');
+    assert.equal(kyBundle.keys[0].title, 'Take Away the Run');
+    assert.match(kyBundle.keys[0].body, /37th nationally in rush EPA/);
+    assert.equal(kyBundle.swingPlayers[0].name, 'Myles Graham');
+    assert.equal(kyBundle.swingPlayers[1].name, 'Tramell Jones Jr.');
+    assert.equal(kyBundle.swingPlayers[2].name, 'Jadan Baugh');
     assert.notDeepEqual(
       radar.find((a) => a.label === 'Run Game'),
       { label: 'Run Game', uf: 78, opp: 62 },

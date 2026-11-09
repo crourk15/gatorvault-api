@@ -531,9 +531,19 @@ describe('schedule-board', () => {
     const kentucky = board.games.find((g) => g.id === 'kentucky');
     assert.equal(kentucky.date, 'November 14, 2026 · 6:15 PM ET');
     assert.equal(kentucky.tv, 'ESPN');
-    assert.deepEqual(kentucky.keys, []);
-    assert.deepEqual(kentucky.swing, []);
-    assert.equal(kentucky.film, 'Kroger Field. 6:15 PM ET. ESPN.');
+    assert.deepEqual(kentucky.keys, [
+      'Take Away the Run',
+      'Stay Alive on Third',
+      "Don't Give Them the Ball",
+    ]);
+    assert.equal(kentucky.swing[0].name, 'Myles Graham');
+    assert.equal(kentucky.swing[1].name, 'Tramell Jones Jr.');
+    assert.equal(kentucky.swing[2].name, 'Jadan Baugh');
+    assert.match(kentucky.howUFWins[0], /37th nationally in rush EPA/);
+    assert.match(kentucky.howUFWins[0], /19th in adjusted line yards/);
+    assert.match(kentucky.howUFWins[1], /132nd in third-down conversions allowed at 47\.7 percent/);
+    assert.match(kentucky.howUFWins[2], /1\.33 per game/);
+    assert.match(kentucky.film, /Take Away the Run/);
     assert.ok(!kentucky.keys?.some((k) => /Physical run fits|Win the trenches|Finish in red zone/i.test(k)));
     assert.equal(kentucky.pred, 'UF 22 · Kentucky 23');
     assert.equal(kentucky.predSat, true);
