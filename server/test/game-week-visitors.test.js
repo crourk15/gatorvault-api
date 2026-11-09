@@ -306,10 +306,10 @@ describe('game-week-visitors', () => {
     assert.match(String(panel.source || ''), /Holston and Steele are on the On3 Nov 7 card/);
     assert.match(String(panel.source || ''), /Boyd is dated by 247/);
     assert.doesNotMatch(String(panel.source || ''), /Simmons|Alderman|Rivals|Gators Online|Bender/i);
-    assert.equal(expectedVisitLabelForSlug('moreno-fisher'), 'Expected Oklahoma visit · Nov 7');
-    assert.equal(expectedVisitLabelForSlug('nathan-holston'), 'Expected Oklahoma visit · Nov 7');
-    assert.equal(expectedVisitLabelForSlug('lee-steele'), 'Expected Oklahoma visit · Nov 7');
-    assert.equal(expectedVisitLabelForSlug('tyler-boyd'), 'Expected Oklahoma visit · Nov 7');
+    assert.equal(expectedVisitLabelForSlug('moreno-fisher'), 'Oklahoma visit · Nov 7');
+    assert.equal(expectedVisitLabelForSlug('nathan-holston'), 'Oklahoma visit · Nov 7');
+    assert.equal(expectedVisitLabelForSlug('lee-steele'), 'Oklahoma visit · Nov 7');
+    assert.equal(expectedVisitLabelForSlug('tyler-boyd'), 'Oklahoma visit · Nov 7');
     const fisher = panel.visitors.find((v) => v.slug === 'moreno-fisher');
     assert.equal(fisher.name, 'Moreno Fisher');
     assert.equal(fisher.position, 'OT');
@@ -334,5 +334,6 @@ describe('game-week-visitors', () => {
     assert.ok(!panel.visitors.some((v) => v.slug === 'prince-che'));
     assert.ok(!panel.visitors.some((v) => v.slug === 'jaxon-flowers'));
     assert.ok(!panel.visitors.some((v) => v.slug === 'brysen-wright'));
+    assert.equal(visitorsPanelForGameId('kentucky'), null);
   });
 });

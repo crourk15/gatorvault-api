@@ -189,4 +189,20 @@ describe('betting-lines next game', () => {
     assert.notEqual(ou.spread.uf, -6.5);
     assert.notEqual(ou.total, 46.5);
   });
+
+  it('serves Kentucky as nextGame after the Oklahoma hold, with no invented line', async () => {
+    const when = new Date('2026-11-08T20:00:00.000Z');
+    const next = pickNextGame(STATIC_LINES, when);
+    assert.equal(next.id, 'uf-kentucky-2026-w11');
+    const payload = await getBettingLines(when);
+    assert.equal(payload.nextGame.id, 'uf-kentucky-2026-w11');
+    assert.equal(payload.nextGame.spread, null);
+    assert.equal(payload.nextGame.total, null);
+    assert.equal(payload.nextGame.moneyline, null);
+    assert.equal(payload.lastGame.id, 'uf-oklahoma-2026-w10');
+    assert.equal(payload.lastGame.homeScore, 7);
+    assert.equal(payload.lastGame.awayScore, 23);
+    assert.equal(payload.finals['uf-oklahoma-2026-w10'].uf, 7);
+    assert.equal(payload.finals['uf-oklahoma-2026-w10'].opp, 23);
+  });
 });

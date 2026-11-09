@@ -446,12 +446,15 @@ const LEFTOVER_SC_WINDOW_RE = /abc or sec network|12:00\s*[–-]\s*1:00/i;
 /** Posted Texas final — last-good noon at DKR / 4-2 must not beat this week. */
 const LEFTOVER_TEXAS_NOW_RE =
   /texas at dkr|dkr-texas|4-2 heading into saturday|12:00\s*pm\s*·\s*abc|easton royal flips to florida/i;
-/** Posted Georgia final — last-good Atlanta / 5-2 must not beat Oklahoma week. */
+/** Posted Georgia final — last-good Atlanta / 5-2 must not beat this week. */
 const LEFTOVER_GEORGIA_NOW_RE =
   /georgia at mercedes|mercedes-benz|5-2 heading into saturday|florida 27,\s*texas 24/i;
-const OU_NOW_GAME = 'Oklahoma in the Swamp — 7:45 PM · SEC Network';
-const OU_NOW_SEASON = '5-3 · SEC home Saturday';
-const OU_NOW_NEWS = 'Florida 8, Georgia 27';
+/** Posted Oklahoma final — last-good Swamp / 5-3 must not beat Kentucky week. */
+const LEFTOVER_OKLAHOMA_NOW_RE =
+  /oklahoma in the swamp|7:45 pm · sec network|5-3\s*·\s*sec home saturday|florida 8,\s*georgia 27|moreno fisher/i;
+const KY_NOW_GAME = 'Kentucky at Kroger Field — 6:15 PM · ESPN';
+const KY_NOW_SEASON = '5-4 heading into Saturday';
+const KY_NOW_NEWS = 'Florida 7, Oklahoma 23';
 
 function pinMissouriAbcTick(text: string): string {
   const t = lockBroadcastWindow(text);
@@ -470,29 +473,30 @@ function isLeftoverNowBlob(blob: string): boolean {
     LEFTOVER_MISSOURI_NOW_RE.test(blob) ||
     LEFTOVER_SC_WINDOW_RE.test(blob) ||
     LEFTOVER_TEXAS_NOW_RE.test(blob) ||
-    LEFTOVER_GEORGIA_NOW_RE.test(blob)
+    LEFTOVER_GEORGIA_NOW_RE.test(blob) ||
+    LEFTOVER_OKLAHOMA_NOW_RE.test(blob)
   );
 }
 
-function oklahomaNowWeek(): HomeNowWeekPillar[] {
+function kentuckyNowWeek(): HomeNowWeekPillar[] {
   return [
-    { key: 'game', label: 'Game', items: [OU_NOW_GAME] },
-    { key: 'news', label: 'News', items: [OU_NOW_NEWS] },
-    { key: 'season', label: 'Season', items: [OU_NOW_SEASON] },
+    { key: 'game', label: 'Game', items: [KY_NOW_GAME] },
+    { key: 'news', label: 'News', items: [KY_NOW_NEWS] },
+    { key: 'season', label: 'Season', items: [KY_NOW_SEASON] },
   ];
 }
 
 function pinLeftoverMissouriNowWeek(rows: HomeNowWeekPillar[]): HomeNowWeekPillar[] {
   const blob = nowWeekBlob(rows);
   if (!rows.length || !isLeftoverNowBlob(blob)) return rows;
-  return oklahomaNowWeek();
+  return kentuckyNowWeek();
 }
 
 function pinLeftoverMissouriTickerLines(lines: string[]): string[] {
   const next = (Array.isArray(lines) ? lines : []).map((s) => String(s || '').trim()).filter(Boolean);
   const text = next.join(' ');
   if (!next.length || !isLeftoverNowBlob(text)) return next;
-  return [`Game — ${OU_NOW_GAME}`, `News — ${OU_NOW_NEWS}`, `Season — ${OU_NOW_SEASON}`];
+  return [`Game — ${KY_NOW_GAME}`, `News — ${KY_NOW_NEWS}`, `Season — ${KY_NOW_SEASON}`];
 }
 
 let lastGoodNowWeekMemory: HomeNowWeekPillar[] | null = null;
@@ -505,7 +509,7 @@ export function isRetiredHomeNowTick(text: string): boolean {
 
 function pinBaileyNowNewsItems(items: string[]): string[] {
   const next = items.map((s) => String(s || '').trim()).filter(Boolean);
-  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [OU_NOW_NEWS];
+  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [KY_NOW_NEWS];
   return next.filter((s) => !isRetiredHomeNowTick(s));
 }
 
@@ -513,7 +517,7 @@ function pinBaileyNowNewsLines(lines: string[]): string[] {
   return lines.map((line) => {
     const text = String(line || '');
     if (/^News — /i.test(text) && STALE_NOW_NEWS_RE.test(text)) {
-      return `News — ${OU_NOW_NEWS}`;
+      return `News — ${KY_NOW_NEWS}`;
     }
     return text;
   });
@@ -529,7 +533,7 @@ export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNow
       const rawItems = (row?.items || []).map((s) => String(s || '').trim()).filter(Boolean);
       const isNews = key === 'news' || label === 'News';
       if (isNews && rawItems.some((s) => STALE_NOW_NEWS_RE.test(s))) {
-        return { key: 'news', label: 'News', items: [OU_NOW_NEWS] };
+        return { key: 'news', label: 'News', items: [KY_NOW_NEWS] };
       }
       return {
         key,
