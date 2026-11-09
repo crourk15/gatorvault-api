@@ -248,6 +248,25 @@ describe('Game Week Film Notes', () => {
     );
   });
 
+  it('Kentucky Matchup Edge is the sat stamp, not the 48% formula', () => {
+    const kentucky = SCHEDULE_GAMES.find((g) => g.id === 'kentucky');
+    assert.ok(kentucky);
+    const radar = buildRadar(kentucky);
+    assert.deepEqual(radar, kentucky.radar);
+    assert.equal(radar.find((a) => a.label === 'Run Game')?.uf, 52);
+    assert.equal(radar.find((a) => a.label === 'Run Game')?.opp, 66);
+    assert.equal(radar.find((a) => a.label === 'Pass Efficiency')?.uf, 68);
+    assert.equal(radar.find((a) => a.label === 'Front 7')?.opp, 64);
+    assert.equal(radar.find((a) => a.label === 'Secondary')?.opp, 64);
+    assert.equal(kentucky.pred, 'UF 22 · Kentucky 23');
+    assert.equal(kentucky.ufPct, 48);
+    assert.equal(kentucky.predSat, true);
+    assert.notDeepEqual(
+      radar.find((a) => a.label === 'Run Game'),
+      { label: 'Run Game', uf: 78, opp: 62 },
+    );
+  });
+
   it('Oklahoma Matchup Edge is the sat stamp, not the 50% formula', () => {
     const oklahoma = SCHEDULE_GAMES.find((g) => g.id === 'oklahoma');
     assert.ok(oklahoma);

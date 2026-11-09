@@ -133,7 +133,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'ky-espn-615';
+const NOW_BUST_VALUE = 'ky-now-edge-48';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
@@ -226,6 +226,16 @@ const OKLAHOMA_BOX = 'https://floridagators.com/sports/football/stats/2026/oklah
 const KY_DATE = 'November 14, 2026 · 6:15 PM ET';
 const KY_TV = 'ESPN';
 const KY_FILM = 'Kroger Field. 6:15 PM ET. ESPN.';
+const KY_PRED = 'UF 22 · Kentucky 23';
+/** Sit stamp — Kentucky 7-2 at home, 10th adj success / 19th line yards / 37th rush EPA. Florida 5-4, 72nd rush EPA, 41st pass EPA, 104th pass EPA allowed. Not the 48% formula hexagon. */
+const KY_RADAR = [
+  { label: 'Run Game', uf: 52, opp: 66 },
+  { label: 'Pass Efficiency', uf: 68, opp: 56 },
+  { label: 'Front 7', uf: 54, opp: 64 },
+  { label: 'Secondary', uf: 50, opp: 64 },
+  { label: 'Special Teams', uf: 55, opp: 55 },
+  { label: 'Coaching Edge', uf: 48, opp: 58 },
+];
 
 /** Charles Oklahoma 3 Keys — pin on the wire so iOS last-good / URLCache cannot keep the empty Saturday board. */
 const OU_KEY_TITLES = [
@@ -362,6 +372,21 @@ function kentuckyWindowNeedPin(ky) {
   return ky?.tv !== KY_TV || !/6:15/.test(String(ky?.date || ''));
 }
 
+function kentuckyEdgeNeedPin(ky) {
+  if (Number(ky?.ufPct) !== 48 || String(ky?.pred || '') !== KY_PRED || Number(ky?.predUF) !== 22 || Number(ky?.predOpp) !== 23) {
+    return true;
+  }
+  if (ky?.predSat !== true) return true;
+  const radar = Array.isArray(ky?.radar) ? ky.radar : [];
+  if (radar.length < 6) return true;
+  if (Number(radar[0]?.uf) !== 52 || Number(radar[0]?.opp) !== 66) return true;
+  if (Number(radar[1]?.uf) !== 68 || Number(radar[1]?.opp) !== 56) return true;
+  if (Number(radar[2]?.uf) !== 54 || Number(radar[2]?.opp) !== 64) return true;
+  if (Number(radar[3]?.uf) !== 50 || Number(radar[3]?.opp) !== 64) return true;
+  if (Number(radar[5]?.uf) !== 48 || Number(radar[5]?.opp) !== 58) return true;
+  return false;
+}
+
 /** Render can still be on Oklahoma week. Stamp the final, point the board at Kentucky. */
 function pinKentuckyWeek(data) {
   if (!data || typeof data !== 'object') return { data, changed: false };
@@ -465,6 +490,21 @@ function pinKentuckyWeek(data) {
           kyChanged = true;
         } else if (/6:00\s*[-–]\s*8:00|power run and play-action/i.test(String(ky.film || ''))) {
           ky = { ...ky, film: KY_FILM };
+          kyChanged = true;
+        }
+        if (kentuckyEdgeNeedPin(ky)) {
+          ky = {
+            ...ky,
+            ufPct: 48,
+            pred: KY_PRED,
+            predUF: 22,
+            predOpp: 23,
+            predSat: true,
+            predConfidence: 69,
+            predMovement: 'down',
+            ufPctDelta: -15,
+            radar: KY_RADAR.map((axis) => ({ ...axis })),
+          };
           kyChanged = true;
         }
         if (kyChanged) {

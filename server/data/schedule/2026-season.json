@@ -1038,6 +1038,15 @@
       "pred": "UF 22 · Kentucky 23",
       "predUF": 22,
       "predOpp": 23,
+      "predSat": true,
+      "radar": [
+        { "label": "Run Game", "uf": 52, "opp": 66 },
+        { "label": "Pass Efficiency", "uf": 68, "opp": 56 },
+        { "label": "Front 7", "uf": 54, "opp": 64 },
+        { "label": "Secondary", "uf": 50, "opp": 64 },
+        { "label": "Special Teams", "uf": 55, "opp": 55 },
+        { "label": "Coaching Edge", "uf": 48, "opp": 58 }
+      ],
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27912",
         "official": "https://www.ticketmaster.com/kentucky-wildcats-football-vs-florida-gators-lexington-kentucky-11-14-2026/event/160064ACA20A7989",

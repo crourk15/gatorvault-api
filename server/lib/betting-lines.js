@@ -213,10 +213,11 @@ const STATIC_LINES = [
     opponent: 'Kentucky',
     date: '2026-11-14T23:15:00.000Z',
     venue: 'Kroger Field',
-    // No sat line yet — Line pending until Charles stamps Vegas.
-    spread: null,
-    total: null,
-    moneyline: null,
+    // Market Nov 8 2026: DraftKings UF +3 / 52.5, ML +130 / -155
+    // (opened ESPN UK -1.5 / 55.5). Hard Rock UK -2.5 / 52.5. FanDuel UK -3.5 / 51.5 is not the stamp.
+    spread: { line: 'UF +3', uf: 3 },
+    total: 52.5,
+    moneyline: { uf: 130, opp: -155 },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
     source: 'schedule'
