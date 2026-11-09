@@ -43,7 +43,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the Kentucky week pack', 
   assert.match(src, /pinKentuckyWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'ky-espn-615'/);
+  assert.match(src, /NOW_BUST_VALUE = 'ky-now-edge-48'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -65,7 +65,7 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /lorenzo\\s\+mcmullen/);
   assert.match(src, /samuel\\s\+bailey/);
   assert.match(src, /News — \$\{KY_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'ky-espn-615'/);
+  assert.match(src, /NOW_BUST_VALUE = 'ky-now-edge-48'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -83,7 +83,7 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'ky-espn-615'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'ky-now-edge-48'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
@@ -193,6 +193,19 @@ test('schedule edge pins Kentucky week over an empty iOS last-good board', () =>
   assert.deepEqual(ky.keys, []);
   assert.deepEqual(ky.swing, []);
   assert.equal(ky.film, 'Kroger Field. 6:15 PM ET. ESPN.');
+  assert.equal(ky.pred, 'UF 22 · Kentucky 23');
+  assert.equal(ky.predUF, 22);
+  assert.equal(ky.predOpp, 23);
+  assert.equal(ky.predSat, true);
+  assert.equal(ky.ufPct, 48);
+  assert.equal(ky.radar[0].label, 'Run Game');
+  assert.equal(ky.radar[0].uf, 52);
+  assert.equal(ky.radar[0].opp, 66);
+  assert.equal(ky.radar[1].uf, 68);
+  assert.equal(ky.radar[3].uf, 50);
+  assert.equal(ky.radar[3].opp, 64);
+  assert.equal(ky.radar[5].uf, 48);
+  assert.equal(ky.radar[5].opp, 58);
 
   const live = pinKentuckyWeek({
     currentGameId: 'kentucky',

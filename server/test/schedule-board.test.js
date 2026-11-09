@@ -535,6 +535,15 @@ describe('schedule-board', () => {
     assert.deepEqual(kentucky.swing, []);
     assert.equal(kentucky.film, 'Kroger Field. 6:15 PM ET. ESPN.');
     assert.ok(!kentucky.keys?.some((k) => /Physical run fits|Win the trenches|Finish in red zone/i.test(k)));
+    assert.equal(kentucky.pred, 'UF 22 · Kentucky 23');
+    assert.equal(kentucky.predSat, true);
+    assert.equal(kentucky.ufPct, 48);
+    assert.equal(kentucky.radar.find((a) => a.label === 'Run Game')?.uf, 52);
+    assert.equal(kentucky.radar.find((a) => a.label === 'Run Game')?.opp, 66);
+    assert.equal(kentucky.radar.find((a) => a.label === 'Pass Efficiency')?.uf, 68);
+    assert.equal(kentucky.radar.find((a) => a.label === 'Front 7')?.opp, 64);
+    assert.equal(kentucky.radar.find((a) => a.label === 'Secondary')?.opp, 64);
+    assert.equal(kentucky.radar.find((a) => a.label === 'Coaching Edge')?.opp, 58);
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {
