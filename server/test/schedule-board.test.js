@@ -26,8 +26,8 @@ describe('schedule-board', () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
-    assert.equal(payload.predThrough, '2026-W8');
-    assert.equal(payload.currentGameId, 'oklahoma');
+    assert.equal(payload.predThrough, '2026-W9');
+    assert.equal(payload.currentGameId, 'kentucky');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);
     assert.equal(campbell.finalOpp, 3);
@@ -78,7 +78,7 @@ describe('schedule-board', () => {
   it('game-week meta games also hide desk scout', () => {
     const feed = require('../lib/game-week-feed');
     const payload = feed.buildGameWeekPayload();
-    assert.equal(payload.currentGameId, 'oklahoma');
+    assert.equal(payload.currentGameId, 'kentucky');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.deepEqual(campbell.offenseScout, []);
     assert.equal(campbell.scoutingReport, undefined);
@@ -514,6 +514,9 @@ describe('schedule-board', () => {
     assert.equal(oklahoma.predUF, 27);
     assert.equal(oklahoma.predOpp, 24);
     assert.equal(oklahoma.predSat, true);
+    assert.equal(oklahoma.finalUF, 7);
+    assert.equal(oklahoma.finalOpp, 23);
+    assert.equal(oklahoma.finalSource, 'official');
     assert.equal(oklahoma.radar.find((a) => a.label === 'Run Game')?.uf, 66);
     assert.equal(oklahoma.radar.find((a) => a.label === 'Run Game')?.opp, 48);
     assert.equal(oklahoma.radar.find((a) => a.label === 'Secondary')?.uf, 54);
@@ -525,6 +528,13 @@ describe('schedule-board', () => {
     );
     assert.equal(oklahoma.expectedVisitors.visitors[0].name, 'Moreno Fisher');
     assert.match(String(oklahoma.expectedVisitors.source || ''), /expected \/ planning, not confirmed on campus/i);
+    const kentucky = board.games.find((g) => g.id === 'kentucky');
+    assert.equal(kentucky.date, 'November 14, 2026 · 6:15 PM ET');
+    assert.equal(kentucky.tv, 'ESPN');
+    assert.deepEqual(kentucky.keys, []);
+    assert.deepEqual(kentucky.swing, []);
+    assert.equal(kentucky.film, 'Kroger Field. 6:15 PM ET. ESPN.');
+    assert.ok(!kentucky.keys?.some((k) => /Physical run fits|Win the trenches|Finish in red zone/i.test(k)));
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

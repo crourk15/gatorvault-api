@@ -70,5 +70,14 @@
     "opp": 27,
     "source": "official",
     "completedAt": "2026-10-31T23:45:00.000Z"
+  },
+  "uf-oklahoma-2026-w10": {
+    "gameKey": "uf-oklahoma-2026-w10",
+    "scheduleId": "oklahoma",
+    "opponent": "Oklahoma",
+    "uf": 7,
+    "opp": 23,
+    "source": "official",
+    "completedAt": "2026-11-08T04:00:00.000Z"
   }
 }

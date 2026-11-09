@@ -105,7 +105,7 @@ export type ScheduleGame = {
 };
 
 /** Bundled remaining-season pred week. Peek drops a leftover last-good stamp older than this. */
-export const SCHEDULE_SEED_PRED_THROUGH = '2026-W8';
+export const SCHEDULE_SEED_PRED_THROUGH = '2026-W9';
 
 /** SEC locked Texas noon to ABC on Oct 11. Saved boards still say the Oct 5 window. */
 export function lockBroadcastWindow(tv?: string | null): string {
@@ -778,6 +778,10 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { label: "Special Teams", uf: 55, opp: 55 },
       { label: "Coaching Edge", uf: 50, opp: 56 },
     ],
+    finalUF: 7,
+    finalOpp: 23,
+    finalSource: "official",
+    boxScoreUrl: "https://floridagators.com/sports/football/stats/2026/oklahoma/boxscore/27911",
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27911",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-oklahoma-sooners-gainesville-florida-11-07-2026/event/2200645C2197098A",
@@ -797,18 +801,15 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     id: "kentucky",
     label: "Nov 14 @ Kentucky",
     opp: "Kentucky Wildcats",
-    date: "November 14, 2026 · 6:00–8:00 PM ET",
+    date: "November 14, 2026 · 6:15 PM ET",
     venue: "Kroger Field, Lexington KY",
-    ufPct: 56,
-    tv: "TBD",
-    keys: ["Physical run fits", "Win the trenches", "Finish in red zone"],
-    swing: [
-      { name: "Jadan Baugh", impact: 95, role: "Wear down front" },
-      { name: "WR room", role: "Explosive plays" },
-    ],
-    film: "Kentucky power run and play-action on the road.",
-    pred: "UF 26 · Kentucky 23",
-    predUF: 26,
+    ufPct: 48,
+    tv: "ESPN",
+    keys: [],
+    swing: [],
+    film: "Kroger Field. 6:15 PM ET. ESPN.",
+    pred: "UF 22 · Kentucky 23",
+    predUF: 22,
     predOpp: 23,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27912",
@@ -830,7 +831,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Vanderbilt Commodores",
     date: "November 21, 2026 · 12:00–1:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 63,
+    ufPct: 54,
     tv: "TBD",
     keys: ["Execute early", "Avoid complacency", "Develop depth"],
     swing: [
@@ -838,8 +839,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "QB1", role: "Efficient scoring drives" },
     ],
     film: "Vanderbilt improving — treat as SEC test.",
-    pred: "UF 28 · Vanderbilt 22",
-    predUF: 28,
+    pred: "UF 24 · Vanderbilt 22",
+    predUF: 24,
     predOpp: 22,
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27913",
@@ -861,7 +862,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Florida State Seminoles",
     date: "November 27, 2026 · 3:30 PM ET",
     venue: "Doak Campbell Stadium, Tallahassee FL",
-    ufPct: 54,
+    ufPct: 48,
     tv: "ABC",
     keys: ["Win field position battle", "Avoid penalties", "Win turnover margin"],
     swing: [
@@ -869,8 +870,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Myles Graham", role: "Contain their TE weapon" },
     ],
     film: "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
-    pred: "UF 26 · FSU 24",
-    predUF: 26,
+    pred: "UF 23 · FSU 24",
+    predUF: 23,
     predOpp: 24,
     filmLessonId: "frl00010-0000-4000-8000-00000000000a",
     opponentTendencies: ["RPO and quick game in rivalry setting", "TE usage in red zone", "Tempo spikes in critical moments"],

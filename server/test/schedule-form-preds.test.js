@@ -17,18 +17,18 @@ const FORM_2026_W5 = {
 };
 
 const FORM_2026 = {
-  n: 8,
-  ufPpg: (66 + 52 + 44 + 52 + 17 + 19 + 27 + 8) / 8,
-  allowed: (21 + 3 + 39 + 28 + 45 + 38 + 24 + 27) / 8,
+  n: 9,
+  ufPpg: (66 + 52 + 44 + 52 + 17 + 19 + 27 + 8 + 7) / 9,
+  allowed: (21 + 3 + 39 + 28 + 45 + 38 + 24 + 27 + 23) / 9,
 };
 
 describe('schedule form predictions', () => {
-  it('reads 35.6 PPG from the official 2026 finals after Georgia', () => {
+  it('reads scoring form from the official 2026 finals after Oklahoma', () => {
     const board = scheduleBoard.getScheduleBoard(2026);
     const form = measureUfScoringForm(board.games);
-    assert.equal(form.n, 8);
+    assert.equal(form.n, 9);
     assert.equal(form.ufPpg, FORM_2026.ufPpg);
-    assert.ok(form.ufPpg < 40, 'Georgia 8 pulls season scoring off the Texas-week 30s');
+    assert.ok(form.ufPpg < 35, 'Oklahoma 7 pulls season scoring off the Georgia-week 30s');
   });
 
   it('regresses pace so remaining cards are not 50 every week', () => {

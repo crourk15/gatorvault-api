@@ -90,10 +90,10 @@ export const TICKET_GAMES: TicketGame[] = [
   },
   {
     game: '🐊 UF @ Kentucky',
-    date: 'November 14, 2026 · 6:00–8:00 PM ET',
+    date: 'November 14, 2026 · 6:15 PM ET',
     venue: 'Kroger Field, Lexington KY',
     type: 'AWAY',
-    note: 'TV TBD · night window',
+    note: '6:15 PM ET · ESPN',
   },
   {
     game: '🐊 UF vs Vanderbilt',

@@ -198,6 +198,27 @@ const STATIC_LINES = [
     moneyline: { uf: -205, opp: +176 },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
+    source: 'schedule',
+    completed: true,
+    homeScore: 7,
+    awayScore: 23,
+    status: 'Final',
+    live: false,
+    scoreSource: 'official'
+  },
+  {
+    id: 'uf-kentucky-2026-w11',
+    week: 11,
+    game: 'Florida at Kentucky',
+    opponent: 'Kentucky',
+    date: '2026-11-14T23:15:00.000Z',
+    venue: 'Kroger Field',
+    // No sat line yet — Line pending until Charles stamps Vegas.
+    spread: null,
+    total: null,
+    moneyline: null,
+    sportsbookUrl: FANDUEL_AFFILIATE,
+    sportsbookLinks: SPORTSBOOKS,
     source: 'schedule'
   },
   {

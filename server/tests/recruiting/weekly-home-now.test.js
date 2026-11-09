@@ -375,3 +375,17 @@ test('after the Georgia final NOW points at Oklahoma at home', () => {
   assert.match(String(cats[1].items[0] || ''), /Moreno Fisher/);
   assert.ok(!cats.some((c) => c.label === 'Road'));
 });
+
+test('after the Oklahoma final NOW points at Kentucky on the road', () => {
+  const now = new Date('2026-11-08T16:00:00.000Z');
+  const lines = buildWeeklyHomeNowLines(now, undefined, { breakInRows: [] });
+  assert.match(lines[0], /^Game — Kentucky at Kroger Field — 6:15 PM · ESPN$/);
+  const rec = seasonRecord(now, getScheduleBoard(2026).games);
+  assert.deepEqual(rec, { wins: 5, losses: 4 });
+  assert.ok(lines.some((s) => /^Season — 5-4 heading into Saturday$/.test(s)));
+  assert.ok(lines.some((s) => /^Road — on the road this Saturday$/.test(s)));
+  const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [] });
+  assert.equal(cats[1].label, 'Road');
+  assert.ok(!cats.some((c) => c.label === 'Visitors'));
+  assert.ok(!lines.some((s) => /Physical run fits|Win the trenches|Finish in red zone/i.test(s)));
+});

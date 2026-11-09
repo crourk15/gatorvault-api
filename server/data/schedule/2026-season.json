@@ -1,9 +1,9 @@
 {
   "season": 2026,
-  "updatedAt": "2026-11-01T20:00:00.000Z",
+  "updatedAt": "2026-11-09T01:00:00.000Z",
   "label": "2026 Florida football schedule",
   "source": "vault-schedule-board",
-  "predThrough": "2026-W8",
+  "predThrough": "2026-W9",
   "games": [
     {
       "id": "fau",
@@ -1017,36 +1017,26 @@
         { "label": "Secondary", "uf": 54, "opp": 70 },
         { "label": "Special Teams", "uf": 55, "opp": 55 },
         { "label": "Coaching Edge", "uf": 50, "opp": 56 }
-      ]
+      ],
+      "finalUF": 7,
+      "finalOpp": 23,
+      "finalSource": "official",
+      "boxScoreUrl": "https://floridagators.com/sports/football/stats/2026/oklahoma/boxscore/27911"
     },
     {
       "id": "kentucky",
       "kind": "game",
       "label": "Nov 14 @ Kentucky",
       "opp": "Kentucky Wildcats",
-      "date": "November 14, 2026 · 6:00–8:00 PM ET",
+      "date": "November 14, 2026 · 6:15 PM ET",
       "venue": "Kroger Field, Lexington KY",
-      "ufPct": 63,
-      "tv": "TBD",
-      "keys": [
-        "Physical run fits",
-        "Win the trenches",
-        "Finish in red zone"
-      ],
-      "swing": [
-        {
-          "name": "Jadan Baugh",
-          "impact": 95,
-          "role": "Wear down front"
-        },
-        {
-          "name": "WR room",
-          "role": "Explosive plays"
-        }
-      ],
-      "film": "Kentucky power run and play-action on the road.",
-      "pred": "UF 29 · Kentucky 23",
-      "predUF": 29,
+      "ufPct": 48,
+      "tv": "ESPN",
+      "keys": [],
+      "swing": [],
+      "film": "Kroger Field. 6:15 PM ET. ESPN.",
+      "pred": "UF 22 · Kentucky 23",
+      "predUF": 22,
       "predOpp": 23,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27912",
@@ -1061,9 +1051,9 @@
         "label": "Orange / White / Orange",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
       },
-      "predConfidence": 74,
+      "predConfidence": 69,
       "predMovement": "down",
-      "ufPctDelta": -8
+      "ufPctDelta": -15
     },
     {
       "id": "vandy",
@@ -1072,7 +1062,7 @@
       "opp": "Vanderbilt Commodores",
       "date": "November 21, 2026 · 12:00–1:00 PM ET",
       "venue": "Ben Hill Griffin Stadium, Gainesville FL",
-      "ufPct": 71,
+      "ufPct": 54,
       "tv": "TBD",
       "keys": [
         "Execute early",
@@ -1090,8 +1080,8 @@
         }
       ],
       "film": "Vanderbilt improving — treat as SEC test.",
-      "pred": "UF 32 · Vanderbilt 22",
-      "predUF": 32,
+      "pred": "UF 24 · Vanderbilt 22",
+      "predUF": 24,
       "predOpp": 22,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27913",
@@ -1106,9 +1096,9 @@
         "label": "Orange / Blue / White",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
       },
-      "predConfidence": 78,
+      "predConfidence": 70,
       "predMovement": "down",
-      "ufPctDelta": -8
+      "ufPctDelta": -17
     },
     {
       "id": "fsu",
@@ -1117,7 +1107,7 @@
       "opp": "Florida State Seminoles",
       "date": "November 27, 2026 · 3:30 PM ET",
       "venue": "Doak Campbell Stadium, Tallahassee FL",
-      "ufPct": 63,
+      "ufPct": 48,
       "tv": "ABC",
       "keys": [
         "Win field position battle",
@@ -1135,8 +1125,8 @@
         }
       ],
       "film": "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
-      "pred": "UF 30 · FSU 24",
-      "predUF": 30,
+      "pred": "UF 23 · FSU 24",
+      "predUF": 23,
       "predOpp": 24,
       "filmLessonId": "frl00010-0000-4000-8000-00000000000a",
       "opponentTendencies": [
@@ -1162,9 +1152,9 @@
         "label": "Blue / White / White",
         "source": "GatorsFB 2026 lineup https://x.com/GatorsFB/status/2089490556275552318"
       },
-      "predConfidence": 74,
+      "predConfidence": 69,
       "predMovement": "down",
-      "ufPctDelta": -8
+      "ufPctDelta": -15
     }
   ],
   "predModel": "uf-form-v1"
