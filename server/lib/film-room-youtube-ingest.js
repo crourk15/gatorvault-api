@@ -498,6 +498,10 @@ function presserPreferenceScore(row) {
   else if (/florida gators/i.test(src)) score += 70;
   if (row?.publishedAt) score += 25;
   if (/^florida football (press conference|media availability)/i.test(title)) score += 35;
+  // Dated weekly podium (Coach Sumrall Press Conference 11-9-26) is the Monday
+  // presser. Generic same-day "Florida Football Press Conference | Coach Sumrall"
+  // is often the later practice wrap and used to win the rail.
+  if (/\bpress conference\b/i.test(title) && /\b\d{1,2}-\d{1,2}-\d{2,4}\b/.test(title)) score += 50;
   if (/\b(film guy|insider|fox\s?\d+|reaction|interview)\b/i.test(`${src} ${title}`)) score -= 60;
   if (/youtube-search|kind.:.search/i.test(src) || (!row?.publishedAt && /youtube/i.test(src))) {
     score -= 20;
