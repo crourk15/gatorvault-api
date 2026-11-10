@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="dark"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>PrimeShine Owner OS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy: { 900: '#0f172a', 800: '#1e293b', 700: '#334155', 600: '#475569' },
+          gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309' },
+          sky: { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7' },
+        }
+      }
+    }
+  };
+  </script>
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --navy-900: #0f172a;
+      --navy-800: #1e293b;
+      --navy-700: #334155;
+      --gold-500: #f59e0b;
+      --gold-400: #fbbf24;
+      --sky-400: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy-900); color: #f1f5f9; min-height: 100vh; }
+    .glass-card {
+      background: linear-gradient(135deg, rgba(30,41,59,0.85) 0%, rgba(15,23,42,0.95) 100%);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+    }
+    .glass-card-light {
+      background: linear-gradient(135deg, rgba(51,65,85,0.5) 0%, rgba(30,41,59,0.7) 100%);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+    }
+    .gold-glow { box-shadow: 0 0 20px rgba(245,158,11,0.15), 0 0 40px rgba(245,158,11,0.05); }
+    .day-card { transition: all 0.3s ease; cursor: pointer; }
+    .day-card:hover { transform: translateY(-2px); border-color: rgba(245,158,11,0.4); }
+    .day-card.completed { border-color: rgba(34,197,94,0.5) !important; }
+    .day-card.active-day { border-color: var(--sky-400) !important; box-shadow: 0 0 20px rgba(56,189,248,0.25); }
+    .task-done .task-text { text-decoration: line-through; opacity: 0.5; }
+    .tab-btn { transition: all 0.2s ease; }
+    .tab-btn.active { background: var(--gold-500); color: var(--navy-900); font-weight: 700; }
+    .progress-fill { transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+    .badge-morning { background: rgba(56,189,248,0.2); color: #38bdf8; }
+    .badge-evening { background: rgba(168,85,247,0.2); color: #a855f7; }
+    .badge-weekend { background: rgba(34,197,94,0.2); color: #22c55e; }
+    .badge-rest { background: rgba(148,163,184,0.2); color: #94a3b8; }
+    .cat-detailing { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .cat-marketing { background: rgba(239,68,68,0.15); color: #f87171; }
+    .cat-outreach { background: rgba(56,189,248,0.15); color: #38bdf8; }
+    .cat-social { background: rgba(168,85,247,0.15); color: #c084fc; }
+    .cat-admin { background: rgba(148,163,184,0.15); color: #cbd5e1; }
+    .cat-revenue { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .cat-optional { background: rgba(100,116,139,0.15); color: #94a3b8; }
+    .tipbox { background: linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(245,158,11,0.04) 100%); border-left: 3px solid var(--gold-500); }
+    .stat-card { transition: transform 0.2s ease; }
+    .stat-card:hover { transform: scale(1.03); }
+    .fade-in { animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .checkbox-custom { appearance: none; width: 20px; height: 20px; min-width: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 4px; cursor: pointer; transition: all 0.2s; background: transparent; }
+    .checkbox-custom:checked { background: #22c55e; border-color: #22c55e; }
+    .cal-day { cursor: pointer; }
+    .cal-day-today { border-color: rgba(56,189,248,0.5); background: rgba(56,189,248,0.08); }
+    .cal-day-selected { border-color: #f59e0b; background: rgba(245,158,11,0.12); box-shadow: 0 0 0 1px rgba(245,158,11,0.25); }
+    .checkbox-custom:checked::after { content: '✓'; color: white; font-size: 13px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    input[type="number"] { -moz-appearance: textfield; }
+
+    .dock { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: rgba(15,23,42,0.96); border-top: 1px solid rgba(255,255,255,0.08); display: flex; }
+    .dock button { flex: 1; padding: 10px 4px 14px; color: #94a3b8; font-size: 10px; font-weight: 700; background: none; border: 0; }
+    .dock button.dock-active { color: #fbbf24; }
+    .lock-screen { position: fixed; inset: 0; z-index: 80; background: #0f172a; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    body { padding-bottom: 88px; }
+  </style>
+</head>
+<body class="antialiased">
+  <div id="lock-screen" class="lock-screen hidden">
+    <div class="w-full max-w-sm text-center">
+      <p class="text-gold-400 font-black text-3xl mb-2">PrimeShine</p>
+      <p class="text-slate-400 text-sm mb-6">Owner OS · enter your PIN</p>
+      <input id="unlock-pin" type="password" inputmode="numeric" maxlength="8" class="w-full bg-navy-800 border border-white/10 rounded-lg px-4 py-3 text-white text-center text-xl tracking-widest mb-3" placeholder="PIN"/>
+      <button type="button" id="unlock-btn" class="w-full bg-gold-500 text-navy-900 font-bold rounded-lg py-3">Unlock</button>
+      <p id="unlock-err" class="text-red-400 text-sm mt-3"></p>
+    </div>
+  </div>
+  <div id="app-shell">
+  <nav id="mobile-menu-ov4k" class="hidden fixed inset-0 bg-navy-900/98 z-[60] flex flex-col p-6 overflow-y-auto">
+    <div class="flex justify-between items-center mb-8">
+      <span class="text-gold-500 font-bold text-xl">PrimeShine</span>
+      <button id="mobile-close-btn-x9r2" class="p-2 text-white" type="button" aria-label="Close menu"><i data-lucide="x" class="w-6 h-6"></i></button>
+    </div>
+    <div class="flex flex-col gap-4">
+      <button type="button" data-room-btn="today" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Today</button>
+      <button type="button" data-room-btn="plan" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">30-Day Plan</button>
+      <button type="button" data-room-btn="calendar" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Calendar</button>
+      <button type="button" data-room-btn="book" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Client book</button>
+      <button type="button" data-room-btn="money" class="text-left text-white text-lg py-3 px-4 rounded-lg hover:bg-navy-800 mobile-nav-link">Books</button>
+      <a href="https://primeshinefl.com" class="text-slate-400 text-lg py-3 px-4 rounded-lg hover:bg-navy-800">Public site</a>
+    </div>
+  </nav>
+
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-navy-900/80 border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="text-2xl md:text-3xl font-black text-gold-500 tracking-tight truncate">PrimeShine</span>
+        <span class="hidden sm:block text-xs md:text-sm text-slate-400 border-l border-slate-600 pl-3">Owner OS</span>
+      </div>
+      <div class="hidden md:flex items-center gap-4">
+        <button type="button" data-room-btn="today" class="text-sm text-slate-300 hover:text-gold-400">Today</button>
+        <button type="button" data-room-btn="plan" class="text-sm text-slate-300 hover:text-gold-400">Plan</button>
+        <button type="button" data-room-btn="calendar" class="text-sm text-slate-300 hover:text-gold-400">Calendar</button>
+        <button type="button" data-room-btn="book" class="text-sm text-slate-300 hover:text-gold-400">Book</button>
+        <button type="button" data-room-btn="money" class="text-sm text-slate-300 hover:text-gold-400">Books</button>
+        <a href="https://primeshinefl.com" class="text-xs text-slate-500 hover:text-slate-300">Site</a>
+        <span class="text-xs text-slate-500">863-860-9238</span>
+      </div>
+      <button id="mobile-menu-btn-q8w1" class="md:hidden p-2 text-white" type="button" aria-label="Open menu"><i data-lucide="menu" class="w-6 h-6"></i></button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10">
+    <section class="text-center mb-8 md:mb-12">
+      <h1 class="text-3xl md:text-5xl font-black text-white mb-2">PrimeShine Mobile Detailing</h1>
+      <p class="text-lg md:text-xl text-gold-400 font-semibold mb-1">30-day planner · book · books</p>
+      <p class="text-sm text-slate-400">Bartow · Lakeland · Winter Haven, FL &nbsp;|&nbsp; <a class="text-sky-400 hover:underline" href="https://primeshinefl.com">primeshinefl.com</a> &nbsp;|&nbsp; 863-860-9238</p>
+      <p id="welcome-line" class="text-xs text-slate-500 mt-2">Welcome back, Charles! Loading today's plan...</p>
+      <p class="text-xs text-slate-600 mt-2">This is not the customer website. Money comes from paid jobs. Back up from Books.</p>
+    </section>
+
+    <section id="room-today" data-room="today">
+      <div id="today-root"></div>
+    <details id="how-to-open" class="glass-card p-4 md:p-6 mb-6">
+      <summary class="text-lg md:text-xl font-bold text-white cursor-pointer">How to get this on your phone</summary>
+      <div class="mt-3">
+      <h2 class="sr-only">How to open this page</h2>
+      <ol class="text-sm text-slate-300 space-y-2 list-decimal pl-5 mb-4">
+        <li>This page is <strong class="text-white">not</strong> on the customer website. Open it from the link in our chat, or from a text you send yourself.</li>
+        <li>On the computer where it is bookmarked: tap <strong class="text-sky-400">Copy this page link</strong> below, then text that link to your own cell number. On your iPhone, open the text and tap the link.</li>
+        <li>On the iPhone: tap the Share button → <strong class="text-white">Add to Home Screen</strong> → name it PrimeShine Plan. If you bookmarked it in Safari on a Mac with the same iCloud, it may already be under Safari Bookmarks.</li>
+        <li>Tap the blue <strong class="text-sky-400">Open today</strong> button for Day 1 tasks. Use <strong class="text-white">Job calendar</strong> to track new clients and monthly maintenance.</li>
+      </ol>
+      <div class="flex flex-col sm:flex-row gap-2 mt-4">
+        <button type="button" id="copy-page-link" class="text-sm font-bold bg-sky-500 text-navy-900 px-4 py-3 rounded-lg min-h-[44px]">Copy this page link</button>
+      </div>
+      <input id="page-link-fallback" hidden readonly class="mt-2 w-full bg-navy-800 border border-white/10 rounded-lg p-2 text-xs text-white"/>
+      <p class="text-xs text-slate-500 mt-3">Today is Day 1 (Thu Sep 3). Google Business Profile first — fully filled profiles get ~5× more clicks.</p>
+      </div>
+    </details>
+
+    <section id="day1-kit" class="glass-card p-4 md:p-6 mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <h2 class="text-lg md:text-xl font-bold text-white">Day 1 copy kit</h2>
+        <span class="text-xs font-semibold bg-sky-500/20 text-sky-400 px-2 py-1 rounded-full">Paste these into Google + Facebook</span>
+      </div>
+      <p class="text-sm text-slate-400 mb-4">Do the morning block first (~1 hr 45 min). Evening is Canva + memorize the menu (~45 min).</p>
+
+      <div class="space-y-4">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <h3 class="text-sm font-bold text-gold-400">Google Business description</h3>
+            <button type="button" class="copy-btn text-xs font-semibold bg-navy-800 text-sky-400 px-2 py-1 rounded-lg" data-copy="gbp-desc">Copy</button>
+          </div>
+          <textarea id="gbp-desc" readonly rows="6" class="w-full bg-navy-800 border border-white/10 rounded-lg p-3 text-sm text-white leading-relaxed">PrimeShine Mobile Detailing brings professional car detailing to your driveway across Bartow, Lakeland, and Winter Haven, FL. We come to you — no drop-off, you keep the keys. Interior details from $80, exterior from $60, and full details from $140. Call or text 863-860-9238 or book online at primeshinefl.com/booking. Open 8AM–6PM.</textarea>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <h3 class="text-sm font-bold text-gold-400">Services + prices (add each one on Google)</h3>
+            <button type="button" class="copy-btn text-xs font-semibold bg-navy-800 text-sky-400 px-2 py-1 rounded-lg" data-copy="gbp-services">Copy</button>
+          </div>
+          <textarea id="gbp-services" readonly rows="8" class="w-full bg-navy-800 border border-white/10 rounded-lg p-3 text-sm text-white leading-relaxed">Interior Only — $80–$120
+Exterior Only — $60–$100
+Full Detail (interior + exterior) — $140–$200
+Carpet / seat shampoo add-on — +$40
+Odor treatment add-on — +$30
+Monthly maintenance — $55/month
+Hours: 8:00 AM – 6:00 PM
+Service area: Bartow, Lakeland, Winter Haven, FL</textarea>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <h3 class="text-sm font-bold text-gold-400">Facebook About / contact block</h3>
+            <button type="button" class="copy-btn text-xs font-semibold bg-navy-800 text-sky-400 px-2 py-1 rounded-lg" data-copy="fb-about">Copy</button>
+          </div>
+          <textarea id="fb-about" readonly rows="7" class="w-full bg-navy-800 border border-white/10 rounded-lg p-3 text-sm text-white leading-relaxed">PrimeShine Mobile Detailing
+Phone: 863-860-9238
+Website: https://primeshinefl.com
+Book: https://primeshinefl.com/booking
+Hours: 8AM–6PM
+Areas: Bartow · Lakeland · Winter Haven, FL
+We come to your driveway. Interior, exterior, and full details.</textarea>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <h3 class="text-sm font-bold text-gold-400">Know your 3 packages cold</h3>
+            <button type="button" class="copy-btn text-xs font-semibold bg-navy-800 text-sky-400 px-2 py-1 rounded-lg" data-copy="packages">Copy</button>
+          </div>
+          <textarea id="packages" readonly rows="14" class="w-full bg-navy-800 border border-white/10 rounded-lg p-3 text-sm text-white leading-relaxed">1) EXTERIOR ONLY — $60–$100
+Hand wash and dry, wheels/tires/trim, glass and door jams, paint-safe finish. Usually 2–3 hours.
+
+2) INTERIOR ONLY — $80–$120
+Full vacuum and crevice work, wipe-down of every surface, mats/plastics/glass, odor-safe cleaners only. Usually 3–4 hours.
+
+3) FULL DETAIL — $140–$200
+Interior + exterior together, clay and seal on paint, dress trim/tires, engine-bay wipe. The driveway showroom package. Usually 5–6 hours.
+
+ADD-ONS
+Shampoo +$40 · Odor treatment +$30 · Monthly maintenance $55/mo
+
+QUOTE LINE
+“I come to you. Interior starts at $80, exterior at $60, full detail at $140. Book at primeshinefl.com/booking or text 863-860-9238.”</textarea>
+        </div>
+
+        <div class="tip-box p-4 rounded-lg">
+          <p class="text-xs font-bold text-gold-400 mb-1">Canva tonight (3 templates)</p>
+          <p class="text-sm text-slate-300">Free Canva account. Size: Instagram Post 1080×1080. Brand: navy background, gold “PrimeShine”, white body text, phone 863-860-9238, primeshinefl.com/booking.</p>
+          <ul class="text-sm text-slate-300 mt-2 space-y-1 list-disc pl-5">
+            <li><strong class="text-white">Before / After</strong> — split photo, caption “We come to you.”</li>
+            <li><strong class="text-white">NOW BOOKING</strong> — big gold headline, phone + booking link.</li>
+            <li><strong class="text-white">Special Offer</strong> — “20% OFF your first detail — limited spots this month.” (You will print this tomorrow.)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    </section>
+
+    <section id="room-plan" class="hidden" data-room="plan">
+    <section id="dashboard-sec" class="glass-card gold-glow p-4 md:p-6 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+        <div>
+          <h2 class="text-lg md:text-xl font-bold text-white">Overall Progress</h2>
+          <p class="text-sm text-slate-400"><span id="days-done-label-p1a2">0</span>/30 days completed</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-sm text-slate-400">Collected:</span>
+          <span id="rev-live" class="text-gold-400 font-black text-xl">$0</span>
+          <span class="text-slate-400 font-semibold">/ $3,000</span>
+          <input id="revenue-input-r5t6" type="hidden" value="0"/>
+        </div>
+      </div>
+      <div class="w-full bg-navy-800 rounded-full h-4 mb-2 overflow-hidden">
+        <div id="progress-bar-main-b3c4" class="progress-fill h-4 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400" style="width: 0%"></div>
+      </div>
+      <div class="flex justify-between text-xs text-slate-500">
+        <span id="progress-pct-d5e6">0%</span>
+        <span>Revenue: <span id="revenue-pct-f7g8">0%</span></span>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
+      <div class="glass-card-light stat-card p-4 text-center">
+        <div class="text-sky-400 mb-1"><i data-lucide="calendar-check" class="w-5 h-5 mx-auto"></i></div>
+        <div id="stat-days-h9i0" class="text-2xl md:text-3xl font-black text-white tabular-nums">0</div>
+        <div class="text-xs text-slate-400">Days Completed</div>
+      </div>
+      <div class="glass-card-light stat-card p-4 text-center">
+        <div class="text-green-400 mb-1"><i data-lucide="check-circle" class="w-5 h-5 mx-auto"></i></div>
+        <div id="stat-tasks-j1k2" class="text-2xl md:text-3xl font-black text-white tabular-nums">0</div>
+        <div class="text-xs text-slate-400">Tasks Done</div>
+      </div>
+      <div class="glass-card-light stat-card p-4 text-center">
+        <div class="text-gold-400 mb-1"><i data-lucide="car" class="w-5 h-5 mx-auto"></i></div>
+        <div class="flex items-center justify-center gap-2">
+          <button class="jobs-minus-btn text-slate-400 hover:text-white p-1 rounded bg-navy-700 min-h-[28px] min-w-[28px] flex items-center justify-center" type="button"><i data-lucide="minus" class="w-3 h-3"></i></button>
+          <span id="stat-jobs-l3m4" class="text-2xl md:text-3xl font-black text-white tabular-nums">0</span>
+          <button class="jobs-plus-btn text-slate-400 hover:text-white p-1 rounded bg-navy-700 min-h-[28px] min-w-[28px] flex items-center justify-center" type="button"><i data-lucide="plus" class="w-3 h-3"></i></button>
+        </div>
+        <div class="text-xs text-slate-400">Jobs This Month</div>
+      </div>
+      <div class="glass-card-light stat-card p-4 text-center">
+        <div class="text-yellow-400 mb-1"><i data-lucide="star" class="w-5 h-5 mx-auto"></i></div>
+        <div class="flex items-center justify-center gap-2">
+          <button class="reviews-minus-btn text-slate-400 hover:text-white p-1 rounded bg-navy-700 min-h-[28px] min-w-[28px] flex items-center justify-center" type="button"><i data-lucide="minus" class="w-3 h-3"></i></button>
+          <span id="stat-reviews-n5o6" class="text-2xl md:text-3xl font-black text-white tabular-nums">0</span>
+          <button class="reviews-plus-btn text-slate-400 hover:text-white p-1 rounded bg-navy-700 min-h-[28px] min-w-[28px] flex items-center justify-center" type="button"><i data-lucide="plus" class="w-3 h-3"></i></button>
+        </div>
+        <div class="text-xs text-slate-400">Reviews Earned</div>
+      </div>
+    </section>
+
+
+    </section>
+    </section>
+
+    <section id="room-calendar" class="hidden" data-room="calendar">
+    <section id="calendar-sec" class="glass-card p-4 md:p-6 mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+        <div>
+          <h2 class="text-lg md:text-xl font-bold text-white">Job calendar</h2>
+          <p class="text-sm text-slate-400">Track new clients and $55/mo maintenance. This stays on your owner page only.</p>
+        </div>
+        <div class="flex gap-2">
+          <button type="button" id="cal-prev" class="px-3 py-2 rounded-lg bg-navy-800 text-white min-h-[44px] min-w-[44px]" aria-label="Previous month">‹</button>
+          <button type="button" id="cal-today" class="px-3 py-2 rounded-lg bg-sky-500/20 text-sky-400 text-sm font-semibold min-h-[44px]">Today</button>
+          <button type="button" id="cal-next" class="px-3 py-2 rounded-lg bg-navy-800 text-white min-h-[44px] min-w-[44px]" aria-label="Next month">›</button>
+        </div>
+      </div>
+      <p id="cal-month-label" class="text-gold-400 font-bold mb-3"></p>
+      <div class="grid grid-cols-4 gap-2 mb-4">
+        <div class="bg-navy-800/70 rounded-lg p-2 text-center"><div id="cal-stat-booked" class="text-lg font-black text-white">0</div><div class="text-[10px] text-slate-500">On the books</div></div>
+        <div class="bg-navy-800/70 rounded-lg p-2 text-center"><div id="cal-stat-new" class="text-lg font-black text-gold-400">0</div><div class="text-[10px] text-slate-500">New clients</div></div>
+        <div class="bg-navy-800/70 rounded-lg p-2 text-center"><div id="cal-stat-monthly" class="text-lg font-black text-green-400">0</div><div class="text-[10px] text-slate-500">Monthly</div></div>
+        <div class="bg-navy-800/70 rounded-lg p-2 text-center"><div id="cal-stat-money" class="text-lg font-black text-white">$0</div><div class="text-[10px] text-slate-500">Listed $</div></div>
+      </div>
+      <div id="cal-grid" class="grid grid-cols-7 gap-1 mb-5"></div>
+      <div class="flex flex-wrap gap-3 text-[11px] text-slate-500 mb-5">
+        <span><span class="inline-block w-1.5 h-1.5 rounded-full bg-gold-400"></span> New client</span>
+        <span><span class="inline-block w-1.5 h-1.5 rounded-full bg-green-400"></span> Monthly</span>
+        <span><span class="inline-block w-1.5 h-1.5 rounded-full bg-sky-400"></span> One-time</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div>
+          <h3 class="text-sm font-bold text-white mb-2">Jobs on <span id="cal-day-label">today</span></h3>
+          <div id="cal-day-jobs" class="space-y-2 mb-4"></div>
+          <form id="job-form" class="space-y-2 bg-navy-800/50 rounded-lg p-3">
+            <p class="text-sm font-bold text-gold-400">Add a job</p>
+            <input id="job-name" required placeholder="Client name" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <input id="job-phone" type="tel" placeholder="Phone" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <div class="grid grid-cols-2 gap-2">
+              <input id="job-date" type="date" required class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+              <input id="job-time" type="time" value="09:00" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            </div>
+            <select id="job-service" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]">
+              <option value="exterior">Exterior Only — from $60</option>
+              <option value="interior">Interior Only — from $80</option>
+              <option value="full">Full Detail — from $140</option>
+              <option value="monthly">Monthly maintenance — $55</option>
+              <option value="custom">Custom / quote</option>
+            </select>
+            <select id="job-kind" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]">
+              <option value="new">New client</option>
+              <option value="onetime">One-time return</option>
+              <option value="monthly">Monthly maintenance (adds next 5 months)</option>
+            </select>
+            <input id="job-price" type="number" min="0" step="1" placeholder="Price" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <input id="job-notes" placeholder="Address / notes (optional)" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm min-h-[44px]"/>
+            <button type="submit" class="w-full bg-gold-500 text-navy-900 font-bold rounded-lg py-3 min-h-[44px]">Save job</button>
+          </form>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold text-white mb-2">Coming up (21 days)</h3>
+          <ul id="cal-upcoming" class="mb-4"></ul>
+          <h3 class="text-sm font-bold text-white mb-2">Overdue</h3>
+          <ul id="cal-overdue"></ul>
+          <p class="text-xs text-slate-500 mt-4">Tap <strong class="text-slate-300">Add to phone calendar</strong> on a job to download an event you can open in the iPhone Calendar app. Jobs save in this browser — use the same phone/bookmark so they stay put.</p>
+        </div>
+      </div>
+    </section>
+
+    </section>
+
+    <section id="room-plan-days" class="hidden" data-room="plan">
+    <section id="plan-sec" class="mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h2 class="text-xl md:text-2xl font-bold text-white">Daily Plan</h2>
+        <button id="today-btn" type="button" class="text-sm font-bold bg-sky-500/20 text-sky-400 px-3 py-2 rounded-full hover:bg-sky-500/30">Open today</button>
+      </div>
+      <div class="flex gap-2 overflow-x-auto pb-2 sticky top-[60px] z-40 bg-navy-900/95 backdrop-blur-md py-3 -mx-4 px-4 md:-mx-6 md:px-6" id="week-tabs-container-q7r8">
+        <button class="tab-btn active whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-navy-800 text-slate-300 min-h-[44px]" data-week="1" type="button">Week 1<span class="hidden sm:inline"> — Foundation</span></button>
+        <button class="tab-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-navy-800 text-slate-300 min-h-[44px]" data-week="2" type="button">Week 2<span class="hidden sm:inline"> — First Clients</span></button>
+        <button class="tab-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-navy-800 text-slate-300 min-h-[44px]" data-week="3" type="button">Week 3<span class="hidden sm:inline"> — Momentum</span></button>
+        <button class="tab-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-navy-800 text-slate-300 min-h-[44px]" data-week="4" type="button">Week 4<span class="hidden sm:inline"> — Scale</span></button>
+        <button class="tab-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-navy-800 text-slate-300 min-h-[44px]" data-week="5" type="button">Week 4+<span class="hidden sm:inline"> — Finish Strong</span></button>
+      </div>
+      <div id="week-theme-banner-s9t0" class="glass-card-light p-3 md:p-4 mb-4 fade-in"></div>
+      <div id="day-cards-grid-u1v2" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4"></div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <section id="pricing-sec" class="glass-card p-5 md:p-6">
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="tag" class="w-5 h-5 text-gold-400"></i> Service Pricing</h3>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Interior Only</span><span class="text-gold-400 font-bold">$80–$120</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Exterior Only</span><span class="text-gold-400 font-bold">$60–$100</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Full Detail (Int + Ext)</span><span class="text-gold-400 font-bold">$140–$200</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Add-on: Shampoo</span><span class="text-sky-400 font-bold">+$40</span></div>
+          <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-slate-300">Add-on: Odor Treatment</span><span class="text-sky-400 font-bold">+$30</span></div>
+          <div class="flex justify-between items-center py-2"><span class="text-slate-300">Monthly Maintenance</span><span class="text-green-400 font-bold">$55/mo recurring</span></div>
+        </div>
+      </section>
+
+      <section id="blueprint-sec" class="glass-card p-5 md:p-6">
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="target" class="w-5 h-5 text-gold-400"></i> Revenue Blueprint</h3>
+        <div class="space-y-3 text-sm">
+          <div class="tipbox p-3 rounded-lg">
+            <p class="text-gold-400 font-semibold mb-1">30-Day Goal: $3,000</p>
+            <p class="text-slate-300">Aim for ~15–20 details at $150–200 average per job.</p>
+          </div>
+          <div class="glass-card-light p-3 rounded-lg text-slate-300">
+            <p>Average job value: <strong class="text-white">~$120</strong></p>
+            <p>Jobs needed: <strong class="text-white">~25 jobs</strong></p>
+            <p>Weekday window: <strong class="text-white">5 hrs (1–2 jobs/day)</strong></p>
+          </div>
+        </div>
+      </section>
+    </div>
+    </section>
+
+    <section id="room-book" class="hidden" data-room="book">
+      <div class="glass-card p-4 md:p-6 mb-4">
+        <h2 class="text-xl font-black text-white mb-1">Client book</h2>
+        <p class="text-sm text-slate-400 mb-3">Every person you have detailed or booked. Call, ask for a review, pitch monthly.</p>
+        <input id="book-search" placeholder="Search name or phone" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-3 text-white min-h-[44px] mb-4"/>
+        <div id="book-root"></div>
+      </div>
+    </section>
+
+    <section id="room-money" class="hidden" data-room="money">
+      <div class="mb-4">
+        <h2 class="text-xl font-black text-white">Books</h2>
+        <p class="text-sm text-slate-400">Collected cash, expenses, pipeline, backup. $3,000 is paid jobs only.</p>
+      </div>
+      <div id="money-root"></div>
+      <div class="glass-card p-4 mb-4">
+        <h3 class="font-bold text-white mb-2">Pipeline</h3>
+        <div id="pipe-root"></div>
+      </div>
+      <div class="glass-card p-4 mb-4">
+        <h3 class="font-bold text-white mb-3">New lead</h3>
+        <form id="lead-form" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <input id="lead-name" placeholder="Name" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px]"/>
+          <input id="lead-phone" type="tel" placeholder="Phone" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px]"/>
+          <select id="lead-source" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px]">
+            <option value="google">Google</option>
+            <option value="facebook">Facebook</option>
+            <option value="flyer">Flyer</option>
+            <option value="referral">Referral</option>
+            <option value="other">Other</option>
+          </select>
+          <input id="lead-notes" placeholder="Notes" class="bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px]"/>
+          <button type="submit" class="sm:col-span-2 bg-gold-500 text-navy-900 font-bold rounded-lg py-3">Save lead</button>
+        </form>
+      </div>
+      <div class="glass-card p-4 mb-4">
+        <h3 class="font-bold text-white mb-3">Backup &amp; lock</h3>
+        <label class="text-xs text-slate-400">Google review link</label>
+        <input id="review-url" placeholder="https://g.page/r/..." class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+        <button type="button" id="review-url-save" class="mb-4 text-sm font-semibold bg-navy-700 text-white px-3 py-2 rounded-lg">Save review link</button>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button type="button" id="export-csv" class="px-3 py-2 rounded-lg bg-sky-500/20 text-sky-400 text-sm font-bold min-h-[44px]">Download CSV</button>
+          <button type="button" id="export-json" class="px-3 py-2 rounded-lg bg-navy-700 text-white text-sm font-bold min-h-[44px]">Backup JSON</button>
+        </div>
+        <label class="text-xs text-slate-400">Optional PIN (this phone only)</label>
+        <input id="pin-input" type="password" inputmode="numeric" maxlength="8" placeholder="4–8 digits" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+        <button type="button" id="pin-save" class="px-3 py-2 rounded-lg bg-gold-500 text-navy-900 text-sm font-bold min-h-[44px]">Save PIN</button>
+        <p id="pin-status" class="text-xs text-slate-500 mt-2"></p>
+      </div>
+      <button id="reset-btn-w3x4" type="button" class="px-6 py-3 bg-red-900/30 hover:bg-red-900/50 text-red-400 rounded-xl text-sm font-semibold border border-red-500/20 transition min-h-[44px]">
+        Reset All Progress
+      </button>
+    </section>
+  </main>
+
+  <nav id="dock" class="dock" aria-label="Owner rooms">
+    <button type="button" data-room-btn="today" class="dock-active">Today</button>
+    <button type="button" data-room-btn="plan">Plan</button>
+    <button type="button" data-room-btn="calendar">Calendar</button>
+    <button type="button" data-room-btn="book">Book</button>
+    <button type="button" data-room-btn="money">Books</button>
+  </nav>
+
+  <div id="collect-overlay" class="hidden fixed inset-0 bg-black/70 z-[70] flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm p-5">
+      <h3 class="text-white font-bold text-lg mb-1">Collect payment</h3>
+      <p id="collect-name" class="text-sm text-slate-400 mb-4"></p>
+      <input id="collect-amount" type="number" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-2"/>
+      <select id="collect-method" class="w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2 text-white min-h-[44px] mb-3">
+        <option value="cash">Cash</option>
+        <option value="zelle">Zelle</option>
+        <option value="venmo">Venmo</option>
+        <option value="card">Card</option>
+        <option value="other">Other</option>
+      </select>
+      <label class="flex items-center gap-2 text-sm text-slate-300 mb-4"><input id="collect-review" type="checkbox" checked/> Ask for a Google review</label>
+      <div class="flex gap-2">
+        <button type="button" id="collect-cancel" class="flex-1 bg-navy-700 text-white rounded-lg py-3">Not now</button>
+        <button type="button" id="collect-save" class="flex-1 bg-gold-500 text-navy-900 font-bold rounded-lg py-3">Collected</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="day-modal-overlay-y5z6" class="hidden fixed inset-0 bg-black/70 z-50 flex items-start justify-center overflow-y-auto p-4 pt-10 md:pt-16">
+    <div id="day-modal-content-a7b8" class="glass-card w-full max-w-2xl p-5 md:p-8 mb-10 relative fade-in">
+      <button id="modal-close-btn-c9d0" type="button" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close"><i data-lucide="x" class="w-6 h-6"></i></button>
+      <div id="modal-body-e1f2"></div>
+    </div>
+  </div>
+
+  <div id="reset-modal-g3h4" class="hidden fixed inset-0 bg-black/70 z-[55] flex items-center justify-center p-4">
+    <div class="glass-card p-6 max-w-sm w-full text-center">
+      <h3 class="text-lg font-bold text-white mb-2">Reset All Progress?</h3>
+      <p class="text-sm text-slate-400 mb-4">This clears checked tasks, revenue, jobs, and reviews in this browser.</p>
+      <div class="flex gap-3 justify-center">
+        <button id="reset-cancel-i5j6" type="button" class="px-5 py-2 bg-navy-700 text-slate-300 rounded-lg text-sm font-semibold min-h-[44px]">Cancel</button>
+        <button id="reset-confirm-k7l8" type="button" class="px-5 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold min-h-[44px]">Yes, Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center py-6 text-xs text-slate-600 border-t border-white/5">
+    <p>PrimeShine Mobile Detailing — Bartow · Lakeland · Winter Haven, FL</p>
+    <p class="mt-1"><a class="hover:text-slate-400" href="https://primeshinefl.com">Back to public site</a></p>
+  </footer>
+
+  </div>
+  <script src="plan-data.js"></script>
+  <script src="store.js"></script>
+  <script src="app.js"></script>
+  <script src="calendar.js"></script>
+  <script src="os.js"></script>
+</body>
+</html>
