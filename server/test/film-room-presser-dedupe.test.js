@@ -56,7 +56,31 @@ describe('Film Room presser same-event dedupe', () => {
     assert.equal(presserEventKey(rows[0]), presserEventKey(rows[1]));
     const out = dedupePressersByEvent(rows);
     assert.equal(out.length, 1);
-    assert.equal(out[0].youtubeId, 'SDwvq_lIsys');
+    assert.equal(out[0].youtubeId, 'UEzcnP7UAfo');
+  });
+
+  it('keeps the dated Monday presser over the same-day practice wrap', () => {
+    const rows = [
+      {
+        id: 'yt_jjJ4ACCyGDM',
+        youtubeId: 'jjJ4ACCyGDM',
+        title: 'Florida Football Press Conference | Coach Sumrall',
+        source: 'Florida Gators Football',
+        publishedAt: '2026-11-09T17:32:39.000Z',
+      },
+      {
+        id: 'yt_mCGBP7M7108',
+        youtubeId: 'mCGBP7M7108',
+        title: 'Florida Football | Coach Sumrall Press Conference 11-9-26',
+        source: 'Florida Gators Football',
+        publishedAt: '2026-11-09T15:58:44.000Z',
+      },
+    ];
+    assert.equal(presserEventKey(rows[0]), presserEventKey(rows[1]));
+    const out = dedupePressersByEvent(rows);
+    assert.equal(out.length, 1);
+    assert.equal(out[0].youtubeId, 'mCGBP7M7108');
+    assert.match(out[0].title, /11-9-26/);
   });
 
   it('keeps distinct SEC Media Days speakers on the same day', () => {
@@ -142,7 +166,7 @@ describe('Film Room presser same-event dedupe', () => {
     assert.equal(out.length, 2);
     assert.deepEqual(
       out.map((r) => r.id).sort(),
-      ['f10', 'f17']
+      ['s10', 's17']
     );
   });
 

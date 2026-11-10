@@ -57,6 +57,7 @@ describe('Film Room repo-into-durable heal', () => {
     const loaded = store.loadFilmRoomCache();
     const ids = (loaded.auto.pressers || []).map((row) => row.youtubeId);
     assert.ok(ids.includes('asXiHSFj7S8'), '9/28 Sumrall missing after heal');
+    assert.ok(ids.includes('mCGBP7M7108'), '11/9 Monday Sumrall missing after heal');
     assert.ok(ids.includes('VVguTPt-Te8'), 'durable 9/26 postgame dropped');
     assert.ok((loaded.meta?.repoHealAdded || 0) >= 1);
 

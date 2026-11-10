@@ -384,6 +384,26 @@
     ],
     "pressers": [
       {
+        "id": "yt_mCGBP7M7108",
+        "slug": "florida-football-coach-sumrall-press-conference-11-9-26",
+        "title": "Florida Football | Coach Sumrall Press Conference 11-9-26",
+        "dek": "",
+        "gameLine": "Florida Gators Football",
+        "season": "2026",
+        "category": "Press Conferences",
+        "duration": "YouTube",
+        "thumbUrl": "https://i2.ytimg.com/vi/mCGBP7M7108/hqdefault.jpg",
+        "videoUrl": "https://www.youtube.com/watch?v=mCGBP7M7108",
+        "youtubeId": "mCGBP7M7108",
+        "embedUrl": "https://www.youtube.com/embed/mCGBP7M7108",
+        "source": "Florida Gators Football",
+        "autoUpdate": true,
+        "mediaReady": true,
+        "featured": false,
+        "publishedAt": "2026-11-09T15:58:44.000Z",
+        "ingestedAt": "2026-11-10T19:30:00.000Z"
+      },
+      {
         "id": "yt_PN68ndztpxQ",
         "slug": "florida-football-coach-sumrall-postgame-interview-10-17-26",
         "title": "Florida Football | Coach Sumrall Postgame Interview 10-17-26",
