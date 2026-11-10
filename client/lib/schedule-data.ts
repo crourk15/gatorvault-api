@@ -805,9 +805,34 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     venue: "Kroger Field, Lexington KY",
     ufPct: 48,
     tv: "ESPN",
-    keys: [],
-    swing: [],
-    film: "Kroger Field. 6:15 PM ET. ESPN.",
+    keys: [
+      "Take Away the Run",
+      "Stay Alive on Third",
+      "Don't Give Them the Ball",
+    ],
+    howUFWins: [
+      "Kentucky can run it. That is the whole offense.\n\nThe Wildcats sit 37th nationally in rush EPA and 19th in adjusted line yards. They are 6th in adjusted standard-down success. Lead back CJ Baxter is at 5.5 yards a carry with eight rushing touchdowns. Jason Patterson is at 6.1. Kentucky has 16 rushing touchdowns through nine games.\n\nFlorida does not need to manufacture anything exotic here. Win first down, choke off Baxter, and make Kentucky play through the weakness of its offense.\n\nTake the run away and the Wildcats are 81st in pass EPA and 115th in yards per attempt.\n\nIf the Gators own first down, Kentucky has to throw it.",
+      "Kentucky’s defense is good enough to keep Florida off schedule. The mistake would be assuming the drive is over when it reaches third down.\n\nFor everything the Wildcats do well defensively, they do not get off the field. Kentucky is 132nd in third-down conversions allowed at 47.7 percent and 115th in third-down EPA allowed.\n\nThat is Florida’s opening.\n\nThe Gators are 48th in third-down conversion rate at 42.0 percent and 39th in third-down EPA.\n\nThis does not have to be four quarters of winning every first down at Kroger Field. Stay alive. Convert. Make Kentucky earn every stop.\n\nWhen it is third down, they are the ones in trouble.",
+      "Kentucky does not beat you with explosives. The Wildcats are 100th in explosive play rate.\n\nThey wait for the ball.\n\nKentucky is 7th nationally in interceptions at 1.33 per game, 5th in takeaways at 2.00 per game and 11th in interception rate. Florida is 110th at avoiding interceptions and has thrown 1.11 per game, 123rd nationally.\n\nFlorida cannot play that game in Lexington.\n\nProtect it. Run it enough that Jones is throwing on Florida’s terms. Make Kentucky drive the field instead of handing it the possession that decides the game.\n\nDo not give a 7-2 team at home the possession that beats you.",
+    ],
+    swing: [
+      {
+        name: "Myles Graham",
+        role: "Kentucky can run it. That is the whole offense.\n\nThe Wildcats sit 37th nationally in rush EPA and 19th in adjusted line yards. They are 6th in adjusted standard-down success. Lead back CJ Baxter is at 5.5 yards a carry with eight rushing touchdowns. Jason Patterson is at 6.1. Kentucky has 16 rushing touchdowns through nine games.\n\nFlorida does not need to manufacture anything exotic here. Win first down, choke off Baxter, and make Kentucky play through the weakness of its offense.\n\nTake the run away and the Wildcats are 81st in pass EPA and 115th in yards per attempt.\n\nIf the Gators own first down, Kentucky has to throw it.",
+      },
+      {
+        name: "Tramell Jones Jr.",
+        role: "Kentucky’s defense is good enough to keep Florida off schedule. The mistake would be assuming the drive is over when it reaches third down.\n\nFor everything the Wildcats do well defensively, they do not get off the field. Kentucky is 132nd in third-down conversions allowed at 47.7 percent and 115th in third-down EPA allowed.\n\nThat is Florida’s opening.\n\nThe Gators are 48th in third-down conversion rate at 42.0 percent and 39th in third-down EPA.\n\nThis does not have to be four quarters of winning every first down at Kroger Field. Stay alive. Convert. Make Kentucky earn every stop.\n\nWhen it is third down, they are the ones in trouble.",
+      },
+      {
+        name: "Jadan Baugh",
+        role: "Kentucky does not beat you with explosives. The Wildcats are 100th in explosive play rate.\n\nThey wait for the ball.\n\nKentucky is 7th nationally in interceptions at 1.33 per game, 5th in takeaways at 2.00 per game and 11th in interception rate. Florida is 110th at avoiding interceptions and has thrown 1.11 per game, 123rd nationally.\n\nFlorida cannot play that game in Lexington.\n\nProtect it. Run it enough that Jones is throwing on Florida’s terms. Make Kentucky drive the field instead of handing it the possession that decides the game.\n\nDo not give a 7-2 team at home the possession that beats you.",
+      },
+    ],
+    film: "Take Away the Run. Kentucky can run it. 37th in rush EPA, 19th in adjusted line yards, 6th in adjusted standard-down success. Baxter 5.5 a carry, eight rushing scores. Patterson 6.1. Sixteen rushing touchdowns. Stay Alive on Third. 132nd in third-down conversions allowed, 47.7 percent. 115th in third-down EPA allowed. Florida is 48th at 42.0 percent. Don't Give Them the Ball. 100th in explosive play rate. 7th in interceptions, 1.33 a game. 5th in takeaways. Florida is 110th at avoiding interceptions, 1.11 a game. Kroger Field. 6:15 PM ET. ESPN.",
+    filmWatched: false,
+    scoutingReport:
+      "Take Away the Run. Kentucky can run it. 37th in rush EPA, 19th in adjusted line yards. 6th in adjusted standard-down success. Baxter 5.5 a carry, eight scores. Patterson 6.1. Sixteen rushing touchdowns. Stay Alive on Third. 132nd in third-down conversions allowed, 47.7 percent. Florida is 48th at 42.0 percent. Don't Give Them the Ball. 100th in explosive play rate. 7th in interceptions, 1.33 a game. 5th in takeaways. Florida is 110th at avoiding interceptions, 1.11 a game. Kroger Field. 6:15 PM ET. ESPN.",
     pred: "UF 22 · Kentucky 23",
     predUF: 22,
     predOpp: 23,
