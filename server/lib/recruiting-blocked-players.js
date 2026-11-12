@@ -171,10 +171,29 @@ function currentRosterRecruitCollision(player) {
 }
 
 /**
+ * Current UF roster season. Recruits who exempted up / reclassified onto
+ * this roster (e.g. Keumajou 2027 → 2026 Fr.) must leave future class boards.
+ */
+const CURRENT_ROSTER_CLASS_YEAR = 2026;
+
+/**
  * Authoritative UF board commits (On3 snapshot / board sync / verified).
  * These often appear on the current roster after enrollment — that collision
- * must not wipe them from recruiting class lists (2026 signees, early 2027s).
+ * must not wipe them from the enrolled signing class (2026 signees).
+ * Future-class rows (2027+) who are already on the roster are not 2027 commits.
  */
+
+/**
+ * True when this identity is on the current UF roster and the recruiting
+ * class year is still in the future (reclass / early enrollee / exempt-up).
+ */
+function isCurrentRosterFutureClassRecruit(player) {
+  if (!player || typeof player !== 'object') return false;
+  const year = Number(player.classYear ?? player.class_year);
+  if (!Number.isFinite(year) || year <= CURRENT_ROSTER_CLASS_YEAR) return false;
+  return Boolean(currentRosterRecruitCollision(player));
+}
+
 function isAuthoritativeUfBoardCommit(player) {
   if (!player || typeof player !== 'object') return false;
   if (player.protected === true) return true;
@@ -252,8 +271,10 @@ function isBlockedRecruit(player) {
   } catch {
     /* optional */
   }
+  // Reclass / exempt-up: already on the 2026 roster, not a 2027+ hub commit.
+  if (isCurrentRosterFutureClassRecruit(player)) return true;
   // Roster collision is for chase phantoms (Dallas Wilson on Priority Chase),
-  // not for real signees who enrolled onto the roster.
+  // not for real signees who enrolled onto the roster in the current class.
   if (!isAuthoritativeUfBoardCommit(player) && currentRosterRecruitCollision(player)) {
     return true;
   }
@@ -273,11 +294,13 @@ function clearRosterIdentityIndex() {
 module.exports = {
   BLOCKED_PLAYER_SLUGS,
   BLOCKED_PLAYER_NAMES,
+  CURRENT_ROSTER_CLASS_YEAR,
   isBlockedRecruit,
   isGarbageChaseName,
   filterBlockedRecruits,
   isEmptyAthPhantomShell,
   isAuthoritativeUfBoardCommit,
+  isCurrentRosterFutureClassRecruit,
   currentRosterRecruitCollision,
   rosterSlugCandidates,
   clearRosterIdentityIndex,

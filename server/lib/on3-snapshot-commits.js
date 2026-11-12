@@ -79,7 +79,13 @@ function getSnapshotHubCommits(classYear) {
 
   const snapshot = loadOn3Snapshot();
   const bucket = snapshot.years?.[String(year)]?.commits || snapshot.years?.[year]?.commits || {};
-  return Object.values(bucket).map((entry) => snapshotEntryToPlayer(entry, year));
+  const rows = Object.values(bucket).map((entry) => snapshotEntryToPlayer(entry, year));
+  try {
+    const { isCurrentRosterFutureClassRecruit } = require('./recruiting-blocked-players');
+    return rows.filter((p) => !isCurrentRosterFutureClassRecruit(p));
+  } catch {
+    return rows;
+  }
 }
 
 function countSnapshotHubCommits(classYear) {

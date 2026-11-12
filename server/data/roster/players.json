@@ -45,7 +45,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5141766,
       "matchConfidence": "high",
       "seasons": [
@@ -54,12 +54,12 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 14,
-            "ast": 10,
-            "tot": 24,
-            "tfl": 7,
+            "solo": 22,
+            "ast": 15,
+            "tot": 37,
+            "qh": 4,
+            "tfl": 8,
             "sack": 4.5,
-            "qh": 3,
             "ff": 1
           }
         },
@@ -78,6 +78,46 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 3,
+            "tot": 5,
+            "qh": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 4,
+            "tot": 4,
+            "tfl": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 2,
+            "tot": 4
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -187,7 +227,7 @@
       ]
     },
     "cfbdPlayerId": 5141766,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -236,7 +276,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 4870995,
       "matchConfidence": "exact",
       "seasons": [
@@ -245,10 +285,10 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 13,
-            "ast": 6,
-            "tot": 19,
-            "pd": 2
+            "solo": 20,
+            "tot": 28,
+            "ast": 8,
+            "pd": 3
           }
         },
         {
@@ -292,6 +332,43 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "tot": 2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 5,
+            "tot": 5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "ast": 2,
+            "tot": 2,
+            "pd": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -409,7 +486,7 @@
       ]
     },
     "cfbdPlayerId": 4870995,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -749,7 +826,7 @@
     "nilSourceLabel": "On3 value",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:34.315Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -758,11 +835,11 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 2,
-            "yds": 0,
+            "car": 5,
+            "yds": 10,
             "td": 0,
-            "lng": 7,
-            "avg": 0
+            "lng": 8,
+            "avg": 2
           }
         },
         {
@@ -770,15 +847,75 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 3,
-            "yds": 50,
+            "rec": 13,
+            "yds": 101,
             "td": 0,
             "lng": 38,
-            "avg": 16.7
+            "avg": 7.8
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 4,
+            "yds": 19,
+            "td": 0,
+            "lng": 16,
+            "avg": 4.8
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": 2,
+            "td": 0,
+            "lng": 2,
+            "avg": 2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 6,
+            "yds": 32,
+            "td": 0,
+            "lng": 12,
+            "avg": 5.3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 2,
+            "yds": 8,
+            "td": 0,
+            "lng": 8,
+            "avg": 4
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -856,7 +993,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:34.320Z"
   },
   {
     "slug": "lagonza-hayward",
@@ -903,7 +1040,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5195292,
       "matchConfidence": "exact",
       "seasons": [
@@ -912,11 +1049,11 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "ast": 10,
-            "tot": 20,
-            "solo": 10,
-            "pd": 3,
-            "tfl": 2
+            "solo": 14,
+            "tot": 25,
+            "tfl": 3,
+            "ast": 11,
+            "pd": 3
           }
         },
         {
@@ -934,6 +1071,44 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "tot": 2,
+            "tfl": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 1,
+            "tot": 2
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -1031,7 +1206,7 @@
       ]
     },
     "cfbdPlayerId": 5195292,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -1082,17 +1257,26 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
         {
           "season": 2026,
           "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
           "category": "returning",
           "stats": {
-            "pr": 1,
-            "prYds": 16,
+            "pr": 6,
+            "prYds": 86,
             "kr": 0,
             "krYds": 0
           }
@@ -1114,15 +1298,100 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 23,
-            "yds": 258,
+            "rec": 36,
+            "yds": 373,
             "td": 2,
             "lng": 59,
-            "avg": 11.2
+            "avg": 10.4
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "returning",
+          "stats": {
+            "pr": 3,
+            "prYds": 39,
+            "kr": 0,
+            "krYds": 0
+          }
+        },
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 8,
+            "td": 0,
+            "lng": 8,
+            "avg": 8
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "returning",
+          "stats": {
+            "pr": 2,
+            "prYds": 31,
+            "kr": 0,
+            "krYds": 0
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 8,
+            "yds": 76,
+            "td": 0,
+            "lng": 17,
+            "avg": 9.5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 4,
+            "yds": 31,
+            "td": 0,
+            "lng": 14,
+            "avg": 7.8
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -1244,7 +1513,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:35.124Z"
   },
   {
     "slug": "onis-konanbanny",
@@ -1339,7 +1608,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:34.315Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -1357,15 +1626,30 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 10,
-            "yds": 180,
+            "rec": 11,
+            "yds": 189,
             "td": 1,
             "lng": 63,
-            "avg": 18
+            "avg": 17.2
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 9,
+            "td": 0,
+            "lng": 9,
+            "avg": 9
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -1455,7 +1739,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:34.320Z"
   },
   {
     "slug": "micah-mays-jr",
@@ -1504,7 +1788,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:33.433Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -1513,15 +1797,30 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 5,
-            "yds": 44,
+            "rec": 7,
+            "yds": 57,
             "td": 0,
             "lng": 20,
-            "avg": 8.8
+            "avg": 8.1
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 13,
+            "td": 0,
+            "lng": 7,
+            "avg": 6.5
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -1584,7 +1883,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:33.440Z"
   },
   {
     "slug": "myles-graham",
@@ -1631,7 +1930,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5079480,
       "matchConfidence": "exact",
       "seasons": [
@@ -1640,13 +1939,14 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 20,
-            "ast": 21,
-            "tot": 41,
-            "tfl": 2.5,
-            "sack": 2.5,
-            "qh": 2,
-            "fr": 1
+            "solo": 39,
+            "ast": 31,
+            "tot": 70,
+            "tfl": 5,
+            "sack": 4,
+            "qh": 3,
+            "fr": 2,
+            "ff": 1
           }
         },
         {
@@ -1677,6 +1977,52 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 10,
+            "ast": 5,
+            "tot": 15,
+            "tfl": 1.5,
+            "sack": 0.5,
+            "qh": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 6,
+            "ast": 1,
+            "tot": 7,
+            "fr": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 4,
+            "tot": 7,
+            "tfl": 1,
+            "sack": 1,
+            "ff": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -1796,7 +2142,7 @@
       ]
     },
     "cfbdPlayerId": 5079480,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -1845,7 +2191,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5141723,
       "matchConfidence": "exact",
       "seasons": [
@@ -1866,11 +2212,11 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 26,
-            "yds": 376,
+            "rec": 35,
+            "yds": 465,
             "td": 3,
             "lng": 40,
-            "avg": 14.5
+            "avg": 13.3
           }
         },
         {
@@ -1887,6 +2233,51 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 4,
+            "yds": 48,
+            "td": 0,
+            "lng": 16,
+            "avg": 12
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 14,
+            "td": 0,
+            "lng": 14,
+            "avg": 7
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 3,
+            "yds": 27,
+            "td": 0,
+            "lng": 17,
+            "avg": 9
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -2010,7 +2401,7 @@
       ]
     },
     "cfbdPlayerId": 5141723,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -2232,7 +2623,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-08T13:37:42.032Z",
+      "syncedAt": "2026-11-12T21:26:34.315Z",
       "cfbdPlayerId": 5139093,
       "matchConfidence": "exact",
       "seasons": [
@@ -2241,11 +2632,11 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 5,
-            "yds": 106,
+            "rec": 7,
+            "yds": 133,
             "td": 1,
             "lng": 48,
-            "avg": 21.2
+            "avg": 19
           }
         },
         {
@@ -2288,6 +2679,21 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 27,
+            "td": 0,
+            "lng": 17,
+            "avg": 13.5
+          }
+        },
         {
           "season": 2026,
           "week": 5,
@@ -2380,7 +2786,7 @@
       ]
     },
     "cfbdPlayerId": 5139093,
-    "updatedAt": "2026-10-08T13:37:42.038Z"
+    "updatedAt": "2026-11-12T21:26:34.320Z"
   },
   {
     "slug": "ty-jackson",
@@ -2427,7 +2833,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5167180,
       "matchConfidence": "exact",
       "seasons": [
@@ -2436,9 +2842,12 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 3,
-            "tot": 4,
-            "ast": 1
+            "solo": 12,
+            "ast": 5,
+            "tot": 17,
+            "tfl": 2,
+            "sack": 1,
+            "ff": 1
           }
         },
         {
@@ -2456,6 +2865,48 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 1,
+            "tot": 3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 5,
+            "ast": 2,
+            "tot": 7
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 1,
+            "tot": 3,
+            "tfl": 2,
+            "sack": 1,
+            "ff": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -2500,7 +2951,7 @@
       ]
     },
     "cfbdPlayerId": 5167180,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -2549,7 +3000,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5079340,
       "matchConfidence": "exact",
       "seasons": [
@@ -2558,14 +3009,14 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 15,
-            "ast": 17,
-            "tot": 32,
-            "tfl": 2,
+            "solo": 24,
+            "ast": 28,
+            "tot": 52,
+            "pd": 3,
+            "qh": 3,
+            "tfl": 4,
             "ff": 1,
-            "fr": 1,
-            "pd": 2,
-            "qh": 1
+            "fr": 1
           }
         },
         {
@@ -2596,6 +3047,49 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 4,
+            "ast": 5,
+            "tot": 9,
+            "pd": 1,
+            "qh": 2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 4,
+            "ast": 2,
+            "tot": 6,
+            "tfl": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 4,
+            "tot": 5,
+            "tfl": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -2715,7 +3209,7 @@
       ]
     },
     "cfbdPlayerId": 5079340,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -2886,7 +3380,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5295814,
       "matchConfidence": "exact",
       "seasons": [
@@ -2895,11 +3389,11 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 5,
-            "yds": 25,
-            "td": 0,
-            "lng": 9,
-            "avg": 5
+            "car": 35,
+            "yds": 90,
+            "td": 1,
+            "lng": 16,
+            "avg": 2.6
           }
         },
         {
@@ -2907,13 +3401,13 @@
           "team": "Florida",
           "category": "passing",
           "stats": {
-            "cmp": 23,
-            "att": 29,
-            "yds": 252,
-            "td": 2,
-            "int": 2,
+            "cmp": 73,
+            "att": 111,
+            "yds": 712,
+            "td": 4,
+            "int": 5,
             "lng": 42,
-            "avg": 8.7
+            "avg": 6.4
           }
         },
         {
@@ -2943,6 +3437,102 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 11,
+            "yds": 7,
+            "td": 0,
+            "lng": 16,
+            "avg": 0.6
+          }
+        },
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "passing",
+          "stats": {
+            "cmp": 10,
+            "att": 22,
+            "yds": 133,
+            "td": 0,
+            "int": 2,
+            "lng": 33,
+            "avg": 6
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 9,
+            "yds": 17,
+            "td": 1,
+            "lng": 11,
+            "avg": 1.9
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "passing",
+          "stats": {
+            "cmp": 18,
+            "att": 25,
+            "yds": 172,
+            "td": 0,
+            "int": 1,
+            "lng": 23,
+            "avg": 6.9
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 10,
+            "yds": 41,
+            "td": 0,
+            "lng": 14,
+            "avg": 4.1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "passing",
+          "stats": {
+            "cmp": 22,
+            "att": 35,
+            "yds": 155,
+            "td": 2,
+            "int": 0,
+            "lng": 17,
+            "avg": 4.4
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -3073,7 +3663,7 @@
       ]
     },
     "cfbdPlayerId": 5295814,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -3248,7 +3838,7 @@
     "nilSourceLabel": "On3 value",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -3257,17 +3847,45 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 6,
-            "tot": 8,
-            "ast": 2,
-            "tfl": 2,
-            "sack": 1,
-            "qh": 1,
+            "solo": 10,
+            "tot": 13,
+            "qh": 2,
+            "ast": 3,
+            "tfl": 4.5,
+            "sack": 2.5,
             "pd": 1
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1,
+            "qh": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 1,
+            "tot": 4,
+            "tfl": 2.5,
+            "sack": 1.5
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -3334,7 +3952,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:35.124Z"
   },
   {
     "slug": "will-griffin",
@@ -3427,7 +4045,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:34.315Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -3448,17 +4066,34 @@
           "team": "Florida",
           "category": "passing",
           "stats": {
-            "cmp": 105,
-            "att": 149,
-            "yds": 1341,
+            "cmp": 110,
+            "att": 156,
+            "yds": 1367,
             "td": 9,
-            "int": 3,
+            "int": 5,
             "lng": 63,
-            "avg": 9
+            "avg": 8.8
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "passing",
+          "stats": {
+            "cmp": 5,
+            "att": 7,
+            "yds": 26,
+            "td": 0,
+            "int": 2,
+            "lng": 10,
+            "avg": 3.7
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -3653,7 +4288,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:34.320Z"
   },
   {
     "slug": "ben-hanks-iii",
@@ -3700,7 +4335,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5295813,
       "matchConfidence": "exact",
       "seasons": [
@@ -3709,11 +4344,12 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 15,
-            "ast": 3,
-            "tot": 18,
-            "pd": 2,
-            "tfl": 1
+            "solo": 19,
+            "tot": 25,
+            "pd": 4,
+            "ast": 6,
+            "tfl": 1.5,
+            "sack": 0.5
           }
         },
         {
@@ -3731,6 +4367,46 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "tot": 3,
+            "pd": 2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 2,
+            "tot": 3,
+            "tfl": 0.5,
+            "sack": 0.5
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -3827,7 +4503,7 @@
       ]
     },
     "cfbdPlayerId": 5295813,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -3875,19 +4551,30 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5079322,
       "matchConfidence": "exact",
       "seasons": [
         {
           "season": 2026,
           "team": "Florida",
+          "category": "returning",
+          "stats": {
+            "pr": 1,
+            "prYds": 4,
+            "kr": 0,
+            "krYds": 0
+          }
+        },
+        {
+          "season": 2026,
+          "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 7,
-            "yds": 46,
+            "rec": 10,
+            "yds": 66,
             "td": 0,
-            "lng": 12,
+            "lng": 14,
             "avg": 6.6
           }
         },
@@ -3896,11 +4583,11 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 110,
-            "yds": 672,
-            "td": 12,
+            "car": 160,
+            "yds": 836,
+            "td": 14,
             "lng": 75,
-            "avg": 6.1
+            "avg": 5.2
           }
         },
         {
@@ -3990,6 +4677,95 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 7,
+            "td": 0,
+            "lng": 7,
+            "avg": 7
+          }
+        },
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 8,
+            "yds": 35,
+            "td": 1,
+            "lng": 15,
+            "avg": 4.4
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 17,
+            "yds": 38,
+            "td": 0,
+            "lng": 15,
+            "avg": 2.2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "returning",
+          "stats": {
+            "pr": 1,
+            "prYds": 4,
+            "kr": 0,
+            "krYds": 0
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 13,
+            "td": 0,
+            "lng": 14,
+            "avg": 6.5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 25,
+            "yds": 91,
+            "td": 1,
+            "lng": 13,
+            "avg": 3.6
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -4173,7 +4949,7 @@
       ]
     },
     "cfbdPlayerId": 5079322,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "on3",
     "nilSourceLabel": "On3 value"
   },
@@ -4484,7 +5260,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:34.315Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -4493,15 +5269,45 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 12,
-            "yds": 137,
+            "rec": 14,
+            "yds": 165,
             "td": 0,
-            "lng": 22,
-            "avg": 11.4
+            "lng": 23,
+            "avg": 11.8
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 23,
+            "td": 0,
+            "lng": 23,
+            "avg": 23
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 5,
+            "td": 0,
+            "lng": 5,
+            "avg": 5
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -4594,7 +5400,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:34.320Z"
   },
   {
     "slug": "aidan-warner",
@@ -4799,7 +5605,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:34.315Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -4808,11 +5614,11 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 2,
-            "yds": 19,
-            "td": 0,
+            "rec": 6,
+            "yds": 49,
+            "td": 2,
             "lng": 10,
-            "avg": 9.5
+            "avg": 8.2
           }
         },
         {
@@ -4828,6 +5634,36 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 15,
+            "td": 0,
+            "lng": 10,
+            "avg": 7.5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 15,
+            "td": 2,
+            "lng": 8,
+            "avg": 7.5
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -4874,7 +5710,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:34.320Z"
   },
   {
     "slug": "titus-bullard",
@@ -5098,7 +5934,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5295815,
       "matchConfidence": "exact",
       "seasons": [
@@ -5127,11 +5963,11 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 5,
-            "yds": 26,
+            "rec": 9,
+            "yds": 96,
             "td": 1,
-            "lng": 10,
-            "avg": 5.2
+            "lng": 33,
+            "avg": 10.7
           }
         },
         {
@@ -5139,11 +5975,11 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 36,
-            "yds": 265,
+            "car": 42,
+            "yds": 293,
             "td": 3,
             "lng": 45,
-            "avg": 7.4
+            "avg": 7
           }
         },
         {
@@ -5172,6 +6008,36 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 4,
+            "yds": 70,
+            "td": 0,
+            "lng": 33,
+            "avg": 17.5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 6,
+            "yds": 28,
+            "td": 0,
+            "lng": 13,
+            "avg": 4.7
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -5351,7 +6217,7 @@
       ]
     },
     "cfbdPlayerId": 5295815,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -5402,7 +6268,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -5411,16 +6277,44 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 10,
-            "ast": 9,
-            "tot": 19,
+            "solo": 17,
+            "tot": 29,
+            "pd": 2,
+            "ast": 12,
+            "fr": 1,
             "tfl": 2.5,
-            "pd": 1,
             "qh": 2
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 4,
+            "tot": 4,
+            "pd": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 3,
+            "tot": 6,
+            "fr": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -5491,7 +6385,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:35.124Z"
   },
   {
     "slug": "cj-hester",
@@ -5584,7 +6478,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:34.315Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -5605,15 +6499,45 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 16,
-            "yds": 40,
+            "car": 19,
+            "yds": 41,
             "td": 0,
             "lng": 11,
-            "avg": 2.5
+            "avg": 2.2
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "yds": -3,
+            "td": 0,
+            "lng": 0,
+            "avg": -3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 2,
+            "yds": 4,
+            "td": 0,
+            "lng": 5,
+            "avg": 2
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -5751,7 +6675,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:34.320Z"
   },
   {
     "slug": "kahleil-jackson",
@@ -5798,7 +6722,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-08T13:37:42.032Z",
+      "syncedAt": "2026-11-12T21:26:33.433Z",
       "cfbdPlayerId": 4693740,
       "matchConfidence": "exact",
       "seasons": [
@@ -5830,11 +6754,11 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 3,
-            "yds": 30,
+            "rec": 4,
+            "yds": 41,
             "td": 0,
             "lng": 11,
-            "avg": 10
+            "avg": 10.3
           }
         },
         {
@@ -5914,6 +6838,21 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 11,
+            "td": 0,
+            "lng": 11,
+            "avg": 11
+          }
+        },
         {
           "season": 2026,
           "week": 5,
@@ -6021,7 +6960,7 @@
       ]
     },
     "cfbdPlayerId": 4693740,
-    "updatedAt": "2026-10-08T13:37:42.039Z",
+    "updatedAt": "2026-11-12T21:26:33.440Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -6070,7 +7009,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-08T13:37:42.032Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 4912316,
       "matchConfidence": "high",
       "seasons": [
@@ -6079,9 +7018,11 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 5,
-            "tot": 8,
-            "ast": 3
+            "ast": 5,
+            "tot": 10,
+            "tfl": 0.5,
+            "sack": 0.5,
+            "solo": 5
           }
         },
         {
@@ -6099,6 +7040,20 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "ast": 2,
+            "tot": 2,
+            "tfl": 0.5,
+            "sack": 0.5
+          }
+        },
         {
           "season": 2026,
           "week": 5,
@@ -6167,7 +7122,7 @@
       ]
     },
     "cfbdPlayerId": 4912316,
-    "updatedAt": "2026-10-08T13:37:42.039Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -6245,7 +7200,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-08T13:37:42.032Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5083314,
       "matchConfidence": "exact",
       "seasons": [
@@ -6254,12 +7209,12 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 7,
-            "ast": 7,
-            "tot": 14,
+            "ast": 9,
+            "tot": 19,
+            "qh": 3,
+            "solo": 10,
             "tfl": 3,
             "sack": 2,
-            "qh": 2,
             "ff": 1
           }
         },
@@ -6304,6 +7259,43 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1,
+            "qh": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "tot": 3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 5,
@@ -6425,7 +7417,7 @@
       ]
     },
     "cfbdPlayerId": 5083314,
-    "updatedAt": "2026-10-08T13:37:42.039Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -6476,7 +7468,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -6485,10 +7477,11 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 0,
-            "yds": 0,
+            "rec": 2,
+            "yds": 14,
             "td": 0,
-            "lng": 0
+            "lng": 8,
+            "avg": 7
           }
         },
         {
@@ -6498,8 +7491,8 @@
           "stats": {
             "pr": 0,
             "prYds": 0,
-            "kr": 7,
-            "krYds": 195
+            "kr": 18,
+            "krYds": 409
           }
         },
         {
@@ -6507,15 +7500,102 @@
           "team": "Florida",
           "category": "rushing",
           "stats": {
-            "car": 9,
-            "yds": 36,
+            "car": 13,
+            "yds": 56,
             "td": 0,
             "lng": 17,
-            "avg": 4
+            "avg": 4.3
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "returning",
+          "stats": {
+            "pr": 0,
+            "prYds": 0,
+            "kr": 3,
+            "krYds": 53
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "returning",
+          "stats": {
+            "pr": 0,
+            "prYds": 0,
+            "kr": 3,
+            "krYds": 56
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 6,
+            "td": 0,
+            "lng": 6,
+            "avg": 6
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "returning",
+          "stats": {
+            "pr": 0,
+            "prYds": 0,
+            "kr": 5,
+            "krYds": 105
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 8,
+            "td": 0,
+            "lng": 8,
+            "avg": 8
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 4,
+            "yds": 20,
+            "td": 0,
+            "lng": 9,
+            "avg": 5
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -6649,7 +7729,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:35.124Z"
   },
   {
     "slug": "anthony-rubio",
@@ -6849,7 +7929,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 4870920,
       "matchConfidence": "exact",
       "seasons": [
@@ -6858,11 +7938,11 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 16,
-            "ast": 3,
-            "tot": 19,
-            "tfl": 1,
-            "pd": 1,
+            "solo": 22,
+            "ast": 7,
+            "tot": 29,
+            "pd": 2,
+            "tfl": 2,
             "int": 1
           }
         },
@@ -6894,6 +7974,47 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 1,
+            "tot": 2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 1,
+            "tot": 2,
+            "pd": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 4,
+            "ast": 2,
+            "tot": 6,
+            "tfl": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -7007,7 +8128,7 @@
       ]
     },
     "cfbdPlayerId": 4870920,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "on3",
     "nilSourceLabel": "On3 value"
   },
@@ -7465,7 +8586,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:33.433Z",
       "cfbdPlayerId": 4870978,
       "matchConfidence": "exact",
       "seasons": [
@@ -7474,13 +8595,13 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
+            "ast": 17,
+            "tot": 26,
+            "tfl": 4,
+            "sack": 1.5,
+            "qh": 3,
             "solo": 9,
-            "ast": 15,
-            "tot": 24,
-            "tfl": 3.5,
-            "qh": 2,
-            "pd": 1,
-            "sack": 1
+            "pd": 1
           }
         },
         {
@@ -7524,6 +8645,21 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "ast": 2,
+            "tot": 2,
+            "tfl": 0.5,
+            "sack": 0.5,
+            "qh": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -7658,7 +8794,7 @@
       ]
     },
     "cfbdPlayerId": 4870978,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:33.440Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -7906,7 +9042,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -7915,16 +9051,58 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 7,
-            "ast": 11,
-            "tot": 18,
-            "tfl": 1,
+            "solo": 20,
+            "ast": 19,
+            "tot": 39,
+            "tfl": 1.5,
+            "ff": 1,
             "pd": 2,
             "int": 2
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 6,
+            "ast": 1,
+            "tot": 7,
+            "tfl": 0.5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 6,
+            "ast": 2,
+            "tot": 8,
+            "ff": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 5,
+            "tot": 6
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -7996,7 +9174,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:35.124Z"
   },
   {
     "slug": "kaiden-hall",
@@ -8413,7 +9591,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -8422,11 +9600,11 @@
           "team": "Florida",
           "category": "punting",
           "stats": {
-            "punts": 16,
-            "yds": 732,
-            "lng": 70,
-            "in20": 6,
-            "tb": 0
+            "punts": 31,
+            "yds": 1460,
+            "lng": 75,
+            "in20": 14,
+            "tb": 1
           }
         },
         {
@@ -8443,6 +9621,54 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "punting",
+          "stats": {
+            "punts": 5,
+            "yds": 212,
+            "avg": 42.4,
+            "lng": 47,
+            "in20": 3,
+            "tb": 0
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "punting",
+          "stats": {
+            "punts": 4,
+            "yds": 205,
+            "avg": 51.2,
+            "lng": 64,
+            "in20": 3,
+            "tb": 0
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "punting",
+          "stats": {
+            "punts": 6,
+            "yds": 311,
+            "avg": 51.8,
+            "lng": 75,
+            "in20": 2,
+            "tb": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -8540,7 +9766,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:35.124Z"
   },
   {
     "slug": "carter-milliron",
@@ -8831,7 +10057,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 4685238,
       "matchConfidence": "exact",
       "seasons": [
@@ -8840,9 +10066,9 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 11,
-            "ast": 10,
-            "tot": 21
+            "solo": 15,
+            "ast": 12,
+            "tot": 27
           }
         },
         {
@@ -8873,6 +10099,43 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 1,
+            "tot": 2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "tot": 3
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "ast": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -8986,7 +10249,7 @@
       ]
     },
     "cfbdPlayerId": 4685238,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -10245,7 +11508,39 @@
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "nilSource": "sideline",
-    "nilSourceLabel": "Sideline model"
+    "nilSourceLabel": "Sideline model",
+    "productionStats": {
+      "source": "official",
+      "syncedAt": "2026-11-12T21:26:34.315Z",
+      "cfbdPlayerId": null,
+      "matchConfidence": null,
+      "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        }
+      ]
+    },
+    "updatedAt": "2026-11-12T21:26:34.320Z"
   },
   {
     "slug": "fletcher-westphal",
@@ -10755,10 +12050,21 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-09-13T04:27:22.807Z",
+      "syncedAt": "2026-11-12T21:26:34.315Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
+        {
+          "season": 2026,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 2,
+            "tot": 5,
+            "tfl": 1.5
+          }
+        },
         {
           "season": 2026,
           "team": "Florida",
@@ -10775,15 +12081,44 @@
           "team": "Florida",
           "category": "receiving",
           "stats": {
-            "rec": 2,
-            "yds": 21,
+            "rec": 4,
+            "yds": 30,
             "td": 0,
             "lng": 14,
-            "avg": 10.5
+            "avg": 7.5
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 2,
+            "tot": 5,
+            "tfl": 1.5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 2,
+            "yds": 9,
+            "td": 0,
+            "lng": 5,
+            "avg": 4.5
+          }
+        },
         {
           "season": 2026,
           "week": 2,
@@ -10815,7 +12150,7 @@
         }
       ]
     },
-    "updatedAt": "2026-09-13T04:27:22.810Z"
+    "updatedAt": "2026-11-12T21:26:34.320Z"
   },
   {
     "slug": "micah-jones",
@@ -11176,7 +12511,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5086808,
       "matchConfidence": "exact",
       "seasons": [
@@ -11185,11 +12520,13 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "ast": 11,
-            "tot": 15,
+            "solo": 10,
+            "ast": 16,
+            "tot": 26,
+            "tfl": 5,
+            "pd": 2,
+            "sack": 0.5,
             "qh": 3,
-            "tfl": 3,
-            "solo": 4,
             "ff": 1
           }
         },
@@ -11208,6 +12545,49 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 2,
+            "tot": 3,
+            "tfl": 0.5
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 1,
+            "tot": 4,
+            "pd": 2
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "ast": 2,
+            "tot": 4,
+            "tfl": 1.5,
+            "sack": 0.5
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -11306,7 +12686,7 @@
       ]
     },
     "cfbdPlayerId": 5086808,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -11355,7 +12735,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:34.315Z",
       "cfbdPlayerId": 5195951,
       "matchConfidence": "exact",
       "seasons": [
@@ -11364,9 +12744,9 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 8,
+            "solo": 9,
+            "tot": 22,
             "ast": 13,
-            "tot": 21,
             "qh": 5,
             "tfl": 1.5,
             "sack": 0.5,
@@ -11388,6 +12768,18 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -11492,7 +12884,7 @@
       ]
     },
     "cfbdPlayerId": 5195951,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:34.320Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -11543,7 +12935,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -11552,16 +12944,45 @@
           "team": "Florida",
           "category": "kicking",
           "stats": {
-            "fgm": 9,
-            "fga": 10,
-            "lng": 53,
-            "pts": 57,
-            "xpm": 30,
-            "xpa": 30
+            "xpm": 34,
+            "xpa": 34,
+            "pts": 67,
+            "fgm": 11,
+            "fga": 12,
+            "lng": 53
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "kicking",
+          "stats": {
+            "xpm": 1,
+            "xpa": 1,
+            "pts": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "kicking",
+          "stats": {
+            "fgm": 2,
+            "fga": 2,
+            "lng": 45,
+            "pts": 9,
+            "xpm": 3,
+            "xpa": 3
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -11660,7 +13081,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:35.124Z"
   },
   {
     "slug": "sebastian-scott",
@@ -12198,7 +13619,7 @@
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
       "source": "cfbd",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": 5221980,
       "matchConfidence": "exact",
       "seasons": [
@@ -12207,10 +13628,11 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "solo": 2,
-            "tot": 5,
-            "ast": 3,
-            "tfl": 0.5
+            "solo": 6,
+            "ast": 4,
+            "tot": 10,
+            "tfl": 1.5,
+            "qh": 1
           }
         },
         {
@@ -12228,6 +13650,33 @@
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 3,
+            "ast": 1,
+            "tot": 4,
+            "tfl": 1,
+            "qh": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -12296,7 +13745,7 @@
       ]
     },
     "cfbdPlayerId": 5221980,
-    "updatedAt": "2026-10-13T15:00:30.016Z",
+    "updatedAt": "2026-11-12T21:26:35.124Z",
     "nilSource": "sideline",
     "nilSourceLabel": "Sideline model"
   },
@@ -12393,7 +13842,7 @@
     "nilSourceLabel": "Sideline model",
     "productionStats": {
       "source": "official",
-      "syncedAt": "2026-10-13T15:00:30.007Z",
+      "syncedAt": "2026-11-12T21:26:35.121Z",
       "cfbdPlayerId": null,
       "matchConfidence": null,
       "seasons": [
@@ -12402,18 +13851,61 @@
           "team": "Florida",
           "category": "defense",
           "stats": {
-            "ast": 6,
-            "tot": 11,
-            "solo": 5,
-            "tfl": 3.5,
-            "sack": 3.5,
-            "ff": 1,
-            "qh": 5,
-            "pd": 2
+            "solo": 9,
+            "ast": 8,
+            "tot": 17,
+            "tfl": 6.5,
+            "qh": 6,
+            "sack": 4.5,
+            "pd": 3,
+            "ff": 1
           }
         }
       ],
       "recentGames": [
+        {
+          "season": 2026,
+          "week": 9,
+          "date": "2026-11-07T23:55:00.000Z",
+          "opponent": "Oklahoma",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "ast": 2,
+            "tot": 3,
+            "tfl": 1,
+            "qh": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 8,
+          "date": "2026-10-31T23:55:00.000Z",
+          "opponent": "Georgia",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 2,
+            "tot": 2,
+            "tfl": 1,
+            "sack": 1,
+            "pd": 1
+          }
+        },
+        {
+          "season": 2026,
+          "week": 7,
+          "date": "2026-10-17T23:55:00.000Z",
+          "opponent": "Texas",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "solo": 1,
+            "tot": 1,
+            "tfl": 1
+          }
+        },
         {
           "season": 2026,
           "week": 6,
@@ -12488,6 +13980,6 @@
         }
       ]
     },
-    "updatedAt": "2026-10-13T15:00:30.016Z"
+    "updatedAt": "2026-11-12T21:26:35.124Z"
   }
 ]

@@ -306,14 +306,18 @@ test('Auburn Week 3 and Ole Miss Week 4 official boxes are on Philo / Baugh / Wi
   assert.equal(game('aaron-philo', 6, 'South Carolina', 'passing')?.stats?.int, 1);
   assert.equal(game('aaron-philo', 6, 'South Carolina', 'rushing')?.stats?.car, 13);
   assert.equal(game('aaron-philo', 6, 'South Carolina', 'rushing')?.stats?.yds, 32);
+  assert.equal(game('aaron-philo', 8, 'Georgia', 'passing')?.stats?.cmp, 5);
+  assert.equal(game('aaron-philo', 8, 'Georgia', 'passing')?.stats?.att, 7);
+  assert.equal(game('aaron-philo', 8, 'Georgia', 'passing')?.stats?.yds, 26);
+  assert.equal(game('aaron-philo', 8, 'Georgia', 'passing')?.stats?.int, 2);
   assert.deepEqual(season('aaron-philo', 'passing')?.stats, {
-    cmp: 105,
-    att: 149,
-    yds: 1341,
+    cmp: 110,
+    att: 156,
+    yds: 1367,
     td: 9,
-    int: 3,
+    int: 5,
     lng: 63,
-    avg: 9,
+    avg: 8.8,
   });
 
   assert.equal(game('jadan-baugh', 3, 'Auburn', 'rushing')?.stats?.yds, 162);
@@ -327,9 +331,16 @@ test('Auburn Week 3 and Ole Miss Week 4 official boxes are on Philo / Baugh / Wi
   assert.equal(game('jadan-baugh', 6, 'South Carolina', 'rushing')?.stats?.td, 1);
   assert.equal(game('jadan-baugh', 6, 'South Carolina', 'receiving')?.stats?.rec, 2);
   assert.equal(game('jadan-baugh', 6, 'South Carolina', 'receiving')?.stats?.yds, 11);
-  assert.equal(season('jadan-baugh', 'rushing')?.stats?.car, 110);
-  assert.equal(season('jadan-baugh', 'rushing')?.stats?.yds, 672);
-  assert.equal(season('jadan-baugh', 'rushing')?.stats?.td, 12);
+  assert.equal(game('jadan-baugh', 7, 'Texas', 'rushing')?.stats?.car, 25);
+  assert.equal(game('jadan-baugh', 7, 'Texas', 'rushing')?.stats?.yds, 91);
+  assert.equal(game('jadan-baugh', 7, 'Texas', 'rushing')?.stats?.td, 1);
+  assert.equal(game('jadan-baugh', 8, 'Georgia', 'rushing')?.stats?.yds, 38);
+  assert.equal(game('jadan-baugh', 9, 'Oklahoma', 'rushing')?.stats?.car, 8);
+  assert.equal(game('jadan-baugh', 9, 'Oklahoma', 'rushing')?.stats?.yds, 35);
+  assert.equal(game('jadan-baugh', 9, 'Oklahoma', 'rushing')?.stats?.td, 1);
+  assert.equal(season('jadan-baugh', 'rushing')?.stats?.car, 160);
+  assert.equal(season('jadan-baugh', 'rushing')?.stats?.yds, 836);
+  assert.equal(season('jadan-baugh', 'rushing')?.stats?.td, 14);
 
   assert.equal(game('dallas-wilson', 3, 'Auburn', 'receiving')?.stats?.yds, 74);
   assert.equal(game('dallas-wilson', 3, 'Auburn', 'receiving')?.stats?.td, 1);
@@ -339,8 +350,13 @@ test('Auburn Week 3 and Ole Miss Week 4 official boxes are on Philo / Baugh / Wi
   assert.equal(game('dallas-wilson', 6, 'South Carolina', 'receiving')?.stats?.rec, 8);
   assert.equal(game('dallas-wilson', 6, 'South Carolina', 'receiving')?.stats?.yds, 74);
   assert.equal(game('dallas-wilson', 6, 'South Carolina', 'receiving')?.stats?.td, 0);
-  assert.equal(season('dallas-wilson', 'receiving')?.stats?.rec, 26);
-  assert.equal(season('dallas-wilson', 'receiving')?.stats?.yds, 376);
+  assert.equal(game('dallas-wilson', 7, 'Texas', 'receiving')?.stats?.rec, 3);
+  assert.equal(game('dallas-wilson', 7, 'Texas', 'receiving')?.stats?.yds, 27);
+  assert.equal(game('dallas-wilson', 8, 'Georgia', 'receiving')?.stats?.yds, 14);
+  assert.equal(game('dallas-wilson', 9, 'Oklahoma', 'receiving')?.stats?.rec, 4);
+  assert.equal(game('dallas-wilson', 9, 'Oklahoma', 'receiving')?.stats?.yds, 48);
+  assert.equal(season('dallas-wilson', 'receiving')?.stats?.rec, 35);
+  assert.equal(season('dallas-wilson', 'receiving')?.stats?.yds, 465);
   assert.equal(season('dallas-wilson', 'receiving')?.stats?.td, 3);
 });
 
@@ -373,8 +389,12 @@ test('every 2026 official week is on Brown / Graham after the full-box rebuild',
   assert.equal(game('myles-graham', 6, 'South Carolina', 'defense')?.stats?.sack, 2);
   assert.equal(game('jayden-woods', 6, 'South Carolina', 'defense')?.stats?.tot, 3);
   assert.equal(game('jayden-woods', 6, 'South Carolina', 'defense')?.stats?.sack, 0.5);
-  assert.equal(season('myles-graham', 'defense')?.stats?.tot, 41);
-  assert.equal(season('myles-graham', 'defense')?.stats?.solo, 20);
+  assert.equal(game('myles-graham', 7, 'Texas', 'defense')?.stats?.tot, 7);
+  assert.equal(game('myles-graham', 8, 'Georgia', 'defense')?.stats?.tot, 7);
+  assert.equal(game('myles-graham', 9, 'Oklahoma', 'defense')?.stats?.tot, 15);
+  assert.equal(game('myles-graham', 9, 'Oklahoma', 'defense')?.stats?.solo, 10);
+  assert.equal(season('myles-graham', 'defense')?.stats?.tot, 70);
+  assert.equal(season('myles-graham', 'defense')?.stats?.solo, 39);
   assert.equal(game('drake-stubbs', 2, 'Campbell', 'defense')?.stats?.tot, 2);
 });
 
@@ -545,13 +565,13 @@ test('automatic sync fetches a missing week and still rechecks the latest final'
   assert.deepEqual(forced.map((g) => g.id), ['fau']);
 });
 
-test('on October 13 the automatic sync still has South Carolina and not Texas', () => {
+test('after Oklahoma is stamped the automatic sync rechecks that latest final', () => {
   const board = require('../lib/schedule-board').getScheduleBoard(2026);
   const roster = require('../data/roster/players.json');
-  const need = gamesNeedingOfficialBox(board, roster, { now: new Date('2026-10-13T18:00:00.000Z') });
+  const need = gamesNeedingOfficialBox(board, roster, { now: new Date('2026-11-12T18:00:00.000Z') });
   assert.deepEqual(
     need.map((g) => g.id),
-    ['scar']
+    ['oklahoma']
   );
 });
 

@@ -83,8 +83,27 @@ describe('alumni / roster phantom recruit hard-block', () => {
       false,
       'authoritative On3 signees must remain on recruiting class boards'
     );
-    const early = getSnapshotHubCommits(2027).find((p) => p.slug === 'stive-bentley-keumajou');
-    assert.ok(early, 'expected Keumajou in 2027 On3 snapshot');
-    assert.equal(isBlockedRecruit(early), false);
+    const early = {
+      slug: 'stive-bentley-keumajou',
+      name: 'Stive-Bentley Keumajou',
+      classYear: 2027,
+      status: 'committed',
+      committedTo: 'Florida',
+      on3Source: 'on3-board-sync',
+      protected: true,
+    };
+    assert.ok(
+      currentRosterRecruitCollision(early),
+      'Keumajou is on the current UF roster after exempting up'
+    );
+    assert.equal(
+      isBlockedRecruit(early),
+      true,
+      '2027 board must drop Keumajou — he is a 2026 roster freshman, not a 2027 commit'
+    );
+    assert.equal(
+      getSnapshotHubCommits(2027).some((p) => p.slug === 'stive-bentley-keumajou'),
+      false
+    );
   });
 });
