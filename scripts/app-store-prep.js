@@ -36,6 +36,7 @@ function runStep(name, scriptRel, { optional = false, skipReason = null } = {}) 
 function main() {
   const steps = [
     runStep('ios-iap-wiring', 'client/scripts/verify-ios-iap-wiring.js'),
+    runStep('listing-copy', 'scripts/verify-app-store-listing-copy.js'),
     runStep('screenshots', 'scripts/verify-app-store-screenshots.js'),
     runStep('aasa', 'server/scripts/verify-aasa.js', { optional: true }),
   ];
