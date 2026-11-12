@@ -437,7 +437,8 @@ export function resolveHomeNowWeekPillars(
 const LAST_GOOD_NOW_WEEK_KEY = 'gv-home-now-week-last-good';
 const RETIRED_NOW_TICK_RE = /1\.0\.29|update in the App Store/i;
 /** Last-week pledge / false commits cannot own this week's NOW News. */
-const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
+const STALE_NOW_NEWS_RE =
+  /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey|florida 7,\s*oklahoma 23/i;
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri|faurot[\s\S]{0,40}espn/i;
 /** Posted South Carolina final — last-good Swamp / 4-1 must not beat this week. */
 const LEFTOVER_MISSOURI_NOW_RE =
@@ -454,7 +455,7 @@ const LEFTOVER_OKLAHOMA_NOW_RE =
   /oklahoma in the swamp|7:45 pm · sec network|5-3\s*·\s*sec home saturday|florida 8,\s*georgia 27|moreno fisher/i;
 const KY_NOW_GAME = 'Kentucky at Kroger Field — 6:15 PM · ESPN';
 const KY_NOW_SEASON = '5-4 heading into Saturday';
-const KY_NOW_NEWS = 'Florida 7, Oklahoma 23';
+const KY_NOW_NEWS = 'Moreno Fisher commits to Florida';
 
 function pinMissouriAbcTick(text: string): string {
   const t = lockBroadcastWindow(text);

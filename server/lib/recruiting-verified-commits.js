@@ -23,6 +23,7 @@ const VERIFIED_UF_COMMITS_BY_YEAR = {
     'easton-royal',
     'kailib-dillard',
     'zahmar-tookes',
+    'moreno-fisher',
   ]),
   2028: new Set([
     'armani-strong',

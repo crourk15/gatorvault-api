@@ -27,6 +27,11 @@ test('verified 2027 UF commits are only tre-geathers, jaydee-lane, ellis-mcgaski
     true,
     'easton-royal flipped to Florida on 2026-10-11'
   );
+  assert.equal(
+    isVerifiedHubCommit({ slug: 'moreno-fisher', classYear: 2027, status: 'committed', committedTo: 'Florida' }),
+    true,
+    'moreno-fisher committed to Florida on 2026-11-12'
+  );
 });
 
 test('isFloridaCommit uses status committed for hub classes in JSON mode', () => {
@@ -120,6 +125,27 @@ test('getHubCommits 2028 includes Armani Strong, Cyion Smith, and Samuel Bailey'
   const bailey = commits.find((p) => String(p.slug || '').toLowerCase() === 'samuel-bailey');
   assert.equal(String(bailey.committedTo || '').toLowerCase(), 'florida');
   assert.equal(String(bailey.status || '').toLowerCase(), 'committed');
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+  delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
+});
+
+test('getHubCommits 2027 includes Moreno Fisher', async () => {
+  delete process.env.SUPABASE_URL;
+  delete process.env.DATABASE_URL;
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+  delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
+  delete require.cache[require.resolve('../../lib/recruiting-verified-commits')];
+  const jsonStore = require('../../lib/recruiting-store');
+  const commits = await jsonStore.getHubCommits(2027);
+  assert.equal(
+    commits.some((p) => String(p.slug || '').toLowerCase() === 'moreno-fisher'),
+    true,
+    'moreno-fisher must appear as a 2027 UF commit'
+  );
+  const fisher = commits.find((p) => String(p.slug || '').toLowerCase() === 'moreno-fisher');
+  assert.equal(String(fisher.committedTo || '').toLowerCase(), 'florida');
+  assert.equal(String(fisher.status || '').toLowerCase(), 'committed');
+  assert.equal(Number(fisher.classYear), 2027);
   delete require.cache[require.resolve('../../lib/recruiting-store')];
   delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
 });

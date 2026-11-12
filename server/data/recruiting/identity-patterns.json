@@ -5713,7 +5713,44 @@
         "2028 Cooper Martenson"
       ],
       "updatedAt": "2026-09-23T19:43:05.593Z"
+    },
+    "moreno-fisher": {
+      "slug": "moreno-fisher",
+      "name": "Moreno Fisher",
+      "stars": 3,
+      "position": "OT",
+      "school": "Hough",
+      "commitSchool": null,
+      "class": 2027,
+      "natlRank": 1162,
+      "patterns": [
+        "3 star OT Moreno",
+        "3-star OT Moreno",
+        "three star OT Moreno",
+        "three-star OT Moreno",
+        "3 star OT Fisher",
+        "3-star OT Fisher",
+        "three star OT Fisher",
+        "three-star OT Fisher",
+        "Hough 3 star",
+        "Hough three star",
+        "Hough OT",
+        "Moreno Fisher",
+        "Fisher",
+        "OT Moreno",
+        "OT Fisher",
+        "3 star Hough commit",
+        "three star Hough commit",
+        "Virginia 3 star",
+        "Virginia three star",
+        "Virginia OT",
+        "2027 OT Moreno",
+        "2027 3-star OT Moreno",
+        "2027 three-star OT Moreno",
+        "2027 Moreno Fisher"
+      ],
+      "updatedAt": "2026-11-12T20:04:20.048Z"
     }
   },
-  "updatedAt": "2026-11-05T18:34:29.174Z"
+  "updatedAt": "2026-11-12T20:04:20.048Z"
 }
