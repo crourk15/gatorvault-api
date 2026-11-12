@@ -11,6 +11,7 @@ const VERIFIED_UF_COMMIT_SLUGS = new Set([
   'armani-strong',
   'cyion-smith',
   'samuel-bailey',
+  'moreno-fisher',
 ]);
 
 /** Keep in sync with server/lib/uf-closing-board-247.js FORCED_ELSEWHERE_COMMITS. */

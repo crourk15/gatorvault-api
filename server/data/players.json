@@ -1428,6 +1428,38 @@
   },
   {
     "id": null,
+    "full_name": "Moreno Fisher",
+    "slug": "moreno-fisher",
+    "class_year": 2027,
+    "position": "OT",
+    "status": "HS",
+    "height": 79,
+    "weight": 270,
+    "hometown": "Cornelius",
+    "state": "NC",
+    "high_school": "Hough",
+    "stars": 3,
+    "composite_rating": 0.8583,
+    "ranking_national": 1162,
+    "ranking_position": 84,
+    "ranking_state": 40,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [],
+      "stats": {
+        "stars": 3,
+        "rating": 85.83,
+        "natl_rank": 1162,
+        "pos_rank": 84,
+        "state_rank": 40,
+        "on3_id": "285221"
+      },
+      "recruiting_notes": "Moreno Fisher committed to Florida on November 12, 2026. 2027 OT, Hough (Cornelius, NC), 6-7 / 270. Former Virginia. Official Oklahoma visit November 6–8. Phil Trautwein.",
+      "discovery_score": null
+    }
+  },
+  {
+    "id": null,
     "full_name": "Elias Pearl",
     "slug": "elias-pearl",
     "class_year": 2027,

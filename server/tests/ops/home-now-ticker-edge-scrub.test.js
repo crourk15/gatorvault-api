@@ -15,7 +15,9 @@ test('ticker edge strips the 1.0.29 App Store line and falls back when origin 50
   assert.match(src, /now-edge-fallback/);
   assert.match(src, /5-4 heading into Saturday/);
   assert.match(src, /Kentucky at Kroger Field — 6:15 PM · ESPN/);
-  assert.match(src, /Florida 7, Oklahoma 23/);
+  assert.match(src, /Moreno Fisher commits to Florida/);
+  assert.match(src, /finalUF: 7/);
+  assert.match(src, /finalOpp: 23/);
   assert.match(src, /if \(isTickerPath\(url\.pathname\) && !upstream\.ok\)/);
   assert.equal(/1\.0\.29 is live/.test(src), false);
 });
@@ -43,7 +45,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the Kentucky week pack', 
   assert.match(src, /pinKentuckyWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'ky-keys-3'/);
+  assert.match(src, /NOW_BUST_VALUE = 'ky-fisher-commit'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -64,8 +66,9 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /cyion\\s\+smith/);
   assert.match(src, /lorenzo\\s\+mcmullen/);
   assert.match(src, /samuel\\s\+bailey/);
+  assert.match(src, /florida 7,\\s\*oklahoma 23/);
   assert.match(src, /News — \$\{KY_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'ky-keys-3'/);
+  assert.match(src, /NOW_BUST_VALUE = 'ky-fisher-commit'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -83,7 +86,7 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'ky-keys-3'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'ky-fisher-commit'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);

@@ -135,7 +135,7 @@ describe('commits cache rev', () => {
     assert.equal(String(stale.classOverviewAll[2028].commits), '3');
   });
 
-  it('hub-runtime 2027 commits are c7 with Pearl #17/#12', () => {
+  it('hub-runtime 2027 commits are c8 with Pearl #17/#12', () => {
     const snap = path.join(__dirname, '../../data/recruiting/hub-runtime/2027/commits.json');
     const doc = JSON.parse(fs.readFileSync(snap, 'utf8'));
     assert.equal(doc.meta.cacheRev, cache.COMMITS_CACHE_REV);

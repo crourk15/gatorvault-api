@@ -376,6 +376,14 @@ test('after the Georgia final NOW points at Oklahoma at home', () => {
   assert.ok(!cats.some((c) => c.label === 'Road'));
 });
 
+test('this-week Moreno Fisher commit breaks into Home NOW News', () => {
+  const now = new Date('2026-11-12T20:00:00.000Z');
+  const cats = buildWeeklyHomeNowCategories(now);
+  const news = cats.find((c) => c.key === 'news');
+  assert.ok(news, 'News pillar must replace Road this week');
+  assert.match(String(news.items[0] || ''), /Moreno Fisher commits to Florida/i);
+});
+
 test('after the Oklahoma final NOW points at Kentucky on the road', () => {
   const now = new Date('2026-11-08T16:00:00.000Z');
   const lines = buildWeeklyHomeNowLines(now, undefined, { breakInRows: [] });

@@ -18,10 +18,10 @@
   },
   "2027": {
     "classRank": "#5",
-    "blueChip": "67%",
-    "commits": "27",
+    "blueChip": "64%",
+    "commits": "28",
     "commitLabel": "Commits",
-    "avgRating": "90.1",
+    "avgRating": "90.0",
     "trendRank": "Stable",
     "trendBlueChip": "Rising",
     "trendCommits": "Rising",
@@ -34,7 +34,7 @@
     }
   },
   "2028": {
-    "classRank": "—",
+    "classRank": "\u2014",
     "blueChip": "100%",
     "commits": "3",
     "commitLabel": "Commits",

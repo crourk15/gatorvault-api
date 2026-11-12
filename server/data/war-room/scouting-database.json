@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-11T11:30:35.687Z",
+  "updatedAt": "2026-11-12T20:06:07.350Z",
   "entries": {
     "1381": {
       "playerId": "1381",
@@ -15571,6 +15571,33 @@
       "sourceType": "College",
       "outlet": "On3",
       "contentHash": "63329291a46fa13ee923"
+    },
+    "285221": {
+      "playerId": "285221",
+      "playerSlug": "moreno-fisher",
+      "playerName": "Moreno Fisher",
+      "playerType": "commit",
+      "updates": [
+        {
+          "playerId": "285221",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The Florida Gators have landed another offensive lineman in the 2027 recruiting class, as Charlotte (N.C.) William Amos Hough offensive tackle",
+          "timestamp": "2026-11-12T20:06:07.340Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/db/moreno-fisher-285221/",
+          "sourceType": "College",
+          "contentHash": "aa7c8083bf37dcbad7e6"
+        }
+      ],
+      "lastCheckedAt": "2026-11-12T20:06:07.350Z",
+      "analystName": "Corey Bender",
+      "sourceUrl": "https://www.on3.com/db/moreno-fisher-285221/",
+      "scoutingSummary": "The Florida Gators have landed another offensive lineman in the 2027 recruiting class, as Charlotte (N.C.) William Amos Hough offensive tackle",
+      "timestamp": "2026-11-12T20:06:07.340Z",
+      "sourceType": "College",
+      "outlet": "On3",
+      "contentHash": "aa7c8083bf37dcbad7e6"
     },
     "285233": {
       "playerId": "285233",

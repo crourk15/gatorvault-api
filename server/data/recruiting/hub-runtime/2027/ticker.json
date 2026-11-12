@@ -1,17 +1,1 @@
-{
-  "ok": true,
-  "status": "ready",
-  "meta": {
-    "generatedAt": "2026-09-21T20:55:00.000Z",
-    "snapshot": true,
-    "endpoint": "ticker",
-    "year": 2027,
-    "source": "hub-runtime",
-    "cacheRev": "t15"
-  },
-  "items": [
-    "Game \u2014 Ole Miss in the Swamp \u00b7 ABC",
-    "Visitors \u2014 Easton Royal",
-    "Season \u2014 3-0 \u00b7 first SEC home Saturday"
-  ]
-}
+{"ok":true,"status":"ready","meta":{"generatedAt":"2026-11-12T20:06:07.124Z","snapshot":true,"endpoint":"ticker","year":2027,"source":"hub-runtime","cacheRev":"t19"},"items":["Game — Kentucky Saturday — 6:15 PM · ESPN","News — Moreno Fisher commits to Florida","Season — 5-4 heading into Saturday"]}

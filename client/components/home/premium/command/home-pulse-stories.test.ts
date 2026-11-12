@@ -428,7 +428,7 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
     ]);
     assert.equal(rows[0].items[0], 'Kentucky at Kroger Field — 6:15 PM · ESPN');
     assert.equal(rows[1].label, 'News');
-    assert.equal(rows[1].items[0], 'Florida 7, Oklahoma 23');
+    assert.equal(rows[1].items[0], 'Moreno Fisher commits to Florida');
     assert.equal(rows[2].items[0], '5-4 heading into Saturday');
     assert.ok(!rows.some((row) => row.items.some((s) => /missouri|faurot|4-0 heading/i.test(s))));
   });
@@ -440,7 +440,7 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
       { key: 'season', label: 'Season', items: ['4-2 heading into Saturday'] },
     ]);
     assert.equal(rows[0].items[0], 'Kentucky at Kroger Field — 6:15 PM · ESPN');
-    assert.equal(rows[1].items[0], 'Florida 7, Oklahoma 23');
+    assert.equal(rows[1].items[0], 'Moreno Fisher commits to Florida');
     assert.equal(rows[2].items[0], '5-4 heading into Saturday');
     assert.ok(!rows.some((row) => row.items.some((s) => /ABC or ESPN|dkr|4-2 heading/i.test(s))));
   });
@@ -453,7 +453,7 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
     ]);
     assert.equal(rows[0].items[0], 'Kentucky at Kroger Field — 6:15 PM · ESPN');
     assert.equal(rows[1].label, 'News');
-    assert.equal(rows[1].items[0], 'Florida 7, Oklahoma 23');
+    assert.equal(rows[1].items[0], 'Moreno Fisher commits to Florida');
     assert.equal(rows[2].items[0], '5-4 heading into Saturday');
     assert.ok(!rows.some((row) => row.items.some((s) => /bailey|abc or sec network|south carolina|4-1/i.test(s))));
   });
@@ -467,7 +467,7 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
     assert.equal(rows.length, 3);
     assert.equal(rows[0].items[0], 'Kentucky at Kroger Field — 6:15 PM · ESPN');
     assert.equal(rows[1].label, 'News');
-    assert.equal(rows[1].items[0], 'Florida 7, Oklahoma 23');
+    assert.equal(rows[1].items[0], 'Moreno Fisher commits to Florida');
     assert.ok(!rows.some((row) => row.items.some((s) => /cyion|bailey/i.test(s))));
   });
 
@@ -478,7 +478,7 @@ describe('usableHomeNowWeek drops the retired App Store tick', () => {
       { key: 'season', label: 'Season', items: ['4-0 heading into Saturday'] },
     ]);
     assert.equal(rows[1].label, 'News');
-    assert.equal(rows[1].items[0], 'Florida 7, Oklahoma 23');
+    assert.equal(rows[1].items[0], 'Moreno Fisher commits to Florida');
     assert.ok(!rows.some((row) => row.items.some((s) => /mcmullen|bailey/i.test(s))));
   });
 
@@ -537,7 +537,7 @@ describe('applyHomeNowWeekPack', () => {
     const remount = applyHomeNowWeekPack([], []);
     assert.equal(remount[0].items[0], 'Kentucky at Kroger Field — 6:15 PM · ESPN');
     assert.equal(remount[1].label, 'News');
-    assert.equal(remount[1].items[0], 'Florida 7, Oklahoma 23');
+    assert.equal(remount[1].items[0], 'Moreno Fisher commits to Florida');
     assert.equal(remount[2].items[0], '5-4 heading into Saturday');
     assert.ok(!remount.some((row) => row.items.some((s) => /bailey/i.test(s))));
   });
@@ -566,7 +566,7 @@ describe('applyHomeNowTickerPack', () => {
       ],
       []
     );
-    assert.ok(next.some((line) => /News — Florida 7, Oklahoma 23/i.test(line)));
+    assert.ok(next.some((line) => /News — Moreno Fisher commits to Florida/i.test(line)));
     assert.ok(!next.some((line) => /mcmullen|bailey/i.test(line)));
     assert.ok(next.some((line) => /Kentucky at Kroger Field — 6:15 PM · ESPN/i.test(line)));
     assert.ok(!next.some((line) => /missouri|faurot|4-0 heading|abc or sec network/i.test(line)));

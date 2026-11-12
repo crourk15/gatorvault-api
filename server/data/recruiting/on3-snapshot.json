@@ -1785,6 +1785,30 @@
           "category": "recruit",
           "skinny": "DL · 3★ · Coral Gables Senior · #640 natl",
           "sourceStatus": "Committed"
+        },
+        "on3:285221": {
+          "on3Id": "285221",
+          "name": "Moreno Fisher",
+          "pos": "OT",
+          "classYear": 2027,
+          "school": "Hough",
+          "hometownCity": "Cornelius",
+          "hometownState": "NC",
+          "state": "NC",
+          "htWt": "6-7 / 270",
+          "stars": 3,
+          "rating": 85.83,
+          "natlRank": 1162,
+          "posRank": 84,
+          "stateRank": 40,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-11-12",
+          "committedTo": "Florida",
+          "category": "recruit",
+          "skinny": "OT · 3★ · Hough · NC",
+          "sourceStatus": "Committed",
+          "on3ProfileUrl": "https://www.on3.com/rivals/moreno-fisher-285221/"
         }
       },
       "rankings": {
@@ -5011,6 +5035,11 @@
     "samuel-bailey|florida|2026-09-28": {
       "commitDate": "2026-09-28",
       "registeredAt": "2026-09-28T17:42:37.312Z",
+      "source": "charles_editorial"
+    },
+    "moreno-fisher|florida|2026-11-12": {
+      "commitDate": "2026-11-12",
+      "registeredAt": "2026-11-12T20:04:19.689Z",
       "source": "charles_editorial"
     }
   },

@@ -10,8 +10,9 @@ const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '5-4 heading into Saturday';
 // Oklahoma is final. Saved boards still pin the Swamp / 5-3 / Florida 8, Georgia 27.
 const KY_NOW_GAME = 'Kentucky at Kroger Field — 6:15 PM · ESPN';
-const KY_NOW_NEWS = 'Florida 7, Oklahoma 23';
-const STALE_NOW_NEWS_RE = /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey/i;
+const KY_NOW_NEWS = 'Moreno Fisher commits to Florida';
+const STALE_NOW_NEWS_RE =
+  /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey|florida 7,\s*oklahoma 23/i;
 /**
  * Posted Oklahoma final — last-good Swamp / 5-3 / Florida 8, Georgia 27 must not
  * beat Kentucky week. Older leftover boards (Missouri / SC / Texas / Georgia)
@@ -133,7 +134,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'ky-keys-3';
+const NOW_BUST_VALUE = 'ky-fisher-commit';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
