@@ -10,6 +10,7 @@ const http = require('http');
 const ROOT = path.resolve(__dirname, '../..');
 const OUT = path.join(__dirname, '../lib/futurecast-lab-seed.json');
 const API = process.env.FC_SEED_API || 'https://gatorvault-api.onrender.com';
+const { filterActiveUfTargets } = require('../../server/lib/recruiting-target-filters');
 
 function fetchJson(url, timeoutMs = 30000) {
   return new Promise((resolve, reject) => {
@@ -133,8 +134,9 @@ function slimPlayer(p) {
 }
 
 /** Prefer process-backed Closest names so the panel is not empty on first paint. */
-function slimHighPriorityList(players, cap = 40) {
-  const slimmed = (players || []).map(slimPlayer).filter(Boolean);
+function slimHighPriorityList(players, cap = 40, opts = {}) {
+  const mapped = (players || []).map(slimPlayer).filter(Boolean);
+  const slimmed = opts.activeOnly === true ? filterActiveUfTargets(mapped) : mapped;
   const closest = [];
   const rest = [];
   for (const row of slimmed) {
@@ -285,7 +287,8 @@ function writePayload(pack) {
 
   const highPriority = slimHighPriorityList(
     pack.hp28?.players || pack.hp27?.players || masterBoard.highPriority.players || [],
-    40
+    40,
+    { activeOnly: true }
   );
   const highPriorityClosing = slimHighPriorityList(
     pack.hp27?.players || masterBoard.highPriority.players || [],
@@ -368,6 +371,17 @@ async function main() {
   if (existing) {
     existing.generatedAt = new Date().toISOString();
     existing.source = (existing.source || 'cached') + '+retained';
+    if (Array.isArray(existing.highPriority)) {
+      existing.highPriority = filterActiveUfTargets(existing.highPriority);
+    }
+    if (existing.movementIntel && typeof existing.movementIntel === 'object') {
+      for (const key of ['risers', 'fallers', 'highVolatility', 'stable', 'fitScoreLeaders', 'fitScoreRisks']) {
+        if (Array.isArray(existing.movementIntel[key])) {
+          existing.movementIntel[key] = filterActiveUfTargets(existing.movementIntel[key]);
+        }
+      }
+    }
+    existing.lastUpdated = existing.generatedAt;
     fs.writeFileSync(OUT, JSON.stringify(existing) + '\n', 'utf8');
     console.log(
       '[generate-futurecast-lab-seed] OK — retained previous seed players',

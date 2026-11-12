@@ -13,11 +13,28 @@ const VERIFIED_UF_COMMIT_SLUGS = new Set([
   'samuel-bailey',
 ]);
 
+/** Keep in sync with server/lib/uf-closing-board-247.js FORCED_ELSEWHERE_COMMITS. */
+const FORCED_ELSEWHERE_SLUGS = new Set([
+  'brysen-wright',
+  'man-robinson',
+  'adryan-cole',
+  'andre-hyppolite',
+  'jaylyn-jones',
+  'ace-alston',
+  'monshun-sales',
+  'tashawn-poole',
+  'keldrid-ben',
+  'angelo-smith',
+  'avrian-pauley',
+  'max-brown',
+]);
+
 export function isFloridaSchool(value: string | null | undefined): boolean {
   const v = String(value || '')
     .replace(/\s+/g, ' ')
     .trim();
   if (!v) return false;
+  if (/\bflorida\s*state\b|\bseminoles\b|\bfsu\b/i.test(v)) return false;
   return /\bflorida\b|\bgators\b/i.test(v);
 }
 
@@ -58,6 +75,7 @@ export function isActiveUfTarget(
   if (!player) return false;
   const slug = String(player.slug || player.id || '').toLowerCase();
   if (slug && VERIFIED_UF_COMMIT_SLUGS.has(slug)) return false;
+  if (slug && FORCED_ELSEWHERE_SLUGS.has(slug)) return false;
   if (looksCommittedStatus(player) && isFloridaSchool(resolveCommittedTo(player))) return false;
   if (looksCommittedStatus(player) && !resolveCommittedTo(player)) return false;
   if (

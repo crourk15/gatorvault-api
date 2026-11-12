@@ -2,6 +2,7 @@ import seedJson from './futurecast-lab-seed.json';
 import type { FutureCastLabDataMap } from './futurecast-lab-data';
 import type { HighPriorityPlayer } from './futurecast-high-priority-api';
 import { resolveLabLastUpdated } from './futurecast-lab-updated';
+import { isActiveUfTarget } from './recruiting-target-filters';
 
 export type FutureCastLabSeed = FutureCastLabDataMap & {
   generatedAt: string;
@@ -78,10 +79,14 @@ export function normalizeSeedHighPriorityPlayer(
   };
 }
 
+function filterDiscoverySeedPlayers<T>(list: T[] | undefined): T[] {
+  return (list || []).filter((row) => isActiveUfTarget(row as { slug?: string | null }));
+}
+
 /** Static first-paint FutureCast Lab map — replaced by live refresh after hydrate. */
 export function buildSeedFutureCastLabData(): FutureCastLabDataMap {
   const { generatedAt: _generatedAt, source: _source, ...lab } = FUTURECAST_LAB_SEED;
-  const highPriority = (lab.highPriority || []).map((p) =>
+  const highPriority = filterDiscoverySeedPlayers(lab.highPriority || []).map((p) =>
     normalizeSeedHighPriorityPlayer(p as unknown as Record<string, unknown>)
   );
   const highPriorityClosing = (lab.highPriorityClosing || []).map((p) =>
@@ -95,9 +100,21 @@ export function buildSeedFutureCastLabData(): FutureCastLabDataMap {
         hpWithOdds.reduce((acc, p) => acc + Number(p.ufProbability), 0) / hpWithOdds.length
       )
     : Math.round(lab.metrics?.avgUFProbability || lab.masterBoard?.ufConfidenceAverage || 0);
+  const movementIntel = lab.movementIntel
+    ? {
+        ...lab.movementIntel,
+        risers: filterDiscoverySeedPlayers(lab.movementIntel.risers),
+        fallers: filterDiscoverySeedPlayers(lab.movementIntel.fallers),
+        highVolatility: filterDiscoverySeedPlayers(lab.movementIntel.highVolatility),
+        stable: filterDiscoverySeedPlayers(lab.movementIntel.stable),
+        fitScoreLeaders: filterDiscoverySeedPlayers(lab.movementIntel.fitScoreLeaders),
+        fitScoreRisks: filterDiscoverySeedPlayers(lab.movementIntel.fitScoreRisks),
+      }
+    : lab.movementIntel;
 
   return {
     ...lab,
+    movementIntel,
     highPriority,
     highPriorityClosing,
     lastUpdated: resolveLabLastUpdated({

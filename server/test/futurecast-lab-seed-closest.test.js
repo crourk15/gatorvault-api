@@ -41,4 +41,24 @@ describe('FutureCast Lab seed Closest to commit', () => {
     );
     assert.ok(withOdds.length >= 3, 'Closest seed rows need UF% for the panel');
   });
+
+  it('drops Wright Miami and 2028 UF commits from seed Chase', () => {
+    const seed = JSON.parse(fs.readFileSync(SEED_PATH, 'utf8'));
+    const slugs = (seed.highPriority || []).map((p) => p.slug);
+    for (const slug of ['brysen-wright', 'cyion-smith', 'samuel-bailey', 'man-robinson']) {
+      assert.equal(slugs.includes(slug), false, `${slug} must not be on 2028 seed Chase`);
+    }
+    const antonio = seed.highPriority.find((p) => p.slug === 'antonio-thomas-jr');
+    assert.ok(antonio, 'Antonio stays on 2028 Chase');
+    assert.ok(Number(antonio.ufProbability) >= 90, `Antonio floor ${antonio.ufProbability}`);
+    const bubba = seed.highPriority.find((p) => p.slug === 'bubba-brown');
+    assert.ok(bubba, 'Bubba stays on 2028 Chase');
+    assert.ok(Number(bubba.ufProbability) >= 90, `Bubba floor ${bubba.ufProbability}`);
+  });
+
+  it('seed generator filters inactive 2028 HP even when prod is down', () => {
+    const src = fs.readFileSync(GEN_PATH, 'utf8');
+    assert.match(src, /filterActiveUfTargets/);
+    assert.match(src, /activeOnly: true/);
+  });
 });

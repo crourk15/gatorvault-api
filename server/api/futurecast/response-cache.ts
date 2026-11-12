@@ -1218,13 +1218,51 @@ function isUsableMasterBoard(value: unknown): boolean {
   return Array.isArray(doc.players) && doc.players.length > 0;
 }
 
+/** Drop UF commits and committed-elsewhere names from the Aug-stale master disk. */
+export function sanitizeMasterBoardPayload(value: unknown): unknown {
+  if (!value || typeof value !== 'object') return value;
+  const doc = value as Record<string, unknown>;
+  if (!Array.isArray(doc.players) && !(doc.highPriority && typeof doc.highPriority === 'object')) {
+    return value;
+  }
+  try {
+    // Closing Class / Flip Watch master plates keep committed-elsewhere names.
+    if (Number(doc.classYear) === 2027) return value;
+    const { filterActiveUfTargets } = require('../../lib/recruiting-target-filters') as {
+      filterActiveUfTargets: (list: unknown[]) => unknown[];
+    };
+    const players = Array.isArray(doc.players) ? filterActiveUfTargets(doc.players) : [];
+    const hp = (doc.highPriority && typeof doc.highPriority === 'object'
+      ? (doc.highPriority as Record<string, unknown>)
+      : {}) as Record<string, unknown>;
+    const hpPlayers = Array.isArray(hp.players) ? filterActiveUfTargets(hp.players) : [];
+    return {
+      ...doc,
+      players,
+      highPriority: {
+        ...hp,
+        players: hpPlayers,
+        playerIds: hpPlayers
+          .map((row) => {
+            if (!row || typeof row !== 'object') return null;
+            const p = row as Record<string, unknown>;
+            return p.id || p.slug || null;
+          })
+          .filter(Boolean),
+      },
+    };
+  } catch {
+    return value;
+  }
+}
+
 /** Durable/bundled master-board snapshot — keeps iOS Lab primary off status:building. */
 export function readMasterBoardRuntime(): unknown | null {
   const fs = require('node:fs');
   for (const filePath of masterBoardRuntimeCandidates()) {
     try {
       if (!fs.existsSync(filePath)) continue;
-      const doc = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      const doc = sanitizeMasterBoardPayload(JSON.parse(fs.readFileSync(filePath, 'utf8')));
       if (isUsableMasterBoard(doc)) return doc;
     } catch {
       /* try next */
@@ -1347,8 +1385,9 @@ export function loadMasterBoardCached(): unknown | null {
   if (isUsableMasterBoard(stale)) return stale;
   const disk = readMasterBoardRuntime();
   if (disk != null) {
-    cache.set(key, disk, CACHE_TTL_MS);
-    return disk;
+    const healed = sanitizeMasterBoardPayload(disk);
+    cache.set(key, healed, CACHE_TTL_MS);
+    return healed;
   }
   const soft = softMasterBoardFromHighPriority();
   if (soft != null) {

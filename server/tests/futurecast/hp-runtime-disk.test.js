@@ -30,6 +30,10 @@ describe('FutureCast HP durable runtime', () => {
     const doc = JSON.parse(fs.readFileSync(seed, 'utf8'));
     assert.equal(doc.classYear, 2028);
     assert.ok(Array.isArray(doc.players) && doc.players.length > 0);
+    const slugs = doc.players.map((p) => p.slug);
+    for (const slug of ['brysen-wright', 'cyion-smith', 'samuel-bailey', 'man-robinson']) {
+      assert.equal(slugs.includes(slug), false, `${slug} must not be on 2028 HP runtime`);
+    }
   });
 
   it('ships bundled high-priority seed for 2027 Closing Class', () => {
