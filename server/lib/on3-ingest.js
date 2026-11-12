@@ -50,6 +50,18 @@ function indexCommits(commits) {
   return map;
 }
 
+/** Drop reclass / exempt-up roster players so On3 cannot restore a 2027 hub card. */
+function dropCurrentRosterFutureClass(commits, year) {
+  try {
+    const { isCurrentRosterFutureClassRecruit } = require('./recruiting-blocked-players');
+    return (commits || []).filter(
+      (p) => !isCurrentRosterFutureClassRecruit({ ...p, classYear: p.classYear || year })
+    );
+  } catch {
+    return commits || [];
+  }
+}
+
 function buildSkinny(player) {
   if (player.skinny) return player.skinny;
   const bits = [
@@ -784,7 +796,7 @@ async function runOn3IngestInner(options = {}) {
   result.knownCommitFingerprints = fingerprintCount;
 
   for (const year of classYears) {
-    const commits = live.boards[year] || [];
+    const commits = dropCurrentRosterFutureClass(live.boards[year] || [], year);
     const currMap = indexCommits(commits);
     const prevMap = (snapshot.years[year] && snapshot.years[year].commits) || {};
     const prevRank = snapshot.years[year] && snapshot.years[year].rankings;

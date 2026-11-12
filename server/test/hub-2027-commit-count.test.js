@@ -8,11 +8,12 @@ const fs = require('fs');
 const path = require('path');
 
 describe('2027 hub commit count lockstep', () => {
-  it('On3 snapshot includes Stive-Bentley Keumajou (26 HS commits)', () => {
+  it('On3 snapshot drops Stive-Bentley Keumajou (enrolled on the 2026 roster)', () => {
     const { countSnapshotHubCommits, getSnapshotHubCommits } = require('../lib/on3-snapshot-commits');
-    assert.equal(countSnapshotHubCommits(2027), 26);
     const slugs = getSnapshotHubCommits(2027).map((p) => p.slug);
-    assert.ok(slugs.includes('stive-bentley-keumajou'));
+    assert.equal(slugs.includes('stive-bentley-keumajou'), false);
+    assert.ok(slugs.includes('moreno-fisher'));
+    assert.equal(countSnapshotHubCommits(2027), 27);
   });
 
   it('ticker, class-overview, and commit cards share the same count', async () => {
@@ -25,7 +26,7 @@ describe('2027 hub commit count lockstep', () => {
       elite.buildHubCommits(2027),
     ]);
     const n = Number(String(overview.commits || '').replace(/[^\d]/g, ''));
-    assert.equal(n, 26, `expected 26 HS commits on class overview, got ${overview.commits}`);
+    assert.equal(n, 27, `expected 27 HS commits on class overview, got ${overview.commits}`);
     assert.equal(cards.length, n);
     const locked = ticker.find((line) => /\d+\s+commits?\s+locked\s+for\s+2027/i.test(line));
     if (locked) {

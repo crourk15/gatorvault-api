@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Stive-Bentley Keumajou is off the 2027 commit board (exempted up onto the 2026 roster, Fr. DL #56). 2027 hub is 27 / 67% / 90.1 with Fisher still on it. Roster Stats now include official Texas, Georgia, and Oklahoma boxes (Graham 15 tackles vs OU, 70 on the season). API after Render — no Codemagic. Reopen Recruiting 2027 and a Team profile Stats tab once.
 - [x] Moreno Fisher (2027 OT, Hough / Cornelius NC) committed to Florida on Nov 12. Profile is a 2027 pledge with Vault Scouting (Walker Little comp). Home NOW News is the commit this Kentucky week. Edge one-shot busts `gv-now-bust=ky-fisher-commit` so iOS last-good Oklahoma 7-23 does not keep the score. API after Render — no Codemagic. Reopen his profile and Home once.
 - [x] FutureCast 2028 Chase drops Wright (Miami, Nov 5), Man Robinson (FSU), Cyion, and Bailey even from the Aug HP / master-board disk. Live HP already filtered; master-board sanitize now matches. Lab seed / Netlify first-paint after deploy. API after Render — no Codemagic. Reopen FutureCast once. iOS last-good seed is the bake row.
 - [x] Film Room Monday presser: Sumrall Kentucky-week `Coach Sumrall Press Conference 11-9-26` (`mCGBP7M7108`). Same-day practice wrap `Florida Football Press Conference | Coach Sumrall` no longer wins the Press rail. Repo cache unions into stale durable. API after Render — no Codemagic. Reopen Film Room Press once.

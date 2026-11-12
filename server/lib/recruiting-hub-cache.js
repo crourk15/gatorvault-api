@@ -10,7 +10,7 @@ const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
 const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 
 /** Bump when HS-only class commit metrics logic changes. */
-const HUB_METRICS_CACHE_REV = 'hs12';
+const HUB_METRICS_CACHE_REV = 'hs13';
 
 /** Bump when footprint commit/target tallies logic changes. */
 const FOOTPRINT_CACHE_REV = 'fp6';
@@ -19,7 +19,7 @@ const FOOTPRINT_CACHE_REV = 'fp6';
  * Bump when commit card meta (On3 ranks / rating plate) must invalidate durable
  * /var/data hub-runtime + deploy hub-snapshot that outlive players.json syncs.
  */
-const COMMITS_CACHE_REV = 'c8';
+const COMMITS_CACHE_REV = 'c9';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
 const TICKER_CACHE_REV = 't19';
