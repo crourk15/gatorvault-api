@@ -20,6 +20,7 @@ import {
   type HighPriorityPlayer,
 } from '@/lib/futurecast-high-priority-api';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
+import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
 
 const LAB_POLL_MS = 90_000;
 const SEED_LAB_DATA = buildSeedFutureCastLabData();
@@ -36,6 +37,10 @@ function hasUsableUfProbability(players: HighPriorityPlayer[] | undefined): bool
   return (players ?? []).some((p) => hpUfPct(p) != null);
 }
 
+function keepActiveDiscoveryHp(players: HighPriorityPlayer[] | undefined): HighPriorityPlayer[] {
+  return (players ?? []).filter((p) => isActiveUfTarget(p));
+}
+
 /** Prefer stale localStorage HP (real UF%) over seed rows that often ship with null odds. */
 function initialLabData(): FutureCastLabDataMap | null {
   if (!SEED_LAB_DATA.masterBoard.players.length) return null;
@@ -44,9 +49,11 @@ function initialLabData(): FutureCastLabDataMap | null {
   const staleClosing = readStaleHighPriorityCache(HIGH_PRIORITY_YEAR);
   return {
     ...SEED_LAB_DATA,
-    highPriority: hasUsableUfProbability(staleDiscovery?.players)
-      ? staleDiscovery!.players
-      : SEED_LAB_DATA.highPriority,
+    highPriority: keepActiveDiscoveryHp(
+      hasUsableUfProbability(staleDiscovery?.players)
+        ? staleDiscovery!.players
+        : SEED_LAB_DATA.highPriority
+    ),
     highPriorityClosing: hasUsableUfProbability(staleClosing?.players)
       ? staleClosing!.players
       : SEED_LAB_DATA.highPriorityClosing,
@@ -164,7 +171,7 @@ export function useFutureCastLabData(): FutureCastLabData {
               const base = prev ?? (hasSeedPaint ? SEED_LAB_DATA : EMPTY_LAB_DATA);
               return {
                 ...base,
-                highPriority: liveHp ? hp.highPriority : base.highPriority,
+                highPriority: liveHp ? keepActiveDiscoveryHp(hp.highPriority) : base.highPriority,
                 highPriorityClosing: liveHpc ? hp.highPriorityClosing : base.highPriorityClosing,
               };
             });

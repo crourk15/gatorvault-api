@@ -26,6 +26,7 @@ describe('master-board soft serve for iOS Lab', () => {
     );
     assert.match(src, /readMasterBoardRuntime/);
     assert.match(src, /writeMasterBoardRuntime/);
+    assert.match(src, /sanitizeMasterBoardPayload/);
     assert.match(src, /softMasterBoardFromHighPriority/);
     assert.match(src, /loadMasterBoardCached/);
     assert.match(src, /degraded: 'hp_soft_seed'/);

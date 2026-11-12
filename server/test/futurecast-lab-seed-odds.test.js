@@ -44,5 +44,16 @@ describe('FutureCast Lab seed commit likelihood', () => {
     );
     assert.match(hook, /ufConfidence/);
     assert.match(hook, /hpUfPct/);
+    assert.match(hook, /keepActiveDiscoveryHp/);
+  });
+
+  it('client filters drop Wright even when seed committedTo is still null', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '../../client/lib/recruiting-target-filters.ts'),
+      'utf8'
+    );
+    assert.match(src, /brysen-wright/);
+    assert.match(src, /FORCED_ELSEWHERE_SLUGS/);
+    assert.match(src, /florida\\s\*state/);
   });
 });
