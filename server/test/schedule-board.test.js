@@ -560,10 +560,27 @@ describe('schedule-board', () => {
     const vandy = board.games.find((g) => g.id === 'vandy');
     assert.equal(vandy.date, 'November 21, 2026 · 12:00 PM ET');
     assert.equal(vandy.tv, 'TBD');
-    assert.deepEqual(vandy.keys, []);
-    assert.deepEqual(vandy.swing, []);
-    assert.equal(vandy.film, 'The Swamp. 12:00 PM ET.');
+    assert.deepEqual(vandy.keys, [
+      'Make the Freshman Beat You',
+      'Take Away the One Guy',
+      'Make the Drive Worth Seven',
+    ]);
+    assert.equal(vandy.howUFWins[0], vandy.swing[0].role);
+    assert.equal(vandy.howUFWins[1], vandy.swing[1].role);
+    assert.equal(vandy.howUFWins[2], vandy.swing[2].role);
+    assert.equal(vandy.swing[0].name, 'Jayden Woods');
+    assert.equal(vandy.swing[1].name, 'Cormani McClain');
+    assert.equal(vandy.swing[2].name, 'Jadan Baugh');
+    assert.match(vandy.howUFWins[0], /133rd nationally in rushing yards/);
+    assert.match(vandy.howUFWins[0], /119th in adjusted line yards/);
+    assert.match(vandy.howUFWins[0], /success rate ranks 117th/);
+    assert.match(vandy.howUFWins[1], /37 percent of Vanderbilt/);
+    assert.match(vandy.howUFWins[1], /2-of-15 on third down/);
+    assert.match(vandy.howUFWins[2], /31st nationally in explosiveness allowed/);
+    assert.match(vandy.howUFWins[2], /Senior Day is not a field-goal game/);
+    assert.match(vandy.film, /Make the Freshman Beat You/);
     assert.ok(!vandy.keys?.some((k) => /Execute early|Avoid complacency|Develop depth/i.test(k)));
+    assert.ok(!vandy.keys?.some((k) => /Stay Alive on Third|Take Away the Run|Don't Give Them the Ball/i.test(k)));
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

@@ -278,6 +278,25 @@ describe('Game Week Film Notes', () => {
     );
   });
 
+  it('Vanderbilt 3 Keys are Charles copy, not the Kentucky skeleton', () => {
+    const vandy = SCHEDULE_GAMES.find((g) => g.id === 'vandy');
+    assert.ok(vandy);
+    assert.deepEqual(vandy.keys, [
+      'Make the Freshman Beat You',
+      'Take Away the One Guy',
+      'Make the Drive Worth Seven',
+    ]);
+    const vuBundle = getGameWeekBundle('vandy');
+    assert.equal(vuBundle.keys[0].title, 'Make the Freshman Beat You');
+    assert.match(vuBundle.keys[0].body, /133rd nationally in rushing yards/);
+    assert.match(vuBundle.keys[1].body, /37 percent of Vanderbilt/);
+    assert.match(vuBundle.keys[2].body, /Senior Day is not a field-goal game/);
+    assert.equal(vuBundle.swingPlayers[0].name, 'Jayden Woods');
+    assert.equal(vuBundle.swingPlayers[1].name, 'Cormani McClain');
+    assert.equal(vuBundle.swingPlayers[2].name, 'Jadan Baugh');
+    assert.ok(!vandy.keys.some((k) => /Stay Alive on Third|Take Away the Run|Don't Give Them the Ball/i.test(k)));
+  });
+
   it('Oklahoma Matchup Edge is the sat stamp, not the 50% formula', () => {
     const oklahoma = SCHEDULE_GAMES.find((g) => g.id === 'oklahoma');
     assert.ok(oklahoma);
