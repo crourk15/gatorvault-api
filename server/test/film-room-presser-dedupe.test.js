@@ -9,6 +9,7 @@ const {
   dedupePressersByEvent,
   normalizePresserSpeaker,
   presserEventKey,
+  shouldKeepSearchHit,
 } = require('../lib/film-room-youtube-ingest');
 
 describe('Film Room presser same-event dedupe', () => {
@@ -187,5 +188,14 @@ describe('Film Room presser same-event dedupe', () => {
     ]);
     assert.equal(out.length, 1);
     assert.equal(out[0].id, 'official');
+  });
+
+  it('drops Film Guy Media Days sit-downs from search ingest', () => {
+    assert.equal(
+      shouldKeepSearchHit({
+        title: 'Florida Head Coach Jon Sumrall Talks With The Film Guy at SEC Media Days',
+      }),
+      false
+    );
   });
 });

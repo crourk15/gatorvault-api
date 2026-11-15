@@ -137,7 +137,7 @@ function fromLocalCache() {
       push(item, filmHub);
     }
   }
-  return rows.slice(0, 40);
+  return rows.slice(0, 80);
 }
 
 function retainPrevious() {
@@ -152,7 +152,7 @@ async function main() {
   for (let i = 0; i < 3; i += 1) {
     try {
       const data = await fetchJson(API + '/api/film-room/catalog');
-      items = (data.items || []).map(slimItem).filter(Boolean).slice(0, 40);
+      items = (data.items || []).map(slimItem).filter(Boolean).slice(0, 80);
       categories = data.categories || [];
       if (items.length) { source = 'prod-api'; break; }
     } catch (err) {

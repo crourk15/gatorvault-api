@@ -407,9 +407,30 @@ describe('Texas week tape is on the Film Room catalog', () => {
     const tengwall = items.find((i) => i.youtubeId === '62XGpTs7Er8');
     assert.ok(tengwall, 'Tengwall Texas defense sit missing');
     assert.match(String(tengwall.source || ''), /Tengwall/i);
-    const sumrall = items.find((i) => i.youtubeId === '4uxiLxMQxPE');
-    assert.ok(sumrall, 'Sumrall Texas postgame presser missing');
+  });
+});
+
+describe('Kentucky week tape is on the Film Room catalog', () => {
+  it('pins the official highlight, Kentucky postgame, Monday podium, and GNFP Georgia/Oklahoma', () => {
+    const items = loadLegacyVideoCatalog();
+    const highlight = items.find((i) => i.youtubeId === 'xCHDvWTV4Eg');
+    assert.ok(highlight, 'xCHDvWTV4Eg Kentucky highlights missing');
+    assert.match(String(highlight.category || ''), /Highlight/i);
+    const sumrall = items.find((i) => i.youtubeId === 'iPGBER6BWR0');
+    assert.ok(sumrall, 'Sumrall Kentucky postgame missing');
     assert.match(String(sumrall.category || ''), /Press/i);
+    const philoWoods = items.find((i) => i.youtubeId === 'htR6yB3X_dg');
+    assert.ok(philoWoods, 'Philo & Woods Kentucky postgame missing');
+    const monday = items.find((i) => i.youtubeId === 'mCGBP7M7108');
+    assert.ok(monday, '11/9 Monday Sumrall missing from Press rail');
+    assert.ok(items.some((i) => i.youtubeId === 'v-749rFgI14'), 'GNFP Oklahoma offense missing');
+    assert.ok(items.some((i) => i.youtubeId === 'oY2RptuK3kw'), 'GNFP Oklahoma defense missing');
+    assert.ok(items.some((i) => i.youtubeId === 'ObGiP0gc_CM'), 'GNFP Georgia offense missing');
+    assert.ok(items.some((i) => i.youtubeId === '9TmOkrHD1MM'), 'GNFP Georgia defense missing');
+    assert.ok(
+      !items.some((i) => /talks with the film guy/i.test(String(i.title || ''))),
+      'Film Guy Media Days sit-down is not a presser'
+    );
   });
 });
 
@@ -417,6 +438,7 @@ describe('Highlights drop condensed games', () => {
   it('keeps official cuts and rejects condensed titles', () => {
     assert.equal(isOfficialHighlightTitle('Game Highlights | Week One | Florida vs. FAU'), true);
     assert.equal(isOfficialHighlightTitle('Game Highlights | Week Seven | Florida vs. Texas'), true);
+    assert.equal(isOfficialHighlightTitle('Game Highlights | Week Eleven | Florida vs. Kentucky'), true);
     assert.equal(isCondensedGameTitle('Florida vs. FAU | Condensed Game'), true);
     assert.equal(isOfficialHighlightTitle('Florida vs. FAU | Condensed Game'), false);
     assert.equal(isOfficialHighlightTitle('Florida vs Campbell Condensed Game'), false);

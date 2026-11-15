@@ -612,6 +612,8 @@ function shouldKeepSearchHit(entry) {
   // Drop reaction shorts / meme clips that only mention a presser.
   if (/[😂📱]|phone went off|message after a reporter|tight ship and he/i.test(title)) return false;
   if (!PRESSER_TITLE.test(title) && !/\bsec media days\b/i.test(title)) return false;
+  // Sit-downs / Film Guy chats are not the official podium.
+  if (/\btalks with the film guy\b/i.test(title)) return false;
   // Must look like Florida football context
   if (!/\bflorida\b|\bgators\b|\bsumrall\b/i.test(title)) return false;
   // Prefer real event titles (Coach/HC/Florida … Press Conference), not loose mentions.
