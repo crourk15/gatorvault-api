@@ -1,9 +1,9 @@
 {
   "season": 2026,
-  "updatedAt": "2026-11-09T01:00:00.000Z",
+  "updatedAt": "2026-11-15T04:15:00.000Z",
   "label": "2026 Florida football schedule",
   "source": "vault-schedule-board",
-  "predThrough": "2026-W9",
+  "predThrough": "2026-W10",
   "games": [
     {
       "id": "fau",
@@ -1086,33 +1086,26 @@
       },
       "predConfidence": 69,
       "predMovement": "down",
-      "ufPctDelta": -15
+      "ufPctDelta": -15,
+      "finalUF": 21,
+      "finalOpp": 14,
+      "finalSource": "official",
+      "boxScoreUrl": "https://floridagators.com/sports/football/stats/2026/kentucky/boxscore/27912"
     },
     {
       "id": "vandy",
       "kind": "game",
       "label": "Nov 21 vs Vanderbilt",
       "opp": "Vanderbilt Commodores",
-      "date": "November 21, 2026 · 12:00–1:00 PM ET",
+      "date": "November 21, 2026 · 12:00 PM ET",
       "venue": "Ben Hill Griffin Stadium, Gainesville FL",
       "ufPct": 54,
       "tv": "TBD",
-      "keys": [
-        "Execute early",
-        "Avoid complacency",
-        "Develop depth"
-      ],
-      "swing": [
-        {
-          "name": "Backup units",
-          "role": "Rep evaluation"
-        },
-        {
-          "name": "QB1",
-          "role": "Efficient scoring drives"
-        }
-      ],
-      "film": "Vanderbilt improving — treat as SEC test.",
+      "keys": [],
+      "howUFWins": [],
+      "swing": [],
+      "film": "The Swamp. 12:00 PM ET.",
+      "filmWatched": false,
       "pred": "UF 24 · Vanderbilt 22",
       "predUF": 24,
       "predOpp": 22,
@@ -1140,7 +1133,7 @@
       "opp": "Florida State Seminoles",
       "date": "November 27, 2026 · 3:30 PM ET",
       "venue": "Doak Campbell Stadium, Tallahassee FL",
-      "ufPct": 48,
+      "ufPct": 46,
       "tv": "ABC",
       "keys": [
         "Win field position battle",
@@ -1158,8 +1151,8 @@
         }
       ],
       "film": "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
-      "pred": "UF 23 · FSU 24",
-      "predUF": 23,
+      "pred": "UF 22 · FSU 24",
+      "predUF": 22,
       "predOpp": 24,
       "filmLessonId": "frl00010-0000-4000-8000-00000000000a",
       "opponentTendencies": [

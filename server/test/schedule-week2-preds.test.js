@@ -4,18 +4,17 @@ const assert = require('assert');
 const { describe, it } = require('node:test');
 const scheduleBoard = require('../lib/schedule-board');
 
-/** Week 9 form overlay after Oklahoma 7-23. */
-const WEEK9_REMAINING = {
-  kentucky: { ufPct: 48, pred: 'UF 22 · Kentucky 23', predUF: 22, predOpp: 23 },
+/** Week 10 form overlay after Kentucky 21-14. */
+const WEEK10_REMAINING = {
   vandy: { ufPct: 54, pred: 'UF 24 · Vanderbilt 22', predUF: 24, predOpp: 22 },
-  fsu: { ufPct: 48, pred: 'UF 23 · FSU 24', predUF: 23, predOpp: 24 },
+  fsu: { ufPct: 46, pred: 'UF 22 · FSU 24', predUF: 22, predOpp: 24 },
 };
 
-describe('schedule remaining-season predictions (2026-W9)', () => {
-  it('keeps Week 9 form on remaining games after Oklahoma 7-23', () => {
+describe('schedule remaining-season predictions (2026-W10)', () => {
+  it('keeps Week 10 form on remaining games after Kentucky 21-14', () => {
     const payload = scheduleBoard.toApiPayload();
-    assert.equal(payload.predThrough, '2026-W9');
-    assert.equal(payload.currentGameId, 'kentucky');
+    assert.equal(payload.predThrough, '2026-W10');
+    assert.equal(payload.currentGameId, 'vandy');
     const uga = payload.games.find((g) => g.id === 'uga');
     assert.equal(uga.finalUF, 8);
     assert.equal(uga.finalOpp, 27);
@@ -37,7 +36,11 @@ describe('schedule remaining-season predictions (2026-W9)', () => {
     const missouri = payload.games.find((g) => g.id === 'missouri');
     assert.equal(missouri.finalUF, 17);
     assert.equal(missouri.finalOpp, 45);
-    for (const [id, expected] of Object.entries(WEEK9_REMAINING)) {
+    const kentucky = payload.games.find((g) => g.id === 'kentucky');
+    assert.equal(kentucky.finalUF, 21);
+    assert.equal(kentucky.finalOpp, 14);
+    assert.equal(kentucky.pred, 'UF 22 · Kentucky 23');
+    for (const [id, expected] of Object.entries(WEEK10_REMAINING)) {
       const game = payload.games.find((g) => g.id === id);
       assert.ok(game, `missing ${id}`);
       assert.equal(game.ufPct, expected.ufPct, `${id} ufPct`);

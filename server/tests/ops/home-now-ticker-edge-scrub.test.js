@@ -13,11 +13,15 @@ const src = fs.readFileSync(
 test('ticker edge strips the 1.0.29 App Store line and falls back when origin 502s', () => {
   assert.match(src, /APP_STORE_UPDATE_RE/);
   assert.match(src, /now-edge-fallback/);
-  assert.match(src, /5-4 heading into Saturday/);
+  assert.match(src, /6-4 · SEC home Saturday/);
+  assert.match(src, /Vanderbilt in the Swamp — 12:00 PM/);
+  assert.match(src, /Florida 21, Kentucky 14/);
   assert.match(src, /Kentucky at Kroger Field — 6:15 PM · ESPN/);
   assert.match(src, /Moreno Fisher commits to Florida/);
   assert.match(src, /finalUF: 7/);
   assert.match(src, /finalOpp: 23/);
+  assert.match(src, /finalUF: 21/);
+  assert.match(src, /finalOpp: 14/);
   assert.match(src, /if \(isTickerPath\(url\.pathname\) && !upstream\.ok\)/);
   assert.equal(/1\.0\.29 is live/.test(src), false);
 });
@@ -40,12 +44,12 @@ test('ticker edge rewrites leftover Missouri and South Carolina week to Texas', 
   assert.match(src, /Kentucky at Kroger Field — 6:15 PM · ESPN/);
 });
 
-test('ticker edge one-shot busts iOS URLCache and pins the Kentucky week pack', () => {
-  assert.match(src, /pinCurrentKentuckyNow/);
-  assert.match(src, /pinKentuckyWeek/);
+test('ticker edge one-shot busts iOS URLCache and pins the Vanderbilt week pack', () => {
+  assert.match(src, /pinCurrentVanderbiltNow/);
+  assert.match(src, /pinVanderbiltWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'ky-fisher-commit'/);
+  assert.match(src, /NOW_BUST_VALUE = 'vandy-noon-64'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -67,8 +71,8 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /lorenzo\\s\+mcmullen/);
   assert.match(src, /samuel\\s\+bailey/);
   assert.match(src, /florida 7,\\s\*oklahoma 23/);
-  assert.match(src, /News — \$\{KY_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'ky-fisher-commit'/);
+  assert.match(src, /News — \$\{VANDY_NOW_NEWS\}/);
+  assert.match(src, /NOW_BUST_VALUE = 'vandy-noon-64'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -86,12 +90,12 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'ky-fisher-commit'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'vandy-noon-64'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
   assert.doesNotMatch(bust, /upstream\.json\(\)/);
-  const nowBust = src.slice(src.indexOf('function applyNowCacheBust'), src.indexOf('function pinCurrentKentuckyNow'));
+  const nowBust = src.slice(src.indexOf('function applyNowCacheBust'), src.indexOf('function pinCurrentVanderbiltNow'));
   assert.match(nowBust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(nowBust, /headers\.set\('clear-site-data'/);
   assert.doesNotMatch(src, /headers\.set\('clear-site-data'/);
@@ -141,13 +145,13 @@ test('2027 hub edge keeps the commit list and leaves the live class line alone',
   assert.equal(pinned.data.classOverviewAll['2027'].commits, '28');
 });
 
-test('schedule edge pins Kentucky week over an empty iOS last-good board', () => {
+test('schedule edge pins Vanderbilt week over an empty iOS last-good board', () => {
   const start = src.indexOf('const TEXAS_BOX');
   const end = src.indexOf('const HUB_BUST_COOKIE');
   assert.ok(start > 0 && end > start);
-  const { pinKentuckyWeek } = new Function(`${src.slice(start, end)}; return { pinKentuckyWeek };`)();
+  const { pinVanderbiltWeek } = new Function(`${src.slice(start, end)}; return { pinVanderbiltWeek };`)();
   const empty = {
-    currentGameId: 'oklahoma',
+    currentGameId: 'kentucky',
     games: [
       {
         id: 'oklahoma',
@@ -164,13 +168,22 @@ test('schedule edge pins Kentucky week over an empty iOS last-good board', () =>
         swing: [{ name: 'Jadan Baugh', role: 'Wear down front' }],
         film: 'Kentucky power run and play-action on the road.',
       },
+      {
+        id: 'vandy',
+        tv: 'TBD',
+        date: 'November 21, 2026 · 12:00–1:00 PM ET',
+        keys: ['Execute early', 'Avoid complacency', 'Develop depth'],
+        swing: [{ name: 'Backup units', role: 'Rep evaluation' }],
+        film: 'Vanderbilt improving — treat as SEC test.',
+      },
     ],
   };
-  const pinned = pinKentuckyWeek(empty);
+  const pinned = pinVanderbiltWeek(empty);
   assert.equal(pinned.changed, true);
-  assert.equal(pinned.data.currentGameId, 'kentucky');
+  assert.equal(pinned.data.currentGameId, 'vandy');
   const ou = pinned.data.games[0];
   const ky = pinned.data.games[1];
+  const vu = pinned.data.games[2];
   assert.deepEqual(ou.keys, [
     'Make Them One-Dimensional',
     'Find the Explosive',
@@ -216,10 +229,17 @@ test('schedule edge pins Kentucky week over an empty iOS last-good board', () =>
   assert.equal(ky.radar[3].opp, 64);
   assert.equal(ky.radar[5].uf, 48);
   assert.equal(ky.radar[5].opp, 58);
+  assert.equal(ky.finalUF, 21);
+  assert.equal(ky.finalOpp, 14);
+  assert.equal(ky.finalSource, 'official');
+  assert.equal(vu.date, 'November 21, 2026 · 12:00 PM ET');
+  assert.deepEqual(vu.keys, []);
+  assert.deepEqual(vu.swing, []);
+  assert.equal(vu.film, 'The Swamp. 12:00 PM ET.');
 
-  const live = pinKentuckyWeek({
-    currentGameId: 'kentucky',
-    games: [{ ...ou }, { ...ky }],
+  const live = pinVanderbiltWeek({
+    currentGameId: 'vandy',
+    games: [{ ...ou }, { ...ky }, { ...vu }],
   });
   assert.equal(live.changed, false);
 });

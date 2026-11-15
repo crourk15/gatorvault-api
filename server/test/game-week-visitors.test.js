@@ -335,5 +335,6 @@ describe('game-week-visitors', () => {
     assert.ok(!panel.visitors.some((v) => v.slug === 'jaxon-flowers'));
     assert.ok(!panel.visitors.some((v) => v.slug === 'brysen-wright'));
     assert.equal(visitorsPanelForGameId('kentucky'), null);
+    assert.equal(visitorsPanelForGameId('vandy'), null);
   });
 });

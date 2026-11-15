@@ -374,6 +374,7 @@ function shortenOpponentName(opp) {
     .replace(/\s+Longhorns$/i, '')
     .replace(/\s+Sooners$/i, '')
     .replace(/\s+Wildcats$/i, '')
+    .replace(/\s+Commodores$/i, '')
     .replace(/\s+Gators$/i, '')
     .replace(/\s+Owls$/i, '')
     .replace(/\s+Camels$/i, '')
