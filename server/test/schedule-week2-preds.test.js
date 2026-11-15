@@ -6,7 +6,7 @@ const scheduleBoard = require('../lib/schedule-board');
 
 /** Week 10 form overlay after Kentucky 21-14. */
 const WEEK10_REMAINING = {
-  vandy: { ufPct: 54, pred: 'UF 24 · Vanderbilt 22', predUF: 24, predOpp: 22 },
+  vandy: { ufPct: 62, pred: 'UF 24 · Vanderbilt 17', predUF: 24, predOpp: 17 },
   fsu: { ufPct: 46, pred: 'UF 22 · FSU 24', predUF: 22, predOpp: 24 },
 };
 

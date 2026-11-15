@@ -872,7 +872,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Vanderbilt Commodores",
     date: "November 21, 2026 · 12:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
-    ufPct: 54,
+    ufPct: 62,
     tv: "TBD",
     keys: [
       "Make the Freshman Beat You",
@@ -902,9 +902,21 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     filmWatched: false,
     scoutingReport:
       "Make the Freshman Beat You. Vanderbilt cannot run. 133rd in rushing yards, 134th in yards per carry, 119th in adjusted line yards. Alabama: 23 carries, 12 yards. Curtis eight TDs, eight INTs. Success rate 117th. Woods six sacks, 10 TFLs. Florida 26 sacks, 23rd in front-seven havoc. Take Away the One Guy. Sherrill 63-847, 37 percent of the passing. Alabama: seven for 100, 44-yarder. Florida 18th in explosives allowed, 124th getting off the field. Alabama held them to 2-of-15. Make the Drive Worth Seven. Vanderbilt 31st in explosiveness allowed. 111th in third downs allowed at 42.5 percent, 122nd in power. Baugh 178-905-15. Red zone 90/73. The Swamp. 12:00 PM ET.",
-    pred: "UF 24 · Vanderbilt 22",
+    pred: "UF 24 · Vanderbilt 17",
     predUF: 24,
-    predOpp: 22,
+    predOpp: 17,
+    predSat: true,
+    predConfidence: 70,
+    predMovement: "up",
+    ufPctDelta: 8,
+    radar: [
+      { label: "Run Game", uf: 66, opp: 46 },
+      { label: "Pass Efficiency", uf: 68, opp: 58 },
+      { label: "Front 7", uf: 68, opp: 50 },
+      { label: "Secondary", uf: 54, opp: 56 },
+      { label: "Special Teams", uf: 54, opp: 72 },
+      { label: "Coaching Edge", uf: 56, opp: 50 },
+    ],
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27913",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-vanderbilt-commodores-gainesville-florida-11-21-2026/event/2200645C219C0A2B",

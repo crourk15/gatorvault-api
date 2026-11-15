@@ -295,6 +295,19 @@ describe('Game Week Film Notes', () => {
     assert.equal(vuBundle.swingPlayers[1].name, 'Cormani McClain');
     assert.equal(vuBundle.swingPlayers[2].name, 'Jadan Baugh');
     assert.ok(!vandy.keys.some((k) => /Stay Alive on Third|Take Away the Run|Don't Give Them the Ball/i.test(k)));
+    const radar = buildRadar(vandy);
+    assert.deepEqual(radar, vandy.radar);
+    assert.equal(radar.find((a) => a.label === 'Run Game')?.uf, 66);
+    assert.equal(radar.find((a) => a.label === 'Run Game')?.opp, 46);
+    assert.equal(radar.find((a) => a.label === 'Special Teams')?.opp, 72);
+    assert.equal(radar.find((a) => a.label === 'Secondary')?.uf, 54);
+    assert.equal(vandy.pred, 'UF 24 · Vanderbilt 17');
+    assert.equal(vandy.ufPct, 62);
+    assert.equal(vandy.predSat, true);
+    assert.notDeepEqual(
+      radar.find((a) => a.label === 'Run Game'),
+      { label: 'Run Game', uf: 78, opp: 56 },
+    );
   });
 
   it('Oklahoma Matchup Edge is the sat stamp, not the 50% formula', () => {

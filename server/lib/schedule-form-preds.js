@@ -18,7 +18,7 @@ const OPP_LOOK = {
   uga: { short: 'Georgia', tier: 'elite', oppPts: 32 },
   oklahoma: { short: 'Oklahoma', tier: 'plus', oppPts: 27 },
   kentucky: { short: 'Kentucky', tier: 'sec', oppPts: 23 },
-  vandy: { short: 'Vanderbilt', tier: 'sec', oppPts: 22 },
+  vandy: { short: 'Vanderbilt', tier: 'sec', oppPts: 17 },
   fsu: { short: 'FSU', tier: 'plus', oppPts: 24 },
 };
 

@@ -581,6 +581,22 @@ describe('schedule-board', () => {
     assert.match(vandy.film, /Make the Freshman Beat You/);
     assert.ok(!vandy.keys?.some((k) => /Execute early|Avoid complacency|Develop depth/i.test(k)));
     assert.ok(!vandy.keys?.some((k) => /Stay Alive on Third|Take Away the Run|Don't Give Them the Ball/i.test(k)));
+    assert.equal(vandy.pred, 'UF 24 · Vanderbilt 17');
+    assert.equal(vandy.predUF, 24);
+    assert.equal(vandy.predOpp, 17);
+    assert.equal(vandy.predSat, true);
+    assert.equal(vandy.ufPct, 62);
+    assert.equal(vandy.radar.find((a) => a.label === 'Run Game')?.uf, 66);
+    assert.equal(vandy.radar.find((a) => a.label === 'Run Game')?.opp, 46);
+    assert.equal(vandy.radar.find((a) => a.label === 'Pass Efficiency')?.uf, 68);
+    assert.equal(vandy.radar.find((a) => a.label === 'Front 7')?.uf, 68);
+    assert.equal(vandy.radar.find((a) => a.label === 'Secondary')?.opp, 56);
+    assert.equal(vandy.radar.find((a) => a.label === 'Special Teams')?.opp, 72);
+    assert.equal(vandy.radar.find((a) => a.label === 'Coaching Edge')?.uf, 56);
+    assert.notDeepEqual(
+      vandy.radar.find((a) => a.label === 'Run Game'),
+      { label: 'Run Game', uf: 78, opp: 56 }
+    );
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

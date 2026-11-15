@@ -17,16 +17,16 @@ const FORM_2026_W5 = {
 };
 
 const FORM_2026 = {
-  n: 9,
-  ufPpg: (66 + 52 + 44 + 52 + 17 + 19 + 27 + 8 + 7) / 9,
-  allowed: (21 + 3 + 39 + 28 + 45 + 38 + 24 + 27 + 23) / 9,
+  n: 10,
+  ufPpg: (66 + 52 + 44 + 52 + 17 + 19 + 27 + 8 + 7 + 21) / 10,
+  allowed: (21 + 3 + 39 + 28 + 45 + 38 + 24 + 27 + 23 + 14) / 10,
 };
 
 describe('schedule form predictions', () => {
-  it('reads scoring form from the official 2026 finals after Oklahoma', () => {
+  it('reads scoring form from the official 2026 finals after Kentucky', () => {
     const board = scheduleBoard.getScheduleBoard(2026);
     const form = measureUfScoringForm(board.games);
-    assert.equal(form.n, 9);
+    assert.equal(form.n, 10);
     assert.equal(form.ufPpg, FORM_2026.ufPpg);
     assert.ok(form.ufPpg < 35, 'Oklahoma 7 pulls season scoring off the Georgia-week 30s');
   });
@@ -75,6 +75,16 @@ describe('schedule form predictions', () => {
     const olemiss = payload.games.find((g) => g.id === 'olemiss');
     assert.equal(olemiss.pred, 'UF 28 \u00b7 Ole Miss 27');
     assert.equal(olemiss.finalUF, 52);
+  });
+
+  it('does not overwrite a sat Vanderbilt GatorVault prediction', () => {
+    const payload = scheduleBoard.toApiPayload();
+    const vandy = payload.games.find((g) => g.id === 'vandy');
+    assert.equal(vandy.ufPct, 62);
+    assert.equal(vandy.pred, 'UF 24 · Vanderbilt 17');
+    assert.equal(vandy.predUF, 24);
+    assert.equal(vandy.predOpp, 17);
+    assert.equal(vandy.predSat, true);
   });
 
   it('does not overwrite a sat Oklahoma GatorVault prediction', () => {

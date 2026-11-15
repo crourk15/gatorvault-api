@@ -135,7 +135,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'vandy-keys-3';
+const NOW_BUST_VALUE = 'vandy-edge-62';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
@@ -246,6 +246,15 @@ const VANDY_FILM =
   'Make the Freshman Beat You. Vanderbilt cannot run. 133rd in rushing yards, 134th in yards per carry, 119th in adjusted line yards. Alabama: 23 carries, 12 yards, two rushing first downs. Curtis eight touchdowns, eight interceptions. Sacked five times. Success rate 117th. Woods six sacks, 10 tackles for loss. Florida 26 sacks, 23rd in front-seven havoc. Take Away the One Guy. Sherrill 63-847, 37 percent of the passing. 13th in receptions, 15th in yards. Alabama: seven for 100, 44-yarder. Florida 18th in explosives allowed at 9.2 percent, 124th getting off the field. Alabama held them to 2-of-15. Make the Drive Worth Seven. Vanderbilt 31st in explosiveness allowed. 111th in third downs allowed at 42.5 percent, 118th in third-down EPA allowed, 122nd in power. Florida 13th in completion, 27th in adjusted success. Baugh 178-905-15. Red zone 90 percent scores, 73 percent touchdowns. The Swamp. 12:00 PM ET.';
 const VANDY_SCOUT =
   'Make the Freshman Beat You. Vanderbilt cannot run. 133rd in rushing yards, 134th in yards per carry, 119th in adjusted line yards. Alabama: 23 carries, 12 yards. Curtis eight TDs, eight INTs. Success rate 117th. Woods six sacks, 10 TFLs. Florida 26 sacks, 23rd in front-seven havoc. Take Away the One Guy. Sherrill 63-847, 37 percent of the passing. Alabama: seven for 100, 44-yarder. Florida 18th in explosives allowed, 124th getting off the field. Alabama held them to 2-of-15. Make the Drive Worth Seven. Vanderbilt 31st in explosiveness allowed. 111th in third downs allowed at 42.5 percent, 122nd in power. Baugh 178-905-15. Red zone 90/73. The Swamp. 12:00 PM ET.';
+const VANDY_PRED = 'UF 24 · Vanderbilt 17';
+const VANDY_RADAR = [
+  { label: 'Run Game', uf: 66, opp: 46 },
+  { label: 'Pass Efficiency', uf: 68, opp: 58 },
+  { label: 'Front 7', uf: 68, opp: 50 },
+  { label: 'Secondary', uf: 54, opp: 56 },
+  { label: 'Special Teams', uf: 54, opp: 72 },
+  { label: 'Coaching Edge', uf: 56, opp: 50 },
+];
 const KY_DATE = 'November 14, 2026 · 6:15 PM ET';
 const KY_TV = 'ESPN';
 const KY_PRED = 'UF 22 · Kentucky 23';
@@ -477,6 +486,22 @@ function vanderbiltKeysNeedPin(vu) {
   return false;
 }
 
+function vanderbiltEdgeNeedPin(vu) {
+  if (Number(vu?.ufPct) !== 62 || String(vu?.pred || '') !== VANDY_PRED || Number(vu?.predUF) !== 24 || Number(vu?.predOpp) !== 17) {
+    return true;
+  }
+  if (vu?.predSat !== true) return true;
+  const radar = Array.isArray(vu?.radar) ? vu.radar : [];
+  if (radar.length < 6) return true;
+  if (Number(radar[0]?.uf) !== 66 || Number(radar[0]?.opp) !== 46) return true;
+  if (Number(radar[1]?.uf) !== 68 || Number(radar[1]?.opp) !== 58) return true;
+  if (Number(radar[2]?.uf) !== 68 || Number(radar[2]?.opp) !== 50) return true;
+  if (Number(radar[3]?.uf) !== 54 || Number(radar[3]?.opp) !== 56) return true;
+  if (Number(radar[4]?.uf) !== 54 || Number(radar[4]?.opp) !== 72) return true;
+  if (Number(radar[5]?.uf) !== 56 || Number(radar[5]?.opp) !== 50) return true;
+  return false;
+}
+
 /** Render can still be on Kentucky week. Stamp the final, point the board at Vanderbilt. */
 function pinVanderbiltWeek(data) {
   if (!data || typeof data !== 'object') return { data, changed: false };
@@ -634,6 +659,21 @@ function pinVanderbiltWeek(data) {
             film: VANDY_FILM,
             scoutingReport: VANDY_SCOUT,
             filmWatched: false,
+          };
+          vuChanged = true;
+        }
+        if (vanderbiltEdgeNeedPin(vu)) {
+          vu = {
+            ...vu,
+            ufPct: 62,
+            pred: VANDY_PRED,
+            predUF: 24,
+            predOpp: 17,
+            predSat: true,
+            predConfidence: 70,
+            predMovement: 'up',
+            ufPctDelta: 8,
+            radar: VANDY_RADAR.map((axis) => ({ ...axis })),
           };
           vuChanged = true;
         }
