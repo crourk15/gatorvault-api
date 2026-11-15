@@ -105,7 +105,7 @@ export type ScheduleGame = {
 };
 
 /** Bundled remaining-season pred week. Peek drops a leftover last-good stamp older than this. */
-export const SCHEDULE_SEED_PRED_THROUGH = '2026-W9';
+export const SCHEDULE_SEED_PRED_THROUGH = '2026-W10';
 
 /** SEC locked Texas noon to ABC on Oct 11. Saved boards still say the Oct 5 window. */
 export function lockBroadcastWindow(tv?: string | null): string {
@@ -848,6 +848,10 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { label: "Special Teams", uf: 55, opp: 55 },
       { label: "Coaching Edge", uf: 48, opp: 58 },
     ],
+    finalUF: 21,
+    finalOpp: 14,
+    finalSource: "official",
+    boxScoreUrl: "https://floridagators.com/sports/football/stats/2026/kentucky/boxscore/27912",
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27912",
       official: "https://www.ticketmaster.com/kentucky-wildcats-football-vs-florida-gators-lexington-kentucky-11-14-2026/event/160064ACA20A7989",
@@ -866,16 +870,15 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     id: "vandy",
     label: "Nov 21 vs Vanderbilt",
     opp: "Vanderbilt Commodores",
-    date: "November 21, 2026 · 12:00–1:00 PM ET",
+    date: "November 21, 2026 · 12:00 PM ET",
     venue: "Ben Hill Griffin Stadium, Gainesville FL",
     ufPct: 54,
     tv: "TBD",
-    keys: ["Execute early", "Avoid complacency", "Develop depth"],
-    swing: [
-      { name: "Backup units", role: "Rep evaluation" },
-      { name: "QB1", role: "Efficient scoring drives" },
-    ],
-    film: "Vanderbilt improving — treat as SEC test.",
+    keys: [],
+    howUFWins: [],
+    swing: [],
+    film: "The Swamp. 12:00 PM ET.",
+    filmWatched: false,
     pred: "UF 24 · Vanderbilt 22",
     predUF: 24,
     predOpp: 22,
@@ -899,7 +902,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Florida State Seminoles",
     date: "November 27, 2026 · 3:30 PM ET",
     venue: "Doak Campbell Stadium, Tallahassee FL",
-    ufPct: 48,
+    ufPct: 46,
     tv: "ABC",
     keys: ["Win field position battle", "Avoid penalties", "Win turnover margin"],
     swing: [
@@ -907,8 +910,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { name: "Myles Graham", role: "Contain their TE weapon" },
     ],
     film: "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
-    pred: "UF 23 · FSU 24",
-    predUF: 23,
+    pred: "UF 22 · FSU 24",
+    predUF: 22,
     predOpp: 24,
     filmLessonId: "frl00010-0000-4000-8000-00000000000a",
     opponentTendencies: ["RPO and quick game in rivalry setting", "TE usage in red zone", "Tempo spikes in critical moments"],

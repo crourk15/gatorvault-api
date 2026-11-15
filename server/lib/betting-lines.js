@@ -220,6 +220,27 @@ const STATIC_LINES = [
     moneyline: { uf: 130, opp: -155 },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
+    source: 'schedule',
+    completed: true,
+    homeScore: 21,
+    awayScore: 14,
+    status: 'Final',
+    live: false,
+    scoreSource: 'official'
+  },
+  {
+    id: 'uf-vandy-2026-w12',
+    week: 12,
+    game: 'Florida vs Vanderbilt',
+    opponent: 'Vanderbilt',
+    date: '2026-11-21T17:00:00.000Z',
+    venue: 'Ben Hill Griffin Stadium',
+    // No trustworthy book stamp yet (Vegas Insider N/A; do not invent a spread).
+    spread: null,
+    total: null,
+    moneyline: { uf: null, opp: null },
+    sportsbookUrl: FANDUEL_AFFILIATE,
+    sportsbookLinks: SPORTSBOOKS,
     source: 'schedule'
   },
   {

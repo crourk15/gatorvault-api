@@ -232,6 +232,7 @@ function shortenOpponentName(opp: string): string {
     .replace(/\s+Longhorns$/i, '')
     .replace(/\s+Sooners$/i, '')
     .replace(/\s+Wildcats$/i, '')
+    .replace(/\s+Commodores$/i, '')
     .replace(/\s+Gators$/i, '')
     .replace(/\s+Owls$/i, '')
     .replace(/\s+Camels$/i, '')
@@ -438,7 +439,7 @@ const LAST_GOOD_NOW_WEEK_KEY = 'gv-home-now-week-last-good';
 const RETIRED_NOW_TICK_RE = /1\.0\.29|update in the App Store/i;
 /** Last-week pledge / false commits cannot own this week's NOW News. */
 const STALE_NOW_NEWS_RE =
-  /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey|florida 7,\s*oklahoma 23/i;
+  /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey|florida 7,\s*oklahoma 23|moreno\s+fisher/i;
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri|faurot[\s\S]{0,40}espn/i;
 /** Posted South Carolina final — last-good Swamp / 4-1 must not beat this week. */
 const LEFTOVER_MISSOURI_NOW_RE =
@@ -452,10 +453,12 @@ const LEFTOVER_GEORGIA_NOW_RE =
   /georgia at mercedes|mercedes-benz|5-2 heading into saturday|florida 27,\s*texas 24/i;
 /** Posted Oklahoma final — last-good Swamp / 5-3 must not beat Kentucky week. */
 const LEFTOVER_OKLAHOMA_NOW_RE =
-  /oklahoma in the swamp|7:45 pm · sec network|5-3\s*·\s*sec home saturday|florida 8,\s*georgia 27|moreno fisher/i;
-const KY_NOW_GAME = 'Kentucky at Kroger Field — 6:15 PM · ESPN';
-const KY_NOW_SEASON = '5-4 heading into Saturday';
-const KY_NOW_NEWS = 'Moreno Fisher commits to Florida';
+  /oklahoma in the swamp|7:45 pm · sec network|5-3\s*·\s*sec home saturday|florida 8,\s*georgia 27/i;
+const LEFTOVER_KENTUCKY_NOW_RE =
+  /kentucky at kroger|kroger field|6:15 pm · espn|5-4 heading into saturday|florida 7,\s*oklahoma 23|moreno fisher/i;
+const VANDY_NOW_GAME = 'Vanderbilt in the Swamp — 12:00 PM';
+const VANDY_NOW_SEASON = '6-4 · SEC home Saturday';
+const VANDY_NOW_NEWS = 'Florida 21, Kentucky 14';
 
 function pinMissouriAbcTick(text: string): string {
   const t = lockBroadcastWindow(text);
@@ -475,29 +478,30 @@ function isLeftoverNowBlob(blob: string): boolean {
     LEFTOVER_SC_WINDOW_RE.test(blob) ||
     LEFTOVER_TEXAS_NOW_RE.test(blob) ||
     LEFTOVER_GEORGIA_NOW_RE.test(blob) ||
-    LEFTOVER_OKLAHOMA_NOW_RE.test(blob)
+    LEFTOVER_OKLAHOMA_NOW_RE.test(blob) ||
+    LEFTOVER_KENTUCKY_NOW_RE.test(blob)
   );
 }
 
-function kentuckyNowWeek(): HomeNowWeekPillar[] {
+function vanderbiltNowWeek(): HomeNowWeekPillar[] {
   return [
-    { key: 'game', label: 'Game', items: [KY_NOW_GAME] },
-    { key: 'news', label: 'News', items: [KY_NOW_NEWS] },
-    { key: 'season', label: 'Season', items: [KY_NOW_SEASON] },
+    { key: 'game', label: 'Game', items: [VANDY_NOW_GAME] },
+    { key: 'news', label: 'News', items: [VANDY_NOW_NEWS] },
+    { key: 'season', label: 'Season', items: [VANDY_NOW_SEASON] },
   ];
 }
 
 function pinLeftoverMissouriNowWeek(rows: HomeNowWeekPillar[]): HomeNowWeekPillar[] {
   const blob = nowWeekBlob(rows);
   if (!rows.length || !isLeftoverNowBlob(blob)) return rows;
-  return kentuckyNowWeek();
+  return vanderbiltNowWeek();
 }
 
 function pinLeftoverMissouriTickerLines(lines: string[]): string[] {
   const next = (Array.isArray(lines) ? lines : []).map((s) => String(s || '').trim()).filter(Boolean);
   const text = next.join(' ');
   if (!next.length || !isLeftoverNowBlob(text)) return next;
-  return [`Game — ${KY_NOW_GAME}`, `News — ${KY_NOW_NEWS}`, `Season — ${KY_NOW_SEASON}`];
+  return [`Game — ${VANDY_NOW_GAME}`, `News — ${VANDY_NOW_NEWS}`, `Season — ${VANDY_NOW_SEASON}`];
 }
 
 let lastGoodNowWeekMemory: HomeNowWeekPillar[] | null = null;
@@ -510,7 +514,7 @@ export function isRetiredHomeNowTick(text: string): boolean {
 
 function pinBaileyNowNewsItems(items: string[]): string[] {
   const next = items.map((s) => String(s || '').trim()).filter(Boolean);
-  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [KY_NOW_NEWS];
+  if (next.some((s) => STALE_NOW_NEWS_RE.test(s))) return [VANDY_NOW_NEWS];
   return next.filter((s) => !isRetiredHomeNowTick(s));
 }
 
@@ -518,7 +522,7 @@ function pinBaileyNowNewsLines(lines: string[]): string[] {
   return lines.map((line) => {
     const text = String(line || '');
     if (/^News — /i.test(text) && STALE_NOW_NEWS_RE.test(text)) {
-      return `News — ${KY_NOW_NEWS}`;
+      return `News — ${VANDY_NOW_NEWS}`;
     }
     return text;
   });
@@ -534,7 +538,7 @@ export function usableHomeNowWeek(nowWeek?: HomeNowWeekPillar[] | null): HomeNow
       const rawItems = (row?.items || []).map((s) => String(s || '').trim()).filter(Boolean);
       const isNews = key === 'news' || label === 'News';
       if (isNews && rawItems.some((s) => STALE_NOW_NEWS_RE.test(s))) {
-        return { key: 'news', label: 'News', items: [KY_NOW_NEWS] };
+        return { key: 'news', label: 'News', items: [VANDY_NOW_NEWS] };
       }
       return {
         key,

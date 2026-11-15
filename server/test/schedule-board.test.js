@@ -26,8 +26,8 @@ describe('schedule-board', () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
-    assert.equal(payload.predThrough, '2026-W9');
-    assert.equal(payload.currentGameId, 'kentucky');
+    assert.equal(payload.predThrough, '2026-W10');
+    assert.equal(payload.currentGameId, 'vandy');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);
     assert.equal(campbell.finalOpp, 3);
@@ -78,7 +78,7 @@ describe('schedule-board', () => {
   it('game-week meta games also hide desk scout', () => {
     const feed = require('../lib/game-week-feed');
     const payload = feed.buildGameWeekPayload();
-    assert.equal(payload.currentGameId, 'kentucky');
+    assert.equal(payload.currentGameId, 'vandy');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.deepEqual(campbell.offenseScout, []);
     assert.equal(campbell.scoutingReport, undefined);
@@ -554,6 +554,16 @@ describe('schedule-board', () => {
     assert.equal(kentucky.radar.find((a) => a.label === 'Front 7')?.opp, 64);
     assert.equal(kentucky.radar.find((a) => a.label === 'Secondary')?.opp, 64);
     assert.equal(kentucky.radar.find((a) => a.label === 'Coaching Edge')?.opp, 58);
+    assert.equal(kentucky.finalUF, 21);
+    assert.equal(kentucky.finalOpp, 14);
+    assert.equal(kentucky.finalSource, 'official');
+    const vandy = board.games.find((g) => g.id === 'vandy');
+    assert.equal(vandy.date, 'November 21, 2026 · 12:00 PM ET');
+    assert.equal(vandy.tv, 'TBD');
+    assert.deepEqual(vandy.keys, []);
+    assert.deepEqual(vandy.swing, []);
+    assert.equal(vandy.film, 'The Swamp. 12:00 PM ET.');
+    assert.ok(!vandy.keys?.some((k) => /Execute early|Avoid complacency|Develop depth/i.test(k)));
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

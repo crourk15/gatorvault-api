@@ -79,5 +79,14 @@
     "opp": 23,
     "source": "official",
     "completedAt": "2026-11-08T04:00:00.000Z"
+  },
+  "uf-kentucky-2026-w11": {
+    "gameKey": "uf-kentucky-2026-w11",
+    "scheduleId": "kentucky",
+    "opponent": "Kentucky",
+    "uf": 21,
+    "opp": 14,
+    "source": "official",
+    "completedAt": "2026-11-15T03:30:00.000Z"
   }
 }

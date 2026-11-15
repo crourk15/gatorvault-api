@@ -216,4 +216,19 @@ describe('betting-lines next game', () => {
     assert.notEqual(ky.spread.uf, 3.5);
     assert.notEqual(ky.total, 51.5);
   });
+
+  it('serves Vanderbilt as nextGame with Line pending after the Kentucky hold', async () => {
+    const when = new Date('2026-11-15T08:00:00.000Z');
+    const next = pickNextGame(STATIC_LINES, when);
+    assert.equal(next.id, 'uf-vandy-2026-w12');
+    const payload = await getBettingLines(when);
+    assert.equal(payload.nextGame.id, 'uf-vandy-2026-w12');
+    assert.equal(payload.nextGame.spread, null);
+    assert.equal(payload.nextGame.total, null);
+    assert.equal(payload.lastGame.id, 'uf-kentucky-2026-w11');
+    assert.equal(payload.lastGame.homeScore, 21);
+    assert.equal(payload.lastGame.awayScore, 14);
+    assert.equal(payload.finals['uf-kentucky-2026-w11'].uf, 21);
+    assert.equal(payload.finals['uf-kentucky-2026-w11'].opp, 14);
+  });
 });

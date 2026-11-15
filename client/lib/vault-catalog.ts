@@ -97,10 +97,10 @@ export const TICKET_GAMES: TicketGame[] = [
   },
   {
     game: '🐊 UF vs Vanderbilt',
-    date: 'November 21, 2026 · 12:00–1:00 PM ET',
+    date: 'November 21, 2026 · 12:00 PM ET',
     venue: 'Ben Hill Griffin Stadium, Gainesville FL',
     type: 'HOME',
-    note: 'TV TBD · early window',
+    note: '12:00 PM ET · TV TBD · Senior Day',
   },
   {
     game: '🐊 UF @ FSU',
