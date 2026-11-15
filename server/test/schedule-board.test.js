@@ -560,10 +560,43 @@ describe('schedule-board', () => {
     const vandy = board.games.find((g) => g.id === 'vandy');
     assert.equal(vandy.date, 'November 21, 2026 · 12:00 PM ET');
     assert.equal(vandy.tv, 'TBD');
-    assert.deepEqual(vandy.keys, []);
-    assert.deepEqual(vandy.swing, []);
-    assert.equal(vandy.film, 'The Swamp. 12:00 PM ET.');
+    assert.deepEqual(vandy.keys, [
+      'Make the Freshman Beat You',
+      'Take Away the One Guy',
+      'Make the Drive Worth Seven',
+    ]);
+    assert.equal(vandy.howUFWins[0], vandy.swing[0].role);
+    assert.equal(vandy.howUFWins[1], vandy.swing[1].role);
+    assert.equal(vandy.howUFWins[2], vandy.swing[2].role);
+    assert.equal(vandy.swing[0].name, 'Jayden Woods');
+    assert.equal(vandy.swing[1].name, 'Cormani McClain');
+    assert.equal(vandy.swing[2].name, 'Jadan Baugh');
+    assert.match(vandy.howUFWins[0], /133rd nationally in rushing yards/);
+    assert.match(vandy.howUFWins[0], /119th in adjusted line yards/);
+    assert.match(vandy.howUFWins[0], /success rate ranks 117th/);
+    assert.match(vandy.howUFWins[1], /37 percent of Vanderbilt/);
+    assert.match(vandy.howUFWins[1], /2-of-15 on third down/);
+    assert.match(vandy.howUFWins[2], /31st nationally in explosiveness allowed/);
+    assert.match(vandy.howUFWins[2], /Senior Day is not a field-goal game/);
+    assert.match(vandy.film, /Make the Freshman Beat You/);
     assert.ok(!vandy.keys?.some((k) => /Execute early|Avoid complacency|Develop depth/i.test(k)));
+    assert.ok(!vandy.keys?.some((k) => /Stay Alive on Third|Take Away the Run|Don't Give Them the Ball/i.test(k)));
+    assert.equal(vandy.pred, 'UF 24 · Vanderbilt 17');
+    assert.equal(vandy.predUF, 24);
+    assert.equal(vandy.predOpp, 17);
+    assert.equal(vandy.predSat, true);
+    assert.equal(vandy.ufPct, 62);
+    assert.equal(vandy.radar.find((a) => a.label === 'Run Game')?.uf, 66);
+    assert.equal(vandy.radar.find((a) => a.label === 'Run Game')?.opp, 46);
+    assert.equal(vandy.radar.find((a) => a.label === 'Pass Efficiency')?.uf, 68);
+    assert.equal(vandy.radar.find((a) => a.label === 'Front 7')?.uf, 68);
+    assert.equal(vandy.radar.find((a) => a.label === 'Secondary')?.opp, 56);
+    assert.equal(vandy.radar.find((a) => a.label === 'Special Teams')?.opp, 72);
+    assert.equal(vandy.radar.find((a) => a.label === 'Coaching Edge')?.uf, 56);
+    assert.notDeepEqual(
+      vandy.radar.find((a) => a.label === 'Run Game'),
+      { label: 'Run Game', uf: 78, opp: 56 }
+    );
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

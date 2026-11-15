@@ -49,7 +49,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the Vanderbilt week pack'
   assert.match(src, /pinVanderbiltWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'vandy-noon-64'/);
+  assert.match(src, /NOW_BUST_VALUE = 'vandy-edge-62'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -72,7 +72,7 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /samuel\\s\+bailey/);
   assert.match(src, /florida 7,\\s\*oklahoma 23/);
   assert.match(src, /News — \$\{VANDY_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'vandy-noon-64'/);
+  assert.match(src, /NOW_BUST_VALUE = 'vandy-edge-62'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -90,7 +90,7 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'vandy-noon-64'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'vandy-edge-62'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
@@ -233,9 +233,31 @@ test('schedule edge pins Vanderbilt week over an empty iOS last-good board', () 
   assert.equal(ky.finalOpp, 14);
   assert.equal(ky.finalSource, 'official');
   assert.equal(vu.date, 'November 21, 2026 · 12:00 PM ET');
-  assert.deepEqual(vu.keys, []);
-  assert.deepEqual(vu.swing, []);
-  assert.equal(vu.film, 'The Swamp. 12:00 PM ET.');
+  assert.deepEqual(vu.keys, [
+    'Make the Freshman Beat You',
+    'Take Away the One Guy',
+    'Make the Drive Worth Seven',
+  ]);
+  assert.equal(vu.swing[0].name, 'Jayden Woods');
+  assert.equal(vu.swing[1].name, 'Cormani McClain');
+  assert.equal(vu.swing[2].name, 'Jadan Baugh');
+  assert.match(vu.howUFWins[0], /133rd nationally in rushing yards/);
+  assert.match(vu.howUFWins[1], /37 percent of Vanderbilt/);
+  assert.match(vu.howUFWins[2], /Senior Day is not a field-goal game/);
+  assert.match(vu.film, /Make the Freshman Beat You/);
+  assert.equal(vu.pred, 'UF 24 · Vanderbilt 17');
+  assert.equal(vu.predUF, 24);
+  assert.equal(vu.predOpp, 17);
+  assert.equal(vu.predSat, true);
+  assert.equal(vu.ufPct, 62);
+  assert.equal(vu.radar[0].label, 'Run Game');
+  assert.equal(vu.radar[0].uf, 66);
+  assert.equal(vu.radar[0].opp, 46);
+  assert.equal(vu.radar[1].uf, 68);
+  assert.equal(vu.radar[3].uf, 54);
+  assert.equal(vu.radar[3].opp, 56);
+  assert.equal(vu.radar[4].opp, 72);
+  assert.equal(vu.radar[5].uf, 56);
 
   const live = pinVanderbiltWeek({
     currentGameId: 'vandy',

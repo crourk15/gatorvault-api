@@ -135,7 +135,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'vandy-noon-64';
+const NOW_BUST_VALUE = 'vandy-edge-62';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
@@ -227,7 +227,34 @@ const GEORGIA_BOX = 'https://floridagators.com/sports/football/stats/2026/georgi
 const OKLAHOMA_BOX = 'https://floridagators.com/sports/football/stats/2026/oklahoma/boxscore/27911';
 const KENTUCKY_BOX = 'https://floridagators.com/sports/football/stats/2026/kentucky/boxscore/27912';
 const VANDY_DATE = 'November 21, 2026 · 12:00 PM ET';
-const VANDY_FILM = 'The Swamp. 12:00 PM ET.';
+const VANDY_KEY_TITLES = [
+  'Make the Freshman Beat You',
+  'Take Away the One Guy',
+  'Make the Drive Worth Seven',
+];
+const VANDY_HOW_UF_WINS = [
+  'Vanderbilt cannot run the football. So do not let them pretend they can.\n\nThe Commodores are 133rd nationally in rushing yards, 134th in yards per carry and 119th in adjusted line yards. Alabama buried the point last week: 23 carries, 12 yards, two rushing first downs.\n\nThat leaves the game in the hands of true freshman Jared Curtis.\n\nCurtis has eight touchdowns against eight interceptions, and there is no safety net behind him with Blaze Berlowitz on IR. Alabama sacked him five times. His success rate ranks 117th nationally.\n\nFlorida should make him carry the game.\n\nForget trying to win some four-quarter wrestling match with Sedrick Alexander. Kill the run early, create obvious passing downs and let the front attack. Jayden Woods has six sacks and 10 tackles for loss. Florida has 26 sacks and ranks 23rd nationally in front-seven havoc.\n\nTake away the easy downs. Put the game on the freshman. Then go hunt him.',
+  'Vanderbilt does not have an explosive offense. It has one player who can make it look like one.\n\nThe Commodores rank 103rd nationally in explosive-play rate. Florida allows an explosive on just 9.2 percent of plays, 18th nationally.\n\nThen there is Junior Sherrill.\n\nSherrill has 63 catches for 847 yards, accounting for 37 percent of Vanderbilt’s passing production. He ranks 13th nationally in receptions and 15th in receiving yards. Against Alabama, when Vanderbilt managed 12 rushing yards all afternoon, Sherrill caught seven passes for 100 yards on 12 targets, including a 44-yarder.\n\nThat was the offense.\n\nFlorida cannot let him become the answer on money downs. The Gators rank 124th at getting off the field on third down. One conversion to Sherrill becomes three more snaps. Three more snaps become another opportunity for a freshman quarterback to find the only matchup he trusts.\n\nAlabama held Vanderbilt to 2-of-15 on third down. That is the blueprint.\n\nErase Sherrill and make Curtis find somebody else. Vanderbilt has not shown that is an offense it can live on.',
+  'Do not spend Saturday hunting explosives. Vanderbilt does not give many away.\n\nThe Commodores rank 31st nationally in explosiveness allowed.\n\nWhat they do give you is another down.\n\nOpponents convert 42.5 percent of third downs against Vanderbilt, 111th nationally. The Commodores are 118th in third-down EPA allowed and 122nd in power success allowed. They struggle to end drives, and when the yardage gets short, they struggle to win the snap.\n\nThat plays directly into Florida’s hands.\n\nThe Gators are 13th nationally in completion percentage and 27th in adjusted success. Jadan Baugh has carried it 178 times for 905 yards and 15 touchdowns. Florida has scored on 90 percent of its red-zone trips and turned 73 percent of them into touchdowns.\n\nSo take what Vanderbilt gives you. Stay ahead of the chains. Convert the third down. Hand it to Baugh when the field gets tight.\n\nAnd when the drive reaches the red zone, do not settle.\n\nSenior Day is not a field-goal game. Get there. Hand it to Baugh. Finish it.',
+];
+const VANDY_SWING = [
+  { name: 'Jayden Woods', role: VANDY_HOW_UF_WINS[0] },
+  { name: 'Cormani McClain', role: VANDY_HOW_UF_WINS[1] },
+  { name: 'Jadan Baugh', role: VANDY_HOW_UF_WINS[2] },
+];
+const VANDY_FILM =
+  'Make the Freshman Beat You. Vanderbilt cannot run. 133rd in rushing yards, 134th in yards per carry, 119th in adjusted line yards. Alabama: 23 carries, 12 yards, two rushing first downs. Curtis eight touchdowns, eight interceptions. Sacked five times. Success rate 117th. Woods six sacks, 10 tackles for loss. Florida 26 sacks, 23rd in front-seven havoc. Take Away the One Guy. Sherrill 63-847, 37 percent of the passing. 13th in receptions, 15th in yards. Alabama: seven for 100, 44-yarder. Florida 18th in explosives allowed at 9.2 percent, 124th getting off the field. Alabama held them to 2-of-15. Make the Drive Worth Seven. Vanderbilt 31st in explosiveness allowed. 111th in third downs allowed at 42.5 percent, 118th in third-down EPA allowed, 122nd in power. Florida 13th in completion, 27th in adjusted success. Baugh 178-905-15. Red zone 90 percent scores, 73 percent touchdowns. The Swamp. 12:00 PM ET.';
+const VANDY_SCOUT =
+  'Make the Freshman Beat You. Vanderbilt cannot run. 133rd in rushing yards, 134th in yards per carry, 119th in adjusted line yards. Alabama: 23 carries, 12 yards. Curtis eight TDs, eight INTs. Success rate 117th. Woods six sacks, 10 TFLs. Florida 26 sacks, 23rd in front-seven havoc. Take Away the One Guy. Sherrill 63-847, 37 percent of the passing. Alabama: seven for 100, 44-yarder. Florida 18th in explosives allowed, 124th getting off the field. Alabama held them to 2-of-15. Make the Drive Worth Seven. Vanderbilt 31st in explosiveness allowed. 111th in third downs allowed at 42.5 percent, 122nd in power. Baugh 178-905-15. Red zone 90/73. The Swamp. 12:00 PM ET.';
+const VANDY_PRED = 'UF 24 · Vanderbilt 17';
+const VANDY_RADAR = [
+  { label: 'Run Game', uf: 66, opp: 46 },
+  { label: 'Pass Efficiency', uf: 68, opp: 58 },
+  { label: 'Front 7', uf: 68, opp: 50 },
+  { label: 'Secondary', uf: 54, opp: 56 },
+  { label: 'Special Teams', uf: 54, opp: 72 },
+  { label: 'Coaching Edge', uf: 56, opp: 50 },
+];
 const KY_DATE = 'November 14, 2026 · 6:15 PM ET';
 const KY_TV = 'ESPN';
 const KY_PRED = 'UF 22 · Kentucky 23';
@@ -433,15 +460,45 @@ function vanderbiltWindowNeedPin(vu) {
   return date !== VANDY_DATE;
 }
 
-function vanderbiltShellNeedPin(vu) {
-  const keys = Array.isArray(vu?.keys) ? vu.keys.map((k) => String(k || '').trim()).filter(Boolean) : [];
+function vanderbiltKeysNeedPin(vu) {
+  const keys = Array.isArray(vu?.keys) ? vu.keys.map((k) => String(k || '').trim()) : [];
+  if (keys.length !== 3) return true;
   if (keys.some((k) => /execute early|avoid complacency|develop depth/i.test(k))) return true;
+  if (
+    keys[0] !== VANDY_KEY_TITLES[0] ||
+    keys[1] !== VANDY_KEY_TITLES[1] ||
+    keys[2] !== VANDY_KEY_TITLES[2]
+  ) {
+    return true;
+  }
   const swing = Array.isArray(vu?.swing) ? vu.swing : [];
+  if (swing[0]?.name !== 'Jayden Woods' || swing[1]?.name !== 'Cormani McClain' || swing[2]?.name !== 'Jadan Baugh') {
+    return true;
+  }
   if (swing.some((row) => /backup units|qb1/i.test(`${row?.name || ''} ${row?.role || ''}`))) return true;
   if (/vanderbilt improving/i.test(String(vu?.film || ''))) return true;
   if (String(vu?.film || '') !== VANDY_FILM) return true;
-  if (keys.length) return true;
-  if (swing.length) return true;
+  const how = Array.isArray(vu?.howUFWins) ? vu.howUFWins.map((n) => String(n || '')) : [];
+  if (how.length < 3) return true;
+  if (!/133rd nationally in rushing yards/.test(how[0])) return true;
+  if (!/37 percent of Vanderbilt/.test(how[1])) return true;
+  if (!/Senior Day is not a field-goal game/.test(how[2])) return true;
+  return false;
+}
+
+function vanderbiltEdgeNeedPin(vu) {
+  if (Number(vu?.ufPct) !== 62 || String(vu?.pred || '') !== VANDY_PRED || Number(vu?.predUF) !== 24 || Number(vu?.predOpp) !== 17) {
+    return true;
+  }
+  if (vu?.predSat !== true) return true;
+  const radar = Array.isArray(vu?.radar) ? vu.radar : [];
+  if (radar.length < 6) return true;
+  if (Number(radar[0]?.uf) !== 66 || Number(radar[0]?.opp) !== 46) return true;
+  if (Number(radar[1]?.uf) !== 68 || Number(radar[1]?.opp) !== 58) return true;
+  if (Number(radar[2]?.uf) !== 68 || Number(radar[2]?.opp) !== 50) return true;
+  if (Number(radar[3]?.uf) !== 54 || Number(radar[3]?.opp) !== 56) return true;
+  if (Number(radar[4]?.uf) !== 54 || Number(radar[4]?.opp) !== 72) return true;
+  if (Number(radar[5]?.uf) !== 56 || Number(radar[5]?.opp) !== 50) return true;
   return false;
 }
 
@@ -593,14 +650,30 @@ function pinVanderbiltWeek(data) {
           vu = { ...vu, date: VANDY_DATE };
           vuChanged = true;
         }
-        if (vanderbiltShellNeedPin(vu)) {
+        if (vanderbiltKeysNeedPin(vu)) {
           vu = {
             ...vu,
-            keys: [],
-            howUFWins: [],
-            swing: [],
+            keys: VANDY_KEY_TITLES.slice(),
+            howUFWins: VANDY_HOW_UF_WINS.slice(),
+            swing: VANDY_SWING.map((row) => ({ ...row })),
             film: VANDY_FILM,
+            scoutingReport: VANDY_SCOUT,
             filmWatched: false,
+          };
+          vuChanged = true;
+        }
+        if (vanderbiltEdgeNeedPin(vu)) {
+          vu = {
+            ...vu,
+            ufPct: 62,
+            pred: VANDY_PRED,
+            predUF: 24,
+            predOpp: 17,
+            predSat: true,
+            predConfidence: 70,
+            predMovement: 'up',
+            ufPctDelta: 8,
+            radar: VANDY_RADAR.map((axis) => ({ ...axis })),
           };
           vuChanged = true;
         }
