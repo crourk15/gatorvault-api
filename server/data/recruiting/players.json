@@ -326336,12 +326336,14 @@
     "nilSource": null,
     "competitors": [],
     "ufRpmPct": null,
-    "updatedAt": "2026-11-17T15:09:44.860Z",
+    "updatedAt": "2026-11-17T17:50:36.918Z",
     "state": "MD",
     "displayRating": 87.37,
     "ratingIsOverride": false,
     "pipelineState": "committed",
     "rankSyncedAt": "2026-11-17T15:09:44.199Z",
-    "evaluationSummary": "3★ RB · #732 natl · DeMatha Catholic"
+    "evaluationSummary": "3★ RB · #732 natl · DeMatha Catholic",
+    "jerseyNumber": 3,
+    "jersey": 3
   }
 ]
