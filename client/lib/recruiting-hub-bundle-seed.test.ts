@@ -19,9 +19,9 @@ const august = {
   trendRating: 'Rising',
 };
 const live = {
-  classRank: '#5',
-  blueChip: '67%',
-  commits: '27',
+  classRank: '#6',
+  blueChip: '61%',
+  commits: '28',
   avgRating: '90.1',
   trendRank: 'Stable',
   trendBlueChip: 'Rising',
@@ -43,8 +43,8 @@ test('leaving the hub does not paint the August class line back over the live on
   assert.equal(isStaleAugust2027ClassLine(2027, live), false);
   assert.equal(isStaleAugust2027ClassLine(2028, august), false);
   const kept = preferRecruitingHubBundle(bundle(live), bundle(august), 2027);
-  assert.equal(kept?.classOverview.classRank, '#5');
-  assert.equal(kept?.classOverview.commits, '27');
+  assert.equal(kept?.classOverview.classRank, '#6');
+  assert.equal(kept?.classOverview.commits, '28');
   assert.equal(recruitingHubBundleIsCurrent(bundle(august), 2027), false);
   assert.equal(recruitingHubBundleIsCurrent(bundle(live), 2027), true);
 });

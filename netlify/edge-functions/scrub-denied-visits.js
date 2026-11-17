@@ -10,11 +10,11 @@ const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
 const SEASON_STANDING = '6-4 · SEC home Saturday';
 // Kentucky is final. Saved boards still pin Kroger / 5-4 / Moreno Fisher.
 const VANDY_NOW_GAME = 'Vanderbilt in the Swamp — 12:00 PM';
-const VANDY_NOW_NEWS = 'Florida 21, Kentucky 14';
+const VANDY_NOW_NEWS = 'Terrance Grant flips to Florida';
 const KY_NOW_GAME = 'Kentucky at Kroger Field — 6:15 PM · ESPN';
 const KY_NOW_NEWS = 'Moreno Fisher commits to Florida';
 const STALE_NOW_NEWS_RE =
-  /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey|florida 7,\s*oklahoma 23|moreno\s+fisher/i;
+  /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey|florida 7,\s*oklahoma 23|moreno\s+fisher|florida 21,\s*kentucky 14/i;
 /**
  * Posted Kentucky final — last-good Kroger / 5-4 / Fisher must not beat
  * Vanderbilt week. Older leftover boards stay in the same rewrite.
@@ -135,7 +135,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'vandy-edge-62';
+const NOW_BUST_VALUE = 'vandy-grant-flip';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
@@ -930,16 +930,16 @@ function heal2028CommitPayload(data, year) {
 }
 
 const EASTON_ROYAL_HUB_SUBTITLE =
-  'Easton Royal flipped from Texas. 5-star WR, No. 5 nationally.';
+  'Easton Royal flipped from Texas. 5-star WR, No. 7 nationally.';
 
 const EASTON_ROYAL_COMMIT = {
   id: 'easton-royal',
   name: 'Easton Royal',
   position: 'WR',
   rating: '98.4',
-  rankNote: '5★ WR · New Orleans, LA · #5 natl · #1 WR · #1 LA',
-  metaLine: '5★ WR · New Orleans, LA · #5 natl · #1 WR · #1 LA',
-  skinny: 'Easton Royal flipped from Texas to Florida. 5-star WR, No. 5 nationally, No. 1 at the position.',
+  rankNote: '5★ WR · New Orleans, LA · #7 natl · #1 WR · #1 LA',
+  metaLine: '5★ WR · New Orleans, LA · #7 natl · #1 WR · #1 LA',
+  skinny: 'Easton Royal flipped from Texas to Florida. 5-star WR, No. 7 nationally, No. 1 at the position.',
   commitDate: 'Oct 11, 2026',
   statusBadge: 'Committed',
   profileUrl: '/vault/recruiting/player/easton-royal',

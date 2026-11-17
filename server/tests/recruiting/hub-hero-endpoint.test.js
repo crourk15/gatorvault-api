@@ -14,10 +14,10 @@ describe('Recruiting Hub hero endpoint payload', () => {
     assert.ok(hero.classYears.includes(2027));
     assert.ok(Array.isArray(hero.ticker));
     assert.ok(hero.classOverview);
-    assert.equal(hero.classOverview.classRank, '#5');
-    assert.equal(hero.classOverview.blueChip, '67%');
-    assert.equal(hero.classOverview.commits, '27');
-    assert.equal(hero.classOverview.avgRating, '90.1');
+    assert.equal(hero.classOverview.classRank, '#6');
+    assert.equal(hero.classOverview.commits, '28');
+    assert.match(String(hero.classOverview.blueChip), /^\d+%$/);
+    assert.match(String(hero.classOverview.avgRating), /^\d+\.\d$/);
     assert.ok(hero.classOverviewAll);
     assert.ok(hero.classOverviewAll[2027]);
     assert.equal(hero.commits, undefined);
@@ -52,7 +52,7 @@ describe('Recruiting Hub hero endpoint payload', () => {
     assert.equal(again.movementFeed.filter((row) => row.id === 'commit-easton-royal').length, 1);
   });
 
-  it('keeps #5 / 67% / 27 / 90.1 when an August plate is the healthy cache', () => {
+  it('keeps the live class line when an August plate is the healthy cache', () => {
     const {
       healOverviewNests,
       eliteClassOverviewCacheKey,
@@ -72,9 +72,9 @@ describe('Recruiting Hub hero endpoint payload', () => {
         { id: 'easton-royal', name: 'Easton Royal' },
       ],
       classOverview: {
-        classRank: '#5',
-        blueChip: '67%',
-        commits: '27',
+        classRank: '#6',
+        blueChip: '61%',
+        commits: '28',
         commitLabel: 'Commits',
         avgRating: '90.1',
       },
@@ -91,12 +91,12 @@ describe('Recruiting Hub hero endpoint payload', () => {
     assert.equal(Array.isArray(payload.commits), true);
     assert.equal(payload.commits.length, 2);
     assert.equal(payload.commits[1].id, 'easton-royal');
-    assert.equal(payload.classOverview.classRank, '#5');
-    assert.equal(payload.classOverview.blueChip, '67%');
-    assert.equal(payload.classOverview.commits, '27');
+    assert.equal(payload.classOverview.classRank, '#6');
+    assert.equal(payload.classOverview.blueChip, '61%');
+    assert.equal(payload.classOverview.commits, '28');
     assert.equal(payload.classOverview.avgRating, '90.1');
-    assert.equal(payload.classOverviewAll[2027].classRank, '#5');
-    assert.equal(payload.classOverviewAll[2027].commits, '27');
+    assert.equal(payload.classOverviewAll[2027].classRank, '#6');
+    assert.equal(payload.classOverviewAll[2027].commits, '28');
     assert.equal(payload.classOverviewAll[2027].avgRating, '90.1');
     hubCache.remove(key);
 

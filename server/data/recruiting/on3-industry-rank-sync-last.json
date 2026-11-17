@@ -1,490 +1,762 @@
 {
-  "at": "2026-08-14T02:08:57.056Z",
+  "at": "2026-11-17T15:06:12.455Z",
   "dryRun": false,
   "summary": {
-    "considered": 18,
-    "fetched": 18,
-    "updated": 15,
-    "unchanged": 3,
+    "considered": 30,
+    "fetched": 30,
+    "updated": 30,
+    "unchanged": 0,
     "failed": [],
     "notable": [
       {
-        "slug": "keenan-britt",
+        "slug": "armani-strong",
         "diffs": {
           "natlRank": {
-            "from": null,
-            "to": 455
+            "from": 215,
+            "to": 535
           },
           "posRank": {
-            "from": null,
-            "to": 39
+            "from": 32,
+            "to": 83
           },
           "stateRank": {
-            "from": null,
+            "from": 26,
+            "to": 69
+          },
+          "rating": {
+            "from": 90.1572463768116,
+            "to": 85
+          },
+          "stars": {
+            "from": 4,
+            "to": 3
+          }
+        },
+        "next": {
+          "natlRank": 535,
+          "posRank": 83,
+          "stateRank": 69,
+          "rating": 85,
+          "stars": 3
+        }
+      },
+      {
+        "slug": "cyion-smith",
+        "diffs": {
+          "natlRank": {
+            "from": 250,
+            "to": 377
+          },
+          "posRank": {
+            "from": 25,
+            "to": 35
+          },
+          "stateRank": {
+            "from": 29,
+            "to": 42
+          },
+          "rating": {
+            "from": 89.51231884057971,
+            "to": 86
+          },
+          "stars": {
+            "from": 4,
+            "to": 3
+          }
+        },
+        "next": {
+          "natlRank": 377,
+          "posRank": 35,
+          "stateRank": 42,
+          "rating": 86,
+          "stars": 3
+        }
+      },
+      {
+        "slug": "samuel-bailey",
+        "diffs": {
+          "natlRank": {
+            "from": 49,
+            "to": 33
+          },
+          "posRank": {
+            "from": 8,
+            "to": 6
+          },
+          "stateRank": {
+            "from": 3,
+            "to": 2
+          },
+          "rating": {
+            "from": 92.8086956521739,
+            "to": 93.95303880317906
+          }
+        },
+        "next": {
+          "natlRank": 33,
+          "posRank": 6,
+          "stateRank": 2,
+          "rating": 93.95303880317906,
+          "stars": 4
+        }
+      },
+      {
+        "slug": "cain-van-norden",
+        "diffs": {
+          "natlRank": {
+            "from": 630,
+            "to": 737
+          },
+          "posRank": {
+            "from": 72,
+            "to": 86
+          },
+          "stateRank": {
+            "from": 15,
             "to": 18
           },
           "rating": {
-            "from": null,
-            "to": 89
-          },
-          "stars": {
-            "from": 0,
-            "to": 3
+            "from": 87.7,
+            "to": 87.36666666666666
           }
         },
         "next": {
-          "natlRank": 455,
-          "posRank": 39,
+          "natlRank": 737,
+          "posRank": 86,
           "stateRank": 18,
-          "rating": 89,
+          "rating": 87.36666666666666,
           "stars": 3
         }
       },
       {
-        "slug": "benjamin-corhei",
+        "slug": "maxwell-hiller",
         "diffs": {
           "natlRank": {
-            "from": null,
-            "to": 1382
-          },
-          "posRank": {
-            "from": null,
-            "to": 130
-          },
-          "stateRank": {
-            "from": null,
-            "to": 137
-          },
-          "rating": {
-            "from": null,
-            "to": 85.76666666666667
-          },
-          "stars": {
-            "from": 0,
-            "to": 3
-          }
-        },
-        "next": {
-          "natlRank": 1382,
-          "posRank": 130,
-          "stateRank": 137,
-          "rating": 85.76666666666667,
-          "stars": 3
-        }
-      },
-      {
-        "slug": "xavier-payne",
-        "diffs": {
-          "natlRank": {
-            "from": null,
-            "to": 1237
-          },
-          "posRank": {
-            "from": null,
-            "to": 93
-          },
-          "stateRank": {
-            "from": null,
-            "to": 131
-          },
-          "rating": {
-            "from": null,
-            "to": 86.1
-          },
-          "stars": {
-            "from": 0,
-            "to": 3
-          }
-        },
-        "next": {
-          "natlRank": 1237,
-          "posRank": 93,
-          "stateRank": 131,
-          "rating": 86.1,
-          "stars": 3
-        }
-      },
-      {
-        "slug": "simeon-caldwell",
-        "diffs": {
-          "natlRank": {
-            "from": null,
-            "to": 247
-          },
-          "posRank": {
-            "from": null,
-            "to": 23
-          },
-          "stateRank": {
-            "from": null,
-            "to": 31
-          },
-          "rating": {
-            "from": null,
-            "to": 91.06666666666666
-          },
-          "stars": {
-            "from": 0,
+            "from": 2,
             "to": 4
           }
         },
         "next": {
-          "natlRank": 247,
-          "posRank": 23,
-          "stateRank": 31,
-          "rating": 91.06666666666666,
+          "natlRank": 4,
+          "posRank": 1,
+          "stateRank": 1,
+          "rating": 98.55698924731183,
+          "stars": 5
+        }
+      },
+      {
+        "slug": "elias-pearl",
+        "diffs": {
+          "natlRank": {
+            "from": 91,
+            "to": 104
+          },
+          "posRank": {
+            "from": 17,
+            "to": 18
+          },
+          "rating": {
+            "from": 93.20398550724637,
+            "to": 93.3590579710145
+          }
+        },
+        "next": {
+          "natlRank": 104,
+          "posRank": 18,
+          "stateRank": 12,
+          "rating": 93.3590579710145,
           "stars": 4
         }
       },
       {
-        "slug": "james-morrow",
+        "slug": "elijah-hutcheson",
         "diffs": {
           "natlRank": {
-            "from": null,
-            "to": 1650
+            "from": 107,
+            "to": 133
           },
           "posRank": {
-            "from": null,
-            "to": 157
-          },
-          "stateRank": {
-            "from": null,
-            "to": 182
+            "from": 9,
+            "to": 11
           },
           "rating": {
-            "from": null,
-            "to": 85.03333333333333
-          },
-          "stars": {
-            "from": 0,
-            "to": 3
+            "from": 92.84818840579709,
+            "to": 92.43514492753624
           }
         },
         "next": {
-          "natlRank": 1650,
-          "posRank": 157,
-          "stateRank": 182,
-          "rating": 85.03333333333333,
-          "stars": 3
+          "natlRank": 133,
+          "posRank": 11,
+          "stateRank": 2,
+          "rating": 92.43514492753624,
+          "stars": 4
         }
       },
       {
-        "slug": "zavier-hilliard",
+        "slug": "davin-davidson",
         "diffs": {
           "natlRank": {
-            "from": null,
-            "to": 2591
-          },
-          "posRank": {
-            "from": null,
-            "to": 232
+            "from": 127,
+            "to": 144
           },
           "stateRank": {
-            "from": null,
-            "to": 301
+            "from": 14,
+            "to": 16
           },
           "rating": {
-            "from": null,
-            "to": 82.33333333333333
-          },
-          "stars": {
-            "from": 0,
-            "to": 3
+            "from": 92.29021739130435,
+            "to": 92.16159420289856
           }
         },
         "next": {
-          "natlRank": 2591,
-          "posRank": 232,
-          "stateRank": 301,
-          "rating": 82.33333333333333,
-          "stars": 3
+          "natlRank": 144,
+          "posRank": 11,
+          "stateRank": 16,
+          "rating": 92.16159420289856,
+          "stars": 4
         }
       },
       {
-        "slug": "jarius-rodgers",
+        "slug": "cahron-wheeler",
         "diffs": {
           "natlRank": {
-            "from": null,
-            "to": 464
+            "from": 120,
+            "to": 130
           },
           "posRank": {
-            "from": null,
-            "to": 49
+            "from": 14,
+            "to": 13
           },
           "stateRank": {
-            "from": null,
-            "to": 60
+            "from": 3,
+            "to": 4
           },
           "rating": {
-            "from": null,
-            "to": 89
-          },
-          "stars": {
-            "from": 0,
-            "to": 3
+            "from": 92.36594202898551,
+            "to": 92.47753623188406
           }
         },
         "next": {
-          "natlRank": 464,
-          "posRank": 49,
-          "stateRank": 60,
-          "rating": 89,
-          "stars": 3
+          "natlRank": 130,
+          "posRank": 13,
+          "stateRank": 4,
+          "rating": 92.47753623188406,
+          "stars": 4
         }
       },
       {
-        "slug": "javian-mallory",
+        "slug": "peyton-miller",
         "diffs": {
           "natlRank": {
-            "from": null,
-            "to": 365
+            "from": 117,
+            "to": 122
+          },
+          "rating": {
+            "from": 92.43442028985507,
+            "to": 92.68442028985507
+          }
+        },
+        "next": {
+          "natlRank": 122,
+          "posRank": 10,
+          "stateRank": 15,
+          "rating": 92.68442028985507,
+          "stars": 4
+        }
+      },
+      {
+        "slug": "tramond-collins",
+        "diffs": {
+          "natlRank": {
+            "from": 138,
+            "to": 139
           },
           "posRank": {
-            "from": null,
-            "to": 25
+            "from": 23,
+            "to": 27
           },
           "stateRank": {
-            "from": null,
+            "from": 16,
+            "to": 15
+          },
+          "rating": {
+            "from": 92.0626811594203,
+            "to": 92.27826086956523
+          }
+        },
+        "next": {
+          "natlRank": 139,
+          "posRank": 27,
+          "stateRank": 15,
+          "rating": 92.27826086956523,
+          "stars": 4
+        }
+      },
+      {
+        "slug": "jabios-smith",
+        "diffs": {
+          "natlRank": {
+            "from": 160,
+            "to": 176
+          },
+          "posRank": {
+            "from": 14,
+            "to": 15
+          },
+          "stateRank": {
+            "from": 13,
+            "to": 15
+          },
+          "rating": {
+            "from": 91.60652173913043,
+            "to": 91.58478260869565
+          }
+        },
+        "next": {
+          "natlRank": 176,
+          "posRank": 15,
+          "stateRank": 15,
+          "rating": 91.58478260869565,
+          "stars": 4
+        }
+      },
+      {
+        "slug": "aamaury-fountain",
+        "diffs": {
+          "natlRank": {
+            "from": 167,
+            "to": 150
+          },
+          "stateRank": {
+            "from": 15,
+            "to": 11
+          },
+          "rating": {
+            "from": 91.57246376811595,
+            "to": 92.0427536231884
+          }
+        },
+        "next": {
+          "natlRank": 150,
+          "posRank": 21,
+          "stateRank": 11,
+          "rating": 92.0427536231884,
+          "stars": 4
+        }
+      },
+      {
+        "slug": "andrew-beard",
+        "diffs": {
+          "natlRank": {
+            "from": 174,
+            "to": 181
+          },
+          "posRank": {
+            "from": 11,
+            "to": 12
+          },
+          "rating": {
+            "from": 91.5391304347826,
+            "to": 91.51195652173914
+          }
+        },
+        "next": {
+          "natlRank": 181,
+          "posRank": 12,
+          "stateRank": 16,
+          "rating": 91.51195652173914,
+          "stars": 4
+        }
+      },
+      {
+        "slug": "amare-nugent",
+        "diffs": {
+          "natlRank": {
+            "from": 221,
+            "to": 219
+          },
+          "posRank": {
+            "from": 26,
+            "to": 29
+          },
+          "rating": {
+            "from": 90.73804347826088,
+            "to": 90.98260869565217
+          }
+        },
+        "next": {
+          "natlRank": 219,
+          "posRank": 29,
+          "stateRank": 23,
+          "rating": 90.98260869565217,
+          "stars": 4
+        }
+      },
+      {
+        "slug": "anthony-jennings",
+        "diffs": {
+          "natlRank": {
+            "from": 308,
+            "to": 318
+          },
+          "posRank": {
+            "from": 45,
             "to": 48
           },
           "rating": {
-            "from": null,
-            "to": 89.72391304347826
-          },
-          "stars": {
-            "from": 0,
-            "to": 4
+            "from": 89.91847826086958,
+            "to": 89.84601449275362
           }
         },
         "next": {
-          "natlRank": 365,
-          "posRank": 25,
-          "stateRank": 48,
-          "rating": 89.72391304347826,
+          "natlRank": 318,
+          "posRank": 48,
+          "stateRank": 28,
+          "rating": 89.84601449275362,
           "stars": 4
         }
       },
       {
-        "slug": "dominic-turnbull",
+        "slug": "zahmar-tookes",
         "diffs": {
           "natlRank": {
-            "from": null,
-            "to": 1379
-          },
-          "posRank": {
-            "from": null,
-            "to": 138
-          },
-          "stateRank": {
-            "from": null,
-            "to": 146
+            "from": 326,
+            "to": 305
           },
           "rating": {
-            "from": null,
-            "to": 85.76666666666667
+            "from": 89.67826086956522,
+            "to": 89.92644927536232
+          }
+        },
+        "next": {
+          "natlRank": 305,
+          "posRank": 37,
+          "stateRank": 1,
+          "rating": 89.92644927536232,
+          "stars": 4
+        }
+      },
+      {
+        "slug": "tommy-douglas",
+        "diffs": {
+          "natlRank": {
+            "from": 367,
+            "to": 373
+          },
+          "posRank": {
+            "from": 20,
+            "to": 23
+          }
+        },
+        "next": {
+          "natlRank": 373,
+          "posRank": 23,
+          "stateRank": 6,
+          "rating": 89.33333333333333,
+          "stars": 4
+        }
+      },
+      {
+        "slug": "kamarion-johnson",
+        "diffs": {
+          "natlRank": {
+            "from": 368,
+            "to": 374
+          },
+          "posRank": {
+            "from": 14,
+            "to": 6
+          },
+          "stateRank": {
+            "from": 41,
+            "to": 42
+          }
+        },
+        "next": {
+          "natlRank": 374,
+          "posRank": 6,
+          "stateRank": 42,
+          "rating": 89.33333333333333,
+          "stars": 4
+        }
+      },
+      {
+        "slug": "ellis-mcgaskin",
+        "diffs": {
+          "natlRank": {
+            "from": 373,
+            "to": 433
+          },
+          "posRank": {
+            "from": 30,
+            "to": 35
+          },
+          "rating": {
+            "from": 89.31159420289856,
+            "to": 88.90036231884059
           },
           "stars": {
-            "from": 0,
+            "from": 4,
             "to": 3
           }
         },
         "next": {
-          "natlRank": 1379,
-          "posRank": 138,
-          "stateRank": 146,
-          "rating": 85.76666666666667,
+          "natlRank": 433,
+          "posRank": 35,
+          "stateRank": 18,
+          "rating": 88.90036231884059,
           "stars": 3
         }
       },
       {
-        "slug": "romin-seymour",
+        "slug": "jackson-ballinger",
         "diffs": {
           "natlRank": {
-            "from": null,
-            "to": 2131
+            "from": 439,
+            "to": 451
           },
           "posRank": {
-            "from": null,
-            "to": 125
+            "from": 24,
+            "to": 26
           },
           "stateRank": {
-            "from": null,
-            "to": 281
-          },
-          "rating": {
-            "from": null,
-            "to": 83.76666666666667
-          },
-          "stars": {
-            "from": 0,
-            "to": 3
+            "from": 18,
+            "to": 19
           }
         },
         "next": {
-          "natlRank": 2131,
-          "posRank": 125,
-          "stateRank": 281,
-          "rating": 83.76666666666667,
+          "natlRank": 451,
+          "posRank": 26,
+          "stateRank": 19,
+          "rating": 88.7,
           "stars": 3
         }
       },
       {
-        "slug": "jalon-copeland",
+        "slug": "kailib-dillard",
         "diffs": {
           "natlRank": {
-            "from": null,
-            "to": 969
+            "from": 449,
+            "to": 461
           },
           "posRank": {
-            "from": null,
+            "from": 40,
+            "to": 46
+          }
+        },
+        "next": {
+          "natlRank": 461,
+          "posRank": 46,
+          "stateRank": 11,
+          "rating": 88.68260869565219,
+          "stars": 3
+        }
+      },
+      {
+        "slug": "tre-geathers",
+        "diffs": {
+          "natlRank": {
+            "from": 607,
+            "to": 540
+          },
+          "posRank": {
+            "from": 48,
+            "to": 45
+          },
+          "stateRank": {
+            "from": 21,
+            "to": 18
+          },
+          "rating": {
+            "from": 87.73333333333333,
+            "to": 88.06666666666666
+          }
+        },
+        "next": {
+          "natlRank": 540,
+          "posRank": 45,
+          "stateRank": 18,
+          "rating": 88.06666666666666,
+          "stars": 3
+        }
+      },
+      {
+        "slug": "devoun-kendrick",
+        "diffs": {
+          "natlRank": {
+            "from": 633,
+            "to": 656
+          },
+          "posRank": {
+            "from": 74,
+            "to": 79
+          },
+          "stateRank": {
+            "from": 53,
+            "to": 54
+          }
+        },
+        "next": {
+          "natlRank": 656,
+          "posRank": 79,
+          "stateRank": 54,
+          "rating": 87.7,
+          "stars": 3
+        }
+      },
+      {
+        "slug": "aaron-mcwilliams",
+        "diffs": {
+          "natlRank": {
+            "from": 2211,
+            "to": 2257
+          },
+          "posRank": {
+            "from": 4,
+            "to": 5
+          },
+          "stateRank": {
+            "from": 228,
+            "to": 233
+          },
+          "rating": {
+            "from": 80.33333333333333,
+            "to": 81.83333333333333
+          }
+        },
+        "next": {
+          "natlRank": 2257,
+          "posRank": 5,
+          "stateRank": 233,
+          "rating": 81.83333333333333,
+          "stars": 3
+        }
+      },
+      {
+        "slug": "jaydee-lane",
+        "diffs": {
+          "natlRank": {
+            "from": 2229,
+            "to": 2780
+          },
+          "posRank": {
+            "from": 2,
+            "to": 10
+          },
+          "stateRank": {
+            "from": 44,
+            "to": 60
+          },
+          "rating": {
+            "from": 80,
+            "to": 79.23809523809524
+          }
+        },
+        "next": {
+          "natlRank": 2780,
+          "posRank": 10,
+          "stateRank": 60,
+          "rating": 79.23809523809524,
+          "stars": 3
+        }
+      },
+      {
+        "slug": "kamauri-whitfield",
+        "diffs": {
+          "natlRank": {
+            "from": 752,
+            "to": 780
+          },
+          "posRank": {
+            "from": 88,
+            "to": 87
+          },
+          "stateRank": {
+            "from": 63,
+            "to": 62
+          }
+        },
+        "next": {
+          "natlRank": 780,
+          "posRank": 87,
+          "stateRank": 62,
+          "rating": 87.1,
+          "stars": 3
+        }
+      },
+      {
+        "slug": "raheem-floyd",
+        "diffs": {
+          "natlRank": {
+            "from": 119,
             "to": 94
           },
-          "stateRank": {
-            "from": null,
-            "to": 97
-          },
-          "rating": {
-            "from": null,
-            "to": 86.76666666666667
-          },
-          "stars": {
-            "from": 0,
-            "to": 3
-          }
-        },
-        "next": {
-          "natlRank": 969,
-          "posRank": 94,
-          "stateRank": 97,
-          "rating": 86.76666666666667,
-          "stars": 3
-        }
-      },
-      {
-        "slug": "tyriq-green",
-        "diffs": {
-          "natlRank": {
-            "from": null,
-            "to": 123
-          },
           "posRank": {
-            "from": null,
-            "to": 11
+            "from": 18,
+            "to": 14
           },
           "stateRank": {
-            "from": null,
-            "to": 13
+            "from": 7,
+            "to": 4
           },
           "rating": {
-            "from": null,
-            "to": 93.71413043478262
-          },
-          "stars": {
-            "from": 0,
-            "to": 4
+            "from": 92.38550724637682,
+            "to": 93.55869565217392
           }
         },
         "next": {
-          "natlRank": 123,
-          "posRank": 11,
-          "stateRank": 13,
-          "rating": 93.71413043478262,
+          "natlRank": 94,
+          "posRank": 14,
+          "stateRank": 4,
+          "rating": 93.55869565217392,
           "stars": 4
         }
       },
       {
-        "slug": "rodney-colton",
+        "slug": "easton-royal",
         "diffs": {
           "natlRank": {
-            "from": null,
-            "to": 570
-          },
-          "posRank": {
-            "from": null,
-            "to": 49
-          },
-          "stateRank": {
-            "from": null,
-            "to": 62
+            "from": 5,
+            "to": 7
           },
           "rating": {
-            "from": null,
-            "to": 88.33333333333333
-          },
-          "stars": {
-            "from": 0,
-            "to": 3
+            "from": 98.42634408602152,
+            "to": 98.34569892473118
           }
         },
         "next": {
-          "natlRank": 570,
-          "posRank": 49,
-          "stateRank": 62,
-          "rating": 88.33333333333333,
-          "stars": 3
+          "natlRank": 7,
+          "posRank": 1,
+          "stateRank": 1,
+          "rating": 98.34569892473118,
+          "stars": 5
         }
       },
       {
-        "slug": "amari-sabb",
+        "slug": "moreno-fisher",
         "diffs": {
           "natlRank": {
-            "from": null,
-            "to": 1606
+            "from": 1162,
+            "to": 1061
           },
           "posRank": {
-            "from": null,
-            "to": 47
+            "from": 84,
+            "to": 71
           },
           "stateRank": {
-            "from": null,
+            "from": 40,
             "to": 38
           },
           "rating": {
-            "from": null,
-            "to": 85.13333333333334
-          },
-          "stars": {
-            "from": 0,
-            "to": 3
+            "from": 85.83,
+            "to": 86.16666666666667
           }
         },
         "next": {
-          "natlRank": 1606,
-          "posRank": 47,
+          "natlRank": 1061,
+          "posRank": 71,
           "stateRank": 38,
-          "rating": 85.13333333333334,
-          "stars": 3
-        }
-      },
-      {
-        "slug": "markel-aguirre",
-        "diffs": {
-          "natlRank": {
-            "from": null,
-            "to": 1098
-          },
-          "posRank": {
-            "from": null,
-            "to": 100
-          },
-          "stateRank": {
-            "from": null,
-            "to": 111
-          },
-          "rating": {
-            "from": null,
-            "to": 86.43333333333334
-          },
-          "stars": {
-            "from": 0,
-            "to": 3
-          }
-        },
-        "next": {
-          "natlRank": 1098,
-          "posRank": 100,
-          "stateRank": 111,
-          "rating": 86.43333333333334,
+          "rating": 86.16666666666667,
           "stars": 3
         }
       }

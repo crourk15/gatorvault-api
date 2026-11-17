@@ -439,7 +439,7 @@ const LAST_GOOD_NOW_WEEK_KEY = 'gv-home-now-week-last-good';
 const RETIRED_NOW_TICK_RE = /1\.0\.29|update in the App Store/i;
 /** Last-week pledge / false commits cannot own this week's NOW News. */
 const STALE_NOW_NEWS_RE =
-  /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey|florida 7,\s*oklahoma 23|moreno\s+fisher/i;
+  /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey|florida 7,\s*oklahoma 23|moreno\s+fisher|florida 21,\s*kentucky 14/i;
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri|faurot[\s\S]{0,40}espn/i;
 /** Posted South Carolina final — last-good Swamp / 4-1 must not beat this week. */
 const LEFTOVER_MISSOURI_NOW_RE =
@@ -458,7 +458,7 @@ const LEFTOVER_KENTUCKY_NOW_RE =
   /kentucky at kroger|kroger field|6:15 pm · espn|5-4 heading into saturday|florida 7,\s*oklahoma 23|moreno fisher/i;
 const VANDY_NOW_GAME = 'Vanderbilt in the Swamp — 12:00 PM';
 const VANDY_NOW_SEASON = '6-4 · SEC home Saturday';
-const VANDY_NOW_NEWS = 'Florida 21, Kentucky 14';
+const VANDY_NOW_NEWS = 'Terrance Grant flips to Florida';
 
 function pinMissouriAbcTick(text: string): string {
   const t = lockBroadcastWindow(text);

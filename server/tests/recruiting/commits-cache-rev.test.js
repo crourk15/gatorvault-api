@@ -135,13 +135,15 @@ describe('commits cache rev', () => {
     assert.equal(String(stale.classOverviewAll[2028].commits), '3');
   });
 
-  it('hub-runtime 2027 commits are c8 with Pearl #17/#12', () => {
+  it('hub-runtime 2027 commits are current rev with Pearl and Grant', () => {
     const snap = path.join(__dirname, '../../data/recruiting/hub-runtime/2027/commits.json');
     const doc = JSON.parse(fs.readFileSync(snap, 'utf8'));
     assert.equal(doc.meta.cacheRev, cache.COMMITS_CACHE_REV);
     const pearl = (doc.items || []).find((p) => /pearl/i.test(p.name || ''));
     assert.ok(pearl, 'Elias Pearl must be in 2027 commits snapshot');
-    assert.match(String(pearl.metaLine || ''), /#17 WR/);
+    assert.match(String(pearl.metaLine || ''), /#18 WR/);
     assert.match(String(pearl.metaLine || ''), /#12 FL/);
+    const grant = (doc.items || []).find((p) => /terrance-grant/i.test(p.id || p.slug || ''));
+    assert.ok(grant, 'Terrance Grant must be in 2027 commits snapshot');
   });
 });

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12T20:06:07.350Z",
+  "updatedAt": "2026-11-17T15:06:20.754Z",
   "entries": {
     "1381": {
       "playerId": "1381",
@@ -4027,8 +4027,30 @@
       "playerId": "180637",
       "playerSlug": "maxwell-hiller",
       "playerName": "Maxwell Hiller",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "180637",
+          "source": "On3 / Charles Power",
+          "type": "Strengths",
+          "content": "Approved · Apr 8, 2026 Maxwell Hiller Scouted by Charles Power IOL 2027 · Football Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality. Measured in at around 6-foot-5, 305 pounds as a junior. Arm length checks in at 32 inches or a shade under. Registers as a plus athlete in the combine setting. A dominant run blocker on Friday nights. A fluid, reactive mover at the second level. Locks on defenders and imposes his will. Not uncommon to see him drive defensive linemen to the sideline. Plays with an innate edge and level of physicality. Has the movement skills to project as a high-level pass protector.",
+          "timestamp": "2026-11-17T15:05:29.600Z",
+          "analystName": "Charles Power",
+          "sourceUrl": "https://www.on3.com/rivals/maxwell-hiller-180637/",
+          "sourceType": "College",
+          "contentHash": "e51a0d471a976ddf7389"
+        },
+        {
+          "playerId": "180637",
+          "source": "On3 / Charles Power",
+          "type": "Evaluation",
+          "content": "Approved · Apr 8, 2026 Maxwell Hiller Scouted by Charles Power IOL 2027 · Football Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality. Measured in at around 6-foot-5, 305 pounds as a junior. Arm length checks in at 32 inches or a shade under. Registers as a plus athlete in the combine setting. A dominant run blocker on Friday nights. A fluid, reactive mover at the second level. Locks on defenders and imposes his will. Not uncommon to see him drive defensive linemen to the sideline. Plays with an innate edge and level of physicality. Has the movement skills to project as a high-level pass protector. High level of coordination leads to…",
+          "timestamp": "2026-11-17T15:05:29.600Z",
+          "analystName": "Charles Power",
+          "sourceUrl": "https://www.on3.com/rivals/maxwell-hiller-180637/",
+          "sourceType": "College",
+          "contentHash": "a1378addf267d88c9cbc"
+        },
         {
           "playerId": "180637",
           "source": "On3 / Corey Bender",
@@ -4041,14 +4063,14 @@
           "contentHash": "6a6c177eee44d57ecc9a"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:23.521Z",
-      "analystName": "Corey Bender",
+      "lastCheckedAt": "2026-11-17T15:05:29.612Z",
+      "analystName": "Charles Power",
       "sourceUrl": "https://www.on3.com/rivals/maxwell-hiller-180637/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:29:23.514Z",
+      "scoutingSummary": "Approved · Apr 8, 2026 Maxwell Hiller Scouted by Charles Power IOL 2027 · Football Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality. Measured in at around 6-foot-5, 305 pounds as a junior. Arm length checks in at 32 inches or a shade under. Registers as a plus athlete in the combine setting. A dominant run blocker on Friday nights. A fluid, reactive mover at the second level. Locks on defenders and imposes his will. Not uncommon to see him drive defensive linemen to the sideline. Plays with an innate edge and level of physicality. Has the movement skills to project as a high-level pass protector. High level of coordination leads to…",
+      "timestamp": "2026-11-17T15:05:29.600Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "a1378addf267d88c9cbc"
     },
     "180659": {
       "playerId": "180659",
@@ -4287,6 +4309,17 @@
           "playerId": "180930",
           "source": "On3 / Corey Bender",
           "type": "Evaluation",
+          "content": "Every recruiting class has prospects with sky-high ceilings. Some eventually become stars, while others need several years of development before",
+          "timestamp": "2026-11-17T15:05:59.373Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/ellis-mcgaskin-180930/",
+          "sourceType": "College",
+          "contentHash": "36df9ebf6dd11f01fad0"
+        },
+        {
+          "playerId": "180930",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
           "content": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
           "timestamp": "2026-07-11T05:06:57.853Z",
           "analystName": "Corey Bender",
@@ -4295,14 +4328,14 @@
           "contentHash": "f38a60fd9722ad020e98"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:05.940Z",
+      "lastCheckedAt": "2026-11-17T15:05:59.383Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/ellis-mcgaskin-180930/",
-      "scoutingSummary": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
-      "timestamp": "2026-07-11T11:29:05.932Z",
+      "scoutingSummary": "Every recruiting class has prospects with sky-high ceilings. Some eventually become stars, while others need several years of development before",
+      "timestamp": "2026-11-17T15:05:59.373Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "f38a60fd9722ad020e98"
+      "contentHash": "36df9ebf6dd11f01fad0"
     },
     "180944": {
       "playerId": "180944",
@@ -4584,8 +4617,19 @@
       "playerId": "236047",
       "playerSlug": "andrew-beard",
       "playerName": "Andrew Beard",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "236047",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:05:48.496Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/andrew-beard-236047/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
         {
           "playerId": "236047",
           "source": "On3 / Corey Bender",
@@ -4598,14 +4642,14 @@
           "contentHash": "f38a60fd9722ad020e98"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:21.294Z",
+      "lastCheckedAt": "2026-11-17T15:05:48.505Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/andrew-beard-236047/",
-      "scoutingSummary": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
-      "timestamp": "2026-07-11T11:29:21.285Z",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:05:48.496Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "f38a60fd9722ad020e98"
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "236048": {
       "playerId": "236048",
@@ -5346,8 +5390,19 @@
       "playerId": "238083",
       "playerSlug": "peyton-miller",
       "playerName": "Peyton Miller",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "238083",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:05:40.107Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/peyton-miller-238083/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
         {
           "playerId": "238083",
           "source": "On3 / Corey Bender",
@@ -5360,14 +5415,14 @@
           "contentHash": "6a6c177eee44d57ecc9a"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:19.443Z",
+      "lastCheckedAt": "2026-11-17T15:05:40.117Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/peyton-miller-238083/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:29:19.435Z",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:05:40.107Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "238097": {
       "playerId": "238097",
@@ -6627,8 +6682,19 @@
       "playerId": "239852",
       "playerSlug": "anthony-jennings",
       "playerName": "Anthony Jennings",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "239852",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:05:52.037Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/anthony-jennings-239852/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
         {
           "playerId": "239852",
           "source": "On3 / Corey Bender",
@@ -6641,14 +6707,14 @@
           "contentHash": "f38a60fd9722ad020e98"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:18.598Z",
+      "lastCheckedAt": "2026-11-17T15:05:52.045Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/anthony-jennings-239852/",
-      "scoutingSummary": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
-      "timestamp": "2026-07-11T11:29:18.590Z",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:05:52.037Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "f38a60fd9722ad020e98"
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "239907": {
       "playerId": "239907",
@@ -7876,8 +7942,19 @@
       "playerId": "241889",
       "playerSlug": "elijah-hutcheson",
       "playerName": "Elijah Hutcheson",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "241889",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:05:33.559Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/elijah-hutcheson-241889/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
         {
           "playerId": "241889",
           "source": "On3 / Corey Bender",
@@ -7890,14 +7967,14 @@
           "contentHash": "6a6c177eee44d57ecc9a"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:21.120Z",
+      "lastCheckedAt": "2026-11-17T15:05:33.569Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/elijah-hutcheson-241889/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:29:21.113Z",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:05:33.559Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "241979": {
       "playerId": "241979",
@@ -8249,8 +8326,19 @@
       "playerId": "242617",
       "playerSlug": "cyion-smith",
       "playerName": "Cyion Smith",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "242617",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The Florida Gators' matchup with Oklahoma is shaping up to be an important one on the recruiting trail too. They are preparing to welcome a loaded",
+          "timestamp": "2026-11-17T15:05:21.726Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/cyion-smith-242617/",
+          "sourceType": "College",
+          "contentHash": "eb4818e687114fdda8a1"
+        },
         {
           "playerId": "242617",
           "source": "On3 / Chad Simmons",
@@ -8263,14 +8351,14 @@
           "contentHash": "fdbcc4de1fbda921d232"
         }
       ],
-      "lastCheckedAt": "2026-07-11T05:14:39.159Z",
-      "analystName": "Chad Simmons",
-      "sourceUrl": "https://www.on3.com/rivals/",
-      "scoutingSummary": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "timestamp": "2026-07-11T05:14:39.135Z",
+      "lastCheckedAt": "2026-11-17T15:05:21.736Z",
+      "analystName": "Corey Bender",
+      "sourceUrl": "https://www.on3.com/rivals/cyion-smith-242617/",
+      "scoutingSummary": "The Florida Gators' matchup with Oklahoma is shaping up to be an important one on the recruiting trail too. They are preparing to welcome a loaded",
+      "timestamp": "2026-11-17T15:05:21.726Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "fdbcc4de1fbda921d232"
+      "contentHash": "eb4818e687114fdda8a1"
     },
     "242630": {
       "playerId": "242630",
@@ -8579,6 +8667,17 @@
           "playerId": "242853",
           "source": "On3 / Corey Bender",
           "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:06:17.824Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/raheem-floyd-242853/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
+        {
+          "playerId": "242853",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
           "content": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
           "timestamp": "2026-07-11T05:06:49.046Z",
           "analystName": "Corey Bender",
@@ -8587,14 +8686,14 @@
           "contentHash": "6a6c177eee44d57ecc9a"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:30:26.167Z",
+      "lastCheckedAt": "2026-11-17T15:06:17.834Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/raheem-floyd-242853/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:30:26.160Z",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:06:17.824Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "242888": {
       "playerId": "242888",
@@ -8935,8 +9034,19 @@
       "playerId": "243497",
       "playerSlug": "kailib-dillard",
       "playerName": "Kailib Dillard",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "243497",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:06:05.010Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/kailib-dillard-243497/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
         {
           "playerId": "243497",
           "source": "On3 / Corey Bender",
@@ -8949,14 +9059,14 @@
           "contentHash": "6a6c177eee44d57ecc9a"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:17.779Z",
+      "lastCheckedAt": "2026-11-17T15:06:05.019Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/kailib-dillard-243497/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:29:17.769Z",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:06:05.010Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "243501": {
       "playerId": "243501",
@@ -9211,8 +9321,19 @@
       "playerId": "243606",
       "playerSlug": "zahmar-tookes",
       "playerName": "Zahmar Tookes",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "243606",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:05:53.706Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/zahmar-tookes-243606/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
         {
           "playerId": "243606",
           "source": "On3 / Corey Bender",
@@ -9225,14 +9346,14 @@
           "contentHash": "6a6c177eee44d57ecc9a"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:18.977Z",
+      "lastCheckedAt": "2026-11-17T15:05:53.715Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/zahmar-tookes-243606/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:29:18.968Z",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:05:53.706Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "243642": {
       "playerId": "243642",
@@ -9444,6 +9565,17 @@
           "playerId": "243836",
           "source": "On3 / Corey Bender",
           "type": "Evaluation",
+          "content": "The Florida Gators' matchup with Oklahoma is shaping up to be an important one on the recruiting trail too. They are preparing to welcome a loaded",
+          "timestamp": "2026-11-17T15:06:14.148Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/kamauri-whitfield-243836/",
+          "sourceType": "College",
+          "contentHash": "eb4818e687114fdda8a1"
+        },
+        {
+          "playerId": "243836",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
           "content": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
           "timestamp": "2026-07-11T05:06:48.534Z",
           "analystName": "Corey Bender",
@@ -9463,14 +9595,14 @@
           "contentHash": "74a0fe0f8b215e32187b"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:50.564Z",
+      "lastCheckedAt": "2026-11-17T15:06:14.158Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/kamauri-whitfield-243836/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:29:50.557Z",
+      "scoutingSummary": "The Florida Gators' matchup with Oklahoma is shaping up to be an important one on the recruiting trail too. They are preparing to welcome a loaded",
+      "timestamp": "2026-11-17T15:06:14.148Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "eb4818e687114fdda8a1"
     },
     "243859": {
       "playerId": "243859",
@@ -9503,8 +9635,19 @@
       "playerId": "243862",
       "playerSlug": "easton-royal",
       "playerName": "Easton Royal",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "243862",
+          "source": "On3 / Charles Power",
+          "type": "Evaluation",
+          "content": "Approved · Jan 10, 2026 Easton Royal Scouted by Charles Power WR 2027 · Football Easton Royal made the most impressive individual play in a game that was a heavy defensive affair. The New Orleans native made a ridiculous one-handed grab on a well-thrown deep ball from Notre Dame quarterback commit Teddy Jarrard. Despite quality coverage from fellow five-star Joshua Dobson, Royal was able to find and bring down the football for the sensational grab. He finished the night with three catches for 46 yards and the touchdowns and was named the game’s MVP. Royal entered the week considered one of the fastest players on hand, and lived up to that reputation with is ability…",
+          "timestamp": "2026-11-17T15:06:19.152Z",
+          "analystName": "Charles Power",
+          "sourceUrl": "https://www.on3.com/rivals/easton-royal-243862/",
+          "sourceType": "College",
+          "contentHash": "61158b837b3f4b91c0eb"
+        },
         {
           "playerId": "243862",
           "source": "On3 / Sam Spiegelman",
@@ -9517,14 +9660,14 @@
           "contentHash": "b276f0d7df5f71cfc462"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:11.586Z",
-      "analystName": "Sam Spiegelman",
+      "lastCheckedAt": "2026-11-17T15:06:19.162Z",
+      "analystName": "Charles Power",
       "sourceUrl": "https://www.on3.com/rivals/easton-royal-243862/",
-      "scoutingSummary": "Lane Kiffin is closing in on a top-10 recruiting class in his first season as LSU's head coach.  The Tigers have been red-hot this summer, bolstering",
-      "timestamp": "2026-07-11T11:29:11.579Z",
+      "scoutingSummary": "Approved · Jan 10, 2026 Easton Royal Scouted by Charles Power WR 2027 · Football Easton Royal made the most impressive individual play in a game that was a heavy defensive affair. The New Orleans native made a ridiculous one-handed grab on a well-thrown deep ball from Notre Dame quarterback commit Teddy Jarrard. Despite quality coverage from fellow five-star Joshua Dobson, Royal was able to find and bring down the football for the sensational grab. He finished the night with three catches for 46 yards and the touchdowns and was named the game’s MVP. Royal entered the week considered one of the fastest players on hand, and lived up to that reputation with is ability…",
+      "timestamp": "2026-11-17T15:06:19.152Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "b276f0d7df5f71cfc462"
+      "contentHash": "61158b837b3f4b91c0eb"
     },
     "243873": {
       "playerId": "243873",
@@ -9800,8 +9943,19 @@
       "playerId": "244244",
       "playerSlug": "jackson-ballinger",
       "playerName": "Jackson Ballinger",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "244244",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The Florida Gators are back in The Swamp on Saturday evening to host Oklahoma, giving Jon Sumrall and his staff another opportunity to welcome",
+          "timestamp": "2026-11-17T15:06:03.287Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/jackson-ballinger-244244/",
+          "sourceType": "College",
+          "contentHash": "06cc1324f2d20ccd013a"
+        },
         {
           "playerId": "244244",
           "source": "On3 / Corey Bender",
@@ -9814,14 +9968,14 @@
           "contentHash": "f38a60fd9722ad020e98"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:18.786Z",
+      "lastCheckedAt": "2026-11-17T15:06:03.296Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/jackson-ballinger-244244/",
-      "scoutingSummary": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
-      "timestamp": "2026-07-11T11:29:18.779Z",
+      "scoutingSummary": "The Florida Gators are back in The Swamp on Saturday evening to host Oklahoma, giving Jon Sumrall and his staff another opportunity to welcome",
+      "timestamp": "2026-11-17T15:06:03.287Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "f38a60fd9722ad020e98"
+      "contentHash": "06cc1324f2d20ccd013a"
     },
     "244313": {
       "playerId": "244313",
@@ -10043,8 +10197,19 @@
       "playerId": "245408",
       "playerSlug": "jabios-smith",
       "playerName": "Ja'Bios Smith",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "245408",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:05:44.801Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/jabios-smith-245408/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
         {
           "playerId": "245408",
           "source": "On3 / Corey Bender",
@@ -10057,14 +10222,14 @@
           "contentHash": "91ade13b20c32414d128"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:20.547Z",
+      "lastCheckedAt": "2026-11-17T15:05:44.809Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/jabios-smith-245408/",
-      "scoutingSummary": "The Florida Gators' official visit season produced a lot of wins for the coaching staff.  Some assistants added to already strong position groups,",
-      "timestamp": "2026-07-11T11:29:20.539Z",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:05:44.801Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "91ade13b20c32414d128"
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "245412": {
       "playerId": "245412",
@@ -10820,6 +10985,17 @@
       "updates": [
         {
           "playerId": "249231",
+          "source": "On3 / Chad Simmons",
+          "type": "Evaluation",
+          "content": "Providence Day School made the trip from Charlotte to the north Georgia mountains Friday night for a matchup loaded with college prospects against",
+          "timestamp": "2026-11-17T15:06:07.101Z",
+          "analystName": "Chad Simmons",
+          "sourceUrl": "https://www.on3.com/rivals/tre-geathers-249231/",
+          "sourceType": "College",
+          "contentHash": "39d85a66ef19011af377"
+        },
+        {
+          "playerId": "249231",
           "source": "On3 / Corey Bender",
           "type": "Evaluation",
           "content": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
@@ -10830,14 +11006,14 @@
           "contentHash": "f38a60fd9722ad020e98"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:09.171Z",
-      "analystName": "Corey Bender",
+      "lastCheckedAt": "2026-11-17T15:06:07.111Z",
+      "analystName": "Chad Simmons",
       "sourceUrl": "https://www.on3.com/rivals/tre-geathers-249231/",
-      "scoutingSummary": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
-      "timestamp": "2026-07-11T11:29:09.161Z",
+      "scoutingSummary": "Providence Day School made the trip from Charlotte to the north Georgia mountains Friday night for a matchup loaded with college prospects against",
+      "timestamp": "2026-11-17T15:06:07.101Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "f38a60fd9722ad020e98"
+      "contentHash": "39d85a66ef19011af377"
     },
     "249242": {
       "playerId": "249242",
@@ -10924,8 +11100,19 @@
       "playerId": "249286",
       "playerSlug": "amare-nugent",
       "playerName": "Amare Nugent",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "249286",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:05:49.980Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/amare-nugent-249286/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
         {
           "playerId": "249286",
           "source": "On3 / Corey Bender",
@@ -10938,14 +11125,14 @@
           "contentHash": "6a6c177eee44d57ecc9a"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:16.860Z",
+      "lastCheckedAt": "2026-11-17T15:05:49.990Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/amare-nugent-249286/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:29:16.852Z",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:05:49.980Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "249287": {
       "playerId": "249287",
@@ -11638,8 +11825,19 @@
       "playerId": "251040",
       "playerSlug": "cain-van-norden",
       "playerName": "Cain Van Norden",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "251040",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "For Cain Van Norden, his senior season at Baltimore (Md.) St. Frances Academy is about more than individual development.  The 2027 Florida commit",
+          "timestamp": "2026-11-17T15:05:25.705Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/cain-van-norden-251040/",
+          "sourceType": "College",
+          "contentHash": "d1a03a95ade44828ce0b"
+        },
         {
           "playerId": "251040",
           "source": "On3 / Corey Bender",
@@ -11652,14 +11850,14 @@
           "contentHash": "6a6c177eee44d57ecc9a"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:15.630Z",
+      "lastCheckedAt": "2026-11-17T15:05:25.715Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/cain-van-norden-251040/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:29:15.622Z",
+      "scoutingSummary": "For Cain Van Norden, his senior season at Baltimore (Md.) St. Frances Academy is about more than individual development.  The 2027 Florida commit",
+      "timestamp": "2026-11-17T15:05:25.705Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "d1a03a95ade44828ce0b"
     },
     "251052": {
       "playerId": "251052",
@@ -12011,8 +12209,19 @@
       "playerId": "258942",
       "playerSlug": "tramond-collins",
       "playerName": "Tramond Collins",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "258942",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:05:43.591Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/tramond-collins-258942/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
         {
           "playerId": "258942",
           "source": "247Sports / Andrew Ivins",
@@ -12025,14 +12234,14 @@
           "contentHash": "18dcd17285c2dd3aeacc"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:45.874Z",
-      "analystName": "Andrew Ivins",
-      "sourceUrl": "https://247sports.com/Player/tramond-collins-46156157/",
-      "scoutingSummary": "s Florida Gators Hard Commit - 3/11/2026 Tramond Collins Pos WR Height 6-2 Weight 183",
-      "timestamp": "2026-07-11T11:29:45.867Z",
+      "lastCheckedAt": "2026-11-17T15:05:43.600Z",
+      "analystName": "Corey Bender",
+      "sourceUrl": "https://www.on3.com/rivals/tramond-collins-258942/",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:05:43.591Z",
       "sourceType": "College",
-      "outlet": "247Sports",
-      "contentHash": "18dcd17285c2dd3aeacc"
+      "outlet": "On3",
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "258964": {
       "playerId": "258964",
@@ -12227,8 +12436,41 @@
       "playerId": "259412",
       "playerSlug": "davin-davidson",
       "playerName": "Davin Davidson",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "259412",
+          "source": "On3 / Charles Power",
+          "type": "Projection",
+          "content": "Approved · Jun 3, 2026 Davin Davidson Scouted by Charles Power QB 2027 · Football Towering quarterback prospect with a big-time arm and intriguing upside.",
+          "timestamp": "2026-11-17T15:05:35.955Z",
+          "analystName": "Charles Power",
+          "sourceUrl": "https://www.on3.com/rivals/davin-davidson-259412/",
+          "sourceType": "College",
+          "contentHash": "c5c6f0e174b109c66bb2"
+        },
+        {
+          "playerId": "259412",
+          "source": "On3 / Charles Power",
+          "type": "Strengths",
+          "content": "The tallest top quarterback in the 2027 cycle. Measured in at 6-foot-6.5, 215 pounds with a 9.75-inch hand prior to his senior season. Touts outstanding arm strength with the ability to generate a ton of zip on passes to the intermediate and deep areas of the field. Can rip the football on a line from 30 yards out. Completed 64.6% of his passes for 2360 yards, 23 touchdowns against 6 interceptions while helping his team to a state title.…",
+          "timestamp": "2026-11-17T15:05:35.955Z",
+          "analystName": "Charles Power",
+          "sourceUrl": "https://www.on3.com/rivals/davin-davidson-259412/",
+          "sourceType": "College",
+          "contentHash": "155c9da2c8bdbbd2f0ed"
+        },
+        {
+          "playerId": "259412",
+          "source": "On3 / Charles Power",
+          "type": "Evaluation",
+          "content": "Approved · Jun 3, 2026 Davin Davidson Scouted by Charles Power QB 2027 · Football Towering quarterback prospect with a big-time arm and intriguing upside. The tallest top quarterback in the 2027 cycle. Measured in at 6-foot-6.5, 215 pounds with a 9.75-inch hand prior to his senior season. Touts outstanding arm strength with the ability to generate a ton of zip on passes to the intermediate and deep areas of the field. Can rip the football on a line from 30 yards out. Shows flashes of arm dexterity. A solid mover at his size. Completed 64.6% of his passes for 2360 yards, 23 touchdowns against 6 interceptions while helping his team to a state title.…",
+          "timestamp": "2026-11-17T15:05:35.955Z",
+          "analystName": "Charles Power",
+          "sourceUrl": "https://www.on3.com/rivals/davin-davidson-259412/",
+          "sourceType": "College",
+          "contentHash": "561520c5b32b5801545e"
+        },
         {
           "playerId": "259412",
           "source": "247Sports / Andrew Ivins",
@@ -12241,14 +12483,14 @@
           "contentHash": "d32d99a7757b124e6c8f"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:45.453Z",
-      "analystName": "Andrew Ivins",
-      "sourceUrl": "https://247sports.com/player/davin-davidson-46151041/",
-      "scoutingSummary": "s Florida Gators Hard Commit - 4/9/2026 Davin Davidson High School Sarasota (HS) Cardinal Mooney (HS) Pos QB Height 6-6.5 Weight 215",
-      "timestamp": "2026-07-11T11:29:45.447Z",
+      "lastCheckedAt": "2026-11-17T15:05:35.965Z",
+      "analystName": "Charles Power",
+      "sourceUrl": "https://www.on3.com/rivals/davin-davidson-259412/",
+      "scoutingSummary": "Approved · Jun 3, 2026 Davin Davidson Scouted by Charles Power QB 2027 · Football Towering quarterback prospect with a big-time arm and intriguing upside. The tallest top quarterback in the 2027 cycle. Measured in at 6-foot-6.5, 215 pounds with a 9.75-inch hand prior to his senior season. Touts outstanding arm strength with the ability to generate a ton of zip on passes to the intermediate and deep areas of the field. Can rip the football on a line from 30 yards out. Shows flashes of arm dexterity. A solid mover at his size. Completed 64.6% of his passes for 2360 yards, 23 touchdowns against 6 interceptions while helping his team to a state title.…",
+      "timestamp": "2026-11-17T15:05:35.955Z",
       "sourceType": "College",
-      "outlet": "247Sports",
-      "contentHash": "d32d99a7757b124e6c8f"
+      "outlet": "On3",
+      "contentHash": "561520c5b32b5801545e"
     },
     "259443": {
       "playerId": "259443",
@@ -13637,8 +13879,19 @@
       "playerId": "280816",
       "playerSlug": "tommy-douglas",
       "playerName": "Tommy Douglas",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "280816",
+          "source": "On3 / Chad Simmons",
+          "type": "Evaluation",
+          "content": "Tommy Douglas committed to Florida because he believed in Jon Sumrall, the direction of the program and how the Gators planned to use tight ends.",
+          "timestamp": "2026-11-17T15:05:55.732Z",
+          "analystName": "Chad Simmons",
+          "sourceUrl": "https://www.on3.com/rivals/tommy-douglas-280816/",
+          "sourceType": "College",
+          "contentHash": "bcb7081a9fe4be32da7e"
+        },
         {
           "playerId": "280816",
           "source": "On3 / Corey Bender",
@@ -13651,14 +13904,14 @@
           "contentHash": "c47f2b904bd48b8a10ce"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:20.763Z",
-      "analystName": "Corey Bender",
+      "lastCheckedAt": "2026-11-17T15:05:55.742Z",
+      "analystName": "Chad Simmons",
       "sourceUrl": "https://www.on3.com/rivals/tommy-douglas-280816/",
-      "scoutingSummary": "It’s another important official visit week for the Florida Gators.  Beginning Thursday, Florida will host six official visitors over the next three",
-      "timestamp": "2026-07-11T11:29:20.755Z",
+      "scoutingSummary": "Tommy Douglas committed to Florida because he believed in Jon Sumrall, the direction of the program and how the Gators planned to use tight ends.",
+      "timestamp": "2026-11-17T15:05:55.732Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "c47f2b904bd48b8a10ce"
+      "contentHash": "bcb7081a9fe4be32da7e"
     },
     "280841": {
       "playerId": "280841",
@@ -13722,6 +13975,28 @@
       "updates": [
         {
           "playerId": "280848",
+          "source": "On3 / Chad Simmons",
+          "type": "Strengths",
+          "content": "s, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Recruiting powered by RIVALS FOOTBALL RECRUITING + Florida&#x27;s the favorite for 2028 in-state DL target Josiah Taylor Chad Simmons · 46m RIVALS FOOTBALL RECRUITING + Georgia makes strong impression on elite 2028 CB Domonic Williams Jr.: &#x27;It&#x27;s like the NFL already&#x27; Chad Simmons · 1h RIVALS FOOTBALL RECRUITING + Arizona makes a strong impression on OL Seth Sullivan following his weekend official visit Greg Biggins · 12h RIVALS BASKETBALL RECRUITING 5-star PG Cayden Daughtry commits to Arkansas Joe Tipton · 12h WOMEN&#x27;S SPORTS Top 2027 recruit Haylen Ayers commits to Vanderbilt Talia Goodman · 12h View all Recruiting → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → NIL ON3 BASKETBALL + Players Era capitalizes on changing landscape, looks to bring &#x27;March to November&#x27; with new format James Fletcher III · 1d ON3 FOOTBALL Jedd Fisch proposes change to eliminate in-season contract negotiations with players Nick Schultz · 2d ON3 NIL Kirby Smart reveals approach to retaining players at Georgia in NIL era: &#x27;The proof is in the process&#x27; Nick Schultz · 2d ON3 FOOTBALL College Football TV Ratings: Tracking the Top 10 most-watched teams of the 2026 season Nick Schultz · 4d ON3 FOOTBALL Washington sells naming rights to Husky Stadium in largest naming rights partnership in college sports history Jonathan Wagner · 5d View all NIL → NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → High School powered by HIGH SCHOOL FOOTBALL Joe Tessitore, Dan Orlovsky to call Bishop Gorman-The St. James Academy game Andy Villamarzo · 5m HIGH SCHOOL FOOTBALL High School Football: Bishop Gorman, The St. James Academy set to clash for Overtime Nationals Championship Andy Villamarzo · 7m HIGH SCHOOL FOOTBALL 2026 West Virginia High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 15m HIGH SCHOOL FOOTBALL 2026 Connecticut High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 52m HIGH SCHOOL FOOTBALL Louisville 5-star WR pledge Ja’Hyde Brown putting up elite statistical numbers Andy Villamarzo · 1h View all High School → Top 10 01 New CFP Projections: Predicting the third Top 25 rankings 02 Hot Top names to know as FSU coaching search heats up 03 Arkansas State fires head coach Butch Jones 04 Why Curt Cignetti is campaigning 05 AP Poll Top 25 updates after Week 11 slate 06 Senior film revamps Rivals300 07 Staples: Jason Witten might be Oklahoma&#x27;s best choice for OC 08 Men&#x27;s AP Top 25 poll released after Week 2 09 BCS formula sets 12-team CFP bracket after Week 11 10 Heisman Poll: Updated ballots after Week 11 Advertisement Get on the radar. Verified scouting reports, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → Advertisement NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → Get the On3 Top 10 Newsletter in your inbox Email",
+          "timestamp": "2026-11-17T15:06:11.316Z",
+          "analystName": "Chad Simmons",
+          "sourceUrl": "https://www.on3.com",
+          "sourceType": "College",
+          "contentHash": "5bb3ea3430db40a95998"
+        },
+        {
+          "playerId": "280848",
+          "source": "On3 / Chad Simmons",
+          "type": "Evaluation",
+          "content": "s, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Recruiting powered by RIVALS FOOTBALL RECRUITING + Florida&#x27;s the favorite for 2028 in-state DL target Josiah Taylor Chad Simmons · 46m RIVALS FOOTBALL RECRUITING + Georgia makes strong impression on elite 2028 CB Domonic Williams Jr.: &#x27;It&#x27;s like the NFL already&#x27; Chad Simmons · 1h RIVALS FOOTBALL RECRUITING + Arizona makes a strong impression on OL Seth Sullivan following his weekend official visit Greg Biggins · 12h RIVALS BASKETBALL RECRUITING 5-star PG Cayden Daughtry commits to Arkansas Joe Tipton · 12h WOMEN&#x27;S SPORTS Top 2027 recruit Haylen Ayers commits to Vanderbilt Talia Goodman · 12h View all Recruiting → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → NIL ON3 BASKETBALL + Players Era capitalizes on changing landscape, looks to bring &#x27;March to November&#x27; with new format James Fletcher III · 1d ON3 FOOTBALL Jedd Fisch proposes change to eliminate in-season contract negotiations with players Nick Schultz · 2d ON3 NIL Kirby Smart reveals approach to retaining players at Georgia in NIL era: &#x27;The proof is in the process&#x27; Nick Schultz · 2d ON3 FOOTBALL College Football TV Ratings: Tracking the Top 10 most-watched teams of the 2026 season Nick Schultz · 4d ON3 FOOTBALL Washington sells naming rights to Husky Stadium in largest naming rights partnership in college sports history Jonathan Wagner · 5d View all NIL → NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → High School powered by HIGH SCHOOL FOOTBALL Joe Tessitore, Dan Orlovsky to call Bishop Gorman-The St. James Academy game Andy Villamarzo · 5m HIGH SCHOOL FOOTBALL High School Football: Bishop Gorman, The St. James Academy set to clash for Overtime Nationals Championship Andy Villamarzo · 7m HIGH SCHOOL FOOTBALL 2026 West Virginia High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 15m HIGH SCHOOL FOOTBALL 2026 Connecticut High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 52m HIGH SCHOOL FOOTBALL Louisville 5-star WR pledge Ja’Hyde Brown putting up elite statistical numbers Andy Villamarzo · 1h View all High School → Top 10 01 New CFP Projections: Predicting the third Top 25 rankings 02 Hot Top names to know as FSU coaching search heats up 03 Arkansas State fires head coach Butch Jones 04 Why Curt Cignetti is campaigning 05 AP Poll Top 25 updates after Week 11 slate 06 Senior film revamps Rivals300 07 Staples: Jason Witten might be Oklahoma&#x27;s best choice for OC 08 Men&#x27;s AP Top 25 poll released after Week 2 09 BCS formula sets 12-team CFP bracket after Week 11 10 Heisman Poll: Updated ballots after Week 11 Advertisement Get on the radar. Be recruited. Verified scouting reports, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → Advertisement NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → Get the On3 Top 10 Newsletter in your inbox Email",
+          "timestamp": "2026-11-17T15:06:11.316Z",
+          "analystName": "Chad Simmons",
+          "sourceUrl": "https://www.on3.com",
+          "sourceType": "College",
+          "contentHash": "4533470342fe53707dc3"
+        },
+        {
+          "playerId": "280848",
           "source": "On3 / Corey Bender",
           "type": "Evaluation",
           "content": "Florida came out of official visit season with a clearer picture of where it stands in some key recruitments. In some of those battles, the Gators",
@@ -13732,14 +14007,14 @@
           "contentHash": "3d1d5df7da2abcf99b80"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:08.060Z",
-      "analystName": "Corey Bender",
-      "sourceUrl": "https://www.on3.com/rivals/aaron-mcwilliams-280848/",
-      "scoutingSummary": "Florida came out of official visit season with a clearer picture of where it stands in some key recruitments. In some of those battles, the Gators",
-      "timestamp": "2026-07-11T11:29:08.052Z",
+      "lastCheckedAt": "2026-11-17T15:06:11.326Z",
+      "analystName": "Chad Simmons",
+      "sourceUrl": "https://www.on3.com",
+      "scoutingSummary": "s, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Recruiting powered by RIVALS FOOTBALL RECRUITING + Florida&#x27;s the favorite for 2028 in-state DL target Josiah Taylor Chad Simmons · 46m RIVALS FOOTBALL RECRUITING + Georgia makes strong impression on elite 2028 CB Domonic Williams Jr.: &#x27;It&#x27;s like the NFL already&#x27; Chad Simmons · 1h RIVALS FOOTBALL RECRUITING + Arizona makes a strong impression on OL Seth Sullivan following his weekend official visit Greg Biggins · 12h RIVALS BASKETBALL RECRUITING 5-star PG Cayden Daughtry commits to Arkansas Joe Tipton · 12h WOMEN&#x27;S SPORTS Top 2027 recruit Haylen Ayers commits to Vanderbilt Talia Goodman · 12h View all Recruiting → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → NIL ON3 BASKETBALL + Players Era capitalizes on changing landscape, looks to bring &#x27;March to November&#x27; with new format James Fletcher III · 1d ON3 FOOTBALL Jedd Fisch proposes change to eliminate in-season contract negotiations with players Nick Schultz · 2d ON3 NIL Kirby Smart reveals approach to retaining players at Georgia in NIL era: &#x27;The proof is in the process&#x27; Nick Schultz · 2d ON3 FOOTBALL College Football TV Ratings: Tracking the Top 10 most-watched teams of the 2026 season Nick Schultz · 4d ON3 FOOTBALL Washington sells naming rights to Husky Stadium in largest naming rights partnership in college sports history Jonathan Wagner · 5d View all NIL → NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → High School powered by HIGH SCHOOL FOOTBALL Joe Tessitore, Dan Orlovsky to call Bishop Gorman-The St. James Academy game Andy Villamarzo · 5m HIGH SCHOOL FOOTBALL High School Football: Bishop Gorman, The St. James Academy set to clash for Overtime Nationals Championship Andy Villamarzo · 7m HIGH SCHOOL FOOTBALL 2026 West Virginia High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 15m HIGH SCHOOL FOOTBALL 2026 Connecticut High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 52m HIGH SCHOOL FOOTBALL Louisville 5-star WR pledge Ja’Hyde Brown putting up elite statistical numbers Andy Villamarzo · 1h View all High School → Top 10 01 New CFP Projections: Predicting the third Top 25 rankings 02 Hot Top names to know as FSU coaching search heats up 03 Arkansas State fires head coach Butch Jones 04 Why Curt Cignetti is campaigning 05 AP Poll Top 25 updates after Week 11 slate 06 Senior film revamps Rivals300 07 Staples: Jason Witten might be Oklahoma&#x27;s best choice for OC 08 Men&#x27;s AP Top 25 poll released after Week 2 09 BCS formula sets 12-team CFP bracket after Week 11 10 Heisman Poll: Updated ballots after Week 11 Advertisement Get on the radar. Be recruited. Verified scouting reports, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → Advertisement NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → Get the On3 Top 10 Newsletter in your inbox Email",
+      "timestamp": "2026-11-17T15:06:11.316Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "3d1d5df7da2abcf99b80"
+      "contentHash": "4533470342fe53707dc3"
     },
     "280932": {
       "playerId": "280932",
@@ -13972,8 +14247,30 @@
       "playerId": "281368",
       "playerSlug": "aamaury-fountain",
       "playerName": "Aamaury Fountain",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "281368",
+          "source": "On3 / Charles Power",
+          "type": "Strengths",
+          "content": "Approved · May 11, 2026 Aamaury Fountain Scouted by Charles Power CB 2027 · Football Big-framed cornerback with length, coordination, and coverage instincts. Has unverified size, but listed at around 6-foot-3, 185 pounds. Has considerable length for the position. Uses his big frame and long arms to disrupt wide receivers off the line when working in press coverage. Able to reroute pass-catchers with ease. Shows smooth movement skills with the ability to flip his hips and redirect in coverage, especially for a bigger cornerback. Shows quality natural instincts when reading routes and breaking on the football.",
+          "timestamp": "2026-11-17T15:05:46.823Z",
+          "analystName": "Charles Power",
+          "sourceUrl": "https://www.on3.com/rivals/aamaury-fountain-281368/",
+          "sourceType": "College",
+          "contentHash": "36383afab578b1d2d6e4"
+        },
+        {
+          "playerId": "281368",
+          "source": "On3 / Charles Power",
+          "type": "Evaluation",
+          "content": "Approved · May 11, 2026 Aamaury Fountain Scouted by Charles Power CB 2027 · Football Big-framed cornerback with length, coordination, and coverage instincts. Has unverified size, but listed at around 6-foot-3, 185 pounds. Has considerable length for the position. Uses his big frame and long arms to disrupt wide receivers off the line when working in press coverage. Able to reroute pass-catchers with ease. Shows smooth movement skills with the ability to flip his hips and redirect in coverage, especially for a bigger cornerback. Shows quality natural instincts when reading routes and breaking on the football. Able to track and locate the ball. Physical as a run defender. Also worked at wide receiver some as…",
+          "timestamp": "2026-11-17T15:05:46.823Z",
+          "analystName": "Charles Power",
+          "sourceUrl": "https://www.on3.com/rivals/aamaury-fountain-281368/",
+          "sourceType": "College",
+          "contentHash": "a7d5378cc99200a6372c"
+        },
         {
           "playerId": "281368",
           "source": "On3 / Corey Bender",
@@ -13986,21 +14283,32 @@
           "contentHash": "6a6c177eee44d57ecc9a"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:16.246Z",
-      "analystName": "Corey Bender",
+      "lastCheckedAt": "2026-11-17T15:05:46.834Z",
+      "analystName": "Charles Power",
       "sourceUrl": "https://www.on3.com/rivals/aamaury-fountain-281368/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:29:16.238Z",
+      "scoutingSummary": "Approved · May 11, 2026 Aamaury Fountain Scouted by Charles Power CB 2027 · Football Big-framed cornerback with length, coordination, and coverage instincts. Has unverified size, but listed at around 6-foot-3, 185 pounds. Has considerable length for the position. Uses his big frame and long arms to disrupt wide receivers off the line when working in press coverage. Able to reroute pass-catchers with ease. Shows smooth movement skills with the ability to flip his hips and redirect in coverage, especially for a bigger cornerback. Shows quality natural instincts when reading routes and breaking on the football. Able to track and locate the ball. Physical as a run defender. Also worked at wide receiver some as…",
+      "timestamp": "2026-11-17T15:05:46.823Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "a7d5378cc99200a6372c"
     },
     "281377": {
       "playerId": "281377",
       "playerSlug": "elias-pearl",
       "playerName": "Elias Pearl",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "281377",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:05:31.690Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/elias-pearl-281377/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
         {
           "playerId": "281377",
           "source": "247Sports / Andrew Ivins",
@@ -14013,14 +14321,14 @@
           "contentHash": "230aad626ed60bc515f3"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:44.231Z",
-      "analystName": "Andrew Ivins",
-      "sourceUrl": "https://247sports.com/player/elias-pearl-46159350/",
-      "scoutingSummary": "s Florida Gators Hard Commit - 5/19/2026 Elias Pearl Pos WR Height 5-10 Weight 180",
-      "timestamp": "2026-07-11T11:29:44.224Z",
+      "lastCheckedAt": "2026-11-17T15:05:31.700Z",
+      "analystName": "Corey Bender",
+      "sourceUrl": "https://www.on3.com/rivals/elias-pearl-281377/",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:05:31.690Z",
       "sourceType": "College",
-      "outlet": "247Sports",
-      "contentHash": "230aad626ed60bc515f3"
+      "outlet": "On3",
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "281457": {
       "playerId": "281457",
@@ -14658,8 +14966,19 @@
       "playerId": "282819",
       "playerSlug": "cahron-wheeler",
       "playerName": "Cahron Wheeler",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "282819",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+          "timestamp": "2026-11-17T15:05:37.939Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/cahron-wheeler-282819/",
+          "sourceType": "College",
+          "contentHash": "01177e4c6fa4bb3a32e8"
+        },
         {
           "playerId": "282819",
           "source": "On3 / Corey Bender",
@@ -14672,21 +14991,32 @@
           "contentHash": "6a6c177eee44d57ecc9a"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:15.411Z",
+      "lastCheckedAt": "2026-11-17T15:05:37.948Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/cahron-wheeler-282819/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:29:15.404Z",
+      "scoutingSummary": "The updated Rivals300 rankings are here, giving another look at where the Florida Gators' 2027 recruiting class stands on the national stage.",
+      "timestamp": "2026-11-17T15:05:37.939Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "01177e4c6fa4bb3a32e8"
     },
     "283076": {
       "playerId": "283076",
       "playerSlug": "samuel-bailey",
       "playerName": "Samuel Bailey",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "283076",
+          "source": "On3 / Chad Simmons",
+          "type": "Evaluation",
+          "content": "One program could move closer to a prediction. Another has a chance to keep a priority target closer to home. A third will host a committed prospect",
+          "timestamp": "2026-11-17T15:05:23.791Z",
+          "analystName": "Chad Simmons",
+          "sourceUrl": "https://www.on3.com/rivals/samuel-bailey-283076/",
+          "sourceType": "College",
+          "contentHash": "2b957cd166da34fcfc64"
+        },
         {
           "playerId": "283076",
           "source": "On3 / Chad Simmons",
@@ -14699,14 +15029,14 @@
           "contentHash": "a4fa8ff45fe69ca52f05"
         }
       ],
-      "lastCheckedAt": "2026-07-11T05:12:42.036Z",
+      "lastCheckedAt": "2026-11-17T15:05:23.801Z",
       "analystName": "Chad Simmons",
       "sourceUrl": "https://www.on3.com/rivals/samuel-bailey-283076/",
-      "scoutingSummary": "Samuel Bailey's recruitment has exploded, and the nation's top programs are showing no signs of slowing down.  The four-star offensive tackle from",
-      "timestamp": "2026-07-11T05:12:42.022Z",
+      "scoutingSummary": "One program could move closer to a prediction. Another has a chance to keep a priority target closer to home. A third will host a committed prospect",
+      "timestamp": "2026-11-17T15:05:23.791Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "a4fa8ff45fe69ca52f05"
+      "contentHash": "2b957cd166da34fcfc64"
     },
     "283228": {
       "playerId": "283228",
@@ -14820,8 +15150,30 @@
       "playerId": "283680",
       "playerSlug": "kamarion-johnson",
       "playerName": "Kamarion Johnson",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "283680",
+          "source": "On3 / Chad Simmons",
+          "type": "Strengths",
+          "content": "s, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Recruiting powered by RIVALS FOOTBALL RECRUITING + Florida&#x27;s the favorite for 2028 in-state DL target Josiah Taylor Chad Simmons · 46m RIVALS FOOTBALL RECRUITING + Georgia makes strong impression on elite 2028 CB Domonic Williams Jr.: &#x27;It&#x27;s like the NFL already&#x27; Chad Simmons · 1h RIVALS FOOTBALL RECRUITING + Arizona makes a strong impression on OL Seth Sullivan following his weekend official visit Greg Biggins · 12h RIVALS BASKETBALL RECRUITING 5-star PG Cayden Daughtry commits to Arkansas Joe Tipton · 12h WOMEN&#x27;S SPORTS Top 2027 recruit Haylen Ayers commits to Vanderbilt Talia Goodman · 12h View all Recruiting → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → NIL ON3 BASKETBALL + Players Era capitalizes on changing landscape, looks to bring &#x27;March to November&#x27; with new format James Fletcher III · 1d ON3 FOOTBALL Jedd Fisch proposes change to eliminate in-season contract negotiations with players Nick Schultz · 2d ON3 NIL Kirby Smart reveals approach to retaining players at Georgia in NIL era: &#x27;The proof is in the process&#x27; Nick Schultz · 2d ON3 FOOTBALL College Football TV Ratings: Tracking the Top 10 most-watched teams of the 2026 season Nick Schultz · 4d ON3 FOOTBALL Washington sells naming rights to Husky Stadium in largest naming rights partnership in college sports history Jonathan Wagner · 5d View all NIL → NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → High School powered by HIGH SCHOOL FOOTBALL Joe Tessitore, Dan Orlovsky to call Bishop Gorman-The St. James Academy game Andy Villamarzo · 5m HIGH SCHOOL FOOTBALL High School Football: Bishop Gorman, The St. James Academy set to clash for Overtime Nationals Championship Andy Villamarzo · 7m HIGH SCHOOL FOOTBALL 2026 West Virginia High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 15m HIGH SCHOOL FOOTBALL 2026 Connecticut High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 52m HIGH SCHOOL FOOTBALL Louisville 5-star WR pledge Ja’Hyde Brown putting up elite statistical numbers Andy Villamarzo · 1h View all High School → Top 10 01 New CFP Projections: Predicting the third Top 25 rankings 02 Hot Top names to know as FSU coaching search heats up 03 Arkansas State fires head coach Butch Jones 04 Why Curt Cignetti is campaigning 05 AP Poll Top 25 updates after Week 11 slate 06 Senior film revamps Rivals300 07 Staples: Jason Witten might be Oklahoma&#x27;s best choice for OC 08 Men&#x27;s AP Top 25 poll released after Week 2 09 BCS formula sets 12-team CFP bracket after Week 11 10 Heisman Poll: Updated ballots after Week 11 Advertisement Get on the radar. Verified scouting reports, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → Advertisement NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → Get the On3 Top 10 Newsletter in your inbox Email",
+          "timestamp": "2026-11-17T15:05:57.881Z",
+          "analystName": "Chad Simmons",
+          "sourceUrl": "https://www.on3.com",
+          "sourceType": "College",
+          "contentHash": "5bb3ea3430db40a95998"
+        },
+        {
+          "playerId": "283680",
+          "source": "On3 / Chad Simmons",
+          "type": "Evaluation",
+          "content": "s, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Recruiting powered by RIVALS FOOTBALL RECRUITING + Florida&#x27;s the favorite for 2028 in-state DL target Josiah Taylor Chad Simmons · 46m RIVALS FOOTBALL RECRUITING + Georgia makes strong impression on elite 2028 CB Domonic Williams Jr.: &#x27;It&#x27;s like the NFL already&#x27; Chad Simmons · 1h RIVALS FOOTBALL RECRUITING + Arizona makes a strong impression on OL Seth Sullivan following his weekend official visit Greg Biggins · 12h RIVALS BASKETBALL RECRUITING 5-star PG Cayden Daughtry commits to Arkansas Joe Tipton · 12h WOMEN&#x27;S SPORTS Top 2027 recruit Haylen Ayers commits to Vanderbilt Talia Goodman · 12h View all Recruiting → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → NIL ON3 BASKETBALL + Players Era capitalizes on changing landscape, looks to bring &#x27;March to November&#x27; with new format James Fletcher III · 1d ON3 FOOTBALL Jedd Fisch proposes change to eliminate in-season contract negotiations with players Nick Schultz · 2d ON3 NIL Kirby Smart reveals approach to retaining players at Georgia in NIL era: &#x27;The proof is in the process&#x27; Nick Schultz · 2d ON3 FOOTBALL College Football TV Ratings: Tracking the Top 10 most-watched teams of the 2026 season Nick Schultz · 4d ON3 FOOTBALL Washington sells naming rights to Husky Stadium in largest naming rights partnership in college sports history Jonathan Wagner · 5d View all NIL → NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → High School powered by HIGH SCHOOL FOOTBALL Joe Tessitore, Dan Orlovsky to call Bishop Gorman-The St. James Academy game Andy Villamarzo · 5m HIGH SCHOOL FOOTBALL High School Football: Bishop Gorman, The St. James Academy set to clash for Overtime Nationals Championship Andy Villamarzo · 7m HIGH SCHOOL FOOTBALL 2026 West Virginia High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 15m HIGH SCHOOL FOOTBALL 2026 Connecticut High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 52m HIGH SCHOOL FOOTBALL Louisville 5-star WR pledge Ja’Hyde Brown putting up elite statistical numbers Andy Villamarzo · 1h View all High School → Top 10 01 New CFP Projections: Predicting the third Top 25 rankings 02 Hot Top names to know as FSU coaching search heats up 03 Arkansas State fires head coach Butch Jones 04 Why Curt Cignetti is campaigning 05 AP Poll Top 25 updates after Week 11 slate 06 Senior film revamps Rivals300 07 Staples: Jason Witten might be Oklahoma&#x27;s best choice for OC 08 Men&#x27;s AP Top 25 poll released after Week 2 09 BCS formula sets 12-team CFP bracket after Week 11 10 Heisman Poll: Updated ballots after Week 11 Advertisement Get on the radar. Be recruited. Verified scouting reports, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → Advertisement NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → Get the On3 Top 10 Newsletter in your inbox Email",
+          "timestamp": "2026-11-17T15:05:57.881Z",
+          "analystName": "Chad Simmons",
+          "sourceUrl": "https://www.on3.com",
+          "sourceType": "College",
+          "contentHash": "4533470342fe53707dc3"
+        },
         {
           "playerId": "283680",
           "source": "On3 / Corey Bender",
@@ -14834,14 +15186,14 @@
           "contentHash": "f38a60fd9722ad020e98"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:15.822Z",
-      "analystName": "Corey Bender",
-      "sourceUrl": "https://www.on3.com/rivals/kamarion-johnson-283680/",
-      "scoutingSummary": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
-      "timestamp": "2026-07-11T11:29:15.814Z",
+      "lastCheckedAt": "2026-11-17T15:05:57.890Z",
+      "analystName": "Chad Simmons",
+      "sourceUrl": "https://www.on3.com",
+      "scoutingSummary": "s, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Recruiting powered by RIVALS FOOTBALL RECRUITING + Florida&#x27;s the favorite for 2028 in-state DL target Josiah Taylor Chad Simmons · 46m RIVALS FOOTBALL RECRUITING + Georgia makes strong impression on elite 2028 CB Domonic Williams Jr.: &#x27;It&#x27;s like the NFL already&#x27; Chad Simmons · 1h RIVALS FOOTBALL RECRUITING + Arizona makes a strong impression on OL Seth Sullivan following his weekend official visit Greg Biggins · 12h RIVALS BASKETBALL RECRUITING 5-star PG Cayden Daughtry commits to Arkansas Joe Tipton · 12h WOMEN&#x27;S SPORTS Top 2027 recruit Haylen Ayers commits to Vanderbilt Talia Goodman · 12h View all Recruiting → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → NIL ON3 BASKETBALL + Players Era capitalizes on changing landscape, looks to bring &#x27;March to November&#x27; with new format James Fletcher III · 1d ON3 FOOTBALL Jedd Fisch proposes change to eliminate in-season contract negotiations with players Nick Schultz · 2d ON3 NIL Kirby Smart reveals approach to retaining players at Georgia in NIL era: &#x27;The proof is in the process&#x27; Nick Schultz · 2d ON3 FOOTBALL College Football TV Ratings: Tracking the Top 10 most-watched teams of the 2026 season Nick Schultz · 4d ON3 FOOTBALL Washington sells naming rights to Husky Stadium in largest naming rights partnership in college sports history Jonathan Wagner · 5d View all NIL → NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → High School powered by HIGH SCHOOL FOOTBALL Joe Tessitore, Dan Orlovsky to call Bishop Gorman-The St. James Academy game Andy Villamarzo · 5m HIGH SCHOOL FOOTBALL High School Football: Bishop Gorman, The St. James Academy set to clash for Overtime Nationals Championship Andy Villamarzo · 7m HIGH SCHOOL FOOTBALL 2026 West Virginia High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 15m HIGH SCHOOL FOOTBALL 2026 Connecticut High School Football Top 25 Rankings - Nov. 17 Andy Villamarzo · 52m HIGH SCHOOL FOOTBALL Louisville 5-star WR pledge Ja’Hyde Brown putting up elite statistical numbers Andy Villamarzo · 1h View all High School → Top 10 01 New CFP Projections: Predicting the third Top 25 rankings 02 Hot Top names to know as FSU coaching search heats up 03 Arkansas State fires head coach Butch Jones 04 Why Curt Cignetti is campaigning 05 AP Poll Top 25 updates after Week 11 slate 06 Senior film revamps Rivals300 07 Staples: Jason Witten might be Oklahoma&#x27;s best choice for OC 08 Men&#x27;s AP Top 25 poll released after Week 2 09 BCS formula sets 12-team CFP bracket after Week 11 10 Heisman Poll: Updated ballots after Week 11 Advertisement Get on the radar. Be recruited. Verified scouting reports, grades and exposure from the most trusted name in recruiting. Trusted by college coaches Evaluated by real scouts More exposure powered by Rivals Claim Your Profile → Team Recruiting Rankings 2027 Football Basketball Rank Team Score 01 Miami 5 13 5 93.360 02 Texas A&amp;M 3 14 6 93.298 03 Notre Dame 3 16 4 93.218 04 Oregon 1 16 9 92.493 05 Ohio State 3 14 5 92.475 View all → Advertisement NIL Valuations 01 Darian Mensah $6.5M 02 Milan Momcilovic $6M 03 Flory Bidunga $6M 04 Dante Moore $5M 05 Jeremiah Smith $5M View all → Get the On3 Top 10 Newsletter in your inbox Email",
+      "timestamp": "2026-11-17T15:05:57.881Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "f38a60fd9722ad020e98"
+      "contentHash": "4533470342fe53707dc3"
     },
     "283699": {
       "playerId": "283699",
@@ -14874,8 +15226,19 @@
       "playerId": "283921",
       "playerSlug": "devoun-kendrick",
       "playerName": "De'Voun Kendrick",
-      "playerType": "target",
+      "playerType": "commit",
       "updates": [
+        {
+          "playerId": "283921",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "The Florida Gators' matchup with Oklahoma is shaping up to be an important one on the recruiting trail too. They are preparing to welcome a loaded",
+          "timestamp": "2026-11-17T15:06:09.076Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/devoun-kendrick-283921/",
+          "sourceType": "College",
+          "contentHash": "eb4818e687114fdda8a1"
+        },
         {
           "playerId": "283921",
           "source": "On3 / Corey Bender",
@@ -14888,14 +15251,14 @@
           "contentHash": "6a6c177eee44d57ecc9a"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:17.065Z",
+      "lastCheckedAt": "2026-11-17T15:06:09.087Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/devoun-kendrick-283921/",
-      "scoutingSummary": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "timestamp": "2026-07-11T11:29:17.055Z",
+      "scoutingSummary": "The Florida Gators' matchup with Oklahoma is shaping up to be an important one on the recruiting trail too. They are preparing to welcome a loaded",
+      "timestamp": "2026-11-17T15:06:09.076Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "6a6c177eee44d57ecc9a"
+      "contentHash": "eb4818e687114fdda8a1"
     },
     "284012": {
       "playerId": "284012",
@@ -14961,6 +15324,17 @@
           "playerId": "284115",
           "source": "On3 / Corey Bender",
           "type": "Evaluation",
+          "content": "The Florida Gators are back in The Swamp on Saturday evening to host Oklahoma, giving Jon Sumrall and his staff another opportunity to welcome",
+          "timestamp": "2026-11-17T15:05:20.026Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/armani-strong-284115/",
+          "sourceType": "College",
+          "contentHash": "06cc1324f2d20ccd013a"
+        },
+        {
+          "playerId": "284115",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
           "content": "The Florida Gators have their first commitment for the 2028 cycle.  On Sunday, Hollywood (Fla.) Chaminade-Madonna 4-star wide receiver Armani Strong",
           "timestamp": "2026-07-11T05:06:53.886Z",
           "analystName": "Corey Bender",
@@ -14969,14 +15343,14 @@
           "contentHash": "a1ba6a06aa85f463fa57"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:30:09.492Z",
+      "lastCheckedAt": "2026-11-17T15:05:20.036Z",
       "analystName": "Corey Bender",
       "sourceUrl": "https://www.on3.com/rivals/armani-strong-284115/",
-      "scoutingSummary": "The Florida Gators have their first commitment for the 2028 cycle.  On Sunday, Hollywood (Fla.) Chaminade-Madonna 4-star wide receiver Armani Strong",
-      "timestamp": "2026-07-11T11:30:09.478Z",
+      "scoutingSummary": "The Florida Gators are back in The Swamp on Saturday evening to host Oklahoma, giving Jon Sumrall and his staff another opportunity to welcome",
+      "timestamp": "2026-11-17T15:05:20.026Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "a1ba6a06aa85f463fa57"
+      "contentHash": "06cc1324f2d20ccd013a"
     },
     "284123": {
       "playerId": "284123",
@@ -15590,11 +15964,11 @@
           "contentHash": "aa7c8083bf37dcbad7e6"
         }
       ],
-      "lastCheckedAt": "2026-11-12T20:06:07.350Z",
+      "lastCheckedAt": "2026-11-17T15:06:20.754Z",
       "analystName": "Corey Bender",
-      "sourceUrl": "https://www.on3.com/db/moreno-fisher-285221/",
+      "sourceUrl": "https://www.on3.com/rivals/moreno-fisher-285221/",
       "scoutingSummary": "The Florida Gators have landed another offensive lineman in the 2027 recruiting class, as Charlotte (N.C.) William Amos Hough offensive tackle",
-      "timestamp": "2026-11-12T20:06:07.340Z",
+      "timestamp": "2026-11-17T15:06:20.746Z",
       "sourceType": "College",
       "outlet": "On3",
       "contentHash": "aa7c8083bf37dcbad7e6"
@@ -15742,6 +16116,17 @@
       "updates": [
         {
           "playerId": "285808",
+          "source": "On3 / Corey Bender",
+          "type": "Evaluation",
+          "content": "For the most part, the Florida Gators' 2027 recruiting class is built.  The SEC program holds commitments from 26 prospects, and while the coaching",
+          "timestamp": "2026-11-17T15:06:12.470Z",
+          "analystName": "Corey Bender",
+          "sourceUrl": "https://www.on3.com/rivals/jaydee-lane-285808/",
+          "sourceType": "College",
+          "contentHash": "25ee0018f93f41c10138"
+        },
+        {
+          "playerId": "285808",
           "source": "On3 / Chad Simmons",
           "type": "Evaluation",
           "content": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
@@ -15752,14 +16137,14 @@
           "contentHash": "fdbcc4de1fbda921d232"
         }
       ],
-      "lastCheckedAt": "2026-07-11T11:29:46.136Z",
-      "analystName": "Chad Simmons",
-      "sourceUrl": "https://www.on3.com",
-      "scoutingSummary": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "timestamp": "2026-07-11T11:29:46.128Z",
+      "lastCheckedAt": "2026-11-17T15:06:12.479Z",
+      "analystName": "Corey Bender",
+      "sourceUrl": "https://www.on3.com/rivals/jaydee-lane-285808/",
+      "scoutingSummary": "For the most part, the Florida Gators' 2027 recruiting class is built.  The SEC program holds commitments from 26 prospects, and while the coaching",
+      "timestamp": "2026-11-17T15:06:12.470Z",
       "sourceType": "College",
       "outlet": "On3",
-      "contentHash": "fdbcc4de1fbda921d232"
+      "contentHash": "25ee0018f93f41c10138"
     },
     "285908": {
       "playerId": "285908",

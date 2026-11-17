@@ -2,6 +2,49 @@
   "version": 1,
   "events": [
     {
+      "id": "gm2_1794928184923_k7wpu",
+      "at": "2026-11-17T15:09:44.923Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "terrance-grant",
+      "fingerprint": "terrance-grant|flip|2026-11-17",
+      "source": "manual",
+      "eventType": "flip"
+    },
+    {
+      "id": "gm2_1794928184597_rdvlj",
+      "at": "2026-11-17T15:09:44.597Z",
+      "layer": "sil",
+      "action": "reject",
+      "subsystem": "intel-store",
+      "reason": "duplicate_fingerprint",
+      "fingerprint": "manual_flip_terrance-grant_2026-11-17",
+      "playerSlug": "terrance-grant"
+    },
+    {
+      "id": "gm2_1794928169445_6i4s8",
+      "at": "2026-11-17T15:09:29.445Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "terrance-grant",
+      "fingerprint": "terrance-grant|flip|2026-11-17",
+      "source": "manual",
+      "eventType": "flip"
+    },
+    {
+      "id": "gm2_1794928169102_ceuc7",
+      "at": "2026-11-17T15:09:29.102Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "terrance-grant",
+      "fingerprint": "manual_flip_terrance-grant_2026-11-17",
+      "source": "manual",
+      "eventType": "flip"
+    },
+    {
       "id": "gm2_1793903669353_gjmen",
       "at": "2026-11-05T18:34:29.353Z",
       "layer": "sil",
@@ -5225,49 +5268,7 @@
       "playerSlug": "tk-cunningham",
       "reason": "invalid_player_on_write",
       "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1783769292589_786p7",
-      "at": "2026-07-11T11:28:12.589Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "jaden-carey",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1783769292588_95ipf",
-      "at": "2026-07-11T11:28:12.588Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "jaden-carey",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1783769292562_2psvg",
-      "at": "2026-07-11T11:28:12.562Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "jamison-roberts",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1783769292560_ji2gr",
-      "at": "2026-07-11T11:28:12.560Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "jamison-roberts",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
     }
   ],
-  "updatedAt": "2026-11-05T18:34:29.353Z"
+  "updatedAt": "2026-11-17T15:09:44.923Z"
 }

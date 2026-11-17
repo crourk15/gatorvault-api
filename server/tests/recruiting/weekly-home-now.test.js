@@ -296,11 +296,11 @@ test('after the South Carolina final the Royal flip owns NOW instead of Road', (
   const now = new Date('2026-10-11T16:00:00.000Z');
   const lines = buildWeeklyHomeNowLines(now);
   assert.match(lines[0], /^Game — Texas at DKR-Texas Memorial Stadium — 12:00 PM · ABC$/);
-  assert.ok(lines.some((s) => /^News — Easton Royal flips to Florida · No\. 5$/.test(s)));
+  assert.ok(lines.some((s) => /^News — Easton Royal flips to Florida · No\. 7$/.test(s)));
   assert.ok(!lines.some((s) => /^Road —/.test(s)));
   const cats = buildWeeklyHomeNowCategories(now);
   assert.equal(cats[1].label, 'News');
-  assert.match(cats[1].items[0], /Easton Royal flips to Florida · No\. 5/);
+  assert.match(cats[1].items[0], /Easton Royal flips to Florida · No\. 7/);
 });
 
 test('after the South Carolina final NOW points at Texas on the road when no commit breaks in', () => {
@@ -382,6 +382,14 @@ test('this-week Moreno Fisher commit breaks into Home NOW News', () => {
   const news = cats.find((c) => c.key === 'news');
   assert.ok(news, 'News pillar must replace Road this week');
   assert.match(String(news.items[0] || ''), /Moreno Fisher commits to Florida/i);
+});
+
+test('this-week Terrance Grant flip breaks into Home NOW News on Vanderbilt week', () => {
+  const now = new Date('2026-11-17T18:00:00.000Z');
+  const cats = buildWeeklyHomeNowCategories(now);
+  const news = cats.find((c) => c.key === 'news');
+  assert.ok(news, 'News pillar must replace Visitors this week');
+  assert.match(String(news.items[0] || ''), /Terrance Grant flips to Florida/i);
 });
 
 test('after the Oklahoma final NOW points at Kentucky on the road', () => {
