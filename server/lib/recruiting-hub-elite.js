@@ -751,7 +751,7 @@ const HERO_CLASS_YEARS = [2026, 2027, 2028];
 
 /** 2027 hub hero — the flip has to be the first line members read. */
 const EASTON_ROYAL_HUB_SUBTITLE =
-  'Easton Royal flipped from Texas. 5-star WR, No. 5 nationally.';
+  'Easton Royal flipped from Texas. 5-star WR, No. 7 nationally.';
 
 function hubHeroSubtitle(year) {
   if (Number(year) === 2027) return EASTON_ROYAL_HUB_SUBTITLE;

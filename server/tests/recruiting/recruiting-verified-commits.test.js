@@ -32,6 +32,11 @@ test('verified 2027 UF commits are only tre-geathers, jaydee-lane, ellis-mcgaski
     true,
     'moreno-fisher committed to Florida on 2026-11-12'
   );
+  assert.equal(
+    isVerifiedHubCommit({ slug: 'terrance-grant', classYear: 2027, status: 'committed', committedTo: 'Florida' }),
+    true,
+    'terrance-grant flipped to Florida on 2026-11-17'
+  );
 });
 
 test('isFloridaCommit uses status committed for hub classes in JSON mode', () => {
@@ -146,6 +151,11 @@ test('getHubCommits 2027 includes Moreno Fisher', async () => {
   assert.equal(String(fisher.committedTo || '').toLowerCase(), 'florida');
   assert.equal(String(fisher.status || '').toLowerCase(), 'committed');
   assert.equal(Number(fisher.classYear), 2027);
+  assert.equal(
+    commits.some((p) => String(p.slug || '').toLowerCase() === 'terrance-grant'),
+    true,
+    'terrance-grant must appear as a 2027 UF commit'
+  );
   delete require.cache[require.resolve('../../lib/recruiting-store')];
   delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
 });

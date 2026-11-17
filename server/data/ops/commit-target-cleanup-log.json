@@ -2,6 +2,726 @@
   "version": 1,
   "entries": [
     {
+      "at": "2026-11-17T15:09:44.922Z",
+      "slug": "terrance-grant",
+      "name": "Terrance Grant",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:09:44.590Z",
+      "slug": "terrance-grant",
+      "name": "Terrance Grant",
+      "classYear": 2027,
+      "source": "stamp-terrance-grant-commit",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:09:44.452Z",
+      "slug": "terrance-grant",
+      "name": "Terrance Grant",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:09:29.443Z",
+      "slug": "terrance-grant",
+      "name": "Terrance Grant",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:09:29.095Z",
+      "slug": "terrance-grant",
+      "name": "Terrance Grant",
+      "classYear": 2027,
+      "source": "stamp-terrance-grant-commit",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:09:28.930Z",
+      "slug": "terrance-grant",
+      "name": "Terrance Grant",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:06:12.307Z",
+      "slug": "moreno-fisher",
+      "name": "Moreno Fisher",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:06:10.454Z",
+      "slug": "easton-royal",
+      "name": "Easton Royal",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:06:08.721Z",
+      "slug": "raheem-floyd",
+      "name": "Raheem Floyd",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:06:05.778Z",
+      "slug": "kamauri-whitfield",
+      "name": "Kamauri Whitfield",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:06:04.021Z",
+      "slug": "jaydee-lane",
+      "name": "Jaydee Lane",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:06:02.353Z",
+      "slug": "aaron-mcwilliams",
+      "name": "Aaron McWilliams",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:06:00.674Z",
+      "slug": "devoun-kendrick",
+      "name": "De'Voun Kendrick",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:58.725Z",
+      "slug": "tre-geathers",
+      "name": "Tre Geathers",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:56.593Z",
+      "slug": "kailib-dillard",
+      "name": "Kailib Dillard",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:54.751Z",
+      "slug": "jackson-ballinger",
+      "name": "Jackson Ballinger",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:51.251Z",
+      "slug": "ellis-mcgaskin",
+      "name": "Ellis McGaskin",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:49.116Z",
+      "slug": "kamarion-johnson",
+      "name": "Kamarion Johnson",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:47.380Z",
+      "slug": "tommy-douglas",
+      "name": "Tommy Douglas",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:45.429Z",
+      "slug": "zahmar-tookes",
+      "name": "Zahmar Tookes",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:43.573Z",
+      "slug": "anthony-jennings",
+      "name": "Anthony Jennings",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:41.651Z",
+      "slug": "amare-nugent",
+      "name": "Amare Nugent",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:40.099Z",
+      "slug": "andrew-beard",
+      "name": "Andrew Beard",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:38.448Z",
+      "slug": "aamaury-fountain",
+      "name": "Aamaury Fountain",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:36.464Z",
+      "slug": "jabios-smith",
+      "name": "Ja'Bios Smith",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:34.051Z",
+      "slug": "tramond-collins",
+      "name": "Tramond Collins",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:31.300Z",
+      "slug": "peyton-miller",
+      "name": "Peyton Miller",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:29.563Z",
+      "slug": "cahron-wheeler",
+      "name": "Cahron Wheeler",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:27.596Z",
+      "slug": "davin-davidson",
+      "name": "Davin Davidson",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:25.136Z",
+      "slug": "elijah-hutcheson",
+      "name": "Elijah Hutcheson",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:23.325Z",
+      "slug": "elias-pearl",
+      "name": "Elias Pearl",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:21.271Z",
+      "slug": "maxwell-hiller",
+      "name": "Maxwell Hiller",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:17.315Z",
+      "slug": "cain-van-norden",
+      "name": "Cain Van Norden",
+      "classYear": 2027,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:15.487Z",
+      "slug": "samuel-bailey",
+      "name": "Samuel Bailey",
+      "classYear": 2028,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:13.337Z",
+      "slug": "cyion-smith",
+      "name": "Cyion Smith",
+      "classYear": 2028,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T15:05:11.549Z",
+      "slug": "armani-strong",
+      "name": "Armani Strong",
+      "classYear": 2028,
+      "source": "upsert_player",
+      "removedFromBoards": [],
+      "boardResults": [
+        {
+          "removed": false,
+          "classYear": 2028,
+          "reason": "not_on_board"
+        },
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
       "at": "2026-09-28T17:42:37.636Z",
       "slug": "samuel-bailey",
       "name": "Samuel Bailey",
@@ -3289,727 +4009,7 @@
           "reason": "not_on_board"
         }
       ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.425Z",
-      "slug": "eric-singleton-jr",
-      "name": "Eric Singleton Jr.",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.407Z",
-      "slug": "jaylen-lloyd",
-      "name": "Jaylen Lloyd",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.383Z",
-      "slug": "emeka-ugorji",
-      "name": "Emeka Ugorji",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.364Z",
-      "slug": "dj-coleman",
-      "name": "DJ Coleman",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.342Z",
-      "slug": "mason-clinton",
-      "name": "Mason Clinton",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.322Z",
-      "slug": "dk-kalu",
-      "name": "DK Kalu",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.302Z",
-      "slug": "aaron-philo",
-      "name": "Aaron Philo",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.280Z",
-      "slug": "london-montgomery",
-      "name": "London Montgomery",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.259Z",
-      "slug": "eagan-boyer",
-      "name": "Eagan Boyer",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.239Z",
-      "slug": "luke-harpring",
-      "name": "Luke Harpring",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.217Z",
-      "slug": "micah-mays",
-      "name": "Micah Mays",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.196Z",
-      "slug": "cam-dooley",
-      "name": "Cam Dooley",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:06.174Z",
-      "slug": "evan-pryor",
-      "name": "Evan Pryor",
-      "classYear": 2026,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.648Z",
-      "slug": "jaydee-lane",
-      "name": "Jaydee Lane",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.621Z",
-      "slug": "aaron-mcwilliams",
-      "name": "Aaron McWilliams",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.594Z",
-      "slug": "kamauri-whitfield",
-      "name": "Kamauri Whitfield",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.566Z",
-      "slug": "devoun-kendrick",
-      "name": "De'Voun Kendrick",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.538Z",
-      "slug": "cain-van-norden",
-      "name": "Cain Van Norden",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.510Z",
-      "slug": "tre-geathers",
-      "name": "Tre Geathers",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.484Z",
-      "slug": "stive-bentley-keumajou",
-      "name": "Stive-Bentley Keumajou",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.456Z",
-      "slug": "kailib-dillard",
-      "name": "Kailib Dillard",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.428Z",
-      "slug": "jackson-ballinger",
-      "name": "Jackson Ballinger",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.400Z",
-      "slug": "ellis-mcgaskin",
-      "name": "Ellis McGaskin",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.374Z",
-      "slug": "kamarion-johnson",
-      "name": "Kamarion Johnson",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.347Z",
-      "slug": "tommy-douglas",
-      "name": "Tommy Douglas",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.319Z",
-      "slug": "zahmar-tookes",
-      "name": "Zahmar Tookes",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.292Z",
-      "slug": "anthony-jennings",
-      "name": "Anthony Jennings",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.263Z",
-      "slug": "amare-nugent",
-      "name": "Amare Nugent",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.235Z",
-      "slug": "andrew-beard",
-      "name": "Andrew Beard",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.208Z",
-      "slug": "raheem-floyd",
-      "name": "Raheem Floyd",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.181Z",
-      "slug": "aamaury-fountain",
-      "name": "Aamaury Fountain",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.153Z",
-      "slug": "jabios-smith",
-      "name": "Ja'Bios Smith",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.124Z",
-      "slug": "tramond-collins",
-      "name": "Tramond Collins",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.093Z",
-      "slug": "peyton-miller",
-      "name": "Peyton Miller",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.064Z",
-      "slug": "cahron-wheeler",
-      "name": "Cahron Wheeler",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
-    },
-    {
-      "at": "2026-07-11T11:28:05.034Z",
-      "slug": "davin-davidson",
-      "name": "Davin Davidson",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
     }
   ],
-  "updatedAt": "2026-09-28T17:42:37.636Z"
+  "updatedAt": "2026-11-17T15:09:44.922Z"
 }

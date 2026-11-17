@@ -1,17 +1,1 @@
-{
-  "ok": true,
-  "status": "ready",
-  "meta": {
-    "generatedAt": "2026-11-15T04:15:00.000Z",
-    "snapshot": true,
-    "endpoint": "ticker",
-    "year": 2027,
-    "source": "hub-runtime",
-    "cacheRev": "t20"
-  },
-  "items": [
-    "Game — Vanderbilt in the Swamp — 12:00 PM",
-    "News — Florida 21, Kentucky 14",
-    "Season — 6-4 · SEC home Saturday"
-  ]
-}
+{"ok":true,"status":"ready","meta":{"generatedAt":"2026-11-17T15:16:01.789Z","snapshot":true,"endpoint":"ticker","year":2027,"source":"hub-runtime","cacheRev":"t21"},"items":["Game — Vanderbilt in the Swamp — 12:00 PM","News — Terrance Grant flips to Florida","Season — 6-4 · SEC home Saturday"]}

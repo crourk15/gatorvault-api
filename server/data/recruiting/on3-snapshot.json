@@ -1786,6 +1786,30 @@
           "skinny": "OT · 3★ · Hough · NC",
           "sourceStatus": "Committed",
           "on3ProfileUrl": "https://www.on3.com/rivals/moreno-fisher-285221/"
+        },
+        "on3:241998": {
+          "on3Id": "241998",
+          "name": "Terrance Grant",
+          "pos": "RB",
+          "classYear": 2027,
+          "school": "DeMatha Catholic",
+          "hometownCity": "Hyattsville",
+          "hometownState": "MD",
+          "state": "MD",
+          "htWt": "5-11 / 220",
+          "stars": 3,
+          "rating": 87.37,
+          "natlRank": 732,
+          "posRank": 53,
+          "stateRank": 17,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-11-17",
+          "committedTo": "Florida",
+          "category": "recruit",
+          "skinny": "RB · 3★ · DeMatha Catholic · MD",
+          "sourceStatus": "Committed",
+          "on3ProfileUrl": "https://www.on3.com/rivals/terrance-grant-241998/"
         }
       },
       "rankings": {
@@ -5017,6 +5041,11 @@
     "moreno-fisher|florida|2026-11-12": {
       "commitDate": "2026-11-12",
       "registeredAt": "2026-11-12T20:04:19.689Z",
+      "source": "charles_editorial"
+    },
+    "terrance-grant|florida|2026-11-17": {
+      "commitDate": "2026-11-17",
+      "registeredAt": "2026-11-17T15:09:44.592Z",
       "source": "charles_editorial"
     }
   },

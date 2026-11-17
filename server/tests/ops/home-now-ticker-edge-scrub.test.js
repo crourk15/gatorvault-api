@@ -15,7 +15,7 @@ test('ticker edge strips the 1.0.29 App Store line and falls back when origin 50
   assert.match(src, /now-edge-fallback/);
   assert.match(src, /6-4 · SEC home Saturday/);
   assert.match(src, /Vanderbilt in the Swamp — 12:00 PM/);
-  assert.match(src, /Florida 21, Kentucky 14/);
+  assert.match(src, /Terrance Grant flips to Florida/);
   assert.match(src, /Kentucky at Kroger Field — 6:15 PM · ESPN/);
   assert.match(src, /Moreno Fisher commits to Florida/);
   assert.match(src, /finalUF: 7/);
@@ -49,7 +49,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the Vanderbilt week pack'
   assert.match(src, /pinVanderbiltWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'vandy-edge-62'/);
+  assert.match(src, /NOW_BUST_VALUE = 'vandy-grant-flip'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -72,7 +72,7 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /samuel\\s\+bailey/);
   assert.match(src, /florida 7,\\s\*oklahoma 23/);
   assert.match(src, /News — \$\{VANDY_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'vandy-edge-62'/);
+  assert.match(src, /NOW_BUST_VALUE = 'vandy-grant-flip'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -90,7 +90,7 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'vandy-edge-62'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'vandy-grant-flip'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
@@ -101,13 +101,13 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
   assert.doesNotMatch(src, /headers\.set\('clear-site-data'/);
 });
 
-test('recruiting page edge drops a cached 8th and stamps 5th', () => {
+test('recruiting page edge drops a cached 8th or 5th and stamps 6th', () => {
   const htmlEdge = fs.readFileSync(
     path.join(__dirname, '../../../netlify/edge-functions/hero-class-rank.js'),
     'utf8'
   );
   assert.equal(htmlEdge.includes('\u0000'), false);
-  assert.match(htmlEdge, /"classRank":"#5"/);
+  assert.match(htmlEdge, /"classRank":"#6"/);
   assert.match(htmlEdge, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(htmlEdge, /headers\.set\('clear-site-data'/);
   const toml = fs.readFileSync(path.join(__dirname, '../../../netlify.toml'), 'utf8');
