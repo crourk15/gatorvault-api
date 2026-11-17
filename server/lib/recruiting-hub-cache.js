@@ -10,19 +10,19 @@ const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
 const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 
 /** Bump when HS-only class commit metrics logic changes. */
-const HUB_METRICS_CACHE_REV = 'hs14';
+const HUB_METRICS_CACHE_REV = 'hs15';
 
 /** Bump when footprint commit/target tallies logic changes. */
-const FOOTPRINT_CACHE_REV = 'fp7';
+const FOOTPRINT_CACHE_REV = 'fp8';
 
 /**
  * Bump when commit card meta (On3 ranks / rating plate) must invalidate durable
  * /var/data hub-runtime + deploy hub-snapshot that outlive players.json syncs.
  */
-const COMMITS_CACHE_REV = 'c10';
+const COMMITS_CACHE_REV = 'c11';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
-const TICKER_CACHE_REV = 't21';
+const TICKER_CACHE_REV = 't22';
 
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
@@ -96,10 +96,21 @@ function isAugust2027ClassLine(value) {
   return commits === '26' || avg === '89.9' || avg === '89.8' || avg === '89.7';
 }
 
+/** Grant-week 28 / 61% / 90.1 plate — Van Norden decommit dropped the class to 27. */
+function isGrantWeek2027ClassLine(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  if (String(value.commits ?? '') !== '28') return false;
+  const blue = String(value.blueChip || '');
+  const avg = String(value.avgRating || '');
+  return blue === '61%' || avg === '90.1';
+}
+
 function healthyOverviewCanReplace(nest, healthy) {
   if (!healthy || typeof healthy !== 'object') return false;
   if (!nest || typeof nest !== 'object') return true;
   if (isAugust2027ClassLine(healthy) && !isAugust2027ClassLine(nest)) return false;
+  if (isGrantWeek2027ClassLine(healthy) && !isGrantWeek2027ClassLine(nest)) return false;
+  if (isGrantWeek2027ClassLine(nest) && !isGrantWeek2027ClassLine(healthy)) return true;
   const nestCount = classOverviewCommitCount(nest);
   const healthyCount = classOverviewCommitCount(healthy);
   if (healthyCount && nestCount && healthyCount < nestCount) return false;
@@ -552,14 +563,24 @@ function readHealthyClassOverview(year) {
       /* optional */
     }
   }
-  if (!isUsableClassOverviewSnapshot(healthy, y) || isAugust2027ClassLine(healthy)) {
+  if (
+    !isUsableClassOverviewSnapshot(healthy, y) ||
+    isAugust2027ClassLine(healthy) ||
+    isGrantWeek2027ClassLine(healthy)
+  ) {
     try {
       healthy = readHubDiskSnapshot('class-overview', y);
     } catch {
       healthy = null;
     }
   }
-  if (!isUsableClassOverviewSnapshot(healthy, y) || isAugust2027ClassLine(healthy)) return null;
+  if (
+    !isUsableClassOverviewSnapshot(healthy, y) ||
+    isAugust2027ClassLine(healthy) ||
+    isGrantWeek2027ClassLine(healthy)
+  ) {
+    return null;
+  }
   return healthy;
 }
 
@@ -593,7 +614,7 @@ function healOverviewNests(value, year) {
       ) {
         applyHealthyOverview(nest, healthy);
       }
-      if (!isAugust2027ClassLine(healthy)) {
+      if (!isAugust2027ClassLine(healthy) && !isGrantWeek2027ClassLine(healthy)) {
         healLockedCommitTicker(value.ticker, y, healthy.commits);
       }
     }
@@ -608,7 +629,8 @@ function healOverviewNests(value, year) {
       if (
         isUsableClassOverviewSnapshot(nest, nestYear) &&
         nestYear !== 2028 &&
-        !isAugust2027ClassLine(nest)
+        !isAugust2027ClassLine(nest) &&
+        !isGrantWeek2027ClassLine(nest)
       ) {
         continue;
       }
@@ -2153,6 +2175,8 @@ module.exports = {
   isUsableCommitsSnapshot,
   isUsableClassOverviewSnapshot,
   isUsableClassOverviewAllSnapshot,
+  isAugust2027ClassLine,
+  isGrantWeek2027ClassLine,
   healBundleFootprintNest,
   healBundleCommitsNest,
   healOverviewNests,

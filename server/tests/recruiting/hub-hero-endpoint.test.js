@@ -15,7 +15,7 @@ describe('Recruiting Hub hero endpoint payload', () => {
     assert.ok(Array.isArray(hero.ticker));
     assert.ok(hero.classOverview);
     assert.equal(hero.classOverview.classRank, '#6');
-    assert.equal(hero.classOverview.commits, '28');
+    assert.equal(hero.classOverview.commits, '27');
     assert.match(String(hero.classOverview.blueChip), /^\d+%$/);
     assert.match(String(hero.classOverview.avgRating), /^\d+\.\d$/);
     assert.ok(hero.classOverviewAll);
@@ -73,10 +73,10 @@ describe('Recruiting Hub hero endpoint payload', () => {
       ],
       classOverview: {
         classRank: '#6',
-        blueChip: '61%',
-        commits: '28',
+        blueChip: '63%',
+        commits: '27',
         commitLabel: 'Commits',
-        avgRating: '90.1',
+        avgRating: '90.2',
       },
       classOverviewAll: {
         2027: {
@@ -92,12 +92,12 @@ describe('Recruiting Hub hero endpoint payload', () => {
     assert.equal(payload.commits.length, 2);
     assert.equal(payload.commits[1].id, 'easton-royal');
     assert.equal(payload.classOverview.classRank, '#6');
-    assert.equal(payload.classOverview.blueChip, '61%');
-    assert.equal(payload.classOverview.commits, '28');
-    assert.equal(payload.classOverview.avgRating, '90.1');
+    assert.equal(payload.classOverview.blueChip, '63%');
+    assert.equal(payload.classOverview.commits, '27');
+    assert.equal(payload.classOverview.avgRating, '90.2');
     assert.equal(payload.classOverviewAll[2027].classRank, '#6');
-    assert.equal(payload.classOverviewAll[2027].commits, '28');
-    assert.equal(payload.classOverviewAll[2027].avgRating, '90.1');
+    assert.equal(payload.classOverviewAll[2027].commits, '27');
+    assert.equal(payload.classOverviewAll[2027].avgRating, '90.2');
     hubCache.remove(key);
 
     const later = {

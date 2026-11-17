@@ -64,6 +64,10 @@ describe('Keumajou enrolled on current roster', () => {
       items.some((p) => String(p.id || p.slug || '').toLowerCase() === 'terrance-grant'),
       'Terrance Grant must be a 2027 commit'
     );
+    assert.equal(
+      items.some((p) => String(p.id || p.slug || '').toLowerCase() === 'cain-van-norden'),
+      false
+    );
   });
 });
 

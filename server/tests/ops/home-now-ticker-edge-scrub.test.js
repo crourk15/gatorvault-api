@@ -76,7 +76,7 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
-  assert.match(src, /HUB_BUST_VALUE = 'class-rank-5'/);
+  assert.match(src, /HUB_BUST_VALUE = 'van-norden-27'/);
   const hubBust = src.slice(src.indexOf('function applyHubCacheBust'), src.indexOf('function isAppStoreUpdateLine'));
   assert.match(hubBust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(hubBust, /headers\.set\('clear-site-data'/);
@@ -108,6 +108,8 @@ test('recruiting page edge drops a cached 8th or 5th and stamps 6th', () => {
   );
   assert.equal(htmlEdge.includes('\u0000'), false);
   assert.match(htmlEdge, /"classRank":"#6"/);
+  assert.match(htmlEdge, /"commits":"27"/);
+  assert.match(htmlEdge, /"blueChip":"63%"/);
   assert.match(htmlEdge, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(htmlEdge, /headers\.set\('clear-site-data'/);
   const toml = fs.readFileSync(path.join(__dirname, '../../../netlify.toml'), 'utf8');
@@ -143,6 +145,34 @@ test('2027 hub edge keeps the commit list and leaves the live class line alone',
   assert.equal(pinned.data.classOverview.avgRating, '90.4');
   assert.equal(pinned.data.classOverviewAll['2027'].classRank, '#4');
   assert.equal(pinned.data.classOverviewAll['2027'].commits, '28');
+});
+
+test('2027 hub edge drops Van Norden and stamps Grant-week 28 / 61% to 27 / 63%', () => {
+  const start = src.indexOf('const EASTON_ROYAL_HUB_SUBTITLE');
+  const end = src.indexOf('function needsHubCacheBust');
+  const { pinEastonRoyalHub } = new Function(
+    `${src.slice(start, end)}; return { pinEastonRoyalHub };`
+  )();
+  const pinned = pinEastonRoyalHub(
+    {
+      commits: [
+        { id: 'cain-van-norden', name: 'Cain Van Norden' },
+        { id: 'easton-royal', name: 'Easton Royal' },
+        { id: 'terrance-grant', name: 'Terrance Grant' },
+      ],
+      classOverview: { classRank: '#6', blueChip: '61%', commits: '28', avgRating: '90.1' },
+      classOverviewAll: { 2027: { classRank: '#6', blueChip: '61%', commits: '28', avgRating: '90.1' } },
+    },
+    2027
+  );
+  assert.equal(
+    pinned.data.commits.some((p) => p.id === 'cain-van-norden'),
+    false
+  );
+  assert.equal(pinned.data.commits[0].id, 'easton-royal');
+  assert.equal(pinned.data.classOverview.commits, '27');
+  assert.equal(pinned.data.classOverview.blueChip, '63%');
+  assert.equal(pinned.data.classOverviewAll[2027].commits, '27');
 });
 
 test('schedule edge pins Vanderbilt week over an empty iOS last-good board', () => {

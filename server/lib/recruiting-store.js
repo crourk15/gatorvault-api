@@ -170,8 +170,9 @@ function isOfficialRecruitingCommit(p, classYear) {
 
 function isHubUfCommitPlayer(p, classYear) {
   if (!isHubFloridaCommitStatus(p)) return false;
-  const { isHubExternalCommitFlipTarget } = require('./recruiting-verified-commits');
+  const { isHubExternalCommitFlipTarget, isOpenUfDecommitPlayer } = require('./recruiting-verified-commits');
   if (isHubExternalCommitFlipTarget(p)) return false;
+  if (isOpenUfDecommitPlayer(p)) return false;
 
   const year = Number(classYear);
   return isOfficialRecruitingCommit(p, year);

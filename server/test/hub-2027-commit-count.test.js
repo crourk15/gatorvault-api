@@ -14,7 +14,8 @@ describe('2027 hub commit count lockstep', () => {
     assert.equal(slugs.includes('stive-bentley-keumajou'), false);
     assert.ok(slugs.includes('moreno-fisher'));
     assert.ok(slugs.includes('terrance-grant'));
-    assert.equal(countSnapshotHubCommits(2027), 28);
+    assert.equal(slugs.includes('cain-van-norden'), false);
+    assert.equal(countSnapshotHubCommits(2027), 27);
   });
 
   it('ticker, class-overview, and commit cards share the same count', async () => {
@@ -27,7 +28,7 @@ describe('2027 hub commit count lockstep', () => {
       elite.buildHubCommits(2027),
     ]);
     const n = Number(String(overview.commits || '').replace(/[^\d]/g, ''));
-    assert.equal(n, 28, `expected 28 HS commits on class overview, got ${overview.commits}`);
+    assert.equal(n, 27, `expected 27 HS commits on class overview, got ${overview.commits}`);
     assert.equal(cards.length, n);
     const locked = ticker.find((line) => /\d+\s+commits?\s+locked\s+for\s+2027/i.test(line));
     if (locked) {

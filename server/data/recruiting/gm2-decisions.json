@@ -2,6 +2,28 @@
   "version": 1,
   "events": [
     {
+      "id": "gm2_1794958501993_6kspx",
+      "at": "2026-11-17T23:35:01.993Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "cain-van-norden",
+      "fingerprint": "manual_decommit_cain-van-norden_2026-11-17",
+      "source": "manual",
+      "eventType": "decommit"
+    },
+    {
+      "id": "gm2_1794958501646_y7i3a",
+      "at": "2026-11-17T23:35:01.646Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "cain-van-norden",
+      "fingerprint": "cain-van-norden|decommit|2026-11-17",
+      "source": "manual",
+      "eventType": "decommit"
+    },
+    {
       "id": "gm2_1794928184923_k7wpu",
       "at": "2026-11-17T15:09:44.923Z",
       "layer": "sil",
@@ -5247,28 +5269,7 @@
       "playerSlug": "mekai-brown",
       "reason": "invalid_player_on_write",
       "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1783769292619_c69u7",
-      "at": "2026-07-11T11:28:12.619Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "tk-cunningham",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1783769292617_qecop",
-      "at": "2026-07-11T11:28:12.617Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "tk-cunningham",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
     }
   ],
-  "updatedAt": "2026-11-17T15:09:44.923Z"
+  "updatedAt": "2026-11-17T23:35:01.993Z"
 }

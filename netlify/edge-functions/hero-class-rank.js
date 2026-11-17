@@ -10,6 +10,10 @@ function stampRank(html) {
   next = next.split('data-hero-metric="class-rank">#8<').join('data-hero-metric="class-rank">#6<');
   next = next.split('data-hero-metric="class-rank">#5<').join('data-hero-metric="class-rank">#6<');
   next = next.split('No. 5 nationally').join('No. 7 nationally');
+  next = next.split('"commits":"28"').join('"commits":"27"');
+  next = next.split('"blueChip":"61%"').join('"blueChip":"63%"');
+  next = next.split('data-hero-metric="commits">28<').join('data-hero-metric="commits">27<');
+  next = next.split('data-hero-metric="blue-chip">61%<').join('data-hero-metric="blue-chip">63%<');
   return next;
 }
 

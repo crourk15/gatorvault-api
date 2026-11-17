@@ -64,6 +64,7 @@ function loadSnapshotCommitKeysByYear() {
 /** True when player appears on the authoritative On3 UF commit board snapshot. */
 function isOn3SnapshotUfCommit(player) {
   if (!player) return false;
+  if (isOpenUfDecommitPlayer(player)) return false;
   const year = Number(player.classYear ?? player.class_year);
   if (!Number.isFinite(year)) return false;
   const keys = loadSnapshotCommitKeysByYear().get(year);
@@ -184,6 +185,31 @@ const HUB_EXTERNAL_COMMIT_BY_SLUG = {
   'brysen-wright': 'Miami',
 };
 
+/** Open 2027 decommits — On3 team-page lag must not re-inflate the UF board. */
+const OPEN_UF_DECOMMIT_SLUGS = new Set(['cain-van-norden']);
+const OPEN_UF_DECOMMIT_ON3_IDS = new Set(['251040']);
+
+function isOpenUfDecommitPlayer(player) {
+  if (!player) return false;
+  const slug = playerSlug(player);
+  if (slug && OPEN_UF_DECOMMIT_SLUGS.has(slug)) return true;
+  if (player.on3Id != null && OPEN_UF_DECOMMIT_ON3_IDS.has(String(player.on3Id))) return true;
+  return false;
+}
+
+function applyOpenUfDecommit(player) {
+  const out = { ...player };
+  out.status = 'decommitted';
+  out.committedTo = null;
+  out.protected = false;
+  out.verifiedCommit = false;
+  if (out.on3Source === 'on3-board-sync') out.on3Source = 'charles_editorial';
+  if (out.lifecycle === 'commit') out.lifecycle = 'target';
+  if (out.pipelineState === 'committed' || out.pipelineState === 'commit') out.pipelineState = 'target';
+  if (out.ufProbability === 100) out.ufProbability = null;
+  return out;
+}
+
 function isHubExternalCommitFlipTarget(player) {
   const slug = playerSlug(player);
   return Object.prototype.hasOwnProperty.call(HUB_EXTERNAL_COMMIT_BY_SLUG, slug);
@@ -192,6 +218,7 @@ function isHubExternalCommitFlipTarget(player) {
 /** Demote unverified On3-style commits back to targets for hub classes. */
 function demoteUnverifiedHubCommit(player) {
   if (!player) return player;
+  if (isOpenUfDecommitPlayer(player)) return applyOpenUfDecommit(player);
   const year = Number(player.classYear ?? player.class_year);
   const slug = playerSlug(player);
 
@@ -437,6 +464,9 @@ module.exports = {
   looksLikeFloridaCommit,
   isHollowCommitted,
   isHubExternalCommitFlipTarget,
+  isOpenUfDecommitPlayer,
+  applyOpenUfDecommit,
+  OPEN_UF_DECOMMIT_SLUGS,
   HUB_EXTERNAL_COMMIT_BY_SLUG,
   isOn3SnapshotUfCommit,
   clearSnapshotCommitKeyCache,

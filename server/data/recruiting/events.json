@@ -1,5 +1,423 @@
 [
   {
+    "id": "evt_1794958501643_5pcabm",
+    "playerId": null,
+    "playerSlug": "cain-van-norden",
+    "eventType": "decommit",
+    "title": "Cain Van Norden decommits from Florida",
+    "detail": "Cain Van Norden decommitted from Florida (2026-11-17). On3 Corey Bender: Florida Gators part ways with 2027 DL Cain Van Norden / 2027 DL Cain Van Norden de-commits from Florida. Hayes Fawcett. Class now 27 commitments.",
+    "skinny": "DL · 3★ · St. Frances Academy · MD",
+    "classYear": 2027,
+    "payload": {
+      "player": {
+        "id": "cain-van-norden",
+        "slug": "cain-van-norden",
+        "name": "Cain Van Norden",
+        "pos": "DL",
+        "classYear": 2027,
+        "school": "St. Frances Academy",
+        "htWt": "6-7 / 299",
+        "stars": 3,
+        "rating": 87.36666666666666,
+        "ratingOverride": null,
+        "vaultGrade": null,
+        "vaultGradeUpdatedAt": null,
+        "natlRank": 737,
+        "posRank": 86,
+        "stateRank": 18,
+        "inState": false,
+        "category": "recruit",
+        "status": "decommitted",
+        "committedTo": null,
+        "fromSchool": null,
+        "commitDate": "2026-05-15",
+        "skinny": "DL · 3★ · St. Frances Academy · MD",
+        "profileNote": "Cain Van Norden decommitted from Florida on November 17, 2026. 2027 DL, Bishop McNamara / St. Frances Academy (District Heights, MD), 6-7 / 299. On3 Corey Bender; Hayes Fawcett. Class now 27.",
+        "on3Id": 251040,
+        "on3Slug": "cain-van-norden-251040",
+        "on3ProfileUrl": "https://www.on3.com/rivals/cain-van-norden-251040/",
+        "on3Source": "charles_editorial",
+        "boardSource": null,
+        "protected": false,
+        "verifiedCommit": false,
+        "rivalsLastPrediction": null,
+        "rivalsAnalyst": null,
+        "rivalsConfidence": null,
+        "rivalsArticleUrl": null,
+        "ufOvStatus": null,
+        "ufOvCancelledAt": null,
+        "nextVisitSchool": null,
+        "visitStart": null,
+        "visitEnd": null,
+        "starsDisplay": "★★★",
+        "headliner": false,
+        "ufProbability": null,
+        "fitScore": null,
+        "staff_lead_id": "chris-prescott",
+        "secondary_recruiter_id": null,
+        "hometownCity": "District Heights",
+        "hometownState": "MD",
+        "stateFips": "24",
+        "pinLat": 39.063946,
+        "pinLng": -76.802101,
+        "nilValue": null,
+        "nilEstimate": null,
+        "nilSource": null,
+        "competitors": [
+          {
+            "school": "Virginia Tech Hokies",
+            "score": null,
+            "source": "on3",
+            "updatedAt": "2026-07-11T11:28:23.122Z",
+            "trend": "flat"
+          },
+          {
+            "school": "Ole Miss Rebels",
+            "score": null,
+            "source": "on3",
+            "updatedAt": "2026-07-11T11:28:23.122Z",
+            "trend": "flat"
+          },
+          {
+            "school": "Oklahoma Sooners",
+            "score": null,
+            "source": "on3",
+            "updatedAt": "2026-07-11T11:28:23.122Z",
+            "trend": "flat"
+          },
+          {
+            "school": "Georgia Bulldogs",
+            "score": null,
+            "source": "on3",
+            "updatedAt": "2026-07-11T11:28:23.122Z",
+            "trend": "flat"
+          },
+          {
+            "school": "Nebraska Cornhuskers",
+            "score": null,
+            "source": "on3",
+            "updatedAt": "2026-07-11T11:28:23.122Z",
+            "trend": "flat"
+          },
+          {
+            "school": "Virginia Tech",
+            "score": 25.8,
+            "source": "on3",
+            "updatedAt": "2026-08-14T00:02:42.267Z",
+            "trend": "flat"
+          },
+          {
+            "school": "Ole Miss",
+            "score": 22.1,
+            "source": "on3",
+            "updatedAt": "2026-08-14T00:02:42.267Z",
+            "trend": "flat"
+          }
+        ],
+        "offers": [
+          {
+            "school": "Virginia Tech Hokies",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Ole Miss Rebels",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Oklahoma Sooners",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Georgia Bulldogs",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Nebraska Cornhuskers",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Maryland Terrapins",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Syracuse Orange",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Rutgers Scarlet Knights",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Michigan State Spartans",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "USF Bulls",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Connecticut Huskies",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Georgia State Panthers",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "James Madison Dukes",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Temple Owls",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Memphis Tigers",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Delaware Fightin' Blue Hens",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Massachusetts Minutemen",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Georgetown Hoyas",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Wake Forest Demon Deacons",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          }
+        ],
+        "offerList": [
+          {
+            "school": "Virginia Tech Hokies",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Ole Miss Rebels",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Oklahoma Sooners",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Georgia Bulldogs",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Nebraska Cornhuskers",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Maryland Terrapins",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Syracuse Orange",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Rutgers Scarlet Knights",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Michigan State Spartans",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "USF Bulls",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Connecticut Huskies",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Georgia State Panthers",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "James Madison Dukes",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Temple Owls",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Memphis Tigers",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Delaware Fightin' Blue Hens",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Massachusetts Minutemen",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Georgetown Hoyas",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          },
+          {
+            "school": "Wake Forest Demon Deacons",
+            "offerType": "Offered",
+            "date": null,
+            "source": "on3"
+          }
+        ],
+        "visits": [
+          {
+            "school": "Florida",
+            "visitType": "unofficial_visit",
+            "date": "Friday, June 19, 2026",
+            "source": "on3"
+          },
+          {
+            "school": "Florida",
+            "visitType": "official_visit",
+            "date": "Thursday, June 4, 2026",
+            "source": "on3"
+          },
+          {
+            "school": "Florida",
+            "visitType": "unofficial_visit",
+            "date": "Tuesday, April 7, 2026",
+            "source": "on3"
+          },
+          {
+            "school": "Florida",
+            "visitType": "unofficial_visit",
+            "date": "2026-06-19",
+            "source": "on3"
+          },
+          {
+            "school": "Ole Miss Rebels",
+            "visitType": "official_visit",
+            "date": "2026-06-12",
+            "source": "on3"
+          },
+          {
+            "school": "Florida",
+            "visitType": "official_visit",
+            "date": "2026-06-04",
+            "source": "on3"
+          },
+          {
+            "school": "Virginia Tech Hokies",
+            "visitType": "official_visit",
+            "date": "2026-05-29",
+            "source": "on3"
+          },
+          {
+            "school": "Florida",
+            "visitType": "unofficial_visit",
+            "date": "2026-04-07",
+            "source": "on3"
+          }
+        ],
+        "ufRpmPct": null,
+        "updatedAt": "2026-11-17T23:35:01.556Z",
+        "state": "MD",
+        "displayRating": 87.36666666666666,
+        "ratingIsOverride": false
+      },
+      "verifiedDecommit": true,
+      "verification": {
+        "sourceType": "beat_writer",
+        "source": "beat_writer",
+        "explicitDecommit": true,
+        "previousCommit": "Florida",
+        "currentCommit": "Open",
+        "sourceUrl": "https://www.on3.com/teams/florida-gators/news/florida-gators-part-ways-with-2027-dl-cain-van-norden/",
+        "detail": "Cain Van Norden decommitted from Florida (2026-11-17). On3 Corey Bender: Florida Gators part ways with 2027 DL Cain Van Norden / 2027 DL Cain Van Norden de-commits from Florida. Hayes Fawcett. Class now 27 commitments."
+      },
+      "intelFingerprint": "251040|decommit|"
+    },
+    "source": "manual",
+    "createdAt": "2026-11-17T23:35:01.643Z"
+  },
+  {
     "id": "evt_1794928169444_ighe8b",
     "playerId": null,
     "playerSlug": "terrance-grant",

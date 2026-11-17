@@ -690,7 +690,7 @@ function pinVanderbiltWeek(data) {
   return { data: next, changed: true };
 }
 const HUB_BUST_COOKIE = 'gv-hub-bust';
-const HUB_BUST_VALUE = 'class-rank-5';
+const HUB_BUST_VALUE = 'van-norden-27';
 
 function needsNowCacheBust(request) {
   const cookie = request?.headers?.get?.('cookie') || '';
@@ -955,6 +955,28 @@ function leadCommitList(items) {
   return { items: next, changed: JSON.stringify(next) !== JSON.stringify(items) };
 }
 
+function dropVanNordenCommit(items) {
+  if (!Array.isArray(items)) return { items, changed: false };
+  const next = items.filter((row) => String(row?.id || row?.slug || '').toLowerCase() !== 'cain-van-norden');
+  return { items: next, changed: next.length !== items.length };
+}
+
+function stampGrantWeekClassLine(overview) {
+  if (!overview || typeof overview !== 'object') return { overview, changed: false };
+  if (String(overview.commits ?? '') !== '28') return { overview, changed: false };
+  const blue = String(overview.blueChip || '');
+  const avg = String(overview.avgRating || '');
+  if (blue !== '61%' && avg !== '90.1') return { overview, changed: false };
+  return {
+    overview: {
+      ...overview,
+      commits: '27',
+      ...(blue === '61%' ? { blueChip: '63%' } : {}),
+    },
+    changed: true,
+  };
+}
+
 /** iOS URLCache can keep the August 2027 board. Royal leads the live class. */
 function pinEastonRoyalHub(data, year) {
   if (!data || typeof data !== 'object') return { data, changed: false };
@@ -969,10 +991,26 @@ function pinEastonRoyalHub(data, year) {
   }
   for (const key of ['commits', 'items']) {
     if (!Array.isArray(out[key]) || !out[key].length || typeof out[key][0] !== 'object') continue;
-    const led = leadCommitList(out[key]);
-    if (led.changed) {
+    const dropped = dropVanNordenCommit(out[key]);
+    const led = leadCommitList(dropped.items);
+    if (dropped.changed || led.changed) {
       out[key] = led.items;
       changed = true;
+    }
+  }
+  const stamped = stampGrantWeekClassLine(out.classOverview);
+  if (stamped.changed) {
+    out.classOverview = stamped.overview;
+    changed = true;
+  }
+  if (out.classOverviewAll && typeof out.classOverviewAll === 'object') {
+    const key = out.classOverviewAll[2027] != null ? 2027 : '2027';
+    if (out.classOverviewAll[key]) {
+      const nest = stampGrantWeekClassLine(out.classOverviewAll[key]);
+      if (nest.changed) {
+        out.classOverviewAll = { ...out.classOverviewAll, [key]: nest.overview };
+        changed = true;
+      }
     }
   }
   return { data: out, changed };
