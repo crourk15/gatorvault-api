@@ -247,7 +247,9 @@ async function demoteUnverifiedHubCommitsInStore() {
 
 async function syncBoardCommitsToPlayers(commits) {
   let synced = 0;
+  const { isOpenUfDecommitPlayer } = require('./recruiting-verified-commits');
   for (const p of commits || []) {
+    if (isOpenUfDecommitPlayer(p)) continue;
     const existing = await findExistingPlayer(p);
     const slug = existing?.slug || store.slugify(p.name);
     await store.upsertPlayer({
@@ -796,7 +798,10 @@ async function runOn3IngestInner(options = {}) {
   result.knownCommitFingerprints = fingerprintCount;
 
   for (const year of classYears) {
-    const commits = dropCurrentRosterFutureClass(live.boards[year] || [], year);
+    const { isOpenUfDecommitPlayer } = require('./recruiting-verified-commits');
+    const commits = dropCurrentRosterFutureClass(live.boards[year] || [], year).filter(
+      (p) => !isOpenUfDecommitPlayer(p)
+    );
     const currMap = indexCommits(commits);
     const prevMap = (snapshot.years[year] && snapshot.years[year].commits) || {};
     const prevRank = snapshot.years[year] && snapshot.years[year].rankings;

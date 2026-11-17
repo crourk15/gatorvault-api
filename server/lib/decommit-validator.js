@@ -109,6 +109,12 @@ async function findPlayerRecord(player) {
 async function isOnDecommitWhitelist(player, existingPlayer) {
   const record = existingPlayer || (await findPlayerRecord(player));
   if (!record) return false;
+  try {
+    const { isOpenUfDecommitPlayer } = require('./recruiting-verified-commits');
+    if (isOpenUfDecommitPlayer(player) || isOpenUfDecommitPlayer(record)) return true;
+  } catch {
+    /* optional */
+  }
   if (store.isFloridaCommit(record)) return true;
   if (record.category === 'target') return true;
   if (record.category === 'recruit' && String(record.status || '').toLowerCase() === 'committed') {

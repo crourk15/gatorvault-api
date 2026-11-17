@@ -82,7 +82,8 @@ function getSnapshotHubCommits(classYear) {
   const rows = Object.values(bucket).map((entry) => snapshotEntryToPlayer(entry, year));
   try {
     const { isCurrentRosterFutureClassRecruit } = require('./recruiting-blocked-players');
-    return rows.filter((p) => !isCurrentRosterFutureClassRecruit(p));
+    const { isOpenUfDecommitPlayer } = require('./recruiting-verified-commits');
+    return rows.filter((p) => !isCurrentRosterFutureClassRecruit(p) && !isOpenUfDecommitPlayer(p));
   } catch {
     return rows;
   }
