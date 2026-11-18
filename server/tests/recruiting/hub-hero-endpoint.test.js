@@ -24,7 +24,7 @@ describe('Recruiting Hub hero endpoint payload', () => {
     assert.equal(hero.footprint, undefined);
   });
 
-  it('cached 2027 hub leads with Easton Royal and names the flip', () => {
+  it('cached 2027 hub names the Royal flip and keeps national-rank commit order', () => {
     const hero = pinEastonRoyalHubSurface(
       {
         title: 'Florida Recruiting',
@@ -45,7 +45,8 @@ describe('Recruiting Hub hero endpoint payload', () => {
       },
       2027
     );
-    assert.equal(bundle.commits[0].id, 'easton-royal');
+    assert.equal(bundle.commits[0].id, 'maxwell-hiller');
+    assert.equal(bundle.commits[1].id, 'easton-royal');
     assert.equal(bundle.movementFeed[0].id, 'commit-easton-royal');
 
     const again = pinEastonRoyalHubSurface(bundle, 2027);
@@ -153,7 +154,8 @@ describe('Recruiting Hub hero endpoint payload', () => {
       2027
     );
     assert.equal(Array.isArray(bundle.commits), true);
-    assert.equal(bundle.commits[0].id, 'easton-royal');
+    assert.equal(bundle.commits[0].id, 'maxwell-hiller');
+    assert.equal(bundle.commits[1].id, 'easton-royal');
     assert.equal(bundle.classOverview.classRank, '#4');
     assert.equal(bundle.classOverview.blueChip, '70%');
     assert.equal(bundle.classOverview.commits, '28');

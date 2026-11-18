@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] 2027 commit cards on web/API are On3 Industry national-rank order (Hiller #4, then Royal #7). Royal-first pin is off the API cache and Netlify edge. Hub bust `commits-natl-rank`. Cache rev `c12`. API + Netlify after deploy — no Codemagic. Reopen Recruiting 2027 once. Installed app JS still leads Royal until the bake row.
 - [x] Cain Van Norden (2027 DL) decommitted Nov 17 (On3 Corey Bender / Hayes Fawcett). Off the 2027 board. Live hub is **#6 / 27 / 63% / 90.2**. Grant stays. Cache rev `hs15` / `c11` / `t22` / `fp8` so durable 28 / 61% cannot paint over live 27. Hub bust `van-norden-27`. Home NOW News stays Terrance Grant this Vanderbilt week. API + Netlify after deploy — no Codemagic. Reopen Recruiting 2027 once.
 - [x] Terrance Grant profile is GV ready: DeMatha senior Hudl sit (`filmWatched: true`), Vault Scouting SHOW (Pacheco comp), prepared-meal full-profile stamp. Jersey #3. API after Render — no Codemagic. Reopen his profile once.
 - [x] Terrance Grant (2027 RB, DeMatha / Hyattsville MD) flipped Maryland → Florida on Nov 17. Hub was 28 / 61% / 90.1 at On3 Industry **#6** before the Van Norden decommit later that day. Home NOW News is still the Grant flip this Vanderbilt week. Edge one-shot busts `gv-now-bust=vandy-grant-flip` so iOS last-good Kentucky score / Fisher does not keep News. API + Netlify after deploy — no Codemagic. Reopen Recruiting 2027 and Home once.
@@ -269,6 +270,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-11-17 | Recruiting 2027 commit cards still lead with Easton Royal. **Live web/API is On3 Industry national-rank order (Hiller #4, then Royal #7) after Render + Netlify.** | `EliteCommitBoard.tsx` in the binary still calls `leadWithEastonRoyal`. Approved builds reorder the live list until this bake. | this PR |
 | 2026-11-17 | Recruiting first paint can still show #6 / 28 / 61% with Cain Van Norden. **Live hub is #6 / 27 / 63% / 90.2 after Render, Van Norden off the board.** | `recruiting-hub-hero-seed.json` and `recruiting-hub-bundle-seed.json` in the binary. Approved builds can still first-paint the Grant-week 28-commit line until this bake; a live fetch after hub bust `van-norden-27` already has 27. | this PR |
 | 2026-11-17 | Recruiting first paint can still show #5 / 27 / 67% and no Terrance Grant. **Live hub is #6 / 27 / 63% with Grant after Render.** | `recruiting-hub-hero-seed.json` and `recruiting-hub-bundle-seed.json` in the binary. Approved builds can still first-paint the Fisher-week class line until this bake; a live fetch after `gv-now-bust=vandy-grant-flip` already has Grant / #6. | this PR |
 | 2026-11-12 | FutureCast first paint can still show Brysen Wright on Chase. **Live HP / master-board drop him after Render.** | `futurecast-lab-seed.json` in the binary still had the Sept Wright row until this bake. Approved builds can still first-paint Wright until live HP lands. | this PR |

@@ -10,37 +10,52 @@ type Props = {
   year?: number;
 };
 
-/** October 11, 2026 Florida flip. Stale first-paint boards omit him; the live list leads with him. */
+/** Stale first-paint boards can omit him; insert at national rank, never first. */
 const EASTON_ROYAL_COMMIT: RhHubCommit = {
   id: 'easton-royal',
   name: 'Easton Royal',
   position: 'WR',
-  rating: '98.4',
-  rankNote: '5★ WR · New Orleans, LA · #5 natl · #1 WR · #1 LA',
-  metaLine: '5★ WR · New Orleans, LA · #5 natl · #1 WR · #1 LA',
+  rating: '98.3',
+  rankNote: '5★ WR · New Orleans, LA · #7 natl · #1 WR · #1 LA',
+  metaLine: '5★ WR · New Orleans, LA · #7 natl · #1 WR · #1 LA',
   skinny:
-    'Easton Royal flipped from Texas to Florida. 5-star WR, No. 5 nationally, No. 1 at the position.',
+    'Easton Royal flipped from Texas to Florida. 5-star WR, No. 7 nationally, No. 1 at the position.',
   commitDate: 'Oct 11, 2026',
   statusBadge: 'Committed',
   profileUrl: '/vault/recruiting/player/easton-royal',
   enrolled: false,
   inState: false,
   stars: 5,
+  natlRank: 7,
 };
 
+function commitNatlRank(row: RhHubCommit | null | undefined): number {
+  const n = Number(row?.natlRank);
+  if (Number.isFinite(n) && n > 0) return n;
+  const m = String(row?.rankNote || row?.metaLine || '').match(/#(\d+)\s+natl/i);
+  if (m) return Number(m[1]);
+  return 9999;
+}
+
+/** Commit cards paint in On3 Industry national-rank order. */
+export function sortCommitsByNatlRank(year: number, rows: RhHubCommit[] | null | undefined): RhHubCommit[] {
+  const list = Array.isArray(rows) ? [...rows] : [];
+  if (Number(year) === 2027 && !list.some((row) => String(row?.id || '').toLowerCase() === 'easton-royal')) {
+    list.push(EASTON_ROYAL_COMMIT);
+  }
+  return list.sort((a, b) => commitNatlRank(a) - commitNatlRank(b) || String(a.name || '').localeCompare(String(b.name || '')));
+}
+
+/** @deprecated use sortCommitsByNatlRank — Royal is #7, not the first card. */
 export function leadWithEastonRoyal(year: number, rows: RhHubCommit[] | null | undefined): RhHubCommit[] {
-  const list = Array.isArray(rows) ? rows : [];
-  if (Number(year) !== 2027) return list;
-  const rest = list.filter((row) => String(row?.id || '').toLowerCase() !== 'easton-royal');
-  const existing = list.find((row) => String(row?.id || '').toLowerCase() === 'easton-royal');
-  return [existing ?? EASTON_ROYAL_COMMIT, ...rest];
+  return sortCommitsByNatlRank(year, rows);
 }
 
 export function EliteCommitBoard(_props: Props = {}): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
   const year = _props.year ?? activeYear;
   const selectCommits = useCallback(
-    (b: { commits: RhHubCommit[] }) => leadWithEastonRoyal(year, b.commits),
+    (b: { commits: RhHubCommit[] }) => sortCommitsByNatlRank(year, b.commits),
     [year]
   );
   const fetchCommits = useCallback((y: number) => fetchRecruitingHubCommits(y), []);
@@ -69,7 +84,7 @@ export function EliteCommitBoard(_props: Props = {}): React.ReactElement {
         </section>
       ) : (
         <section className="rh-commit-grid" data-testid={`rh-elite-commit-board-${year}`}>
-          {leadWithEastonRoyal(year, data).map((c) => (
+          {sortCommitsByNatlRank(year, data).map((c) => (
             <EliteCommitCard key={c.id} commit={c} year={year} />
           ))}
         </section>
