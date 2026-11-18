@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<!-- Phone form for Log bet. The vault site does not serve this file. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Log bet</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #090909; color: #f4f1ea; font: 17px/1.35 -apple-system, BlinkMacSystemFont, sans-serif; }
+  main { max-width: 440px; margin: 0 auto; padding: 22px 18px 48px; }
+  .eyebrow { margin: 0; color: #a39b8d; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+  h1 { margin: 10px 0 0; font-size: 34px; line-height: 1.05; letter-spacing: -0.03em; }
+  .game { margin: 8px 0 0; color: #d8d2c8; font-size: 18px; }
+  .sheet { margin: 18px 0 0; border-top: 1px solid #2b2b2b; }
+  .row { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid #2b2b2b; }
+  .row span { color: #a39b8d; }
+  .row b { font-weight: 650; font-variant-numeric: tabular-nums; }
+  label { display: block; margin: 22px 0 8px; color: #d8d2c8; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
+  input { width: 100%; box-sizing: border-box; font-size: 28px; padding: 14px 12px; border-radius: 12px; border: 1px solid #343434; background: #121212; color: white; }
+  .signs { display: flex; gap: 8px; margin-top: 8px; }
+  .signs button { flex: 1; font: 700 18px/1 -apple-system, BlinkMacSystemFont, sans-serif; padding: 16px 8px; border-radius: 12px; border: 1px solid #343434; background: #121212; color: #f4f1ea; }
+  .signs button.on { border-color: #f4f1ea; background: #f4f1ea; color: #111; }
+  .box { margin-top: 16px; min-height: 96px; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #343434; background: #121212; color: #d8d2c8; }
+  .box strong { font-size: 28px; letter-spacing: 0.08em; }
+  .box span { font-size: 22px; font-variant-numeric: tabular-nums; }
+  .box.green { border-color: #86efac; background: rgba(34, 197, 94, 0.16); color: #86efac; }
+  .box.red { border-color: #fca5a5; background: rgba(239, 68, 68, 0.16); color: #fca5a5; }
+  #save { width: 100%; margin-top: 16px; font: 700 18px/1 -apple-system, BlinkMacSystemFont, sans-serif; padding: 16px 8px; border-radius: 12px; border: 0; background: #f4f1ea; color: #111; }
+  #save:disabled { opacity: 0.55; }
+  #saved { min-height: 24px; margin: 12px 0 0; font-size: 17px; }
+  .help { margin: 14px 0 0; color: #8d877c; font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow" id="meta"></p>
+  <h1 id="line"></h1>
+  <p class="game" id="game"></p>
+  <section class="sheet" id="sheet"></section>
+  <label for="odds">Hard Rock odds</label>
+  <input id="odds" inputmode="decimal" autocomplete="off" autocapitalize="off" placeholder="110" enterkeyhint="done">
+  <div class="signs">
+    <button type="button" id="minus">Minus</button>
+    <button type="button" id="plus">Plus</button>
+  </div>
+  <div class="box" id="box"><strong id="mark">—</strong><span id="pct"></span></div>
+  <label for="stake">Stake</label>
+  <input id="stake" inputmode="decimal" value="10" autocomplete="off">
+  <button type="button" id="save">Log placed bet</button>
+  <p id="saved"></p>
+  <p class="help">Minus is a price like -110. Green means that price beats Pinnacle. The stake starts at $10.</p>
+</main>
+<script>
+function param(name) {
+  var hash = new URLSearchParams(String(location.hash || "").replace(/^#/, ""));
+  var fromHash = hash.get(name);
+  if (fromHash) return fromHash;
+  var search = String(location.search || "").replace(/^\?/, "");
+  var cut = search.lastIndexOf("?");
+  var query = cut >= 0 ? search.slice(cut + 1) : search;
+  return new URLSearchParams(query).get(name) || "";
+}
+function toDecimal(raw) {
+  var text = String(raw || "").trim().replace(/\s/g, "").replace(/[−–—]/g, "-");
+  if (!text || text === "+" || text === "-") return null;
+  var n = Number(text);
+  if (!isFinite(n)) return null;
+  if (text.indexOf(".") >= 0 && n > 1 && n < 100) return n;
+  if (n >= 100) return n / 100 + 1;
+  if (n <= -100) return 100 / Math.abs(n) + 1;
+  return null;
+}
+function american(decimal) {
+  if (!isFinite(decimal) || decimal <= 1) return "";
+  if (decimal >= 2) return "+" + Math.round((decimal - 1) * 100);
+  return "-" + Math.round(100 / (decimal - 1));
+}
+function addRow(label, value) {
+  if (!value) return;
+  var row = document.createElement("div");
+  row.className = "row";
+  var name = document.createElement("span");
+  name.textContent = label;
+  var price = document.createElement("b");
+  price.textContent = value;
+  row.appendChild(name);
+  row.appendChild(price);
+  document.getElementById("sheet").appendChild(row);
+}
+var nvp = Number(param("nvp"));
+var pin = Number(param("pin"));
+var hr = Number(param("hr"));
+var home = param("home");
+var away = param("away");
+var timing = param("timing") || "Pre-match";
+document.getElementById("meta").textContent = [param("period"), param("market"), timing].filter(Boolean).join(" · ");
+document.getElementById("line").textContent = param("line") || "Log bet";
+document.getElementById("game").textContent = (away && home) ? (away + " vs " + home) : "";
+if (isFinite(nvp) && nvp > 1) addRow("Fair price", american(nvp) + " (" + nvp.toFixed(2) + ")");
+if (isFinite(pin) && pin > 1) addRow("Pinnacle", american(pin) + " (" + pin.toFixed(2) + ")");
+if (isFinite(hr) && hr > 1) addRow("Hard Rock at alert", american(hr) + " (" + hr.toFixed(2) + ")");
+var input = document.getElementById("odds");
+var minus = document.getElementById("minus");
+var plus = document.getElementById("plus");
+var box = document.getElementById("box");
+var mark = document.getElementById("mark");
+var pct = document.getElementById("pct");
+function oddsBody(raw) {
+  return String(raw || "").replace(/[−–—]/g, "-").replace(/\s/g, "").replace(/^[+-]/, "");
+}
+function setSign(sign) {
+  var body = oddsBody(input.value);
+  input.value = body ? sign + body : sign;
+  paint();
+}
+function paint() {
+  box.className = "box";
+  var shown = String(input.value || "").trim().charAt(0);
+  minus.className = shown === "-" || shown === "−" ? "on" : "";
+  plus.className = shown === "+" ? "on" : "";
+  var dec = toDecimal(input.value);
+  if (!isFinite(nvp) || nvp <= 1) {
+    mark.textContent = "N/A";
+    pct.textContent = "";
+    return;
+  }
+  if (dec == null) {
+    mark.textContent = "TYPE ODDS";
+    pct.textContent = "";
+    return;
+  }
+  var ev = (dec / nvp - 1) * 100;
+  var green = ev >= 0;
+  box.className = "box " + (green ? "green" : "red");
+  mark.textContent = green ? "GREEN" : "RED";
+  pct.textContent = (ev >= 0 ? "+" : "") + ev.toFixed(2) + "%";
+}
+minus.addEventListener("click", function () { setSign("-"); });
+plus.addEventListener("click", function () { setSign("+"); });
+input.addEventListener("input", paint);
+if (isFinite(hr) && hr > 1) input.value = american(hr);
+paint();
+var save = document.getElementById("save");
+var saved = document.getElementById("saved");
+var stake = document.getElementById("stake");
+function placeId() {
+  var alphabet = "abcdefghijklmnopqrstuvwxyz0123456789";
+  var out = "";
+  for (var i = 0; i < 16; i += 1) out += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+  return out;
+}
+function showResult(body) {
+  if (body && body.ok) {
+    var ev = Number(body.ev);
+    saved.textContent = "Logged. It is in your Pinnacle bet log at " + (ev >= 0 ? "+" : "") + ev.toFixed(2) + "%.";
+    return;
+  }
+  save.disabled = false;
+  saved.textContent = (body && body.error) || "The bet was not logged.";
+}
+function payload() {
+  return {
+    event: param("event"),
+    eventId: param("event"),
+    home: param("home"),
+    away: param("away"),
+    market: param("market"),
+    line: param("line"),
+    outcome: param("outcome"),
+    points: param("points"),
+    lineType: param("kind"),
+    periodNumber: param("periodNumber") || "0",
+    ways: param("ways"),
+    nvp: param("nvp"),
+    pin: param("pin"),
+    key: param("key"),
+    odds: input.value,
+    stake: stake.value || "10"
+  };
+}
+function waitForResult(root, id, n) {
+  return fetch(root + "/pod-done-" + id + "/json?poll=1&since=10m").then(function (res) {
+    return res.text();
+  }).then(function (text) {
+    var lines = text.trim() ? text.trim().split("\n") : [];
+    for (var i = lines.length - 1; i >= 0; i -= 1) {
+      try {
+        var msg = JSON.parse(lines[i]);
+        if (!msg.message) continue;
+        var body = JSON.parse(msg.message);
+        if (body && (body.ok || body.error)) {
+          showResult(body);
+          return;
+        }
+      } catch (err) { /* keep looking */ }
+    }
+    if (n >= 15) {
+      save.disabled = false;
+      saved.textContent = "The computer did not answer. Leave the scanner on, then tap Log placed bet again.";
+      return;
+    }
+    return new Promise(function (resolve) {
+      setTimeout(function () { resolve(waitForResult(root, id, n + 1)); }, 2000);
+    });
+  });
+}
+save.addEventListener("click", function () {
+  saved.textContent = "Logging…";
+  save.disabled = true;
+  var body = payload();
+  var inbox = param("inbox");
+  if (!inbox) {
+    fetch("/api/place", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }).then(function (res) { return res.json(); }).then(showResult).catch(function () {
+      save.disabled = false;
+      saved.textContent = "The log did not save. Tap Log placed bet again.";
+    });
+    return;
+  }
+  var id = placeId();
+  body.id = id;
+  var root = (param("ntfy") || "https://ntfy.sh").replace(/\/$/, "");
+  fetch(root + "/" + encodeURIComponent(inbox), {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify(body)
+  }).then(function (res) {
+    if (!res.ok) throw new Error("send");
+    return waitForResult(root, id, 0);
+  }).catch(function () {
+    save.disabled = false;
+    saved.textContent = "The log did not save. Tap Log placed bet again.";
+  });
+});
+input.focus();
+</script>
+</body>
+</html>
