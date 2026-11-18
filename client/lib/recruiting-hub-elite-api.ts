@@ -69,6 +69,7 @@ export type RhHubCommit = {
   insiderIntel?: string | null;
   inState?: boolean;
   stars?: number | null;
+  natlRank?: number | null;
 };
 
 export type RhHubBattle = {

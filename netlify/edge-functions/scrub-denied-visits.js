@@ -690,7 +690,7 @@ function pinVanderbiltWeek(data) {
   return { data: next, changed: true };
 }
 const HUB_BUST_COOKIE = 'gv-hub-bust';
-const HUB_BUST_VALUE = 'van-norden-27';
+const HUB_BUST_VALUE = 'commits-natl-rank';
 
 function needsNowCacheBust(request) {
   const cookie = request?.headers?.get?.('cookie') || '';
@@ -932,29 +932,6 @@ function heal2028CommitPayload(data, year) {
 const EASTON_ROYAL_HUB_SUBTITLE =
   'Easton Royal flipped from Texas. 5-star WR, No. 7 nationally.';
 
-const EASTON_ROYAL_COMMIT = {
-  id: 'easton-royal',
-  name: 'Easton Royal',
-  position: 'WR',
-  rating: '98.4',
-  rankNote: '5★ WR · New Orleans, LA · #7 natl · #1 WR · #1 LA',
-  metaLine: '5★ WR · New Orleans, LA · #7 natl · #1 WR · #1 LA',
-  skinny: 'Easton Royal flipped from Texas to Florida. 5-star WR, No. 7 nationally, No. 1 at the position.',
-  commitDate: 'Oct 11, 2026',
-  statusBadge: 'Committed',
-  profileUrl: '/vault/recruiting/player/easton-royal',
-  inState: false,
-  stars: 5,
-};
-
-function leadCommitList(items) {
-  if (!Array.isArray(items)) return { items, changed: false };
-  const rest = items.filter((row) => String(row?.id || row?.slug || '').toLowerCase() !== 'easton-royal');
-  const existing = items.find((row) => String(row?.id || row?.slug || '').toLowerCase() === 'easton-royal');
-  const next = [existing || EASTON_ROYAL_COMMIT, ...rest];
-  return { items: next, changed: JSON.stringify(next) !== JSON.stringify(items) };
-}
-
 function dropVanNordenCommit(items) {
   if (!Array.isArray(items)) return { items, changed: false };
   const next = items.filter((row) => String(row?.id || row?.slug || '').toLowerCase() !== 'cain-van-norden');
@@ -977,7 +954,7 @@ function stampGrantWeekClassLine(overview) {
   };
 }
 
-/** iOS URLCache can keep the August 2027 board. Royal leads the live class. */
+/** iOS URLCache can keep the August 2027 board. Hero names the flip; cards stay natl-rank order. */
 function pinEastonRoyalHub(data, year) {
   if (!data || typeof data !== 'object') return { data, changed: false };
   if (Number(year) !== 2027) return { data, changed: false };
@@ -992,9 +969,8 @@ function pinEastonRoyalHub(data, year) {
   for (const key of ['commits', 'items']) {
     if (!Array.isArray(out[key]) || !out[key].length || typeof out[key][0] !== 'object') continue;
     const dropped = dropVanNordenCommit(out[key]);
-    const led = leadCommitList(dropped.items);
-    if (dropped.changed || led.changed) {
-      out[key] = led.items;
+    if (dropped.changed) {
+      out[key] = dropped.items;
       changed = true;
     }
   }

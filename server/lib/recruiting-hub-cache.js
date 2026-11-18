@@ -19,7 +19,7 @@ const FOOTPRINT_CACHE_REV = 'fp8';
  * Bump when commit card meta (On3 ranks / rating plate) must invalidate durable
  * /var/data hub-runtime + deploy hub-snapshot that outlive players.json syncs.
  */
-const COMMITS_CACHE_REV = 'c11';
+const COMMITS_CACHE_REV = 'c12';
 
 /** Bump when Home NOW locked-commit ticker line must invalidate. */
 const TICKER_CACHE_REV = 't22';
@@ -677,23 +677,12 @@ function commitRowSlug(row) {
   return String(row?.id || row?.slug || '').toLowerCase();
 }
 
-function moveEastonRoyalFirst(list) {
-  if (!Array.isArray(list)) return;
-  const idx = list.findIndex((row) => row && typeof row === 'object' && commitRowSlug(row) === 'easton-royal');
-  if (idx > 0) {
-    const [row] = list.splice(idx, 1);
-    list.unshift(row);
-  }
-}
-
 /**
- * 2027 hub: Easton Royal leads the commit class and the hero line.
- * Cached plates built before the flip kept Maxwell first and a generic subtitle.
+ * 2027 hub: keep the Royal flip on the hero line. Commit cards stay
+ * national-rank order (Hiller #4, then Royal #7) — do not pin him first.
  */
 function pinEastonRoyalHubSurface(value, year) {
   if (!value || typeof value !== 'object' || Number(year) !== 2027) return value;
-  moveEastonRoyalFirst(value.commits);
-  moveEastonRoyalFirst(value.items);
   const onBoard =
     (Array.isArray(value.commits) && value.commits.some((row) => commitRowSlug(row) === 'easton-royal')) ||
     (Array.isArray(value.items) && value.items.some((row) => commitRowSlug(row) === 'easton-royal'));

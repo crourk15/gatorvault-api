@@ -76,7 +76,7 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
-  assert.match(src, /HUB_BUST_VALUE = 'van-norden-27'/);
+  assert.match(src, /HUB_BUST_VALUE = 'commits-natl-rank'/);
   const hubBust = src.slice(src.indexOf('function applyHubCacheBust'), src.indexOf('function isAppStoreUpdateLine'));
   assert.match(hubBust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(hubBust, /headers\.set\('clear-site-data'/);
@@ -137,8 +137,8 @@ test('2027 hub edge keeps the commit list and leaves the live class line alone',
   const pinned = pinEastonRoyalHub(bundle, 2027);
   assert.equal(Array.isArray(pinned.data.commits), true);
   assert.equal(pinned.data.commits.length, 2);
-  assert.equal(pinned.data.commits[0].id, 'easton-royal');
-  assert.equal(pinned.data.commits[0].name, 'Easton Royal');
+  assert.equal(pinned.data.commits[0].id, 'maxwell-hiller');
+  assert.equal(pinned.data.commits[1].id, 'easton-royal');
   assert.equal(pinned.data.classOverview.classRank, '#4');
   assert.equal(pinned.data.classOverview.blueChip, '70%');
   assert.equal(pinned.data.classOverview.commits, '28');
@@ -156,6 +156,7 @@ test('2027 hub edge drops Van Norden and stamps Grant-week 28 / 61% to 27 / 63%'
   const pinned = pinEastonRoyalHub(
     {
       commits: [
+        { id: 'maxwell-hiller', name: 'Maxwell Hiller' },
         { id: 'cain-van-norden', name: 'Cain Van Norden' },
         { id: 'easton-royal', name: 'Easton Royal' },
         { id: 'terrance-grant', name: 'Terrance Grant' },
@@ -169,7 +170,8 @@ test('2027 hub edge drops Van Norden and stamps Grant-week 28 / 61% to 27 / 63%'
     pinned.data.commits.some((p) => p.id === 'cain-van-norden'),
     false
   );
-  assert.equal(pinned.data.commits[0].id, 'easton-royal');
+  assert.equal(pinned.data.commits[0].id, 'maxwell-hiller');
+  assert.equal(pinned.data.commits[1].id, 'easton-royal');
   assert.equal(pinned.data.classOverview.commits, '27');
   assert.equal(pinned.data.classOverview.blueChip, '63%');
   assert.equal(pinned.data.classOverviewAll[2027].commits, '27');

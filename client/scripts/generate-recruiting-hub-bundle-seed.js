@@ -29,6 +29,7 @@ function slimCommit(c) {
     stars: c.stars ?? null,
     enrolled: c.enrolled,
     inState: c.inState,
+    natlRank: Number.parseInt(String(c.natlRank ?? ''), 10) || null,
   };
 }
 

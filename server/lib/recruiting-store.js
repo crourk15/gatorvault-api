@@ -142,12 +142,13 @@ function isFloridaCommit(p) {
   return isHubCommittedStatus(p);
 }
 
+function hubNatlRank(player) {
+  const n = Number.parseInt(String(player?.natlRank ?? player?.natl ?? ''), 10);
+  return Number.isFinite(n) && n > 0 ? n : 9999;
+}
+
 function sortHubCommits(players) {
-  return players.slice().sort((a, b) => {
-    const ra = a.natlRank ?? a.natl ?? 9999;
-    const rb = b.natlRank ?? b.natl ?? 9999;
-    return ra - rb;
-  });
+  return players.slice().sort((a, b) => hubNatlRank(a) - hubNatlRank(b));
 }
 
 function isOfficialRecruitingCommit(p, classYear) {

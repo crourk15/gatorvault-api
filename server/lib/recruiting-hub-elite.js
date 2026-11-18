@@ -637,6 +637,7 @@ function mapHubCommit(player, classYear) {
     insiderIntel: null,
     inState: Boolean(player.inState),
     stars: stars || null,
+    natlRank: Number.parseInt(String(player.natlRank ?? player.natl ?? ''), 10) || null,
   };
 }
 
