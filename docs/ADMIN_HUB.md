@@ -160,6 +160,16 @@ Full Ops / Full QA iframes remain under Dashboard / QA as escape hatches.
 4. Desk shows a **FutureCast feed** card when the full path ran (seeded / promoted / refreshed + %).
 5. `#futurecast/control` lists admin allowlist extras, board sample, early watch — add/remove 2028 only.
 
+### Winter 2027 portal research (desk only)
+
+Jump-early board lives in `server/data/portal/winter-2027-research.json`. **Do not ship to GatorVault** until Charles says so.
+
+- NCAA football window is **January 4–13, 2027** (10 days, first business day after Jan 1). No December football window. No spring football window.
+- Sumrall / Caldwell want **10–12 difference makers**, not 30 practice bodies.
+- Staff/beat rooms: **both tackles**, **secondary**, **IDL if outgoing**, **QB only if the 2027 starter is not already on the roster**.
+- Named portal targets stay empty until a verified beat/On3 item. Do not invent names. Do not upsert `category: portal` from this file.
+- Loader: `server/lib/portal-winter-research.js`. Fan `getPortalBoard()` must stay empty until a ship call.
+
 ### API crash-loop note (Aug 20)
 
 If Open shows “still starting,” the Render API is flapping HTML 502 (event-loop starve past ~5s `/ready`). Guards: skip boot warm, disable in-process background hub refresh, hub-warm cron **lite** only, desk-lite Open Brief, 25s brief timeout.
