@@ -28,14 +28,14 @@ Cross-links already in `client/lib/legal-content.ts` (Privacy — community data
 
 ## Screenshot plan (6.7" and 6.5" displays)
 
-| # | Screen | Route | Highlights |
-|---|--------|-------|------------|
-| 1 | FutureCast Lab | /vault/futurecast/ | Master board, movement, trending |
-| 2 | Recruiting Hub | /vault/recruiting/ | Class overview, board |
-| 3 | Team Hub | /vault/team/ | Roster, depth, coaches |
-| 4 | Community | /vault/community/ | Threads, report/block (signed in) |
-| 5 | Membership | /vault/membership/ | Tiers, trial, account management |
-| 6 | GatorNation Live | /vault/live-feed/ | Live feed / pulse |
+| Upload # | Screen | File | Caption |
+|---|--------|------|---------|
+| 1 | Recruiting Hub | `02-recruiting.png` | Every Florida target. One board. |
+| 2 | FutureCast Lab | `01-futurecast.png` | See who's leaning Florida, and how the board moves |
+| 3 | Team Hub | `03-team.png` | Roster, depth, and staff in one hub |
+| 4 | Live feed | `06-live-feed.png` | Today's Florida recruiting feed |
+| 5 | Community | `04-community.png` | Talk the class with other fans |
+| 6 | Membership | `05-membership.png` | 30-day free trial. No card required. |
 
 Capture at **1284×2778** (6.5" Display slot) via `npm run capture:app-store-screenshots`. Optional iPad 13" at **2064×2752** via `npm run generate:ipad-screenshots`.
 

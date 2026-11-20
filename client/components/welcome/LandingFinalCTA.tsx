@@ -10,7 +10,8 @@ export function LandingFinalCTA(): React.ReactElement {
       <div className="gv-final-container">
         <h2 className="gv-final-title">Ready to enter the Vault?</h2>
         <p className="gv-final-sub">
-          Join now and get instant access to recruiting intel, FutureCast, film, and insider tools.
+          Join now and get the board, FutureCast, Game Week, and film in one place. 30-day free
+          trial — no card required.
         </p>
         <div className="gv-final-buttons">
           <Button href="/join?tier=film" variant="primary">

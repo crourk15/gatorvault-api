@@ -12,22 +12,22 @@ export function LandingHeroElite(): React.ReactElement {
     <section className="gv-hero-elite" data-testid="welcome-hero">
       <div className="gv-hero-container">
         <div className="gv-hero-left">
-          <h1 className="gv-hero-title">Built for Gator Nation.</h1>
+          <h1 className="gv-hero-title">Every Florida recruiting storyline. One place.</h1>
           <p className="gv-hero-sub">
-            For Gator fans who love the program and want recruiting in one place — without the rumor
-            chase.
+            The board, the visits, Game Week, and the film — built by Florida fans who follow the
+            class as closely as you do.
           </p>
           <div className="gv-hero-cta-row">
             <Button href={WELCOME_LINKS.join} variant="primary">
               Join GatorVault
             </Button>
             <Button href={WELCOME_LINKS.recruiting} variant="secondary">
-              Explore Recruiting
+              Explore the board
             </Button>
           </div>
           <p className="gv-hero-trust">
-            On3-sourced intel, kept current. We&apos;re fans too — just trying to make sense of the class
-            together.
+            30-day free trial, no card required. We&apos;re fans too — just trying to make sense of
+            the class together.
           </p>
           <p className="gv-hero-micro">Cancel anytime. Instant access.</p>
         </div>
@@ -41,20 +41,14 @@ export function LandingHeroElite(): React.ReactElement {
             <h3 className="gv-hero-preview-title">Recruiting Board</h3>
             <FeatureCard
               icon="📈"
-              title="4★ ATH — Trending UF"
-              description="Movement: +12% | Fit Score: 89"
+              title="2028 board"
+              description="Targets, visits, and movement in one place"
               className="gv-hero-feature-card"
             />
           </Card>
           <Card variant="dark" className="gv-hero-preview-card">
-            <h3 className="gv-hero-preview-title">Gator Nation Live</h3>
-            <Ticker
-              items={[
-                'Portal update coming at 6 PM',
-                'UF trending for 2026 WR',
-                'Film Room drop tonight',
-              ]}
-            />
+            <h3 className="gv-hero-preview-title">What&apos;s inside</h3>
+            <Ticker items={['Recruiting board', 'FutureCast', 'Game Week', 'Film Room']} />
           </Card>
         </div>
       </div>
