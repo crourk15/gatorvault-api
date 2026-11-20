@@ -1024,8 +1024,8 @@
     "state": "LA",
     "high_school": "Brother Martin",
     "stars": 5,
-    "composite_rating": 98.43,
-    "ranking_national": 5,
+    "composite_rating": 98.35,
+    "ranking_national": 7,
     "ranking_position": 1,
     "ranking_state": 1,
     "committed_to": "Florida",
@@ -1038,8 +1038,8 @@
       ],
       "stats": {
         "stars": 5,
-        "rating": 98.43,
-        "natl_rank": 5,
+        "rating": 98.35,
+        "natl_rank": 7,
         "pos_rank": 1,
         "state_rank": 1,
         "on3_id": "243862"

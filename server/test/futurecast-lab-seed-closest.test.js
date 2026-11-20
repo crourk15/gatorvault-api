@@ -56,9 +56,21 @@ describe('FutureCast Lab seed Closest to commit', () => {
     assert.ok(Number(bubba.ufProbability) >= 90, `Bubba floor ${bubba.ufProbability}`);
   });
 
+  it('Closing Class seed is live Flip Watch, not Easton Royal as Texas', () => {
+    const seed = JSON.parse(fs.readFileSync(SEED_PATH, 'utf8'));
+    const masterSlugs = (seed.masterBoard?.players || []).map((p) => p.slug);
+    assert.equal(masterSlugs.includes('easton-royal'), false);
+    const flip = (seed.flipWatch || []).map((p) => (p && p.slug) || p);
+    assert.deepEqual(flip, ['jalen-brewster', 'keldrid-ben', 'andre-hyppolite', 'ace-alston']);
+    assert.match(String(seed.masterBoard?.updatedAt || ''), /^2026-11-1[89]/);
+    assert.match(String(seed.lastUpdated || ''), /^2026-11-1[89]/);
+    assert.equal(seed.source, 'prod-api');
+  });
+
   it('seed generator filters inactive 2028 HP even when prod is down', () => {
     const src = fs.readFileSync(GEN_PATH, 'utf8');
     assert.match(src, /filterActiveUfTargets/);
     assert.match(src, /activeOnly: true/);
+    assert.match(src, /pack\.hp27\?\.flipWatch/);
   });
 });
