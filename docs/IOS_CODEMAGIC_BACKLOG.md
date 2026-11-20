@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] FutureCast Lab restamped Nov 20 from live HP: Royal off Closing Class Flip Watch (Florida #7), 2028 Chase is the Nov 19 plate (59), Wright/Bailey/Cyion/Robinson stay off Chase. Grant is a 2027 commit, not a chase card. Live `/api/futurecast/high-priority` already feeds iOS — no Codemagic. Reopen FutureCast once.
 - [x] 2027 commit cards on web/API are On3 Industry national-rank order (Hiller #4, then Royal #7). Royal-first pin is off the API cache and Netlify edge. Hub bust `commits-natl-rank`. Cache rev `c12`. API + Netlify after deploy — no Codemagic. Reopen Recruiting 2027 once. Installed app JS still leads Royal until the bake row.
 - [x] Cain Van Norden (2027 DL) decommitted Nov 17 (On3 Corey Bender / Hayes Fawcett). Off the 2027 board. Live hub is **#6 / 27 / 63% / 90.2**. Grant stays. Cache rev `hs15` / `c11` / `t22` / `fp8` so durable 28 / 61% cannot paint over live 27. Hub bust `van-norden-27`. Home NOW News stays Terrance Grant this Vanderbilt week. API + Netlify after deploy — no Codemagic. Reopen Recruiting 2027 once.
 - [x] Terrance Grant profile is GV ready: DeMatha senior Hudl sit (`filmWatched: true`), Vault Scouting SHOW (Pacheco comp), prepared-meal full-profile stamp. Jersey #3. API after Render — no Codemagic. Reopen his profile once.

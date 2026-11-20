@@ -276,10 +276,9 @@ function writePayload(pack) {
     commitSort: homeRaw.commitSort || 'fit',
     heatmap: homeRaw.heatmap || masterBoard.heatmap,
     commits: [],
-    topTargets: (homeRaw.topTargets || masterBoard.players.slice(0, 6))
-      .map(slimPlayer)
-      .filter(Boolean)
-      .slice(0, 8),
+    topTargets: filterActiveUfTargets(
+      (homeRaw.topTargets || []).map(slimPlayer).filter(Boolean)
+    ).slice(0, 8),
     trendingUp: (homeRaw.trendingUp || []).map(slimPlayer).filter(Boolean).slice(0, 6),
     trendingDown: (homeRaw.trendingDown || []).map(slimPlayer).filter(Boolean).slice(0, 6),
     portalWatchlist: [],
@@ -334,12 +333,20 @@ function writePayload(pack) {
       activePredictions: masterBoard.players.length,
     },
     heatLevel: 'warm',
-    lastUpdated: null,
+    lastUpdated:
+      pack.hp28?.updatedAt ||
+      pack.hp28?.lastUpdated ||
+      pack.hp27?.updatedAt ||
+      pack.master?.updatedAt ||
+      new Date().toISOString(),
     highPriority,
     highPriorityClosing,
     visitIntel: pack.hp28?.visitIntel || pack.hp27?.visitIntel || [],
     visitRecap: pack.hp28?.visitRecap || pack.hp27?.visitRecap || [],
-    flipWatch: pack.hp28?.flipWatch || pack.hp27?.flipWatch || [],
+    flipWatch:
+      (Array.isArray(pack.hp27?.flipWatch) && pack.hp27.flipWatch.length
+        ? pack.hp27.flipWatch
+        : pack.hp28?.flipWatch) || [],
     movementNarratives: pack.hp28?.movementNarratives || pack.hp27?.movementNarratives || [],
     underclassmen: [],
     roster: [],

@@ -34,6 +34,8 @@ describe('FutureCast HP durable runtime', () => {
     for (const slug of ['brysen-wright', 'cyion-smith', 'samuel-bailey', 'man-robinson']) {
       assert.equal(slugs.includes(slug), false, `${slug} must not be on 2028 HP runtime`);
     }
+    assert.ok(doc.players.length >= 40, `2028 HP runtime should be the live chase plate, got ${doc.players.length}`);
+    assert.match(String(doc.updatedAt || ''), /^2026-11-1[89]/);
   });
 
   it('ships bundled high-priority seed for 2027 Closing Class', () => {
