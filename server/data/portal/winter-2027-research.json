@@ -1,0 +1,349 @@
+{
+  "id": "winter-2027-portal-research",
+  "updatedAt": "2026-11-20T23:50:00Z",
+  "fanShip": false,
+  "status": "desk-only",
+  "fanSurfacesBlocked": [
+    "/vault/portal",
+    "/api/portal/watchlist",
+    "getPortalBoard",
+    "FutureCast portal watchlist"
+  ],
+  "window": {
+    "sport": "FBS/FCS football",
+    "opens": "2027-01-04",
+    "closes": "2027-01-13",
+    "days": 10,
+    "rule": "10-day notification window beginning the first business day after January 1. Postseason teams with a game on or after January 12 get five extra days after their last game.",
+    "noDecemberWindow": true,
+    "noSpringFootballWindow": true,
+    "sources": [
+      {
+        "name": "NCAA Figure 13-1 undergraduate transfer windows",
+        "url": "https://ncaaorg.s3.amazonaws.com/compliance/d1/D1Comp_UndergraduateTransferWindows.pdf",
+        "note": "Football (FBS/FCS) January 4, 2027 through January 13, 2027."
+      },
+      {
+        "name": "NCAA.org Division I Cabinet transfer-window vote",
+        "url": "https://www.ncaa.org/news/division-i-cabinet-approves-new-transfer-windows-in-several-sports/"
+      }
+    ]
+  },
+  "staffThesis": {
+    "addCount": "10-12 difference makers",
+    "not": "30 bodies to fill a Tuesday practice",
+    "resourcing": "NIL market decides how many of those 10-12 Florida can actually buy. Sumrall said that out loud.",
+    "qbGate": "Identify whether the 2027 starter is already on the roster (Philo, Jones Jr., Griffin). If yes, spend the money around him. If no, a portal QB taxes the tackle budget.",
+    "sources": [
+      {
+        "name": "Kevin Brockway, Gainesville Sun / Naples Daily News, Nov 17, 2026",
+        "url": "https://www.naplesnews.com/story/sports/college/football/2026/11/17/jon-sumrall-outlines-florida-football-transfer-portal-plans/92747444007/"
+      },
+      {
+        "name": "Hail Florida Hail, Nov 16, 2026",
+        "url": "https://hailfloridahail.com/jon-sumrall-and-dave-caldwell-want-to-be-more-selective-in-the-transfer-portal-building-florida-s-roster-for-2027"
+      },
+      {
+        "name": "Gators on SI, Sumrall portal / QB, Nov 2026",
+        "url": "https://www.si.com/college/florida/football/sumrall-teases-gators-qb-future-transfer-portal-plans-01m7k1hxs0sw"
+      },
+      {
+        "name": "PNJ / SEC teleconference, Nov 18, 2026",
+        "url": "https://www.pnj.com/story/sports/college/football/2026/11/18/jon-sumrall-discusses-florida-football-roster-needs-in-final-sec-teleconference/92844890007/"
+      }
+    ]
+  },
+  "rosterSnapshot": {
+    "asOf": "2026-11-20",
+    "source": "server/data/roster/players.json",
+    "depthChartNote": "Official two-deep on disk is still Week 10 Oklahoma. Use it as last stamped two-deep, not Vanderbilt week.",
+    "rosterCount": 118,
+    "hsCommits2027": 27,
+    "incomingPortalBoardCount": 0,
+    "incomingPortalNote": "getPortalBoard() is empty because last winter's UF transfers are already on the 2026 roster. Winter 2027 targets have not been written into the fan store \u2014 on purpose."
+  },
+  "needs": [
+    {
+      "rank": 1,
+      "room": "OT",
+      "tier": "must-add",
+      "why": "Sumrall / SI: both tackle spots are immediate needs and the most expensive portal buy. HS incoming Hutcheson and Fisher are 2027 true freshmen \u2014 not Year-1 SEC starters. Listed LT Lovett and RT Ugorji (Jones has taken snaps) have not locked the room.",
+      "schemeMin": 9,
+      "olOnRoster": 20,
+      "departingLikely": [
+        "Knijeah Harris"
+      ],
+      "hsIncoming": [
+        "Elijah Hutcheson (OT)",
+        "Moreno Fisher (OT)",
+        "Maxwell Hiller (IOL)",
+        "Peyton Miller (IOL)"
+      ],
+      "hunt": "Power conference tackle who can start in 2027. Length, 2+ years left. Two if the budget holds.",
+      "namedCandidates": []
+    },
+    {
+      "rank": 2,
+      "room": "S",
+      "tier": "must-add",
+      "why": "Starter Bryce Thornton is a senior. DJ Coleman and Alfonzo Allen Jr. are also on one year. Returning two-deep is Cam Dooley and Lagonza Hayward. 2027 class has one safety (3-star Kailib Dillard).",
+      "schemeMin": 4,
+      "departingLikely": [
+        "Bryce Thornton",
+        "DJ Coleman",
+        "Alfonzo Allen Jr."
+      ],
+      "hsIncoming": [
+        "Kailib Dillard"
+      ],
+      "hunt": "Range-and-tackle safety who can play SS or STAR in Year 1. 2+ years left.",
+      "namedCandidates": []
+    },
+    {
+      "rank": 3,
+      "room": "CB",
+      "tier": "high",
+      "why": "Staff/beat (SI, Gainesville Sun) named the secondary as a portal shop. Jordy Lowery and Javion Toombs are on one year. Hanks / Flowers / McClain are the live room. Four 2027 CB commits (Floyd, Fountain, Nugent, Whitfield) are incoming freshmen. Quality starter snaps still look thin.",
+      "schemeMin": 5,
+      "departingLikely": [
+        "Jordy Lowery",
+        "Javion Toombs"
+      ],
+      "hsIncoming": [
+        "Raheem Floyd",
+        "Aamaury Fountain",
+        "Amare Nugent",
+        "Kamauri Whitfield"
+      ],
+      "hunt": "Press-man corner with starter snaps. Do not treat podcast McClain-leave talk as a fact.",
+      "namedCandidates": []
+    },
+    {
+      "rank": 4,
+      "room": "IDL",
+      "tier": "high",
+      "why": "SI: interior DL depends on outgoing. Kamran James (starter, Sr.) and Emmanuel Oyebadejo (listed with James / McCray, R-Sr.) are on one year. Bett / McCloud / McCray return. Two 2027 DL commits (Tookes, Kendrick).",
+      "schemeMin": 5,
+      "departingLikely": [
+        "Kamran James",
+        "Emmanuel Oyebadejo"
+      ],
+      "hsIncoming": [
+        "Zahmar Tookes",
+        "De'Voun Kendrick"
+      ],
+      "hunt": "Year-1 interior who can two-gap. Only if James / Oyebadejo are actually gone.",
+      "namedCandidates": []
+    },
+    {
+      "rank": 5,
+      "room": "QB",
+      "tier": "conditional",
+      "why": "Sumrall, Nov 17: wants the next two weeks (Vanderbilt, then FSU, then a bowl) to answer whether the 2027 starter is on this team. Philo just won SEC Offensive Player of the Week vs Kentucky. Jones Jr. started Texas. Griffin is getting scout-team/game-ready reps, not a throw-him-out plan. A portal QB taxes the tackle budget.",
+      "schemeMin": 3,
+      "departingLikely": [],
+      "hsIncoming": [
+        "Davin Davidson"
+      ],
+      "returning": [
+        "Aaron Philo",
+        "Tramell Jones Jr.",
+        "Will Griffin",
+        "Aidan Warner",
+        "Aaron Williams"
+      ],
+      "hunt": "Only if the staff decides the 2027 starter is not Philo / Jones / Griffin. Do not publish a QB name until that call is made.",
+      "namedCandidates": []
+    },
+    {
+      "rank": 6,
+      "room": "LB",
+      "tier": "watch",
+      "why": "MIKE starter Jaden Robinson is a senior. TJ Bullard is R-Sr. Graham / Chiles / Ty Jackson / Myles Johnson return. Three 2027 LBs (Ja'Bios Smith, McGaskin, Geathers).",
+      "schemeMin": 5,
+      "departingLikely": [
+        "Jaden Robinson",
+        "TJ Bullard"
+      ],
+      "hsIncoming": [
+        "Ja'Bios Smith",
+        "Ellis McGaskin",
+        "Tre Geathers"
+      ],
+      "hunt": "Only a difference-maker. Not a depth body.",
+      "namedCandidates": []
+    },
+    {
+      "rank": 7,
+      "room": "EDGE",
+      "tier": "watch",
+      "why": "Jayden Woods is the So. starter. Kofi Asare is R-Sr. One 2027 EDGE (Cahron Wheeler).",
+      "schemeMin": 5,
+      "departingLikely": [
+        "Kofi Asare"
+      ],
+      "hsIncoming": [
+        "Cahron Wheeler"
+      ],
+      "hunt": "Pass-rush piece who can play JACK. Not a 30-man roster filler.",
+      "namedCandidates": []
+    },
+    {
+      "rank": 8,
+      "room": "WR",
+      "tier": "watch",
+      "why": "Eric Singleton Jr. (Sr. starter) and Kahleil Jackson (Gr.) are on the way out. Wilson, Vernell Brown III, Stockton return. Four 2027 WR commits including Royal. Headcount is fine. A true WR1 if Singleton is not back would still be a dude, not a body.",
+      "schemeMin": 7,
+      "departingLikely": [
+        "Eric Singleton Jr.",
+        "Kahleil Jackson"
+      ],
+      "hsIncoming": [
+        "Easton Royal",
+        "Elias Pearl",
+        "Tramond Collins",
+        "Anthony Jennings"
+      ],
+      "hunt": "Only if Singleton is gone and the staff wants a Year-1 WR1. Royal is a freshman.",
+      "namedCandidates": []
+    },
+    {
+      "rank": 9,
+      "room": "RB",
+      "tier": "stable",
+      "why": "Baugh is Jr. with two years. Pryor is the only one-year back. Beard and Grant arrive. Do not spend a portal slot here unless Baugh's situation changes.",
+      "schemeMin": 4,
+      "departingLikely": [
+        "Evan Pryor"
+      ],
+      "hsIncoming": [
+        "Andrew Beard",
+        "Terrance Grant"
+      ],
+      "hunt": null,
+      "namedCandidates": []
+    },
+    {
+      "rank": 10,
+      "room": "TE",
+      "tier": "stable",
+      "why": "Dippre is R-Jr. Harpring / Amir Jackson return. Douglas and Ballinger arrive. Not a 10-12 slot unless a difference-maker falls.",
+      "schemeMin": 3,
+      "departingLikely": [],
+      "hsIncoming": [
+        "Tommy Douglas",
+        "Jackson Ballinger"
+      ],
+      "hunt": null,
+      "namedCandidates": []
+    }
+  ],
+  "outgoingLikely": [
+    {
+      "name": "Kahleil Jackson",
+      "pos": "WR",
+      "class": "Gr.",
+      "elig": 0,
+      "tier": "rotation"
+    },
+    {
+      "name": "Bryce Thornton",
+      "pos": "S",
+      "class": "Sr.",
+      "elig": 1,
+      "tier": "starter"
+    },
+    {
+      "name": "Eric Singleton Jr.",
+      "pos": "WR",
+      "class": "Sr.",
+      "elig": 1,
+      "tier": "starter"
+    },
+    {
+      "name": "Kamran James",
+      "pos": "DL",
+      "class": "Sr.",
+      "elig": 1,
+      "tier": "starter"
+    },
+    {
+      "name": "Jaden Robinson",
+      "pos": "ILB",
+      "class": "Sr.",
+      "elig": 1,
+      "tier": "starter"
+    },
+    {
+      "name": "Emmanuel Oyebadejo",
+      "pos": "DL",
+      "class": "R-Sr.",
+      "elig": 1,
+      "tier": "starter"
+    },
+    {
+      "name": "DJ Coleman",
+      "pos": "S",
+      "class": "Sr.",
+      "elig": 1,
+      "tier": "rotation"
+    },
+    {
+      "name": "Alfonzo Allen Jr.",
+      "pos": "S",
+      "class": "R-Sr.",
+      "elig": 1,
+      "tier": "rotation"
+    },
+    {
+      "name": "Knijeah Harris",
+      "pos": "OL",
+      "class": "Sr.",
+      "elig": 1,
+      "tier": "rotation"
+    },
+    {
+      "name": "Jordy Lowery",
+      "pos": "CB",
+      "class": "R-Sr.",
+      "elig": 1,
+      "tier": "rotation"
+    },
+    {
+      "name": "Javion Toombs",
+      "pos": "CB",
+      "class": "R-Sr.",
+      "elig": 1,
+      "tier": "rotation"
+    },
+    {
+      "name": "Evan Pryor",
+      "pos": "RB",
+      "class": "R-Sr.",
+      "elig": 1,
+      "tier": "rotation"
+    },
+    {
+      "name": "Kofi Asare",
+      "pos": "JACK",
+      "class": "R-Sr.",
+      "elig": 1,
+      "tier": "rotation"
+    },
+    {
+      "name": "TJ Bullard",
+      "pos": "ILB",
+      "class": "R-Sr.",
+      "elig": 1,
+      "tier": "rotation"
+    }
+  ],
+  "namedCandidates": [],
+  "namedCandidatesRule": "No invented names. A player lands on this list only with a verified beat or On3 item that he is in the portal, or a Florida staff/beat link. Podcast wish lists (e.g. Bryce Underwood) stay off this board.",
+  "doNot": [
+    "Write these rooms or hunts onto /vault/portal until Charles says ship.",
+    "Upsert category=portal into the recruiting store from this file.",
+    "Treat eligibility 1 as a confirmed departure \u2014 five-for-five can bring seniors back.",
+    "Force a portal QB while Sumrall is still answering that in-house."
+  ]
+}

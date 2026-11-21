@@ -130,10 +130,52 @@ function utcParts(at: Date): { year: number; month: number; day: number } {
   };
 }
 
+function addUtcDays(d: Date, n: number): Date {
+  return new Date(d.getTime() + n * 86400000);
+}
+
+function ymdUtc(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * NCAA FBS/FCS: 10-day notification window starting the first business day
+ * after January 1. 2026-27 is January 4–13, 2027. No December football window
+ * and no spring football window.
+ */
+export function footballWinterWindow(januaryYear: number): { startYmd: string; endYmd: string } {
+  let start = new Date(Date.UTC(januaryYear, 0, 2));
+  while (start.getUTCDay() === 0 || start.getUTCDay() === 6) {
+    start = addUtcDays(start, 1);
+  }
+  return { startYmd: ymdUtc(start), endYmd: ymdUtc(addUtcDays(start, 9)) };
+}
+
+function formatIsoMonthDayYear(iso: string): string {
+  const [y, m, d] = iso.split('-').map((v) => Number.parseInt(v, 10));
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  return `${months[m - 1]} ${d}, ${y}`;
+}
+
 export function getPortalSeasonState(at: Date = new Date()): PortalSeasonState {
   const { year, month, day } = utcParts(at);
+  const today = ymdUtc(at);
+  const thisWin = footballWinterWindow(year);
 
-  if (month === 12 || (month === 1 && day <= 15)) {
+  if (today >= thisWin.startYmd && today <= thisWin.endYmd) {
     return {
       active: true,
       phase: 'portal-winter',
@@ -142,56 +184,45 @@ export function getPortalSeasonState(at: Date = new Date()): PortalSeasonState {
     };
   }
 
-  if ((month === 4 && day >= 15) || (month === 5 && day <= 1)) {
-    return {
-      active: true,
-      phase: 'portal-spring',
-      label: 'Spring transfer portal',
-      nextWindowStart: null,
-    };
-  }
+  const nextWin = today < thisWin.startYmd ? thisWin : footballWinterWindow(year + 1);
+  const nextLabel = formatIsoMonthDayYear(nextWin.startYmd);
+  const inPrep =
+    (month === 11 && day >= 15) ||
+    month === 12 ||
+    (month === 1 && today < nextWin.startYmd);
 
-  if (month === 11 && day >= 15) {
+  if (inPrep) {
     return {
       active: false,
       phase: 'portal-prep',
-      label: 'Portal intel opens December 1',
-      nextWindowStart: `${year}-12-01`,
+      label: `Football portal opens ${nextLabel}`,
+      nextWindowStart: nextWin.startYmd,
     };
   }
 
-  if (month >= 8 && month <= 10) {
+  if ((month >= 8 && month <= 10) || (month === 11 && day < 15)) {
     return {
       active: false,
       phase: 'football-season',
-      label: 'Portal intel resumes December — tracking 2027 board and 2028 discovery',
-      nextWindowStart: `${year}-12-01`,
+      label: `Portal intel resumes January — tracking 2027 board and 2028 discovery`,
+      nextWindowStart: nextWin.startYmd,
     };
   }
 
-  if (month === 11 && day < 15) {
-    return {
-      active: false,
-      phase: 'football-season',
-      label: 'Portal intel resumes December — tracking 2027 board and 2028 discovery',
-      nextWindowStart: `${year}-12-01`,
-    };
-  }
-
-  if ((month === 1 && day > 15) || month === 2 || month === 3 || (month === 4 && day < 15)) {
+  if (month === 2 || month === 3 || (month === 1 && today > thisWin.endYmd)) {
     return {
       active: false,
       phase: 'signing-season',
-      label: 'Spring portal opens mid-April',
-      nextWindowStart: `${year}-04-15`,
+      label: `Next football portal ${nextLabel}`,
+      nextWindowStart: nextWin.startYmd,
     };
   }
 
   return {
     active: false,
     phase: 'offseason',
-    label: 'Portal intel resumes December',
-    nextWindowStart: `${year}-12-01`,
+    label: `Portal intel resumes ${nextLabel}`,
+    nextWindowStart: nextWin.startYmd,
   };
 }
 
