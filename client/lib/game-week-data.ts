@@ -1,5 +1,6 @@
 /** Game Week enriched bundles — merges SCHEDULE_GAMES with intel widgets. */
 import { SCHEDULE_GAMES, type ScheduleGame } from './schedule-data';
+import { parseScheduleKickoff } from './gators-live';
 import { getNextScheduleGame, toPremiumScheduleGame } from './schedule-premium';
 
 export { SCHEDULE_GAMES };
@@ -119,6 +120,10 @@ export function headshotUrl(slug: string): string {
   return rosterPhotoCandidates(slug)[0];
 }
 
+function hasPostedFinal(game: ScheduleGame | undefined): boolean {
+  return Number.isFinite(Number(game?.finalUF)) && Number.isFinite(Number(game?.finalOpp));
+}
+
 /** Next upcoming kickoff, or the last game once the slate is done. */
 export function defaultGameWeekId(games: ScheduleGame[] = SCHEDULE_GAMES, now = new Date()): string {
   const pool = games.length ? games : SCHEDULE_GAMES;
@@ -128,14 +133,19 @@ export function defaultGameWeekId(games: ScheduleGame[] = SCHEDULE_GAMES, now = 
   return last?.id || 'olemiss';
 }
 
-/** Live meta pointer wins when the board still holds last week's kick. */
+/** Live meta pointer wins when the board still holds last week's kick — not after the final. */
 export function resolveGameWeekId(
   games: ScheduleGame[] = SCHEDULE_GAMES,
   now = new Date(),
   preferredId?: string,
 ): string {
   const preferred = String(preferredId || '').trim();
-  if (preferred && games.some((g) => g.id === preferred)) return preferred;
+  const preferredGame = preferred ? games.find((g) => g.id === preferred) : undefined;
+  if (preferredGame) {
+    const kick = parseScheduleKickoff(preferredGame.date);
+    const closed = hasPostedFinal(preferredGame) && kick != null && now.getTime() > kick.getTime();
+    if (!closed) return preferred;
+  }
   return defaultGameWeekId(games, now);
 }
 

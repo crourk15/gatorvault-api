@@ -457,7 +457,7 @@ const LEFTOVER_OKLAHOMA_NOW_RE =
 const LEFTOVER_KENTUCKY_NOW_RE =
   /kentucky at kroger|kroger field|6:15 pm · espn|5-4 heading into saturday|florida 7,\s*oklahoma 23|moreno fisher/i;
 const LEFTOVER_VANDERBILT_NOW_RE =
-  /vanderbilt in the swamp|6-4\s*·\s*sec home saturday|florida 21,\s*kentucky 14/i;
+  /vanderbilt|live — florida vs|6-4 heading|6-4\s*·\s*sec home saturday|florida 21,\s*kentucky 14/i;
 const FSU_NOW_GAME = 'Florida State at Doak Campbell Stadium — 3:30 PM · ABC';
 const FSU_NOW_SEASON = '7-4 heading into Friday';
 const FSU_NOW_NEWS = 'Terrance Grant flips to Florida';

@@ -259,6 +259,38 @@ describe('schedule-api uniforms', () => {
     assert.match(String(row?.howUFWins?.[0] || ''), /137th nationally in rush EPA/);
   });
 
+  it('peekScheduleBoard first-paints the sat FSU card and drops a closed Vanderbilt pointer', () => {
+    const vandy = SCHEDULE_GAMES.find((g) => g.id === 'vandy');
+    const fsu = SCHEDULE_GAMES.find((g) => g.id === 'fsu');
+    assert.ok(vandy && fsu);
+    __scheduleApiTest.clearLastGood(2026);
+    __scheduleApiTest.writeLastGood(2026, {
+      games: [
+        vandy,
+        {
+          ...fsu,
+          keys: ['Win field position battle', 'Avoid penalties', 'Win turnover margin'],
+          ufPct: 0,
+          pred: '',
+          predUF: 0,
+          predOpp: 0,
+          predSat: undefined,
+          radar: [],
+        },
+      ],
+      currentGameId: 'vandy',
+    });
+    const peeked = peekScheduleBoard(2026);
+    assert.equal(peeked.currentGameId, undefined);
+    const row = peeked.games.find((g) => g.id === 'fsu');
+    assert.equal(row?.keys?.[0], 'Take Away the Keep');
+    assert.equal(row?.ufPct, 58);
+    assert.equal(row?.pred, 'UF 27 · FSU 23');
+    assert.equal(row?.predSat, true);
+    assert.equal(row?.radar?.[0]?.uf, 58);
+    assert.equal(__scheduleApiTest.readLastGood(2026)?.currentGameId, undefined);
+  });
+
   it('peekScheduleBoard prefers last-good live keys over the baked seed', () => {
     const olemiss = SCHEDULE_GAMES.find((g) => g.id === 'olemiss');
     assert.ok(olemiss);
@@ -268,30 +300,32 @@ describe('schedule-api uniforms', () => {
     });
     const peeked = peekScheduleBoard(2026);
     assert.equal(peeked.games[0]?.keys?.[0], 'Maintain Lane Discipline & Crowd Chambliss');
-    assert.equal(__scheduleApiTest.readLastGood(2026)?.currentGameId, 'olemiss');
+    assert.equal(__scheduleApiTest.readLastGood(2026)?.currentGameId, undefined);
   });
 
   it('peekScheduleBoard does not first-paint durable leftover remaining scores', () => {
-    const oklahoma = SCHEDULE_GAMES.find((g) => g.id === 'oklahoma');
-    assert.ok(oklahoma);
     __scheduleApiTest.clearLastGood(1999);
     __scheduleApiTest.writeLastGood(1999, {
       games: [
         {
-          ...oklahoma,
-          pred: 'UF 36 · Oklahoma 21',
+          id: 'fake-remaining',
+          label: 'Leftover',
+          opp: 'Leftover Opp',
+          date: 'December 5, 2026 · 12:00 PM ET',
+          venue: 'Nowhere',
+          pred: 'UF 36 · Leftover 21',
           predUF: 36,
           predOpp: 21,
           ufPct: 82,
           keys: ['Make Them One-Dimensional'],
-          finalUF: undefined,
-          finalOpp: undefined,
+          swing: [],
+          film: '',
         },
       ],
-      currentGameId: 'oklahoma',
+      currentGameId: 'fake-remaining',
     });
     const peeked = peekScheduleBoard(1999);
-    const row = peeked.games.find((g) => g.id === 'oklahoma');
+    const row = peeked.games.find((g) => g.id === 'fake-remaining');
     assert.equal(row?.pred, '');
     assert.equal(row?.predUF, 0);
     assert.equal(row?.predPending, true);

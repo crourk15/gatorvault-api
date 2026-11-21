@@ -421,6 +421,18 @@ describe('resolveHomeNowWeekPillars', () => {
 });
 
 describe('usableHomeNowWeek drops the retired App Store tick', () => {
+  it('rewrites LIVE Vanderbilt last-good to FSU week', () => {
+    const rows = usableHomeNowWeek([
+      { key: 'game', label: 'Game', items: ['LIVE — Florida vs Vanderbilt'] },
+      { key: 'news', label: 'News', items: ['Terrance Grant flips to Florida'] },
+      { key: 'season', label: 'Season', items: ['6-4 heading into Saturday'] },
+    ]);
+    assert.equal(rows[0].items[0], 'Florida State at Doak Campbell Stadium — 3:30 PM · ABC');
+    assert.equal(rows[1].items[0], 'Terrance Grant flips to Florida');
+    assert.equal(rows[2].items[0], '7-4 heading into Friday');
+    assert.ok(!rows.some((row) => row.items.some((s) => /vanderbilt|6-4 heading/i.test(s))));
+  });
+
   it('rewrites leftover Missouri last-good to Texas week', () => {
     const rows = usableHomeNowWeek([
       { key: 'game', label: 'Game', items: ['Missouri at Faurot Field — 3:30 PM · ESPN'] },

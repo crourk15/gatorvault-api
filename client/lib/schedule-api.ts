@@ -4,6 +4,7 @@
  * Do not refill desk scout (offenseScout / defenseScout / scoutingReport) from seed.
  */
 import { snapshotLiveFetch } from './snapshot-fetch';
+import { parseScheduleKickoff } from './gators-live';
 import {
   lockBroadcastWindow,
   SCHEDULE_GAMES,
@@ -35,10 +36,10 @@ function hasPostedFinal(game: ScheduleGame): boolean {
   return Number.isFinite(Number(game.finalUF)) && Number.isFinite(Number(game.finalOpp));
 }
 
-/** Remaining-game leans are live-only. Do not first-paint last-good or seed scores. */
+/** Remaining-game leans are live-only. Sat stamps (FSU 58%) first-paint. */
 export function stripRemainingPreds(games: ScheduleGame[]): ScheduleGame[] {
   return games.map((game) => {
-    if (hasPostedFinal(game)) return game;
+    if (hasPostedFinal(game) || game.predSat === true) return game;
     return {
       ...game,
       pred: '',
@@ -57,6 +58,7 @@ function seedBoard(): ScheduleBoardLive {
   return {
     games: SCHEDULE_GAMES.slice(),
     predThrough: SCHEDULE_SEED_PRED_THROUGH,
+    currentGameId: 'fsu',
   };
 }
 
@@ -102,7 +104,7 @@ function preferKickoffDate(live: string, seed?: string): string {
 }
 
 function isStubKeyTitle(title: string): boolean {
-  return /win early downs|protect the football|limit explosives/i.test(title);
+  return /win early downs|protect the football|limit explosives|win field position|avoid penalties|win turnover margin/i.test(title);
 }
 
 /** iOS last-good can keep Saturday's empty Oklahoma keys after the live board landed. */
@@ -175,7 +177,17 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
       const predConfidence = Number(g.predConfidence ?? seed?.predConfidence);
       const predMovement = g.predMovement || seed?.predMovement;
       const ufPctDelta = Number(g.ufPctDelta ?? seed?.ufPctDelta);
-      const oklahomaIntel = id === 'oklahoma' ? preferOklahomaIntel(g, seed) : null;
+      const stampedIntel =
+        id === 'oklahoma' || id === 'fsu' ? preferOklahomaIntel(g, seed) : null;
+      const livePct = Number(g.ufPct);
+      const seedPct = Number(seed?.ufPct);
+      const ufPct =
+        Number.isFinite(livePct) && livePct > 0
+          ? livePct
+          : Number.isFinite(seedPct) && seedPct > 0
+            ? seedPct
+            : 50;
+      const predSat = g.predSat === true || seed?.predSat === true;
       return {
         ...g,
         id,
@@ -189,10 +201,11 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
         ...(Number.isFinite(ufPctDelta) ? { ufPctDelta } : {}),
         label: String(g.label || id).trim(),
         venue: String(g.venue || '').trim(),
-        ufPct: Number.isFinite(Number(g.ufPct)) ? Number(g.ufPct) : 50,
-        keys: oklahomaIntel ? oklahomaIntel.keys : Array.isArray(g.keys) ? g.keys : [],
-        swing: oklahomaIntel ? oklahomaIntel.swing : Array.isArray(g.swing) ? g.swing : [],
-        ...(oklahomaIntel?.howUFWins ? { howUFWins: oklahomaIntel.howUFWins } : {}),
+        ufPct,
+        ...(predSat ? { predSat: true } : {}),
+        keys: stampedIntel ? stampedIntel.keys : Array.isArray(g.keys) ? g.keys : [],
+        swing: stampedIntel ? stampedIntel.swing : Array.isArray(g.swing) ? g.swing : [],
+        ...(stampedIntel?.howUFWins ? { howUFWins: stampedIntel.howUFWins } : {}),
         ...(Array.isArray(g.radar) && g.radar.length
           ? {
               radar: g.radar
@@ -206,7 +219,7 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
           : seed?.radar
             ? { radar: seed.radar }
             : {}),
-        film: lockBroadcastWindow(String(oklahomaIntel?.film || g.film || '')),
+        film: lockBroadcastWindow(String(stampedIntel?.film || g.film || '')),
         filmNotes: Array.isArray(g.filmNotes)
           ? g.filmNotes.map((n) => lockBroadcastWindow(String(n || '').trim())).filter(Boolean)
           : seed?.filmNotes?.map((n) => lockBroadcastWindow(n)),
@@ -219,12 +232,12 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
           ? g.defenseScout.map((n) => String(n || '').trim()).filter(Boolean)
           : undefined,
         scoutingReport:
-          String(oklahomaIntel?.scoutingReport || g.scoutingReport || '').trim()
-            ? lockBroadcastWindow(String(oklahomaIntel?.scoutingReport || g.scoutingReport || '').trim())
+          String(stampedIntel?.scoutingReport || g.scoutingReport || '').trim()
+            ? lockBroadcastWindow(String(stampedIntel?.scoutingReport || g.scoutingReport || '').trim())
             : undefined,
-        pred: String(g.pred || ''),
-        predUF: Number.isFinite(Number(g.predUF)) ? Number(g.predUF) : 0,
-        predOpp: Number.isFinite(Number(g.predOpp)) ? Number(g.predOpp) : 0,
+        pred: String(g.pred || seed?.pred || ''),
+        predUF: Number.isFinite(Number(g.predUF)) && Number(g.predUF) > 0 ? Number(g.predUF) : Number(seed?.predUF) || 0,
+        predOpp: Number.isFinite(Number(g.predOpp)) && Number(g.predOpp) > 0 ? Number(g.predOpp) : Number(seed?.predOpp) || 0,
         ...(Number.isFinite(Number(g.finalUF)) && Number.isFinite(Number(g.finalOpp))
           ? {
               finalUF: Number(g.finalUF),
@@ -268,7 +281,12 @@ function lastGoodKey(season: number): string {
 function hydrateBoard(parsed: ScheduleBoardLive | null | undefined): ScheduleBoardLive | null {
   const games = normalizeGames(parsed?.games);
   if (!games.length) return null;
-  const currentGameId = String(parsed?.currentGameId || '').trim() || undefined;
+  let currentGameId = String(parsed?.currentGameId || '').trim() || undefined;
+  const current = currentGameId ? games.find((g) => g.id === currentGameId) : undefined;
+  const kick = current ? parseScheduleKickoff(current.date) : null;
+  if (current && hasPostedFinal(current) && kick && Date.now() > kick.getTime()) {
+    currentGameId = undefined;
+  }
   const predThrough = String(parsed?.predThrough || '').trim() || undefined;
   return { games, currentGameId, ...(predThrough ? { predThrough } : {}) };
 }

@@ -38,6 +38,8 @@ test('ticker edge rewrites leftover Missouri and South Carolina week to Texas', 
   assert.match(src, /LEFTOVER_MISSOURI_NOW_RE/);
   assert.match(src, /4-0 heading into saturday/);
   assert.match(src, /south carolina/);
+  assert.match(src, /live — florida vs/);
+  assert.match(src, /6-4 heading/);
   assert.match(src, /visitors\\s\*\[—–-\]\\s\*easton royal/);
   assert.doesNotMatch(src, /\|easton royal\/i/);
   assert.match(src, /texas at dkr/);
@@ -50,7 +52,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the Vanderbilt week pack'
   assert.match(src, /pinVanderbiltWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'fsu-week-74'/);
+  assert.match(src, /NOW_BUST_VALUE = 'fsu-now-edge'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -73,7 +75,7 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /samuel\\s\+bailey/);
   assert.match(src, /florida 7,\\s\*oklahoma 23/);
   assert.match(src, /News — \$\{FSU_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'fsu-week-74'/);
+  assert.match(src, /NOW_BUST_VALUE = 'fsu-now-edge'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -91,7 +93,7 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'fsu-week-74'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'fsu-now-edge'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
