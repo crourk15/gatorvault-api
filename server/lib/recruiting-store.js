@@ -884,7 +884,12 @@ async function getPlayersBySlugs(slugs) {
 async function resolvePlayerKey(key) {
   const raw = String(key || '').trim();
   if (!raw) return null;
-  const normalized = raw.toLowerCase();
+  let normalized = raw.toLowerCase();
+  try {
+    normalized = require('./player-slug-alias').aliasPlayerSlug(normalized);
+  } catch {
+    /* keep normalized */
+  }
   const bySlug = await getPlayerBySlug(normalized);
   if (bySlug) return bySlug;
   if (!/^\d+$/.test(raw)) return null;

@@ -66,6 +66,9 @@ const require = createRequire(import.meta.url);
 const { healStaleFloridaCommitNote } = require('../../lib/player-profile-stamp') as {
   healStaleFloridaCommitNote: (note: unknown, recruiting: unknown) => unknown;
 };
+const { aliasPlayerSlug } = require('../../lib/player-slug-alias') as {
+  aliasPlayerSlug: (slug: string) => string;
+};
 
 export type FullProfileSource = 'postgres' | 'recruiting-store';
 
@@ -400,7 +403,7 @@ function peekRecruitingClassYear(slug: string): number | null {
 }
 
 export async function buildFullProfileBySlug(slug: string): Promise<FullProfileResponse | null> {
-  const normalized = String(slug || '').trim().toLowerCase();
+  const normalized = aliasPlayerSlug(String(slug || '').trim().toLowerCase());
   if (!normalized) return null;
 
   try {
@@ -587,8 +590,13 @@ export async function resolvePlayerSlugRecord(
   slug: string,
   context: 'recruiting' | 'futurecast' | 'roster' | 'auto' = 'auto'
 ): Promise<ResolvePlayerResponse | null> {
-  const normalized = String(slug || '').trim().toLowerCase();
+  const incoming = String(slug || '').trim().toLowerCase();
+  const normalized = aliasPlayerSlug(incoming);
   if (!normalized) return null;
+  const aliasedHref =
+    incoming && incoming !== normalized
+      ? `/vault/recruiting/player/${encodeURIComponent(normalized)}/`
+      : null;
 
   // Team roster taps must stay on roster profiles even when the same slug
   // also exists as a PORTAL/FutureCast player (e.g. Eric Singleton Jr.).
@@ -612,7 +620,7 @@ export async function resolvePlayerSlugRecord(
     if (postgres) {
       const player = await getPlayerById(postgres.playerId);
       if (player) {
-        let redirectHref: string | null = null;
+        let redirectHref: string | null = aliasedHref;
         if (
           player.status === 'PORTAL' &&
           context !== 'recruiting' &&
@@ -647,7 +655,7 @@ export async function resolvePlayerSlugRecord(
       kind: 'recruiting-fallback',
       playerId,
       canonicalSlug: recruiting.slug,
-      redirectHref: null,
+      redirectHref: aliasedHref,
       roster: null,
     };
   }

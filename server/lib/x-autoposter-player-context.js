@@ -98,7 +98,11 @@ function isValidPlayerName(name) {
   const SPATIAL_FALSE_SURNAMES = new Set(['here', 'there', 'today', 'tonight', 'tomorrow', 'now']);
   if (MONTH_FIRST_NAMES.has(core[0].toLowerCase())) return false;
   if (SPATIAL_FALSE_SURNAMES.has(core[core.length - 1].toLowerCase())) return false;
-  const POS_TOKENS = new Set(['qb', 'rb', 'wr', 'te', 'ol', 'ot', 'og', 'c', 'dl', 'dt', 'de', 'edge', 'lb', 'cb', 's', 'ath', 'k', 'p']);
+  const POS_TOKENS = new Set([
+    'qb', 'rb', 'wr', 'te', 'ol', 'ot', 'og', 'c', 'dl', 'dt', 'de', 'edge', 'lb', 'cb', 's', 'ath', 'k', 'p',
+    'lineman', 'linebacker', 'quarterback', 'receiver', 'running', 'tight', 'cornerback', 'safety',
+    'athlete', 'tackle', 'guard',
+  ]);
   if (POS_TOKENS.has(core[0].toLowerCase())) return false;
   if (/^(?:upcoming|early|first|major|top|new)\s+/i.test(trimmed)) return false;
   if (/\b(battles heat|heat up|commit lands|recruiting storylines?|flip targets|decision dates)\b/i.test(trimmed)) return false;

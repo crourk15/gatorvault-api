@@ -69,11 +69,19 @@ function visitHistoryPhrase(existing, player) {
   return 'shown interest in Florida this offseason';
 }
 
+function dropJunkContext(text) {
+  const t = String(text || '').trim();
+  if (!t) return '';
+  if (/^\([^)]*\)$/.test(t) || /^change of\b/i.test(t)) return '';
+  return t;
+}
+
 function optionalContext(rawDetail, maxLen = 120) {
-  const clean = sanitizeSourceText(rawDetail);
+  const clean = dropJunkContext(sanitizeSourceText(rawDetail));
   if (!clean || clean.length < 12) return '';
   const sentence = clean.split(/[.!?]/)[0].trim();
   if (!sentence || sentence.length < 12) return '';
+  if (!dropJunkContext(sentence)) return '';
   const clipped = sentence.length > maxLen ? `${sentence.slice(0, maxLen - 1).trim()}…` : sentence;
   if (/@\w|https?:|vip|tells/i.test(clipped)) return '';
   return clipped.endsWith('.') ? clipped : `${clipped}.`;
@@ -92,7 +100,9 @@ function buildSkinnyAlert({ player = {}, eventType = 'target_update', row = {}, 
   const stars = starPrefix(player.stars);
   const pos = posLabel(player.pos);
   const name = playerName(player.name);
-  const ctx = extraContext != null ? sanitizeSourceText(extraContext) : optionalContext(row.detail);
+  const ctx = dropJunkContext(
+    extraContext != null ? sanitizeSourceText(extraContext) : optionalContext(row.detail)
+  );
 
   switch (eventType) {
     case 'official_visit':
@@ -108,7 +118,8 @@ function buildSkinnyAlert({ player = {}, eventType = 'target_update', row = {}, 
       ]);
 
     case 'visit_cancelled':
-    case 'ov_change': {
+    case 'ov_change':
+    case 'change_of': {
       const next = String(row.nextVisitSchool || player.nextVisitSchool || '').trim();
       const base = `${stars} ${pos} ${name} has cancelled his official visit to Florida.`.replace(/\s+/g, ' ').trim();
       return next ? `${base} He is now scheduled to visit ${next}.` : base;
@@ -150,7 +161,9 @@ function buildProfileNote({
   const name = schoolCommitPrefix(player);
   const pos = posLabel(player.pos);
   const priority = priorityLabel(player);
-  const ctx = extraContext != null ? sanitizeSourceText(extraContext) : optionalContext(row.detail, 160);
+  const ctx = dropJunkContext(
+    extraContext != null ? sanitizeSourceText(extraContext) : optionalContext(row.detail, 160)
+  );
   const next = String(row.nextVisitSchool || player.nextVisitSchool || '').trim();
 
   switch (eventType) {
@@ -170,6 +183,7 @@ function buildProfileNote({
 
     case 'visit_cancelled':
     case 'ov_change':
+    case 'change_of':
       return joinParts([
         `${name} cancelled his scheduled official visit to Florida${next ? ` and is now targeting ${next}` : ''}.`,
         `Florida had been evaluating him as a ${priority} ${pos} target.`,
@@ -228,6 +242,7 @@ function buildRecruitingCopy({ player, existing, eventType, row = {} }) {
 
 module.exports = {
   sanitizeSourceText,
+  optionalContext,
   buildSkinnyAlert,
   buildProfileNote,
   buildRecruitingCopy,

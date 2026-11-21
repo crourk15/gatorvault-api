@@ -386,6 +386,13 @@ function weightFromHtWt(htWt) {
 function overlayVerifiedFloridaProfile(player, recruiting) {
   if (!player || !recruiting) return player;
   const slug = String(player.slug || recruiting.slug || '').toLowerCase();
+  const decommitted =
+    isOpenUfDecommitPlayer(recruiting) ||
+    isOpenUfDecommitPlayer({ slug }) ||
+    String(recruiting.status || '').toLowerCase() === 'decommitted';
+  if (decommitted) {
+    return { ...player, committedTo: null };
+  }
   if (!/^florida$/i.test(String(recruiting.committedTo || ''))) return player;
   if (recruiting.verifiedCommit !== true && !isVerifiedUfCommitAnyYear(slug)) return player;
 

@@ -284,7 +284,12 @@ const ALL_ALLOWED = new Set([...ALLOWLIST_2027, ...ALLOWLIST_2028]);
 
 function canonicalTargetSlug(rawSlug) {
   const s = String(rawSlug || '').trim().toLowerCase();
-  return SLUG_ALIASES[s] || s;
+  if (SLUG_ALIASES[s]) return SLUG_ALIASES[s];
+  try {
+    return require('./player-slug-alias').aliasPlayerSlug(s);
+  } catch {
+    return s;
+  }
 }
 
 function isAllowlistedTarget(player) {

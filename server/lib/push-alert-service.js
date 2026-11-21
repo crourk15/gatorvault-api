@@ -278,9 +278,13 @@ function formatVisitWindow(log) {
 
 /** Single-player visit alerts open the recruit profile (not FutureCast). */
 function visitAlertPlayerUrl(slug) {
-  const normalized = String(slug || '').trim().toLowerCase();
-  if (!normalized) return `${SITE_URL}/vault/alerts/`;
-  return `${SITE_URL}/vault/recruiting/player/${encodeURIComponent(normalized)}/`;
+  try {
+    return require('./player-slug-alias').playerRecruitingProfileUrl(slug);
+  } catch {
+    const normalized = String(slug || '').trim().toLowerCase();
+    if (!normalized) return `${SITE_URL}/vault/alerts/`;
+    return `${SITE_URL}/vault/recruiting/player/${encodeURIComponent(normalized)}/`;
+  }
 }
 
 function buildScheduledPayload(log) {
@@ -323,7 +327,7 @@ function buildCommitPayload({ eventType, player, skinny }) {
   return {
     title: isFlip ? 'Gators flip' : 'Gators commit',
     body: skinny || `${stars}${name}${pos}${year} is headed to Florida.`,
-    url: slug ? `${SITE_URL}/vault/recruiting/player/${slug}/` : `${SITE_URL}/vault/recruiting/`,
+    url: slug ? visitAlertPlayerUrl(slug) : `${SITE_URL}/vault/recruiting/`,
     tag: `commit|${eventType}|${slug}|${player?.commitDate || ''}`,
     type: eventType === 'flip' ? 'flip' : 'commit',
     playerSlug: slug || null,

@@ -104,7 +104,12 @@ export async function augmentPlayerFromRecruiting(
     rankingNational: player.rankingNational ?? recruiting.natlRank ?? null,
     rankingPosition: player.rankingPosition ?? recruiting.posRank ?? null,
     rankingState: player.rankingState ?? recruiting.stateRank ?? null,
-    committedTo: player.committedTo ?? recruiting.committedTo ?? null,
+    committedTo:
+      String(recruiting.status || '').toLowerCase() === 'decommitted'
+        ? null
+        : recruiting.committedTo !== undefined
+          ? recruiting.committedTo
+          : player.committedTo ?? null,
     height,
     weight,
     ufFitScore:

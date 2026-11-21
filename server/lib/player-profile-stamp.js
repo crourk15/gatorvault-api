@@ -155,7 +155,20 @@ function floridaCommitBio(recruiting) {
  * Replace a stamped "committed to Texas" (or other non-Florida) bio once the
  * live row is a Florida commit. Leaves real Florida bios and other pledges.
  */
+function isDecommittedRecruiting(recruiting) {
+  return String(recruiting?.status || '').toLowerCase() === 'decommitted';
+}
+
 function healStaleFloridaCommitNote(note, recruiting) {
+  if (isDecommittedRecruiting(recruiting)) {
+    const text = String(note || '');
+    if (/committed to florida/i.test(text) && !/decommit/i.test(text)) {
+      const fresh = String(recruiting?.profileNote || recruiting?.skinny || '').trim();
+      if (fresh && /decommit/i.test(fresh)) return fresh;
+      return 'Decommitted from Florida.';
+    }
+    return note ?? null;
+  }
   if (!isFloridaSchool(recruiting?.committedTo)) return note ?? null;
   if (!noteSaysNonFloridaCommit(note)) {
     const existing = String(note || '').trim();
