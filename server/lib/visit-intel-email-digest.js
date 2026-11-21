@@ -60,9 +60,13 @@ function buildVisitDailyEmailHtml(recapRows, dayKey) {
 }
 
 function visitAlertPlayerUrl(slug) {
-  const normalized = String(slug || "").trim().toLowerCase();
-  if (!normalized) return `${SITE_URL}/vault/alerts/`;
-  return `${SITE_URL}/vault/recruiting/player/${encodeURIComponent(normalized)}/`;
+  try {
+    return require("./player-slug-alias").playerRecruitingProfileUrl(slug);
+  } catch {
+    const normalized = String(slug || "").trim().toLowerCase();
+    if (!normalized) return `${SITE_URL}/vault/alerts/`;
+    return `${SITE_URL}/vault/recruiting/player/${encodeURIComponent(normalized)}/`;
+  }
 }
 
 function isVisitEmailReady() {

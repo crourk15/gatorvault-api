@@ -109,4 +109,17 @@ describe('player-overview-mode', () => {
     });
     assert.equal(empty, null);
   });
+
+  it('commit stand ignores parenthetical (change of) staff note', () => {
+    const stand = mod.buildRecruitingStand({
+      player: { status: 'HS', committedTo: 'Florida', classYear: 2027 },
+      metrics: { ufFitScore: 0, ufFitLabel: null, ufFitTier: 0, portalHidden: true },
+      competingSchools: [],
+      futurecastSummary: null,
+      staffNote: '(change of)',
+      evaluationNote: null,
+    });
+    assert.doesNotMatch(stand.headline, /change of/i);
+    assert.match(stand.headline, /Committed to Florida/i);
+  });
 });

@@ -267,6 +267,9 @@ export function fanSignalTypeLabel(signalType: string | null | undefined): strin
     VISIT: 'Visit',
     OFFICIAL_VISIT: 'Official visit',
     UNOFFICIAL_VISIT: 'Unofficial visit',
+    OV_CHANGE: 'Visit change',
+    VISIT_CANCELLED: 'Visit cancelled',
+    CHANGE_OF: 'Visit change',
     COMMIT: 'Commit',
     DECOMMIT: 'Decommit',
     COMPETING_INTEREST: 'Board move',
@@ -274,6 +277,8 @@ export function fanSignalTypeLabel(signalType: string | null | undefined): strin
     STAFF_FLAG: 'Staff flag',
     PORTAL_ACTIVITY: 'Portal',
     INTEL: 'Intel',
+    RANKING_CHANGE: 'Ranking move',
+    PREDICTION_CHANGE: 'Board move',
   };
   if (map[type]) return map[type];
   return type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) || 'Update';

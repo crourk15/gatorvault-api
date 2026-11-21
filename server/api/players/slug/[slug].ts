@@ -26,18 +26,29 @@ import {
 } from '../utils';
 
 const require = createRequire(import.meta.url);
-const { verifiedClassYearForSlug, overlayVerifiedFloridaProfile } = require('../../../lib/recruiting-verified-commits') as {
+const { verifiedClassYearForSlug, overlayVerifiedFloridaProfile, isOpenUfDecommitPlayer } = require('../../../lib/recruiting-verified-commits') as {
   verifiedClassYearForSlug: (slug: string) => number | null;
   overlayVerifiedFloridaProfile: (
     player: Record<string, unknown>,
     recruiting: Record<string, unknown> | null
   ) => Record<string, unknown>;
+  isOpenUfDecommitPlayer: (player: { slug?: string | null } | null) => boolean;
+};
+const { aliasPlayerSlug } = require('../../../lib/player-slug-alias') as {
+  aliasPlayerSlug: (slug: string) => string;
 };
 
 async function withVerifiedFloridaCommit(slug: string, player: Record<string, unknown>) {
-  if (verifiedClassYearForSlug(slug) == null) return player;
   try {
     const recruiting = await getRecruitingPlayerBySlug(slug);
+    const decommitted =
+      isOpenUfDecommitPlayer({ slug }) ||
+      isOpenUfDecommitPlayer(recruiting) ||
+      String(recruiting?.status || '').toLowerCase() === 'decommitted';
+    if (decommitted) {
+      return overlayVerifiedFloridaProfile(player, recruiting || { slug, status: 'decommitted', committedTo: null });
+    }
+    if (verifiedClassYearForSlug(slug) == null) return player;
     return overlayVerifiedFloridaProfile(player, recruiting);
   } catch {
     return player;
@@ -61,7 +72,7 @@ async function tryRecruitingFallback(slug: string, res: Response): Promise<boole
 
 export const handleGetPlayerBySlug = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const slug = String(req.params.slug || '').toLowerCase();
+    const slug = aliasPlayerSlug(String(req.params.slug || '').toLowerCase());
     if (!slug || !isSlug(slug)) {
       sendError(res, 400, 'Invalid slug');
       return;

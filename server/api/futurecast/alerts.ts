@@ -41,7 +41,11 @@ function isGatorVaultBoardSlug(slug: string | null | undefined): boolean {
 function keepBoardIntelAlert(row: AlertRow): boolean {
   const slug = canonicalTargetSlug(row.playerSlug || row.playerId);
   if (!slug) return true; // generic movement banners
-  if (/ryan-peterson|jalanie-george|keoni-snipes|zylen-little|josiah-taylor/i.test(slug)) {
+  if (
+    /ryan-peterson|jalanie-george|keoni-snipes|zylen-little|josiah-taylor|lineman-moreno-fisher/i.test(
+      slug
+    )
+  ) {
     return false;
   }
   // Named player alerts must be on the GatorVault 2027/2028 board.
@@ -141,7 +145,7 @@ function softAlertsFromIntel(): { alerts: AlertRow[]; updatedAt: string; ok: tru
 
 export const handleGetFutureCastAlerts = asyncHandler(async (_req: Request, res: Response) => {
   try {
-    await sendCachedJson(res, 'futurecast:alerts:v3-board', buildFutureCastAlertsPayload, {
+    await sendCachedJson(res, 'futurecast:alerts:v4-board', buildFutureCastAlertsPayload, {
       softOnDeferred: softAlertsFromIntel,
       backgroundBuildOnSoft: true,
     });

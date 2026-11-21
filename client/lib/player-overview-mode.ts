@@ -51,6 +51,8 @@ function firstSentence(text: string | null | undefined): string | null {
     .replace(/\s+/g, ' ')
     .trim();
   if (!t) return null;
+  if (/^\([^)]{0,40}\)$/.test(t)) return null;
+  if (/^change of\b/i.test(t)) return null;
   const m = t.match(/^(.{12,160}?[.!?])(?:\s|$)/);
   if (m?.[1]) return m[1].trim();
   if (t.length <= 160) return t;

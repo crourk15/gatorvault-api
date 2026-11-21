@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Player profile click-through from a `(change of)` / visit-change email: `lineman-moreno-fisher` aliases to Moreno Fisher, Van Norden decommit overlays off a stale FutureCast Florida pledge, and skinny copy drops parenthetical junk. API after Render — no Codemagic. Reopen the profile from the email once.
 - [x] Winter 2027 portal research is desk-only (`server/data/portal/winter-2027-research.json`). Fan portal board stays empty. Live API portal season is the NCAA football window **January 4–13, 2027** (no December / no spring football window). Not on `/vault/portal` until Charles ships it. API after Render — no Codemagic for the research file. First-paint dormant copy is the bake row.
 - [x] FutureCast Lab restamped Nov 20 from live HP: Royal off Closing Class Flip Watch (Florida #7), 2028 Chase is the Nov 19 plate (59), Wright/Bailey/Cyion/Robinson stay off Chase. Grant is a 2027 commit, not a chase card. Live `/api/futurecast/high-priority` already feeds iOS — no Codemagic. Reopen FutureCast once.
 - [x] 2027 commit cards on web/API are On3 Industry national-rank order (Hiller #4, then Royal #7). Royal-first pin is off the API cache and Netlify edge. Hub bust `commits-natl-rank`. Cache rev `c12`. API + Netlify after deploy — no Codemagic. Reopen Recruiting 2027 once. Installed app JS still leads Royal until the bake row.

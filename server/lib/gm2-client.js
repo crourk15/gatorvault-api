@@ -26,9 +26,14 @@ function appendGvCta(text, meta = {}) {
 
 function formatVisitLabel(visitType) {
   const t = String(visitType || '').toLowerCase();
+  if (t === 'ov_change' || t === 'visit_cancelled' || t === 'change_of' || t === 'change of') {
+    return 'cancelled official visit';
+  }
   if (t.includes('official')) return 'official visit';
   if (t.includes('unofficial')) return 'unofficial visit';
-  return t.replace(/_/g, ' ') || 'recruiting window';
+  const cleaned = t.replace(/_/g, ' ').trim();
+  if (!cleaned || cleaned === 'change of') return 'recruiting window';
+  return cleaned;
 }
 
 function buildInsiderParagraph(player = {}, context = {}, intel = {}) {
@@ -120,5 +125,6 @@ async function complete(promptOrBundle) {
 module.exports = {
   complete,
   buildInsiderParagraph,
-  buildPredictionChangeParagraph
+  buildPredictionChangeParagraph,
+  formatVisitLabel
 };
