@@ -419,3 +419,17 @@ test('after the Kentucky final NOW points at Vanderbilt at home', () => {
   assert.ok(!cats.some((c) => c.label === 'Road'));
   assert.ok(!lines.some((s) => /Execute early|Avoid complacency|Develop depth/i.test(s)));
 });
+
+test('after the Vanderbilt final NOW points at FSU on the road', () => {
+  const now = new Date('2026-11-22T16:00:00.000Z');
+  const lines = buildWeeklyHomeNowLines(now, undefined, { breakInRows: [] });
+  assert.match(lines[0], /^Game — Florida State at Doak Campbell Stadium — 3:30 PM · ABC$/);
+  const rec = seasonRecord(now, getScheduleBoard(2026).games);
+  assert.deepEqual(rec, { wins: 7, losses: 4 });
+  assert.ok(lines.some((s) => /^Season — 7-4 heading into Friday$/.test(s)));
+  assert.ok(lines.some((s) => /^Road — on the road this Friday$/.test(s)));
+  const cats = buildWeeklyHomeNowCategories(now, undefined, { breakInRows: [] });
+  assert.equal(cats[1].label, 'Road');
+  assert.ok(!cats.some((c) => c.label === 'Visitors'));
+  assert.ok(!lines.some((s) => /Win field position|Avoid penalties|Win turnover margin/i.test(s)));
+});

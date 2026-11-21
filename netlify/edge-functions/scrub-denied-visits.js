@@ -7,20 +7,22 @@
 const DENIED = [{ slug: 'tranard-roberts', nameRe: /tranard\s+roberts/i, schoolRe: /auburn/i }];
 
 const APP_STORE_UPDATE_RE = /1\.0\.29|update in the App Store/i;
-const SEASON_STANDING = '6-4 · SEC home Saturday';
-// Kentucky is final. Saved boards still pin Kroger / 5-4 / Moreno Fisher.
+const SEASON_STANDING = '7-4 heading into Friday';
+// Vanderbilt is final. Saved boards still pin the Swamp / 6-4 / Grant.
+const FSU_NOW_GAME = 'Florida State at Doak Campbell Stadium — 3:30 PM · ABC';
+const FSU_NOW_NEWS = 'Terrance Grant flips to Florida';
 const VANDY_NOW_GAME = 'Vanderbilt in the Swamp — 12:00 PM';
 const VANDY_NOW_NEWS = 'Terrance Grant flips to Florida';
 const KY_NOW_GAME = 'Kentucky at Kroger Field — 6:15 PM · ESPN';
 const KY_NOW_NEWS = 'Moreno Fisher commits to Florida';
 const STALE_NOW_NEWS_RE =
-  /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey|florida 7,\s*oklahoma 23|moreno\s+fisher|florida 21,\s*kentucky 14/i;
+  /cyion\s+smith|lorenzo\s+mcmullen|samuel\s+bailey|florida 7,\s*oklahoma 23|moreno\s+fisher|florida 21,\s*kentucky 14|florida 34,\s*vanderbilt 27/i;
 /**
  * Posted Kentucky final — last-good Kroger / 5-4 / Fisher must not beat
  * Vanderbilt week. Older leftover boards stay in the same rewrite.
  */
 const LEFTOVER_MISSOURI_NOW_RE =
-  /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45|visitors\s*[—–-]\s*easton royal|texas at dkr|dkr-texas|4-2 heading into saturday|12:00\s*pm\s*·\s*abc|georgia at mercedes|mercedes-benz|5-2 heading into saturday|florida 27,\s*texas 24|oklahoma in the swamp|7:45 pm · sec network|5-3\s*·\s*sec home saturday|florida 8,\s*georgia 27|moreno fisher|kentucky at kroger|kroger field|6:15 pm · espn|5-4 heading into saturday|florida 7,\s*oklahoma 23/i;
+  /missouri|faurot|4-0 heading into saturday|abc or sec network|12:00\s*[–-]\s*1:00|samuel\s+bailey|south carolina|4-1\s*·\s*sec home|12:45|visitors\s*[—–-]\s*easton royal|texas at dkr|dkr-texas|4-2 heading into saturday|12:00\s*pm\s*·\s*abc|georgia at mercedes|mercedes-benz|5-2 heading into saturday|florida 27,\s*texas 24|oklahoma in the swamp|7:45 pm · sec network|5-3\s*·\s*sec home saturday|florida 8,\s*georgia 27|moreno fisher|kentucky at kroger|kroger field|6:15 pm · espn|5-4 heading into saturday|florida 7,\s*oklahoma 23|vanderbilt in the swamp|6-4\s*·\s*sec home saturday|florida 21,\s*kentucky 14/i;
 /** Sep 21 was ABC-or-ESPN. SEC locked ABC Sep 27. Git ESPN overlay snapped NOW back. */
 const MISSOURI_ESPN_NOW_RE = /missouri[\s\S]{0,80}espn|espn[\s\S]{0,80}missouri/i;
 
@@ -57,14 +59,14 @@ function pinLeftoverMissouriNow(data) {
   return {
     data: {
       ...data,
-      items: [`Game — ${VANDY_NOW_GAME}`, `News — ${VANDY_NOW_NEWS}`, `Season — ${SEASON_STANDING}`],
+      items: [`Game — ${FSU_NOW_GAME}`, `News — ${FSU_NOW_NEWS}`, `Season — ${SEASON_STANDING}`],
       nowWeek: [
-        { key: 'game', label: 'Game', items: [VANDY_NOW_GAME] },
-        { key: 'news', label: 'News', items: [VANDY_NOW_NEWS] },
+        { key: 'game', label: 'Game', items: [FSU_NOW_GAME] },
+        { key: 'news', label: 'News', items: [FSU_NOW_NEWS] },
         { key: 'season', label: 'Season', items: [SEASON_STANDING] },
       ],
       ...(Array.isArray(data.ticker)
-        ? { ticker: [`Game — ${VANDY_NOW_GAME}`, `News — ${VANDY_NOW_NEWS}`, `Season — ${SEASON_STANDING}`] }
+        ? { ticker: [`Game — ${FSU_NOW_GAME}`, `News — ${FSU_NOW_NEWS}`, `Season — ${SEASON_STANDING}`] }
         : {}),
     },
     changed: true,
@@ -109,13 +111,13 @@ const TICKER_FALLBACK = {
   ok: true,
   status: 'ready',
   items: [
-    `Game — ${VANDY_NOW_GAME}`,
-    `News — ${VANDY_NOW_NEWS}`,
+    `Game — ${FSU_NOW_GAME}`,
+    `News — ${FSU_NOW_NEWS}`,
     `Season — ${SEASON_STANDING}`,
   ],
   nowWeek: [
-    { key: 'game', label: 'Game', items: [VANDY_NOW_GAME] },
-    { key: 'news', label: 'News', items: [VANDY_NOW_NEWS] },
+    { key: 'game', label: 'Game', items: [FSU_NOW_GAME] },
+    { key: 'news', label: 'News', items: [FSU_NOW_NEWS] },
     { key: 'season', label: 'Season', items: [SEASON_STANDING] },
   ],
   meta: { endpoint: 'ticker', cacheReason: 'now-edge-fallback' },
@@ -135,7 +137,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'vandy-grant-flip';
+const NOW_BUST_VALUE = 'fsu-week-74';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
@@ -226,6 +228,7 @@ const TEXAS_BOX = 'https://floridagators.com/sports/football/stats/2026/texas/bo
 const GEORGIA_BOX = 'https://floridagators.com/sports/football/stats/2026/georgia/boxscore/27910';
 const OKLAHOMA_BOX = 'https://floridagators.com/sports/football/stats/2026/oklahoma/boxscore/27911';
 const KENTUCKY_BOX = 'https://floridagators.com/sports/football/stats/2026/kentucky/boxscore/27912';
+const VANDY_BOX = 'https://floridagators.com/game-center/27913';
 const VANDY_DATE = 'November 21, 2026 · 12:00 PM ET';
 const VANDY_KEY_TITLES = [
   'Make the Freshman Beat You',
@@ -254,6 +257,36 @@ const VANDY_RADAR = [
   { label: 'Secondary', uf: 54, opp: 56 },
   { label: 'Special Teams', uf: 54, opp: 72 },
   { label: 'Coaching Edge', uf: 56, opp: 50 },
+];
+const FSU_DATE = 'November 27, 2026 · 3:30 PM ET';
+const FSU_TV = 'ABC';
+const FSU_PRED = 'UF 27 · FSU 23';
+const FSU_KEY_TITLES = [
+  'Take Away the Keep',
+  'Make Him Give It to You',
+  'Get Off the Field',
+];
+const FSU_HOW_UF_WINS = [
+  'Ashton Daniels is the run game.\n\nHe has 13 rushing touchdowns. That is the Florida State quarterback record. He has 14 passing touchdowns. One hundred thirteen carries. Four hundred forty yards. He is one of two quarterbacks in the country with 13 scores through the air and 13 on the ground.\n\nOusmane Kromah ran for 609 yards at 5.3 a carry in seven games. The Seminoles still live on the keep.\n\nVirginia was five rushing touchdowns in one afternoon. Pitt was 16-10. Boston College was 31-24. Rick Stockstill has them 2-0 since Mike Norvell was fired on Nov. 1. They are not lighting it up. They are handing it to the quarterback and letting him finish it.\n\nFlorida just let Sedrick Alexander run for 129 yards. That cannot be the plan against a quarterback who scores with his legs.\n\nFit the keep. Make Daniels a passer.',
+  'Daniels will give you the ball if you let the down get dirty.\n\nHe has thrown 12 interceptions. Florida State ranks 136th in interception rate. They take the ball away 0.7 times a game, 130th nationally.\n\nThey will beat themselves at Doak if Florida is in his face.\n\nDaniels went 16-for-24 for 163 yards at Pitt. The last two under Stockstill have been one-score games. This is not the Norvell explosion. This is a senior quarterback who still throws it to you.\n\nFlorida cannot play that game the other way. Take the one they give you.',
+  'Florida State does not get off the field.\n\nThe Seminoles rank 134th in EPA allowed on third down. That is the opening.\n\nFlorida just went 11-of-16 on third down against Vanderbilt. Aaron Philo is the starter the rest of the way. He threw for 241 yards on Senior Day. Sumrall named him the job barring something crazy.\n\nStay on schedule. Convert. Make Stockstill\'s defense live in the down they cannot play.\n\nDoak on Friday is not a field-goal game. Finish the drive.',
+];
+const FSU_SWING = [
+  { name: 'Myles Graham', role: FSU_HOW_UF_WINS[0] },
+  { name: 'Jayden Woods', role: FSU_HOW_UF_WINS[1] },
+  { name: 'Aaron Philo', role: FSU_HOW_UF_WINS[2] },
+];
+const FSU_FILM =
+  'Take Away the Keep. Daniels 13 rushing touchdowns, FSU quarterback record. 14 passing scores. 113-440. Kromah 114-609-5 in seven games. Virginia: five rushing scores. Stockstill 2-0, Pitt 16-10, Boston College 31-24. Alexander 129 on Saturday. Fit the keep. Make Him Give It to You. Daniels 12 interceptions, 136th in interception rate. 0.7 takeaways a game, 130th. Pitt: 16-for-24, 163. Get Off the Field. 134th in third-down EPA allowed. Florida 11-of-16 on third against Vanderbilt. Philo 241. Doak. Friday 3:30 PM ET. ABC.';
+const FSU_SCOUT =
+  'Take Away the Keep. Daniels 13 rushing touchdowns, FSU quarterback record. 14 passing scores. 113-440. Kromah 609 at 5.3. Stockstill 2-0. Make Him Give It to You. 12 interceptions, 136th in interception rate. 0.7 takeaways, 130th. Get Off the Field. 134th in third-down EPA allowed. Florida 11-of-16 on third. Philo 241. Doak. Friday 3:30 PM ET. ABC.';
+const FSU_RADAR = [
+  { label: 'Run Game', uf: 58, opp: 66 },
+  { label: 'Pass Efficiency', uf: 64, opp: 62 },
+  { label: 'Front 7', uf: 68, opp: 54 },
+  { label: 'Secondary', uf: 56, opp: 52 },
+  { label: 'Special Teams', uf: 55, opp: 55 },
+  { label: 'Coaching Edge', uf: 54, opp: 58 },
 ];
 const KY_DATE = 'November 14, 2026 · 6:15 PM ET';
 const KY_TV = 'ESPN';
@@ -502,13 +535,62 @@ function vanderbiltEdgeNeedPin(vu) {
   return false;
 }
 
-/** Render can still be on Kentucky week. Stamp the final, point the board at Vanderbilt. */
+function vanderbiltFinalNeedPin(vu) {
+  return Number(vu?.finalUF) !== 34 || Number(vu?.finalOpp) !== 27 || vu?.finalSource !== 'official';
+}
+
+function fsuWindowNeedPin(fsu) {
+  return fsu?.tv !== FSU_TV || String(fsu?.date || '') !== FSU_DATE;
+}
+
+function fsuKeysNeedPin(fsu) {
+  const keys = Array.isArray(fsu?.keys) ? fsu.keys.map((k) => String(k || '').trim()) : [];
+  if (keys.length !== 3) return true;
+  if (keys.some((k) => /win field position|avoid penalties|win turnover margin/i.test(k))) return true;
+  if (
+    keys[0] !== FSU_KEY_TITLES[0] ||
+    keys[1] !== FSU_KEY_TITLES[1] ||
+    keys[2] !== FSU_KEY_TITLES[2]
+  ) {
+    return true;
+  }
+  const swing = Array.isArray(fsu?.swing) ? fsu.swing : [];
+  if (swing[0]?.name !== 'Myles Graham' || swing[1]?.name !== 'Jayden Woods' || swing[2]?.name !== 'Aaron Philo') {
+    return true;
+  }
+  if (swing.some((row) => /qb1|contain their te/i.test(`${row?.name || ''} ${row?.role || ''}`))) return true;
+  if (/uf takes doak|faulkner wins early/i.test(String(fsu?.film || ''))) return true;
+  if (String(fsu?.film || '') !== FSU_FILM) return true;
+  const how = Array.isArray(fsu?.howUFWins) ? fsu.howUFWins.map((n) => String(n || '')) : [];
+  if (how.length < 3) return true;
+  if (!/13 rushing touchdowns/.test(how[0])) return true;
+  if (!/12 interceptions/.test(how[1])) return true;
+  if (!/Doak on Friday is not a field-goal game/.test(how[2])) return true;
+  return false;
+}
+
+function fsuEdgeNeedPin(fsu) {
+  if (Number(fsu?.ufPct) !== 58 || String(fsu?.pred || '') !== FSU_PRED || Number(fsu?.predUF) !== 27 || Number(fsu?.predOpp) !== 23) {
+    return true;
+  }
+  if (fsu?.predSat !== true) return true;
+  const radar = Array.isArray(fsu?.radar) ? fsu.radar : [];
+  if (radar.length < 6) return true;
+  if (Number(radar[0]?.uf) !== 58 || Number(radar[0]?.opp) !== 66) return true;
+  if (Number(radar[1]?.uf) !== 64 || Number(radar[1]?.opp) !== 62) return true;
+  if (Number(radar[2]?.uf) !== 68 || Number(radar[2]?.opp) !== 54) return true;
+  if (Number(radar[3]?.uf) !== 56 || Number(radar[3]?.opp) !== 52) return true;
+  if (Number(radar[5]?.uf) !== 54 || Number(radar[5]?.opp) !== 58) return true;
+  return false;
+}
+
+/** Render can still be on Vanderbilt week. Stamp the final, point the board at FSU. */
 function pinVanderbiltWeek(data) {
   if (!data || typeof data !== 'object') return { data, changed: false };
   const next = { ...data };
   let changed = false;
-  if (Array.isArray(next.games) && next.currentGameId !== 'vandy') {
-    next.currentGameId = 'vandy';
+  if (Array.isArray(next.games) && next.currentGameId !== 'fsu') {
+    next.currentGameId = 'fsu';
     changed = true;
   }
   if (Array.isArray(next.games)) {
@@ -650,6 +732,16 @@ function pinVanderbiltWeek(data) {
           vu = { ...vu, date: VANDY_DATE };
           vuChanged = true;
         }
+        if (vanderbiltFinalNeedPin(vu)) {
+          vu = {
+            ...vu,
+            finalUF: 34,
+            finalOpp: 27,
+            finalSource: 'official',
+            boxScoreUrl: vu.boxScoreUrl || VANDY_BOX,
+          };
+          vuChanged = true;
+        }
         if (vanderbiltKeysNeedPin(vu)) {
           vu = {
             ...vu,
@@ -680,6 +772,46 @@ function pinVanderbiltWeek(data) {
         if (vuChanged) {
           changed = true;
           return vu;
+        }
+        return game;
+      }
+      if (game.id === 'fsu') {
+        let fsu = game;
+        let fsuChanged = false;
+        if (fsuWindowNeedPin(fsu)) {
+          fsu = { ...fsu, tv: FSU_TV, date: FSU_DATE };
+          fsuChanged = true;
+        }
+        if (fsuKeysNeedPin(fsu)) {
+          fsu = {
+            ...fsu,
+            keys: FSU_KEY_TITLES.slice(),
+            howUFWins: FSU_HOW_UF_WINS.slice(),
+            swing: FSU_SWING.map((row) => ({ ...row })),
+            film: FSU_FILM,
+            scoutingReport: FSU_SCOUT,
+            filmWatched: false,
+          };
+          fsuChanged = true;
+        }
+        if (fsuEdgeNeedPin(fsu)) {
+          fsu = {
+            ...fsu,
+            ufPct: 58,
+            pred: FSU_PRED,
+            predUF: 27,
+            predOpp: 23,
+            predSat: true,
+            predConfidence: 70,
+            predMovement: 'up',
+            ufPctDelta: 12,
+            radar: FSU_RADAR.map((axis) => ({ ...axis })),
+          };
+          fsuChanged = true;
+        }
+        if (fsuChanged) {
+          changed = true;
+          return fsu;
         }
         return game;
       }

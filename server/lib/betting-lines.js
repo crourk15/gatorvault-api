@@ -235,24 +235,31 @@ const STATIC_LINES = [
     opponent: 'Vanderbilt',
     date: '2026-11-21T17:00:00.000Z',
     venue: 'Ben Hill Griffin Stadium',
-    // No trustworthy book stamp yet (Vegas Insider N/A; do not invent a spread).
+    // No pregame book stamp. Official final 34-27.
     spread: null,
     total: null,
     moneyline: { uf: null, opp: null },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
-    source: 'schedule'
+    source: 'schedule',
+    completed: true,
+    homeScore: 34,
+    awayScore: 27,
+    status: 'Final',
+    live: false,
+    scoreSource: 'official'
   },
   {
     id: 'uf-fsu-2026',
-    week: null,
-    game: 'Florida vs Florida State',
+    week: 13,
+    game: 'Florida at Florida State',
     opponent: 'Florida State',
-    date: '2026-11-29T20:00:00.000Z',
+    date: '2026-11-27T20:30:00.000Z',
     venue: 'Doak Campbell Stadium',
-    spread: { line: 'UF +3.5', uf: 3.5 },
-    total: 54.5,
-    moneyline: { uf: +145, opp: -170 },
+    // Public board Nov 20–21 2026: DraftKings / Vegas Insider consensus UF -4.5 / 52.5, ML -205 / +170.
+    spread: { line: 'UF -4.5', uf: -4.5 },
+    total: 52.5,
+    moneyline: { uf: -205, opp: +170 },
     sportsbookUrl: FANDUEL_AFFILIATE,
     sportsbookLinks: SPORTSBOOKS,
     source: 'schedule'

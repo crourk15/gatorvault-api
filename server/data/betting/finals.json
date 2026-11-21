@@ -88,5 +88,14 @@
     "opp": 14,
     "source": "official",
     "completedAt": "2026-11-15T03:30:00.000Z"
+  },
+  "uf-vandy-2026-w12": {
+    "gameKey": "uf-vandy-2026-w12",
+    "scheduleId": "vandy",
+    "opponent": "Vanderbilt",
+    "uf": 34,
+    "opp": 27,
+    "source": "official",
+    "completedAt": "2026-11-21T20:45:00.000Z"
   }
 }

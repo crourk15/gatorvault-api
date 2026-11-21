@@ -128,6 +128,7 @@ const BUNDLE_INTEL_KEYS = [
   'pred',
   'predUF',
   'predOpp',
+  'predSat',
   'film',
   'filmNotes',
   'keys',
