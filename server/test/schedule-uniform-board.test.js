@@ -197,15 +197,15 @@ describe('schedule uniform board', () => {
       const fresh = require('../lib/schedule-board');
       const board = fresh.getScheduleBoard(2026);
       const fsu = board.games.find((g) => g.id === 'fsu');
-      assert.equal(fsu.pred, 'UF 22 · FSU 24');
-      assert.equal(fsu.predUF, 22);
-      assert.equal(fsu.predOpp, 24);
-      assert.equal(fsu.ufPct, 46);
-      assert.match(fsu.film, /UF takes Doak/i);
+      assert.equal(fsu.pred, 'UF 27 · FSU 23');
+      assert.equal(fsu.predUF, 27);
+      assert.equal(fsu.predOpp, 23);
+      assert.equal(fsu.ufPct, 58);
+      assert.match(fsu.film, /Take Away the Keep/i);
       const rewritten = JSON.parse(fs.readFileSync(file, 'utf8'));
       const rewrittenFsu = rewritten.games.find((g) => g.id === 'fsu');
-      assert.equal(rewrittenFsu.pred, 'UF 22 · FSU 24');
-      assert.equal(rewrittenFsu.ufPct, 46);
+      assert.equal(rewrittenFsu.pred, 'UF 27 · FSU 23');
+      assert.equal(rewrittenFsu.ufPct, 58);
     } finally {
       if (prev == null) delete process.env.GV_SCHEDULE_PATH;
       else process.env.GV_SCHEDULE_PATH = prev;

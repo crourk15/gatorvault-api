@@ -43,7 +43,7 @@ const UF_2026_GAMES = [
   { id: 'oklahoma', opp: 'Oklahoma Sooners', date: 'November 7, 2026 7:45 PM ET' },
   { id: 'kentucky', opp: 'Kentucky Wildcats', date: 'November 14, 2026 6:15 PM ET' },
   { id: 'vanderbilt', opp: 'Vanderbilt Commodores', date: 'November 21, 2026 12:00 PM ET' },
-  { id: 'fsu', opp: 'Florida State Seminoles', date: 'November 27, 2026 TBA' },
+  { id: 'fsu', opp: 'Florida State Seminoles', date: 'November 27, 2026 3:30 PM ET' },
 ];
 
 let scoreboardCache = { at: 0, data: null };

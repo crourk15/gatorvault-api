@@ -310,6 +310,38 @@ describe('Game Week Film Notes', () => {
     );
   });
 
+  it('FSU 3 Keys are this rivalry, not the Vanderbilt skeleton or field-position filler', () => {
+    const fsu = SCHEDULE_GAMES.find((g) => g.id === 'fsu');
+    assert.ok(fsu);
+    assert.deepEqual(fsu.keys, [
+      'Take Away the Keep',
+      'Make Him Give It to You',
+      'Get Off the Field',
+    ]);
+    const bundle = getGameWeekBundle('fsu');
+    assert.equal(bundle.keys[0].title, 'Take Away the Keep');
+    assert.match(bundle.keys[0].body, /13 rushing touchdowns/);
+    assert.match(bundle.keys[1].body, /12 interceptions/);
+    assert.match(bundle.keys[2].body, /Doak on Friday is not a field-goal game/);
+    assert.equal(bundle.swingPlayers[0].name, 'Myles Graham');
+    assert.equal(bundle.swingPlayers[1].name, 'Jayden Woods');
+    assert.equal(bundle.swingPlayers[2].name, 'Aaron Philo');
+    assert.ok(!fsu.keys.some((k) => /Win field position|Avoid penalties|Win turnover margin/i.test(k)));
+    assert.ok(!fsu.keys.some((k) => /Make the Freshman Beat You|Take Away the One Guy|Make the Drive Worth Seven/i.test(k)));
+    const radar = buildRadar(fsu);
+    assert.deepEqual(radar, fsu.radar);
+    assert.equal(radar.find((a) => a.label === 'Run Game')?.uf, 58);
+    assert.equal(radar.find((a) => a.label === 'Run Game')?.opp, 66);
+    assert.equal(radar.find((a) => a.label === 'Front 7')?.uf, 68);
+    assert.equal(radar.find((a) => a.label === 'Coaching Edge')?.opp, 58);
+    assert.equal(fsu.pred, 'UF 27 · FSU 23');
+    assert.equal(fsu.ufPct, 58);
+    assert.equal(fsu.predSat, true);
+    assert.equal(fsu.finalUF, undefined);
+    assert.equal(SCHEDULE_GAMES.find((g) => g.id === 'vandy')?.finalUF, 34);
+    assert.equal(SCHEDULE_GAMES.find((g) => g.id === 'vandy')?.finalOpp, 27);
+  });
+
   it('Oklahoma Matchup Edge is the sat stamp, not the 50% formula', () => {
     const oklahoma = SCHEDULE_GAMES.find((g) => g.id === 'oklahoma');
     assert.ok(oklahoma);

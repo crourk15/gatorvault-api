@@ -26,8 +26,8 @@ describe('schedule-board', () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.count, payload.games.length);
     assert.ok(payload.updatedAt);
-    assert.equal(payload.predThrough, '2026-W10');
-    assert.equal(payload.currentGameId, 'vandy');
+    assert.equal(payload.predThrough, '2026-W11');
+    assert.equal(payload.currentGameId, 'fsu');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.equal(campbell.finalUF, 52);
     assert.equal(campbell.finalOpp, 3);
@@ -78,7 +78,7 @@ describe('schedule-board', () => {
   it('game-week meta games also hide desk scout', () => {
     const feed = require('../lib/game-week-feed');
     const payload = feed.buildGameWeekPayload();
-    assert.equal(payload.currentGameId, 'vandy');
+    assert.equal(payload.currentGameId, 'fsu');
     const campbell = payload.games.find((g) => g.id === 'campbell');
     assert.deepEqual(campbell.offenseScout, []);
     assert.equal(campbell.scoutingReport, undefined);
@@ -593,10 +593,38 @@ describe('schedule-board', () => {
     assert.equal(vandy.radar.find((a) => a.label === 'Secondary')?.opp, 56);
     assert.equal(vandy.radar.find((a) => a.label === 'Special Teams')?.opp, 72);
     assert.equal(vandy.radar.find((a) => a.label === 'Coaching Edge')?.uf, 56);
+    assert.equal(vandy.finalUF, 34);
+    assert.equal(vandy.finalOpp, 27);
+    assert.equal(vandy.finalSource, 'official');
     assert.notDeepEqual(
       vandy.radar.find((a) => a.label === 'Run Game'),
       { label: 'Run Game', uf: 78, opp: 56 }
     );
+    const fsu = board.games.find((g) => g.id === 'fsu');
+    assert.equal(fsu.date, 'November 27, 2026 · 3:30 PM ET');
+    assert.equal(fsu.tv, 'ABC');
+    assert.deepEqual(fsu.keys, [
+      'Take Away the Keep',
+      'Make Him Give It to You',
+      'Get Off the Field',
+    ]);
+    assert.equal(fsu.swing[0].name, 'Myles Graham');
+    assert.equal(fsu.swing[1].name, 'Jayden Woods');
+    assert.equal(fsu.swing[2].name, 'Aaron Philo');
+    assert.match(fsu.howUFWins[0], /13 rushing touchdowns/);
+    assert.match(fsu.howUFWins[1], /12 interceptions/);
+    assert.match(fsu.howUFWins[2], /Doak on Friday is not a field-goal game/);
+    assert.match(fsu.film, /Take Away the Keep/);
+    assert.ok(!fsu.keys?.some((k) => /Win field position|Avoid penalties|Win turnover margin/i.test(k)));
+    assert.equal(fsu.pred, 'UF 27 · FSU 23');
+    assert.equal(fsu.predUF, 27);
+    assert.equal(fsu.predOpp, 23);
+    assert.equal(fsu.predSat, true);
+    assert.equal(fsu.ufPct, 58);
+    assert.equal(fsu.radar.find((a) => a.label === 'Run Game')?.uf, 58);
+    assert.equal(fsu.radar.find((a) => a.label === 'Run Game')?.opp, 66);
+    assert.equal(fsu.radar.find((a) => a.label === 'Front 7')?.uf, 68);
+    assert.equal(fsu.radar.find((a) => a.label === 'Coaching Edge')?.opp, 58);
   });
 
   it('Swing Impact restamps from official box form + this opponent', () => {

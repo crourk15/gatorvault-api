@@ -4,17 +4,16 @@ const assert = require('assert');
 const { describe, it } = require('node:test');
 const scheduleBoard = require('../lib/schedule-board');
 
-/** Week 10 form overlay after Kentucky 21-14. */
-const WEEK10_REMAINING = {
-  vandy: { ufPct: 62, pred: 'UF 24 · Vanderbilt 17', predUF: 24, predOpp: 17 },
-  fsu: { ufPct: 46, pred: 'UF 22 · FSU 24', predUF: 22, predOpp: 24 },
+/** Week 11 remaining card after Vanderbilt 34-27. */
+const WEEK11_REMAINING = {
+  fsu: { ufPct: 58, pred: 'UF 27 · FSU 23', predUF: 27, predOpp: 23 },
 };
 
-describe('schedule remaining-season predictions (2026-W10)', () => {
-  it('keeps Week 10 form on remaining games after Kentucky 21-14', () => {
+describe('schedule remaining-season predictions (2026-W11)', () => {
+  it('keeps the sat FSU card after Vanderbilt 34-27', () => {
     const payload = scheduleBoard.toApiPayload();
-    assert.equal(payload.predThrough, '2026-W10');
-    assert.equal(payload.currentGameId, 'vandy');
+    assert.equal(payload.predThrough, '2026-W11');
+    assert.equal(payload.currentGameId, 'fsu');
     const uga = payload.games.find((g) => g.id === 'uga');
     assert.equal(uga.finalUF, 8);
     assert.equal(uga.finalOpp, 27);
@@ -40,7 +39,11 @@ describe('schedule remaining-season predictions (2026-W10)', () => {
     assert.equal(kentucky.finalUF, 21);
     assert.equal(kentucky.finalOpp, 14);
     assert.equal(kentucky.pred, 'UF 22 · Kentucky 23');
-    for (const [id, expected] of Object.entries(WEEK10_REMAINING)) {
+    const vandy = payload.games.find((g) => g.id === 'vandy');
+    assert.equal(vandy.finalUF, 34);
+    assert.equal(vandy.finalOpp, 27);
+    assert.equal(vandy.pred, 'UF 24 · Vanderbilt 17');
+    for (const [id, expected] of Object.entries(WEEK11_REMAINING)) {
       const game = payload.games.find((g) => g.id === id);
       assert.ok(game, `missing ${id}`);
       assert.equal(game.ufPct, expected.ufPct, `${id} ufPct`);

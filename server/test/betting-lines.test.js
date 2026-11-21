@@ -231,4 +231,24 @@ describe('betting-lines next game', () => {
     assert.equal(payload.finals['uf-kentucky-2026-w11'].uf, 21);
     assert.equal(payload.finals['uf-kentucky-2026-w11'].opp, 14);
   });
+
+  it('serves FSU as nextGame with UF -4.5 after the Vanderbilt final', async () => {
+    const when = new Date('2026-11-22T08:00:00.000Z');
+    const next = pickNextGame(STATIC_LINES, when);
+    assert.equal(next.id, 'uf-fsu-2026');
+    const payload = await getBettingLines(when);
+    assert.equal(payload.nextGame.id, 'uf-fsu-2026');
+    assert.equal(payload.nextGame.spread.line, 'UF -4.5');
+    assert.equal(payload.nextGame.spread.uf, -4.5);
+    assert.equal(payload.nextGame.total, 52.5);
+    assert.equal(payload.nextGame.moneyline.uf, -205);
+    assert.equal(payload.nextGame.moneyline.opp, 170);
+    assert.notEqual(payload.nextGame.spread.uf, 3.5);
+    assert.notEqual(payload.nextGame.total, 54.5);
+    assert.equal(payload.lastGame.id, 'uf-vandy-2026-w12');
+    assert.equal(payload.lastGame.homeScore, 34);
+    assert.equal(payload.lastGame.awayScore, 27);
+    assert.equal(payload.finals['uf-vandy-2026-w12'].uf, 34);
+    assert.equal(payload.finals['uf-vandy-2026-w12'].opp, 27);
+  });
 });

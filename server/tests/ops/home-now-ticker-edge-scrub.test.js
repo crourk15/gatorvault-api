@@ -13,7 +13,8 @@ const src = fs.readFileSync(
 test('ticker edge strips the 1.0.29 App Store line and falls back when origin 502s', () => {
   assert.match(src, /APP_STORE_UPDATE_RE/);
   assert.match(src, /now-edge-fallback/);
-  assert.match(src, /6-4 · SEC home Saturday/);
+  assert.match(src, /7-4 heading into Friday/);
+  assert.match(src, /Florida State at Doak Campbell Stadium — 3:30 PM · ABC/);
   assert.match(src, /Vanderbilt in the Swamp — 12:00 PM/);
   assert.match(src, /Terrance Grant flips to Florida/);
   assert.match(src, /Kentucky at Kroger Field — 6:15 PM · ESPN/);
@@ -49,7 +50,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the Vanderbilt week pack'
   assert.match(src, /pinVanderbiltWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'vandy-grant-flip'/);
+  assert.match(src, /NOW_BUST_VALUE = 'fsu-week-74'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -71,8 +72,8 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /lorenzo\\s\+mcmullen/);
   assert.match(src, /samuel\\s\+bailey/);
   assert.match(src, /florida 7,\\s\*oklahoma 23/);
-  assert.match(src, /News — \$\{VANDY_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'vandy-grant-flip'/);
+  assert.match(src, /News — \$\{FSU_NOW_NEWS\}/);
+  assert.match(src, /NOW_BUST_VALUE = 'fsu-week-74'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -90,7 +91,7 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'vandy-grant-flip'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'fsu-week-74'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
@@ -177,13 +178,13 @@ test('2027 hub edge drops Van Norden and stamps Grant-week 28 / 61% to 27 / 63%'
   assert.equal(pinned.data.classOverviewAll[2027].commits, '27');
 });
 
-test('schedule edge pins Vanderbilt week over an empty iOS last-good board', () => {
+test('schedule edge pins FSU week over an empty iOS last-good board', () => {
   const start = src.indexOf('const TEXAS_BOX');
   const end = src.indexOf('const HUB_BUST_COOKIE');
   assert.ok(start > 0 && end > start);
   const { pinVanderbiltWeek } = new Function(`${src.slice(start, end)}; return { pinVanderbiltWeek };`)();
   const empty = {
-    currentGameId: 'kentucky',
+    currentGameId: 'vandy',
     games: [
       {
         id: 'oklahoma',
@@ -208,11 +209,19 @@ test('schedule edge pins Vanderbilt week over an empty iOS last-good board', () 
         swing: [{ name: 'Backup units', role: 'Rep evaluation' }],
         film: 'Vanderbilt improving — treat as SEC test.',
       },
+      {
+        id: 'fsu',
+        tv: 'ABC',
+        date: 'November 27, 2026 · 3:30 PM ET',
+        keys: ['Win field position battle', 'Avoid penalties', 'Win turnover margin'],
+        swing: [{ name: 'QB1', role: 'Composure in hostile environment' }],
+        film: 'Everything on the line. UF takes Doak — finish drives and win the turnover battle.',
+      },
     ],
   };
   const pinned = pinVanderbiltWeek(empty);
   assert.equal(pinned.changed, true);
-  assert.equal(pinned.data.currentGameId, 'vandy');
+  assert.equal(pinned.data.currentGameId, 'fsu');
   const ou = pinned.data.games[0];
   const ky = pinned.data.games[1];
   const vu = pinned.data.games[2];
@@ -290,10 +299,37 @@ test('schedule edge pins Vanderbilt week over an empty iOS last-good board', () 
   assert.equal(vu.radar[3].opp, 56);
   assert.equal(vu.radar[4].opp, 72);
   assert.equal(vu.radar[5].uf, 56);
+  assert.equal(vu.finalUF, 34);
+  assert.equal(vu.finalOpp, 27);
+  assert.equal(vu.finalSource, 'official');
+  const fsu = pinned.data.games[3];
+  assert.equal(fsu.date, 'November 27, 2026 · 3:30 PM ET');
+  assert.equal(fsu.tv, 'ABC');
+  assert.deepEqual(fsu.keys, [
+    'Take Away the Keep',
+    'Make Him Give It to You',
+    'Get Off the Field',
+  ]);
+  assert.equal(fsu.swing[0].name, 'Myles Graham');
+  assert.equal(fsu.swing[1].name, 'Jayden Woods');
+  assert.equal(fsu.swing[2].name, 'Aaron Philo');
+  assert.match(fsu.howUFWins[0], /13 rushing touchdowns/);
+  assert.match(fsu.howUFWins[1], /12 interceptions/);
+  assert.match(fsu.howUFWins[2], /Doak on Friday is not a field-goal game/);
+  assert.match(fsu.film, /Take Away the Keep/);
+  assert.equal(fsu.pred, 'UF 27 · FSU 23');
+  assert.equal(fsu.predUF, 27);
+  assert.equal(fsu.predOpp, 23);
+  assert.equal(fsu.predSat, true);
+  assert.equal(fsu.ufPct, 58);
+  assert.equal(fsu.radar[0].uf, 58);
+  assert.equal(fsu.radar[0].opp, 66);
+  assert.equal(fsu.radar[2].uf, 68);
+  assert.equal(fsu.radar[5].opp, 58);
 
   const live = pinVanderbiltWeek({
-    currentGameId: 'vandy',
-    games: [{ ...ou }, { ...ky }, { ...vu }],
+    currentGameId: 'fsu',
+    games: [{ ...ou }, { ...ky }, { ...vu }, { ...fsu }],
   });
   assert.equal(live.changed, false);
 });

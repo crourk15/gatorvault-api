@@ -105,7 +105,7 @@ export type ScheduleGame = {
 };
 
 /** Bundled remaining-season pred week. Peek drops a leftover last-good stamp older than this. */
-export const SCHEDULE_SEED_PRED_THROUGH = '2026-W10';
+export const SCHEDULE_SEED_PRED_THROUGH = '2026-W11';
 
 /** SEC locked Texas noon to ABC on Oct 11. Saved boards still say the Oct 5 window. */
 export function lockBroadcastWindow(tv?: string | null): string {
@@ -917,6 +917,10 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       { label: "Special Teams", uf: 54, opp: 72 },
       { label: "Coaching Edge", uf: 56, opp: 50 },
     ],
+    finalUF: 34,
+    finalOpp: 27,
+    finalSource: "official",
+    boxScoreUrl: "https://floridagators.com/game-center/27913",
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27913",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-vanderbilt-commodores-gainesville-florida-11-21-2026/event/2200645C219C0A2B",
@@ -937,22 +941,57 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     opp: "Florida State Seminoles",
     date: "November 27, 2026 · 3:30 PM ET",
     venue: "Doak Campbell Stadium, Tallahassee FL",
-    ufPct: 46,
+    ufPct: 58,
     tv: "ABC",
-    keys: ["Win field position battle", "Avoid penalties", "Win turnover margin"],
-    swing: [
-      { name: "QB1", role: "Composure in hostile environment" },
-      { name: "Myles Graham", role: "Contain their TE weapon" },
+    keys: [
+      "Take Away the Keep",
+      "Make Him Give It to You",
+      "Get Off the Field",
     ],
-    film: "Everything on the line. UF takes Doak — finish drives and win the turnover battle.",
-    pred: "UF 22 · FSU 24",
-    predUF: 22,
-    predOpp: 24,
+    howUFWins: [
+      "Ashton Daniels is the run game.\n\nHe has 13 rushing touchdowns. That is the Florida State quarterback record. He has 14 passing touchdowns. One hundred thirteen carries. Four hundred forty yards. He is one of two quarterbacks in the country with 13 scores through the air and 13 on the ground.\n\nOusmane Kromah ran for 609 yards at 5.3 a carry in seven games. The Seminoles still live on the keep.\n\nVirginia was five rushing touchdowns in one afternoon. Pitt was 16-10. Boston College was 31-24. Rick Stockstill has them 2-0 since Mike Norvell was fired on Nov. 1. They are not lighting it up. They are handing it to the quarterback and letting him finish it.\n\nFlorida just let Sedrick Alexander run for 129 yards. That cannot be the plan against a quarterback who scores with his legs.\n\nFit the keep. Make Daniels a passer.",
+      "Daniels will give you the ball if you let the down get dirty.\n\nHe has thrown 12 interceptions. Florida State ranks 136th in interception rate. They take the ball away 0.7 times a game, 130th nationally.\n\nThey will beat themselves at Doak if Florida is in his face.\n\nDaniels went 16-for-24 for 163 yards at Pitt. The last two under Stockstill have been one-score games. This is not the Norvell explosion. This is a senior quarterback who still throws it to you.\n\nFlorida cannot play that game the other way. Take the one they give you.",
+      "Florida State does not get off the field.\n\nThe Seminoles rank 134th in EPA allowed on third down. That is the opening.\n\nFlorida just went 11-of-16 on third down against Vanderbilt. Aaron Philo is the starter the rest of the way. He threw for 241 yards on Senior Day. Sumrall named him the job barring something crazy.\n\nStay on schedule. Convert. Make Stockstill's defense live in the down they cannot play.\n\nDoak on Friday is not a field-goal game. Finish the drive.",
+    ],
+    swing: [
+      {
+        name: "Myles Graham",
+        role: "Ashton Daniels is the run game.\n\nHe has 13 rushing touchdowns. That is the Florida State quarterback record. He has 14 passing touchdowns. One hundred thirteen carries. Four hundred forty yards. He is one of two quarterbacks in the country with 13 scores through the air and 13 on the ground.\n\nOusmane Kromah ran for 609 yards at 5.3 a carry in seven games. The Seminoles still live on the keep.\n\nVirginia was five rushing touchdowns in one afternoon. Pitt was 16-10. Boston College was 31-24. Rick Stockstill has them 2-0 since Mike Norvell was fired on Nov. 1. They are not lighting it up. They are handing it to the quarterback and letting him finish it.\n\nFlorida just let Sedrick Alexander run for 129 yards. That cannot be the plan against a quarterback who scores with his legs.\n\nFit the keep. Make Daniels a passer.",
+      },
+      {
+        name: "Jayden Woods",
+        role: "Daniels will give you the ball if you let the down get dirty.\n\nHe has thrown 12 interceptions. Florida State ranks 136th in interception rate. They take the ball away 0.7 times a game, 130th nationally.\n\nThey will beat themselves at Doak if Florida is in his face.\n\nDaniels went 16-for-24 for 163 yards at Pitt. The last two under Stockstill have been one-score games. This is not the Norvell explosion. This is a senior quarterback who still throws it to you.\n\nFlorida cannot play that game the other way. Take the one they give you.",
+      },
+      {
+        name: "Aaron Philo",
+        role: "Florida State does not get off the field.\n\nThe Seminoles rank 134th in EPA allowed on third down. That is the opening.\n\nFlorida just went 11-of-16 on third down against Vanderbilt. Aaron Philo is the starter the rest of the way. He threw for 241 yards on Senior Day. Sumrall named him the job barring something crazy.\n\nStay on schedule. Convert. Make Stockstill's defense live in the down they cannot play.\n\nDoak on Friday is not a field-goal game. Finish the drive.",
+      },
+    ],
+    film: "Take Away the Keep. Daniels 13 rushing touchdowns, FSU quarterback record. 14 passing scores. 113-440. Kromah 114-609-5 in seven games. Virginia: five rushing scores. Stockstill 2-0, Pitt 16-10, Boston College 31-24. Alexander 129 on Saturday. Fit the keep. Make Him Give It to You. Daniels 12 interceptions, 136th in interception rate. 0.7 takeaways a game, 130th. Pitt: 16-for-24, 163. Get Off the Field. 134th in third-down EPA allowed. Florida 11-of-16 on third against Vanderbilt. Philo 241. Doak. Friday 3:30 PM ET. ABC.",
+    filmWatched: false,
+    pred: "UF 27 · FSU 23",
+    predUF: 27,
+    predOpp: 23,
+    predSat: true,
+    predConfidence: 70,
+    predMovement: "up",
+    ufPctDelta: 12,
     filmLessonId: "frl00010-0000-4000-8000-00000000000a",
-    opponentTendencies: ["RPO and quick game in rivalry setting", "TE usage in red zone", "Tempo spikes in critical moments"],
-    howUFWins: ["Faulkner wins early downs without turnovers", "White coverage matches sim pressure looks", "Special teams and field position decide it"],
+    opponentTendencies: [
+      "Daniels keeps it — 13 rushing touchdowns, FSU quarterback record",
+      "12 interceptions — they give the ball away",
+      "Kromah 5.3 a carry when he is in",
+    ],
     scoutingReport:
-      "Rivalry game at Doak — field position and turnover margin decide it. UF's 3-3-5 is built to handle spread RPO; offense must finish drives.",
+      "Take Away the Keep. Daniels 13 rushing touchdowns, FSU quarterback record. 14 passing scores. 113-440. Kromah 609 at 5.3. Stockstill 2-0. Make Him Give It to You. 12 interceptions, 136th in interception rate. 0.7 takeaways, 130th. Get Off the Field. 134th in third-down EPA allowed. Florida 11-of-16 on third. Philo 241. Doak. Friday 3:30 PM ET. ABC.",
+    radar: [
+      { label: "Run Game", uf: 58, opp: 66 },
+      { label: "Pass Efficiency", uf: 64, opp: 62 },
+      { label: "Front 7", uf: 68, opp: 54 },
+      { label: "Secondary", uf: 56, opp: 52 },
+      { label: "Special Teams", uf: 55, opp: 55 },
+      { label: "Coaching Edge", uf: 54, opp: 58 },
+    ],
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27914",
       tickpick: "https://www.tickpick.com/buy-florida-state-seminoles-vs-florida-gators-tickets-doak-campbell-stadium-11-27-26-3pm/7528939/",
