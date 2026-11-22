@@ -314,20 +314,21 @@ describe('Game Week Film Notes', () => {
     const fsu = SCHEDULE_GAMES.find((g) => g.id === 'fsu');
     assert.ok(fsu);
     assert.deepEqual(fsu.keys, [
-      'Take Away the Keep',
-      'Make Him Give It to You',
-      'Get Off the Field',
+      'Keep Them on Their Side',
+      'Break the First Tackle, Find the Field',
+      'Take Away Their Second Down',
     ]);
     const bundle = getGameWeekBundle('fsu');
-    assert.equal(bundle.keys[0].title, 'Take Away the Keep');
-    assert.match(bundle.keys[0].body, /13 rushing touchdowns/);
-    assert.match(bundle.keys[1].body, /12 interceptions/);
-    assert.match(bundle.keys[2].body, /Doak on Friday is not a field-goal game/);
-    assert.equal(bundle.swingPlayers[0].name, 'Myles Graham');
-    assert.equal(bundle.swingPlayers[1].name, 'Jayden Woods');
-    assert.equal(bundle.swingPlayers[2].name, 'Aaron Philo');
+    assert.equal(bundle.keys[0].title, 'Keep Them on Their Side');
+    assert.match(bundle.keys[0].body, /40\.6 percent success rate/);
+    assert.match(bundle.keys[1].body, /121st in line yards allowed/);
+    assert.match(bundle.keys[2].body, /second down stops belonging to them/);
+    assert.equal(bundle.swingPlayers[0].name, 'Jayden Woods');
+    assert.equal(bundle.swingPlayers[1].name, 'Jadan Baugh');
+    assert.equal(bundle.swingPlayers[2].name, 'Myles Graham');
     assert.ok(!fsu.keys.some((k) => /Win field position|Avoid penalties|Win turnover margin/i.test(k)));
     assert.ok(!fsu.keys.some((k) => /Make the Freshman Beat You|Take Away the One Guy|Make the Drive Worth Seven/i.test(k)));
+    assert.ok(!fsu.keys.some((k) => /Take Away the Keep|Make Him Give It to You|Get Off the Field/i.test(k)));
     const radar = buildRadar(fsu);
     assert.deepEqual(radar, fsu.radar);
     assert.equal(radar.find((a) => a.label === 'Run Game')?.uf, 58);

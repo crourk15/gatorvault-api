@@ -137,7 +137,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'fsu-now-edge';
+const NOW_BUST_VALUE = 'fsu-keys';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
@@ -262,24 +262,24 @@ const FSU_DATE = 'November 27, 2026 · 3:30 PM ET';
 const FSU_TV = 'ABC';
 const FSU_PRED = 'UF 27 · FSU 23';
 const FSU_KEY_TITLES = [
-  'Take Away the Keep',
-  'Make Him Give It to You',
-  'Get Off the Field',
+  'Keep Them on Their Side',
+  'Break the First Tackle, Find the Field',
+  'Take Away Their Second Down',
 ];
 const FSU_HOW_UF_WINS = [
-  'Ashton Daniels is the run game.\n\nHe has 13 rushing touchdowns. That is the Florida State quarterback record. He has 14 passing touchdowns. One hundred thirteen carries. Four hundred forty yards. He is one of two quarterbacks in the country with 13 scores through the air and 13 on the ground.\n\nOusmane Kromah ran for 609 yards at 5.3 a carry in seven games. The Seminoles still live on the keep.\n\nVirginia was five rushing touchdowns in one afternoon. Pitt was 16-10. Boston College was 31-24. Rick Stockstill has them 2-0 since Mike Norvell was fired on Nov. 1. They are not lighting it up. They are handing it to the quarterback and letting him finish it.\n\nFlorida just let Sedrick Alexander run for 129 yards. That cannot be the plan against a quarterback who scores with his legs.\n\nFit the keep. Make Daniels a passer.',
-  'Daniels will give you the ball if you let the down get dirty.\n\nHe has thrown 12 interceptions. Florida State ranks 136th in interception rate. They take the ball away 0.7 times a game, 130th nationally.\n\nThey will beat themselves at Doak if Florida is in his face.\n\nDaniels went 16-for-24 for 163 yards at Pitt. The last two under Stockstill have been one-score games. This is not the Norvell explosion. This is a senior quarterback who still throws it to you.\n\nFlorida cannot play that game the other way. Take the one they give you.',
-  'Florida State does not get off the field.\n\nThe Seminoles rank 134th in EPA allowed on third down. That is the opening.\n\nFlorida just went 11-of-16 on third down against Vanderbilt. Aaron Philo is the starter the rest of the way. He threw for 241 yards on Senior Day. Sumrall named him the job barring something crazy.\n\nStay on schedule. Convert. Make Stockstill\'s defense live in the down they cannot play.\n\nDoak on Friday is not a field-goal game. Finish the drive.',
+  'Florida State is two different offenses depending on which side of the 50 it is playing on.\n\nIn its own half, FSU has a 40.6 percent success rate, 110th nationally, with 0.00 EPA. Cross midfield and everything changes: 48.3 percent success, 41st nationally, and +0.19 EPA, 29th.\n\nDo not let them become that offense.\n\nJayden Woods and the Florida defense need to kill drives before the field flips. Force FSU to keep operating in the part of the field where it has been ordinary. Make them earn the right to cross the 50 instead of giving them the field where their offense comes alive.',
+  'Florida State\'s run defense has a second-level problem.\n\nThe Seminoles rank 121st in line yards allowed, 112th in stuff rate and 131st in open-field yards allowed at 1.60 per carry. Get through the first wave and there is yardage waiting behind it.\n\nThat is where Jadan Baugh can change the game.\n\nBaugh has 197 carries for 981 yards and 16 touchdowns. Florida does not need to spend all afternoon trying to overpower FSU at the line. Get Baugh through it. Make the first defender miss, reach the second level and force a defense that has struggled in space to finish the play.',
+  'First down sets the trap.\n\nFlorida State has succeeded on just 42.2 percent of first downs, 90th nationally. Second down is different. The Seminoles produce +0.18 EPA on second down, 31st in the country.\n\nSo take that down away from them before it arrives.\n\nMyles Graham and the Florida front need to win first down and create 2nd-and-long. Make FSU use its best down from its worst situation. Stop the first-down run, close the easy throwing window and force the Seminoles behind schedule.\n\nWin first down, and second down stops belonging to them.',
 ];
 const FSU_SWING = [
-  { name: 'Myles Graham', role: FSU_HOW_UF_WINS[0] },
-  { name: 'Jayden Woods', role: FSU_HOW_UF_WINS[1] },
-  { name: 'Aaron Philo', role: FSU_HOW_UF_WINS[2] },
+  { name: 'Jayden Woods', role: FSU_HOW_UF_WINS[0] },
+  { name: 'Jadan Baugh', role: FSU_HOW_UF_WINS[1] },
+  { name: 'Myles Graham', role: FSU_HOW_UF_WINS[2] },
 ];
 const FSU_FILM =
-  'Take Away the Keep. Daniels 13 rushing touchdowns, FSU quarterback record. 14 passing scores. 113-440. Kromah 114-609-5 in seven games. Virginia: five rushing scores. Stockstill 2-0, Pitt 16-10, Boston College 31-24. Alexander 129 on Saturday. Fit the keep. Make Him Give It to You. Daniels 12 interceptions, 136th in interception rate. 0.7 takeaways a game, 130th. Pitt: 16-for-24, 163. Get Off the Field. 134th in third-down EPA allowed. Florida 11-of-16 on third against Vanderbilt. Philo 241. Doak. Friday 3:30 PM ET. ABC.';
+  'Keep Them on Their Side. Own half 40.6 percent success, 110th, 0.00 EPA. Across midfield 48.3 percent, 41st, +0.19 EPA, 29th. Woods. Kill the drive before the field flips. Break the First Tackle, Find the Field. 121st in line yards allowed, 112th in stuff rate, 131st in open-field yards at 1.60 a carry. Baugh 197-981-16. Get him through the first wave. Take Away Their Second Down. First down 42.2 percent success, 90th. Second down +0.18 EPA, 31st. Graham. Win first down. Make 2nd-and-long. Doak. Friday 3:30 PM ET. ABC.';
 const FSU_SCOUT =
-  'Take Away the Keep. Daniels 13 rushing touchdowns, FSU quarterback record. 14 passing scores. 113-440. Kromah 609 at 5.3. Stockstill 2-0. Make Him Give It to You. 12 interceptions, 136th in interception rate. 0.7 takeaways, 130th. Get Off the Field. 134th in third-down EPA allowed. Florida 11-of-16 on third. Philo 241. Doak. Friday 3:30 PM ET. ABC.';
+  'Keep Them on Their Side. Own half 40.6 percent success, 110th, 0.00 EPA. Across midfield 48.3 percent, 41st, +0.19 EPA, 29th. Woods. Break the First Tackle, Find the Field. 121st in line yards, 112th in stuff, 131st in open-field at 1.60. Baugh 197-981-16. Take Away Their Second Down. First down 42.2 percent, 90th. Second down +0.18 EPA, 31st. Graham. Win first down. Doak. Friday 3:30 PM ET. ABC.';
 const FSU_RADAR = [
   { label: 'Run Game', uf: 58, opp: 66 },
   { label: 'Pass Efficiency', uf: 64, opp: 62 },
@@ -555,17 +555,17 @@ function fsuKeysNeedPin(fsu) {
     return true;
   }
   const swing = Array.isArray(fsu?.swing) ? fsu.swing : [];
-  if (swing[0]?.name !== 'Myles Graham' || swing[1]?.name !== 'Jayden Woods' || swing[2]?.name !== 'Aaron Philo') {
+  if (swing[0]?.name !== 'Jayden Woods' || swing[1]?.name !== 'Jadan Baugh' || swing[2]?.name !== 'Myles Graham') {
     return true;
   }
   if (swing.some((row) => /qb1|contain their te/i.test(`${row?.name || ''} ${row?.role || ''}`))) return true;
-  if (/uf takes doak|faulkner wins early/i.test(String(fsu?.film || ''))) return true;
+  if (/uf takes doak|faulkner wins early|take away the keep/i.test(String(fsu?.film || ''))) return true;
   if (String(fsu?.film || '') !== FSU_FILM) return true;
   const how = Array.isArray(fsu?.howUFWins) ? fsu.howUFWins.map((n) => String(n || '')) : [];
   if (how.length < 3) return true;
-  if (!/13 rushing touchdowns/.test(how[0])) return true;
-  if (!/12 interceptions/.test(how[1])) return true;
-  if (!/Doak on Friday is not a field-goal game/.test(how[2])) return true;
+  if (!/40\.6 percent success rate/.test(how[0])) return true;
+  if (!/121st in line yards allowed/.test(how[1])) return true;
+  if (!/second down stops belonging to them/.test(how[2])) return true;
   return false;
 }
 

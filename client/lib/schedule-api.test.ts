@@ -283,12 +283,44 @@ describe('schedule-api uniforms', () => {
     const peeked = peekScheduleBoard(2026);
     assert.equal(peeked.currentGameId, undefined);
     const row = peeked.games.find((g) => g.id === 'fsu');
-    assert.equal(row?.keys?.[0], 'Take Away the Keep');
+    assert.equal(row?.keys?.[0], 'Keep Them on Their Side');
     assert.equal(row?.ufPct, 58);
     assert.equal(row?.pred, 'UF 27 · FSU 23');
     assert.equal(row?.predSat, true);
     assert.equal(row?.radar?.[0]?.uf, 58);
     assert.equal(__scheduleApiTest.readLastGood(2026)?.currentGameId, undefined);
+  });
+
+  it('peekScheduleBoard drops the keep/INT/kick FSU last-good keys for the live seed', () => {
+    const fsu = SCHEDULE_GAMES.find((g) => g.id === 'fsu');
+    assert.ok(fsu);
+    __scheduleApiTest.clearLastGood(2026);
+    __scheduleApiTest.writeLastGood(2026, {
+      games: [
+        {
+          ...fsu,
+          keys: ['Take Away the Keep', 'Make Him Give It to You', 'Get Off the Field'],
+          howUFWins: ['Fit the keep.', 'Take the one they give you.', 'Finish the drive.'],
+          swing: [
+            { name: 'Myles Graham', role: 'Fit the keep.' },
+            { name: 'Jayden Woods', role: 'Take the one they give you.' },
+            { name: 'Aaron Philo', role: 'Finish the drive.' },
+          ],
+        },
+      ],
+      currentGameId: 'fsu',
+    });
+    const peeked = peekScheduleBoard(2026);
+    const row = peeked.games.find((g) => g.id === 'fsu');
+    assert.deepEqual(row?.keys, [
+      'Keep Them on Their Side',
+      'Break the First Tackle, Find the Field',
+      'Take Away Their Second Down',
+    ]);
+    assert.equal(row?.swing?.[0]?.name, 'Jayden Woods');
+    assert.equal(row?.swing?.[1]?.name, 'Jadan Baugh');
+    assert.equal(row?.swing?.[2]?.name, 'Myles Graham');
+    assert.match(String(row?.howUFWins?.[0] || ''), /40\.6 percent success rate/);
   });
 
   it('peekScheduleBoard prefers last-good live keys over the baked seed', () => {

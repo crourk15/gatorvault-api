@@ -201,7 +201,7 @@ describe('schedule uniform board', () => {
       assert.equal(fsu.predUF, 27);
       assert.equal(fsu.predOpp, 23);
       assert.equal(fsu.ufPct, 58);
-      assert.match(fsu.film, /Take Away the Keep/i);
+      assert.match(fsu.film, /Keep Them on Their Side/i);
       const rewritten = JSON.parse(fs.readFileSync(file, 'utf8'));
       const rewrittenFsu = rewritten.games.find((g) => g.id === 'fsu');
       assert.equal(rewrittenFsu.pred, 'UF 27 · FSU 23');

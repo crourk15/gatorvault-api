@@ -52,7 +52,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the Vanderbilt week pack'
   assert.match(src, /pinVanderbiltWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'fsu-now-edge'/);
+  assert.match(src, /NOW_BUST_VALUE = 'fsu-keys'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -75,7 +75,7 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /samuel\\s\+bailey/);
   assert.match(src, /florida 7,\\s\*oklahoma 23/);
   assert.match(src, /News — \$\{FSU_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'fsu-now-edge'/);
+  assert.match(src, /NOW_BUST_VALUE = 'fsu-keys'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -93,7 +93,7 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'fsu-now-edge'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'fsu-keys'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
@@ -308,17 +308,17 @@ test('schedule edge pins FSU week over an empty iOS last-good board', () => {
   assert.equal(fsu.date, 'November 27, 2026 · 3:30 PM ET');
   assert.equal(fsu.tv, 'ABC');
   assert.deepEqual(fsu.keys, [
-    'Take Away the Keep',
-    'Make Him Give It to You',
-    'Get Off the Field',
+    'Keep Them on Their Side',
+    'Break the First Tackle, Find the Field',
+    'Take Away Their Second Down',
   ]);
-  assert.equal(fsu.swing[0].name, 'Myles Graham');
-  assert.equal(fsu.swing[1].name, 'Jayden Woods');
-  assert.equal(fsu.swing[2].name, 'Aaron Philo');
-  assert.match(fsu.howUFWins[0], /13 rushing touchdowns/);
-  assert.match(fsu.howUFWins[1], /12 interceptions/);
-  assert.match(fsu.howUFWins[2], /Doak on Friday is not a field-goal game/);
-  assert.match(fsu.film, /Take Away the Keep/);
+  assert.equal(fsu.swing[0].name, 'Jayden Woods');
+  assert.equal(fsu.swing[1].name, 'Jadan Baugh');
+  assert.equal(fsu.swing[2].name, 'Myles Graham');
+  assert.match(fsu.howUFWins[0], /40\.6 percent success rate/);
+  assert.match(fsu.howUFWins[1], /121st in line yards allowed/);
+  assert.match(fsu.howUFWins[2], /second down stops belonging to them/);
+  assert.match(fsu.film, /Keep Them on Their Side/);
   assert.equal(fsu.pred, 'UF 27 · FSU 23');
   assert.equal(fsu.predUF, 27);
   assert.equal(fsu.predOpp, 23);

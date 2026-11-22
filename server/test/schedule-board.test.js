@@ -604,17 +604,17 @@ describe('schedule-board', () => {
     assert.equal(fsu.date, 'November 27, 2026 · 3:30 PM ET');
     assert.equal(fsu.tv, 'ABC');
     assert.deepEqual(fsu.keys, [
-      'Take Away the Keep',
-      'Make Him Give It to You',
-      'Get Off the Field',
+      'Keep Them on Their Side',
+      'Break the First Tackle, Find the Field',
+      'Take Away Their Second Down',
     ]);
-    assert.equal(fsu.swing[0].name, 'Myles Graham');
-    assert.equal(fsu.swing[1].name, 'Jayden Woods');
-    assert.equal(fsu.swing[2].name, 'Aaron Philo');
-    assert.match(fsu.howUFWins[0], /13 rushing touchdowns/);
-    assert.match(fsu.howUFWins[1], /12 interceptions/);
-    assert.match(fsu.howUFWins[2], /Doak on Friday is not a field-goal game/);
-    assert.match(fsu.film, /Take Away the Keep/);
+    assert.equal(fsu.swing[0].name, 'Jayden Woods');
+    assert.equal(fsu.swing[1].name, 'Jadan Baugh');
+    assert.equal(fsu.swing[2].name, 'Myles Graham');
+    assert.match(fsu.howUFWins[0], /40\.6 percent success rate/);
+    assert.match(fsu.howUFWins[1], /121st in line yards allowed/);
+    assert.match(fsu.howUFWins[2], /second down stops belonging to them/);
+    assert.match(fsu.film, /Keep Them on Their Side/);
     assert.ok(!fsu.keys?.some((k) => /Win field position|Avoid penalties|Win turnover margin/i.test(k)));
     assert.equal(fsu.pred, 'UF 27 · FSU 23');
     assert.equal(fsu.predUF, 27);

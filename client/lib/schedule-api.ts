@@ -104,7 +104,7 @@ function preferKickoffDate(live: string, seed?: string): string {
 }
 
 function isStubKeyTitle(title: string): boolean {
-  return /win early downs|protect the football|limit explosives|win field position|avoid penalties|win turnover margin/i.test(title);
+  return /win early downs|protect the football|limit explosives|win field position|avoid penalties|win turnover margin|take away the keep|make him give it to you|get off the field/i.test(title);
 }
 
 /** iOS last-good can keep Saturday's empty Oklahoma keys after the live board landed. */
