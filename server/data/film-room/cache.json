@@ -384,6 +384,26 @@
     ],
     "pressers": [
       {
+        "id": "yt_3BPiF6o7kQI",
+        "slug": "florida-football-press-conference-coach-sumrall-11-23-26",
+        "title": "Florida Football Press Conference | Coach Sumrall 11-23-26",
+        "dek": "",
+        "gameLine": "Florida Gators Football",
+        "season": "2026",
+        "category": "Press Conferences",
+        "duration": "YouTube",
+        "thumbUrl": "https://i4.ytimg.com/vi/3BPiF6o7kQI/hqdefault.jpg",
+        "videoUrl": "https://www.youtube.com/watch?v=3BPiF6o7kQI",
+        "youtubeId": "3BPiF6o7kQI",
+        "embedUrl": "https://www.youtube.com/embed/3BPiF6o7kQI",
+        "source": "Florida Gators Football",
+        "autoUpdate": true,
+        "mediaReady": true,
+        "featured": false,
+        "publishedAt": "2026-11-23T17:01:29.000Z",
+        "ingestedAt": "2026-11-23T20:00:00.000Z"
+      },
+      {
         "id": "yt_mCGBP7M7108",
         "slug": "florida-football-coach-sumrall-press-conference-11-9-26",
         "title": "Florida Football | Coach Sumrall Press Conference 11-9-26",

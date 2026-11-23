@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Film Room Monday presser: Sumrall FSU-week `Florida Football Press Conference | Coach Sumrall 11-23-26` (`3BPiF6o7kQI`). Repo cache unions into stale durable so the 3-hour YouTube cron miss cannot keep the 11-21 postgame on top. API after Render — no Codemagic. Reopen Film Room Press once.
 - [x] Game Week Matchup Edge legend is **UF / FSU**. Live `/api/schedule` stamps FSU `opp` to `FSU` so the installed 1.0.33 first-word split cannot paint Florida. Edge one-shot busts `gv-now-bust=fsu-legend`. API + Netlify after deploy — no Codemagic. Force-quit and reopen Game Week once.
 - [x] FutureCast Best scheme matches drops visit-change leftover **change of**. Live HP / scheme-match filter after Render — no Codemagic. Reopen FutureCast once. Installed first-paint seed is the bake row if it still has the junk name.
 - [x] Game Week FSU 3 Keys: Keep Them on Their Side, Break the First Tackle, Find the Field, Take Away Their Second Down. Jayden Woods, Jadan Baugh, Myles Graham. Charles copy. Own-half 40.6% / 110th vs opposite-half 48.3% / 41st; open-field D 131st at 1.60; first down 42.2% / 90th vs second down +0.18 EPA / 31st. Edge pins `/api/schedule` and one-shot busts `gv-now-bust=fsu-keys`. API + Netlify after deploy — no Codemagic. Force-quit and reopen Game Week once.
