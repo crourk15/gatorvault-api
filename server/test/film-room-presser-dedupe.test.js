@@ -83,6 +83,30 @@ describe('Film Room presser same-event dedupe', () => {
     assert.match(out[0].title, /11-9-26/);
   });
 
+  it('keeps the dated 11-23 Monday presser over a same-day practice wrap', () => {
+    const rows = [
+      {
+        id: 'yt_wrap1123',
+        youtubeId: 'wrap1123xxx',
+        title: 'Florida Football Press Conference | Coach Sumrall',
+        source: 'Florida Gators Football',
+        publishedAt: '2026-11-23T19:00:00.000Z',
+      },
+      {
+        id: 'yt_3BPiF6o7kQI',
+        youtubeId: '3BPiF6o7kQI',
+        title: 'Florida Football Press Conference | Coach Sumrall 11-23-26',
+        source: 'Florida Gators Football',
+        publishedAt: '2026-11-23T17:01:29.000Z',
+      },
+    ];
+    assert.equal(presserEventKey(rows[0]), presserEventKey(rows[1]));
+    const out = dedupePressersByEvent(rows);
+    assert.equal(out.length, 1);
+    assert.equal(out[0].youtubeId, '3BPiF6o7kQI');
+    assert.match(out[0].title, /11-23-26/);
+  });
+
   it('keeps distinct SEC Media Days speakers on the same day', () => {
     const rows = [
       {

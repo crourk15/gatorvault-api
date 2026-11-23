@@ -40,6 +40,17 @@ test('shouldKeepEntry keeps football pressers and drops soccer', () => {
   assert.equal(shouldKeepEntry(drop, florida), false);
 });
 
+test('shouldKeepEntry keeps FSU-week Monday Sumrall 11-23-26', () => {
+  const football = { kind: 'gators_football', bucket: 'pressers', label: 'Florida Gators Football' };
+  assert.equal(
+    shouldKeepEntry(
+      { title: 'Florida Football Press Conference | Coach Sumrall 11-23-26' },
+      football
+    ),
+    true
+  );
+});
+
 test('shouldKeepEntry keeps official game highlights on the football channel', () => {
   const football = { kind: 'gators_football', bucket: 'pressers', label: 'Florida Gators Football' };
   const keep = { title: 'Game Highlights | Week One | Florida vs. FAU' };
