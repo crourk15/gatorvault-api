@@ -133,7 +133,11 @@ export function GameWeekCommandCenter({
             {bundle.game.predPending ? null : (
               <WinProbabilityGaugeWidget ufPct={bundle.game.ufPct} prediction={bundle.prediction} />
             )}
-            <ScoutingRadarChart axes={bundle.radar} opponentName={bundle.game.opp} />
+            <ScoutingRadarChart
+              axes={bundle.radar}
+              opponentName={bundle.game.opp}
+              opponentId={bundle.game.id}
+            />
           </div>
         </div>
       </section>

@@ -102,6 +102,22 @@ const OPPONENT_META: Record<string, { short: string; logo: string }> = {
   fsu: { short: 'FSU', logo: 'FSU' },
 };
 
+/**
+ * Matchup Edge legend short — never first-word "Florida" for Florida State.
+ * Uses schedule shorts (FSU, FAU, SC, MISS) so UF / Florida cannot paint as UF vs UF.
+ */
+export function radarOpponentShort(gameId?: string, opponentName?: string): string {
+  const id = String(gameId || '').trim().toLowerCase();
+  if (id && OPPONENT_META[id]?.short) return OPPONENT_META[id].short;
+  const n = String(opponentName || '').trim();
+  if (!n) return 'OPP';
+  if (/\bflorida\s+state\b|\bseminoles\b|\bfsu\b/i.test(n)) return 'FSU';
+  if (/\bflorida\s+atlantic\b|\bfau\b/i.test(n)) return 'FAU';
+  if (/\bsouth\s+carolina\b|\bgamecocks\b/i.test(n)) return 'SC';
+  if (/\bole\s+miss\b|\brebels\b/i.test(n)) return 'MISS';
+  return n.split(/\s+/)[0] || 'OPP';
+}
+
 const TV_PLACEHOLDERS = new Set(['FLEX', 'EARLY', 'NIGHT', 'TBD', '—', '-']);
 const POSTGAME_MS = 8 * 3600_000;
 

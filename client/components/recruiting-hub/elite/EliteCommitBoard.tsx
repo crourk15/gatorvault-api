@@ -37,18 +37,27 @@ function commitNatlRank(row: RhHubCommit | null | undefined): number {
   return 9999;
 }
 
+function commitRating(row: RhHubCommit | null | undefined): number {
+  const n = Number(row?.rating);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
 /** Commit cards paint in On3 Industry national-rank order. */
 export function sortCommitsByNatlRank(year: number, rows: RhHubCommit[] | null | undefined): RhHubCommit[] {
   const list = Array.isArray(rows) ? [...rows] : [];
   if (Number(year) === 2027 && !list.some((row) => String(row?.id || '').toLowerCase() === 'easton-royal')) {
     list.push(EASTON_ROYAL_COMMIT);
   }
-  return list.sort((a, b) => commitNatlRank(a) - commitNatlRank(b) || String(a.name || '').localeCompare(String(b.name || '')));
-}
-
-/** @deprecated use sortCommitsByNatlRank — Royal is #7, not the first card. */
-export function leadWithEastonRoyal(year: number, rows: RhHubCommit[] | null | undefined): RhHubCommit[] {
-  return sortCommitsByNatlRank(year, rows);
+  return list
+    .map((row, index) => ({ row, index }))
+    .sort((a, b) => {
+      const rank = commitNatlRank(a.row) - commitNatlRank(b.row);
+      if (rank) return rank;
+      const rating = commitRating(b.row) - commitRating(a.row);
+      if (rating) return rating;
+      return a.index - b.index;
+    })
+    .map((entry) => entry.row);
 }
 
 export function EliteCommitBoard(_props: Props = {}): React.ReactElement {

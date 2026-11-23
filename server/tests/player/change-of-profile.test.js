@@ -73,4 +73,10 @@ describe('change-of email / profile click-through', () => {
     const leftover = sanitizeSourceText('Change of schools from "Florida" to "Texas"');
     assert.doesNotMatch(leftover, /\(change of\)/i);
   });
+
+  it('rejects change of as a player name', () => {
+    assert.equal(isValidPlayerName('change of'), false);
+    assert.equal(isValidPlayerName('Change of'), false);
+    assert.equal(isValidPlayerName('Moreno Fisher'), true);
+  });
 });

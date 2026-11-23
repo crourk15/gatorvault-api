@@ -35,8 +35,8 @@ test('Royal pin keeps the hero flip and does not move him to card 1', () => {
       title: 'Florida Recruiting',
       subtitle: 'Who Florida is chasing — movement, board, and beat intel.',
       commits: [
-        { id: 'maxwell-hiller', name: 'Maxwell Hiller', rankNote: '#4 natl' },
-        { id: 'easton-royal', name: 'Easton Royal', rankNote: '#7 natl' },
+        { id: 'easton-royal', name: 'Easton Royal', rankNote: '#7 natl', rating: '98.3' },
+        { id: 'maxwell-hiller', name: 'Maxwell Hiller', rankNote: '#4 natl', rating: '98.6' },
         { id: 'raheem-floyd', name: 'Raheem Floyd', rankNote: '#94 natl' },
       ],
       movementFeed: [{ id: 'visit-tranard', name: 'Tranard Roberts', event: 'visit' }],
@@ -70,6 +70,8 @@ test('web EliteCommitBoard sorts by national rank instead of leading Royal', () 
     'utf8'
   );
   assert.match(src, /function sortCommitsByNatlRank/);
-  assert.match(src, /commitNatlRank\(a\) - commitNatlRank\(b\)/);
+  assert.match(src, /commitNatlRank\(a\.row\) - commitNatlRank\(b\.row\)/);
+  assert.match(src, /sortCommitsByNatlRank\(year, data\)/);
+  assert.doesNotMatch(src, /function leadWithEastonRoyal/);
   assert.doesNotMatch(src, /return \[existing \?\? EASTON_ROYAL_COMMIT, \.\.\.rest\]/);
 });

@@ -52,6 +52,8 @@ const BLOCKED_PLAYER_SLUGS = new Set([
   'andrew-whittemore',
   // Beat/On3 parse junk — "UF. Three" phantom DL (stole Zylen-like ranks).
   'uf-three',
+  // Visit-change event type leaked as a player name on FutureCast scheme matches.
+  'change-of',
 ]);
 
 const BLOCKED_PLAYER_NAMES = new Set([
@@ -95,6 +97,8 @@ const BLOCKED_PLAYER_NAMES = new Set([
   'andrew whittemore',
   'uf three',
   'uf. three',
+  'change of',
+  '(change of)',
 ]);
 
 function normalizeSlug(raw) {
@@ -241,13 +245,25 @@ function isEmptyAthPhantomShell(player) {
   return true;
 }
 
+function stripChangeOfNameJunk(name) {
+  return String(name || '')
+    .replace(/\s*\(\s*change[\s_-]+of[^)]*\)\s*/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function isGarbageChaseName(name) {
   const n = String(name || '').trim();
   if (!n) return false;
   // "UF. Three", "Florida. My", program fragments mistaken for recruits
   if (/^UF\.?\s+/i.test(n)) return true;
-  if (/^Florida\.?\s+(My|The|Gators?)/i.test(n)) return true;
-  if (/^(The\s+)?Gators?\s+(Online|Football)/i.test(n)) return true;
+  if (/^Florida\.?\s+(My|The|Gators?)\b/i.test(n)) return true;
+  if (/^(The\s+)?Gators?\s+(Online|Football)\b/i.test(n)) return true;
+  // Visit-change leftover ("change of" / "(change of)") is not a recruit.
+  const stripped = stripChangeOfNameJunk(n);
+  if (!stripped) return true;
+  if (/^change[\s_-]+of\b/i.test(n) || /^change[\s_-]+of\b/i.test(stripped)) return true;
+  if (/^\(\s*change[\s_-]+of/i.test(n)) return true;
   return false;
 }
 
@@ -297,6 +313,7 @@ module.exports = {
   CURRENT_ROSTER_CLASS_YEAR,
   isBlockedRecruit,
   isGarbageChaseName,
+  stripChangeOfNameJunk,
   filterBlockedRecruits,
   isEmptyAthPhantomShell,
   isAuthoritativeUfBoardCommit,
