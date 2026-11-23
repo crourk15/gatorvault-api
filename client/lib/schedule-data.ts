@@ -938,7 +938,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
   {
     id: "fsu",
     label: "Nov 27 @ FSU",
-    opp: "Florida State Seminoles",
+    opp: "FSU",
     date: "November 27, 2026 · 3:30 PM ET",
     venue: "Doak Campbell Stadium, Tallahassee FL",
     ufPct: 58,

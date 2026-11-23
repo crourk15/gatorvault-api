@@ -52,7 +52,7 @@ test('ticker edge one-shot busts iOS URLCache and pins the Vanderbilt week pack'
   assert.match(src, /pinVanderbiltWeek/);
   assert.match(src, /applyNowCacheBust/);
   assert.match(src, /NOW_BUST_COOKIE = 'gv-now-bust'/);
-  assert.match(src, /NOW_BUST_VALUE = 'fsu-keys'/);
+  assert.match(src, /NOW_BUST_VALUE = 'fsu-legend'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /pinTexasJonesCard/);
   assert.match(src, /Tramell Jones starts/);
@@ -75,7 +75,7 @@ test('ticker edge rewrites leftover Cyion / Bailey NOW News to the Texas road li
   assert.match(src, /samuel\\s\+bailey/);
   assert.match(src, /florida 7,\\s\*oklahoma 23/);
   assert.match(src, /News — \$\{FSU_NOW_NEWS\}/);
-  assert.match(src, /NOW_BUST_VALUE = 'fsu-keys'/);
+  assert.match(src, /NOW_BUST_VALUE = 'fsu-legend'/);
   assert.match(src, /lockScheduleBroadcast/);
   assert.match(src, /lockAbcOnlyString/);
   assert.match(src, /pinEastonRoyalHub/);
@@ -93,7 +93,7 @@ test('iOS launch edge does not clear the cache while the vault page opens', () =
     path.join(__dirname, '../../../netlify/edge-functions/now-ios-bust.js'),
     'utf8'
   );
-  assert.match(bust, /NOW_BUST_VALUE = 'fsu-keys'/);
+  assert.match(bust, /NOW_BUST_VALUE = 'fsu-legend'/);
   assert.match(bust, /context\.next\(\)/);
   assert.match(bust, /headers\.delete\('clear-site-data'\)/);
   assert.doesNotMatch(bust, /headers\.set\('clear-site-data'/);
@@ -340,12 +340,20 @@ test('schedule edge pins FSU week over an empty iOS last-good board', () => {
   assert.equal(fsu.radar[0].opp, 66);
   assert.equal(fsu.radar[2].uf, 68);
   assert.equal(fsu.radar[5].opp, 58);
+  assert.equal(fsu.opp, 'FSU');
 
   const live = pinVanderbiltWeek({
     currentGameId: 'fsu',
     games: [{ ...ou }, { ...ky }, { ...vu }, { ...fsu }],
   });
   assert.equal(live.changed, false);
+
+  const leftoverFlorida = pinVanderbiltWeek({
+    currentGameId: 'fsu',
+    games: [{ ...fsu, opp: 'Florida State Seminoles' }],
+  });
+  assert.equal(leftoverFlorida.changed, true);
+  assert.equal(leftoverFlorida.data.games[0].opp, 'FSU');
 });
 
 test('vault hydration boot script parses', () => {
