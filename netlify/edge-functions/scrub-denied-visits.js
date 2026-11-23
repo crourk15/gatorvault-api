@@ -137,7 +137,7 @@ function isPingPath(pathname) {
 }
 
 const NOW_BUST_COOKIE = 'gv-now-bust';
-const NOW_BUST_VALUE = 'fsu-keys';
+const NOW_BUST_VALUE = 'fsu-legend';
 
 function lockAbcOnlyString(value) {
   return String(value ?? '').replace(/ABC or ESPN/gi, 'ABC');
@@ -543,6 +543,11 @@ function fsuWindowNeedPin(fsu) {
   return fsu?.tv !== FSU_TV || String(fsu?.date || '') !== FSU_DATE;
 }
 
+/** Installed radar still first-word splits opponentName — "Florida State" became UF / Florida. */
+function fsuLegendNeedPin(fsu) {
+  return String(fsu?.opp || '').trim() !== 'FSU';
+}
+
 function fsuKeysNeedPin(fsu) {
   const keys = Array.isArray(fsu?.keys) ? fsu.keys.map((k) => String(k || '').trim()) : [];
   if (keys.length !== 3) return true;
@@ -780,6 +785,10 @@ function pinVanderbiltWeek(data) {
         let fsuChanged = false;
         if (fsuWindowNeedPin(fsu)) {
           fsu = { ...fsu, tv: FSU_TV, date: FSU_DATE };
+          fsuChanged = true;
+        }
+        if (fsuLegendNeedPin(fsu)) {
+          fsu = { ...fsu, opp: 'FSU' };
           fsuChanged = true;
         }
         if (fsuKeysNeedPin(fsu)) {

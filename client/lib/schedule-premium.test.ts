@@ -106,14 +106,19 @@ describe('schedule-premium finals', () => {
   it('Matchup Edge legend uses FSU not Florida for Florida State', () => {
     assert.equal(radarOpponentShort('fsu', 'Florida State Seminoles'), 'FSU');
     assert.equal(radarOpponentShort('', 'Florida State Seminoles'), 'FSU');
+    assert.equal(radarOpponentShort('fsu', 'FSU'), 'FSU');
     assert.equal(radarOpponentShort('fau', 'FAU Owls'), 'FAU');
     assert.equal(radarOpponentShort('scar', 'South Carolina Gamecocks'), 'SC');
     assert.equal(radarOpponentShort('olemiss', 'Ole Miss Rebels'), 'MISS');
+    const fsu = SCHEDULE_GAMES.find((g) => g.id === 'fsu');
+    assert.equal(fsu?.opp, 'FSU');
+    assert.equal(String(fsu?.opp || '').split(/\s+/)[0], 'FSU');
     for (const g of SCHEDULE_GAMES) {
       if (g.kind === 'bye') continue;
       const label = radarOpponentShort(g.id, g.opp);
       assert.notEqual(label, 'Florida', `${g.id} legend must not read Florida`);
       assert.notEqual(label.toLowerCase(), 'florida');
+      assert.notEqual(String(g.opp || '').split(/\s+/)[0], 'Florida', `${g.id} first word must not be Florida`);
     }
   });
 
