@@ -1,0 +1,487 @@
+CFB 27 — SHANAHAN / McVAY COORDINATOR COPY
+================================================================================
+IDENTITY (how this book thinks)
+================================================================================
+This is not the Bunch/Doubles meta book. This is Kyle Shanahan + Sean McVay
+translated into College Football 27:
+
+  1) WIDE ZONE / STRETCH is the offense. Everything else is a lie after zone works.
+  2) Condensed splits (tight, bunch, deuce, wing) so the cutback exists and boot
+     has a launch point. No empty-spread base.
+  3) Motion (jet / cheat / HB) forces a pre-snap declare.
+  4) PLAY-ACTION BOOT is the constraint — not RPO. RPOs are garnish only.
+  5) Pass game: flood/sail vs zone, mesh/drive vs man, crossers + stretch-shot
+     (Yankee family) when they sit on the run, spot/spacing in the red zone.
+  6) Personnel mix: 11 (Tight Doubles / Bunch / Tight Y Off) + 12 (Deuce / Wing /
+     Pistol Wing) + 21 (I Form Y Off Close). Tight ends are featured, not extras.
+
+Audibles (every formation, same jobs):
+  A1 = Cover 0 / all-out blitz
+  A2 = Man (Cover 1 / press)
+  A3 = Zone / 2-high / soft
+  A4 = Wide zone / stretch / split zone check
+Road rule: if audibles fail, call the same play from Coach Suggestions.
+PS5: Square audible | Triangle hot route | L1 custom adj | L2 protection | R3 flip
+
+Build sources (verified CFB 27 names only):
+  Ohio State  — Wing X Off Close, Deuce Close, Tight Y Off, Tight Doubles,
+                 Bunch X Nasty, I Form Y Off Close, Goal Line, Hail Mary
+  Notre Dame   — Pistol Y Off Trips, Pistol Wing, Gun Normal Y Off
+                 (ND Normal Y Off has the boot-shot package OSU's does not)
+
+
+================================================================================
+HOW TO CALL IT (Shanahan sequence, not random)
+================================================================================
+Open on wide zone / stretch from condensed 12 or pistol.
+If they fit outside     -> split zone / jet / duo
+If they overflow        -> boot / waggle / sprint / PA stretch shot
+If they play man        -> mesh / drive / wheel
+If they play 2-high     -> flood / sail / crossers
+If they pin ears        -> spot / spacing / slip / jet
+Never let 1st-and-10 become an RPO down. Zone first. Boot second.
+
+
+================================================================================
+SECTION 1 — FORMATIONS + AUDIBLES
+================================================================================
+
+1) SINGLEBACK WING X OFF CLOSE — WIDE ZONE HOME BASE
+   Why it exists: this is the Shanahan picture. Condensed 12, jet motion, wide
+   zone, fake jet, boot. You live here on early downs.
+   A1 C0/BLITZ : PA Sprint HB Flat
+   A2 MAN      : PA Sprint Y Leak
+   A3 ZONE/2H  : PA Boot Rt
+   A4 RUN      : Wide Zone
+   FULL PLAYS (15):
+   HB Duo | Jet HB Duo | Jet PA Boot | Jet Split Zone | Jet Sweep |
+   Mtn PA Boot Screen | Mtn PA Z Slide | Mtn Wide Zone Wk | PA Boot Rt |
+   PA Jet Sweep | PA Sprint HB Flat | PA Sprint Y Leak | Split Zone Wk |
+   Wide Zone | Zone Fake Jet
+
+2) SINGLEBACK DEUCE CLOSE — 12 PERSONNEL STRETCH / BOOT
+   Why it exists: two TEs, under center, stretch + split zone + boot slide.
+   McVay's 12-personnel red-zone and early-down partner to Wing X Off.
+   A1 C0/BLITZ : Spacing Switch
+   A2 MAN      : PA Boot Slide
+   A3 ZONE/2H  : Flood Trail
+   A4 RUN      : HB Stretch
+   FULL PLAYS (18):
+   0 1 Trap | Bench | Flood Trail | HB Stretch | Inside Zone Split |
+   Motion Power | Motion Zone Split | Motion Zone Toss | Mtn Duo |
+   Mtn PA Boot Screen | PA Boot Corner Post | PA Boot Scissors |
+   PA Boot Slide | PA Drag Wheel | PA Slide Y Screen | PA Stretch Shot |
+   Spacing Switch | Zone Split Wk
+
+3) PISTOL Y OFF TRIPS (NOTRE DAME) — PISTOL WIDE ZONE + NAKED
+   Why it exists: pistol is the college Shanahan answer. Wide zone weak, stretch,
+   PA boot, PA stretch shot. Same run family, different picture.
+   A1 C0/BLITZ : Slants
+   A2 MAN      : Mtn PA Boot HB Wheel
+   A3 ZONE/2H  : Strong Flood
+   A4 RUN      : Mtn HB Wide Zone Wk
+   FULL PLAYS (27):
+   All Go | Counter Y | Dash Flood | GT Counter | HB Split Dive | HB Stretch |
+   HB Swing | HB Zone | HB Zone Wk | Mtn Dive Counter Y | Mtn Fake Screen Cross |
+   Mtn HB Wide Zone Wk | Mtn Lead Zone Wk | Mtn PA Boot HB Wheel | Mtn PA Slide |
+   Mtn PA Slide Screen | Mtn RPO Zone Alert Screen | Mtn Speed Option |
+   PA Boot Rt | PA Boot Slide | PA Double Post | PA Scissors | PA Stretch Shot |
+   RPO Zone Alert Out | Slants | Strong Flood | Y Lead Read Option
+
+4) GUN TIGHT Y OFF — CONDENSED CHEAT / MESH
+   Why it exists: McVay condensed 11. Cheat outside zone is the gun wide-zone
+   tell. Mesh spot vs man. Flood vs zone. Jailbreak when they pin ears.
+   A1 C0/BLITZ : Cheat Spot Y Quick
+   A2 MAN      : Mesh Spot
+   A3 ZONE/2H  : Flood Drive
+   A4 RUN      : Cheat Outside Zone
+   FULL PLAYS (18):
+   Cheat Outside Zone | Cheat Slash Wheel Cross | Cheat Spot Y Quick |
+   Flood Drive | HB Scissors | HB Slip Screen | Inside Zone | Mesh Spot |
+   Mtn Mesh Spot | Mtn Slot Choice | Mtn Y-Corner | PA Go Slot Cross |
+   PA Jailbreak Screen | PA Slot Cross | Read Option | RPO Peek Slant Bubble |
+   Switch WR Drag | TE Corner
+
+5) GUN TIGHT DOUBLES — McVAY 11 PASS ENGINE
+   Why it exists: Cross Wheels is the coverage problem. Flood Drive vs zone.
+   Shot Fade Cross vs man. You do not need this to run — you need it to answer.
+   A1 C0/BLITZ : Dbl Stick
+   A2 MAN      : Shot Fade Cross
+   A3 ZONE/2H  : Cross Wheels
+   A4 RUN      : HB Quick Base
+   FULL PLAYS (15):
+   Bench | Cross Wheels | Dbl Stick | Flood Drive | HB Draw | HB Quick Base |
+   HB Slip Screen | Mtn Bunch Option | Mtn Cross HB Sneak | Mtn Fk Cross |
+   PA Deep Curls | PA WR Cross | Shot Fade Cross | Tight Curl | Z Spot
+
+6) GUN BUNCH X NASTY — McVAY BUNCH
+   Why it exists: compressed traffic beats man; mesh/flood answers zone; the
+   red-zone and goal-line pass package lives here.
+   A1 C0/BLITZ : Return Spot
+   A2 MAN      : Drive HB Under
+   A3 ZONE/2H  : Mesh Corner
+   A4 RUN      : HB Base
+   FULL PLAYS (21):
+   Counter Y | Deep Flood | Drive HB Under | HB Base | Inside Zone |
+   Mesh Corner | Mesh Traffic | Mtn Cross Post | Mtn RPO Zone Alert |
+   Mtn Y Corner Under | Post Wheel Shallow | Return Mesh Spot | Return Spot |
+   Return Whip Trail | RZ PA X Whip | Whip Double Spot | X Cross |
+   Y Corner Pivot | Y Flat Goalline | Z Mesh Goalline | Z Spot Goalline
+
+7) PISTOL WING (NOTRE DAME) — 12 PISTOL BOOT
+   Why it exists: two-TE pistol. Stretch + duo + split zone, then boot left/right.
+   This is the "we will run 12 all drive" formation.
+   A1 C0/BLITZ : TE Stick
+   A2 MAN      : PA Boot HB Wheel
+   A3 ZONE/2H  : PA Boot
+   A4 RUN      : HB Stretch
+   FULL PLAYS (18):
+   Curl Combo | HB Counter | HB Slam | HB Stretch | HB Zone Wk |
+   Mtn HB Duo | Mtn HB Split Zone | Mtn PA Boot Lt | PA Boot | PA Boot HB Wheel |
+   PA Boot Lt | PA TE Slip | Pin Pull Sweep | Read Option | Read Option Wk |
+   Strong Power | TE Attack | TE Stick
+
+8) GUN NORMAL Y OFF (NOTRE DAME) — BOOT-SHOT CONSTRAINT
+   Why it exists: gun look, same boot family. PA Boot Shot and PA Boot Z Cross
+   punish the safety who started jumping wide zone. Do not start drives here.
+   A1 C0/BLITZ : Sticks
+   A2 MAN      : PA Boot Z Cross
+   A3 ZONE/2H  : PA Boot Shot
+   A4 RUN      : Inside Zone
+   FULL PLAYS (21):
+   All Go | Bench | Counter Y | Inside Zone | Mtn All Curls | Mtn HB Off Tackle |
+   Mtn HB Swing | Mtn Inside Zone | Mtn PA Verticals | Mtn Spot Wheel |
+   PA Boot Shot | PA Boot Z Cross | PA Cross | Read Option |
+   Return Inside Zone Split | Return PA Slide | RPO Alert QB Power |
+   RPO Peek Slant | RPO Return Read Y Flat | Scissors Z Curl | Sticks
+
+9) I FORM Y OFF CLOSE — 21 PERSONNEL / SHORT + DOUBLE MOTION
+   Why it exists: Shanahan 21. Stretch and zone weak under center, double-motion
+   flood/boot when they load the box. Short-yardage without becoming Power I.
+   A1 C0/BLITZ : Dbl Outs
+   A2 MAN      : Dbl Mtn PA Double Cross
+   A3 ZONE/2H  : Dbl Mtn PA Flood
+   A4 RUN      : HB Stretch
+   FULL PLAYS (15):
+   Dbl Mtn Counter F | Dbl Mtn PA Double Cross | Dbl Mtn PA Flood |
+   Dbl Mtn PA Sprint HB Flat | Dbl Mtn PA WR Options | Dbl Mtn Zone Wk |
+   Dbl Outs | HB Iso | HB Stretch | HB Zone Toss | Mtn Counter Solid |
+   Mtn Flood | Mtn PA Counter | PA Pylon Sail | PA X Deep Out
+
+10) GOAL LINE NORMAL — GOAL LINE
+   Why it exists: true GL mechanics. Sneak/power + PA Spot/Waggle. Waggle is the
+   boot cousin on the 1-yard line.
+   A1 C0/BLITZ : QB Sneak
+   A2 MAN      : PA Spot
+   A3 ZONE/2H  : PA Waggle
+   A4 RUN      : Power O
+   FULL PLAYS (12):
+   FB Dive Weak | HB Counter Wk | HB Dive | HB Split 0 | HB Sting | PA Power O |
+   PA Spot | PA Sprint HB Flat | PA Waggle | Power O | QB Sneak | Strong Toss
+
+11) HAIL MARY
+   A1 Shot Save Clock | A2 Hail Mary | A3 Goal Post | A4 Hail Mary
+   FULL PLAYS: Goal Post | Hail Mary | Shot Save Clock
+
+
+================================================================================
+SECTION 2 — MY GAMEPLAN (10 EACH)
+Format: # | FORMATION | PLAY
+Each list mixes: (E) expected zone, (C) constraint/boot, (M) move-the-chains, (S) stress/motion
+================================================================================
+
+----- 1ST AND 10 -----
+ 1 | Wing X Off Close    | Wide Zone                (E establish the offense)
+ 2 | Deuce Close         | HB Stretch               (E same family, 12 look)
+ 3 | Pistol Y Off Trips  | Mtn HB Wide Zone Wk       (E pistol picture)
+ 4 | Tight Y Off         | Cheat Outside Zone       (E gun zone)
+ 5 | Tight Doubles       | Cross Wheels             (M info vs zone/match)
+ 6 | Pistol Wing         | PA Boot                  (C first boot of the drive)
+ 7 | Bunch X Nasty       | Drive HB Under           (M man answer)
+ 8 | Wing X Off Close    | Jet Split Zone           (S jet declare)
+ 9 | Deuce Close         | PA Boot Slide            (C if they jumped stretch)
+10 | Pistol Y Off Trips  | PA Stretch Shot           (C Yankee shot)
+
+----- 2ND AND SHORT -----
+ 1 | I Form Y Off Close  | HB Stretch               (E convert)
+ 2 | Pistol Wing         | Strong Power            (E 12 downhill)
+ 3 | Deuce Close         | Motion Power            (E motion short)
+ 4 | Wing X Off Close    | HB Duo                  (E inside)
+ 5 | Pistol Wing         | Mtn HB Duo              (E)
+ 6 | Deuce Close         | PA Boot Slide            (C punish loaded box)
+ 7 | Bunch X Nasty       | Drive HB Under           (C if they jump run)
+ 8 | Tight Doubles       | Tight Curl               (M)
+ 9 | I Form Y Off Close  | Dbl Mtn Zone Wk         (S double motion)
+10 | Goal Line Normal    | QB Sneak                 (E inches only)
+
+----- 2ND AND MEDIUM -----
+ 1 | Wing X Off Close    | Wide Zone                (E)
+ 2 | Tight Doubles       | Cross Wheels             (M)
+ 3 | Bunch X Nasty       | Mesh Corner              (E zone)
+ 4 | Tight Y Off         | Mesh Spot                (M man)
+ 5 | Pistol Y Off Trips  | Strong Flood             (M zone)
+ 6 | Deuce Close         | Flood Trail              (M)
+ 7 | Tight Doubles       | Dbl Stick                (C pressure)
+ 8 | Pistol Wing         | PA Boot Lt               (C)
+ 9 | Tight Y Off         | Cheat Outside Zone       (E keep honest)
+10 | Normal Y Off (ND)  | PA Boot Shot             (C if safety sits)
+
+----- 2ND AND LONG -----
+ 1 | Tight Doubles       | Cross Wheels             (M get 6-12)
+ 2 | Bunch X Nasty       | Mesh Traffic             (M)
+ 3 | Tight Y Off         | Flood Drive              (M)
+ 4 | Tight Doubles       | HB Draw                  (C vs soft)
+ 5 | Tight Doubles       | HB Slip Screen           (C vs pin-ears)
+ 6 | Pistol Y Off Trips  | Dash Flood               (M)
+ 7 | Bunch X Nasty       | Post Wheel Shallow       (M/S)
+ 8 | Tight Y Off         | Cheat Slash Wheel Cross  (S)
+ 9 | Normal Y Off (ND)  | PA Boot Z Cross           (C)
+10 | Pistol Y Off Trips  | PA Double Post            (S one shot)
+
+----- 3RD AND SHORT -----
+ 1 | I Form Y Off Close  | HB Stretch               (E)
+ 2 | Pistol Wing         | Strong Power            (E)
+ 3 | Deuce Close         | Motion Power            (E)
+ 4 | Wing X Off Close    | HB Duo                  (E)
+ 5 | Bunch X Nasty       | Drive HB Under           (C pass convert)
+ 6 | Tight Doubles       | Tight Curl               (M)
+ 7 | Tight Y Off         | Cheat Spot Y Quick       (C zero)
+ 8 | Goal Line Normal    | QB Sneak                 (E inches)
+ 9 | Pistol Wing         | TE Stick                 (M)
+10 | Deuce Close         | PA Boot Slide            (C)
+
+----- 3RD AND MEDIUM -----
+ 1 | Tight Doubles       | Cross Wheels             (M)
+ 2 | Bunch X Nasty       | Mesh Corner              (E)
+ 3 | Tight Y Off         | Flood Drive              (M)
+ 4 | Pistol Y Off Trips  | Strong Flood             (M)
+ 5 | Bunch X Nasty       | Drive HB Under           (E man)
+ 6 | Tight Doubles       | Z Spot                   (M)
+ 7 | Deuce Close         | Flood Trail              (M)
+ 8 | Pistol Wing         | PA Boot HB Wheel         (S)
+ 9 | Tight Y Off         | Mesh Spot                (M)
+10 | Bunch X Nasty       | Whip Double Spot         (M RZ-ish depth)
+
+----- 3RD AND LONG -----
+ 1 | Tight Doubles       | Cross Wheels             (M first look chunk)
+ 2 | Bunch X Nasty       | Deep Flood               (E zone shot)
+ 3 | Tight Doubles       | Shot Fade Cross          (E man shot)
+ 4 | Pistol Y Off Trips  | All Go                   (E 2-high)
+ 5 | Normal Y Off (ND)  | PA Boot Shot             (C)
+ 6 | Tight Doubles       | HB Slip Screen           (C vs blitz)
+ 7 | Tight Y Off         | Cheat Slash Wheel Cross  (S)
+ 8 | Pistol Y Off Trips  | PA Double Post            (S)
+ 9 | Bunch X Nasty       | X Cross                  (E man)
+10 | Deuce Close         | PA Stretch Shot          (C Yankee)
+
+----- 3RD AND EXTRA LONG (if meter exists) -----
+ 1 | Pistol Y Off Trips  | All Go
+ 2 | Tight Doubles       | Shot Fade Cross
+ 3 | Bunch X Nasty       | Deep Flood
+ 4 | Tight Doubles       | Cross Wheels
+ 5 | Tight Doubles       | HB Slip Screen
+ 6 | Normal Y Off (ND)  | PA Boot Shot
+ 7 | Tight Y Off         | Cheat Slash Wheel Cross
+ 8 | Pistol Y Off Trips  | PA Stretch Shot
+ 9 | Bunch X Nasty       | Mtn Cross Post
+10 | I Form Y Off Close  | PA Pylon Sail
+
+----- 4TH AND SHORT -----
+ 1 | I Form Y Off Close  | HB Stretch
+ 2 | Goal Line Normal    | QB Sneak
+ 3 | Pistol Wing         | Strong Power
+ 4 | Deuce Close         | Motion Power
+ 5 | Wing X Off Close    | HB Duo
+ 6 | Goal Line Normal    | Power O
+ 7 | Pistol Wing         | TE Stick
+ 8 | Deuce Close         | 0 1 Trap
+ 9 | I Form Y Off Close  | HB Iso
+10 | Bunch X Nasty       | HB Base
+
+----- 4TH AND MEDIUM -----
+ 1 | Tight Doubles       | Cross Wheels
+ 2 | Bunch X Nasty       | Drive HB Under
+ 3 | Tight Y Off         | Mesh Spot
+ 4 | Tight Doubles       | Shot Fade Cross
+ 5 | Bunch X Nasty       | X Cross
+ 6 | Pistol Y Off Trips  | Mtn PA Boot HB Wheel
+ 7 | Tight Y Off         | Flood Drive
+ 8 | Pistol Wing         | PA Boot
+ 9 | Deuce Close         | PA Boot Slide
+10 | Tight Doubles       | Z Spot
+
+----- 4TH AND LONG -----
+ 1 | Tight Doubles       | Shot Fade Cross
+ 2 | Bunch X Nasty       | Deep Flood
+ 3 | Tight Doubles       | Cross Wheels
+ 4 | Pistol Y Off Trips  | All Go
+ 5 | Normal Y Off (ND)  | PA Boot Shot
+ 6 | Tight Y Off         | Cheat Slash Wheel Cross
+ 7 | Bunch X Nasty       | X Cross
+ 8 | Pistol Y Off Trips  | PA Double Post
+ 9 | Deuce Close         | PA Stretch Shot
+10 | I Form Y Off Close  | PA Pylon Sail
+
+----- RED ZONE -----
+ 1 | Bunch X Nasty       | Whip Double Spot         (E condensed)
+ 2 | Tight Doubles       | Z Spot                   (E)
+ 3 | Tight Y Off         | Cheat Spot Y Quick       (S)
+ 4 | Deuce Close         | Motion Power             (E)
+ 5 | Pistol Wing         | HB Stretch               (E)
+ 6 | Deuce Close         | PA Boot Slide            (C)
+ 7 | Bunch X Nasty       | Y Corner Pivot           (E)
+ 8 | Tight Doubles       | Tight Curl               (M)
+ 9 | Pistol Y Off Trips  | PA Boot Slide             (C)
+10 | Wing X Off Close    | PA Sprint Y Leak         (S)
+
+----- RED ZONE FRENZY -----
+ 1 | Bunch X Nasty       | RZ PA X Whip             (E must-score PA)
+ 2 | Tight Y Off         | Cheat Spot Y Quick       (S)
+ 3 | Deuce Close         | PA Stretch Shot          (C)
+ 4 | Pistol Wing         | PA Boot                  (C)
+ 5 | Bunch X Nasty       | Whip Double Spot         (E)
+ 6 | Deuce Close         | PA Boot Slide            (C)
+ 7 | Tight Doubles       | Shot Fade Cross          (E if soft)
+ 8 | Pistol Y Off Trips  | Mtn PA Boot HB Wheel     (S)
+ 9 | Tight Doubles       | Z Spot                   (M)
+10 | I Form Y Off Close  | Dbl Mtn PA Flood         (S)
+
+----- GOAL LINE RUN -----
+ 1 | Goal Line Normal    | Power O
+ 2 | Goal Line Normal    | QB Sneak
+ 3 | I Form Y Off Close  | HB Stretch
+ 4 | Pistol Wing         | Strong Power
+ 5 | Deuce Close         | Motion Power
+ 6 | Goal Line Normal    | HB Dive
+ 7 | Deuce Close         | Mtn Duo
+ 8 | Goal Line Normal    | Strong Toss
+ 9 | Pistol Wing         | HB Slam
+10 | Wing X Off Close    | HB Duo
+
+----- GOAL LINE PASS -----
+ 1 | Bunch X Nasty       | Y Flat Goalline
+ 2 | Bunch X Nasty       | Z Spot Goalline
+ 3 | Bunch X Nasty       | Z Mesh Goalline
+ 4 | Bunch X Nasty       | RZ PA X Whip
+ 5 | Goal Line Normal    | PA Spot
+ 6 | Goal Line Normal    | PA Waggle
+ 7 | Tight Doubles       | Tight Curl
+ 8 | Tight Y Off         | Cheat Spot Y Quick
+ 9 | Goal Line Normal    | PA Sprint HB Flat
+10 | Deuce Close         | Spacing Switch
+
+----- BACKED UP -----
+ 1 | Tight Doubles       | Bench                    (M safe width)
+ 2 | Tight Y Off         | Cheat Spot Y Quick       (C0 safe)
+ 3 | Bunch X Nasty       | Return Spot              (M)
+ 4 | Tight Doubles       | HB Slip Screen           (C)
+ 5 | Wing X Off Close    | Wide Zone                (E away from GL)
+ 6 | Pistol Y Off Trips  | HB Stretch               (E)
+ 7 | Tight Y Off         | Cheat Outside Zone       (S)
+ 8 | Pistol Wing         | HB Stretch               (E)
+ 9 | Tight Doubles       | HB Quick Base            (E)
+10 | Bunch X Nasty       | HB Base                  (E)
+
+----- TWO MINUTE -----
+ 1 | Tight Doubles       | Cross Wheels
+ 2 | Tight Doubles       | Bench
+ 3 | Tight Y Off         | Mesh Spot
+ 4 | Bunch X Nasty       | Drive HB Under
+ 5 | Tight Doubles       | Dbl Stick
+ 6 | Tight Y Off         | Cheat Spot Y Quick
+ 7 | Tight Doubles       | HB Slip Screen
+ 8 | Pistol Y Off Trips  | Slants
+ 9 | Normal Y Off (ND)  | Sticks
+10 | Pistol Y Off Trips  | Mtn PA Boot HB Wheel
+
+----- FOUR MINUTE -----
+ 1 | Wing X Off Close    | Wide Zone
+ 2 | Deuce Close         | HB Stretch
+ 3 | Pistol Y Off Trips  | Mtn HB Wide Zone Wk
+ 4 | Pistol Wing         | HB Stretch
+ 5 | I Form Y Off Close  | HB Stretch
+ 6 | Tight Y Off         | Cheat Outside Zone
+ 7 | Deuce Close         | Inside Zone Split
+ 8 | Pistol Wing         | Mtn HB Duo
+ 9 | Wing X Off Close    | Split Zone Wk
+10 | Tight Doubles       | HB Draw
+
+----- HAIL MARY -----
+ 1 | Hail Mary           | Hail Mary
+ 2 | Hail Mary           | Goal Post
+ 3 | Hail Mary           | Shot Save Clock
+ 4 | Pistol Y Off Trips  | All Go
+ 5 | Tight Doubles       | Shot Fade Cross
+ 6 | Bunch X Nasty       | Deep Flood
+ 7 | Normal Y Off (ND)  | All Go
+ 8 | Pistol Y Off Trips  | PA Stretch Shot
+ 9 | Tight Y Off         | PA Go Slot Cross
+10 | I Form Y Off Close  | PA Pylon Sail
+
+
+================================================================================
+SECTION 3 — OPENING SCRIPT (MY FIRST 8)
+================================================================================
+ 1 | Wing X Off Close    | Wide Zone
+ 2 | Deuce Close         | HB Stretch
+ 3 | Pistol Y Off Trips  | Mtn HB Wide Zone Wk
+ 4 | Pistol Wing         | PA Boot
+ 5 | Tight Doubles       | Cross Wheels
+ 6 | Tight Y Off         | Cheat Outside Zone
+ 7 | Bunch X Nasty       | Drive HB Under
+ 8 | Wing X Off Close    | Jet PA Boot   (or PA Stretch Shot from Deuce if they sat)
+
+
+================================================================================
+SECTION 4 — PRE-SNAP BUTTON CHEAT
+================================================================================
+Cover 0 / blitz     -> A1
+Man / press         -> A2
+Zone / 2-high soft  -> A3
+Light box / check   -> A4   (this book checks to WIDE ZONE / STRETCH, not iso)
+
+PRIMARY A1 HOTS: PA Sprint HB Flat | Spacing Switch | Slants | Cheat Spot Y Quick | Dbl Stick | Return Spot | TE Stick | Sticks | Dbl Outs | QB Sneak
+PRIMARY A2 MAN:  PA Sprint Y Leak | PA Boot Slide | Mtn PA Boot HB Wheel | Mesh Spot | Shot Fade Cross | Drive HB Under | PA Boot HB Wheel | PA Boot Z Cross | Dbl Mtn PA Double Cross
+PRIMARY A3 ZONE: PA Boot Rt | Flood Trail | Strong Flood | Flood Drive | Cross Wheels | Mesh Corner | PA Boot | PA Boot Shot | Dbl Mtn PA Flood | PA Waggle
+PRIMARY A4 CHECK: Wide Zone | HB Stretch | Mtn HB Wide Zone Wk | Cheat Outside Zone | HB Quick Base | HB Base | Inside Zone | Power O
+
+
+================================================================================
+SECTION 5 — INSTALL ORDER
+================================================================================
+1. Create custom offense. Add formations in this order:
+     Ohio State: Singleback Wing X Off Close, Singleback Deuce Close,
+                 Gun Tight Y Off, Gun Tight Doubles, Gun Bunch X Nasty,
+                 I Form Y Off Close, Goal Line Normal, Hail Mary
+     Notre Dame: Pistol Y Off Trips, Pistol Wing, Gun Normal Y Off
+                 (use ND's Normal Y Off — it has PA Boot Shot / PA Boot Z Cross)
+2. Set A1-A4 audibles exactly as Section 1.
+3. Star all My Gameplan lists (every meter, including Backed Up / Frenzy / GL Run / GL Pass).
+4. Practice in this order:
+     a) Wing X Off Close Wide Zone + Jet Split Zone + PA Boot Rt
+     b) Deuce Close HB Stretch + PA Boot Slide + PA Stretch Shot
+     c) Pistol Y Off Trips Mtn HB Wide Zone Wk + Strong Flood + PA Stretch Shot
+     d) Tight Doubles Cross Wheels + Bunch Drive HB Under
+     then Tight Y Off cheat and ND Normal Y Off boot shot as changeups.
+5. Do not audible to plays outside A1-A4.
+6. Do not install Cluster, Power I, or RPO-heavy trips as base. Those fight this identity.
+
+
+================================================================================
+SECTION 6 — COVERAGE RULES OF THUMB
+================================================================================
+Cover 0 / fire        A1 hot. Ball out. Spot / stick / slant / sprint flat. No hero ball.
+Cover 1 / press man   Mesh, drive, wheel, fade-cross, boot to the vacated flat.
+Cover 2 / 2-high      Flood, sail, cross wheels, boot, stretch shot over the top.
+Cover 3               Cross wheels, mesh corner, boot to the flat, TE leak.
+Cover 4 / quarters     Wide zone until a safety cheats. Then PA Stretch Shot / All Go.
+Light box             A4. Run the zone. Do not throw your offense away.
+Loaded box            Boot. If they still sit, jet or split zone the other way.
+
+QB rule: fake the zone like you mean it. Boot is not a scramble — eyes to flat,
+then intermediate crosser/leak, then the post. Same ladder every time.
+
+
+END — verified CFB 27 names only (cfb.fan Ohio State + Notre Dame)
+Shanahan/McVay identity: wide zone + condensed 11/12/21 + jet/cheat motion + boot constraint.
+The Bunch/Doubles meta book stays in docs/cfb-27-playsheet.txt if you want it back.
