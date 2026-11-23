@@ -1086,6 +1086,34 @@ function stampGrantWeekClassLine(overview) {
   };
 }
 
+function commitNatlRankFromRow(row) {
+  const n = Number(row?.natlRank);
+  if (Number.isFinite(n) && n > 0) return n;
+  const m = String(row?.rankNote || row?.metaLine || '').match(/#(\d+)\s+natl/i);
+  return m ? Number(m[1]) : 9999;
+}
+
+function commitRatingFromRow(row) {
+  const n = Number(row?.rating);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+function sortHubCommitsByNatlRank(items) {
+  if (!Array.isArray(items) || items.length < 2) return { items, changed: false };
+  const next = items
+    .map((row, index) => ({ row, index }))
+    .sort((a, b) => {
+      const rank = commitNatlRankFromRow(a.row) - commitNatlRankFromRow(b.row);
+      if (rank) return rank;
+      const rating = commitRatingFromRow(b.row) - commitRatingFromRow(a.row);
+      if (rating) return rating;
+      return a.index - b.index;
+    })
+    .map((entry) => entry.row);
+  const changed = next.some((row, i) => row !== items[i]);
+  return { items: next, changed };
+}
+
 /** iOS URLCache can keep the August 2027 board. Hero names the flip; cards stay natl-rank order. */
 function pinEastonRoyalHub(data, year) {
   if (!data || typeof data !== 'object') return { data, changed: false };
@@ -1101,8 +1129,9 @@ function pinEastonRoyalHub(data, year) {
   for (const key of ['commits', 'items']) {
     if (!Array.isArray(out[key]) || !out[key].length || typeof out[key][0] !== 'object') continue;
     const dropped = dropVanNordenCommit(out[key]);
-    if (dropped.changed) {
-      out[key] = dropped.items;
+    const ranked = sortHubCommitsByNatlRank(dropped.items);
+    if (dropped.changed || ranked.changed) {
+      out[key] = ranked.items;
       changed = true;
     }
   }

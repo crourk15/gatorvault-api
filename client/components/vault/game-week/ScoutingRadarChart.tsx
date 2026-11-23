@@ -2,10 +2,12 @@
 
 import React from 'react';
 import type { RadarAxis } from '@/lib/game-week-data';
+import { radarOpponentShort } from '@/lib/schedule-premium';
 
 type Props = {
   axes: RadarAxis[];
   opponentName: string;
+  opponentId?: string;
 };
 
 const SIZE = 220;
@@ -27,9 +29,10 @@ function polygonPoints(values: number[]): string {
     .join(' ');
 }
 
-export function ScoutingRadarChart({ axes, opponentName }: Props): React.ReactElement {
+export function ScoutingRadarChart({ axes, opponentName, opponentId }: Props): React.ReactElement {
   const n = axes.length;
   const gridLevels = [25, 50, 75, 100];
+  const oppShort = radarOpponentShort(opponentId, opponentName);
 
   return (
     <div className="gv-gw-radar" data-testid="gw-radar-chart">
@@ -80,7 +83,9 @@ export function ScoutingRadarChart({ axes, opponentName }: Props): React.ReactEl
       </svg>
       <div className="gv-gw-radar__legend">
         <span className="gv-gw-radar__legend-uf">● UF</span>
-        <span className="gv-gw-radar__legend-opp">● {opponentName.split(' ')[0]}</span>
+        <span className="gv-gw-radar__legend-opp" data-testid="gw-radar-legend-opp">
+          ● {oppShort}
+        </span>
       </div>
     </div>
   );

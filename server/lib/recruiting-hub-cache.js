@@ -677,12 +677,38 @@ function commitRowSlug(row) {
   return String(row?.id || row?.slug || '').toLowerCase();
 }
 
+function commitNatlRankFromRow(row) {
+  const n = Number(row?.natlRank);
+  if (Number.isFinite(n) && n > 0) return n;
+  const m = String(row?.rankNote || row?.metaLine || '').match(/#(\d+)\s+natl/i);
+  return m ? Number(m[1]) : 9999;
+}
+
+function sortCommitRowsByNatlRank(items) {
+  if (!Array.isArray(items) || items.length < 2) return items;
+  return items
+    .map((row, index) => ({ row, index }))
+    .sort((a, b) => {
+      const rank = commitNatlRankFromRow(a.row) - commitNatlRankFromRow(b.row);
+      if (rank) return rank;
+      const rating = (Number(b.row?.rating) || 0) - (Number(a.row?.rating) || 0);
+      if (rating) return rating;
+      return a.index - b.index;
+    })
+    .map((entry) => entry.row);
+}
+
 /**
  * 2027 hub: keep the Royal flip on the hero line. Commit cards stay
  * national-rank order (Hiller #4, then Royal #7) — do not pin him first.
  */
 function pinEastonRoyalHubSurface(value, year) {
   if (!value || typeof value !== 'object' || Number(year) !== 2027) return value;
+  for (const key of ['commits', 'items']) {
+    if (Array.isArray(value[key]) && value[key].length) {
+      value[key] = sortCommitRowsByNatlRank(value[key]);
+    }
+  }
   const onBoard =
     (Array.isArray(value.commits) && value.commits.some((row) => commitRowSlug(row) === 'easton-royal')) ||
     (Array.isArray(value.items) && value.items.some((row) => commitRowSlug(row) === 'easton-royal'));

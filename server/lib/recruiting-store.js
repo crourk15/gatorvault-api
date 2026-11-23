@@ -399,7 +399,13 @@ function normalizeClassYear(raw) {
 
 function normalizePlayer(raw) {
   const slug = raw.slug || slugify(raw.name);
-  const displayName = String(raw.name || '').trim() || nameFromSlug(slug) || slug;
+  let displayName = String(raw.name || '')
+    .replace(/\s*\(\s*change[\s_-]+of[^)]*\)\s*/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!displayName || /^change[\s_-]+of\b/i.test(displayName)) {
+    displayName = nameFromSlug(slug) || slug;
+  }
   const committedTo = raw.committedTo ?? raw.committed_to ?? null;
   const statusRaw = raw.status ?? (isFloridaCommit({ status: 'committed', committedTo }) ? 'committed' : null);
   let status = statusRaw;

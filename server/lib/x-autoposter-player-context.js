@@ -69,6 +69,8 @@ const INVALID_NAME_PHRASES = [
   /^app\s+store$/i,
   /^insider\s+notes$/i,
   /^prince\s+avenue\s+christian$/i,
+  /^change\s+of\b/i,
+  /^\(\s*change\s+of/i,
   // Program tribute / greeting phrases that NAME_CHUNK otherwise treats as people.
   /^happy\s+birthday$/i,
   /^birthday\s+wishes$/i,

@@ -142,6 +142,18 @@ test('2027 hub edge keeps the commit list and leaves the live class line alone',
   assert.equal(pinned.data.commits.length, 2);
   assert.equal(pinned.data.commits[0].id, 'maxwell-hiller');
   assert.equal(pinned.data.commits[1].id, 'easton-royal');
+  const resorted = pinEastonRoyalHub(
+    {
+      year: 2027,
+      commits: [
+        { id: 'easton-royal', name: 'Easton Royal', rankNote: '#7 natl', rating: '98.3' },
+        { id: 'maxwell-hiller', name: 'Maxwell Hiller', rankNote: '#4 natl', rating: '98.6' },
+      ],
+    },
+    2027
+  );
+  assert.equal(resorted.data.commits[0].id, 'maxwell-hiller');
+  assert.equal(resorted.data.commits[1].id, 'easton-royal');
   assert.equal(pinned.data.classOverview.classRank, '#4');
   assert.equal(pinned.data.classOverview.blueChip, '70%');
   assert.equal(pinned.data.classOverview.commits, '28');

@@ -5,6 +5,7 @@ import {
   getNextScheduleGame,
   getScheduleGameStatus,
   hasPostedFinal,
+  radarOpponentShort,
   toPremiumScheduleGame,
 } from './schedule-premium';
 
@@ -100,6 +101,20 @@ describe('schedule-premium finals', () => {
       getScheduleGameStatus(games.find((g) => g.id === 'auburn')!, 'olemiss', afterWhistle),
       'past',
     );
+  });
+
+  it('Matchup Edge legend uses FSU not Florida for Florida State', () => {
+    assert.equal(radarOpponentShort('fsu', 'Florida State Seminoles'), 'FSU');
+    assert.equal(radarOpponentShort('', 'Florida State Seminoles'), 'FSU');
+    assert.equal(radarOpponentShort('fau', 'FAU Owls'), 'FAU');
+    assert.equal(radarOpponentShort('scar', 'South Carolina Gamecocks'), 'SC');
+    assert.equal(radarOpponentShort('olemiss', 'Ole Miss Rebels'), 'MISS');
+    for (const g of SCHEDULE_GAMES) {
+      if (g.kind === 'bye') continue;
+      const label = radarOpponentShort(g.id, g.opp);
+      assert.notEqual(label, 'Florida', `${g.id} legend must not read Florida`);
+      assert.notEqual(label.toLowerCase(), 'florida');
+    }
   });
 
   it('opens Texas Game Week once South Carolina has a posted final after kick', () => {

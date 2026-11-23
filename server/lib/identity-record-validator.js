@@ -118,6 +118,7 @@ function sanitizeSchoolField(school, { allowCollege = false } = {}) {
 function isValidIdentityPlayerName(name) {
   const trimmed = String(name || '').trim();
   if (trimmed.length < 3 || trimmed.length > 48) return false;
+  if (/^change[\s_-]+of\b/i.test(trimmed) || /^\(\s*change[\s_-]+of/i.test(trimmed)) return false;
   const parts = trimmed.split(/\s+/).filter(Boolean);
   if (parts.length < 2) return false;
   const suffixes = new Set(['jr', 'sr', 'ii', 'iii', 'iv']);

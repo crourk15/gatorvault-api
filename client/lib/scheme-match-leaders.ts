@@ -7,6 +7,8 @@ import type { HighPriorityPlayer } from './futurecast-high-priority-api';
 import type { NeedTier } from './fc-position-need-board';
 import { normalizeNeedBoardRoom, needTierLabel } from './fc-position-need-board';
 import { isActiveUfTarget } from './recruiting-target-filters';
+import { isGarbageChaseName, stripChangeOfNameJunk } from './recruiting-blocked-players';
+import { nameFromSlug } from './slug';
 
 function ufPctFromFc(raw: number | null | undefined): number {
   if (raw == null || Number.isNaN(Number(raw))) return 0;
@@ -84,9 +86,14 @@ export function buildSchemeMatchLeaders(
 ): SchemeMatchRow[] {
   return [...players]
     .filter((p) => Number(p.fitScore) > 0 && isActiveUfTarget(p))
-    .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0))
-    .slice(0, limit)
     .map((p) => {
+      const cleaned = stripChangeOfNameJunk(p.name) || nameFromSlug(p.slug);
+      return { player: p, name: cleaned };
+    })
+    .filter((row) => row.name && !isGarbageChaseName(row.name))
+    .sort((a, b) => (b.player.fitScore ?? 0) - (a.player.fitScore ?? 0))
+    .slice(0, limit)
+    .map(({ player: p, name }) => {
       const fitScore = Math.round(Number(p.fitScore) || 0);
       const fitBand = fitBandFromScore(fitScore);
       const ufPct = ufPctFromFc(p.ufProbability);
@@ -94,7 +101,7 @@ export function buildSchemeMatchLeaders(
       const needTier = room ? needTierByPos[room] ?? null : null;
       return {
         slug: p.slug,
-        name: p.name,
+        name,
         position: p.position || 'TBD',
         school: p.school ?? null,
         fitScore,

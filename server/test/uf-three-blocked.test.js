@@ -21,6 +21,23 @@ describe('uf-three chase phantom', () => {
     );
   });
 
+  it('blocks visit-change leftover names', () => {
+    assert.equal(isGarbageChaseName('change of'), true);
+    assert.equal(isGarbageChaseName('(change of)'), true);
+    assert.equal(isGarbageChaseName('Change of'), true);
+    assert.equal(
+      isBlockedRecruit({
+        slug: 'change-of',
+        name: 'change of',
+        pos: 'WR',
+        classYear: 2028,
+      }),
+      true
+    );
+    assert.equal(isGarbageChaseName('Moreno Fisher (change of)'), false);
+    assert.equal(isGarbageChaseName('Izayah Vickers'), false);
+  });
+
   it('keeps real chase targets', () => {
     assert.equal(isGarbageChaseName('Izayah Vickers'), false);
     assert.equal(
