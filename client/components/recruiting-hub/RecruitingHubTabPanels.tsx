@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { HighPriorityTargetCard } from '@/components/futurecast/HighPriorityTargetCard';
-import { ScoutingDepartmentPage } from '@/components/site/ScoutingDepartmentPage';
+import { RecruitingPanelHeader } from '@/components/recruiting-hub/RecruitingPanelHeader';
 import { UiEmpty } from '@/components/site/UiMessage';
 import { MovementIntelPreview } from '@/components/shared/MovementIntelPreview';
 import { PlayerCardEnhanced } from '@/components/vault/recruiting/EliteRecruitCard';
@@ -51,10 +51,11 @@ export function RecruitingHubTabPanels({
     <div className="rh-tab-panels rh-frame">
       {tab === 'priority' && (
         <section>
-          <h2 className="rh-panel-title">Top 10 UF Priority Targets</h2>
-          <p className="rh-muted">
-            Insider intel, visit schedule, staff confidence, and prediction schools — the advantage board.
-          </p>
+          <RecruitingPanelHeader
+            kicker="Chase board"
+            title="Priority Targets"
+            dek="Visit schedule, staff confidence, and competing schools — the advantage board."
+          />
           <div className="gv-hp-board-grid">
             {highPriority.map((p, i) => (
               <HighPriorityTargetCard key={p.slug} player={p} rank={i + 1} />
@@ -66,12 +67,20 @@ export function RecruitingHubTabPanels({
 
       {tab === 'intel' && (
         <div className="gv-rh-movement-wrap">
-          <MovementIntelPreview data={staffDashboard} loading={!staffDashboard && loading} />
+          <RecruitingPanelHeader
+            kicker="Board"
+            title="Who's Moving"
+            dek="UF% swings on the board — risers, fallers, and volatility."
+          />
+          <MovementIntelPreview
+            data={staffDashboard}
+            loading={!staffDashboard && loading}
+            embedded
+          />
           {(intel.risers.length > 0 || intel.fallers.length > 0) && (
             <section className="rh-movement-section">
               <header className="rh-section-head">
-                <h2 className="rh-panel-title rh-section-title">Movement Tracker</h2>
-                <p className="rh-section-sub">Live UF% shifts on priority targets — stock-style movement read.</p>
+                <h3 className="gv-rh-portal-prep__section-title">On the board</h3>
               </header>
               <div className="gv-rh-elite-grid">
                 {[...intel.risers.slice(0, 6), ...intel.fallers.slice(0, 4)].map((p) => (
@@ -85,8 +94,12 @@ export function RecruitingHubTabPanels({
 
       {tab === 'scouting' && (
         <section>
+          <RecruitingPanelHeader
+            kicker="War Room"
+            title="Scouting"
+            dek="Verified evals — recruits, commits, portal, and targets."
+          />
           <ScoutingTiles />
-          <ScoutingDepartmentPage inVault />
         </section>
       )}
 
@@ -94,6 +107,11 @@ export function RecruitingHubTabPanels({
 
       {tab === 'rankings' && (
         <section>
+          <RecruitingPanelHeader
+            kicker={`${rankYear} class`}
+            title="Rankings"
+            dek="Priority order on the live board."
+          />
           <RecruitingSubTabBar
             options={[
               { id: '2027', label: '2027' },
@@ -102,7 +120,6 @@ export function RecruitingHubTabPanels({
             active={String(rankYear)}
             onChange={(id) => setRankYear(id === '2028' ? 2028 : 2027)}
           />
-          <h2 className="rh-panel-title">Priority Rankings — {rankYear} Targets</h2>
           <RankingsTable players={rankings} year={rankYear} />
         </section>
       )}

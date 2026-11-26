@@ -25,6 +25,7 @@ I will not start Codemagic.
 - The app clears its saved web cache on open so that old hero response is not reused. The member stays signed in.
 - Recruiting Portal tab is the January 4–13, 2027 war room (10–12 difference makers, ranked rooms). Names stay off until verified. Approved 1.0.33 still first-paints lock-icon “Portal Closed” until this bake. Live `/api/recruiting/portal` hydrates the prep payload after Render.
 - Who’s Moving stays on board intel. Approved 1.0.33 still writes `?tab=movement` and can dump onto the 2028 class war-room until this bake. Live Netlify hydrates `?tab=intel` after deploy.
+- Recruiting panel tabs share one command header. Portal no longer stacks under the class-hub hero titles. Live Netlify hydrates after deploy.
 
 ## Whats New (paste)
 
