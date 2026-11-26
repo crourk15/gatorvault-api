@@ -12,6 +12,7 @@ const { enrichBoard } = require('./recruiting-board-enrich');
 const { getLiveBoardTargets } = require('./live-board-targets');
 const { createMemoryCache } = require('./memory-cache');
 const { mountRecruitingHubRoutes } = require('./recruiting-hub-routes');
+const { getFanPortalPrep } = require('./portal-fan-prep');
 
 const boardCache = createMemoryCache(parseInt(process.env.RECRUITING_BOARD_CACHE_MS || '45000', 10));
 
@@ -103,6 +104,12 @@ function mountRecruitingRoutes(app) {
         starsDisplay: p.starsDisplay || '★'.repeat(Math.min(5, parseInt(p.stars, 10) || 0)),
         isHeadliner: portal.headlinerSlug === p.slug
       }));
+      let prep = null;
+      try {
+        prep = getFanPortalPrep();
+      } catch (_err) {
+        prep = null;
+      }
       return res.json({
         ok: true,
         incoming,
@@ -110,7 +117,10 @@ function mountRecruitingRoutes(app) {
         headliner: portal.headliner,
         headlinerSlug: portal.headlinerSlug,
         on3Source,
-        headlinerSource: portal.headlinerSource || 'stars'
+        headlinerSource: portal.headlinerSource || 'stars',
+        fanShip: false,
+        season: prep && prep.season ? prep.season : null,
+        prep,
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
