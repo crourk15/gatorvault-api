@@ -23,4 +23,9 @@ describe('shouldSkipSwrCache', () => {
     assert.equal(shouldSkipSwrCache('/api/gnl/feed?limit=40'), true);
     assert.equal(shouldSkipSwrCache('/api/recruiting/intel/beat?limit=8'), true);
   });
+
+  it('skips Film Room catalog so a last-good Texas week cannot hide live pressers', () => {
+    assert.equal(shouldSkipSwrCache('/api/film-room/catalog'), true);
+    assert.equal(shouldSkipSwrCache('/api/film-room/reviews'), true);
+  });
 });

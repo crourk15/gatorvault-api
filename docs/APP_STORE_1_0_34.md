@@ -2,7 +2,7 @@
 
 **Why:** **1.0.33** is the approved App Store build. TestFlight showed the right recruiting hero. After the App Store install, the old class line can paint back over it. Do not upload another 1.0.33.
 
-Do **not** start Codemagic until this bump is on `main`.
+The **1.0.34** bump is already on `main`. Do **not** start Codemagic until Charles says start (after the GNL + Film Room seed restamp is on `main`).
 
 ## iOS
 
@@ -23,6 +23,8 @@ I will not start Codemagic.
 
 - Recruiting hero does not paint the old class line (rank #8, 26 commits, average 89.9) over the live class.
 - The app clears its saved web cache on open so that old hero response is not reused. The member stays signed in.
+- Gator Nation Live first paint is today's beat (`gnl-hub-seed.json`), not the October Easton Royal seed. Live dashboard still replaces it on hydrate (SWR skipped).
+- Film Room first paint is the live catalog (`film-room-hub-seed.json`): current Press, Film Breakdown, Highlights — not Texas week. A saved last-good catalog cannot hide it.
 
 ## Whats New (paste)
 

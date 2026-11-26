@@ -272,12 +272,14 @@ These ship via Render / Netlify API — current App Store binary (1.0.18) picks 
 
 **1.0.33 is on the App Store.** Do not upload another 1.0.33.
 
-**Next bake target: App Store `1.0.34` / build `103`.** The recruiting hero must not paint the old class line over the live one. See `docs/APP_STORE_1_0_34.md`. Merge to `main`, then Charles starts Codemagic **ios-release**. Do **not** start until this bump is on `main`.
+**Next bake target: App Store `1.0.34` / build `103`.** The recruiting hero must not paint the old class line over the live one. The 1.0.34 bump is already on `main`. See `docs/APP_STORE_1_0_34.md`. Merge the GNL + Film Room seed restamp, then Charles starts Codemagic **ios-release**. Do **not** start until Charles says start.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-11-25 | Gator Nation Live first paint is today's beat, not the October Easton Royal seed. **Live `/api/live/dashboard` already follows the API after Render.** | `gnl-hub-seed.json` in the binary. Approved 1.0.33 still first-paints Oct 11 until this bake. Codemagic `npm run build` regenerates the seed from production. | this PR |
+| 2026-11-25 | Film Room first paint is the live catalog (FSU-week Sumrall presser, current breakdowns / highlights), not Texas week. **Live `/api/film-room/catalog` already follows the API after Render.** | `film-room-hub-seed.json` in the binary. Approved 1.0.33 still first-paints Oct 21 until this bake. A saved last-good catalog cannot hide it. | this PR |
 | 2026-11-23 | Game Week Matchup Edge first paint can still say UF / Florida if last-good still has `Florida State Seminoles`. **Live `/api/schedule` stamps `opp: FSU` after Render + Netlify (`gv-now-bust=fsu-legend`).** | Seed `schedule-data.ts` in the binary. Approved builds rewrite on the live fetch; first-paint seed is this bake. | this PR |
 | 2026-11-21 | Home NOW last-good can still first-paint Vanderbilt 6-4 / Swamp noon. **Live ticker/API is FSU at Doak, Friday 3:30 ABC, 7-4 after Render + Netlify.** | `home-command-utils.ts` last-good pin in the binary. Approved builds rewrite on the ticker edge (`gv-now-bust=fsu-keys`); first-paint seed is this bake. | this PR |
 | 2026-11-20 | Portal dormant first-paint can still say December 1. **Live API season is January 4–13, 2027 after Render — desk research is not on GatorVault.** | `recruiting-cycle.ts` in the binary. Approved builds can still first-paint the old Dec/spring windows until this bake; `/api/futurecast/home` already hydrates the NCAA January window. | this PR |

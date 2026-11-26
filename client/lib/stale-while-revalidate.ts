@@ -51,6 +51,9 @@ const NO_CACHE_PREFIXES = [
   '/api/live/dashboard',
   '/api/gnl/feed',
   '/api/recruiting/intel/beat',
+  // Film Room first paint. A saved Texas-week catalog cannot hide today's pressers.
+  '/api/film-room/catalog',
+  '/api/film-room/reviews',
 ];
 
 type CacheEnvelope<T> = { at: number; data: T };
