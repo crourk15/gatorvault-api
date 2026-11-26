@@ -28,7 +28,7 @@ type GatorNationLivePageProps = {
   focusSection?: GatorNationLiveFocus;
 };
 
-/** GatorNation Live — seeded first paint, then live refresh (45s). */
+/** GatorNation Live — seeded first paint, then live refresh (20s). */
 export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps = {}): React.ReactElement {
   const [bundle, setBundle] = useState<LiveHubBundle>(SEED_BUNDLE);
   const [loading, setLoading] = useState(false);

@@ -137,7 +137,29 @@ function fromLocalCache() {
       push(item, filmHub);
     }
   }
-  return rows.slice(0, 40);
+  return rows;
+}
+
+function itemKey(item) {
+  return String(item?.youtubeId || item?.id || '').trim();
+}
+
+function mergeCatalogItems(primary, extra) {
+  const seen = new Set();
+  const out = [];
+  for (const item of [...(primary || []), ...(extra || [])]) {
+    if (!item) continue;
+    const key = itemKey(item);
+    if (key && seen.has(key)) continue;
+    if (key) seen.add(key);
+    out.push(item);
+  }
+  out.sort((a, b) => {
+    const ta = Date.parse(a.publishedAt || a.lastVerified || '') || 0;
+    const tb = Date.parse(b.publishedAt || b.lastVerified || '') || 0;
+    return tb - ta;
+  });
+  return out.slice(0, 48);
 }
 
 function retainPrevious() {
@@ -152,7 +174,7 @@ async function main() {
   for (let i = 0; i < 3; i += 1) {
     try {
       const data = await fetchJson(API + '/api/film-room/catalog');
-      items = (data.items || []).map(slimItem).filter(Boolean).slice(0, 40);
+      items = (data.items || []).map(slimItem).filter(Boolean);
       categories = data.categories || [];
       if (items.length) { source = 'prod-api'; break; }
     } catch (err) {
@@ -161,13 +183,18 @@ async function main() {
     }
   }
 
-  if (!items.length) {
-    try {
-      items = fromLocalCache();
-      source = 'local-cache';
-    } catch (err) {
-      console.warn('[generate-film-room-hub-seed] local cache failed:', err.message);
-    }
+  let localItems = [];
+  try {
+    localItems = fromLocalCache();
+  } catch (err) {
+    console.warn('[generate-film-room-hub-seed] local cache failed:', err.message);
+  }
+
+  if (items.length) {
+    items = mergeCatalogItems(items, localItems);
+  } else if (localItems.length) {
+    items = mergeCatalogItems(localItems, []);
+    source = 'local-cache';
   }
 
   const prev = retainPrevious();
@@ -178,6 +205,9 @@ async function main() {
   }
 
   if (!items.length) throw new Error('Film Room seed empty');
+  if (!categories.length) {
+    categories = ['Film Breakdown', 'Scheme School', 'UF Press Conferences', 'Highlights'];
+  }
 
   const seed = {
     generatedAt: new Date().toISOString(),

@@ -67,4 +67,43 @@ describe('film-room hub seed (Codemagic-safe)', () => {
     assert.match(src, /film-room-gnfp-filter/);
     assert.doesNotMatch(src, /film-room-youtube-ingest/);
   });
+
+  it('Film Room hub seed is a current catalog with Press and Breakdown, not Texas week only', () => {
+    const seed = JSON.parse(
+      require('fs').readFileSync(
+        path.join(__dirname, '../../client/lib/film-room-hub-seed.json'),
+        'utf8'
+      )
+    );
+    assert.ok(Date.parse(seed.generatedAt) > Date.parse('2026-11-20T00:00:00.000Z'));
+    const hubs = (seed.items || []).map((row) => String(row.filmHub || row.category || ''));
+    assert.ok(hubs.some((h) => /press/i.test(h)), 'Press missing from Film Room seed');
+    assert.ok(
+      hubs.some((h) => /break|gnfp|tengwall|film guy/i.test(h)),
+      'Film Breakdown missing from Film Room seed'
+    );
+    const ids = (seed.items || []).map((row) => row.youtubeId);
+    assert.ok(ids.includes('3BPiF6o7kQI'), '11-23 Sumrall presser missing from Film Room seed');
+  });
+
+  it('GNL hub seed is today, not the October Royal plate', () => {
+    const seed = JSON.parse(
+      require('fs').readFileSync(
+        path.join(__dirname, '../../client/lib/gnl-hub-seed.json'),
+        'utf8'
+      )
+    );
+    assert.ok(Date.parse(seed.generatedAt) > Date.parse('2026-11-20T00:00:00.000Z'));
+    assert.ok((seed.feed || []).length > 0);
+    assert.ok((seed.panels?.beatWriterHighlights || []).length > 0);
+  });
+
+  it('skips Film Room catalog SWR so a last-good week cannot hide live pressers', () => {
+    const src = require('fs').readFileSync(
+      path.join(__dirname, '../../client/lib/stale-while-revalidate.ts'),
+      'utf8'
+    );
+    assert.match(src, /\/api\/film-room\/catalog/);
+    assert.match(src, /\/api\/film-room\/reviews/);
+  });
 });
