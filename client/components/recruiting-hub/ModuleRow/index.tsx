@@ -26,7 +26,7 @@ const MODULES = [
   },
   {
     title: 'Portal Tracker',
-    description: 'Incoming and outgoing portal movement with status tags.',
+    description: 'January 4–13, 2027. 10–12 difference makers. Names land when verified.',
     href: '/vault/recruiting?tab=portal',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">

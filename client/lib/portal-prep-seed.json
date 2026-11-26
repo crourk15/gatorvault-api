@@ -1,0 +1,158 @@
+{
+  "generatedAt": "2026-11-25T18:00:00Z",
+  "prep": {
+    "ok": true,
+    "fanShip": false,
+    "status": "prep",
+    "namesLandWhen": "Names land when they are verified.",
+    "season": {
+      "active": false,
+      "phase": "portal-prep",
+      "label": "Football portal opens January 4, 2027",
+      "nextWindowStart": "2027-01-04"
+    },
+    "window": {
+      "opens": "2027-01-04",
+      "closes": "2027-01-13",
+      "days": 10,
+      "label": "January 4–13, 2027",
+      "daysUntilOpen": 40
+    },
+    "thesis": {
+      "addCount": "10–12 difference makers",
+      "not": "Not 30 practice bodies.",
+      "line": "NIL decides how many of those 10–12 Florida can actually buy."
+    },
+    "rooms": [
+      {
+        "rank": 1,
+        "room": "OT",
+        "tier": "must-add",
+        "tierLabel": "Must add",
+        "dek": "Both tackle spots. Most expensive portal buy. 2027 true freshmen are not Year-1 SEC starters.",
+        "hunt": "Power-conference tackle who can start in 2027. Length, 2+ years left. Two if the budget holds.",
+        "alreadySigned": [
+          "Elijah Hutcheson",
+          "Moreno Fisher",
+          "Maxwell Hiller",
+          "Peyton Miller"
+        ]
+      },
+      {
+        "rank": 2,
+        "room": "S",
+        "tier": "must-add",
+        "tierLabel": "Must add",
+        "dek": "One-year safeties leave a hole. One 2027 commit is not enough.",
+        "hunt": "Range-and-tackle safety who can play SS or STAR in Year 1. 2+ years left.",
+        "alreadySigned": [
+          "Kailib Dillard"
+        ]
+      },
+      {
+        "rank": 3,
+        "room": "CB",
+        "tier": "high",
+        "tierLabel": "High",
+        "dek": "Secondary is a portal shop. Quality starter snaps still look thin.",
+        "hunt": "Press-man corner with starter snaps. Not a depth body.",
+        "alreadySigned": [
+          "Raheem Floyd",
+          "Aamaury Fountain",
+          "Amare Nugent",
+          "Kamauri Whitfield"
+        ]
+      },
+      {
+        "rank": 4,
+        "room": "IDL",
+        "tier": "high",
+        "tierLabel": "High",
+        "dek": "Interior only if the staff needs a Year-1 two-gap piece.",
+        "hunt": "Year-1 interior who can two-gap. Not a roster filler.",
+        "alreadySigned": [
+          "Zahmar Tookes",
+          "De'Voun Kendrick"
+        ]
+      },
+      {
+        "rank": 5,
+        "room": "QB",
+        "tier": "conditional",
+        "tierLabel": "Only if",
+        "dek": "Only if the 2027 starter is not already on the roster. A portal QB taxes the tackle budget.",
+        "hunt": "Do not shop a quarterback until that call is made.",
+        "alreadySigned": [
+          "Davin Davidson"
+        ]
+      },
+      {
+        "rank": 6,
+        "room": "LB",
+        "tier": "watch",
+        "tierLabel": "Watch",
+        "dek": "Only a difference-maker. Not a depth body.",
+        "hunt": "A Year-1 MIKE/WILL who changes the front. Pass if he is just a count.",
+        "alreadySigned": [
+          "Ja'Bios Smith",
+          "Ellis McGaskin",
+          "Tre Geathers"
+        ]
+      },
+      {
+        "rank": 7,
+        "room": "EDGE",
+        "tier": "watch",
+        "tierLabel": "Watch",
+        "dek": "Pass-rush JACK piece. Not a 30-man roster filler.",
+        "hunt": "A rush piece who can play JACK in Year 1.",
+        "alreadySigned": [
+          "Cahron Wheeler"
+        ]
+      },
+      {
+        "rank": 8,
+        "room": "WR",
+        "tier": "watch",
+        "tierLabel": "Watch",
+        "dek": "Headcount is fine. A true WR1 only if the staff wants a Year-1 dude.",
+        "hunt": "Do not spend a 10–12 slot on a body. Royal is a freshman.",
+        "alreadySigned": [
+          "Easton Royal",
+          "Elias Pearl",
+          "Tramond Collins",
+          "Anthony Jennings"
+        ]
+      },
+      {
+        "rank": 9,
+        "room": "RB",
+        "tier": "stable",
+        "tierLabel": "Hold",
+        "dek": "Do not spend a portal slot here unless the backfield situation changes.",
+        "hunt": "Hold the room.",
+        "alreadySigned": [
+          "Andrew Beard",
+          "Terrance Grant"
+        ]
+      },
+      {
+        "rank": 10,
+        "room": "TE",
+        "tier": "stable",
+        "tierLabel": "Hold",
+        "dek": "Not a 10–12 slot unless a difference-maker falls.",
+        "hunt": "Hold the room.",
+        "alreadySigned": [
+          "Tommy Douglas",
+          "Jackson Ballinger"
+        ]
+      }
+    ],
+    "mustAdd": [
+      "OT",
+      "S"
+    ],
+    "incomingCount": 0
+  }
+}

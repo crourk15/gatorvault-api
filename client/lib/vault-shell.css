@@ -4441,6 +4441,188 @@ a.gv-live-feed__row-title:hover {
   margin-bottom: 0.75rem;
 }
 
+.gv-rh-portal-prep {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.gv-rh-portal-prep__hero {
+  padding: 1.15rem 1.1rem 1.2rem;
+  background: var(--th-card-bg, #fff);
+  border: 1px solid var(--th-border, rgba(0, 33, 165, 0.18));
+  border-top: 3px solid var(--th-accent, var(--gator-orange, #fa4616));
+  border-radius: var(--th-radius-card, 12px);
+}
+
+.gv-rh-portal-prep__eyebrow {
+  margin: 0 0 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--th-accent, var(--gator-orange, #fa4616));
+}
+
+.gv-rh-portal-prep__title {
+  margin: 0;
+  font-size: clamp(1.35rem, 4.2vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--th-heading-light, var(--gator-blue, #0021a5));
+}
+
+.gv-rh-portal-prep__sub {
+  margin: 0.55rem 0 0;
+  max-width: 40rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--th-meta, var(--subtle-gray, #5b6770));
+}
+
+.gv-rh-portal-prep__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.gv-rh-portal-prep__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  padding: 0.7rem 0.75rem;
+  background: rgba(0, 33, 165, 0.04);
+  border-radius: 10px;
+}
+
+.gv-rh-portal-prep__stat-label {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--th-meta, #5b6770);
+}
+
+.gv-rh-portal-prep__stat-value {
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--th-blue, var(--gator-blue, #0021a5));
+}
+
+.gv-rh-portal-prep__thesis {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 650;
+  line-height: 1.45;
+  border-left: 3px solid var(--th-accent, #fa4616);
+  border-radius: 0 10px 10px 0;
+}
+
+.gv-rh-portal-prep__section-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gv-rh-portal-prep__empty {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--th-meta, #5b6770);
+  background: rgba(0, 33, 165, 0.04);
+  border-radius: 10px;
+}
+
+.gv-rh-portal-prep__rooms {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.gv-rh-portal-room {
+  margin: 0;
+  padding: 0.95rem 1rem 1rem;
+  background: var(--th-card-bg, #fff);
+  border: 1px solid var(--th-border, rgba(0, 33, 165, 0.16));
+  border-left: 3px solid var(--th-blue, #0021a5);
+  border-radius: 12px;
+}
+
+.gv-rh-portal-room--must-add {
+  border-left-color: var(--th-accent, #fa4616);
+}
+
+.gv-rh-portal-room__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.gv-rh-portal-room__rank {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--th-accent, #fa4616);
+}
+
+.gv-rh-portal-room__pos {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--th-heading-light, #0021a5);
+}
+
+.gv-rh-portal-room__tier {
+  margin-left: auto;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(0, 33, 165, 0.08);
+  color: var(--th-blue, #0021a5);
+}
+
+.gv-rh-portal-room--must-add .gv-rh-portal-room__tier {
+  background: rgba(250, 70, 22, 0.12);
+  color: var(--th-accent, #fa4616);
+}
+
+.gv-rh-portal-room__dek,
+.gv-rh-portal-room__hunt,
+.gv-rh-portal-room__signed {
+  margin: 0.45rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.gv-rh-portal-room__hunt,
+.gv-rh-portal-room__signed {
+  color: var(--th-meta, #5b6770);
+}
+
+@media (min-width: 768px) {
+  .gv-rh-portal-prep__stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .gv-rh-portal-prep__rooms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* ── Phase 9 Batch 3: Roster Profile 2.0 + Team KPI + Dashboard Pulse ── */
 
 .gv-roster-profile {

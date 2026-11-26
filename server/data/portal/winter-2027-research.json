@@ -3,11 +3,12 @@
   "updatedAt": "2026-11-20T23:50:00Z",
   "fanShip": false,
   "status": "desk-only",
+  "fanPrepLive": true,
   "fanSurfacesBlocked": [
-    "/vault/portal",
-    "/api/portal/watchlist",
-    "getPortalBoard",
-    "FutureCast portal watchlist"
+    "named portal candidates",
+    "getPortalBoard incoming",
+    "/api/portal/watchlist names",
+    "FutureCast portal watchlist names"
   ],
   "window": {
     "sport": "FBS/FCS football",

@@ -1,6 +1,7 @@
 /**
  * Desk-only winter 2027 portal research.
- * Never merge this file into getPortalBoard() or fan /vault/portal.
+ * Never merge named candidates into getPortalBoard() or fan incoming.
+ * Fan /vault/portal reads sanitized prep from portal-fan-prep.js (rooms / thesis / window).
  */
 const fs = require('fs');
 const path = require('path');

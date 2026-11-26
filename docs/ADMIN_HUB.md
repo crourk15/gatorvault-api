@@ -160,15 +160,15 @@ Full Ops / Full QA iframes remain under Dashboard / QA as escape hatches.
 4. Desk shows a **FutureCast feed** card when the full path ran (seeded / promoted / refreshed + %).
 5. `#futurecast/control` lists admin allowlist extras, board sample, early watch — add/remove 2028 only.
 
-### Winter 2027 portal research (desk only)
+### Winter 2027 portal research (desk names / fan prep)
 
-Jump-early board lives in `server/data/portal/winter-2027-research.json`. **Do not ship to GatorVault** until Charles says so.
+Jump-early board lives in `server/data/portal/winter-2027-research.json`. **`fanShip` stays false.** Fan `/vault/recruiting?tab=portal` shows the elite prep war room (window, 10–12, ranked rooms) from `portal-fan-prep.js`. Incoming names stay off until Charles ships a verified name.
 
 - NCAA football window is **January 4–13, 2027** (10 days, first business day after Jan 1). No December football window. No spring football window.
 - Sumrall / Caldwell want **10–12 difference makers**, not 30 practice bodies.
 - Staff/beat rooms: **both tackles**, **secondary**, **IDL if outgoing**, **QB only if the 2027 starter is not already on the roster**.
 - Named portal targets stay empty until a verified beat/On3 item. Do not invent names. Do not upsert `category: portal` from this file.
-- Loader: `server/lib/portal-winter-research.js`. Fan `getPortalBoard()` must stay empty until a ship call.
+- Loader: `server/lib/portal-winter-research.js`. Fan `getPortalBoard()` must stay empty until a ship call. Fan prep: `GET /api/recruiting/portal` → `prep`.
 
 ### API crash-loop note (Aug 20)
 

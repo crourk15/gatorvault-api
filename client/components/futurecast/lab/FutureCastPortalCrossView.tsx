@@ -69,7 +69,7 @@ export function FutureCastPortalCrossView({
           day: 'numeric',
           timeZone: 'UTC',
         })
-      : 'December';
+      : 'January 4, 2027';
     return (
       <div
         className="fc-lab-portal-one-line"
@@ -135,11 +135,17 @@ export function PortalSeasonDormantCard({
   const state = resolvePortalSeason(portalSeason, 0);
   return (
     <div className={className} data-testid={testId} data-portal-phase={state.phase}>
-      <p className="fc-portal-dormant__title">Portal watchlist is in offseason mode</p>
-      <p className="fc-portal-dormant__text">{portalDormantMessage(state)}</p>
+      <p className="fc-portal-dormant__title">Football portal opens January 4, 2027</p>
+      <p className="fc-portal-dormant__text">
+        {portalDormantMessage(state)}. 10–12 difference makers — not 30 practice bodies. Names
+        land when they are verified.
+      </p>
       {state.nextWindowStart ? (
-        <p className="fc-portal-dormant__meta">Next window: {state.nextWindowStart}</p>
+        <p className="fc-portal-dormant__meta">Window {state.nextWindowStart} through January 13.</p>
       ) : null}
+      <a href="/vault/recruiting?tab=portal" className="fc-card-link">
+        Open Portal war room →
+      </a>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import { apiFetch } from './api-fetch';
 import type { RecruitingBoardPlayer } from './recruiting-board-api';
+import type { FanPortalPrep } from './portal-prep';
+import type { PortalSeasonState } from './recruiting-cycle';
 
 export interface HeatCheckItem {
   playerName: string;
@@ -36,11 +38,19 @@ export interface PortalIncomingPlayer {
 export interface RecruitingPortalBoardResponse {
   ok?: boolean;
   incoming?: RecruitingBoardPlayer[];
+  count?: number;
+  fanShip?: boolean;
+  season?: PortalSeasonState | null;
+  prep?: FanPortalPrep | null;
 }
 
 export async function fetchRecruitingPortalBoard(): Promise<RecruitingBoardPlayer[]> {
   const data = await apiFetch<RecruitingPortalBoardResponse>('/api/recruiting/portal');
   return data.incoming ?? [];
+}
+
+export async function fetchRecruitingPortalPayload(): Promise<RecruitingPortalBoardResponse> {
+  return apiFetch<RecruitingPortalBoardResponse>('/api/recruiting/portal');
 }
 
 export async function fetchAllRecruitingPlayers(): Promise<RecruitingBoardPlayer[]> {
