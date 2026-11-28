@@ -12,7 +12,10 @@ type Props = {
 
 /** Client-only hub sections (hero may be SSR-deferred). */
 export function RecruitingHubCommandCenterClient({ deferHero = false }: Props): React.ReactElement {
-  const [panelMode, setPanelMode] = React.useState(false);
+  const [panelMode, setPanelMode] = React.useState(() => {
+    if (typeof window === 'undefined') return false;
+    return isRecruitingPanelTab(normalizeRecruitingTab(resolveRecruitingTab()));
+  });
 
   React.useEffect(() => {
     const sync = () => {

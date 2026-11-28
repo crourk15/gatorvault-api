@@ -51,11 +51,26 @@ export const RECRUITING_TAB_PATHS: Record<RecruitingHubTab, string> = {
   'commits-2027': '/vault/recruiting/2027/commits',
   'targets-2027': '/vault/recruiting/2027/targets',
   'targets-2028': '/vault/recruiting/2028/targets',
-  intel: '/vault/recruiting/?tab=movement',
+  intel: '/vault/recruiting/?tab=intel',
   scouting: '/vault/recruiting/?tab=scouting',
   portal: '/vault/recruiting/?tab=portal',
   rankings: '/vault/recruiting/?tab=rankings',
 };
+
+/** Query aliases — Who's Moving used to write ?tab=movement, which is not a hub tab key. */
+const RECRUITING_TAB_QUERY_ALIASES: Record<string, RecruitingHubTab> = {
+  movement: 'intel',
+  heat: 'intel',
+  'heat-check': 'intel',
+};
+
+export function recruitingTabFromQuery(tab: string | null | undefined): RecruitingHubTab | null {
+  const t = String(tab || '').trim().toLowerCase();
+  if (!t) return null;
+  if (t in RECRUITING_TAB_PATHS) return normalizeRecruitingTab(t as RecruitingHubTab);
+  if (t in RECRUITING_TAB_QUERY_ALIASES) return RECRUITING_TAB_QUERY_ALIASES[t];
+  return null;
+}
 
 /** Alternate hub base (same tabs, different URL prefix) */
 export const RECRUITING_HUB_BASE = '/recruiting-hub';
@@ -66,10 +81,12 @@ export const RECRUITING_LEGACY_PATH_ALIASES: Record<string, RecruitingHubTab> = 
   '/vault/recruiting/2026/commits': 'commits-2026',
   '/vault/recruiting/2026/targets': 'targets-2027',
   '/vault/recruiting/heat-check': 'intel',
+  '/vault/recruiting/movement': 'intel',
   [RECRUITING_HUB_BASE]: 'commits-2027',
   [`${RECRUITING_HUB_BASE}/2026/commits`]: 'commits-2026',
   [`${RECRUITING_HUB_BASE}/2026/targets`]: 'targets-2027',
   [`${RECRUITING_HUB_BASE}/heat-check`]: 'intel',
+  [`${RECRUITING_HUB_BASE}/movement`]: 'intel',
 };
 
 /** Map deprecated tab ids to active hub tabs. */
@@ -262,9 +279,7 @@ export function parseRecruitingTabFromPath(pathname?: string): RecruitingHubTab 
 
 export function parseRecruitingTabFromSearch(): RecruitingHubTab | null {
   if (typeof window === 'undefined') return null;
-  const t = new URLSearchParams(window.location.search).get('tab');
-  if (t && t in RECRUITING_TAB_PATHS) return t as RecruitingHubTab;
-  return null;
+  return recruitingTabFromQuery(new URLSearchParams(window.location.search).get('tab'));
 }
 
 export function resolveRecruitingTab(pathname?: string): RecruitingHubTab {

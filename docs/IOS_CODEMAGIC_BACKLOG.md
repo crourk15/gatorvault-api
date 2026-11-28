@@ -278,6 +278,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-11-25 | Who’s Moving stays on board intel (`?tab=intel`). Approved 1.0.33 writes `?tab=movement`, which the hub does not parse, so the click dumps onto the 2028 class war-room. **Live Netlify JS hydrates the fix after deploy.** | `vault-route-map.ts` in the binary. | this PR |
 | 2026-11-25 | Recruiting Portal tab is the January 4–13, 2027 war room (10–12 difference makers, ranked rooms). Names stay off until verified. **Live `/api/recruiting/portal` hydrates the prep payload after Render.** | `RecruitingPortalSection.tsx`, `portal-prep-seed.json`, and portal CSS in the binary. Approved 1.0.33 still first-paints lock-icon “Portal Closed” until this bake. | this PR |
 | 2026-11-23 | Game Week Matchup Edge first paint can still say UF / Florida if last-good still has `Florida State Seminoles`. **Live `/api/schedule` stamps `opp: FSU` after Render + Netlify (`gv-now-bust=fsu-legend`).** | Seed `schedule-data.ts` in the binary. Approved builds rewrite on the live fetch; first-paint seed is this bake. | this PR |
 | 2026-11-21 | Home NOW last-good can still first-paint Vanderbilt 6-4 / Swamp noon. **Live ticker/API is FSU at Doak, Friday 3:30 ABC, 7-4 after Render + Netlify.** | `home-command-utils.ts` last-good pin in the binary. Approved builds rewrite on the ticker edge (`gv-now-bust=fsu-keys`); first-paint seed is this bake. | this PR |
