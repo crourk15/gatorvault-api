@@ -16,7 +16,7 @@ Click **Edit** (top right), then set:
 
 | Field | Value |
 |-------|--------|
-| Subtitle | UF Football Intel Hub |
+| Subtitle | Commits, portal & visit alerts |
 | Primary Category | Sports |
 | Secondary Category | News (optional) |
 | Privacy Policy URL | https://gatorvaultinsider.com/privacy/ |

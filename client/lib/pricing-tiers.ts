@@ -55,7 +55,7 @@ export const PRICING_TIERS: PricingTier[] = [
       'Portal tracker + visit intel',
       'NIL snapshot + live feed',
       'Depth chart + team hub',
-      'Game Week matchup shell',
+      'Game Week hub',
     ],
   },
   {
@@ -67,10 +67,9 @@ export const PRICING_TIERS: PricingTier[] = [
     popular: true,
     features: [
       'Everything in Locker Room',
-      'FutureCast — UF probabilities & movement',
+      'FutureCast — Florida lean and movement',
       'Vault Scouting on player profiles',
       'Game Week Intel + Scouting Report',
-      'Class of 2029 & 2030 early targets',
       'Film Room breakdowns',
     ],
   },
@@ -144,7 +143,7 @@ export const PUBLIC_FEATURE_COMPARISON_ROWS: PublicFeatureComparisonRow[] = [
     film: 'Full',
   },
   {
-    feature: 'Game Week shell',
+    feature: 'Game Week hub',
     free: '—',
     locker: 'Full',
     film: 'Full',
@@ -162,9 +161,9 @@ export const PUBLIC_FEATURE_COMPARISON_ROWS: PublicFeatureComparisonRow[] = [
     film: 'Full',
   },
   {
-    feature: 'Class of 2029 & 2030',
-    free: '—',
-    locker: 'Teaser',
+    feature: 'Member community',
+    free: 'Limited',
+    locker: 'Full',
     film: 'Full',
   },
   {
@@ -196,7 +195,7 @@ export const LANDING_FEATURES = [
   {
     icon: '📈',
     title: 'FutureCast',
-    desc: '2027 recruiting intelligence — UF probability, Fit Score, movement heatmaps, and portal watchlist.',
+    desc: '2028 board lean — Florida probability, fit score, movement, and portal watch.',
     href: '/futurecast',
   },
   {
@@ -208,13 +207,13 @@ export const LANDING_FEATURES = [
   {
     icon: '🎯',
     title: 'Recruiting Board',
-    desc: '2026 class + 2027 targets, priority tiers, staff notes, and eval status.',
+    desc: '2027 commits and 2028 targets, priority tiers, staff notes, and eval status.',
     href: '/vault/recruiting/board',
   },
   {
     icon: '🔄',
     title: 'Portal Radar',
-    desc: 'Every Gator portal addition tracked — On3-sourced intel and full player pages.',
+    desc: 'Every Gator portal addition tracked — scheme-fit profiles and full player pages.',
     href: '/vault/portal',
   },
   {
