@@ -31,6 +31,52 @@ function chipLabel(chip: FanPortalPrepChip): string {
   return bits.join(' · ');
 }
 
+function sizeLine(chip: FanPortalPrepChip): string | null {
+  const bits = [];
+  if (chip.ht) bits.push(chip.ht.replace(/"/g, ''));
+  if (chip.wt) bits.push(String(chip.wt));
+  return bits.length ? bits.join(' ') : null;
+}
+
+function CallCards({ rows }: { rows: FanPortalPrepChip[] }): React.ReactElement | null {
+  if (!rows.length) return null;
+  return (
+    <div className="gv-rh-portal-room__chips gv-rh-portal-room__chips--scan" data-testid="portal-gv-calls">
+      <p className="gv-rh-portal-room__chip-label">GatorVault call</p>
+      <ul className="gv-rh-portal-room__calls">
+        {rows.map((chip) => {
+          const school = chip.school || chip.committedTo;
+          const size = sizeLine(chip);
+          const meta = [
+            school,
+            chip.conference,
+            size,
+            chip.snaps != null ? `${chip.snaps} snaps` : null,
+            chip.pffGrade != null ? `PFF ${Number(chip.pffGrade).toFixed(1)}` : null,
+            chip.yearsLeft != null ? `${chip.yearsLeft} yr left` : null,
+          ].filter(Boolean);
+          return (
+            <li key={chip.slug || chip.name} className="gv-rh-portal-room__call">
+              <div className="gv-rh-portal-room__call-head">
+                <span className="gv-rh-portal-room__call-name">{chip.name}</span>
+                {chip.announcedPortal ? (
+                  <span className="gv-rh-portal-room__call-stamp">Entering portal</span>
+                ) : (
+                  <span className="gv-rh-portal-room__call-stamp gv-rh-portal-room__call-stamp--scan">
+                    PFF scan
+                  </span>
+                )}
+              </div>
+              {meta.length ? <p className="gv-rh-portal-room__call-meta">{meta.join(' · ')}</p> : null}
+              {chip.note ? <p className="gv-rh-portal-room__call-note">{chip.note}</p> : null}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 function RoomChips({
   label,
   rows,
@@ -86,7 +132,7 @@ function RoomCard({
         </div>
         {hunt ? <p className="gv-rh-portal-room__hunt">{hunt}</p> : null}
         <RoomChips label="On the 2027 board" rows={signed} kind="signed" />
-        <RoomChips label="GatorVault scan" rows={scans} kind="scan" />
+        <CallCards rows={scans} />
         <RoomChips label="Fits this hole" rows={fillers} kind="gap" />
         {!compact && !fillers.length && !scans.length ? (
           <p className="gv-rh-portal-room__empty-gap" data-testid={`portal-gap-empty-${room.room}`}>
@@ -144,7 +190,9 @@ export function PortalList(): React.ReactElement {
         <p className="fc-portal-room__kicker">{prep.window.label}</p>
         <h2 className="fc-portal-room__title">Portal Room</h2>
         <p className="fc-portal-room__dek">
-          {prep.thesis.addCount}. {prep.thesis.not} Names land when On3 or the beat verifies a college transfer who fills the hole.
+          {prep.thesis.addCount}. {prep.thesis.not}{' '}
+          {prep.namesLandWhen ||
+            'GatorVault call sheets are a PFF/production scan. In-portal stamp when On3 or the beat verifies.'}
         </p>
         <div className="fc-portal-room__pills" role="list">
           <span role="listitem">
@@ -154,7 +202,9 @@ export function PortalList(): React.ReactElement {
             Must add {prep.mustAdd.length ? prep.mustAdd.join(' · ') : '—'}
           </span>
           <span role="listitem">{prep.thesis.addCount.replace(/ difference makers$/i, '') || '10–12'}</span>
-          <span role="listitem">{gapCount ? `${gapCount} gap filler${gapCount === 1 ? '' : 's'}` : 'Scanning'}</span>
+          <span role="listitem">
+            {gapCount ? `${gapCount} GatorVault call${gapCount === 1 ? '' : 's'}` : 'Scanning'}
+          </span>
         </div>
         <ol className="fc-portal-room__steps" data-testid="portal-room-steps">
           <li>
@@ -163,7 +213,7 @@ export function PortalList(): React.ReactElement {
           </li>
           <li>
             <strong>Scan</strong>
-            A college transfer who actually plays that room — not a random name.
+            PFF grade and starter snaps on the hole — not a rumor, not in the portal until stamped.
           </li>
           <li>
             <strong>Class</strong>
@@ -176,7 +226,7 @@ export function PortalList(): React.ReactElement {
         {loading
           ? 'Loading verified names…'
           : incoming.length || gapCount
-            ? 'Verified college transfers only — they have to fill the hole.'
+            ? 'GatorVault calls fill the hole. Entering-portal stamp is On3 or the beat. PFF scan is not a commit.'
             : 'Scanning On3 and the beat. High-school remaining targets stay on Recruiting.'}
       </p>
 

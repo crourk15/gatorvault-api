@@ -299,7 +299,8 @@ function getFanPortalPrep(at = new Date()) {
     ok: true,
     fanShip: false,
     status: 'prep',
-    namesLandWhen: 'Names land when On3 or the beat verifies a college transfer who fills the hole.',
+    namesLandWhen:
+      'GatorVault call sheets are a PFF/production scan. In-portal stamp when On3 or the beat verifies.',
     season,
     window: {
       opens: research.window.opens,

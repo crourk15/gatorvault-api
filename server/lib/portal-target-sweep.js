@@ -5,7 +5,12 @@
 const fs = require('fs');
 const path = require('path');
 const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
-const { collectPortalTargetCandidates, rankPortalTargets, toScanChip } = require('./portal-target-finder');
+const {
+  collectPortalTargetCandidates,
+  rankPortalTargets,
+  toScanChip,
+  loadPffScanBoard,
+} = require('./portal-target-finder');
 const { getFanPortalPrep } = require('./portal-fan-prep');
 
 const BUNDLE_REPORT = path.join(__dirname, '..', 'data', 'portal', 'winter-2027-targets.json');
@@ -22,8 +27,19 @@ function readJson(file) {
   }
 }
 
+function reportHasTargets(report) {
+  if (!report || typeof report !== 'object') return false;
+  if (Array.isArray(report.targets) && report.targets.length > 0) return true;
+  const rooms = report.rooms || {};
+  return Object.keys(rooms).some((key) => Array.isArray(rooms[key]) && rooms[key].length > 0);
+}
+
 function readLastReport() {
-  return readJson(reportPath()) || readJson(BUNDLE_REPORT) || { ok: true, targets: [], rooms: {} };
+  const live = readJson(reportPath());
+  const bundle = readJson(BUNDLE_REPORT);
+  if (reportHasTargets(live)) return live;
+  if (reportHasTargets(bundle)) return bundle;
+  return live || bundle || { ok: true, targets: [], rooms: {} };
 }
 
 function writeLastReport(report) {
@@ -77,10 +93,12 @@ async function runPortalTargetSweep(opts = {}) {
   const prep = getFanPortalPrep(opts.at || new Date());
   const [incoming, on3] = await Promise.all([loadIncoming(), loadOn3(opts)]);
   const intel = opts.intel || loadIntel();
+  const scan = opts.skipScan ? [] : (opts.scan || loadPffScanBoard());
   const candidates = collectPortalTargetCandidates({
     incoming: opts.incoming || incoming,
     intel,
     on3: opts.on3 || on3,
+    scan,
   });
   const ranked = rankPortalTargets(candidates, roomsFromPrep(prep));
   const rooms = {};
@@ -99,6 +117,7 @@ async function runPortalTargetSweep(opts = {}) {
       on3: (opts.on3 || on3).length,
       intel: intel.length,
       incoming: (opts.incoming || incoming).length,
+      scan: scan.length,
     },
     targetCount: targets.length,
     rooms,

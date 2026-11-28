@@ -9,6 +9,17 @@ export type FanPortalPrepChip = {
   natlRank?: number | null;
   status?: 'commit' | 'target' | 'flip' | 'gap' | 'scan' | string;
   committedTo?: string | null;
+  school?: string | null;
+  conference?: string | null;
+  pffGrade?: number | null;
+  snaps?: number | null;
+  ht?: string | null;
+  wt?: number | null;
+  jersey?: string | null;
+  yearsLeft?: number | null;
+  note?: string | null;
+  announcedPortal?: boolean;
+  productionPath?: string | null;
 };
 
 export type FanPortalPrepRoom = {
@@ -77,6 +88,17 @@ export function portalChip(row: string | FanPortalPrepChip | null | undefined): 
     stars: row.stars ?? null,
     natlRank: row.natlRank ?? null,
     status: row.status || 'commit',
-    committedTo: row.committedTo ?? null,
+    committedTo: row.committedTo ?? row.school ?? null,
+    school: row.school ?? row.committedTo ?? null,
+    conference: row.conference ?? null,
+    pffGrade: row.pffGrade ?? null,
+    snaps: row.snaps ?? null,
+    ht: row.ht ?? null,
+    wt: row.wt ?? null,
+    jersey: row.jersey ?? null,
+    yearsLeft: row.yearsLeft ?? null,
+    note: row.note ?? null,
+    announcedPortal: !!row.announcedPortal,
+    productionPath: row.productionPath ?? null,
   };
 }

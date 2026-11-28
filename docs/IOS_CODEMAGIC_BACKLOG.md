@@ -278,6 +278,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-11-27 | Portal Room GatorVault call sheets (5+ PFF/production names per hole, school/snaps/grade on the card). **Live `/api/recruiting/portal` hydrates after Render.** | Call-card row in the binary. | this PR |
 | 2026-11-27 | Portal Room GatorVault scan chips (On3/beat names that fill a hole, Buy-scored). **Live `/api/recruiting/portal` hydrates after Render.** | Scan chip row in the binary. | this PR |
 | 2026-11-27 | Portal Room tab owns FutureCast (not buried under Chase). Hunt vs Hold board, hole → scan → class steps, no recruiting white-card header. **Live Netlify hydrates after deploy.** | Lab hash focus + Portal Room chrome in the binary. | this PR |
 | 2026-11-27 | Portal Room is a FutureCast tab next to Early Discovery (`#portal`). Recruiting stays class cards. When a portal player commits they get a Portal transfer stamp on the class board. **Live Netlify hydrates after deploy.** | FutureCast nav, PortalList, commit stamp, and route map in the binary. | this PR |

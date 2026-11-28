@@ -1439,6 +1439,67 @@
   color: #fde68a;
 }
 
+.gv-rh-portal-room__calls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+}
+
+.gv-rh-portal-room__call {
+  border: 1px solid rgba(250, 204, 21, 0.22);
+  background: rgba(250, 204, 21, 0.06);
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+}
+
+.gv-rh-portal-room__call-head {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.gv-rh-portal-room__call-name {
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #fde68a;
+}
+
+.gv-rh-portal-room__call-stamp {
+  margin-left: auto;
+  font-size: 0.5625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.14rem 0.42rem;
+  border-radius: 999px;
+  background: rgba(250, 70, 22, 0.22);
+  color: #ffd4c4;
+}
+
+.gv-rh-portal-room__call-stamp--scan {
+  background: rgba(250, 204, 21, 0.16);
+  color: #fde68a;
+}
+
+.gv-rh-portal-room__call-meta {
+  margin: 0.28rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: #e2e8f0;
+}
+
+.gv-rh-portal-room__call-note {
+  margin: 0.22rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: #94a3b8;
+}
+
 .gv-rh-portal-room__empty-gap {
   margin: 0.45rem 0 0;
   font-size: 0.75rem;

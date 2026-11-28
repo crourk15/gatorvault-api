@@ -1,20 +1,24 @@
 /**
- * GatorVault portal targets from our systems — On3 watch, beat portal intel,
- * recruiting-store portal rows — then hole-fit + Buy score.
- * Never invent names. Never mark them Florida commits.
+ * GatorVault portal targets from our systems — PFF scan board, On3 watch,
+ * beat portal intel, recruiting-store portal rows — then hole-fit + Buy score.
+ * Never invent PFF. Never mark them Florida commits.
  */
+const fs = require('fs');
+const path = require('path');
 const { slugify } = require('./slug');
 const { computePortalBuyScore } = require('./portal-buy-score');
 const { portalRoomForPos, isUfPortalCommit } = require('./portal-fan-prep');
 
 const ROOM_CAP = {
   'must-add': 5,
-  high: 4,
+  high: 5,
   conditional: 2,
   watch: 2,
   stable: 1,
   hold: 1,
 };
+
+const SCAN_BOARD = path.join(__dirname, '..', 'data', 'portal', 'winter-2027-scan.json');
 
 function isFloridaSchoolNameSafe(raw) {
   return /\bflorida\b|\bgators\b/i.test(String(raw || ''));
@@ -45,6 +49,7 @@ function fromSchoolOf(row) {
 function isVerifiedPortalSource(row) {
   const source = String(row.source || '').toLowerCase();
   if (source === 'on3' || source === 'beat' || source === 'store') return true;
+  if (source === 'pff' || source === 'gv-scan' || source === 'scan') return true;
   if (String(row.category || '').toLowerCase() === 'portal') return true;
   const status = String(row.status || row.eventType || row.triggerType || '').toLowerCase();
   return status.includes('portal');
@@ -65,10 +70,16 @@ function isPortalTargetCandidate(row, room) {
   return true;
 }
 
+function scanish(source) {
+  const s = String(source || '').toLowerCase();
+  return s === 'pff' || s === 'gv-scan' || s === 'scan';
+}
+
 function toCandidate(row, source) {
   const name = cleanName(row.name || row.full_name || row.playerName);
   const slug = String(row.slug || row.playerSlug || slugify(name)).toLowerCase();
   const fromSchool = fromSchoolOf(row);
+  const scan = scanish(source) || scanish(row.source);
   return {
     name,
     slug,
@@ -79,8 +90,15 @@ function toCandidate(row, source) {
     conferenceTier: row.conferenceTier || row.level || '',
     starts: row.starts ?? row.gamesStarted ?? null,
     snapPct: row.snapPct ?? row.snap_pct ?? null,
+    snaps: row.snaps ?? row.offenseSnaps ?? row.defenseSnaps ?? null,
     pffGrade: row.pffGrade ?? row.pff_grade ?? row.pff ?? null,
     yearsLeft: row.yearsLeft ?? row.years_left ?? row.elig ?? null,
+    ht: row.ht || row.height || null,
+    wt: row.wt ?? row.weight ?? null,
+    jersey: row.jersey ?? row.number ?? null,
+    note: row.note || null,
+    announcedPortal: !!row.announcedPortal,
+    production: row.production || null,
     stars: row.stars ?? null,
     natlRank: row.natlRank ?? row.natl ?? null,
     schemeFit: row.schemeFit ?? row.scheme_score ?? null,
@@ -88,8 +106,8 @@ function toCandidate(row, source) {
     floridaVisit: row.floridaVisit || row.ufVisit || false,
     staffFlag: row.staffFlag || false,
     beatLink: source === 'beat' || row.beatLink || false,
-    category: 'portal',
-    status: row.status || 'portal_in',
+    category: scan ? 'scan' : 'portal',
+    status: row.status || (scan ? 'scan' : 'portal_in'),
     source,
     sourceUrl: row.sourceUrl || row.url || null,
   };
@@ -121,7 +139,18 @@ function fromIntelItem(item) {
   );
 }
 
-function collectPortalTargetCandidates({ incoming = [], intel = [], on3 = [] } = {}) {
+function loadPffScanBoard() {
+  try {
+    const buf = fs.readFileSync(SCAN_BOARD);
+    const text = buf[1] === 0 ? buf.toString('utf16le') : buf.toString('utf8');
+    const data = JSON.parse(text.replace(/^\uFEFF/, ''));
+    return Array.isArray(data && data.players) ? data.players : [];
+  } catch {
+    return [];
+  }
+}
+
+function collectPortalTargetCandidates({ incoming = [], intel = [], on3 = [], scan = [] } = {}) {
   const out = [];
   const seen = new Set();
   function push(row, source) {
@@ -143,6 +172,7 @@ function collectPortalTargetCandidates({ incoming = [], intel = [], on3 = [] } =
       out.push(cand);
     }
   }
+  for (const row of scan) push(row, row.source || 'pff');
   return out;
 }
 
@@ -184,6 +214,7 @@ function rankPortalTargets(candidates, rooms) {
 
 function toScanChip(row) {
   if (!row || !row.name) return null;
+  const school = row.fromSchool || row.school || null;
   return {
     name: row.name,
     slug: row.slug || '',
@@ -191,17 +222,31 @@ function toScanChip(row) {
     stars: Number(row.stars) > 0 ? Number(row.stars) : null,
     natlRank: Number(row.natlRank) > 0 ? Number(row.natlRank) : null,
     status: 'scan',
-    committedTo: row.fromSchool || row.school || null,
+    committedTo: school,
+    school,
+    conference: row.conference || null,
+    pffGrade: row.pffGrade ?? null,
+    snaps: row.snaps ?? null,
+    ht: row.ht || null,
+    wt: row.wt ?? null,
+    jersey: row.jersey || null,
+    yearsLeft: row.yearsLeft ?? null,
+    note: row.note || null,
+    announcedPortal: !!row.announcedPortal,
     buyScore: row.buyScore,
+    productionPath: row.productionPath || null,
     source: row.source,
+    sourceUrl: row.sourceUrl || null,
   };
 }
 
 module.exports = {
   ROOM_CAP,
+  SCAN_BOARD,
   isPortalTargetCandidate,
   collectPortalTargetCandidates,
   rankPortalTargets,
   toScanChip,
   looksLikePersonName,
+  loadPffScanBoard,
 };

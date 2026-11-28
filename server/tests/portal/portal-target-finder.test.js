@@ -109,6 +109,7 @@ test('sweep with empty sources does not invent names', async () => {
   const report = await runPortalTargetSweep({
     dryRun: true,
     skipOn3: true,
+    skipScan: true,
     incoming: [],
     intel: [],
     on3: [],
@@ -118,6 +119,35 @@ test('sweep with empty sources does not invent names', async () => {
   assert.equal(report.targets.length, 0);
   const blob = JSON.stringify(report);
   assert.equal(blob.includes('namedCandidates'), false);
+});
+
+test('PFF scan board puts at least 5 Buy-scored calls on each hunt room', async () => {
+  const report = await runPortalTargetSweep({
+    dryRun: true,
+    skipOn3: true,
+    incoming: [],
+    intel: [],
+    on3: [],
+  });
+  assert.equal(report.fanShip, false);
+  for (const room of ['OT', 'S', 'CB', 'IDL']) {
+    const rows = report.rooms[room] || [];
+    assert.ok(rows.length >= 5, `${room} has ${rows.length}`);
+    for (const row of rows) {
+      assert.ok(row.name && row.school);
+      assert.equal(row.status, 'scan');
+      if (!row.announcedPortal) {
+        assert.ok(Number(row.pffGrade) >= 75, `${row.name} PFF`);
+      }
+    }
+  }
+  const ot = report.rooms.OT.map((r) => r.name);
+  assert.ok(ot.includes('Matt Hofer'));
+  const safeties = report.rooms.S;
+  const bejarano = safeties.find((r) => r.name === 'Javon Bejarano');
+  assert.ok(bejarano);
+  assert.equal(bejarano.announcedPortal, true);
+  assert.equal(bejarano.school, 'Houston Christian');
 });
 
 test('finder is wired into recruiting-light, ops, and the API', () => {
@@ -132,7 +162,7 @@ test('finder is wired into recruiting-light, ops, and the API', () => {
   assert.match(cron, /portal-targets\/sweep/);
   assert.match(ops, /portal-target-sweep/);
   assert.match(routes, /portal-targets\/sweep/);
-  assert.match(ui, /GatorVault scan/);
+  assert.match(ui, /GatorVault call/);
 });
 
 test('fan prep still does not ship research namedCandidates', () => {
