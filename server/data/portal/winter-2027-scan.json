@@ -1,7 +1,7 @@
 {
   "ok": true,
   "fanShip": false,
-  "generatedAt": "2026-11-28T04:00:00Z",
+  "generatedAt": "2026-11-28T04:10:00Z",
   "season": 2026,
   "source": "pff",
   "sourceNote": "PFF NCAA 2026 grades, Nov 27 2026 ET. Formula: hole, NFL Day 1-2 off, P4 starter snaps or G5/FCS high PFF, hunt frame, years left. Mix 2 P4 per hunt room. Not in the portal unless announcedPortal. Do not invent grades.",
@@ -9,7 +9,8 @@
     "OT": "https://www.pff.com/grades/ncaa/t",
     "S": "https://www.pff.com/grades/ncaa/s",
     "CB": "https://www.pff.com/grades/ncaa/cb",
-    "IDL": "https://www.pff.com/grades/ncaa/di"
+    "IDL": "https://www.pff.com/grades/ncaa/di",
+    "QB": "https://www.pff.com/grades/ncaa/qb"
   },
   "players": [
     {
@@ -410,6 +411,135 @@
       "nflBound": false,
       "note": "ACC interior. 6'1 300. PFF 81.0 on 414 snaps. Not on 2027 DT R1-R3 lists. Two-gap size. Not in the portal yet.",
       "sourceUrl": "https://www.pff.com/grades/ncaa/di"
+    },
+    {
+      "name": "Kalieb Osborne",
+      "position": "QB",
+      "fromSchool": "UConn",
+      "conference": "Independent",
+      "conferenceTier": "g5",
+      "jersey": "7",
+      "ht": "6'4\"",
+      "wt": 218,
+      "pffGrade": 91.9,
+      "snaps": 729,
+      "production": "high",
+      "nflBound": false,
+      "note": "Independent starter. 6'4 218. PFF 91.9 on 729 snaps. SEC-size G5 path. Not a 2027 Day 1-2 board name. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+    },
+    {
+      "name": "Caden Veltkamp",
+      "position": "QB",
+      "fromSchool": "Florida Atlantic",
+      "conference": "AAC",
+      "conferenceTier": "g5",
+      "jersey": "10",
+      "ht": "6'5\"",
+      "wt": 245,
+      "pffGrade": 91.7,
+      "snaps": 829,
+      "production": "high",
+      "nflBound": false,
+      "note": "AAC / FAU. 6'5 245. PFF 91.7 on 829 snaps. NFL sleeper, not R1-R3. Florida school, Year-1 size. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+    },
+    {
+      "name": "Gio Lopez",
+      "position": "QB",
+      "fromSchool": "Wake Forest",
+      "conference": "ACC",
+      "conferenceTier": "p4",
+      "jersey": "3",
+      "ht": "6'0\"",
+      "wt": 220,
+      "pffGrade": 92.0,
+      "snaps": 616,
+      "production": "high",
+      "nflBound": false,
+      "nflDraftRound": 5,
+      "note": "ACC starter. 6'0 220. PFF 92.0 on 616 snaps. Draft Countdown QB17 — not Day 1-2. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+    },
+    {
+      "name": "Aidan Chiles",
+      "position": "QB",
+      "fromSchool": "Northwestern",
+      "conference": "Big Ten",
+      "conferenceTier": "p4",
+      "jersey": "0",
+      "ht": "6'4\"",
+      "wt": 220,
+      "pffGrade": 87.1,
+      "snaps": 512,
+      "production": "high",
+      "nflBound": false,
+      "note": "Big Ten starter. 6'4 220. PFF 87.1 on 512 snaps. Not on 2027 QB R1-R3 lists. Pocket size. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+    },
+    {
+      "name": "Nathan Hayes",
+      "position": "QB",
+      "fromSchool": "North Dakota State",
+      "conference": "FCS",
+      "conferenceTier": "fcs",
+      "jersey": "2",
+      "ht": "6'3\"",
+      "wt": 228,
+      "pffGrade": 87.6,
+      "snaps": 671,
+      "production": "high",
+      "nflBound": false,
+      "note": "FCS starter (NDSU). 6'3 228. PFF 87.6 on 671 snaps. FCS + PFF path. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+    },
+    {
+      "name": "Michael Hawkins Jr.",
+      "position": "QB",
+      "fromSchool": "West Virginia",
+      "conference": "Big 12",
+      "conferenceTier": "p4",
+      "jersey": "3",
+      "ht": "6'1\"",
+      "wt": 205,
+      "pffGrade": 90.6,
+      "snaps": 811,
+      "production": "high",
+      "nflBound": false,
+      "note": "Big 12 starter. 6'1 205. PFF 90.6 on 811 snaps. Dual-threat volume. Not a 2027 Day 1-2. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+    },
+    {
+      "name": "Tayven Jackson",
+      "position": "QB",
+      "fromSchool": "North Texas",
+      "conference": "AAC",
+      "conferenceTier": "g5",
+      "jersey": "2",
+      "ht": "6'4\"",
+      "wt": 209,
+      "pffGrade": 85.0,
+      "snaps": 622,
+      "production": "high",
+      "nflBound": false,
+      "note": "AAC starter. 6'4 209. PFF 85.0 on 622 snaps. Size for a Year-1 SEC room. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+    },
+    {
+      "name": "Lincoln Kienholz",
+      "position": "QB",
+      "fromSchool": "Louisville",
+      "conference": "ACC",
+      "conferenceTier": "p4",
+      "jersey": "3",
+      "ht": "6'2\"",
+      "wt": 215,
+      "pffGrade": 85.8,
+      "snaps": 705,
+      "production": "high",
+      "nflBound": false,
+      "note": "ACC starter. 6'2 215. PFF 85.8 on 705 snaps. Draft Countdown QB16 — Day 3 range. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
     }
   ],
   "blockedNfl": [
@@ -452,6 +582,54 @@
       "nflDraftRound": 3,
       "reason": "WalterFootball 2027 CB R2-3.",
       "sourceUrl": "https://walterfootball.com/CBRankings2027.php"
+    },
+    {
+      "name": "Darian Mensah",
+      "position": "QB",
+      "fromSchool": "Miami",
+      "nflDraftRound": 1,
+      "reason": "2027 QB R1 / Walter R1.",
+      "sourceUrl": "https://walterfootball.com/QBRankings2027.php"
+    },
+    {
+      "name": "CJ Carr",
+      "position": "QB",
+      "fromSchool": "Notre Dame",
+      "nflDraftRound": 1,
+      "reason": "2027 QB R1.",
+      "sourceUrl": "https://sticktothemodel.com/draft/prospect-overview/big-board/qb"
+    },
+    {
+      "name": "Trinidad Chambliss",
+      "position": "QB",
+      "fromSchool": "Ole Miss",
+      "nflDraftRound": 1,
+      "reason": "2027 top-10 overall QB.",
+      "sourceUrl": "https://sticktothemodel.com/draft/prospect-overview/big-board/qb"
+    },
+    {
+      "name": "Sam Leavitt",
+      "position": "QB",
+      "fromSchool": "LSU",
+      "nflDraftRound": 3,
+      "reason": "Walter 2027 QB R3-4.",
+      "sourceUrl": "https://walterfootball.com/QBRankings2027.php"
+    },
+    {
+      "name": "Austin Simmons",
+      "position": "QB",
+      "fromSchool": "Missouri",
+      "nflDraftRound": 3,
+      "reason": "Draft Countdown 2027 QB9 — Day 2 range.",
+      "sourceUrl": "https://www.draftcountdown.com/rankings/2027-nfl-draft-qb-rankings/"
+    },
+    {
+      "name": "Gunner Stockton",
+      "position": "QB",
+      "fromSchool": "Georgia",
+      "nflDraftRound": 3,
+      "reason": "Georgia starter, Walter R3-5. Not a Florida portal buy.",
+      "sourceUrl": "https://walterfootball.com/QBRankings2027.php"
     }
   ],
   "formula": {

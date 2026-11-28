@@ -139,4 +139,6 @@ test('hunt frame scores length at OT and two-gap mass at IDL', () => {
   assert.equal(frameFitPoints({ ht: '6\'3"', wt: 255 }, 'IDL'), 0);
   assert.equal(frameFitPoints({ ht: '6\'1"', wt: 304 }, 'IDL'), 8);
   assert.equal(frameFitPoints({ ht: '6\'2"', wt: 195 }, 'CB'), 8);
+  assert.equal(frameFitPoints({ ht: '6\'4"', wt: 218 }, 'QB'), 8);
+  assert.equal(frameFitPoints({ ht: '5\'10"', wt: 210 }, 'QB'), 0);
 });

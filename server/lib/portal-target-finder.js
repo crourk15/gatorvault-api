@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { slugify } = require('./slug');
 const { computePortalBuyScore } = require('./portal-buy-score');
-const { portalRoomForPos, isUfPortalCommit } = require('./portal-fan-prep');
+const { portalRoomForPos, isUfPortalCommit, isFloridaSchoolName } = require('./portal-fan-prep');
 
 const ROOM_CAP = {
   'must-add': 5,
@@ -21,7 +21,7 @@ const ROOM_CAP = {
 const SCAN_BOARD = path.join(__dirname, '..', 'data', 'portal', 'winter-2027-scan.json');
 
 function isFloridaSchoolNameSafe(raw) {
-  return /\bflorida\b|\bgators\b/i.test(String(raw || ''));
+  return isFloridaSchoolName(raw);
 }
 
 function cleanName(raw) {

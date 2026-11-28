@@ -33,6 +33,20 @@ test('Day 1-2 NFL projections are not portal buys', () => {
     ),
     false
   );
+  assert.equal(
+    isPortalTargetCandidate(
+      {
+        name: 'Darian Mensah',
+        position: 'QB',
+        fromSchool: 'Miami',
+        conference: 'ACC',
+        source: 'pff',
+        nflDraftRound: 1,
+      },
+      'QB'
+    ),
+    false
+  );
 });
 
 test('rejects invented / HS / Florida-commit names', () => {
@@ -64,6 +78,32 @@ test('rejects invented / HS / Florida-commit names', () => {
       'OT'
     ),
     false
+  );
+  assert.equal(
+    isPortalTargetCandidate(
+      {
+        name: 'Aaron Philo',
+        position: 'QB',
+        fromSchool: 'Florida',
+        conference: 'SEC',
+        source: 'pff',
+      },
+      'QB'
+    ),
+    false
+  );
+  assert.equal(
+    isPortalTargetCandidate(
+      {
+        name: 'Caden Veltkamp',
+        position: 'QB',
+        fromSchool: 'Florida Atlantic',
+        conference: 'AAC',
+        source: 'pff',
+      },
+      'QB'
+    ),
+    true
   );
 });
 
@@ -148,7 +188,7 @@ test('PFF scan board puts at least 5 Buy-scored calls on each hunt room', async 
     on3: [],
   });
   assert.equal(report.fanShip, false);
-  for (const room of ['OT', 'S', 'CB', 'IDL']) {
+  for (const room of ['OT', 'S', 'QB', 'CB', 'IDL']) {
     const rows = report.rooms[room] || [];
     assert.ok(rows.length >= 5, `${room} has ${rows.length}`);
     for (const row of rows) {
@@ -163,12 +203,19 @@ test('PFF scan board puts at least 5 Buy-scored calls on each hunt room', async 
   assert.ok(ot.includes('Matt Hofer'));
   assert.equal(ot.includes('Lance Heard'), false);
   assert.ok(ot.includes('Moshood Giwa'));
+  const qb = report.rooms.QB.map((r) => r.name);
+  assert.ok(qb.includes('Aidan Chiles'));
+  assert.ok(qb.includes('Lincoln Kienholz'));
+  assert.ok(qb.includes('Caden Veltkamp') || qb.includes('Kalieb Osborne'));
+  assert.equal(qb.includes('Darian Mensah'), false);
+  assert.equal(qb.includes('CJ Carr'), false);
+  assert.equal(qb.includes('Trinidad Chambliss'), false);
   const safeties = report.rooms.S;
   const bejarano = safeties.find((r) => r.name === 'Javon Bejarano');
   assert.ok(bejarano);
   assert.equal(bejarano.announcedPortal, true);
   assert.equal(bejarano.school, 'Houston Christian');
-  for (const room of ['OT', 'S', 'CB', 'IDL']) {
+  for (const room of ['OT', 'S', 'QB', 'CB', 'IDL']) {
     const p4 = (report.rooms[room] || []).filter((row) => row.productionPath === 'p4-starter');
     assert.ok(p4.length >= 2, `${room} P4 mix ${p4.length}`);
   }

@@ -35,8 +35,8 @@ const FAN_COPY = {
     hunt: 'Year-1 interior who can two-gap. Not a roster filler.',
   },
   QB: {
-    dek: 'Only if the 2027 starter is not already on the roster. A portal QB taxes the tackle budget.',
-    hunt: 'Do not shop a quarterback until that call is made.',
+    dek: 'If a 2026 quarterback leaves, Florida is in the market. A portal QB still taxes the tackle budget.',
+    hunt: 'Year-1 starter. Pocket plus enough legs for Sumrall. 2+ years left if we can get it.',
   },
   LB: {
     dek: 'Only a difference-maker. Not a depth body.',
@@ -82,8 +82,15 @@ function portalRoomForPos(raw) {
   return null;
 }
 
+const OTHER_FLORIDA_SCHOOLS =
+  /\bflorida\s+(state|atlantic|international|a\s*&\s*m|am|gulf|tech|poly|college)|south\s+florida|central\s+florida|west\s+florida|\bfsu\b|\bfau\b|\bfiu\b|\bfamu\b|\busf\b|\bucf\b/i;
+
+/** University of Florida / Gators — not FAU, FSU, UCF, USF, FIU, FAMU. */
 function isFloridaSchoolName(raw) {
-  return /\bflorida\b|\bgators\b/i.test(String(raw || ''));
+  const s = String(raw || '').trim();
+  if (!s) return false;
+  if (OTHER_FLORIDA_SCHOOLS.test(s)) return false;
+  return /^(uf|university of florida|florida(?:\s+gators)?)$/i.test(s) || /\bgators\b/i.test(s);
 }
 
 function isUfPortalCommit(player) {
@@ -332,6 +339,7 @@ module.exports = {
   overlayLiveHsClass,
   portalRoomForPos,
   portalGapFitsNeed,
+  isFloridaSchoolName,
   isUfPortalCommit,
   chipName,
   daysUntilYmd,

@@ -80,7 +80,7 @@ function weightLbs(player) {
   return num(player?.wt ?? player?.weight);
 }
 
-/** Hunt-copy frame: length at OT, press at CB, two-gap mass at IDL, range body at S. */
+/** Hunt-copy frame: length at OT, press at CB, two-gap mass at IDL, range body at S, starter size at QB. */
 function frameFitPoints(player, room) {
   const pos = String(room || player?.position || player?.pos || '')
     .toUpperCase()
@@ -104,6 +104,11 @@ function frameFitPoints(player, room) {
   if (pos === 'IDL' || pos === 'DT' || pos === 'NT' || pos === 'DL') {
     if (wt != null && wt >= 295) return 8;
     if (wt != null && wt >= 275) return 3;
+    return 0;
+  }
+  if (pos === 'QB') {
+    if (inches != null && inches >= 74 && wt != null && wt >= 210) return 8;
+    if (inches != null && inches >= 72 && wt != null && wt >= 205) return 4;
     return 0;
   }
   return 0;

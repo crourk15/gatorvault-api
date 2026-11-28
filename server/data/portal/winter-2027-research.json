@@ -1,6 +1,6 @@
 {
   "id": "winter-2027-portal-research",
-  "updatedAt": "2026-11-20T23:50:00Z",
+  "updatedAt": "2026-11-28T04:10:00Z",
   "fanShip": false,
   "status": "desk-only",
   "fanPrepLive": true,
@@ -34,7 +34,7 @@
     "addCount": "10-12 difference makers",
     "not": "30 bodies to fill a Tuesday practice",
     "resourcing": "NIL market decides how many of those 10-12 Florida can actually buy. Sumrall said that out loud.",
-    "qbGate": "Identify whether the 2027 starter is already on the roster (Philo, Jones Jr., Griffin). If yes, spend the money around him. If no, a portal QB taxes the tackle budget.",
+    "qbGate": "One 2026 QB leaving puts Florida in the portal market. Still taxes the tackle budget. Philo / Jones / Griffin stay on the roster picture; the hole is the next starter if one leaves.",
     "sources": [
       {
         "name": "Kevin Brockway, Gainesville Sun / Naples Daily News, Nov 17, 2026",
@@ -61,14 +61,14 @@
     "rosterCount": 118,
     "hsCommits2027": 27,
     "incomingPortalBoardCount": 0,
-    "incomingPortalNote": "getPortalBoard() is empty because last winter's UF transfers are already on the 2026 roster. Winter 2027 targets have not been written into the fan store \u2014 on purpose."
+    "incomingPortalNote": "getPortalBoard() is empty because last winter's UF transfers are already on the 2026 roster. Winter 2027 targets have not been written into the fan store — on purpose."
   },
   "needs": [
     {
       "rank": 1,
       "room": "OT",
       "tier": "must-add",
-      "why": "Sumrall / SI: both tackle spots are immediate needs and the most expensive portal buy. HS incoming Hutcheson and Fisher are 2027 true freshmen \u2014 not Year-1 SEC starters. Listed LT Lovett and RT Ugorji (Jones has taken snaps) have not locked the room.",
+      "why": "Sumrall / SI: both tackle spots are immediate needs and the most expensive portal buy. HS incoming Hutcheson and Fisher are 2027 true freshmen — not Year-1 SEC starters. Listed LT Lovett and RT Ugorji (Jones has taken snaps) have not locked the room.",
       "schemeMin": 9,
       "olOnRoster": 20,
       "departingLikely": [
@@ -113,7 +113,7 @@
       "namedCandidates": []
     },
     {
-      "rank": 3,
+      "rank": 4,
       "room": "CB",
       "tier": "high",
       "why": "Staff/beat (SI, Gainesville Sun) named the secondary as a portal shop. Jordy Lowery and Javion Toombs are on one year. Hanks / Flowers / McClain are the live room. Four 2027 CB commits (Floyd, Fountain, Nugent, Whitfield) are incoming freshmen. Quality starter snaps still look thin.",
@@ -132,7 +132,7 @@
       "namedCandidates": []
     },
     {
-      "rank": 4,
+      "rank": 5,
       "room": "IDL",
       "tier": "high",
       "why": "SI: interior DL depends on outgoing. Kamran James (starter, Sr.) and Emmanuel Oyebadejo (listed with James / McCray, R-Sr.) are on one year. Bett / McCloud / McCray return. Two 2027 DL commits (Tookes, Kendrick).",
@@ -149,10 +149,10 @@
       "namedCandidates": []
     },
     {
-      "rank": 5,
+      "rank": 3,
       "room": "QB",
-      "tier": "conditional",
-      "why": "Sumrall, Nov 17: wants the next two weeks (Vanderbilt, then FSU, then a bowl) to answer whether the 2027 starter is on this team. Philo just won SEC Offensive Player of the Week vs Kentucky. Jones Jr. started Texas. Griffin is getting scout-team/game-ready reps, not a throw-him-out plan. A portal QB taxes the tackle budget.",
+      "tier": "must-add",
+      "why": "Charles call Nov 27: one QB is likely to leave and Florida will pursue a portal starter. Philo, Jones Jr., and Griffin are still on the 2026 picture. Davin Davidson is a 2027 freshman. A portal QB taxes the tackle budget but the hole is live.",
       "schemeMin": 3,
       "departingLikely": [],
       "hsIncoming": [
@@ -165,7 +165,7 @@
         "Aidan Warner",
         "Aaron Williams"
       ],
-      "hunt": "Only if the staff decides the 2027 starter is not Philo / Jones / Griffin. Do not publish a QB name until that call is made.",
+      "hunt": "Year-1 starter. Pocket plus enough legs for Sumrall. 2+ years left if we can get it.",
       "namedCandidates": []
     },
     {
@@ -356,7 +356,6 @@
   "doNot": [
     "Write these rooms or hunts onto /vault/portal until Charles says ship.",
     "Upsert category=portal into the recruiting store from this file.",
-    "Treat eligibility 1 as a confirmed departure \u2014 five-for-five can bring seniors back.",
-    "Force a portal QB while Sumrall is still answering that in-house."
+    "Treat eligibility 1 as a confirmed departure — five-for-five can bring seniors back."
   ]
 }

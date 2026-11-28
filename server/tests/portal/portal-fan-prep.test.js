@@ -33,7 +33,7 @@ test('fan portal prep is the January 2027 war room without named candidates', ()
   assert.equal(prep.incomingCount, 0);
   assert.equal(prep.rooms[0].room, 'OT');
   assert.equal(prep.rooms[0].tier, 'must-add');
-  assert.deepEqual(prep.mustAdd, ['OT', 'S']);
+  assert.deepEqual(prep.mustAdd, ['OT', 'S', 'QB']);
   assert.ok(prep.rooms.length >= 8);
   assert.equal('namedCandidates' in prep, false);
   assert.equal('outgoingLikely' in prep, false);

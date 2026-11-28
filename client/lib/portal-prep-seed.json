@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-27T18:00:00Z",
+  "generatedAt": "2026-11-28T04:20:00Z",
   "prep": {
     "ok": true,
     "fanShip": false,
     "status": "prep",
-    "namesLandWhen": "GatorVault call sheets use the Buy formula: hole, not NFL Day 1-2, PFF/snaps, hunt frame. In-portal stamp when On3 or the beat verifies.",
+    "namesLandWhen": "GatorVault call sheets: hole, not NFL Day 1-2, PFF and snaps, hunt frame. In-portal stamp when On3 or the beat verifies.",
     "season": {
       "active": false,
       "phase": "portal-prep",
@@ -311,6 +311,144 @@
       },
       {
         "rank": 3,
+        "room": "QB",
+        "tier": "must-add",
+        "tierLabel": "Must add",
+        "dek": "If a 2026 quarterback leaves, Florida is in the market. A portal QB still taxes the tackle budget.",
+        "hunt": "Year-1 starter. Pocket plus enough legs for Sumrall. 2+ years left if we can get it.",
+        "alreadySigned": [
+          {
+            "name": "Davin Davidson",
+            "slug": "davin-davidson",
+            "position": "QB",
+            "stars": 4,
+            "natlRank": 144,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": [],
+        "gapFillers": [],
+        "scanTargets": [
+          {
+            "name": "Aidan Chiles",
+            "slug": "aidan-chiles",
+            "position": "QB",
+            "stars": null,
+            "natlRank": null,
+            "status": "scan",
+            "committedTo": "Northwestern",
+            "school": "Northwestern",
+            "conference": "Big Ten",
+            "pffGrade": 87.1,
+            "snaps": 512,
+            "ht": "6'4\"",
+            "wt": 220,
+            "jersey": "0",
+            "yearsLeft": null,
+            "note": "Big Ten starter. 6'4 220. PFF 87.1 on 512 snaps. Not on 2027 QB R1-R3 lists. Pocket size. Not in the portal yet.",
+            "announcedPortal": false,
+            "buyScore": 57,
+            "productionPath": "p4-starter",
+            "source": "pff",
+            "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+          },
+          {
+            "name": "Lincoln Kienholz",
+            "slug": "lincoln-kienholz",
+            "position": "QB",
+            "stars": null,
+            "natlRank": null,
+            "status": "scan",
+            "committedTo": "Louisville",
+            "school": "Louisville",
+            "conference": "ACC",
+            "pffGrade": 85.8,
+            "snaps": 705,
+            "ht": "6'2\"",
+            "wt": 215,
+            "jersey": "3",
+            "yearsLeft": null,
+            "note": "ACC starter. 6'2 215. PFF 85.8 on 705 snaps. Draft Countdown QB16 — Day 3 range. Not in the portal yet.",
+            "announcedPortal": false,
+            "buyScore": 57,
+            "productionPath": "p4-starter",
+            "source": "pff",
+            "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+          },
+          {
+            "name": "Caden Veltkamp",
+            "slug": "caden-veltkamp",
+            "position": "QB",
+            "stars": null,
+            "natlRank": null,
+            "status": "scan",
+            "committedTo": "Florida Atlantic",
+            "school": "Florida Atlantic",
+            "conference": "AAC",
+            "pffGrade": 91.7,
+            "snaps": 829,
+            "ht": "6'5\"",
+            "wt": 245,
+            "jersey": "10",
+            "yearsLeft": null,
+            "note": "AAC / FAU. 6'5 245. PFF 91.7 on 829 snaps. NFL sleeper, not R1-R3. Florida school, Year-1 size. Not in the portal yet.",
+            "announcedPortal": false,
+            "buyScore": 56,
+            "productionPath": "fcs-g5-pff",
+            "source": "pff",
+            "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+          },
+          {
+            "name": "Kalieb Osborne",
+            "slug": "kalieb-osborne",
+            "position": "QB",
+            "stars": null,
+            "natlRank": null,
+            "status": "scan",
+            "committedTo": "UConn",
+            "school": "UConn",
+            "conference": "Independent",
+            "pffGrade": 91.9,
+            "snaps": 729,
+            "ht": "6'4\"",
+            "wt": 218,
+            "jersey": "7",
+            "yearsLeft": null,
+            "note": "Independent starter. 6'4 218. PFF 91.9 on 729 snaps. SEC-size G5 path. Not a 2027 Day 1-2 board name. Not in the portal yet.",
+            "announcedPortal": false,
+            "buyScore": 56,
+            "productionPath": "fcs-g5-pff",
+            "source": "pff",
+            "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+          },
+          {
+            "name": "Nathan Hayes",
+            "slug": "nathan-hayes",
+            "position": "QB",
+            "stars": null,
+            "natlRank": null,
+            "status": "scan",
+            "committedTo": "North Dakota State",
+            "school": "North Dakota State",
+            "conference": "FCS",
+            "pffGrade": 87.6,
+            "snaps": 671,
+            "ht": "6'3\"",
+            "wt": 228,
+            "jersey": "2",
+            "yearsLeft": null,
+            "note": "FCS starter (NDSU). 6'3 228. PFF 87.6 on 671 snaps. FCS + PFF path. Not in the portal yet.",
+            "announcedPortal": false,
+            "buyScore": 56,
+            "productionPath": "fcs-g5-pff",
+            "source": "pff",
+            "sourceUrl": "https://www.pff.com/grades/ncaa/qb"
+          }
+        ]
+      },
+      {
+        "rank": 4,
         "room": "CB",
         "tier": "high",
         "tierLabel": "High",
@@ -475,7 +613,7 @@
         ]
       },
       {
-        "rank": 4,
+        "rank": 5,
         "room": "IDL",
         "tier": "high",
         "tierLabel": "High",
@@ -620,28 +758,6 @@
             "sourceUrl": "https://www.pff.com/grades/ncaa/di"
           }
         ]
-      },
-      {
-        "rank": 5,
-        "room": "QB",
-        "tier": "conditional",
-        "tierLabel": "Only if",
-        "dek": "Only if the 2027 starter is not already on the roster. A portal QB taxes the tackle budget.",
-        "hunt": "Do not shop a quarterback until that call is made.",
-        "alreadySigned": [
-          {
-            "name": "Davin Davidson",
-            "slug": "davin-davidson",
-            "position": "QB",
-            "stars": 4,
-            "natlRank": 144,
-            "status": "commit",
-            "committedTo": "Florida"
-          }
-        ],
-        "stillRecruiting": [],
-        "gapFillers": [],
-        "scanTargets": []
       },
       {
         "rank": 6,
@@ -850,7 +966,8 @@
     ],
     "mustAdd": [
       "OT",
-      "S"
+      "S",
+      "QB"
     ],
     "incomingCount": 0,
     "classYear": 2027
