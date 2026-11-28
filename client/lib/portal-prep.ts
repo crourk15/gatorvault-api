@@ -7,8 +7,19 @@ export type FanPortalPrepChip = {
   position?: string;
   stars?: number | null;
   natlRank?: number | null;
-  status?: 'commit' | 'target' | 'flip' | 'gap' | string;
+  status?: 'commit' | 'target' | 'flip' | 'gap' | 'scan' | string;
   committedTo?: string | null;
+  school?: string | null;
+  conference?: string | null;
+  pffGrade?: number | null;
+  snaps?: number | null;
+  ht?: string | null;
+  wt?: number | null;
+  jersey?: string | null;
+  yearsLeft?: number | null;
+  note?: string | null;
+  announcedPortal?: boolean;
+  productionPath?: string | null;
 };
 
 export type FanPortalPrepRoom = {
@@ -21,6 +32,7 @@ export type FanPortalPrepRoom = {
   alreadySigned: Array<string | FanPortalPrepChip>;
   stillRecruiting?: Array<string | FanPortalPrepChip>;
   gapFillers?: Array<string | FanPortalPrepChip>;
+  scanTargets?: Array<string | FanPortalPrepChip>;
 };
 
 export type FanPortalPrep = {
@@ -55,9 +67,10 @@ type SeedFile = {
 export const PORTAL_PREP_SEED = (seedJson as SeedFile).prep;
 
 export function daysUntilPortalOpen(opens: string, at: Date = new Date()): number {
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(at);
   const target = Date.parse(`${opens}T00:00:00Z`);
-  if (!Number.isFinite(target)) return 0;
-  const now = Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate());
+  const now = Date.parse(`${today}T00:00:00Z`);
+  if (!Number.isFinite(target) || !Number.isFinite(now)) return 0;
   return Math.max(0, Math.round((target - now) / 86400000));
 }
 
@@ -76,6 +89,17 @@ export function portalChip(row: string | FanPortalPrepChip | null | undefined): 
     stars: row.stars ?? null,
     natlRank: row.natlRank ?? null,
     status: row.status || 'commit',
-    committedTo: row.committedTo ?? null,
+    committedTo: row.committedTo ?? row.school ?? null,
+    school: row.school ?? row.committedTo ?? null,
+    conference: row.conference ?? null,
+    pffGrade: row.pffGrade ?? null,
+    snaps: row.snaps ?? null,
+    ht: row.ht ?? null,
+    wt: row.wt ?? null,
+    jersey: row.jersey ?? null,
+    yearsLeft: row.yearsLeft ?? null,
+    note: row.note ?? null,
+    announcedPortal: !!row.announcedPortal,
+    productionPath: row.productionPath ?? null,
   };
 }

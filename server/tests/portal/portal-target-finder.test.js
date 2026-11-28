@@ -1,0 +1,247 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const {
+  collectPortalTargetCandidates,
+  rankPortalTargets,
+  isPortalTargetCandidate,
+  looksLikePersonName,
+} = require('../../lib/portal-target-finder');
+const { runPortalTargetSweep } = require('../../lib/portal-target-sweep');
+const { getFanPortalPrep } = require('../../lib/portal-fan-prep');
+
+const ROOMS = [
+  { room: 'OT', tier: 'must-add', rank: 1 },
+  { room: 'S', tier: 'must-add', rank: 2 },
+  { room: 'WR', tier: 'stable', rank: 8 },
+];
+
+test('Day 1-2 NFL projections are not portal buys', () => {
+  assert.equal(
+    isPortalTargetCandidate(
+      {
+        name: 'Lance Heard',
+        position: 'OT',
+        fromSchool: 'Kentucky',
+        conference: 'SEC',
+        source: 'pff',
+        nflBound: true,
+        nflDraftRound: 2,
+      },
+      'OT'
+    ),
+    false
+  );
+  assert.equal(
+    isPortalTargetCandidate(
+      {
+        name: 'Darian Mensah',
+        position: 'QB',
+        fromSchool: 'Miami',
+        conference: 'ACC',
+        source: 'pff',
+        nflDraftRound: 1,
+      },
+      'QB'
+    ),
+    false
+  );
+});
+
+test('rejects invented / HS / Florida-commit names', () => {
+  assert.equal(looksLikePersonName('A verified OT'), false);
+  assert.equal(
+    isPortalTargetCandidate(
+      { name: 'Some Recruit', category: 'recruit', school: 'IMG', position: 'OT', source: 'on3' },
+      'OT'
+    ),
+    false
+  );
+  assert.equal(
+    isPortalTargetCandidate(
+      {
+        name: 'Already Gator',
+        category: 'portal',
+        school: 'Georgia',
+        committedTo: 'Florida',
+        position: 'OT',
+        source: 'on3',
+      },
+      'OT'
+    ),
+    false
+  );
+  assert.equal(
+    isPortalTargetCandidate(
+      { name: 'No School Guy', category: 'portal', position: 'OT', source: 'beat' },
+      'OT'
+    ),
+    false
+  );
+  assert.equal(
+    isPortalTargetCandidate(
+      {
+        name: 'Aaron Philo',
+        position: 'QB',
+        fromSchool: 'Florida',
+        conference: 'SEC',
+        source: 'pff',
+      },
+      'QB'
+    ),
+    false
+  );
+  assert.equal(
+    isPortalTargetCandidate(
+      {
+        name: 'Caden Veltkamp',
+        position: 'QB',
+        fromSchool: 'Florida Atlantic',
+        conference: 'AAC',
+        source: 'pff',
+      },
+      'QB'
+    ),
+    true
+  );
+});
+
+test('On3 / beat college transfers that fill a hole rank by Buy score', () => {
+  const candidates = collectPortalTargetCandidates({
+    on3: [
+      {
+        name: 'Troy Tackle',
+        position: 'OT',
+        fromSchool: 'Troy',
+        conference: 'Sun Belt',
+        starts: 12,
+        pffGrade: 82,
+        yearsLeft: 2,
+        source: 'on3',
+      },
+    ],
+    intel: [
+      {
+        playerName: 'Range Safety',
+        playerSlug: 'range-safety',
+        pos: 'S',
+        fromSchool: 'James Madison',
+        conferenceTier: 'fcs',
+        starts: 11,
+        pffGrade: 86,
+        yearsLeft: 2,
+        triggerType: 'portal_elite',
+        eventType: 'portal_in',
+      },
+    ],
+    incoming: [],
+  });
+  const ranked = rankPortalTargets(candidates, ROOMS);
+  assert.equal(ranked.get('OT').length, 1);
+  assert.equal(ranked.get('OT')[0].name, 'Troy Tackle');
+  assert.equal(ranked.get('OT')[0].productionPath, 'fcs-g5-pff');
+  assert.equal(ranked.get('S')[0].name, 'Range Safety');
+  assert.ok(ranked.get('S')[0].buyScore >= 32 + 24);
+  assert.equal((ranked.get('WR') || []).length, 0);
+});
+
+test('hold-room names need production, not a random WR body', () => {
+  const candidates = collectPortalTargetCandidates({
+    on3: [
+      {
+        name: 'Depth Receiver',
+        position: 'WR',
+        fromSchool: 'App State',
+        conference: 'Sun Belt',
+        snapPct: 0.2,
+        source: 'on3',
+      },
+    ],
+  });
+  const ranked = rankPortalTargets(candidates, ROOMS);
+  assert.equal((ranked.get('WR') || []).length, 0);
+});
+
+test('sweep with empty sources does not invent names', async () => {
+  const report = await runPortalTargetSweep({
+    dryRun: true,
+    skipOn3: true,
+    skipScan: true,
+    incoming: [],
+    intel: [],
+    on3: [],
+  });
+  assert.equal(report.fanShip, false);
+  assert.equal(report.targetCount, 0);
+  assert.equal(report.targets.length, 0);
+  const blob = JSON.stringify(report);
+  assert.equal(blob.includes('namedCandidates'), false);
+});
+
+test('PFF scan board puts at least 5 Buy-scored calls on each hunt room', async () => {
+  const report = await runPortalTargetSweep({
+    dryRun: true,
+    skipOn3: true,
+    incoming: [],
+    intel: [],
+    on3: [],
+  });
+  assert.equal(report.fanShip, false);
+  for (const room of ['OT', 'S', 'QB', 'CB', 'IDL', 'LB', 'EDGE', 'WR', 'RB', 'TE', 'IOL']) {
+    const rows = report.rooms[room] || [];
+    assert.ok(rows.length >= 5, `${room} has ${rows.length}`);
+    for (const row of rows) {
+      assert.ok(row.name && row.school);
+      assert.equal(row.status, 'scan');
+      if (!row.announcedPortal) {
+        assert.ok(Number(row.pffGrade) >= 75, `${row.name} PFF`);
+      }
+    }
+  }
+  const ot = report.rooms.OT.map((r) => r.name);
+  assert.ok(ot.includes('Matt Hofer'));
+  assert.equal(ot.includes('Lance Heard'), false);
+  assert.ok(ot.includes('Moshood Giwa'));
+  const qb = report.rooms.QB.map((r) => r.name);
+  assert.ok(qb.includes('Aidan Chiles'));
+  assert.ok(qb.includes('Lincoln Kienholz'));
+  assert.ok(qb.includes('Caden Veltkamp') || qb.includes('Kalieb Osborne'));
+  assert.equal(qb.includes('Darian Mensah'), false);
+  assert.equal(qb.includes('CJ Carr'), false);
+  assert.equal(qb.includes('Trinidad Chambliss'), false);
+  const safeties = report.rooms.S;
+  const bejarano = safeties.find((r) => r.name === 'Javon Bejarano');
+  assert.ok(bejarano);
+  assert.equal(bejarano.announcedPortal, true);
+  assert.equal(bejarano.school, 'Houston Christian');
+  for (const room of ['OT', 'S', 'QB', 'CB', 'IDL', 'LB', 'EDGE', 'WR', 'RB', 'TE', 'IOL']) {
+    const p4 = (report.rooms[room] || []).filter((row) => row.productionPath === 'p4-starter');
+    assert.ok(p4.length >= 2, `${room} P4 mix ${p4.length}`);
+  }
+});
+
+test('finder is wired into recruiting-light, ops, and the API', () => {
+  const root = path.join(__dirname, '..', '..', '..');
+  const cron = fs.readFileSync(path.join(root, 'server/scripts/render-recruiting-light-cron.js'), 'utf8');
+  const ops = fs.readFileSync(path.join(root, 'server/lib/ops-jobs.js'), 'utf8');
+  const routes = fs.readFileSync(path.join(root, 'server/lib/recruiting-routes.js'), 'utf8');
+  const ui = fs.readFileSync(
+    path.join(root, 'client/components/vault/recruiting/RecruitingPortalSection.tsx'),
+    'utf8'
+  );
+  assert.match(cron, /portal-targets\/sweep/);
+  assert.match(ops, /portal-target-sweep/);
+  assert.match(routes, /portal-targets\/sweep/);
+  assert.match(ui, /GatorVault call/);
+});
+
+test('fan prep still does not ship research namedCandidates', () => {
+  const prep = getFanPortalPrep(new Date('2026-11-25T18:00:00Z'));
+  assert.equal(prep.fanShip, false);
+  assert.equal('namedCandidates' in prep, false);
+  for (const room of prep.rooms) {
+    assert.ok(Array.isArray(room.scanTargets));
+    assert.equal(room.scanTargets.length, 0);
+  }
+});

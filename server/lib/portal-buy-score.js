@@ -1,11 +1,12 @@
 /**
- * Desk Portal Buy score — rank who actually fills a hole.
- * Not HS Chase. Not "who might enter." Fan names still require the gap-fill gate.
+ * Desk Portal Buy score — Year-1 SEC starter Florida can actually sign.
+ * Not HS Chase. Not "who might enter." NFL Day 1–2 are gated in the finder.
  *
- * Production has two paths:
+ * Production has two paths (do not stack):
  *   P4 starter snaps → year1Starter
  *   FCS / G5 high production + good PFF → nonPowerProduction
- * Those do not stack. Missing PFF on a non-P4 body is not a buy.
+ * Missing PFF on a non-P4 body is not a buy.
+ * Frame fit is the hunt: length at OT, press at CB, two-gap mass at IDL, range body at S.
  */
 
 const ROOM_WEIGHT = {
@@ -61,11 +62,83 @@ function norm(value) {
 }
 
 function snapPct(player) {
-  const raw = num(
-    player?.snapPct ?? player?.snap_pct ?? player?.snapShare ?? player?.snaps
-  );
+  const raw = num(player?.snapPct ?? player?.snap_pct ?? player?.snapShare);
   if (raw == null) return null;
   return raw > 1 ? raw / 100 : raw;
+}
+
+function heightInches(player) {
+  const listed = num(player?.heightInches);
+  if (listed != null) return listed;
+  const raw = String(player?.ht || player?.height || '');
+  const m = raw.match(/(\d)\s*['’]\s*(\d{1,2})/);
+  if (!m) return null;
+  return Number(m[1]) * 12 + Number(m[2]);
+}
+
+function weightLbs(player) {
+  return num(player?.wt ?? player?.weight);
+}
+
+/** Hunt-copy frame: length at OT, press at CB, two-gap mass at IDL, range body at S, starter size at QB. */
+function frameFitPoints(player, room) {
+  const pos = String(room || player?.position || player?.pos || '')
+    .toUpperCase()
+    .replace(/[^A-Z]/g, '');
+  const inches = heightInches(player);
+  const wt = weightLbs(player);
+  if (pos === 'OT') {
+    if (inches != null && inches >= 77 && wt != null && wt >= 300) return 8;
+    if (inches != null && inches >= 77) return 4;
+    return 0;
+  }
+  if (pos === 'S' || pos === 'SS' || pos === 'FS' || pos === 'STAR') {
+    if (inches != null && inches >= 72 && wt != null && wt >= 200) return 6;
+    return 0;
+  }
+  if (pos === 'CB') {
+    if (inches != null && inches >= 72) return 8;
+    if (inches != null && inches >= 71 && wt != null && wt >= 195) return 4;
+    return 0;
+  }
+  if (pos === 'IDL' || pos === 'DT' || pos === 'NT' || pos === 'DL') {
+    if (wt != null && wt >= 295) return 8;
+    if (wt != null && wt >= 275) return 3;
+    return 0;
+  }
+  if (pos === 'QB') {
+    if (inches != null && inches >= 74 && wt != null && wt >= 210) return 8;
+    if (inches != null && inches >= 72 && wt != null && wt >= 205) return 4;
+    return 0;
+  }
+  if (pos === 'LB' || pos === 'ILB' || pos === 'MIKE' || pos === 'WILL') {
+    if (inches != null && inches >= 73 && wt != null && wt >= 230) return 6;
+    return 0;
+  }
+  if (pos === 'EDGE' || pos === 'DE' || pos === 'JACK') {
+    if (inches != null && inches >= 75 && wt != null && wt >= 240) return 8;
+    if (inches != null && inches >= 73 && wt != null && wt >= 245) return 4;
+    return 0;
+  }
+  if (pos === 'WR') {
+    if (inches != null && inches >= 75 && wt != null && wt >= 200) return 6;
+    if (inches != null && inches >= 73) return 3;
+    return 0;
+  }
+  if (pos === 'RB' || pos === 'HB') {
+    if (wt != null && wt >= 210) return 4;
+    return 0;
+  }
+  if (pos === 'TE') {
+    if (inches != null && inches >= 76 && wt != null && wt >= 245) return 6;
+    return 0;
+  }
+  if (pos === 'IOL' || pos === 'OG' || pos === 'G' || pos === 'C' || pos === 'OC') {
+    if (inches != null && inches >= 75 && wt != null && wt >= 310) return 6;
+    if (wt != null && wt >= 300) return 3;
+    return 0;
+  }
+  return 0;
 }
 
 function pffGrade(player) {
@@ -133,7 +206,12 @@ function p4StarterPoints(player) {
   const snap = snapPct(player);
   const startCount = starts(player);
   const depth = num(player?.depthRank ?? player?.depth);
-  if (depth === 1 || (startCount != null && startCount >= 8) || (snap != null && snap >= 0.7)) {
+  if (
+    depth === 1 ||
+    (startCount != null && startCount >= 8) ||
+    (snap != null && snap >= 0.7) ||
+    hasHighProduction(player)
+  ) {
     return 25;
   }
   if (depth === 2 || (startCount != null && startCount >= 4) || (snap != null && snap >= 0.4)) {
@@ -218,6 +296,7 @@ function computePortalBuyScore(player = {}, opts = {}) {
     yearsLeft: yearsLeftPoints(yearsLeft(player)),
     schemeFit: schemeFitPoints(player),
     floridaProcess: floridaProcessPoints(player),
+    frameFit: frameFitPoints(player, room),
     budgetTax: budgetTax(player, room),
     depthBody: depthBodyPenalty(productionPts, player, conf),
   };
@@ -228,7 +307,8 @@ function computePortalBuyScore(player = {}, opts = {}) {
         productionPts +
         pts.yearsLeft +
         pts.schemeFit +
-        pts.floridaProcess -
+        pts.floridaProcess +
+        pts.frameFit -
         pts.budgetTax -
         pts.depthBody) *
         10
@@ -251,4 +331,6 @@ module.exports = {
   hasHighProduction,
   pffGrade,
   nonPowerProductionPoints,
+  frameFitPoints,
+  heightInches,
 };

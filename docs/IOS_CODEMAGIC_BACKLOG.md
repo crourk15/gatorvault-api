@@ -278,7 +278,10 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-11-27 | Portal Room tab owns FutureCast (not buried under Chase). Hunt vs Hold board, hole → scan → class steps, no recruiting white-card header. **Live Netlify hydrates after deploy.** | Lab hash focus + Portal Room chrome in the binary. | this PR |
+| 2026-11-27 | Portal Room is a full war room: 5 GatorVault calls on every room (Must buy + Hold), Must add OT · S · QB, leftover Hole/Scan/Class steps gone. Window January 4–13, 2027 counted in ET. **Live `/api/recruiting/portal` hydrates after Render.** | Call cards, header, and portal CSS in the binary. | this PR |
+| 2026-11-27 | Portal Room GatorVault call sheets (5+ PFF/production names per hole, school/snaps/grade on the card). **Live `/api/recruiting/portal` hydrates after Render.** | Call-card row in the binary. | this PR |
+| 2026-11-27 | Portal Room GatorVault scan chips (On3/beat names that fill a hole, Buy-scored). **Live `/api/recruiting/portal` hydrates after Render.** | Scan chip row in the binary. | this PR |
+| 2026-11-27 | Portal Room tab owns FutureCast (not buried under Chase). Hunt vs Hold board, no recruiting white-card header. **Live Netlify hydrates after deploy.** | Lab hash focus + Portal Room chrome in the binary. | this PR |
 | 2026-11-27 | Portal Room is a FutureCast tab next to Early Discovery (`#portal`). Recruiting stays class cards. When a portal player commits they get a Portal transfer stamp on the class board. **Live Netlify hydrates after deploy.** | FutureCast nav, PortalList, commit stamp, and route map in the binary. | this PR |
 | 2026-11-27 | Portal War Room shows the live 2027 commit class and remaining targets. OT commits are Hutcheson/Fisher; Hiller/Miller sit at IOL. **Live Netlify hydrates after deploy.** | Portal class list + room chips in the binary. | this PR |
 | 2026-11-26 | Recruiting panel tabs (Portal, Who’s Moving, Scouting, Rankings, Priority) use one command header. Portal is the war room board, not stacked class-hub titles. **Live Netlify hydrates after deploy.** | Panel header, portal CSS, and tab chrome in the binary. | this PR |

@@ -35,8 +35,8 @@ const FAN_COPY = {
     hunt: 'Year-1 interior who can two-gap. Not a roster filler.',
   },
   QB: {
-    dek: 'Only if the 2027 starter is not already on the roster. A portal QB taxes the tackle budget.',
-    hunt: 'Do not shop a quarterback until that call is made.',
+    dek: 'If a 2026 quarterback leaves, Florida is in the market. A portal QB still taxes the tackle budget.',
+    hunt: 'Year-1 starter. Pocket plus enough legs for Sumrall. 2+ years left if we can get it.',
   },
   LB: {
     dek: 'Only a difference-maker. Not a depth body.',
@@ -69,7 +69,7 @@ function portalRoomForPos(raw) {
     .toUpperCase()
     .replace(/[^A-Z]/g, '');
   if (p === 'OT') return 'OT';
-  if (p === 'IOL' || p === 'OG' || p === 'C' || p === 'OC') return 'IOL';
+  if (p === 'IOL' || p === 'OG' || p === 'G' || p === 'C' || p === 'OC') return 'IOL';
   if (p === 'S' || p === 'SS' || p === 'FS' || p === 'STAR') return 'S';
   if (p === 'CB') return 'CB';
   if (p === 'DT' || p === 'NT' || p === 'DL' || p === 'IDL') return 'IDL';
@@ -77,13 +77,20 @@ function portalRoomForPos(raw) {
   if (p === 'LB' || p === 'ILB' || p === 'OLB' || p === 'MIKE' || p === 'WILL') return 'LB';
   if (p === 'EDGE' || p === 'DE' || p === 'JACK') return 'EDGE';
   if (p === 'WR') return 'WR';
-  if (p === 'RB') return 'RB';
+  if (p === 'RB' || p === 'HB') return 'RB';
   if (p === 'TE') return 'TE';
   return null;
 }
 
+const OTHER_FLORIDA_SCHOOLS =
+  /\bflorida\s+(state|atlantic|international|a\s*&\s*m|am|gulf|tech|poly|college)|south\s+florida|central\s+florida|west\s+florida|\bfsu\b|\bfau\b|\bfiu\b|\bfamu\b|\busf\b|\bucf\b/i;
+
+/** University of Florida / Gators — not FAU, FSU, UCF, USF, FIU, FAMU. */
 function isFloridaSchoolName(raw) {
-  return /\bflorida\b|\bgators\b/i.test(String(raw || ''));
+  const s = String(raw || '').trim();
+  if (!s) return false;
+  if (OTHER_FLORIDA_SCHOOLS.test(s)) return false;
+  return /^(uf|university of florida|florida(?:\s+gators)?)$/i.test(s) || /\bgators\b/i.test(s);
 }
 
 function isUfPortalCommit(player) {
@@ -148,10 +155,14 @@ function stripParen(raw) {
     .trim();
 }
 
+function calendarYmdInEt(at = new Date()) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(at);
+}
+
 function daysUntilYmd(ymd, at = new Date()) {
   const target = Date.parse(`${ymd}T00:00:00Z`);
-  if (!Number.isFinite(target)) return null;
-  const now = Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate());
+  const now = Date.parse(`${calendarYmdInEt(at)}T00:00:00Z`);
+  if (!Number.isFinite(target) || !Number.isFinite(now)) return null;
   return Math.max(0, Math.round((target - now) / 86400000));
 }
 
@@ -174,6 +185,7 @@ function fanRooms(needs) {
         }).filter(Boolean),
         stillRecruiting: [],
         gapFillers: [],
+        scanTargets: [],
       };
     })
     .filter((row) => row.room)
@@ -207,13 +219,16 @@ function ensureIolRoom(rooms, iolChips) {
     alreadySigned: iolChips,
     stillRecruiting: [],
     gapFillers: [],
+    scanTargets: [],
   });
   return rooms.sort((a, b) => a.rank - b.rank);
 }
 
-async function overlayLiveHsClass(prep) {
+async function overlayLiveHsClass(prep, opts = {}) {
   const elite = require('./recruiting-hub-elite');
   const store = require('./recruiting-store');
+  const { scanTargetsForRoom, readLastReport } = require('./portal-target-sweep');
+  const report = opts.report || readLastReport();
   const { commits } = await elite.loadHubHsClassCommits(2027);
 
   const signedByRoom = new Map();
@@ -252,11 +267,21 @@ async function overlayLiveHsClass(prep) {
         )
       )
       .filter(Boolean);
+    const scans = (scanTargetsForRoom(row.room, report) || []).filter((chip) => {
+      const name = String(chip.name || '').trim().toLowerCase();
+      const slug = String(chip.slug || '').trim().toLowerCase();
+      return !fillers.some(
+        (f) =>
+          (slug && String(f.slug || '').toLowerCase() === slug) ||
+          String(f.name || '').trim().toLowerCase() === name
+      );
+    });
     return {
       ...row,
       alreadySigned: sortChips(signedByRoom.get(row.room) || []),
       stillRecruiting: [],
       gapFillers: sortChips(fillers),
+      scanTargets: scans,
     };
   });
   ensureIolRoom(rooms, sortChips(signedByRoom.get('IOL') || []));
@@ -285,7 +310,8 @@ function getFanPortalPrep(at = new Date()) {
     ok: true,
     fanShip: false,
     status: 'prep',
-    namesLandWhen: 'Names land when they are verified.',
+    namesLandWhen:
+      'Call sheets on every room. PFF scan until they enter. Stamp when On3 or the beat verifies.',
     season,
     window: {
       opens: research.window.opens,
@@ -317,6 +343,7 @@ module.exports = {
   overlayLiveHsClass,
   portalRoomForPos,
   portalGapFitsNeed,
+  isFloridaSchoolName,
   isUfPortalCommit,
   chipName,
   daysUntilYmd,

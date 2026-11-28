@@ -29,6 +29,15 @@ const STEPS = [
     }),
   },
   {
+    name: 'portal-targets',
+    path: '/api/recruiting/portal-targets/sweep',
+    summarize: (r) => ({
+      targetCount: r?.targetCount ?? null,
+      on3: r?.sources?.on3 ?? null,
+      softFailure: r?.softFailure === true,
+    }),
+  },
+  {
     name: 'allowlist-intel',
     path: '/api/recruiting/allowlist-intel/sweep',
     summarize: (r) => ({
