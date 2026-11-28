@@ -35,12 +35,22 @@ describe('FutureCast Portal Room layout', () => {
 
   it('Portal Room title is needs + gap fillers, not the class list', () => {
     const src = read('client/components/vault/recruiting/RecruitingPortalSection.tsx');
-    assert.match(src, /title="Portal Room"/);
-    assert.match(src, /What the roster needs/);
-    assert.match(src, /Gap fillers/);
+    assert.match(src, /Portal Room/);
+    assert.match(src, /Must buy/);
+    assert.match(src, /Hold the room/);
+    assert.match(src, /portal-room-steps/);
+    assert.doesNotMatch(src, /RecruitingPanelHeader/);
     assert.doesNotMatch(src, /EliteCommitBoard/);
     assert.doesNotMatch(src, /RemainingTargetsStrip/);
     assert.doesNotMatch(src, /portal-class-list/);
+  });
+
+  it('Portal Room tab owns the FutureCast lab instead of sitting under Chase', () => {
+    const desktop = read('client/components/futurecast/lab/FutureCastLabPageDesktop.tsx');
+    const mobile = read('client/components/futurecast/mobile/FutureCastLabPageMobile.tsx');
+    assert.match(desktop, /portalFocus/);
+    assert.match(desktop, /fc-lab-cc-page--portal/);
+    assert.match(mobile, /portalFocus/);
   });
 
   it('recruiting panel tabs no longer include Portal', () => {
