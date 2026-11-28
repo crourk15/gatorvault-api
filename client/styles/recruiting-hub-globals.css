@@ -49,8 +49,18 @@
 
 .rh-panel-title {
   margin: 0 0 var(--space-sm);
+  font-family: var(--font-display, Oswald, sans-serif);
   font-size: var(--text-h3);
   font-weight: 700;
+  color: #fff;
+}
+
+.rh-panel-view .rh-sticky-tabs {
+  margin-top: 0.35rem !important;
+}
+
+.rh-panel-view .rh-tab-panels {
+  padding-top: 0.35rem;
 }
 
 .rh-muted {

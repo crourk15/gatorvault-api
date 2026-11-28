@@ -11,6 +11,7 @@ import {
   daysUntilPortalOpen,
   type FanPortalPrep,
 } from '@/lib/portal-prep';
+import { RecruitingPanelHeader } from '@/components/recruiting-hub/RecruitingPanelHeader';
 
 function incomingName(p: RecruitingBoardPlayer): string {
   return String(p.name || '').trim() || 'Portal target';
@@ -52,50 +53,32 @@ export function PortalList(): React.ReactElement {
 
   return (
     <section className="gv-rh-portal-prep" data-testid="portal-prep">
-      <header className="gv-rh-portal-prep__hero">
-        <p className="gv-rh-portal-prep__eyebrow">{prep.season?.label || 'Portal Prep'}</p>
-        <h2 className="gv-rh-portal-prep__title">Football portal opens January 4, 2027</h2>
-        <p className="gv-rh-portal-prep__sub">
-          {prep.namesLandWhen} This is the room Florida will shop — {prep.thesis.addCount}.{' '}
-          {prep.thesis.not}
-        </p>
-        <div className="gv-rh-portal-prep__stats">
-          <div className="gv-rh-portal-prep__stat">
-            <span className="gv-rh-portal-prep__stat-label">Window</span>
-            <strong className="gv-rh-portal-prep__stat-value">{prep.window.label}</strong>
-          </div>
-          <div className="gv-rh-portal-prep__stat">
-            <span className="gv-rh-portal-prep__stat-label">Hunt</span>
-            <strong className="gv-rh-portal-prep__stat-value">10–12</strong>
-          </div>
-          <div className="gv-rh-portal-prep__stat">
-            <span className="gv-rh-portal-prep__stat-label">Must add</span>
-            <strong className="gv-rh-portal-prep__stat-value">
-              {prep.mustAdd.length ? prep.mustAdd.join(' · ') : '—'}
-            </strong>
-          </div>
-          <div className="gv-rh-portal-prep__stat">
-            <span className="gv-rh-portal-prep__stat-label">
-              {windowOpen ? 'Window' : 'Opens in'}
-            </span>
-            <strong className="gv-rh-portal-prep__stat-value">
-              {windowOpen ? 'Open' : `${opensIn} day${opensIn === 1 ? '' : 's'}`}
-            </strong>
-          </div>
-        </div>
-      </header>
+      <RecruitingPanelHeader
+        kicker={prep.window.label}
+        title="Portal War Room"
+        dek={`${prep.thesis.addCount}. ${prep.thesis.not} ${prep.namesLandWhen}`}
+        stats={[
+          {
+            label: windowOpen ? 'Window' : 'Opens in',
+            value: windowOpen ? 'Open' : `${opensIn} day${opensIn === 1 ? '' : 's'}`,
+          },
+          { label: 'Hunt', value: prep.thesis.addCount.replace(/ difference makers$/i, '') || '10–12' },
+          {
+            label: 'Must add',
+            value: prep.mustAdd.length ? prep.mustAdd.join(' · ') : '—',
+          },
+          {
+            label: 'Incoming',
+            value: incoming.length ? String(incoming.length) : 'Empty',
+          },
+        ]}
+      />
 
-      <p className="gv-rh-portal-prep__thesis">{prep.thesis.line}</p>
+      {prep.thesis.line ? <p className="gv-rh-portal-prep__thesis">{prep.thesis.line}</p> : null}
 
-      <div className="gv-rh-portal-prep__incoming" data-testid="portal-incoming">
-        <h3 className="gv-rh-portal-prep__section-title">Incoming board</h3>
-        {loading && incoming.length === 0 ? (
-          <p className="gv-rh-portal-prep__empty">Loading verified names…</p>
-        ) : incoming.length === 0 ? (
-          <p className="gv-rh-portal-prep__empty" data-testid="portal-incoming-empty">
-            Empty until a name is verified. The hunt is the rooms below.
-          </p>
-        ) : (
+      {incoming.length > 0 ? (
+        <div className="gv-rh-portal-prep__incoming" data-testid="portal-incoming">
+          <h3 className="gv-rh-portal-prep__section-title">Incoming</h3>
           <div className="gv-rh-portal-grid" data-testid="portal-grid">
             {incoming.map((p) => (
               <article key={p.slug} className="gv-rh-portal-card gv-rh-portal-card--in">
@@ -135,32 +118,43 @@ export function PortalList(): React.ReactElement {
               </article>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <p
+          className="gv-rh-portal-prep__empty gv-rh-portal-prep__empty--inline"
+          data-testid="portal-incoming-empty"
+        >
+          {loading ? 'Loading verified names…' : 'Incoming empty until a name is verified. The hunt is the rooms.'}
+        </p>
+      )}
 
-      <ol className="gv-rh-portal-prep__rooms" data-testid="portal-rooms">
-        {prep.rooms.map((room) => (
-          <li
-            key={room.room}
-            className={`gv-rh-portal-room gv-rh-portal-room--${room.tier}`}
-          >
-            <div className="gv-rh-portal-room__head">
+      <div className="gv-rh-portal-prep__board">
+        <h3 className="gv-rh-portal-prep__section-title">Position rooms</h3>
+        <ol className="gv-rh-portal-prep__rooms" data-testid="portal-rooms">
+          {prep.rooms.map((room) => (
+            <li key={room.room} className={`gv-rh-portal-room gv-rh-portal-room--${room.tier}`}>
               <span className="gv-rh-portal-room__rank">#{room.rank}</span>
-              <h3 className="gv-rh-portal-room__pos">{room.room}</h3>
-              <span className="gv-rh-portal-room__tier">{room.tierLabel}</span>
-            </div>
-            <p className="gv-rh-portal-room__dek">{room.dek}</p>
-            {room.hunt && room.hunt !== room.dek ? (
-              <p className="gv-rh-portal-room__hunt">Hunt: {room.hunt}</p>
-            ) : null}
-            {room.alreadySigned.length > 0 ? (
-              <p className="gv-rh-portal-room__signed">
-                Already signed: {room.alreadySigned.join(', ')}
-              </p>
-            ) : null}
-          </li>
-        ))}
-      </ol>
+              <div className="gv-rh-portal-room__main">
+                <div className="gv-rh-portal-room__head">
+                  <h3 className="gv-rh-portal-room__pos">{room.room}</h3>
+                  <span className="gv-rh-portal-room__tier">{room.tierLabel}</span>
+                </div>
+                <p className="gv-rh-portal-room__hunt">{room.hunt || room.dek}</p>
+                {room.dek && room.hunt && room.hunt !== room.dek ? (
+                  <p className="gv-rh-portal-room__dek">{room.dek}</p>
+                ) : null}
+                {room.alreadySigned.length > 0 ? (
+                  <ul className="gv-rh-portal-room__signed">
+                    {room.alreadySigned.map((name) => (
+                      <li key={name}>{name}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
     </section>
   );
 }

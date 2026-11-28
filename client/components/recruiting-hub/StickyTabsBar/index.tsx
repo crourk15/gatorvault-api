@@ -18,13 +18,14 @@ export const STICKY_TAB_LABELS: { id: RecruitingHubTab; label: string }[] = [
 type Props = {
   active: RecruitingHubTab;
   onChange: (tab: RecruitingHubTab) => void;
+  tabs?: { id: RecruitingHubTab; label: string }[];
 };
 
-export function StickyTabsBar({ active, onChange }: Props): React.ReactElement {
+export function StickyTabsBar({ active, onChange, tabs = STICKY_TAB_LABELS }: Props): React.ReactElement {
   return (
     <div className="rh-sticky-tabs">
       <div className="rh-sticky-tabs__inner rh-frame gv-hub-tabs gv-hub-tabs--scroll" role="tablist">
-        {STICKY_TAB_LABELS.map(({ id, label }) => (
+        {tabs.map(({ id, label }) => (
           <button
             key={id}
             type="button"

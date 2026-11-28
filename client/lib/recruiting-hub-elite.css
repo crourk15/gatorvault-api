@@ -46,10 +46,12 @@
 
 .gv-rh-elite-hero__title {
   margin: 0;
+  font-family: var(--font-display, Oswald, sans-serif);
   font-size: clamp(1.625rem, 3.2vw, 2.125rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.12;
+  text-transform: uppercase;
   color: var(--heading-color-dark, #fff);
 }
 

@@ -45,15 +45,22 @@ function MovementBadge({ delta, tone }: { delta: number; tone: 'rise' | 'fall' |
 export function MovementIntelPreview({
   data,
   loading,
+  embedded = false,
 }: {
   data: StaffDashboardResponse | null;
   loading?: boolean;
+  embedded?: boolean;
 }): React.ReactElement {
   if (loading || !data) {
     return (
-      <section className="gv-home-movement gv-home__section" aria-label="Movement intel preview">
+      <section
+        className={`gv-home-movement gv-home__section${embedded ? ' gv-home-movement--embedded' : ''}`}
+        aria-label="Movement intel preview"
+      >
         <div className="gv-home__frame">
-          <h2 className="gv-home__section-heading gv-type-h2">{GV_COPY.headlines.movementIntel}</h2>
+          {embedded ? null : (
+            <h2 className="gv-home__section-heading gv-type-h2">{GV_COPY.headlines.movementIntel}</h2>
+          )}
           <div className="gv-home-movement__grid">
             {[1, 2, 3].map((n) => (
               <div key={n} className="gv-home-skeleton gv-home-skeleton--card" />
@@ -74,15 +81,17 @@ export function MovementIntelPreview({
 
   return (
     <section
-      className="gv-home-movement gv-home__section"
+      className={`gv-home-movement gv-home__section${embedded ? ' gv-home-movement--embedded' : ''}`}
       aria-label="Movement intel preview"
       data-testid="movement-intel-preview"
     >
       <div className="gv-home__frame">
-        <header className="rh-section-head gv-home-movement__head">
-          <h2 className="gv-home__section-heading gv-type-h2 rh-section-title">{GV_COPY.headlines.movementIntel}</h2>
-          <p className="rh-section-sub">Stock-style UF% movement across risers, fallers, and volatility.</p>
-        </header>
+        {embedded ? null : (
+          <header className="rh-section-head gv-home-movement__head">
+            <h2 className="gv-home__section-heading gv-type-h2 rh-section-title">{GV_COPY.headlines.movementIntel}</h2>
+            <p className="rh-section-sub">Stock-style UF% movement across risers, fallers, and volatility.</p>
+          </header>
+        )}
 
         <div className="gv-home-movement__grid">
           <div className="gv-home-movement__card">
