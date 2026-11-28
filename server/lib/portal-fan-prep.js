@@ -300,7 +300,7 @@ function getFanPortalPrep(at = new Date()) {
     fanShip: false,
     status: 'prep',
     namesLandWhen:
-      'GatorVault call sheets are a PFF/production scan. In-portal stamp when On3 or the beat verifies.',
+      'GatorVault call sheets: hole, not NFL Day 1-2, PFF and snaps, hunt frame. In-portal stamp when On3 or the beat verifies.',
     season,
     window: {
       opens: research.window.opens,

@@ -207,12 +207,71 @@ function roomCap(tier) {
   return ROOM_CAP[String(tier || '').toLowerCase()] ?? 2;
 }
 
+const HUNT_P4_FLOOR = 2;
+const HUNT_NON_POWER_CAP = 3;
+
 function passesHoldGate(score, tier) {
   const t = String(tier || '').toLowerCase();
   if (t !== 'stable' && t !== 'hold' && t !== 'watch') return true;
   const production = Math.max(score.pts.year1Starter || 0, score.pts.nonPowerProduction || 0);
   if (t === 'watch') return production >= 12 || score.buyScore >= 28;
   return production >= 20 || score.buyScore >= 40;
+}
+
+function candKey(row) {
+  return String((row && (row.slug || row.name)) || '')
+    .trim()
+    .toLowerCase();
+}
+
+function isP4Row(row) {
+  return String(row && row.conferenceTier ? row.conferenceTier : '').toLowerCase() === 'p4';
+}
+
+/** Best score, but G5 grades cannot bury two buyable P4 names when they exist. */
+function pickHuntBoard(fits, cap) {
+  const ranked = [...fits].sort(
+    (a, b) => b.buyScore - a.buyScore || String(a.name).localeCompare(String(b.name))
+  );
+  const out = [];
+  const taken = new Set();
+  function add(row) {
+    if (!row) return false;
+    const key = candKey(row);
+    if (!key || taken.has(key) || out.length >= cap) return false;
+    taken.add(key);
+    out.push(row);
+    return true;
+  }
+  for (const row of ranked) {
+    if (out.length >= cap) break;
+    if (!isP4Row(row) && out.filter((r) => !isP4Row(r)).length >= HUNT_NON_POWER_CAP) continue;
+    add(row);
+  }
+  const extras = ranked.filter((row) => isP4Row(row) && !taken.has(candKey(row)));
+  for (const extra of extras) {
+    if (out.filter(isP4Row).length >= HUNT_P4_FLOOR) break;
+    let replaceAt = -1;
+    for (let i = out.length - 1; i >= 0; i -= 1) {
+      if (!isP4Row(out[i])) {
+        replaceAt = i;
+        break;
+      }
+    }
+    if (replaceAt < 0) {
+      add(extra);
+      continue;
+    }
+    taken.delete(candKey(out[replaceAt]));
+    out[replaceAt] = extra;
+    taken.add(candKey(extra));
+  }
+  for (const row of ranked) {
+    if (out.length >= cap) break;
+    add(row);
+  }
+  out.sort((a, b) => b.buyScore - a.buyScore || String(a.name).localeCompare(String(b.name)));
+  return out.slice(0, cap);
 }
 
 function rankPortalTargets(candidates, rooms) {
@@ -234,7 +293,9 @@ function rankPortalTargets(candidates, rooms) {
       });
     }
     fits.sort((a, b) => b.buyScore - a.buyScore || String(a.name).localeCompare(String(b.name)));
-    byRoom.set(room.room, fits.slice(0, roomCap(room.tier)));
+    const hunt = room.tier === 'must-add' || room.tier === 'high';
+    const picked = hunt ? pickHuntBoard(fits, roomCap(room.tier)) : fits.slice(0, roomCap(room.tier));
+    byRoom.set(room.room, picked);
   }
   return byRoom;
 }
@@ -277,4 +338,7 @@ module.exports = {
   looksLikePersonName,
   loadPffScanBoard,
   isNflBound,
+  pickHuntBoard,
+  HUNT_P4_FLOOR,
+  HUNT_NON_POWER_CAP,
 };

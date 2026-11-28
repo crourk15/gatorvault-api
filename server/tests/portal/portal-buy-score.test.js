@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const {
   computePortalBuyScore,
   conferenceTier,
+  frameFitPoints,
 } = require('../../lib/portal-buy-score');
 
 test('P4 starter snaps score as year-1 starter, not the FCS lane', () => {
@@ -130,4 +131,12 @@ test('conferenceTier maps Notre Dame to P4 and CAA-style FCS flags', () => {
   assert.equal(conferenceTier({ conference: 'SEC' }), 'p4');
   assert.equal(conferenceTier({ conferenceTier: 'fcs' }), 'fcs');
   assert.equal(conferenceTier({ conference: 'MAC' }), 'g5');
+});
+
+test('hunt frame scores length at OT and two-gap mass at IDL', () => {
+  assert.equal(frameFitPoints({ ht: '6\'6"', wt: 320 }, 'OT'), 8);
+  assert.equal(frameFitPoints({ ht: '6\'5"', wt: 288 }, 'OT'), 4);
+  assert.equal(frameFitPoints({ ht: '6\'3"', wt: 255 }, 'IDL'), 0);
+  assert.equal(frameFitPoints({ ht: '6\'1"', wt: 304 }, 'IDL'), 8);
+  assert.equal(frameFitPoints({ ht: '6\'2"', wt: 195 }, 'CB'), 8);
 });

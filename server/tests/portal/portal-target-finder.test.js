@@ -168,6 +168,10 @@ test('PFF scan board puts at least 5 Buy-scored calls on each hunt room', async 
   assert.ok(bejarano);
   assert.equal(bejarano.announcedPortal, true);
   assert.equal(bejarano.school, 'Houston Christian');
+  for (const room of ['OT', 'S', 'CB', 'IDL']) {
+    const p4 = (report.rooms[room] || []).filter((row) => row.productionPath === 'p4-starter');
+    assert.ok(p4.length >= 2, `${room} P4 mix ${p4.length}`);
+  }
 });
 
 test('finder is wired into recruiting-light, ops, and the API', () => {

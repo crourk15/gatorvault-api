@@ -1,10 +1,10 @@
 {
   "ok": true,
   "fanShip": false,
-  "generatedAt": "2026-11-28T03:50:00Z",
+  "generatedAt": "2026-11-28T04:00:00Z",
   "season": 2026,
   "source": "pff",
-  "sourceNote": "PFF NCAA 2026 season grades, pulled Nov 27 2026 ET. G5/FCS high-PFF is the buyable market. Day 1-2 2027 NFL projections are blocked. Not in the portal unless announcedPortal is true. Do not invent grades.",
+  "sourceNote": "PFF NCAA 2026 grades, Nov 27 2026 ET. Formula: hole, NFL Day 1-2 off, P4 starter snaps or G5/FCS high PFF, hunt frame, years left. Mix 2 P4 per hunt room. Not in the portal unless announcedPortal. Do not invent grades.",
   "sourceUrls": {
     "OT": "https://www.pff.com/grades/ncaa/t",
     "S": "https://www.pff.com/grades/ncaa/s",
@@ -25,7 +25,8 @@
       "snaps": 840,
       "production": "high",
       "note": "MAC tackle. PFF 87.9 on 840 snaps. G5 high-production path. Not in the portal yet.",
-      "sourceUrl": "https://www.pff.com/grades/ncaa/t"
+      "sourceUrl": "https://www.pff.com/grades/ncaa/t",
+      "yearsLeft": 2
     },
     {
       "name": "Moshood Giwa",
@@ -173,7 +174,8 @@
       "snaps": 703,
       "production": "high",
       "note": "Sun Belt corner. PFF 90.9 on 703 snaps — the G5 high-PFF path. 5'11 200. Not in the portal yet.",
-      "sourceUrl": "https://www.pff.com/grades/ncaa/cb"
+      "sourceUrl": "https://www.pff.com/grades/ncaa/cb",
+      "yearsLeft": 2
     },
     {
       "name": "Joel Boamah",
@@ -300,6 +302,114 @@
       "production": "high",
       "note": "AAC interior. 6'3 285. PFF 79.2 on 558 snaps — the volume play. Not in the portal yet.",
       "sourceUrl": "https://www.pff.com/grades/ncaa/di"
+    },
+    {
+      "name": "Niki Prongos",
+      "position": "OT",
+      "fromSchool": "Stanford",
+      "conference": "ACC",
+      "conferenceTier": "p4",
+      "jersey": "66",
+      "ht": "6'7\"",
+      "wt": 310,
+      "pffGrade": 77.0,
+      "snaps": 523,
+      "production": "high",
+      "nflBound": false,
+      "nflDraftRound": 4,
+      "note": "ACC tackle. 6'7 310. PFF 77.0 on 523 snaps. Day 3 / not R1-R3. Hunt length. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/t"
+    },
+    {
+      "name": "Logan Bartley",
+      "position": "S",
+      "fromSchool": "Kansas State",
+      "conference": "Big 12",
+      "conferenceTier": "p4",
+      "ht": "6'2\"",
+      "wt": 213,
+      "pffGrade": 83.1,
+      "snaps": 624,
+      "production": "high",
+      "yearsLeft": 2,
+      "nflBound": false,
+      "note": "Big 12 safety, Naples FL. Sophomore — 2028 draft class. 6'2 213. PFF 83.1 on 624 snaps. Range-and-tackle body. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/s"
+    },
+    {
+      "name": "Ta'Shawn James",
+      "position": "S",
+      "fromSchool": "UCLA",
+      "conference": "Big Ten",
+      "conferenceTier": "p4",
+      "ht": "6'0\"",
+      "wt": 211,
+      "pffGrade": 81.7,
+      "snaps": 516,
+      "production": "high",
+      "nflBound": false,
+      "note": "Big Ten safety. 6'0 211. PFF 81.7 on 516 snaps. Not a 2027 Day 1-2 board name. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/s"
+    },
+    {
+      "name": "Vernon Glover Jr.",
+      "position": "CB",
+      "fromSchool": "TCU",
+      "conference": "Big 12",
+      "conferenceTier": "p4",
+      "ht": "6'1\"",
+      "wt": 195,
+      "pffGrade": 81.1,
+      "snaps": 663,
+      "production": "high",
+      "nflBound": false,
+      "note": "Big 12 corner. 6'1 195. PFF 81.1 on 663 snaps. Press length. Undrafted on 2027 CB board. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/cb"
+    },
+    {
+      "name": "Joker Johnson",
+      "position": "CB",
+      "fromSchool": "Arkansas",
+      "conference": "SEC",
+      "conferenceTier": "p4",
+      "ht": "6'0\"",
+      "wt": 195,
+      "pffGrade": 81.0,
+      "snaps": 649,
+      "production": "high",
+      "nflBound": false,
+      "note": "SEC corner. 6'0 195. PFF 81.0 on 649 snaps. Not on the 2027 CB consensus board. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/cb"
+    },
+    {
+      "name": "Blake Herold",
+      "position": "IDL",
+      "fromSchool": "Kansas",
+      "conference": "Big 12",
+      "conferenceTier": "p4",
+      "ht": "6'3\"",
+      "wt": 300,
+      "pffGrade": 79.2,
+      "snaps": 536,
+      "production": "high",
+      "nflBound": false,
+      "note": "Big 12 interior. 6'3 300 two-gap body. PFF 79.2 on 536 snaps. Priority UDFA, not Day 1-2. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/di"
+    },
+    {
+      "name": "Preston Watson",
+      "position": "IDL",
+      "fromSchool": "Duke",
+      "conference": "ACC",
+      "conferenceTier": "p4",
+      "ht": "6'1\"",
+      "wt": 300,
+      "pffGrade": 81.0,
+      "snaps": 414,
+      "production": "high",
+      "nflBound": false,
+      "note": "ACC interior. 6'1 300. PFF 81.0 on 414 snaps. Not on 2027 DT R1-R3 lists. Two-gap size. Not in the portal yet.",
+      "sourceUrl": "https://www.pff.com/grades/ncaa/di"
     }
   ],
   "blockedNfl": [
@@ -308,8 +418,57 @@
       "position": "OT",
       "fromSchool": "Kentucky",
       "nflDraftRound": 2,
-      "reason": "2027 NFL consensus Round 2 / PFN OT3 / 92 mock appearances. Not a portal buy.",
+      "reason": "2027 consensus Round 2 / PFN OT3.",
       "sourceUrl": "https://www.nflmockdraftdatabase.com/players/2027/lance-heard"
+    },
+    {
+      "name": "Jackson Lloyd",
+      "position": "OT",
+      "fromSchool": "Alabama",
+      "nflDraftRound": 1,
+      "reason": "Alabama LT, 2028 class projected top-10. Not a portal buy.",
+      "sourceUrl": "https://www.nfldraftbuzz.com/Player/Jackson-Lloyd-OT-Alabama"
+    },
+    {
+      "name": "John Nestor",
+      "position": "CB",
+      "fromSchool": "Minnesota",
+      "nflDraftRound": 2,
+      "reason": "2027 CB consensus Round 2.",
+      "sourceUrl": "https://sticktothemodel.com/draft/prospect-overview/big-board/cb"
+    },
+    {
+      "name": "Jett Jefferson",
+      "position": "CB",
+      "fromSchool": "Mississippi State",
+      "nflDraftRound": 2,
+      "reason": "WalterFootball 2027 CB R1-2.",
+      "sourceUrl": "https://walterfootball.com/CBRankings2027.php"
+    },
+    {
+      "name": "Jalen Mayo",
+      "position": "CB",
+      "fromSchool": "Houston",
+      "nflDraftRound": 3,
+      "reason": "WalterFootball 2027 CB R2-3.",
+      "sourceUrl": "https://walterfootball.com/CBRankings2027.php"
     }
-  ]
+  ],
+  "formula": {
+    "line": "Year-1 SEC starter Florida can actually sign.",
+    "gates": [
+      "hole",
+      "not 2027 NFL R1-R3",
+      "starter snaps",
+      "real PFF",
+      "not HS"
+    ],
+    "score": [
+      "room",
+      "P4 starter OR G5/FCS+PFF",
+      "years left",
+      "hunt frame"
+    ],
+    "mix": "Hunt rooms keep 2 P4 buyable names when they exist so G5 grades cannot bury them."
+  }
 }
