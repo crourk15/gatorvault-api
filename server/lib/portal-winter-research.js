@@ -1,7 +1,7 @@
 /**
  * Desk-only winter 2027 portal research.
  * Never merge named candidates into getPortalBoard() or fan incoming.
- * Fan /vault/portal reads sanitized prep from portal-fan-prep.js (rooms / thesis / window).
+ * Fan FutureCast Portal Room reads sanitized prep from portal-fan-prep.js (rooms / thesis / window).
  */
 const fs = require('fs');
 const path = require('path');

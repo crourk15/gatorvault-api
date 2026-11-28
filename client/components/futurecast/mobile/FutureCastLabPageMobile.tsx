@@ -108,7 +108,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
               />
             )}
           </section>
-          <section id={FUTURECAST_LAB_ANCHORS.portal}>
+          <section id={FUTURECAST_LAB_ANCHORS.portal} className="rh-frame" data-testid="fc-portal-room">
             {pending ? (
               <PanelSkeleton minHeight={180} />
             ) : (

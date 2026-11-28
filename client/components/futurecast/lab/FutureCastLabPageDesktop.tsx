@@ -75,17 +75,20 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
               updatedAt={data.lastUpdated}
             />
           )}
-          <div id={FUTURECAST_LAB_ANCHORS.portal}>
-            {pending ? null : (
-              <FutureCastPortalCrossView
-                portalPlayers={data.home.portalWatchlist ?? []}
-                masterBoard={data.masterBoard}
-                portalSeason={data.home.portalSeason}
-              />
-            )}
-          </div>
         </div>
       </div>
+
+      <section id={FUTURECAST_LAB_ANCHORS.portal} className="rh-frame" data-testid="fc-portal-room">
+        {pending ? (
+          <PanelSkeleton minHeight={320} />
+        ) : (
+          <FutureCastPortalCrossView
+            portalPlayers={data.home.portalWatchlist ?? []}
+            masterBoard={data.masterBoard}
+            portalSeason={data.home.portalSeason}
+          />
+        )}
+      </section>
 
       <section id={FUTURECAST_LAB_ANCHORS.movement} className="rh-frame">
         {pending ? null : (

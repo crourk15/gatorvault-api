@@ -1,8 +1,7 @@
 'use strict';
 
 /**
- * Portal / recruiting panel titles should be a command header, not stacked
- * class-hub copy.
+ * Portal Room lives on FutureCast. Recruiting stays the class board.
  *
  * Run: node --test server/test/portal-panel-layout.test.js
  */
@@ -18,15 +17,38 @@ function read(rel) {
   return fs.readFileSync(path.join(ROOT, rel), 'utf8');
 }
 
-describe('recruiting panel elite layout', () => {
-  it('Portal war room owns the title, not the class-hub date string', () => {
+describe('FutureCast Portal Room layout', () => {
+  it('FutureCast discovery nav has Portal Room next to Early Discovery', () => {
+    const src = read('client/components/site/FutureCastSubNav.tsx');
+    assert.match(src, /id: 'discovery', label: 'Early Discovery'/);
+    assert.match(src, /id: 'portal', label: 'Portal Room'/);
+    assert.match(src, /fc-portal-room-nav/);
+  });
+
+  it('Portal Room is its own FutureCast section, not buried under Fit', () => {
+    const desktop = read('client/components/futurecast/lab/FutureCastLabPageDesktop.tsx');
+    const mobile = read('client/components/futurecast/mobile/FutureCastLabPageMobile.tsx');
+    assert.match(desktop, /data-testid="fc-portal-room"/);
+    assert.match(desktop, /id=\{FUTURECAST_LAB_ANCHORS\.portal\} className="rh-frame"/);
+    assert.match(mobile, /data-testid="fc-portal-room"/);
+  });
+
+  it('Portal Room title is needs + gap fillers, not the class list', () => {
     const src = read('client/components/vault/recruiting/RecruitingPortalSection.tsx');
-    assert.match(src, /title="Portal War Room"/);
-    assert.doesNotMatch(src, /Football portal opens January 4, 2027/);
-    assert.match(src, /RecruitingPanelHeader/);
-    assert.match(src, /EliteCommitBoard year=\{2027\}/);
-    assert.match(src, /RemainingTargetsStrip year=\{2027\}/);
-    assert.match(src, /portal-class-list/);
+    assert.match(src, /title="Portal Room"/);
+    assert.match(src, /What the roster needs/);
+    assert.match(src, /Gap fillers/);
+    assert.doesNotMatch(src, /EliteCommitBoard/);
+    assert.doesNotMatch(src, /RemainingTargetsStrip/);
+    assert.doesNotMatch(src, /portal-class-list/);
+  });
+
+  it('recruiting panel tabs no longer include Portal', () => {
+    const src = read('client/lib/recruiting-hub-tabs.ts');
+    assert.match(src, /RECRUITING_PANEL_TAB_ITEMS/);
+    assert.doesNotMatch(src, /id: 'portal'/);
+    const panelView = read('client/components/recruiting-hub/RecruitingHubPanelView.tsx');
+    assert.match(panelView, /tabs=\{RECRUITING_PANEL_TAB_ITEMS\}/);
   });
 
   it('hides the class hero while a panel tab is open', () => {
@@ -35,19 +57,12 @@ describe('recruiting panel elite layout', () => {
     assert.match(css, /\.rh-hero-strip/);
   });
 
-  it('panel sticky tabs are the five command tabs, not class years', () => {
-    const src = read('client/lib/recruiting-hub-tabs.ts');
-    assert.match(src, /RECRUITING_PANEL_TAB_ITEMS/);
-    assert.match(src, /id: 'portal'/);
-    const panelView = read('client/components/recruiting-hub/RecruitingHubPanelView.tsx');
-    assert.match(panelView, /tabs=\{RECRUITING_PANEL_TAB_ITEMS\}/);
-  });
-
   it('does not nest Scouting Department page titles inside the recruiting tab', () => {
     const src = read('client/components/recruiting-hub/RecruitingHubTabPanels.tsx');
     assert.doesNotMatch(src, /ScoutingDepartmentPage/);
     assert.match(src, /title="Scouting"/);
     assert.match(src, /title="Who's Moving"/);
     assert.match(src, /title="Priority Targets"/);
+    assert.match(src, /Portal Room is on FutureCast/);
   });
 });

@@ -24,6 +24,7 @@ describe('recruiting Who\u2019s Moving tab query', () => {
     assert.equal(recruitingTabFromQuery('heat'), 'intel');
     assert.equal(recruitingTabFromQuery('heat-check'), 'intel');
     assert.equal(recruitingTabFromQuery('portal'), 'portal');
+    assert.match(recruitingTabPath('portal'), /futurecast#portal/);
     assert.equal(recruitingTabFromQuery(''), null);
     assert.equal(recruitingTabFromQuery(null), null);
   });
@@ -40,7 +41,7 @@ describe('recruiting Who\u2019s Moving tab query', () => {
 
   it('treats intel as a dedicated panel, not the elite class hub', () => {
     assert.equal(isRecruitingPanelTab('intel'), true);
-    assert.equal(isRecruitingPanelTab('portal'), true);
+    assert.equal(isRecruitingPanelTab('portal'), false);
     assert.equal(isRecruitingPanelTab('commits-2027'), false);
   });
 

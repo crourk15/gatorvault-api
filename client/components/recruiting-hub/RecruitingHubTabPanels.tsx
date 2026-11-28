@@ -6,7 +6,7 @@ import { RecruitingPanelHeader } from '@/components/recruiting-hub/RecruitingPan
 import { UiEmpty } from '@/components/site/UiMessage';
 import { MovementIntelPreview } from '@/components/shared/MovementIntelPreview';
 import { PlayerCardEnhanced } from '@/components/vault/recruiting/EliteRecruitCard';
-import { PortalList } from '@/components/vault/recruiting/RecruitingPortalSection';
+import { FUTURECAST_LAB_ANCHORS, futureCastLabHref } from '@/lib/vault-route-map';
 import { RankingsTable } from '@/components/vault/recruiting/RecruitingRankingsTable';
 import { ScoutingTiles } from '@/components/vault/recruiting/RecruitingScoutingTiles';
 import { RecruitingSubTabBar } from '@/components/vault/recruiting/RecruitingTabBar';
@@ -103,7 +103,18 @@ export function RecruitingHubTabPanels({
         </section>
       )}
 
-      {tab === 'portal' && <PortalList />}
+      {tab === 'portal' && (
+        <section data-testid="portal-moved-to-futurecast">
+          <RecruitingPanelHeader
+            kicker="Moved"
+            title="Portal Room is on FutureCast"
+            dek="Recruiting stays the class board. Members open Portal Room next to 2028 Discovery."
+          />
+          <p className="rh-cc-empty">
+            <a href={futureCastLabHref(FUTURECAST_LAB_ANCHORS.portal)}>Open Portal Room →</a>
+          </p>
+        </section>
+      )}
 
       {tab === 'rankings' && (
         <section>

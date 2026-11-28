@@ -53,7 +53,7 @@ export const RECRUITING_TAB_PATHS: Record<RecruitingHubTab, string> = {
   'targets-2028': '/vault/recruiting/2028/targets',
   intel: '/vault/recruiting/?tab=intel',
   scouting: '/vault/recruiting/?tab=scouting',
-  portal: '/vault/recruiting/?tab=portal',
+  portal: '/vault/futurecast#portal',
   rankings: '/vault/recruiting/?tab=rankings',
 };
 
@@ -154,7 +154,7 @@ export const FUTURECAST_LAB_SECTIONS = [
   { id: FUTURECAST_LAB_ANCHORS.trending, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.trending), shortLabel: 'Battles' },
   { id: FUTURECAST_LAB_ANCHORS.movement, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.movement), shortLabel: 'Movement' },
   { id: FUTURECAST_LAB_ANCHORS.positions, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.positions), shortLabel: 'Fit' },
-  { id: FUTURECAST_LAB_ANCHORS.portal, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.portal), shortLabel: 'Portal' },
+  { id: FUTURECAST_LAB_ANCHORS.portal, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.portal), shortLabel: 'Portal Room' },
   { id: FUTURECAST_LAB_ANCHORS.feed, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.feed), shortLabel: 'Feed' },
 ] as const;
 
@@ -235,13 +235,13 @@ export const LEGACY_ROUTE_REDIRECTS: { from: string; to: string }[] = [
   { from: '/recruiting-hub.html', to: '/recruiting-hub' },
   { from: '/film-room.html', to: '/vault/film-room' },
   { from: '/latest-updates.html', to: '/vault/live' },
-  { from: '/portal.html', to: '/vault/recruiting/?tab=portal' },
+  { from: '/portal.html', to: '/vault/futurecast#portal' },
   { from: '/vault/tickets', to: '/vault/schedule' },
   { from: '/vault/tickets/', to: '/vault/schedule' },
   { from: '/vault/tickets/*', to: '/vault/schedule' },
-  { from: '/vault/portal', to: '/vault/recruiting/?tab=portal' },
-  { from: '/vault/portal/', to: '/vault/recruiting/?tab=portal' },
-  { from: '/vault/portal/*', to: '/vault/recruiting/?tab=portal' },
+  { from: '/vault/portal', to: '/vault/futurecast#portal' },
+  { from: '/vault/portal/', to: '/vault/futurecast#portal' },
+  { from: '/vault/portal/*', to: '/vault/futurecast#portal' },
   { from: '/vault/scouting', to: '/vault/recruiting/?tab=scouting' },
   { from: '/vault/scouting/', to: '/vault/recruiting/?tab=scouting' },
   { from: '/vault/scouting/*', to: '/vault/recruiting/?tab=scouting' },

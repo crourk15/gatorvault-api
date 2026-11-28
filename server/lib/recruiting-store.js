@@ -382,6 +382,11 @@ async function getHubHsCommits(classYear) {
   return filterHubHsCommitPlayers(await getHubCommits(classYear));
 }
 
+/** Florida portal commits for a class year — land on recruiting cards with a Transfer stamp. */
+async function getHubPortalCommits(classYear) {
+  return (await getHubCommits(classYear)).filter((p) => !isHubHsCommitPlayer(p));
+}
+
 function isCommittedAnywhere(p) {
   if (!p) return false;
   const status = String(p.status || '').toLowerCase();
@@ -1718,6 +1723,7 @@ module.exports = {
   getBoard,
   getHubCommits,
   getHubHsCommits,
+  getHubPortalCommits,
   isHubHsCommitPlayer,
   getPortalBoard,
   selectPortalHeadliner,

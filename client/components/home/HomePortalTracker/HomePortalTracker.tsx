@@ -56,7 +56,7 @@ export function HomePortalTracker({ data, loading }: Props): React.ReactElement 
             </li>
           )}
         </ul>
-        <a href="/vault/recruiting?tab=portal" className="gv-home-link">
+        <a href="/vault/futurecast#portal" className="gv-home-link">
           Open Portal Tracker →
         </a>
       </div>

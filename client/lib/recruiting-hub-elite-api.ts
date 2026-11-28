@@ -52,6 +52,7 @@ export type RhHubCommit = {
   skinny?: string | null;
   commitDate: string;
   statusBadge?: string;
+  origin?: 'hs' | 'portal' | string;
   profileUrl: string;
   stabilityMeter?: string | null;
   ufPercent?: string | null;

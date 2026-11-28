@@ -27,6 +27,7 @@ I will not start Codemagic.
 - Who’s Moving stays on board intel. Approved 1.0.33 still writes `?tab=movement` and can dump onto the 2028 class war-room until this bake. Live Netlify hydrates `?tab=intel` after deploy.
 - Recruiting panel tabs share one command header. Portal no longer stacks under the class-hub hero titles. Live Netlify hydrates after deploy.
 - Portal War Room lists the live 2027 commit class and remaining targets (Tranard, flip watch). OT is Hutcheson/Fisher — Hiller is IOL. Portal transfer names stay off. Live Netlify hydrates after deploy.
+- Portal Room is a FutureCast tab next to Early Discovery. Recruiting stays the class board. Gap-fillers only when they fill a roster hole. Portal commits land on recruiting with a Portal transfer stamp. Live Netlify hydrates after deploy.
 
 ## Whats New (paste)
 

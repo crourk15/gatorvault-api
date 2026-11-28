@@ -23,7 +23,7 @@ const CLOSING_CLASS_SUB_LINKS: { id: string; label: string; href: string }[] = [
   { id: 'trending', label: 'Battles', href: FUTURECAST_SEGMENT_PATHS.trending },
   { id: 'movement', label: 'Movement', href: FUTURECAST_SEGMENT_PATHS.movement },
   { id: 'fit', label: 'Fit', href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.positions) },
-  { id: 'portal', label: 'Portal', href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.portal) },
+  { id: 'portal', label: 'Portal Room', href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.portal) },
   { id: 'big-board', label: 'Big Board', href: BIG_BOARD_HREF },
   { id: 'alerts', label: 'Alerts', href: ALERTS_HREF },
 ];
@@ -34,6 +34,7 @@ const DISCOVERY_SUB_LINKS: { id: string; label: string; href: string }[] = [
   { id: 'trending', label: 'Battles', href: FUTURECAST_SEGMENT_PATHS.trending },
   { id: 'fit', label: 'Fit', href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.positions) },
   { id: 'discovery', label: 'Early Discovery', href: BIG_BOARD_HREF },
+  { id: 'portal', label: 'Portal Room', href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.portal) },
 ];
 
 export type FutureCastSubId = FutureCastSegment;
@@ -93,7 +94,9 @@ export function FutureCastSubNav({
               ? 'fc-big-board-nav'
               : link.id === 'alerts'
                 ? 'fc-alerts-nav'
-                : undefined
+                : link.id === 'portal'
+                  ? 'fc-portal-room-nav'
+                  : undefined
           }
         >
           {link.label}
