@@ -29,6 +29,7 @@ I will not start Codemagic.
 - Portal War Room lists the live 2027 commit class and remaining targets (Tranard, flip watch). OT is Hutcheson/Fisher — Hiller is IOL. Portal transfer names stay off. Live Netlify hydrates after deploy.
 - Portal Room is a FutureCast tab next to Early Discovery. Recruiting stays the class board. Gap-fillers only when they fill a roster hole. Portal commits land on recruiting with a Portal transfer stamp. Live Netlify hydrates after deploy.
 - Portal Room tab owns the Lab (not buried under Chase). Must-buy vs Hold board. Live Netlify hydrates after deploy.
+- Portal Room GatorVault scan lists verified On3/beat college transfers that fill a hole, ranked by Buy score (FCS/G5 with production + PFF included). Live `/api/recruiting/portal` hydrates after Render.
 
 ## Whats New (paste)
 

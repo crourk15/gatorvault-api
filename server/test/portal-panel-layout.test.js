@@ -38,6 +38,7 @@ describe('FutureCast Portal Room layout', () => {
     assert.match(src, /Portal Room/);
     assert.match(src, /Must buy/);
     assert.match(src, /Hold the room/);
+    assert.match(src, /GatorVault scan/);
     assert.match(src, /portal-room-steps/);
     assert.doesNotMatch(src, /RecruitingPanelHeader/);
     assert.doesNotMatch(src, /EliteCommitBoard/);

@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "fanShip": false,
+  "updatedAt": null,
+  "window": {
+    "opens": "2027-01-04",
+    "closes": "2027-01-13"
+  },
+  "sources": {
+    "on3": 0,
+    "intel": 0,
+    "incoming": 0
+  },
+  "targetCount": 0,
+  "rooms": {},
+  "targets": []
+}

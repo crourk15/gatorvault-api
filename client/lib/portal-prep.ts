@@ -7,7 +7,7 @@ export type FanPortalPrepChip = {
   position?: string;
   stars?: number | null;
   natlRank?: number | null;
-  status?: 'commit' | 'target' | 'flip' | 'gap' | string;
+  status?: 'commit' | 'target' | 'flip' | 'gap' | 'scan' | string;
   committedTo?: string | null;
 };
 
@@ -21,6 +21,7 @@ export type FanPortalPrepRoom = {
   alreadySigned: Array<string | FanPortalPrepChip>;
   stillRecruiting?: Array<string | FanPortalPrepChip>;
   gapFillers?: Array<string | FanPortalPrepChip>;
+  scanTargets?: Array<string | FanPortalPrepChip>;
 };
 
 export type FanPortalPrep = {

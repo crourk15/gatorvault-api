@@ -1434,6 +1434,11 @@
   color: #ffd4c4;
 }
 
+.gv-rh-portal-room__chips--scan .gv-rh-portal-room__signed li {
+  background: rgba(250, 204, 21, 0.14);
+  color: #fde68a;
+}
+
 .gv-rh-portal-room__empty-gap {
   margin: 0.45rem 0 0;
   font-size: 0.75rem;

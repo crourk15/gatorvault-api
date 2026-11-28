@@ -88,6 +88,18 @@ const JOBS = {
       return runBeatLateIngestSweep(opts);
     }
   },
+  'portal-target-sweep': {
+    label: 'Portal Room target sweep (On3 + beat + Buy score)',
+    subsystem: 'cron:portal-target-sweep',
+    schedule: 'With recruiting-light cron',
+    async run(opts = {}) {
+      const { runPortalTargetSweep } = require('./portal-target-sweep');
+      return runPortalTargetSweep({
+        dryRun: opts.dryRun === true,
+        skipOn3: opts.skipOn3 === true,
+      });
+    }
+  },
   'allowlist-intel-sweep': {
     label: 'Allowlist continuous intel sweep (visits/offers → intel)',
     subsystem: 'cron:allowlist-intel-sweep',

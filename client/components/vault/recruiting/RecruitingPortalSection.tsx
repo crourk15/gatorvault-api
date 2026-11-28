@@ -14,13 +14,13 @@ import {
 } from '@/lib/portal-prep';
 
 function chipHref(chip: FanPortalPrepChip): string {
-  const gap = chip.status === 'gap';
+  const portal = chip.status === 'gap' || chip.status === 'scan';
   return playerProfilePath(
     chip.slug,
-    gap ? 'PORTAL' : 'HIGH_SCHOOL',
+    portal ? 'PORTAL' : 'HIGH_SCHOOL',
     true,
     chip.name,
-    gap ? 'futurecast' : 'recruiting'
+    portal ? 'futurecast' : 'recruiting'
   );
 }
 
@@ -38,7 +38,7 @@ function RoomChips({
 }: {
   label: string;
   rows: FanPortalPrepChip[];
-  kind: 'signed' | 'gap';
+  kind: 'signed' | 'gap' | 'scan';
 }): React.ReactElement | null {
   if (!rows.length) return null;
   return (
@@ -72,6 +72,7 @@ function RoomCard({
 }): React.ReactElement {
   const signed = (room.alreadySigned || []).map(portalChip).filter(Boolean) as FanPortalPrepChip[];
   const fillers = (room.gapFillers || []).map(portalChip).filter(Boolean) as FanPortalPrepChip[];
+  const scans = (room.scanTargets || []).map(portalChip).filter(Boolean) as FanPortalPrepChip[];
   const hunt = room.hunt || room.dek;
   return (
     <li
@@ -85,10 +86,11 @@ function RoomCard({
         </div>
         {hunt ? <p className="gv-rh-portal-room__hunt">{hunt}</p> : null}
         <RoomChips label="On the 2027 board" rows={signed} kind="signed" />
+        <RoomChips label="GatorVault scan" rows={scans} kind="scan" />
         <RoomChips label="Fits this hole" rows={fillers} kind="gap" />
-        {!compact && !fillers.length ? (
+        {!compact && !fillers.length && !scans.length ? (
           <p className="gv-rh-portal-room__empty-gap" data-testid={`portal-gap-empty-${room.room}`}>
-            No verified transfer yet — only a college player who can start this room.
+            Scanning On3 and the beat for a college transfer who can start this room.
           </p>
         ) : null}
       </div>
@@ -132,7 +134,7 @@ export function PortalList(): React.ReactElement {
   const huntRooms = (prep.rooms || []).filter((row) => isHuntRoom(row.tier));
   const holdRooms = (prep.rooms || []).filter((row) => !isHuntRoom(row.tier));
   const gapCount = (prep.rooms || []).reduce(
-    (n, room) => n + ((room.gapFillers || []).length),
+    (n, room) => n + ((room.gapFillers || []).length) + ((room.scanTargets || []).length),
     0
   );
 
@@ -142,7 +144,7 @@ export function PortalList(): React.ReactElement {
         <p className="fc-portal-room__kicker">{prep.window.label}</p>
         <h2 className="fc-portal-room__title">Portal Room</h2>
         <p className="fc-portal-room__dek">
-          {prep.thesis.addCount}. {prep.thesis.not} Names land when they fill a roster hole.
+          {prep.thesis.addCount}. {prep.thesis.not} Names land when On3 or the beat verifies a college transfer who fills the hole.
         </p>
         <div className="fc-portal-room__pills" role="list">
           <span role="listitem">
@@ -175,7 +177,7 @@ export function PortalList(): React.ReactElement {
           ? 'Loading verified names…'
           : incoming.length || gapCount
             ? 'Verified college transfers only — they have to fill the hole.'
-            : 'No verified gap-fillers yet. High-school remaining targets stay on Recruiting.'}
+            : 'Scanning On3 and the beat. High-school remaining targets stay on Recruiting.'}
       </p>
 
       <div className="gv-rh-portal-prep__board">

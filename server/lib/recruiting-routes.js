@@ -630,6 +630,29 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  app.post('/api/recruiting/portal-targets/sweep', async (req, res) => {
+    try {
+      if (!requireIngestCronAuth(req, res)) return;
+      const { runPortalTargetSweep } = require('./portal-target-sweep');
+      const dryRun = req.body.dryRun === true || req.query.dryRun === 'true';
+      const skipOn3 = req.body.skipOn3 === true || req.query.skipOn3 === 'true';
+      const result = await runPortalTargetSweep({ dryRun, skipOn3 });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      console.error('portal-targets sweep error', err);
+      return res.status(200).json({ ok: false, softFailure: true, error: err.message, cached: true });
+    }
+  });
+
+  app.get('/api/recruiting/portal-targets/last-report', (req, res) => {
+    try {
+      const { readLastReport } = require('./portal-target-sweep');
+      return res.json({ ok: true, report: readLastReport() });
+    } catch (err) {
+      return res.status(200).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/recruiting/allowlist-intel/sweep', async (req, res) => {
     try {
       if (!requireIngestCronAuth(req, res)) return;

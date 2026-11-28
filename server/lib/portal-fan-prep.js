@@ -174,6 +174,7 @@ function fanRooms(needs) {
         }).filter(Boolean),
         stillRecruiting: [],
         gapFillers: [],
+        scanTargets: [],
       };
     })
     .filter((row) => row.room)
@@ -207,13 +208,16 @@ function ensureIolRoom(rooms, iolChips) {
     alreadySigned: iolChips,
     stillRecruiting: [],
     gapFillers: [],
+    scanTargets: [],
   });
   return rooms.sort((a, b) => a.rank - b.rank);
 }
 
-async function overlayLiveHsClass(prep) {
+async function overlayLiveHsClass(prep, opts = {}) {
   const elite = require('./recruiting-hub-elite');
   const store = require('./recruiting-store');
+  const { scanTargetsForRoom, readLastReport } = require('./portal-target-sweep');
+  const report = opts.report || readLastReport();
   const { commits } = await elite.loadHubHsClassCommits(2027);
 
   const signedByRoom = new Map();
@@ -252,11 +256,21 @@ async function overlayLiveHsClass(prep) {
         )
       )
       .filter(Boolean);
+    const scans = (scanTargetsForRoom(row.room, report) || []).filter((chip) => {
+      const name = String(chip.name || '').trim().toLowerCase();
+      const slug = String(chip.slug || '').trim().toLowerCase();
+      return !fillers.some(
+        (f) =>
+          (slug && String(f.slug || '').toLowerCase() === slug) ||
+          String(f.name || '').trim().toLowerCase() === name
+      );
+    });
     return {
       ...row,
       alreadySigned: sortChips(signedByRoom.get(row.room) || []),
       stillRecruiting: [],
       gapFillers: sortChips(fillers),
+      scanTargets: scans,
     };
   });
   ensureIolRoom(rooms, sortChips(signedByRoom.get('IOL') || []));
@@ -285,7 +299,7 @@ function getFanPortalPrep(at = new Date()) {
     ok: true,
     fanShip: false,
     status: 'prep',
-    namesLandWhen: 'Names land when they are verified.',
+    namesLandWhen: 'Names land when On3 or the beat verifies a college transfer who fills the hole.',
     season,
     window: {
       opens: research.window.opens,
