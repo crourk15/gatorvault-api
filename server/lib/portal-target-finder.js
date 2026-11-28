@@ -12,10 +12,10 @@ const { portalRoomForPos, isUfPortalCommit, isFloridaSchoolName } = require('./p
 const ROOM_CAP = {
   'must-add': 5,
   high: 5,
-  conditional: 2,
-  watch: 2,
-  stable: 1,
-  hold: 1,
+  conditional: 5,
+  watch: 5,
+  stable: 5,
+  hold: 5,
 };
 
 const SCAN_BOARD = path.join(__dirname, '..', 'data', 'portal', 'winter-2027-scan.json');
@@ -293,9 +293,7 @@ function rankPortalTargets(candidates, rooms) {
       });
     }
     fits.sort((a, b) => b.buyScore - a.buyScore || String(a.name).localeCompare(String(b.name)));
-    const hunt = room.tier === 'must-add' || room.tier === 'high';
-    const picked = hunt ? pickHuntBoard(fits, roomCap(room.tier)) : fits.slice(0, roomCap(room.tier));
-    byRoom.set(room.room, picked);
+    byRoom.set(room.room, pickHuntBoard(fits, roomCap(room.tier)));
   }
   return byRoom;
 }

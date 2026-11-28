@@ -67,9 +67,10 @@ type SeedFile = {
 export const PORTAL_PREP_SEED = (seedJson as SeedFile).prep;
 
 export function daysUntilPortalOpen(opens: string, at: Date = new Date()): number {
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(at);
   const target = Date.parse(`${opens}T00:00:00Z`);
-  if (!Number.isFinite(target)) return 0;
-  const now = Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate());
+  const now = Date.parse(`${today}T00:00:00Z`);
+  if (!Number.isFinite(target) || !Number.isFinite(now)) return 0;
   return Math.max(0, Math.round((target - now) / 86400000));
 }
 

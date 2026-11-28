@@ -5,6 +5,8 @@ const {
   getFanPortalPrepLive,
   chipName,
   portalGapFitsNeed,
+  daysUntilYmd,
+  portalRoomForPos,
 } = require('../../lib/portal-fan-prep');
 const { fanPortalCandidatesFromResearch } = require('../../lib/portal-winter-research');
 const { getPortalBoard } = require('../../lib/recruiting-store');
@@ -27,6 +29,9 @@ test('fan portal prep is the January 2027 war room without named candidates', ()
   assert.equal(prep.window.closes, '2027-01-13');
   assert.equal(prep.window.label, 'January 4–13, 2027');
   assert.equal(prep.window.daysUntilOpen, 40);
+  assert.equal(daysUntilYmd('2027-01-04', new Date('2026-11-28T03:55:00Z')), 38);
+  assert.equal(portalRoomForPos('HB'), 'RB');
+  assert.equal(portalRoomForPos('G'), 'IOL');
   assert.equal(prep.season.phase, 'portal-prep');
   assert.equal(prep.thesis.addCount, '10–12 difference makers');
   assert.match(prep.thesis.not, /Not 30/);

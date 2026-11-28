@@ -69,7 +69,7 @@ function portalRoomForPos(raw) {
     .toUpperCase()
     .replace(/[^A-Z]/g, '');
   if (p === 'OT') return 'OT';
-  if (p === 'IOL' || p === 'OG' || p === 'C' || p === 'OC') return 'IOL';
+  if (p === 'IOL' || p === 'OG' || p === 'G' || p === 'C' || p === 'OC') return 'IOL';
   if (p === 'S' || p === 'SS' || p === 'FS' || p === 'STAR') return 'S';
   if (p === 'CB') return 'CB';
   if (p === 'DT' || p === 'NT' || p === 'DL' || p === 'IDL') return 'IDL';
@@ -77,7 +77,7 @@ function portalRoomForPos(raw) {
   if (p === 'LB' || p === 'ILB' || p === 'OLB' || p === 'MIKE' || p === 'WILL') return 'LB';
   if (p === 'EDGE' || p === 'DE' || p === 'JACK') return 'EDGE';
   if (p === 'WR') return 'WR';
-  if (p === 'RB') return 'RB';
+  if (p === 'RB' || p === 'HB') return 'RB';
   if (p === 'TE') return 'TE';
   return null;
 }
@@ -155,10 +155,14 @@ function stripParen(raw) {
     .trim();
 }
 
+function calendarYmdInEt(at = new Date()) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(at);
+}
+
 function daysUntilYmd(ymd, at = new Date()) {
   const target = Date.parse(`${ymd}T00:00:00Z`);
-  if (!Number.isFinite(target)) return null;
-  const now = Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate());
+  const now = Date.parse(`${calendarYmdInEt(at)}T00:00:00Z`);
+  if (!Number.isFinite(target) || !Number.isFinite(now)) return null;
   return Math.max(0, Math.round((target - now) / 86400000));
 }
 
@@ -307,7 +311,7 @@ function getFanPortalPrep(at = new Date()) {
     fanShip: false,
     status: 'prep',
     namesLandWhen:
-      'GatorVault call sheets: hole, not NFL Day 1-2, PFF and snaps, hunt frame. In-portal stamp when On3 or the beat verifies.',
+      'Call sheets on every room. PFF scan until they enter. Stamp when On3 or the beat verifies.',
     season,
     window: {
       opens: research.window.opens,

@@ -111,6 +111,33 @@ function frameFitPoints(player, room) {
     if (inches != null && inches >= 72 && wt != null && wt >= 205) return 4;
     return 0;
   }
+  if (pos === 'LB' || pos === 'ILB' || pos === 'MIKE' || pos === 'WILL') {
+    if (inches != null && inches >= 73 && wt != null && wt >= 230) return 6;
+    return 0;
+  }
+  if (pos === 'EDGE' || pos === 'DE' || pos === 'JACK') {
+    if (inches != null && inches >= 75 && wt != null && wt >= 240) return 8;
+    if (inches != null && inches >= 73 && wt != null && wt >= 245) return 4;
+    return 0;
+  }
+  if (pos === 'WR') {
+    if (inches != null && inches >= 75 && wt != null && wt >= 200) return 6;
+    if (inches != null && inches >= 73) return 3;
+    return 0;
+  }
+  if (pos === 'RB' || pos === 'HB') {
+    if (wt != null && wt >= 210) return 4;
+    return 0;
+  }
+  if (pos === 'TE') {
+    if (inches != null && inches >= 76 && wt != null && wt >= 245) return 6;
+    return 0;
+  }
+  if (pos === 'IOL' || pos === 'OG' || pos === 'G' || pos === 'C' || pos === 'OC') {
+    if (inches != null && inches >= 75 && wt != null && wt >= 310) return 6;
+    if (wt != null && wt >= 300) return 3;
+    return 0;
+  }
   return 0;
 }
 

@@ -188,7 +188,7 @@ test('PFF scan board puts at least 5 Buy-scored calls on each hunt room', async 
     on3: [],
   });
   assert.equal(report.fanShip, false);
-  for (const room of ['OT', 'S', 'QB', 'CB', 'IDL']) {
+  for (const room of ['OT', 'S', 'QB', 'CB', 'IDL', 'LB', 'EDGE', 'WR', 'RB', 'TE', 'IOL']) {
     const rows = report.rooms[room] || [];
     assert.ok(rows.length >= 5, `${room} has ${rows.length}`);
     for (const row of rows) {
@@ -215,7 +215,7 @@ test('PFF scan board puts at least 5 Buy-scored calls on each hunt room', async 
   assert.ok(bejarano);
   assert.equal(bejarano.announcedPortal, true);
   assert.equal(bejarano.school, 'Houston Christian');
-  for (const room of ['OT', 'S', 'QB', 'CB', 'IDL']) {
+  for (const room of ['OT', 'S', 'QB', 'CB', 'IDL', 'LB', 'EDGE', 'WR', 'RB', 'TE', 'IOL']) {
     const p4 = (report.rooms[room] || []).filter((row) => row.productionPath === 'p4-starter');
     assert.ok(p4.length >= 2, `${room} P4 mix ${p4.length}`);
   }

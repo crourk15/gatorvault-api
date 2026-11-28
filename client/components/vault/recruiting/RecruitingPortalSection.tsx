@@ -68,7 +68,6 @@ function CallCards({ rows }: { rows: FanPortalPrepChip[] }): React.ReactElement 
                 )}
               </div>
               {meta.length ? <p className="gv-rh-portal-room__call-meta">{meta.join(' · ')}</p> : null}
-              {chip.note ? <p className="gv-rh-portal-room__call-note">{chip.note}</p> : null}
             </li>
           );
         })}
@@ -109,21 +108,13 @@ function isHuntRoom(tier: string): boolean {
   return tier === 'must-add' || tier === 'high';
 }
 
-function RoomCard({
-  room,
-  compact,
-}: {
-  room: FanPortalPrepRoom;
-  compact?: boolean;
-}): React.ReactElement {
+function RoomCard({ room }: { room: FanPortalPrepRoom }): React.ReactElement {
   const signed = (room.alreadySigned || []).map(portalChip).filter(Boolean) as FanPortalPrepChip[];
   const fillers = (room.gapFillers || []).map(portalChip).filter(Boolean) as FanPortalPrepChip[];
   const scans = (room.scanTargets || []).map(portalChip).filter(Boolean) as FanPortalPrepChip[];
   const hunt = room.hunt || room.dek;
   return (
-    <li
-      className={`gv-rh-portal-room gv-rh-portal-room--${room.tier}${compact ? ' gv-rh-portal-room--hold' : ''}`}
-    >
+    <li className={`gv-rh-portal-room gv-rh-portal-room--${room.tier}`}>
       <span className="gv-rh-portal-room__rank">#{room.rank}</span>
       <div className="gv-rh-portal-room__main">
         <div className="gv-rh-portal-room__head">
@@ -134,21 +125,15 @@ function RoomCard({
         <RoomChips label="On the 2027 board" rows={signed} kind="signed" />
         <CallCards rows={scans} />
         <RoomChips label="Fits this hole" rows={fillers} kind="gap" />
-        {!compact && !fillers.length && !scans.length ? (
-          <p className="gv-rh-portal-room__empty-gap" data-testid={`portal-gap-empty-${room.room}`}>
-            Scanning On3 and the beat for a college transfer who can start this room.
-          </p>
-        ) : null}
       </div>
     </li>
   );
 }
 
-/** FutureCast Portal Room — roster holes first, then only verified gap-fillers. */
+/** FutureCast Portal Room — ranked holes with GatorVault calls on every room. */
 export function PortalList(): React.ReactElement {
   const [prep, setPrep] = useState<FanPortalPrep>(PORTAL_PREP_SEED);
   const [incoming, setIncoming] = useState<RecruitingBoardPlayer[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -163,19 +148,16 @@ export function PortalList(): React.ReactElement {
       .catch(() => {
         if (cancelled) return;
         setIncoming([]);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
       });
     return () => {
       cancelled = true;
     };
   }, []);
 
-  const daysLeft = useMemo(
-    () => daysUntilPortalOpen(prep.window.opens),
-    [prep.window.opens]
-  );
+  const daysLeft = useMemo(() => {
+    if (typeof prep.window.daysUntilOpen === 'number') return prep.window.daysUntilOpen;
+    return daysUntilPortalOpen(prep.window.opens);
+  }, [prep.window.daysUntilOpen, prep.window.opens]);
   const windowOpen = prep.season?.active === true;
   const huntRooms = (prep.rooms || []).filter((row) => isHuntRoom(row.tier));
   const holdRooms = (prep.rooms || []).filter((row) => !isHuntRoom(row.tier));
@@ -190,9 +172,7 @@ export function PortalList(): React.ReactElement {
         <p className="fc-portal-room__kicker">{prep.window.label}</p>
         <h2 className="fc-portal-room__title">Portal Room</h2>
         <p className="fc-portal-room__dek">
-          {prep.thesis.addCount}. {prep.thesis.not}{' '}
-          {prep.namesLandWhen ||
-            'GatorVault call sheets are a PFF/production scan. In-portal stamp when On3 or the beat verifies.'}
+          {prep.thesis.addCount}. {prep.thesis.not} {prep.thesis.line}
         </p>
         <div className="fc-portal-room__pills" role="list">
           <span role="listitem">
@@ -203,31 +183,15 @@ export function PortalList(): React.ReactElement {
           </span>
           <span role="listitem">{prep.thesis.addCount.replace(/ difference makers$/i, '') || '10–12'}</span>
           <span role="listitem">
-            {gapCount ? `${gapCount} GatorVault call${gapCount === 1 ? '' : 's'}` : 'Scanning'}
+            {gapCount ? `${gapCount} GatorVault call${gapCount === 1 ? '' : 's'}` : 'Board warming'}
           </span>
         </div>
-        <ol className="fc-portal-room__steps" data-testid="portal-room-steps">
-          <li>
-            <strong>Hole</strong>
-            What the upcoming roster still needs.
-          </li>
-          <li>
-            <strong>Scan</strong>
-            PFF grade and starter snaps on the hole — not a rumor, not in the portal until stamped.
-          </li>
-          <li>
-            <strong>Class</strong>
-            He joins Recruiting with a Portal transfer stamp.
-          </li>
-        </ol>
       </header>
 
       <p className="fc-portal-room__note" data-testid="portal-incoming-empty">
-        {loading
-          ? 'Loading verified names…'
-          : incoming.length || gapCount
-            ? 'GatorVault calls fill the hole. Entering-portal stamp is On3 or the beat. PFF scan is not a commit.'
-            : 'Scanning On3 and the beat. High-school remaining targets stay on Recruiting.'}
+        {incoming.length
+          ? 'Verified portal names sit on Recruiting with a transfer stamp. These call sheets are the hunt.'
+          : 'PFF scan is not a commit. Entering-portal stamp is On3 or the beat.'}
       </p>
 
       <div className="gv-rh-portal-prep__board">
@@ -244,7 +208,7 @@ export function PortalList(): React.ReactElement {
           <h3 className="gv-rh-portal-prep__section-title">Hold the room</h3>
           <ol className="gv-rh-portal-prep__rooms gv-rh-portal-prep__rooms--hold" data-testid="portal-hold-rooms">
             {holdRooms.map((room) => (
-              <RoomCard key={room.room} room={room} compact />
+              <RoomCard key={room.room} room={room} />
             ))}
           </ol>
         </div>
