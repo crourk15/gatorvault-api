@@ -34,8 +34,8 @@ export function RecruitingHubPanelView(): React.ReactElement {
   return (
     <div className="rh-panel-view" data-testid="rh-panel-view">
       <div className="rh-panel-view__toolbar rh-frame">
-        <a href="/vault/recruiting/" className="rh-panel-view__back">
-          ← Class board
+        <a href="/vault/recruiting/2027/commits" className="rh-panel-view__back">
+          ← 2027 class
         </a>
       </div>
       <StickyTabsBar

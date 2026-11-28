@@ -71,6 +71,7 @@ export function EliteCommitBoard(_props: Props = {}): React.ReactElement {
   const { data, loading, error } = useHubBundleSection({
     select: selectCommits,
     fetchFallback: fetchCommits,
+    year,
   });
 
   return (

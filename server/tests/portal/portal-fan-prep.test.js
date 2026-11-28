@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { getFanPortalPrep } = require('../../lib/portal-fan-prep');
+const { getFanPortalPrep, getFanPortalPrepLive, chipName } = require('../../lib/portal-fan-prep');
 const { fanPortalCandidatesFromResearch } = require('../../lib/portal-winter-research');
 const { getPortalBoard } = require('../../lib/recruiting-store');
 
@@ -47,16 +47,36 @@ test('fan incoming portal board stays empty until Charles ships names', async ()
   assert.equal(board.incoming.length, 0);
 });
 
-test('portal-prep first-paint seed matches live fan rooms', () => {
+test('portal-prep first-paint seed matches live fan rooms', async () => {
   const fs = require('fs');
   const path = require('path');
   const seedPath = path.join(__dirname, '../../../client/lib/portal-prep-seed.json');
   const seed = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
-  const prep = getFanPortalPrep(new Date('2026-11-25T18:00:00Z'));
+  const prep = await getFanPortalPrepLive(new Date('2026-11-25T18:00:00Z'));
   assert.equal(seed.prep.fanShip, false);
   assert.deepEqual(
     seed.prep.rooms.map((row) => row.room),
     prep.rooms.map((row) => row.room)
   );
   assert.equal(seed.prep.window.opens, '2027-01-04');
+});
+
+test('live portal rooms use the 2027 class Florida is actually recruiting', async () => {
+  const prep = await getFanPortalPrepLive(new Date('2026-11-25T18:00:00Z'));
+  const byRoom = Object.fromEntries(prep.rooms.map((row) => [row.room, row]));
+  const otNames = (byRoom.OT.alreadySigned || []).map(chipName);
+  const iolNames = (byRoom.IOL.alreadySigned || []).map(chipName);
+  const rbRecruiting = (byRoom.RB.stillRecruiting || []).map(chipName);
+  assert.ok(otNames.includes('Elijah Hutcheson'));
+  assert.ok(otNames.includes('Moreno Fisher'));
+  assert.equal(otNames.includes('Maxwell Hiller'), false);
+  assert.equal(otNames.includes('Peyton Miller'), false);
+  assert.ok(iolNames.includes('Maxwell Hiller'));
+  assert.ok(iolNames.includes('Peyton Miller'));
+  assert.ok(rbRecruiting.includes('Tranard Roberts'));
+  assert.equal(prep.incomingCount, 0);
+  const blob = JSON.stringify(prep);
+  for (const name of OUTGOING_DESK_NAMES) {
+    assert.equal(blob.includes(name), false, `live prep leaked ${name}`);
+  }
 });

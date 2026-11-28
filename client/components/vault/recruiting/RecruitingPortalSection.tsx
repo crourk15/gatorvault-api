@@ -9,12 +9,70 @@ import { playerProfilePath } from '@/lib/player-routes';
 import {
   PORTAL_PREP_SEED,
   daysUntilPortalOpen,
+  portalChip,
   type FanPortalPrep,
+  type FanPortalPrepChip,
 } from '@/lib/portal-prep';
 import { RecruitingPanelHeader } from '@/components/recruiting-hub/RecruitingPanelHeader';
+import { EliteCommitBoard } from '@/components/recruiting-hub/elite/EliteCommitBoard';
+import { RemainingTargetsStrip } from '@/components/recruiting-hub/elite/RemainingTargetsStrip';
+import { RecruitingHubBundleProvider } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
+import { useRecruitingHubBundle } from '@/components/recruiting-hub/elite/useRecruitingHubBundle';
+import '@/components/recruiting-hub/elite/recruiting-hub.css';
 
 function incomingName(p: RecruitingBoardPlayer): string {
   return String(p.name || '').trim() || 'Portal target';
+}
+
+function chipHref(chip: FanPortalPrepChip): string {
+  return playerProfilePath(chip.slug, 'HIGH_SCHOOL', true, chip.name, 'recruiting');
+}
+
+function chipLabel(chip: FanPortalPrepChip): string {
+  const bits = [chip.name];
+  if (chip.natlRank) bits.push(`#${chip.natlRank}`);
+  if (chip.status === 'flip' && chip.committedTo) bits.push(chip.committedTo);
+  return bits.join(' · ');
+}
+
+function RoomChips({
+  label,
+  rows,
+  kind,
+}: {
+  label: string;
+  rows: FanPortalPrepChip[];
+  kind: 'signed' | 'recruiting';
+}): React.ReactElement | null {
+  if (!rows.length) return null;
+  return (
+    <div className={`gv-rh-portal-room__chips gv-rh-portal-room__chips--${kind}`}>
+      <p className="gv-rh-portal-room__chip-label">{label}</p>
+      <ul className="gv-rh-portal-room__signed">
+        {rows.map((chip) => {
+          const href = chip.slug ? chipHref(chip) : '';
+          const text = chipLabel(chip);
+          return (
+            <li key={chip.slug || chip.name}>
+              {href ? <a href={href}>{text}</a> : text}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function PortalClassList(): React.ReactElement {
+  const bundle = useRecruitingHubBundle(2027);
+  return (
+    <RecruitingHubBundleProvider value={bundle}>
+      <div className="gv-rh-portal-prep__class" data-testid="portal-class-list">
+        <EliteCommitBoard year={2027} />
+        <RemainingTargetsStrip year={2027} />
+      </div>
+    </RecruitingHubBundleProvider>
+  );
 }
 
 export function PortalList(): React.ReactElement {
@@ -124,37 +182,44 @@ export function PortalList(): React.ReactElement {
           className="gv-rh-portal-prep__empty gv-rh-portal-prep__empty--inline"
           data-testid="portal-incoming-empty"
         >
-          {loading ? 'Loading verified names…' : 'Incoming empty until a name is verified. The hunt is the rooms.'}
+          {loading
+            ? 'Loading verified names…'
+            : 'Incoming portal names stay empty until a transfer is verified. The 2027 class below is the live board.'}
         </p>
       )}
 
       <div className="gv-rh-portal-prep__board">
         <h3 className="gv-rh-portal-prep__section-title">Position rooms</h3>
         <ol className="gv-rh-portal-prep__rooms" data-testid="portal-rooms">
-          {prep.rooms.map((room) => (
-            <li key={room.room} className={`gv-rh-portal-room gv-rh-portal-room--${room.tier}`}>
-              <span className="gv-rh-portal-room__rank">#{room.rank}</span>
-              <div className="gv-rh-portal-room__main">
-                <div className="gv-rh-portal-room__head">
-                  <h3 className="gv-rh-portal-room__pos">{room.room}</h3>
-                  <span className="gv-rh-portal-room__tier">{room.tierLabel}</span>
+          {prep.rooms.map((room) => {
+            const signed = (room.alreadySigned || []).map(portalChip).filter(Boolean) as FanPortalPrepChip[];
+            const recruiting = (room.stillRecruiting || []).map(portalChip).filter(Boolean) as FanPortalPrepChip[];
+            return (
+              <li key={room.room} className={`gv-rh-portal-room gv-rh-portal-room--${room.tier}`}>
+                <span className="gv-rh-portal-room__rank">#{room.rank}</span>
+                <div className="gv-rh-portal-room__main">
+                  <div className="gv-rh-portal-room__head">
+                    <h3 className="gv-rh-portal-room__pos">{room.room}</h3>
+                    <span className="gv-rh-portal-room__tier">{room.tierLabel}</span>
+                  </div>
+                  <p className="gv-rh-portal-room__hunt">{room.hunt || room.dek}</p>
+                  {room.dek && room.hunt && room.hunt !== room.dek ? (
+                    <p className="gv-rh-portal-room__dek">{room.dek}</p>
+                  ) : null}
+                  <RoomChips label="2027 commits" rows={signed} kind="signed" />
+                  <RoomChips
+                    label="Still recruiting"
+                    rows={recruiting}
+                    kind="recruiting"
+                  />
                 </div>
-                <p className="gv-rh-portal-room__hunt">{room.hunt || room.dek}</p>
-                {room.dek && room.hunt && room.hunt !== room.dek ? (
-                  <p className="gv-rh-portal-room__dek">{room.dek}</p>
-                ) : null}
-                {room.alreadySigned.length > 0 ? (
-                  <ul className="gv-rh-portal-room__signed">
-                    {room.alreadySigned.map((name) => (
-                      <li key={name}>{name}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </div>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ol>
       </div>
+
+      <PortalClassList />
     </section>
   );
 }

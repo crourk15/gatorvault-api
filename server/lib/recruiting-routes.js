@@ -12,7 +12,7 @@ const { enrichBoard } = require('./recruiting-board-enrich');
 const { getLiveBoardTargets } = require('./live-board-targets');
 const { createMemoryCache } = require('./memory-cache');
 const { mountRecruitingHubRoutes } = require('./recruiting-hub-routes');
-const { getFanPortalPrep } = require('./portal-fan-prep');
+const { getFanPortalPrepLive } = require('./portal-fan-prep');
 
 const boardCache = createMemoryCache(parseInt(process.env.RECRUITING_BOARD_CACHE_MS || '45000', 10));
 
@@ -106,7 +106,7 @@ function mountRecruitingRoutes(app) {
       }));
       let prep = null;
       try {
-        prep = getFanPortalPrep();
+        prep = await getFanPortalPrepLive();
       } catch (_err) {
         prep = null;
       }

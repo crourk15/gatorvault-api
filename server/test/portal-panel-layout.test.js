@@ -24,6 +24,9 @@ describe('recruiting panel elite layout', () => {
     assert.match(src, /title="Portal War Room"/);
     assert.doesNotMatch(src, /Football portal opens January 4, 2027/);
     assert.match(src, /RecruitingPanelHeader/);
+    assert.match(src, /EliteCommitBoard year=\{2027\}/);
+    assert.match(src, /RemainingTargetsStrip year=\{2027\}/);
+    assert.match(src, /portal-class-list/);
   });
 
   it('hides the class hero while a panel tab is open', () => {
