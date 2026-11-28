@@ -17,6 +17,24 @@ const ROOMS = [
   { room: 'WR', tier: 'stable', rank: 8 },
 ];
 
+test('Day 1-2 NFL projections are not portal buys', () => {
+  assert.equal(
+    isPortalTargetCandidate(
+      {
+        name: 'Lance Heard',
+        position: 'OT',
+        fromSchool: 'Kentucky',
+        conference: 'SEC',
+        source: 'pff',
+        nflBound: true,
+        nflDraftRound: 2,
+      },
+      'OT'
+    ),
+    false
+  );
+});
+
 test('rejects invented / HS / Florida-commit names', () => {
   assert.equal(looksLikePersonName('A verified OT'), false);
   assert.equal(
@@ -143,6 +161,8 @@ test('PFF scan board puts at least 5 Buy-scored calls on each hunt room', async 
   }
   const ot = report.rooms.OT.map((r) => r.name);
   assert.ok(ot.includes('Matt Hofer'));
+  assert.equal(ot.includes('Lance Heard'), false);
+  assert.ok(ot.includes('Moshood Giwa'));
   const safeties = report.rooms.S;
   const bejarano = safeties.find((r) => r.name === 'Javon Bejarano');
   assert.ok(bejarano);

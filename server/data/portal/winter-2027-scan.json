@@ -1,10 +1,10 @@
 {
   "ok": true,
   "fanShip": false,
-  "generatedAt": "2026-11-28T03:40:00Z",
+  "generatedAt": "2026-11-28T03:50:00Z",
   "season": 2026,
   "source": "pff",
-  "sourceNote": "PFF NCAA 2026 season grades pages, pulled Nov 27 2026 ET. Not in the portal unless announcedPortal is true. Do not invent grades.",
+  "sourceNote": "PFF NCAA 2026 season grades, pulled Nov 27 2026 ET. G5/FCS high-PFF is the buyable market. Day 1-2 2027 NFL projections are blocked. Not in the portal unless announcedPortal is true. Do not invent grades.",
   "sourceUrls": {
     "OT": "https://www.pff.com/grades/ncaa/t",
     "S": "https://www.pff.com/grades/ncaa/s",
@@ -28,18 +28,19 @@
       "sourceUrl": "https://www.pff.com/grades/ncaa/t"
     },
     {
-      "name": "Lance Heard",
+      "name": "Moshood Giwa",
       "position": "OT",
-      "fromSchool": "Kentucky",
-      "conference": "SEC",
+      "fromSchool": "Rutgers",
+      "conference": "Big Ten",
       "conferenceTier": "p4",
-      "jersey": "53",
+      "jersey": "74",
       "ht": "6'6\"",
-      "wt": 325,
-      "pffGrade": 84.0,
-      "snaps": 732,
+      "wt": 320,
+      "pffGrade": 77.8,
+      "snaps": 641,
       "production": "high",
-      "note": "SEC tackle. 6'6 325. PFF 84.0 on 732 snaps. P4 starter-volume path. Not in the portal yet.",
+      "nflBound": false,
+      "note": "Big Ten tackle. 6'6 320. PFF 77.8 on 641 snaps. Late-round / priority UDFA — not a 2027 Day 1-2. P4 starter-volume path. Not in the portal yet.",
       "sourceUrl": "https://www.pff.com/grades/ncaa/t"
     },
     {
@@ -299,6 +300,16 @@
       "production": "high",
       "note": "AAC interior. 6'3 285. PFF 79.2 on 558 snaps — the volume play. Not in the portal yet.",
       "sourceUrl": "https://www.pff.com/grades/ncaa/di"
+    }
+  ],
+  "blockedNfl": [
+    {
+      "name": "Lance Heard",
+      "position": "OT",
+      "fromSchool": "Kentucky",
+      "nflDraftRound": 2,
+      "reason": "2027 NFL consensus Round 2 / PFN OT3 / 92 mock appearances. Not a portal buy.",
+      "sourceUrl": "https://www.nflmockdraftdatabase.com/players/2027/lance-heard"
     }
   ]
 }

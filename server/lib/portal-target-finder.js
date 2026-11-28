@@ -55,6 +55,16 @@ function isVerifiedPortalSource(row) {
   return status.includes('portal');
 }
 
+/** Day 1–2 2027 NFL projections are not GatorVault portal buys. */
+function isNflBound(row) {
+  if (!row) return false;
+  if (row.nflBound === true) return true;
+  const round = Number(row.nflDraftRound ?? row.draftRound);
+  if (Number.isFinite(round) && round >= 1 && round <= 3) return true;
+  const band = String(row.nflProjection || row.draftProjection || '').toLowerCase();
+  return /\b(r1|r2|r3|1st round|2nd round|3rd round|first round|second round|third round)\b/.test(band);
+}
+
 /** Hard gate: verified college transfer who fills a live hole. */
 function isPortalTargetCandidate(row, room) {
   if (!row || !room) return false;
@@ -63,6 +73,7 @@ function isPortalTargetCandidate(row, room) {
   if (!isVerifiedPortalSource(row)) return false;
   if (String(row.category || '').toLowerCase() === 'recruit') return false;
   if (String(row.status || '').toLowerCase() === 'portal_out') return false;
+  if (isNflBound(row)) return false;
   if (isUfPortalCommit(row)) return false;
   const from = fromSchoolOf(row);
   if (!from || isFloridaSchoolNameSafe(from)) return false;
@@ -98,6 +109,8 @@ function toCandidate(row, source) {
     jersey: row.jersey ?? row.number ?? null,
     note: row.note || null,
     announcedPortal: !!row.announcedPortal,
+    nflBound: isNflBound(row),
+    nflDraftRound: row.nflDraftRound ?? row.draftRound ?? null,
     production: row.production || null,
     stars: row.stars ?? null,
     natlRank: row.natlRank ?? row.natl ?? null,
@@ -144,7 +157,21 @@ function loadPffScanBoard() {
     const buf = fs.readFileSync(SCAN_BOARD);
     const text = buf[1] === 0 ? buf.toString('utf16le') : buf.toString('utf8');
     const data = JSON.parse(text.replace(/^\uFEFF/, ''));
-    return Array.isArray(data && data.players) ? data.players : [];
+    const players = Array.isArray(data && data.players) ? data.players : [];
+    const blocked = new Set(
+      (Array.isArray(data && data.blockedNfl) ? data.blockedNfl : []).map((row) =>
+        String(row && row.name ? row.name : '')
+          .trim()
+          .toLowerCase()
+      )
+    );
+    return players.filter((row) => {
+      const name = String(row && row.name ? row.name : '')
+        .trim()
+        .toLowerCase();
+      if (name && blocked.has(name)) return false;
+      return !isNflBound(row);
+    });
   } catch {
     return [];
   }
@@ -249,4 +276,5 @@ module.exports = {
   toScanChip,
   looksLikePersonName,
   loadPffScanBoard,
+  isNflBound,
 };
