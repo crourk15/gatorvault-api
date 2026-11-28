@@ -7,7 +7,7 @@ const LINKS = [
   { href: '/vault/futurecast', label: 'FutureCast' },
   { href: '/vault/futurecast#movement', label: 'Movement Intel' },
   { href: '/vault/recruiting/?tab=scouting', label: 'Scouting' },
-  { href: '/vault/recruiting/?tab=portal', label: 'Portal' },
+  { href: '/vault/futurecast#portal', label: 'Portal Room' },
   { href: '/vault/recruiting/?tab=rankings', label: 'Rankings' },
 ];
 

@@ -89,7 +89,7 @@ export function buildHomeMetricCards(input: {
       value: portalStable ? 'Stable' : `${snap?.portalActive ?? 0} active`,
       meta: 'Watchlist',
       tone: portalStable ? 'neutral' : 'hot',
-      href: `${SITE_ROUTES.recruiting}?tab=portal`,
+      href: `${SITE_ROUTES.futurecast}#portal`,
       sparkline: DEFAULT_SPARK,
     },
     {

@@ -72,12 +72,11 @@ export function isVaultPath(pathname?: string): boolean {
 }
 
 export function vaultPortalBackHref(pathname: string): string {
-  if (isVaultPath(pathname)) return '/vault/recruiting/?tab=portal';
-  return '/vault/recruiting/?tab=portal';
+  return '/vault/futurecast#portal';
 }
 
 export function vaultPortalBackLabel(pathname: string): string {
-  return isVaultPath(pathname) ? '← Recruiting Hub · Portal' : '← Portal';
+  return isVaultPath(pathname) ? '← FutureCast · Portal Room' : '← Portal Room';
 }
 
 export function vaultFutureCastBackHref(pathname: string): string {

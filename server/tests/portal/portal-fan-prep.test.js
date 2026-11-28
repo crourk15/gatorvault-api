@@ -1,6 +1,11 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { getFanPortalPrep, getFanPortalPrepLive, chipName } = require('../../lib/portal-fan-prep');
+const {
+  getFanPortalPrep,
+  getFanPortalPrepLive,
+  chipName,
+  portalGapFitsNeed,
+} = require('../../lib/portal-fan-prep');
 const { fanPortalCandidatesFromResearch } = require('../../lib/portal-winter-research');
 const { getPortalBoard } = require('../../lib/recruiting-store');
 
@@ -61,22 +66,46 @@ test('portal-prep first-paint seed matches live fan rooms', async () => {
   assert.equal(seed.prep.window.opens, '2027-01-04');
 });
 
-test('live portal rooms use the 2027 class Florida is actually recruiting', async () => {
+test('live portal rooms show HS signed context, not remaining HS targets', async () => {
   const prep = await getFanPortalPrepLive(new Date('2026-11-25T18:00:00Z'));
   const byRoom = Object.fromEntries(prep.rooms.map((row) => [row.room, row]));
   const otNames = (byRoom.OT.alreadySigned || []).map(chipName);
   const iolNames = (byRoom.IOL.alreadySigned || []).map(chipName);
   const rbRecruiting = (byRoom.RB.stillRecruiting || []).map(chipName);
+  const rbGaps = (byRoom.RB.gapFillers || []).map(chipName);
   assert.ok(otNames.includes('Elijah Hutcheson'));
   assert.ok(otNames.includes('Moreno Fisher'));
   assert.equal(otNames.includes('Maxwell Hiller'), false);
   assert.equal(otNames.includes('Peyton Miller'), false);
   assert.ok(iolNames.includes('Maxwell Hiller'));
   assert.ok(iolNames.includes('Peyton Miller'));
-  assert.ok(rbRecruiting.includes('Tranard Roberts'));
+  assert.equal(rbRecruiting.includes('Tranard Roberts'), false);
+  assert.equal(rbGaps.includes('Tranard Roberts'), false);
+  assert.equal((byRoom.OT.gapFillers || []).length, 0);
   assert.equal(prep.incomingCount, 0);
   const blob = JSON.stringify(prep);
   for (const name of OUTGOING_DESK_NAMES) {
     assert.equal(blob.includes(name), false, `live prep leaked ${name}`);
   }
+});
+
+test('gap fillers must be portal players who fill that hole', () => {
+  const fit = {
+    category: 'portal',
+    name: 'Sample Tackle',
+    position: 'OT',
+    school: 'Georgia',
+  };
+  assert.equal(portalGapFitsNeed(fit, 'OT'), true);
+  assert.equal(portalGapFitsNeed({ ...fit, position: 'WR' }, 'OT'), false);
+  assert.equal(portalGapFitsNeed({ ...fit, category: 'recruit' }, 'OT'), false);
+  assert.equal(portalGapFitsNeed({ ...fit, committedTo: 'Florida' }, 'OT'), false);
+  assert.equal(portalGapFitsNeed({ ...fit, school: '' }, 'OT'), false);
+  assert.equal(
+    portalGapFitsNeed(
+      { category: 'recruit', name: 'Tranard Roberts', position: 'RB', school: 'IMG' },
+      'RB'
+    ),
+    false
+  );
 });

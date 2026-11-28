@@ -51,7 +51,8 @@
             "committedTo": "Florida"
           }
         ],
-        "stillRecruiting": []
+        "stillRecruiting": [],
+        "gapFillers": []
       },
       {
         "rank": 2,
@@ -71,17 +72,8 @@
             "committedTo": "Florida"
           }
         ],
-        "stillRecruiting": [
-          {
-            "name": "Andre Hyppolite",
-            "slug": "andre-hyppolite",
-            "position": "S",
-            "stars": null,
-            "natlRank": null,
-            "status": "flip",
-            "committedTo": "Miami"
-          }
-        ]
+        "stillRecruiting": [],
+        "gapFillers": []
       },
       {
         "rank": 3,
@@ -128,17 +120,8 @@
             "committedTo": "Florida"
           }
         ],
-        "stillRecruiting": [
-          {
-            "name": "Ace Alston",
-            "slug": "ace-alston",
-            "position": "CB",
-            "stars": null,
-            "natlRank": null,
-            "status": "flip",
-            "committedTo": "Notre Dame"
-          }
-        ]
+        "stillRecruiting": [],
+        "gapFillers": []
       },
       {
         "rank": 4,
@@ -167,17 +150,8 @@
             "committedTo": "Florida"
           }
         ],
-        "stillRecruiting": [
-          {
-            "name": "Jalen Brewster",
-            "slug": "jalen-brewster",
-            "position": "DL",
-            "stars": null,
-            "natlRank": null,
-            "status": "flip",
-            "committedTo": "Texas Tech"
-          }
-        ]
+        "stillRecruiting": [],
+        "gapFillers": []
       },
       {
         "rank": 5,
@@ -197,7 +171,8 @@
             "committedTo": "Florida"
           }
         ],
-        "stillRecruiting": []
+        "stillRecruiting": [],
+        "gapFillers": []
       },
       {
         "rank": 6,
@@ -235,7 +210,8 @@
             "committedTo": "Florida"
           }
         ],
-        "stillRecruiting": []
+        "stillRecruiting": [],
+        "gapFillers": []
       },
       {
         "rank": 7,
@@ -255,7 +231,8 @@
             "committedTo": "Florida"
           }
         ],
-        "stillRecruiting": []
+        "stillRecruiting": [],
+        "gapFillers": []
       },
       {
         "rank": 8,
@@ -302,7 +279,8 @@
             "committedTo": "Florida"
           }
         ],
-        "stillRecruiting": []
+        "stillRecruiting": [],
+        "gapFillers": []
       },
       {
         "rank": 9,
@@ -331,26 +309,8 @@
             "committedTo": "Florida"
           }
         ],
-        "stillRecruiting": [
-          {
-            "name": "Keldrid Ben",
-            "slug": "keldrid-ben",
-            "position": "RB",
-            "stars": null,
-            "natlRank": null,
-            "status": "flip",
-            "committedTo": "Oklahoma"
-          },
-          {
-            "name": "Tranard Roberts",
-            "slug": "tranard-roberts",
-            "position": "RB",
-            "stars": null,
-            "natlRank": null,
-            "status": "target",
-            "committedTo": null
-          }
-        ]
+        "stillRecruiting": [],
+        "gapFillers": []
       },
       {
         "rank": 10,
@@ -379,7 +339,8 @@
             "committedTo": "Florida"
           }
         ],
-        "stillRecruiting": []
+        "stillRecruiting": [],
+        "gapFillers": []
       },
       {
         "rank": 11,
@@ -408,7 +369,8 @@
             "committedTo": "Florida"
           }
         ],
-        "stillRecruiting": []
+        "stillRecruiting": [],
+        "gapFillers": []
       }
     ],
     "mustAdd": [

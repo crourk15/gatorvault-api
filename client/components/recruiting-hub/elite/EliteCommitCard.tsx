@@ -28,7 +28,10 @@ function positionMark(position: string | null | undefined): string {
 /**
  * Pre-NSD language only. Never "Signed" for verbal commits.
  */
-function commitStamp(commit: RhHubCommit): { label: string; tone: 'enrolled' | 'committed' | 'accent' } {
+function commitStamp(commit: RhHubCommit): { label: string; tone: 'enrolled' | 'committed' | 'accent' | 'portal' } {
+  if (commit.origin === 'portal' || /portal|transfer/i.test(String(commit.statusBadge || ''))) {
+    return { label: 'Portal transfer', tone: 'portal' };
+  }
   if (commit.enrolled) return { label: 'Enrolled', tone: 'enrolled' };
   const raw = String(commit.statusBadge || '').trim();
   if (/sign|loi|inked/i.test(raw)) return { label: 'Committed', tone: 'committed' };
@@ -79,6 +82,7 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
     <article
       className="rh-commit-card rh-elite-commit-card rh-elite-commit-card--heat"
       data-testid="rh-elite-commit-card"
+      data-origin={commit.origin === 'portal' ? 'portal' : 'hs'}
     >
       <span className="rh-elite-commit-card__watermark" aria-hidden>
         UF

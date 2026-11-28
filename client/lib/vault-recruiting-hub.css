@@ -1326,9 +1326,17 @@
   text-decoration: none;
 }
 
-.gv-rh-portal-room__chips--recruiting .gv-rh-portal-room__signed li {
+.gv-rh-portal-room__chips--recruiting .gv-rh-portal-room__signed li,
+.gv-rh-portal-room__chips--gap .gv-rh-portal-room__signed li {
   background: rgba(250, 70, 22, 0.16);
   color: #ffd4c4;
+}
+
+.gv-rh-portal-room__empty-gap {
+  margin: 0.45rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: #94a3b8;
 }
 
 .gv-rh-portal-prep__class {

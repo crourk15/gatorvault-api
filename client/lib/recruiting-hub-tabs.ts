@@ -4,7 +4,6 @@ export const RECRUITING_PANEL_TAB_ITEMS: { id: RecruitingHubTab; label: string }
   { id: 'priority', label: 'High Priority' },
   { id: 'intel', label: "Who's Moving" },
   { id: 'scouting', label: 'Scouting' },
-  { id: 'portal', label: 'Portal' },
   { id: 'rankings', label: 'Rankings' },
 ];
 

@@ -162,12 +162,13 @@ Full Ops / Full QA iframes remain under Dashboard / QA as escape hatches.
 
 ### Winter 2027 portal research (desk names / fan prep)
 
-Jump-early board lives in `server/data/portal/winter-2027-research.json`. **`fanShip` stays false.** Fan `/vault/recruiting?tab=portal` shows the elite prep war room (window, 10–12, ranked rooms) from `portal-fan-prep.js`. Incoming names stay off until Charles ships a verified name.
+Jump-early board lives in `server/data/portal/winter-2027-research.json`. **`fanShip` stays false.** Fan Portal Room is **FutureCast → Portal Room** (`/vault/futurecast#portal`). Recruiting stays the class board. Incoming names stay off until a verified transfer fills a roster hole.
 
 - NCAA football window is **January 4–13, 2027** (10 days, first business day after Jan 1). No December football window. No spring football window.
 - Sumrall / Caldwell want **10–12 difference makers**, not 30 practice bodies.
 - Staff/beat rooms: **both tackles**, **secondary**, **IDL if outgoing**, **QB only if the 2027 starter is not already on the roster**.
-- Named portal targets stay empty until a verified beat/On3 item. Do not invent names. Do not upsert `category: portal` from this file.
+- Named portal targets stay empty until a verified beat/On3 item. Do not invent names. Do not upsert `category: portal` from this file. Gap-fillers must `portalGapFitsNeed` (same room, college previous school, not already a Florida commit).
+- When a portal player commits to Florida they land on the recruiting class cards with a **Portal transfer** stamp, then get a Vault Scouting profile the same way as HS (`upsert-vault-film-eval.js`).
 - Loader: `server/lib/portal-winter-research.js`. Fan `getPortalBoard()` must stay empty until a ship call. Fan prep: `GET /api/recruiting/portal` → `prep`.
 
 ### API crash-loop note (Aug 20)

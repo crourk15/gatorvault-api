@@ -20,7 +20,7 @@ export const WELCOME_CARD_HREFS: Record<string, string> = {
   'Staff Notes': '/vault/futurecast#signals',
   'High Priority Targets': WELCOME_LINKS.recruitingHub,
   'Class Rankings': '/vault/recruiting/?tab=rankings',
-  'Portal Tracker': '/vault/recruiting/?tab=portal',
+  'Portal Tracker': '/vault/futurecast#portal',
   'Scouting Reports': '/vault/recruiting/?tab=scouting',
   Highlights: WELCOME_LINKS.filmRoom,
   'Cut-Ups': WELCOME_LINKS.filmRoom,

@@ -27,7 +27,7 @@ const MODULES = [
   {
     title: 'Portal Tracker',
     description: 'January 4–13, 2027. 10–12 difference makers. Names land when verified.',
-    href: '/vault/recruiting?tab=portal',
+    href: '/vault/futurecast#portal',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 7h10v2H7V7zm-2 4h14v2H5v-2zm2 4h10v2H7v-2z" />

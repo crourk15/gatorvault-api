@@ -8,7 +8,7 @@ const LINKS = [
   { href: '#podcast-hub', label: 'Podcasts' },
   { href: '/vault/recruiting', label: 'Recruiting Hub' },
   { href: '/vault/futurecast#movement', label: 'Movement Intel' },
-  { href: '/vault/recruiting/?tab=portal', label: 'Portal' },
+  { href: '/vault/futurecast#portal', label: 'Portal Room' },
 ];
 
 export function LiveFooter(): React.ReactElement {

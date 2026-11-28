@@ -603,13 +603,17 @@ function mapHubCommit(player, classYear) {
   const projection = null;
   const isFutureCommit = classYear >= 2027;
   const stars = effectiveStars(player) || 0;
+  const origin = String(player.category || '').toLowerCase() === 'portal' ? 'portal' : 'hs';
   // Pre-NSD: verbal commits are Committed — never Signed / LOI.
   // Headliner stays as an accent badge; stars live on the card mark/meta chips.
-  const badge = !isFutureCommit
-    ? 'Enrolled'
-    : player.headliner
-      ? 'Headliner'
-      : 'Committed';
+  // Portal transfers get their own stamp so they do not look like HS pledges.
+  const badge = origin === 'portal'
+    ? 'Portal transfer'
+    : !isFutureCommit
+      ? 'Enrolled'
+      : player.headliner
+        ? 'Headliner'
+        : 'Committed';
   return {
     id: slug,
     name: player.name,
@@ -620,6 +624,7 @@ function mapHubCommit(player, classYear) {
     skinny,
     commitDate: formatCommitDate(player),
     statusBadge: badge || undefined,
+    origin,
     profileUrl: profileUrl(player),
     stabilityMeter: null,
     ufPercent: !isFutureCommit && pct > 0 ? `${pct}%` : null,
@@ -642,9 +647,33 @@ function mapHubCommit(player, classYear) {
 }
 
 async function buildHubCommits(year = 2027) {
-  // Match class-overview / ticker counts (HS signing class only — portal has its own board).
+  // Class cards = HS pledges plus UF portal commits (Transfer stamp).
+  // Ticker / class-overview stay HS-only via loadHubHsClassCommits.
+  const { filterBlockedRecruits } = require('./recruiting-blocked-players');
+  const { enrichBoard } = require('./recruiting-board-enrich');
   const { commits } = await loadHubHsClassCommits(year);
-  return commits.map((player) => mapHubCommit(player, year));
+  const portalRaw = filterBlockedRecruits(await store.getHubPortalCommits(year));
+  const portalEnriched = enrichBoard(
+    { classYear: year, commits: portalRaw, targets: [], rankings: null },
+    false
+  );
+  const portal = Array.isArray(portalEnriched?.commits) ? portalEnriched.commits : portalRaw;
+  const seen = new Set(
+    commits.map((p) => String(p.slug || p.id || '').toLowerCase()).filter(Boolean)
+  );
+  const cards = commits.map((player) => mapHubCommit(player, year));
+  for (const player of portal) {
+    const slug = String(player.slug || player.id || '').toLowerCase();
+    if (slug && seen.has(slug)) continue;
+    if (slug) seen.add(slug);
+    cards.push(mapHubCommit({ ...player, category: 'portal' }, year));
+  }
+  return cards.sort((a, b) => {
+    const ar = Number(a.natlRank) > 0 ? Number(a.natlRank) : 9999;
+    const br = Number(b.natlRank) > 0 ? Number(b.natlRank) : 9999;
+    if (ar !== br) return ar - br;
+    return String(a.name).localeCompare(String(b.name));
+  });
 }
 
 async function buildHubClassOverviewAll() {

@@ -1,6 +1,6 @@
 /**
- * Fan-safe winter 2027 portal prep.
- * Rooms, thesis, NCAA window — never named portal candidates.
+ * Fan-safe winter 2027 portal prep (FutureCast Portal Room).
+ * Rooms, thesis, NCAA window — gap-fillers only when they fit a hole.
  * fanShip stays false. getPortalBoard() stays empty until Charles ships names.
  */
 const { loadWinter2027PortalResearch } = require('./portal-winter-research');
@@ -64,13 +64,6 @@ const FAN_COPY = {
   },
 };
 
-const FLIP_WATCH_POS = {
-  'jalen-brewster': 'IDL',
-  'keldrid-ben': 'RB',
-  'andre-hyppolite': 'S',
-  'ace-alston': 'CB',
-};
-
 function portalRoomForPos(raw) {
   const p = String(raw || '')
     .toUpperCase()
@@ -87,6 +80,31 @@ function portalRoomForPos(raw) {
   if (p === 'RB') return 'RB';
   if (p === 'TE') return 'TE';
   return null;
+}
+
+function isFloridaSchoolName(raw) {
+  return /\bflorida\b|\bgators\b/i.test(String(raw || ''));
+}
+
+function isUfPortalCommit(player) {
+  if (!player) return false;
+  if (isFloridaSchoolName(player.committedTo || player.committed_to)) return true;
+  const status = String(player.status || '').toLowerCase();
+  return status === 'portal_in' && isFloridaSchoolName(player.school);
+}
+
+/** Verified college transfer who actually plays the hole — never a random name. */
+function portalGapFitsNeed(player, room) {
+  if (!player || !room) return false;
+  if (String(player.category || '').toLowerCase() !== 'portal') return false;
+  if (String(player.status || '').toLowerCase() === 'portal_out') return false;
+  if (isUfPortalCommit(player)) return false;
+  if (portalRoomForPos(player.position || player.pos) !== room) return false;
+  const name = String(player.name || '').trim();
+  if (!name) return false;
+  const from = String(player.fromSchool || player.previousSchool || player.school || '').trim();
+  if (!from || isFloridaSchoolName(from)) return false;
+  return true;
 }
 
 function toChip(row, status) {
@@ -155,6 +173,7 @@ function fanRooms(needs) {
           return name ? { name, slug: '', position: room, stars: null, natlRank: null, status: 'commit', committedTo: null } : null;
         }).filter(Boolean),
         stillRecruiting: [],
+        gapFillers: [],
       };
     })
     .filter((row) => row.room)
@@ -187,20 +206,15 @@ function ensureIolRoom(rooms, iolChips) {
     hunt: copy.hunt,
     alreadySigned: iolChips,
     stillRecruiting: [],
+    gapFillers: [],
   });
   return rooms.sort((a, b) => a.rank - b.rank);
 }
 
 async function overlayLiveHsClass(prep) {
   const elite = require('./recruiting-hub-elite');
-  const {
-    ALLOWLIST_2027,
-    FLIP_WATCH_2027,
-    FLIP_WATCH_COMMITS_2027,
-    CANONICAL_TARGET_NAMES,
-  } = require('./recruiting-target-allowlist');
+  const store = require('./recruiting-store');
   const { commits } = await elite.loadHubHsClassCommits(2027);
-  const heat = await elite.buildHubHeatIndex(2027);
 
   const signedByRoom = new Map();
   for (const player of commits || []) {
@@ -213,69 +227,38 @@ async function overlayLiveHsClass(prep) {
     signedByRoom.set(room, list);
   }
 
-  const recruitingByRoom = new Map();
-  const seen = new Set();
-  for (const row of heat || []) {
-    const slug = String(row.id || row.slug || '')
-      .trim()
-      .toLowerCase();
-    if (!slug || seen.has(slug)) continue;
-    seen.add(slug);
-    const room = portalRoomForPos(row.position) || FLIP_WATCH_POS[slug] || null;
-    if (!room) continue;
-    const flip = FLIP_WATCH_2027.includes(slug) || Boolean(row.flipWatch);
-    const chip = toChip(
-      {
-        ...row,
-        slug,
-        committedTo: row.committedTo || FLIP_WATCH_COMMITS_2027[slug] || null,
-      },
-      flip ? 'flip' : 'target'
-    );
-    if (!chip) continue;
-    const list = recruitingByRoom.get(room) || [];
-    list.push(chip);
-    recruitingByRoom.set(room, list);
+  let incoming = [];
+  try {
+    const board = await store.getPortalBoard();
+    incoming = Array.isArray(board && board.incoming) ? board.incoming : [];
+  } catch (err) {
+    console.warn('[portal-fan-prep] portal board read failed', err && err.message);
   }
 
-  for (const slug of ALLOWLIST_2027) {
-    if (seen.has(slug)) continue;
-    const room = FLIP_WATCH_POS[slug] || null;
-    if (!room) {
-      // Open hunt with no heat row still belongs on RB if it is Tranard.
-      if (slug === 'tranard-roberts') {
-        const chip = toChip(
-          { name: CANONICAL_TARGET_NAMES[slug] || slug, slug, position: 'RB' },
-          'target'
-        );
-        if (chip) {
-          const list = recruitingByRoom.get('RB') || [];
-          list.push(chip);
-          recruitingByRoom.set('RB', list);
-        }
-      }
-      continue;
-    }
-    const chip = toChip(
-      {
-        name: CANONICAL_TARGET_NAMES[slug] || slug,
-        slug,
-        position: room,
-        committedTo: FLIP_WATCH_COMMITS_2027[slug] || null,
-      },
-      FLIP_WATCH_2027.includes(slug) ? 'flip' : 'target'
-    );
-    if (!chip) continue;
-    const list = recruitingByRoom.get(room) || [];
-    list.push(chip);
-    recruitingByRoom.set(room, list);
-  }
-
-  const rooms = (prep.rooms || []).map((row) => ({
-    ...row,
-    alreadySigned: sortChips(signedByRoom.get(row.room) || []),
-    stillRecruiting: sortChips(recruitingByRoom.get(row.room) || []),
-  }));
+  const rooms = (prep.rooms || []).map((row) => {
+    const fillers = incoming
+      .filter((player) => portalGapFitsNeed(player, row.room))
+      .map((player) =>
+        toChip(
+          {
+            name: player.name,
+            slug: player.slug || player.id,
+            position: player.position || player.pos,
+            stars: player.stars,
+            natlRank: player.natlRank,
+            committedTo: player.fromSchool || player.previousSchool || player.school || null,
+          },
+          'gap'
+        )
+      )
+      .filter(Boolean);
+    return {
+      ...row,
+      alreadySigned: sortChips(signedByRoom.get(row.room) || []),
+      stillRecruiting: [],
+      gapFillers: sortChips(fillers),
+    };
+  });
   ensureIolRoom(rooms, sortChips(signedByRoom.get('IOL') || []));
   return { ...prep, rooms, classYear: 2027 };
 }
@@ -333,6 +316,8 @@ module.exports = {
   getFanPortalPrepLive,
   overlayLiveHsClass,
   portalRoomForPos,
+  portalGapFitsNeed,
+  isUfPortalCommit,
   chipName,
   daysUntilYmd,
 };
