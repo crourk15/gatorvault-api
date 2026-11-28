@@ -13,6 +13,7 @@ import { FutureCastPositionBreakdown } from './FutureCastPositionBreakdown';
 import { FutureCastPortalCrossView } from './FutureCastPortalCrossView';
 import { FutureCastLiveFeed } from './FutureCastLiveFeed';
 import { FutureCastExtendedModules } from './FutureCastExtendedModules';
+import { useFutureCastLabHash } from './useFutureCastLabHash';
 
 type Props = {
   lab: FutureCastLabData;
@@ -29,6 +30,26 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
   const hasSeededBoard =
     (data.masterBoard?.players?.length || 0) > 0 || (highPriority?.length || 0) > 0;
   const pending = lab.secondaryLoading && !hasSeededBoard;
+  const hash = useFutureCastLabHash();
+  const portalFocus = hash === FUTURECAST_LAB_ANCHORS.portal;
+
+  if (portalFocus) {
+    return (
+      <div className="rh-cc-page fc-lab-cc-page fc-lab-cc-page--portal" data-testid="fc-lab-page-desktop">
+        <section id={FUTURECAST_LAB_ANCHORS.portal} className="rh-frame" data-testid="fc-portal-room">
+          {pending ? (
+            <PanelSkeleton minHeight={320} />
+          ) : (
+            <FutureCastPortalCrossView
+              portalPlayers={data.home.portalWatchlist ?? []}
+              masterBoard={data.masterBoard}
+              portalSeason={data.home.portalSeason}
+            />
+          )}
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="rh-cc-page fc-lab-cc-page" data-testid="fc-lab-page-desktop">
@@ -77,18 +98,6 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
           )}
         </div>
       </div>
-
-      <section id={FUTURECAST_LAB_ANCHORS.portal} className="rh-frame" data-testid="fc-portal-room">
-        {pending ? (
-          <PanelSkeleton minHeight={320} />
-        ) : (
-          <FutureCastPortalCrossView
-            portalPlayers={data.home.portalWatchlist ?? []}
-            masterBoard={data.masterBoard}
-            portalSeason={data.home.portalSeason}
-          />
-        )}
-      </section>
 
       <section id={FUTURECAST_LAB_ANCHORS.movement} className="rh-frame">
         {pending ? null : (

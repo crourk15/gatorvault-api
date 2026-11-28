@@ -278,6 +278,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-11-27 | Portal Room tab owns FutureCast (not buried under Chase). Hunt vs Hold board, hole → scan → class steps, no recruiting white-card header. **Live Netlify hydrates after deploy.** | Lab hash focus + Portal Room chrome in the binary. | this PR |
 | 2026-11-27 | Portal Room is a FutureCast tab next to Early Discovery (`#portal`). Recruiting stays class cards. When a portal player commits they get a Portal transfer stamp on the class board. **Live Netlify hydrates after deploy.** | FutureCast nav, PortalList, commit stamp, and route map in the binary. | this PR |
 | 2026-11-27 | Portal War Room shows the live 2027 commit class and remaining targets. OT commits are Hutcheson/Fisher; Hiller/Miller sit at IOL. **Live Netlify hydrates after deploy.** | Portal class list + room chips in the binary. | this PR |
 | 2026-11-26 | Recruiting panel tabs (Portal, Who’s Moving, Scouting, Rankings, Priority) use one command header. Portal is the war room board, not stacked class-hub titles. **Live Netlify hydrates after deploy.** | Panel header, portal CSS, and tab chrome in the binary. | this PR |

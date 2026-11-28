@@ -13,6 +13,7 @@ import { FutureCastPositionBreakdown } from '@/components/futurecast/lab/FutureC
 import { FutureCastPortalCrossView } from '@/components/futurecast/lab/FutureCastPortalCrossView';
 import { FutureCastLiveFeed } from '@/components/futurecast/lab/FutureCastLiveFeed';
 import { FutureCastExtendedModules } from '@/components/futurecast/lab/FutureCastExtendedModules';
+import { useFutureCastLabHash } from '@/components/futurecast/lab/useFutureCastLabHash';
 
 type Props = {
   lab: FutureCastLabData;
@@ -30,6 +31,26 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
   const hasSeededBoard =
     (data.masterBoard?.players?.length || 0) > 0 || (highPriority?.length || 0) > 0;
   const pending = lab.secondaryLoading && !hasSeededBoard;
+  const hash = useFutureCastLabHash();
+  const portalFocus = hash === FUTURECAST_LAB_ANCHORS.portal;
+
+  if (portalFocus) {
+    return (
+      <div className="rh-cc-page fc-lab-cc-page fc-lab-cc-page--portal" data-testid="fc-lab-page-mobile">
+        <section id={FUTURECAST_LAB_ANCHORS.portal} className="rh-frame" data-testid="fc-portal-room">
+          {pending ? (
+            <PanelSkeleton minHeight={180} />
+          ) : (
+            <FutureCastPortalCrossView
+              portalPlayers={data.home.portalWatchlist ?? []}
+              masterBoard={data.masterBoard}
+              portalSeason={data.home.portalSeason}
+            />
+          )}
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="rh-cc-page fc-lab-cc-page" data-testid="fc-lab-page-mobile">
@@ -105,17 +126,6 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
                 underclassmen={data.underclassmen}
                 roster={data.roster}
                 commits2027={data.commits2027}
-              />
-            )}
-          </section>
-          <section id={FUTURECAST_LAB_ANCHORS.portal} className="rh-frame" data-testid="fc-portal-room">
-            {pending ? (
-              <PanelSkeleton minHeight={180} />
-            ) : (
-              <FutureCastPortalCrossView
-                portalPlayers={data.home.portalWatchlist ?? []}
-                masterBoard={data.masterBoard}
-                portalSeason={data.home.portalSeason}
               />
             )}
           </section>
