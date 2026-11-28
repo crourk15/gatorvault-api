@@ -1,6 +1,16 @@
 import seedJson from './portal-prep-seed.json';
 import type { PortalSeasonState } from './recruiting-cycle';
 
+export type FanPortalPrepChip = {
+  name: string;
+  slug?: string;
+  position?: string;
+  stars?: number | null;
+  natlRank?: number | null;
+  status?: 'commit' | 'target' | 'flip' | string;
+  committedTo?: string | null;
+};
+
 export type FanPortalPrepRoom = {
   rank: number;
   room: string;
@@ -8,7 +18,8 @@ export type FanPortalPrepRoom = {
   tierLabel: string;
   dek: string;
   hunt: string;
-  alreadySigned: string[];
+  alreadySigned: Array<string | FanPortalPrepChip>;
+  stillRecruiting?: Array<string | FanPortalPrepChip>;
 };
 
 export type FanPortalPrep = {
@@ -16,6 +27,7 @@ export type FanPortalPrep = {
   fanShip: boolean;
   status: string;
   namesLandWhen: string;
+  classYear?: number;
   season?: PortalSeasonState | null;
   window: {
     opens: string;
@@ -46,4 +58,23 @@ export function daysUntilPortalOpen(opens: string, at: Date = new Date()): numbe
   if (!Number.isFinite(target)) return 0;
   const now = Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate());
   return Math.max(0, Math.round((target - now) / 86400000));
+}
+
+export function portalChip(row: string | FanPortalPrepChip | null | undefined): FanPortalPrepChip | null {
+  if (!row) return null;
+  if (typeof row === 'string') {
+    const name = row.trim();
+    return name ? { name, slug: '', status: 'commit' } : null;
+  }
+  const name = String(row.name || '').trim();
+  if (!name) return null;
+  return {
+    name,
+    slug: String(row.slug || '').trim(),
+    position: row.position,
+    stars: row.stars ?? null,
+    natlRank: row.natlRank ?? null,
+    status: row.status || 'commit',
+    committedTo: row.committedTo ?? null,
+  };
 }

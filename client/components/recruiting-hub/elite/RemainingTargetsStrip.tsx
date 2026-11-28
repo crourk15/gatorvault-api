@@ -132,13 +132,15 @@ function RemainingRow({ target }: { target: RemainingTarget }): React.ReactEleme
  * Closing-class strip: unsigned + flip-watch names still in play.
  * School mark = hard commit only — never top RPM rival.
  */
-export function RemainingTargetsStrip(): React.ReactElement | null {
+export function RemainingTargetsStrip({ year }: { year?: number } = {}): React.ReactElement | null {
   const { activeYear } = useRecruitingClassYear();
+  const classYear = year ?? activeYear;
   const selectHeat = useCallback((b: { heatIndex: RhHubHeatTarget[] }) => b.heatIndex, []);
-  const fetchHeat = useCallback((year: number) => fetchRecruitingHubHeatIndex(year), []);
+  const fetchHeat = useCallback((y: number) => fetchRecruitingHubHeatIndex(y), []);
   const { data, loading, error } = useHubBundleSection({
     select: selectHeat,
     fetchFallback: fetchHeat,
+    year: classYear,
   });
 
   const rows = useMemo(() => {
@@ -146,7 +148,7 @@ export function RemainingTargetsStrip(): React.ReactElement | null {
     const bySlug = new Map(list.map((row) => [String(row.id || '').toLowerCase(), row]));
 
     // Ensure curated flip-watch commits appear even if heat-index drops them.
-    if (activeYear === 2027) {
+    if (classYear === 2027) {
       for (const flip of CLOSING_CLASS_FLIP_WATCH) {
         const slug = String(flip.slug).toLowerCase();
         if (bySlug.has(slug)) continue;
@@ -175,14 +177,14 @@ export function RemainingTargetsStrip(): React.ReactElement | null {
         return Number(b.ufPercent ?? -1) - Number(a.ufPercent ?? -1);
       })
       .slice(0, MAX_REMAINING);
-  }, [data, activeYear]);
+  }, [data, classYear]);
 
   return (
     <>
       <div className="rh-section-header">
         <div className="rh-section-title">Remaining Targets</div>
         <div className="rh-section-subtitle">
-          {activeYear} — open board names, then flip-watch commits still in play.
+          {classYear} — open board names, then flip-watch commits still in play.
         </div>
       </div>
       {loading ? (

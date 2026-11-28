@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T18:00:00Z",
+  "generatedAt": "2026-11-27T18:00:00Z",
   "prep": {
     "ok": true,
     "fanShip": false,
@@ -32,11 +32,26 @@
         "dek": "Both tackle spots. Most expensive portal buy. 2027 true freshmen are not Year-1 SEC starters.",
         "hunt": "Power-conference tackle who can start in 2027. Length, 2+ years left. Two if the budget holds.",
         "alreadySigned": [
-          "Elijah Hutcheson",
-          "Moreno Fisher",
-          "Maxwell Hiller",
-          "Peyton Miller"
-        ]
+          {
+            "name": "Elijah Hutcheson",
+            "slug": "elijah-hutcheson",
+            "position": "OT",
+            "stars": 4,
+            "natlRank": 133,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Moreno Fisher",
+            "slug": "moreno-fisher",
+            "position": "OT",
+            "stars": 3,
+            "natlRank": 1061,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": []
       },
       {
         "rank": 2,
@@ -46,7 +61,26 @@
         "dek": "One-year safeties leave a hole. One 2027 commit is not enough.",
         "hunt": "Range-and-tackle safety who can play SS or STAR in Year 1. 2+ years left.",
         "alreadySigned": [
-          "Kailib Dillard"
+          {
+            "name": "Kailib Dillard",
+            "slug": "kailib-dillard",
+            "position": "S",
+            "stars": 3,
+            "natlRank": 461,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": [
+          {
+            "name": "Andre Hyppolite",
+            "slug": "andre-hyppolite",
+            "position": "S",
+            "stars": null,
+            "natlRank": null,
+            "status": "flip",
+            "committedTo": "Miami"
+          }
         ]
       },
       {
@@ -57,10 +91,53 @@
         "dek": "Secondary is a portal shop. Quality starter snaps still look thin.",
         "hunt": "Press-man corner with starter snaps. Not a depth body.",
         "alreadySigned": [
-          "Raheem Floyd",
-          "Aamaury Fountain",
-          "Amare Nugent",
-          "Kamauri Whitfield"
+          {
+            "name": "Raheem Floyd",
+            "slug": "raheem-floyd",
+            "position": "CB",
+            "stars": 4,
+            "natlRank": 94,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Aamaury Fountain",
+            "slug": "aamaury-fountain",
+            "position": "CB",
+            "stars": 4,
+            "natlRank": 150,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Amare Nugent",
+            "slug": "amare-nugent",
+            "position": "CB",
+            "stars": 4,
+            "natlRank": 219,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Kamauri Whitfield",
+            "slug": "kamauri-whitfield",
+            "position": "CB",
+            "stars": 3,
+            "natlRank": 780,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": [
+          {
+            "name": "Ace Alston",
+            "slug": "ace-alston",
+            "position": "CB",
+            "stars": null,
+            "natlRank": null,
+            "status": "flip",
+            "committedTo": "Notre Dame"
+          }
         ]
       },
       {
@@ -71,8 +148,35 @@
         "dek": "Interior only if the staff needs a Year-1 two-gap piece.",
         "hunt": "Year-1 interior who can two-gap. Not a roster filler.",
         "alreadySigned": [
-          "Zahmar Tookes",
-          "De'Voun Kendrick"
+          {
+            "name": "Zahmar Tookes",
+            "slug": "zahmar-tookes",
+            "position": "DL",
+            "stars": 4,
+            "natlRank": 305,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "De'Voun Kendrick",
+            "slug": "devoun-kendrick",
+            "position": "DL",
+            "stars": 3,
+            "natlRank": 656,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": [
+          {
+            "name": "Jalen Brewster",
+            "slug": "jalen-brewster",
+            "position": "DL",
+            "stars": null,
+            "natlRank": null,
+            "status": "flip",
+            "committedTo": "Texas Tech"
+          }
         ]
       },
       {
@@ -83,8 +187,17 @@
         "dek": "Only if the 2027 starter is not already on the roster. A portal QB taxes the tackle budget.",
         "hunt": "Do not shop a quarterback until that call is made.",
         "alreadySigned": [
-          "Davin Davidson"
-        ]
+          {
+            "name": "Davin Davidson",
+            "slug": "davin-davidson",
+            "position": "QB",
+            "stars": 4,
+            "natlRank": 144,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": []
       },
       {
         "rank": 6,
@@ -94,10 +207,35 @@
         "dek": "Only a difference-maker. Not a depth body.",
         "hunt": "A Year-1 MIKE/WILL who changes the front. Pass if he is just a count.",
         "alreadySigned": [
-          "Ja'Bios Smith",
-          "Ellis McGaskin",
-          "Tre Geathers"
-        ]
+          {
+            "name": "Ja'Bios Smith",
+            "slug": "jabios-smith",
+            "position": "LB",
+            "stars": 4,
+            "natlRank": 176,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Ellis McGaskin",
+            "slug": "ellis-mcgaskin",
+            "position": "LB",
+            "stars": 3,
+            "natlRank": 433,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Tre Geathers",
+            "slug": "tre-geathers",
+            "position": "LB",
+            "stars": 3,
+            "natlRank": 540,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": []
       },
       {
         "rank": 7,
@@ -107,8 +245,17 @@
         "dek": "Pass-rush JACK piece. Not a 30-man roster filler.",
         "hunt": "A rush piece who can play JACK in Year 1.",
         "alreadySigned": [
-          "Cahron Wheeler"
-        ]
+          {
+            "name": "Cahron Wheeler",
+            "slug": "cahron-wheeler",
+            "position": "EDGE",
+            "stars": 4,
+            "natlRank": 130,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": []
       },
       {
         "rank": 8,
@@ -118,11 +265,44 @@
         "dek": "Headcount is fine. A true WR1 only if the staff wants a Year-1 dude.",
         "hunt": "Do not spend a 10–12 slot on a body. Royal is a freshman.",
         "alreadySigned": [
-          "Easton Royal",
-          "Elias Pearl",
-          "Tramond Collins",
-          "Anthony Jennings"
-        ]
+          {
+            "name": "Easton Royal",
+            "slug": "easton-royal",
+            "position": "WR",
+            "stars": 5,
+            "natlRank": 7,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Elias Pearl",
+            "slug": "elias-pearl",
+            "position": "WR",
+            "stars": 4,
+            "natlRank": 104,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Tramond Collins",
+            "slug": "tramond-collins",
+            "position": "WR",
+            "stars": 4,
+            "natlRank": 139,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Anthony Jennings",
+            "slug": "anthony-jennings",
+            "position": "WR",
+            "stars": 4,
+            "natlRank": 318,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": []
       },
       {
         "rank": 9,
@@ -132,8 +312,44 @@
         "dek": "Do not spend a portal slot here unless the backfield situation changes.",
         "hunt": "Hold the room.",
         "alreadySigned": [
-          "Andrew Beard",
-          "Terrance Grant"
+          {
+            "name": "Andrew Beard",
+            "slug": "andrew-beard",
+            "position": "RB",
+            "stars": 4,
+            "natlRank": 181,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Terrance Grant",
+            "slug": "terrance-grant",
+            "position": "RB",
+            "stars": 3,
+            "natlRank": 732,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": [
+          {
+            "name": "Keldrid Ben",
+            "slug": "keldrid-ben",
+            "position": "RB",
+            "stars": null,
+            "natlRank": null,
+            "status": "flip",
+            "committedTo": "Oklahoma"
+          },
+          {
+            "name": "Tranard Roberts",
+            "slug": "tranard-roberts",
+            "position": "RB",
+            "stars": null,
+            "natlRank": null,
+            "status": "target",
+            "committedTo": null
+          }
         ]
       },
       {
@@ -144,15 +360,62 @@
         "dek": "Not a 10–12 slot unless a difference-maker falls.",
         "hunt": "Hold the room.",
         "alreadySigned": [
-          "Tommy Douglas",
-          "Jackson Ballinger"
-        ]
+          {
+            "name": "Tommy Douglas",
+            "slug": "tommy-douglas",
+            "position": "TE",
+            "stars": 4,
+            "natlRank": 373,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Jackson Ballinger",
+            "slug": "jackson-ballinger",
+            "position": "TE",
+            "stars": 3,
+            "natlRank": 451,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": []
+      },
+      {
+        "rank": 11,
+        "room": "IOL",
+        "tier": "stable",
+        "tierLabel": "Hold",
+        "dek": "Interior is signed. Not a 10–12 portal slot unless a Year-1 starter falls.",
+        "hunt": "Hold the room.",
+        "alreadySigned": [
+          {
+            "name": "Maxwell Hiller",
+            "slug": "maxwell-hiller",
+            "position": "IOL",
+            "stars": 5,
+            "natlRank": 4,
+            "status": "commit",
+            "committedTo": "Florida"
+          },
+          {
+            "name": "Peyton Miller",
+            "slug": "peyton-miller",
+            "position": "IOL",
+            "stars": 4,
+            "natlRank": 122,
+            "status": "commit",
+            "committedTo": "Florida"
+          }
+        ],
+        "stillRecruiting": []
       }
     ],
     "mustAdd": [
       "OT",
       "S"
     ],
-    "incomingCount": 0
+    "incomingCount": 0,
+    "classYear": 2027
   }
 }

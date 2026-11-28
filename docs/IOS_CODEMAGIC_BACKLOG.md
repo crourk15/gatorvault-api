@@ -278,6 +278,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-11-27 | Portal War Room shows the live 2027 commit class and remaining targets. OT commits are Hutcheson/Fisher; Hiller/Miller sit at IOL. **Live Netlify hydrates after deploy.** | Portal class list + room chips in the binary. | this PR |
 | 2026-11-26 | Recruiting panel tabs (Portal, Who’s Moving, Scouting, Rankings, Priority) use one command header. Portal is the war room board, not stacked class-hub titles. **Live Netlify hydrates after deploy.** | Panel header, portal CSS, and tab chrome in the binary. | this PR |
 | 2026-11-25 | Who’s Moving stays on board intel (`?tab=intel`). Approved 1.0.33 writes `?tab=movement`, which the hub does not parse, so the click dumps onto the 2028 class war-room. **Live Netlify JS hydrates the fix after deploy.** | `vault-route-map.ts` in the binary. | this PR |
 | 2026-11-25 | Recruiting Portal tab is the January 4–13, 2027 war room (10–12 difference makers, ranked rooms). Names stay off until verified. **Live `/api/recruiting/portal` hydrates the prep payload after Render.** | `RecruitingPortalSection.tsx`, `portal-prep-seed.json`, and portal CSS in the binary. Approved 1.0.33 still first-paints lock-icon “Portal Closed” until this bake. | this PR |

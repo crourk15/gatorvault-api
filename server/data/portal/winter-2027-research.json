@@ -76,11 +76,23 @@
       ],
       "hsIncoming": [
         "Elijah Hutcheson (OT)",
-        "Moreno Fisher (OT)",
-        "Maxwell Hiller (IOL)",
-        "Peyton Miller (IOL)"
+        "Moreno Fisher (OT)"
       ],
       "hunt": "Power conference tackle who can start in 2027. Length, 2+ years left. Two if the budget holds.",
+      "namedCandidates": []
+    },
+    {
+      "rank": 11,
+      "room": "IOL",
+      "tier": "stable",
+      "why": "Hiller is the 5-star interior. Miller arrives with him. Not a 10-12 portal slot unless a Year-1 starter falls.",
+      "schemeMin": 6,
+      "departingLikely": [],
+      "hsIncoming": [
+        "Maxwell Hiller",
+        "Peyton Miller"
+      ],
+      "hunt": "Hold the room.",
       "namedCandidates": []
     },
     {
